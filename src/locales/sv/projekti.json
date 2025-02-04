@@ -65,11 +65,11 @@
   },
   "liittyvat-suunnitelmat": {
     "title": "Relaterade planer",
-    "kaynnistetty-suunnitelmalla": "Planering har tidigare påbörjats i planen <suunnitelma/>. Informationen i publikationen nedan är kopierad från den.",
-    "suunnittelua-on-jaettu": "Planeringen är uppdelad i plan <suunnitelma/>.",
-    "kuulutettu-yhdessa": "Planen tillkännagavs tidigare tillsammans med plan <suunnitelma/>.",
-    "kuulutettu-yhdessa-pdf": "Planen tillkännagavs tidigare tillsammans med plan {{kuulutettuYhdessaSuunnitelmanimi}}.",
-    "ei-julkaisuja": "Än så länge har planen inga publicerade publikationer, så dess information kan inte ses."
+    "kaynnistetty-suunnitelmalla": "Planeringen har tidigare inletts med planen <suunnitelma/>. Informationen i publikationen nedan har kopierats från den.",
+    "suunnitelma-on-jaettu": "Planen har delats upp i planerna: {{suunnitelmaNimi}} och <suunnitelma2/>",
+    "kuulutettu-yhdessa": "Planen har tidigare kungjorts tillsammans med planen <suunnitelma/>.",
+    "kuulutettu-yhdessa-pdf": "Planen har tidigare kungjorts tillsammans med planen {{kuulutettuYhdessaSuunnitelmanimi}}.",
+    "ei-julkaisuja": "Planen har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas."
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",

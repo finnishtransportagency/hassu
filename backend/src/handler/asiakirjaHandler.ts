@@ -13,7 +13,7 @@ import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavat
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,

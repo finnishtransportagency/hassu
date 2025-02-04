@@ -41,7 +41,7 @@ import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhall
 import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
 import { log } from "../../logger";
 import { validateVuorovaikutusKierrosCanBeDeleted } from "hassu-common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
-import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../projekti/adapter/adaptToAPI/julkinen/haeKuulutettuYhdessaSuunnitelmanimi";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
