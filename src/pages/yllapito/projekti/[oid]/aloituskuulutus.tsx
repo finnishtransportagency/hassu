@@ -426,7 +426,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                 <>
                   <p>
                     {label({
-                      label: "Esikatsele tiedostot ennen tallentamista.",
+                      label: "Esikatsele tiedostot.",
                       inputLanguage: ensisijainenKaannettavaKieli,
                       kielitiedot,
                     })}
@@ -460,7 +460,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                 <>
                   <p>
                     {label({
-                      label: "Esikatsele tiedostot ennen tallentamista.",
+                      label: "Esikatsele tiedostot.",
                       inputLanguage: toissijainenKaannettavaKieli,
                       kielitiedot,
                     })}

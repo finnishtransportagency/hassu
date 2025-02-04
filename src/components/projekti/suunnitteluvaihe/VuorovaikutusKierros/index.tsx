@@ -365,7 +365,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot ennen tallentamista.",
+                          label: "Esikatsele tiedostot.",
                           inputLanguage: ensisijainenKieli,
                           kielitiedot,
                         })}
@@ -387,7 +387,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot ennen tallentamista.",
+                          label: "Esikatsele tiedostot.",
                           inputLanguage: toissijainenKieli,
                           kielitiedot,
                         })}

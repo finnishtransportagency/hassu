@@ -59,7 +59,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
           <div>
             <p className="mb-10">
               {label({
-                label: "Esikatsele tiedostot ennen tallentamista.",
+                label: "Esikatsele tiedostot.",
                 inputLanguage: Kieli.SUOMI,
                 kielitiedot,
               })}
@@ -146,7 +146,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
           <div>
             <p className="mb-10">
               {label({
-                label: "Esikatsele tiedostot ennen tallentamista.",
+                label: "Esikatsele tiedostot.",
                 inputLanguage: toissijainenKieli,
                 kielitiedot,
               })}
