@@ -254,12 +254,6 @@ export default function AineistoSivunPainikkeet({
                 puutteet.push("aineistoja on kategorisoimatta");
               }
             }
-            if (!aineistotReady) {
-              puutteet.push("aineistoja ei ole vielä käsitelty");
-            }
-            if (kuulutusPaivaIsInPast) {
-              puutteet.push("kuulutuspäivä on menneisyydessä");
-            }
             if (puutteet.length > 0) {
               const muut = puutteet.slice(0, -1);
               const viimeinen = puutteet[puutteet.length - 1];
