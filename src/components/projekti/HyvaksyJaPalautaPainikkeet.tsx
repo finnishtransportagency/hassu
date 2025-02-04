@@ -44,7 +44,7 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
     const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
     const asianhallintaVaaraTila = isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi]);
 
-    const puutteet = [];
+    const puutteet: string[] = [];
 
     if (puuttuuKuntatieto) {
       puutteet.push("kuntatiedot puuttuvat");
@@ -66,14 +66,9 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
     }
 
     if (puutteet.length > 0) {
-      const formattedPuutteet =
-        puutteet.length === 1
-          ? capitalize(puutteet[0])
-          : puutteet.length === 2
-          ? `${capitalize(puutteet[0])} ja ${puutteet[1]}`
-          : `${capitalize(puutteet[0])}, ${puutteet.slice(1, -1).join(", ")}${puutteet.length > 2 ? " ja " : ""}${
-              puutteet[puutteet.length - 1]
-            }`;
+      const muut = puutteet.slice(0, -1);
+      const viimeinen = puutteet[puutteet.length - 1];
+      const formattedPuutteet = muut.length ? capitalize(muut.join(", ") + " ja " + viimeinen) : capitalize(viimeinen);
 
       showErrorMessage(formattedPuutteet);
       return;
