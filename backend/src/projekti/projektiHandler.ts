@@ -56,6 +56,7 @@ import { config } from "../config";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 import { lisaaJakotiedotJulkaisuille } from "./lisaaJakotiedotJulkaisuille";
 import { haeJaetunProjektinOid } from "./haeJaetunProjektinOid";
+import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -184,11 +185,12 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
     await handleEvents(projektiAdaptationResult);
   } else {
     requirePermissionLuonti();
+    auditLog.info("Luodaan projekti syötteellä", { input });
     const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
     log.info("Creating projekti to Hassu", { oid });
     await projektiDatabase.createProjekti(projekti);
     log.info("Created projekti to Hassu", { projekti });
-    auditLog.info("Luo projekti", { projekti });
+    auditLog.info("Luotu projekti", { projekti });
 
     const emailOptions = createPerustamisEmail(projekti);
     if (emailOptions.to) {
@@ -341,7 +343,15 @@ export async function createProjektiFromVelho(
       assertIsDefined(vaylaUser.uid);
       const existingCurrentUser = kayttoOikeudet.findUserByUid(vaylaUser.uid);
       if (!existingCurrentUser) {
-        kayttoOikeudet.addUser({ kayttajatunnus: vaylaUser.uid, muokattavissa: true, tyyppi: API.KayttajaTyyppi.VARAHENKILO });
+        log.info("Nykyinen käyttäjä puuttuu projektin henkilöistä. Lisätään se.", {
+          nykyinenKayttaja: vaylaUser.uid,
+          projektinHenkilot: kayttoOikeudet.getKayttoOikeudet().map((k) => k.kayttajatunnus),
+        });
+        kayttoOikeudet.addUser({
+          kayttajatunnus: vaylaUser.uid,
+          muokattavissa: true,
+          tyyppi: isAorLTunnus(vaylaUser.uid) ? API.KayttajaTyyppi.VARAHENKILO : undefined,
+        });
       }
     }
 

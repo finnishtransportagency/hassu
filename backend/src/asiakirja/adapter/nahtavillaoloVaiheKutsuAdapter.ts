@@ -6,7 +6,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";

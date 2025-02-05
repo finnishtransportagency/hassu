@@ -17,7 +17,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { fileService } from "../../files/fileService";
-import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { translate } from "../../util/localization";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
