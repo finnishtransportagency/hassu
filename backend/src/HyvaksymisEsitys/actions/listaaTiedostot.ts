@@ -23,7 +23,7 @@ export default async function listaaHyvaksymisEsityksenTiedostot({
   const projekti: ProjektiTiedostoineen = await projektiDatabase.haeHyvaksymisEsityksenTiedostoTiedot(oid);
   if (projekti) {
     const hyvaksymisEsitys = projekti.julkaistuHyvaksymisEsitys;
-    const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+    const projari = projekti.kayttoOikeudet.find((hlo) => hlo.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
     assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
     assertIsDefined(projekti.velho, "Projektilla tulee olla velho");
 
