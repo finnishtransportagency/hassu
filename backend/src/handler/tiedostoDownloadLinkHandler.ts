@@ -88,7 +88,7 @@ class TiedostoDownloadLinkHandler {
 
       const poistumisPaivaEndOfTheDay = parseDate(lausuntoPyynnonTaydennys.poistumisPaiva).endOf("day");
       if (poistumisPaivaEndOfTheDay.isBefore(nyt())) {
-        const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO));
+        const projari = projekti.kayttoOikeudet.find((hlo) => hlo.tyyppi === KayttajaTyyppi.PROJEKTIPAALLIKKO);
         assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
         return Promise.resolve({
           __typename: "LadattavatTiedostot",
