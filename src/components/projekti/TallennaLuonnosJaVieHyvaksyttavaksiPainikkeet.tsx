@@ -17,6 +17,7 @@ import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaihe
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -40,6 +41,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   tilasiirtymaTyyppi,
 }: Readonly<Props<TFieldValues>>) {
   const { showSuccessMessage } = useSnackbars();
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
 
   const { mutate: reloadProjekti } = useProjekti();
 
@@ -56,15 +58,15 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
         (async () => {
           try {
             const convertedFormData = await preSubmitFunction(formData);
-            await api.tallennaProjekti(convertedFormData);
+            const response = await api.tallennaProjekti(convertedFormData);
             await reloadProjekti();
-            showSuccessMessage("Tallennus onnistui");
+            showTallennaProjektiMessage(response);
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
         })()
       ),
-    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, preSubmitFunction, reloadProjekti, showTallennaProjektiMessage, withLoadingSpinner]
   );
 
   const lahetaHyvaksyttavaksi: SubmitHandler<TFieldValues> = useCallback(

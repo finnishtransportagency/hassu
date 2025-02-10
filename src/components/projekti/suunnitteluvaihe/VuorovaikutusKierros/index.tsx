@@ -59,6 +59,7 @@ import { H2 } from "../../../Headings";
 import KierroksenPoistoButton from "../KierroksenPoistoButton";
 import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
 import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -230,19 +231,19 @@ function VuorovaikutusKierrosKutsu({
     [talletaTiedosto]
   );
 
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
+
   const saveDraft = useCallback(
     (formData: VuorovaikutusFormValues) =>
       withLoadingSpinner(
         (async () => {
           const convertedData = await preSubmitFunction(formData);
-          await api.tallennaProjekti(convertedData);
-          showSuccessMessage("Tallennus onnistui");
-          if (reloadProjekti) {
-            await reloadProjekti();
-          }
+          const response = await api.tallennaProjekti(convertedData);
+          showTallennaProjektiMessage(response);
+          await reloadProjekti?.();
         })()
       ),
-    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, preSubmitFunction, reloadProjekti, showTallennaProjektiMessage, withLoadingSpinner]
   );
 
   const saveAndPublish = useCallback(

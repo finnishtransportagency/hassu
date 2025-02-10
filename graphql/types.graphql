@@ -157,6 +157,16 @@ type ProjektiVirhe {
   projektipaallikko: ProjektipaallikkoVirhe
 }
 
+type TallennaProjektiResponse {
+  status: TallennaProjektiStatus!
+  correlationId: String
+}
+
+enum TallennaProjektiStatus {
+  OK
+  VELHO_TALLENNUS_ERROR
+}
+
 type Projekti implements IProjekti {
   oid: String!
   versio: Int!

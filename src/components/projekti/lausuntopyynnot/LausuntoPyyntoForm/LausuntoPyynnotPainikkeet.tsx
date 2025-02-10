@@ -7,14 +7,15 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { LausuntoPyynnotFormValues, mapLausuntoPyyntoFormValuesToLausuntoPyyntoInput } from "../types";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import { TallennaProjektiResponse } from "@services/api";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>) {
   const { mutate: reloadProjekti } = useProjekti();
-  const { showSuccessMessage } = useSnackbars();
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -22,9 +23,9 @@ export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ proje
   const api = useApi();
 
   const saveLausuntoPyynnot = useCallback(
-    async (formData: LausuntoPyynnotFormValues) => {
+    async (formData: LausuntoPyynnotFormValues): Promise<TallennaProjektiResponse> => {
       const tallennaProjektiInput = mapLausuntoPyyntoFormValuesToLausuntoPyyntoInput(formData);
-      await api.tallennaProjekti(tallennaProjektiInput);
+      return await api.tallennaProjekti(tallennaProjektiInput);
     },
     [api]
   );
@@ -35,10 +36,10 @@ export default function LausuntoPyynnotPainikkeet({ projekti }: Readonly<{ proje
     withLoadingSpinner(
       (async () => {
         try {
-          await saveLausuntoPyynnot(formData);
+          const response = await saveLausuntoPyynnot(formData);
           await checkAineistoValmiit({ retries: 30 });
           await reloadProjekti();
-          showSuccessMessage("Tallennus onnistui");
+          showTallennaProjektiMessage(response);
         } catch (e) {
           log.error("OnSubmit Error", e);
         }

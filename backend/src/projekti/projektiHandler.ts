@@ -56,6 +56,7 @@ import { config } from "../config";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 import { lisaaJakotiedotJulkaisuille } from "./lisaaJakotiedotJulkaisuille";
 import { haeJaetunProjektinOid } from "./haeJaetunProjektinOid";
+import { getCorrelationId } from "../aws/monitoring";
 
 export async function projektinTila(oid: string): Promise<API.ProjektinTila> {
   requirePermissionLuku();
@@ -163,14 +164,15 @@ export async function arkistoiProjekti(oid: string): Promise<string> {
 }
 
 export async function tallennaJaSiirraTilaa({ projekti, tilasiirtyma }: TallennaJaSiirraTilaaMutationVariables): Promise<string> {
-  const output = await createOrUpdateProjekti(projekti);
+  await createOrUpdateProjekti(projekti);
   await tilaHandler.siirraTila(tilasiirtyma);
-  return output;
+  return projekti.oid;
 }
 
-export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): Promise<string> {
+export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): Promise<API.TallennaProjektiResponse> {
   requirePermissionLuku();
   const oid = input.oid;
+  let status: API.TallennaProjektiStatus | undefined = undefined;
   const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiInDB) {
     // Save over existing one
@@ -181,7 +183,7 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
     await handleFilesAfterAdaptToSave(projektiAdaptationResult.projekti);
     await handleLyhytOsoite(projektiAdaptationResult.projekti, projektiInDB);
     await projektiDatabase.saveProjekti(projektiAdaptationResult.projekti);
-    await handleEvents(projektiAdaptationResult);
+    status = await handleEvents(projektiAdaptationResult);
   } else {
     requirePermissionLuonti();
     const { projekti } = await createProjektiFromVelho(input.oid, requireVaylaUser(), input);
@@ -193,10 +195,10 @@ export async function createOrUpdateProjekti(input: API.TallennaProjektiInput): 
     const emailOptions = createPerustamisEmail(projekti);
     if (emailOptions.to) {
       await emailClient.sendEmail(emailOptions);
-      log.info("Sent email to projektipaallikko", emailOptions.to);
+      log.info("Sent email to projektipäällikkö", emailOptions.to);
     }
   }
-  return input.oid;
+  return { __typename: "TallennaProjektiResponse", status: status ?? API.TallennaProjektiStatus.OK, correlationId: getCorrelationId() };
 }
 
 export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput | null | undefined): Promise<string> {
@@ -727,11 +729,17 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
   }
 }
 
-export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult) {
+export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult): Promise<API.TallennaProjektiStatus | undefined> {
+  let status: API.TallennaProjektiStatus | undefined = undefined;
+
   await projektiAdaptationResult.onEvents(
     (events: ProjektiEvent[]) => events.some((event) => event.eventType === ProjektiEventType.SAVE_PROJEKTI_TO_VELHO),
     async () => {
-      await saveProjektiToVelho(projektiAdaptationResult.projekti);
+      try {
+        await saveProjektiToVelho(projektiAdaptationResult.projekti);
+      } catch {
+        status = API.TallennaProjektiStatus.VELHO_TALLENNUS_ERROR;
+      }
     }
   );
 
@@ -782,6 +790,8 @@ export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationR
       return await eventSqsClient.synchronizeAineisto(oid);
     }
   );
+
+  return status;
 }
 
 async function handleLyhytOsoite(dbProjektiToSave: DBProjekti, projektiInDB: DBProjekti) {

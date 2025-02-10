@@ -25,7 +25,7 @@ import { PartiallyMandatory } from "../tiedostot/PartiallyMandatory";
 import { VelhoUnavailableError } from "hassu-common/error/velhoUnavailableError";
 
 import NodeCache from "node-cache";
-import { isEmpty } from "lodash";
+import { isEmpty, pick } from "lodash";
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 
 const accessTokenCache = new NodeCache({
@@ -33,7 +33,29 @@ const accessTokenCache = new NodeCache({
 });
 const ACCESS_TOKEN_CACHE_KEY = "accessToken";
 
-type VelhoProjektiDataUpdater = (projekti: ProjektiRekisteri.ProjektiProjekti) => ProjektiRekisteri.ProjektiProjekti;
+type VelhoProjektiDataUpdater = (projekti: ProjektiRekisteri.ProjektiProjektiMuokkaus) => ProjektiRekisteri.ProjektiProjektiMuokkaus;
+
+// Record, jonka avaimina on Projektimuokkauksen avaimet.
+// Muodostettu Recordiksi sen tarjoaman tyyppitarkistuksen vuoksi.
+const muokkausKeyRecord: Record<keyof ProjektiRekisteri.ProjektiProjektiMuokkaus, undefined> = {
+  "lahdejarjestelman-id": undefined,
+  "mitattugeometria-oid": undefined,
+  "muutoksen-lahde-oid": undefined,
+  "piirretyt-geometriat": undefined,
+  "sijainti-tilannepaiva": undefined,
+  "tarkka-geometria": undefined,
+  alkaen: undefined,
+  lahdejarjestelma: undefined,
+  mitattugeometria: undefined,
+  oid: undefined,
+  ominaisuudet: undefined,
+  paattyen: undefined,
+  projektijoukko: undefined,
+  rataosoitteet: undefined,
+  schemaversio: undefined,
+  sijainnit: undefined,
+};
+const projektiMuokkausAvaimet = Object.keys(muokkausKeyRecord) as (keyof ProjektiRekisteri.ProjektiProjektiMuokkaus)[];
 
 export class VelhoClient {
   public async authenticate(): Promise<string> {
@@ -260,8 +282,11 @@ export class VelhoClient {
     }
     const projektiApi = await this.createProjektiRekisteriApi();
     try {
+      // Haetaan geometriatietoineen, sillä ne saatetaan tarvita bodyssä, kun projekti päivitetään put-pyynnöllä
       const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-      const projekti = projektiDataUpdater(loadProjektiResponse.data);
+      const data = loadProjektiResponse.data;
+      const projektiProjektiMuokkaus: ProjektiRekisteri.ProjektiProjektiMuokkaus = pick(data, ...projektiMuokkausAvaimet);
+      const projekti = projektiDataUpdater(projektiProjektiMuokkaus);
       auditLog.info("Päivitetään velhoprojekti", { velho: { oid, projekti } });
       await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
     } catch (e: unknown) {
