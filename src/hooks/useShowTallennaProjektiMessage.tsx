@@ -15,8 +15,8 @@ export function useShowTallennaProjektiMessage() {
         OK: () => showSuccessMessage("Tallennus onnistui"),
         VELHO_TALLENNUS_ERROR: () => {
           const virkkeet: string[] = [
-            "Tiedot tallennettu VLS-järjestelmään, mutta tietojen vieminen Projektivelhoon epäonnistui.",
-            "Voit yrittää tallentamista myöhemmin uudelleen.",
+            "Tiedot tallentui onnistuneesti VLS-järjestelmään, mutta tietojen vieminen Projektivelhoon epäonnistui.",
+            "Voit yrittää tietojen viemistä myöhemmin tallentamalla uudelleen.",
           ];
           if (response.correlationId) {
             virkkeet.push("Välitä tunnistetieto '" + response.correlationId + "' järjestelmän ylläpitäjälle vikailmoituksen yhteydessä.");
