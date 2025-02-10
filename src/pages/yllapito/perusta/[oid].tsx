@@ -2,17 +2,15 @@ import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState 
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { useRouter } from "next/router";
-import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
-import { ProjektiKayttajaInput, TallennaProjektiInput } from "@services/api";
+import KayttoOikeusHallinta, { FormValues } from "@components/projekti/KayttoOikeusHallinta";
 import * as Yup from "yup";
 import { FormProvider, useForm, UseFormProps, UseFormReturn } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import log from "loglevel";
 import Button from "@components/button/Button";
-import { kayttoOikeudetSchema, KayttoOikeudetSchemaContext } from "src/schemas/kayttoOikeudet";
+import { kayttoOikeudetSchema } from "src/schemas/kayttoOikeudet";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
-import deleteFieldArrayIds from "src/util/deleteFieldArrayIds";
 import Section from "@components/layout/Section2";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -20,12 +18,7 @@ import useApi from "src/hooks/useApi";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-
-// Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
-type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
-type FormValues = Required<{
-  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
-}>;
+import { TallennaProjektiInput } from "@services/api";
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
@@ -41,7 +34,7 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
 ]);
 
 export default function PerustaProjekti(): ReactElement {
-  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti();
+  const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti({ revalidateOnMount: true });
 
   return (
     <div>
@@ -62,16 +55,14 @@ const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (proje
   oid: projekti.oid,
   versio: projekti.versio,
   kayttoOikeudet:
-    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio }) => {
-      const formValues: ProjektiKayttajaInput = {
-        kayttajatunnus,
-        puhelinnumero: puhelinnumero || "",
-        tyyppi,
-        yleinenYhteystieto: !!yleinenYhteystieto,
-        elyOrganisaatio: elyOrganisaatio || null,
-      };
-      return formValues;
-    }) || [],
+    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, organisaatio }) => ({
+      kayttajatunnus,
+      puhelinnumero: puhelinnumero || "",
+      tyyppi,
+      yleinenYhteystieto: !!yleinenYhteystieto,
+      elyOrganisaatio: elyOrganisaatio || null,
+      organisaatio: organisaatio || "",
+    })) || [],
 });
 
 const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
@@ -85,14 +76,11 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
   const projektiHasError = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = projektiHasError || isLoadingProjekti || formIsSubmitting;
 
-  const [formContext, setFormContext] = useState<KayttoOikeudetSchemaContext>({ kayttajat: [] });
-
   const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = {
     resolver: yupResolver(validationSchema, { abortEarly: false, recursive: true }),
     defaultValues,
     mode: "onChange",
     reValidateMode: "onChange",
-    context: formContext,
   };
 
   const useFormReturn = useForm<FormValues>(formOptions);
@@ -112,9 +100,21 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
     async (formData: FormValues, newRoute: string) =>
       await withLoadingSpinner(
         (async () => {
-          deleteFieldArrayIds(formData?.kayttoOikeudet);
+          const tallennaProjektiInput: TallennaProjektiInput = {
+            oid: formData.oid,
+            versio: formData.versio,
+            kayttoOikeudet: formData.kayttoOikeudet.map(
+              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+                kayttajatunnus,
+                puhelinnumero,
+                elyOrganisaatio,
+                tyyppi,
+                yleinenYhteystieto,
+              })
+            ),
+          };
           try {
-            await api.tallennaProjekti(formData);
+            await api.tallennaProjekti(tallennaProjektiInput);
             await reloadProjekti();
             reset(formData);
             await router.push(newRoute);
@@ -134,12 +134,6 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
     await submitAndMoveToNewRoute(formData, `/yllapito/projekti/${projekti.oid}`);
   };
 
-  const onKayttajatUpdate = useCallback(
-    (kayttajat: ProjektiKayttajaInput[]) => {
-      setFormContext({ kayttajat });
-    },
-    [setFormContext]
-  );
   const [kayttooikeusOhjeetOpen, setKayttooikeusOhjeetOpen] = useState(() => {
     const savedValue = localStorage.getItem("kayttoOikeusOhjeet");
     const isOpen = savedValue ? savedValue.toLowerCase() !== "false" : true;
@@ -167,7 +161,6 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
           <KayttoOikeusHallinta
             disableFields={disableFormEdit}
             projektiKayttajat={projekti.kayttoOikeudet || []}
-            onKayttajatUpdate={onKayttajatUpdate}
             projekti={projekti}
             includeTitle={true}
             ohjeetOpen={kayttooikeusOhjeetOpen}
