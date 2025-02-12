@@ -2,7 +2,8 @@ import { SQSRecord } from "aws-lambda";
 import {
   OmistajaHakuEvent,
   handleEvent,
-  setClient,
+  setMmlClient,
+  setPrhClient,
   tallennaKiinteistonOmistajat,
   tuoKarttarajausJaTallennaKiinteistotunnukset,
 } from "../../src/mml/kiinteistoHandler";
@@ -19,6 +20,7 @@ import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { parameters } from "../../src/aws/parameters";
 import sinon from "sinon";
 import MockDate from "mockdate";
+import { PrhClient } from "../../src/mml/prh/prh";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -114,6 +116,7 @@ const mockMmlClient: MmlClient = {
         omistajat: [
           {
             nimi: "Yritys Oy Ab",
+            ytunnus: "123-456",
             yhteystiedot: { jakeluosoite: "Yritysosoite 1", postinumero: "00001", paikkakunta: "Helsinki" },
           },
         ],
@@ -132,14 +135,27 @@ const mockMmlClient: MmlClient = {
   },
 };
 
+const mockPrhClient: PrhClient = {
+  haeYritykset: () =>
+    Promise.resolve([
+      {
+        nimi: "Yritys Oy Ab",
+        ytunnus: "123-456",
+        yhteystiedot: { jakeluosoite: "Yritysosoite 2", postinumero: "01002", paikkakunta: "Vantaa", maakoodi: "FI" },
+      },
+    ]),
+};
+
 describe("kiinteistoHandler", () => {
   const time = "2024-02-23T12:32:54+02:00";
   after(() => {
-    setClient(undefined);
+    setPrhClient(undefined);
+    setMmlClient(undefined);
   });
 
   before(() => {
-    setClient(mockMmlClient);
+    setPrhClient(mockPrhClient);
+    setMmlClient(mockMmlClient);
     MockDate.set(time);
   });
 
