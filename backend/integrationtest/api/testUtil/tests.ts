@@ -109,7 +109,7 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
 
   // Expect that varahenkilo from Velho is found
   const varahenkilo = p.kayttoOikeudet
-    ?.filter((kayttaja) => kayttaja.tyyppi == API.KayttajaTyyppi.VARAHENKILO && kayttaja.muokattavissa === false)
+    ?.filter((kayttaja) => kayttaja.tyyppi === API.KayttajaTyyppi.VARAHENKILO && kayttaja.muokattavissa === false)
     .pop();
   expect(varahenkilo).is.not.empty;
 
@@ -136,8 +136,8 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
   userFixture.loginAs(UserFixture.testi1Kayttaja);
   const kayttoOikeudetWithVarahenkiloChanges = cloneDeep(kayttoOikeudet);
   kayttoOikeudetWithVarahenkiloChanges
-    .filter((user) => user.kayttajatunnus == UserFixture.testi1Kayttaja.uid)
-    .forEach((user) => (user.tyyppi = API.KayttajaTyyppi.VARAHENKILO));
+    .filter((user) => user.kayttajatunnus === UserFixture.testi1Kayttaja.uid)
+    .forEach((user) => user.tyyppi === API.KayttajaTyyppi.VARAHENKILO);
 
   await expect(
     api.tallennaProjekti({
