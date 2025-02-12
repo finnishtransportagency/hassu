@@ -1,4 +1,5 @@
 import axios from "axios";
+import lookup from "country-code-lookup";
 import { auditLog } from "../../logger";
 import { Omistaja } from "../mmlClient";
 import { chunkArray } from "../../database/chunkArray";
@@ -17,13 +18,16 @@ export type Options = {
 
 type PrhResponse = {
   yTunnus: string;
-  postiosoite: string;
+  postiosoite: string | null;
   toiminimi: string;
-  postinumero: string;
-  coNimi: string;
-  toimipaikka: string;
-  maa: string;
-  ulkomaanosoite: string;
+  postinumero: string | null;
+  coNimi: string | null;
+  toimipaikka: string | null;
+  maa: string | null;
+  ulkomaanosoite: {
+    maa: string | null;
+    osoite: string | null;
+  } | null;
 };
 
 const TIMEOUT = 120000;
@@ -40,7 +44,7 @@ export async function createPrhClient(options: Options): Promise<PrhClient> {
   };
 }
 
-function trim(text: string | undefined) {
+function trim(text: string | undefined | null) {
   const txt = text?.trim();
   return txt || undefined;
 }
@@ -79,7 +83,14 @@ function determineYhteystiedot(prhResponse: PrhResponse): Omistaja["yhteystiedot
   const hasOnlyForeignPostalAddress =
     !!prhResponse.ulkomaanosoite && !prhResponse.postiosoite && !prhResponse.postinumero && !prhResponse.toimipaikka && !prhResponse.maa;
   if (hasOnlyForeignPostalAddress) {
-    return { jakeluosoite: prhResponse.ulkomaanosoite, maakoodi: undefined, paikkakunta: undefined, postinumero: undefined };
+    const maa = prhResponse.ulkomaanosoite?.maa;
+    const osoite = prhResponse.ulkomaanosoite?.osoite;
+    const maakoodi = maa ? lookup.countries.find((country) => country.country.toLowerCase() === maa.toLowerCase())?.iso2 : undefined;
+
+    // Jollei maatietoa saada muutettua maakoodiksi, lisätään se osoitteen perään
+    const jakeluosoite = maakoodi ? osoite : [osoite, maa].filter((str) => !!str).join(" ");
+
+    return { jakeluosoite, maakoodi, paikkakunta: undefined, postinumero: undefined };
   }
 
   return {
