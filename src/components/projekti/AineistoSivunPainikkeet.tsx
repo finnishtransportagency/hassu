@@ -19,6 +19,7 @@ import HassuDialog from "@components/HassuDialog";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 import { isInPast } from "common/util/dateUtils";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
 
 type SiirtymaTyyppi =
@@ -82,6 +83,7 @@ export default function AineistoSivunPainikkeet({
 }) {
   const router = useRouter();
   const { mutate: reloadProjekti } = useProjekti();
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
 
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -145,9 +147,10 @@ export default function AineistoSivunPainikkeet({
   const savePaatosAineisto = useCallback(
     async (formData: FormValues) => {
       const tallennaProjektiInput: TallennaProjektiInput = mapFormValuesToTallennaProjektiInput(formData, siirtymaTyyppi, muokkausTila);
-      await api.tallennaProjekti(tallennaProjektiInput);
+      const response = await api.tallennaProjekti(tallennaProjektiInput);
       await checkAineistoValmiit({ retries: 5 });
       await reloadProjekti?.();
+      return response;
     },
     [api, muokkausTila, reloadProjekti, siirtymaTyyppi, checkAineistoValmiit]
   );
@@ -221,14 +224,14 @@ export default function AineistoSivunPainikkeet({
       withLoadingSpinner(
         (async () => {
           try {
-            await savePaatosAineisto(formData);
-            showSuccessMessage("Tallennus onnistui");
+            const response = await savePaatosAineisto(formData);
+            showTallennaProjektiMessage(response);
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
         })()
       ),
-    [savePaatosAineisto, showSuccessMessage, withLoadingSpinner]
+    [savePaatosAineisto, showTallennaProjektiMessage, withLoadingSpinner]
   );
 
   const saveAndMoveToKuulutusPage = async (formData: FormValues) =>
@@ -262,9 +265,9 @@ export default function AineistoSivunPainikkeet({
               return;
             }
           }
-          await savePaatosAineisto(formData);
+          const response = await savePaatosAineisto(formData);
           await moveToKuulutusPage();
-          showSuccessMessage("Tallennus onnistui");
+          showTallennaProjektiMessage(response);
         } catch (e) {
           log.error("OnSubmit Error", e);
         }

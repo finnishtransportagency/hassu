@@ -12,6 +12,7 @@ import {
   ProjektiProjektiLuontiOminaisuudetVarahenkilo,
   ProjektiProjektiLuontiOminaisuudetVastuuhenkilo,
   ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum,
+  ProjektiProjektiMuokkaus,
 } from "./projektirekisteri";
 import mergeWith from "lodash/mergeWith";
 import pickBy from "lodash/pickBy";
@@ -404,7 +405,7 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   return kasittelynTila;
 }
 
-export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: KasittelynTila): ProjektiProjekti {
+export function applyKasittelyntilaToVelho(projekti: ProjektiProjektiMuokkaus, params: KasittelynTila): ProjektiProjektiMuokkaus {
   const ominaisuudet = projekti.ominaisuudet;
   setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(value)));
   setIfDefined(params.ennakkoneuvotteluPaiva, (value) => (ominaisuudet["ennakkoneuvottelu"] = toLocalDate(value)));
@@ -531,12 +532,15 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjekti, params: K
   return projekti;
 }
 
-export function applyAloitusKuulutusPaivaToVelho(projekti: ProjektiProjekti, kuulutusPaiva: string | undefined): ProjektiProjekti {
+export function applyAloitusKuulutusPaivaToVelho(
+  projekti: ProjektiProjektiMuokkaus,
+  kuulutusPaiva: string | undefined
+): ProjektiProjektiMuokkaus {
   setIfDefined(kuulutusPaiva, (value) => (projekti.ominaisuudet["aloituskuulutus"] = toLocalDate(value)));
   return projekti;
 }
 
-export function applySuunnittelunTilaToVelho(projekti: ProjektiProjekti, suunnitelmanTila: string): ProjektiProjekti {
+export function applySuunnittelunTilaToVelho(projekti: ProjektiProjektiMuokkaus, suunnitelmanTila: string): ProjektiProjektiMuokkaus {
   projekti.ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(suunnitelmanTila);
   return projekti;
 }

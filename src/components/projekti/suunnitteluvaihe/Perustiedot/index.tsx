@@ -48,6 +48,7 @@ import { getDefaultValuesForLokalisoituLinkkiLista } from "src/util/getDefaultVa
 import { FormAineisto } from "src/util/FormAineisto";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -288,6 +289,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     reset(defaultValues);
   }, [defaultValues, reset]);
 
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
+
   const saveDraft = useCallback(
     (formData: SuunnittelunPerustiedotFormValues) =>
       withLoadingSpinner(
@@ -310,16 +313,16 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             },
           };
           try {
-            await api.tallennaProjekti(tallennaProjektiInput);
+            const response = await api.tallennaProjekti(tallennaProjektiInput);
             await checkAineistoValmiit({ retries: 5 });
             await reloadProjekti?.();
-            showSuccessMessage("Tallennus onnistui");
+            showTallennaProjektiMessage(response);
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
         })()
       ),
-    [api, reloadProjekti, showSuccessMessage, checkAineistoValmiit, withLoadingSpinner]
+    [withLoadingSpinner, api, checkAineistoValmiit, reloadProjekti, showTallennaProjektiMessage]
   );
 
   const saveAfterPublish = useCallback(
