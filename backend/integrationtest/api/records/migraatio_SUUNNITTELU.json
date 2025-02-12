@@ -40,6 +40,7 @@
         "organisaatio": "CGI Suomi Oy",
         "sukunimi": "Hassu",
         "tyyppi": "PROJEKTIPAALLIKKO",
+        "puhelinnumero": "029123123",
         "yleinenYhteystieto": true
       },
       {
@@ -49,6 +50,7 @@
         "muokattavissa": false,
         "organisaatio": "CGI Suomi Oy",
         "sukunimi": "Hassu",
+        "puhelinnumero": "029123123",
         "tyyppi": "VARAHENKILO"
       }
     ],

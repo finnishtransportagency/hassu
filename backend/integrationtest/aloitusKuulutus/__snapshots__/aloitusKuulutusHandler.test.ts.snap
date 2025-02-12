@@ -190,7 +190,7 @@ Object {
           "__typename": "Yhteystieto",
           "etunimi": "A-tunnus1",
           "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123456789",
+          "puhelinnumero": "029123123",
           "sahkoposti": "mikko.haapamki@cgi.com",
           "sukunimi": "Hassu",
         },
@@ -474,7 +474,7 @@ Object {
           "__typename": "Yhteystieto",
           "etunimi": "A-tunnus1",
           "organisaatio": "CGI Suomi Oy",
-          "puhelinnumero": "123456789",
+          "puhelinnumero": "029123123",
           "sahkoposti": "mikko.haapamki@cgi.com",
           "sukunimi": "Hassu",
         },
@@ -791,7 +791,7 @@ Object {
           "RUOTSI": "/suunnittelusopimus/logo.png",
           "SUOMI": "/suunnittelusopimus/logo.png",
         },
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "029123123",
         "sukunimi": "Kuntalainen",
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
@@ -818,7 +818,7 @@ Object {
           "etunimi": "Kunta",
           "kunta": 536,
           "organisaatio": "Nokia",
-          "puhelinnumero": "123456789",
+          "puhelinnumero": "029123123",
           "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
           "sukunimi": "Kuntalainen",
         },
@@ -1001,7 +1001,7 @@ Object {
           "RUOTSI": "/suunnittelusopimus/logo.png",
           "SUOMI": "/suunnittelusopimus/logo.png",
         },
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "029123123",
         "sukunimi": "Kuntalainen",
       },
       "tila": "ODOTTAA_HYVAKSYNTAA",
@@ -1028,7 +1028,7 @@ Object {
           "etunimi": "Kunta",
           "kunta": 536,
           "organisaatio": "Nokia",
-          "puhelinnumero": "123456789",
+          "puhelinnumero": "029123123",
           "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
           "sukunimi": "Kuntalainen",
         },
@@ -1178,7 +1178,7 @@ Object {
           "RUOTSI": "/suunnittelusopimus/logo.png",
           "SUOMI": "/suunnittelusopimus/logo.png",
         },
-        "puhelinnumero": "123456789",
+        "puhelinnumero": "029123123",
         "sukunimi": "Kuntalainen",
       },
       "tila": "HYVAKSYTTY",
@@ -1205,7 +1205,7 @@ Object {
           "etunimi": "Kunta",
           "kunta": 536,
           "organisaatio": "Nokia",
-          "puhelinnumero": "123456789",
+          "puhelinnumero": "029123123",
           "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
           "sukunimi": "Kuntalainen",
         },
@@ -1337,7 +1337,7 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman la
 
 Lisätietoja antaa 
 
-Nokia, Kunta Kuntalainen, puh. 123456789, Kunta.Kuntalainen@vayla.fi
+Nokia, Kunta Kuntalainen, puh. 029123123, Kunta.Kuntalainen@vayla.fi
 
 Pirkanmaan ELY-keskus, Eemil Elylainen, puh. 123456789, eemil.elylainen@ely.fi
 
@@ -1359,7 +1359,7 @@ NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarb
 
 Mer information om planen 
 
-Nokia, Kunta Kuntalainen, tel. 123456789, Kunta.Kuntalainen@vayla.fi
+Nokia, Kunta Kuntalainen, tel. 029123123, Kunta.Kuntalainen@vayla.fi
 
 NTM-centralen i Birkaland, Eemil Elylainen, tel. 123456789, eemil.elylainen@ely.fi
 

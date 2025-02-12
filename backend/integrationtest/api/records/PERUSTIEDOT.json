@@ -15,7 +15,7 @@
         "kayttajatunnus": "A000112",
         "muokattavissa": false,
         "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
+        "puhelinnumero": "029123123",
         "sukunimi": "Hassu",
         "tyyppi": "PROJEKTIPAALLIKKO",
         "yleinenYhteystieto": true
@@ -26,7 +26,7 @@
         "kayttajatunnus": "A000114",
         "muokattavissa": false,
         "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
+        "puhelinnumero": "029123123",
         "sukunimi": "Hassu",
         "tyyppi": "VARAHENKILO",
         "yleinenYhteystieto": false
@@ -37,7 +37,7 @@
         "kayttajatunnus": "A000111",
         "muokattavissa": true,
         "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
+        "puhelinnumero": "029123123",
         "sukunimi": "Hassu"
       },
       {
@@ -46,7 +46,7 @@
         "kayttajatunnus": "LX581241",
         "muokattavissa": true,
         "organisaatio": "CGI Suomi Oy",
-        "puhelinnumero": "123",
+        "puhelinnumero": "029123123",
         "sukunimi": "Hassu",
         "yleinenYhteystieto": true
       }

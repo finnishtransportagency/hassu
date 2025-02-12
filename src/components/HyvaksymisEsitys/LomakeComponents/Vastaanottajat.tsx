@@ -31,7 +31,7 @@ export default function Vastaanottajat({ ennakkoneuvottelu }: Readonly<Hyvaksymi
       {fields.map((field, index) => (
         <Stack direction="row" key={field.id}>
           <TextFieldWithController
-            label="Sähköpostiosoite"
+            label="Sähköpostiosoite *"
             sx={{ minWidth: { md: "335px" } }}
             fullWidth={isMobile}
             controllerProps={{
