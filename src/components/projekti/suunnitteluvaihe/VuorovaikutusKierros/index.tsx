@@ -59,6 +59,9 @@ import { H2 } from "../../../Headings";
 import KierroksenPoistoButton from "../KierroksenPoistoButton";
 import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
 import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
+import capitalize from "lodash/capitalize";
+import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -110,7 +113,7 @@ function VuorovaikutusKierrosKutsu({
   const [openHyvaksy, setOpenHyvaksy] = useState(false);
   const [openVuorovaikutustilaisuus, setOpenVuorovaikutustilaisuus] = useState(false);
 
-  const { showSuccessMessage } = useSnackbars();
+  const { showSuccessMessage, showErrorMessage } = useSnackbars();
   const pdfFormRef = React.useRef<React.ElementRef<typeof PdfPreviewForm>>(null);
 
   const vuorovaikutusKierros: VuorovaikutusKierros = useMemo(() => projekti?.vuorovaikutusKierros ?? defaultVuorovaikutus, [projekti]);
@@ -230,19 +233,19 @@ function VuorovaikutusKierrosKutsu({
     [talletaTiedosto]
   );
 
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
+
   const saveDraft = useCallback(
     (formData: VuorovaikutusFormValues) =>
       withLoadingSpinner(
         (async () => {
           const convertedData = await preSubmitFunction(formData);
-          await api.tallennaProjekti(convertedData);
-          showSuccessMessage("Tallennus onnistui");
-          if (reloadProjekti) {
-            await reloadProjekti();
-          }
+          const response = await api.tallennaProjekti(convertedData);
+          showTallennaProjektiMessage(response);
+          await reloadProjekti?.();
         })()
       ),
-    [api, preSubmitFunction, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, preSubmitFunction, reloadProjekti, showTallennaProjektiMessage, withLoadingSpinner]
   );
 
   const saveAndPublish = useCallback(
@@ -272,9 +275,40 @@ function VuorovaikutusKierrosKutsu({
     return handleSubmit(saveAndPublish);
   }, [handleSubmit, saveAndPublish]);
 
+  const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
+  const aineistotReady = useIsProjektiReadyForTilaChange();
+
   const handleClickOpenHyvaksy = useCallback(() => {
-    setOpenHyvaksy(true);
-  }, []);
+    try {
+      const puutteet: string[] = [];
+      const kunnatPuuttuu = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
+      const vaihe = projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? Vaihe.NAHTAVILLAOLO : Vaihe.SUUNNITTELU;
+
+      if (!projektiHasPublishedAloituskuulutusJulkaisu(projekti)) {
+        puutteet.push("aloituskuulutusta ei ole julkaistu");
+      }
+      if (kunnatPuuttuu) {
+        puutteet.push("kuntavastaanottajat puuttuvat");
+      }
+      if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
+        puutteet.push("asianhallinta on vaarassa tilassa");
+      }
+      if (!aineistotReady) {
+        puutteet.push("aineistoja ei ole vielä käsitelty");
+      }
+      if (puutteet.length > 0) {
+        const muut = puutteet.slice(0, -1);
+        const viimeinen = puutteet[puutteet.length - 1];
+        const formattedPuutteet = muut.length ? capitalize(muut.join(", ") + " ja " + viimeinen) : capitalize(viimeinen);
+        showErrorMessage(formattedPuutteet);
+        return;
+      }
+
+      setOpenHyvaksy(true);
+    } catch (e) {
+      log.error(e);
+    }
+  }, [kuntavastaanottajat, projekti, aineistotReady, showErrorMessage]);
 
   const handleClickCloseHyvaksy = useCallback(() => {
     setOpenHyvaksy(false);
@@ -285,14 +319,6 @@ function VuorovaikutusKierrosKutsu({
   const esikatselePdf = pdfFormRef.current?.esikatselePdf;
 
   const projektiHenkilot: (Yhteystieto & { kayttajatunnus: string })[] = useProjektiHenkilot(projekti);
-
-  const kuntavastaanottajat = watch("vuorovaikutusKierros.ilmoituksenVastaanottajat.kunnat");
-
-  const julkaisuIsDisabled = useMemo(() => {
-    const kunnatPuuttuu = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
-    const vaihe = projekti.vuorovaikutusKierros?.palattuNahtavillaolosta ? Vaihe.NAHTAVILLAOLO : Vaihe.SUUNNITTELU;
-    return !projektiHasPublishedAloituskuulutusJulkaisu(projekti) || kunnatPuuttuu || isAsianhallintaVaarassaTilassa(projekti, vaihe);
-  }, [kuntavastaanottajat?.length, projekti]);
 
   const kielitiedot = projekti.kielitiedot;
   if (!kielitiedot) return <></>;
@@ -340,7 +366,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot",
+                          label: "Esikatsele tiedostot.",
                           inputLanguage: ensisijainenKieli,
                           kielitiedot,
                         })}
@@ -362,7 +388,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot",
+                          label: "Esikatsele tiedostot.",
                           inputLanguage: toissijainenKieli,
                           kielitiedot,
                         })}
@@ -397,13 +423,7 @@ function VuorovaikutusKierrosKutsu({
                   >
                     Tallenna luonnos
                   </Button>
-                  <Button
-                    style={{ whiteSpace: "nowrap" }}
-                    primary
-                    id="save_and_publish"
-                    onClick={handleSubmit(handleClickOpenHyvaksy)}
-                    disabled={julkaisuIsDisabled}
-                  >
+                  <Button style={{ whiteSpace: "nowrap" }} primary id="save_and_publish" onClick={handleSubmit(handleClickOpenHyvaksy)}>
                     {onTulevaisuudessa(julkaisupaiva) ? "Ajasta julkaistavaksi" : "Julkaise"}
                   </Button>
                 </Stack>

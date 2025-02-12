@@ -6,7 +6,7 @@ import { Stack } from "@mui/system";
 import { TilasiirtymaTyyppi } from "@services/api";
 import { GenericApiKuulutusJulkaisu } from "backend/src/projekti/projektiUtil";
 import { isInPast } from "common/util/dateUtils";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import useSnackbars from "src/hooks/useSnackbars";
 import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
@@ -14,6 +14,7 @@ import * as yup from "yup";
 import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaiheMap";
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
+import capitalize from "lodash/capitalize";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -39,25 +40,42 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
   }, []);
 
   const openHyvaksy = useCallback(async () => {
+    const puuttuuKuntatieto = isKuntatietoMissing(projekti);
+    const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
+    const asianhallintaVaaraTila = isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi]);
+
+    const puutteet: string[] = [];
+
+    if (puuttuuKuntatieto) {
+      puutteet.push("kuntatiedot puuttuvat");
+    }
+    if (kuulutusPaivaInPast) {
+      puutteet.push("kuulutuspäivämäärä on menneisyydessä");
+    }
+    if (asianhallintaVaaraTila) {
+      puutteet.push("asianhallinta on väärässä tilassa");
+    }
+
     const isValid = await yup
       .object()
       .shape({ kuulutusPaiva: paivamaara({ preventPast: true }) })
       .isValid(julkaisu);
 
-    if (isValid) {
-      setIsOpenHyvaksy(true);
-    } else {
-      showErrorMessage("Kuulutuspäivämärä on menneisyydessä tai virheellinen. Palauta kuulutus muokattavaksi ja korjaa päivämäärä.");
+    if (!isValid) {
+      puutteet.push("kuulutuspäivämäärä on virheellinen");
     }
-  }, [julkaisu, showErrorMessage]);
 
-  const hyvaksyIsDisabled = useMemo(() => {
-    const puuttuuKuntatieto = isKuntatietoMissing(projekti);
-    const kuulutusPaivaInPast = !!julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva);
-    return (
-      kuulutusPaivaInPast || puuttuuKuntatieto || isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])
-    );
-  }, [julkaisu.kuulutusPaiva, projekti, tilasiirtymaTyyppi]);
+    if (puutteet.length > 0) {
+      const muut = puutteet.slice(0, -1);
+      const viimeinen = puutteet[puutteet.length - 1];
+      const formattedPuutteet = muut.length ? capitalize(muut.join(", ") + " ja " + viimeinen) : capitalize(viimeinen);
+
+      showErrorMessage(formattedPuutteet);
+      return;
+    }
+
+    setIsOpenHyvaksy(true);
+  }, [julkaisu, showErrorMessage, projekti, tilasiirtymaTyyppi]);
 
   return (
     <>
@@ -66,7 +84,7 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
           <Button type="button" id="button_reject" onClick={openPalauta}>
             Palauta
           </Button>
-          <Button type="button" id="button_open_acceptance_dialog" disabled={hyvaksyIsDisabled} primary onClick={openHyvaksy}>
+          <Button type="button" id="button_open_acceptance_dialog" primary onClick={openHyvaksy}>
             {!!julkaisu.aineistoMuokkaus ? "Hyväksy" : "Hyväksy ja lähetä"}
           </Button>
         </Stack>

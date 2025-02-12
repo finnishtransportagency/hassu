@@ -8,7 +8,7 @@ import {
 } from "../../database/model";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
-import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { translate } from "../../util/localization";
 import { formatDate } from "../asiakirjaUtil";
 import { Kieli } from "hassu-common/graphql/apiModel";

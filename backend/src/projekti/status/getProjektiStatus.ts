@@ -17,7 +17,6 @@ import { kayttoOikeudetSchema } from "../../../../src/schemas/kayttoOikeudet";
 import { perustiedotValidationSchema } from "../../../../src/schemas/perustiedot";
 import { ValidationError } from "yup";
 import { adaptAsianhallinta } from "../adapter/adaptAsianhallinta";
-import { adaptDBVaylaUsertoAPIProjektiKayttaja } from "../adapter/adaptToAPI";
 import { log } from "../../logger";
 
 export const HYVAKSYMISPAATOS_DURATION: DateAddTuple = [1, "year"];
@@ -214,13 +213,7 @@ function getJulkaisu<A extends Pick<GenericDbKuulutusJulkaisu, "tila" | "kuulutu
 
 function projektiHenkiloissaOnOngelma(projekti: ProjektiForGetStatus): boolean {
   try {
-    kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet, {
-      context: {
-        projekti: {
-          kayttoOikeudet: adaptDBVaylaUsertoAPIProjektiKayttaja(projekti.kayttoOikeudet),
-        },
-      },
-    });
+    kayttoOikeudetSchema.validateSync(projekti.kayttoOikeudet);
   } catch (e) {
     if (e instanceof ValidationError) {
       return true;

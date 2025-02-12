@@ -41,7 +41,8 @@
         "organisaatio": "CGI Suomi Oy",
         "sukunimi": "Hassu",
         "tyyppi": "PROJEKTIPAALLIKKO",
-        "yleinenYhteystieto": true
+        "yleinenYhteystieto": true,
+        "puhelinnumero": "029123123"
       },
       {
         "email": "mikko.haapamaki02@cgi.com",

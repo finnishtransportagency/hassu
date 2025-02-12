@@ -51,7 +51,7 @@ function SnackbarProvider({ children }: Readonly<Props>) {
     };
 
     const showErrorMessage = (msg: string) => {
-      showMessage(msg, "error", 10000);
+      showMessage(msg, "error", null);
     };
 
     const showInfoMessage = (msg: string) => {

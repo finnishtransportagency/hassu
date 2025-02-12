@@ -1,5 +1,5 @@
 import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
-import { KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -22,7 +22,7 @@ import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
-import { organisaatioIsEly } from "../../util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
@@ -207,11 +207,7 @@ export class CommonKutsuAdapter {
       throw new Error(`Projektipäällikkö tai sen organisaatiotieto puuttuu`);
     }
 
-    const isElyOrganisaatio = !!organisaatioIsEly(projektiPaallikko.organisaatio) && !!projektiPaallikko.elyOrganisaatio;
-
-    return isElyOrganisaatio
-      ? translate(`viranomainen.${projektiPaallikko.elyOrganisaatio}`, this.kieli)
-      : translate("viranomainen.VAYLAVIRASTO", this.kieli);
+    return this.getLocalizedOrganization(projektiPaallikko.organisaatio, projektiPaallikko.elyOrganisaatio, undefined);
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: KaannettavaKieli): string {
@@ -517,11 +513,23 @@ export class CommonKutsuAdapter {
     titteli,
     elyOrganisaatio,
   }: Yhteystieto): LokalisoituYhteystieto {
+    return {
+      etunimi: formatProperNoun(etunimi),
+      sukunimi: formatProperNoun(sukunimi),
+      organisaatio: this.getLocalizedOrganization(organisaatio, elyOrganisaatio, kunta),
+      puhelinnumero,
+      sahkoposti,
+      titteli,
+    };
+  }
+
+  private getLocalizedOrganization(organisaatio: string | undefined, elyOrganisaatio: ELY | undefined, kunta: number | undefined) {
     let organisaatioTeksti = organisaatio ?? "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);
-    } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {
-      const kaannos = translate(`viranomainen.${elyOrganisaatio}`, this.kieli);
+    } else if (organisaatioIsEly(organisaatio)) {
+      const elyTranslateKey = elyOrganisaatio ? `viranomainen.${elyOrganisaatio}` : "ely-keskus";
+      const kaannos = translate(elyTranslateKey, this.kieli);
       if (kaannos) {
         organisaatioTeksti = kaannos;
       }
@@ -532,15 +540,7 @@ export class CommonKutsuAdapter {
         organisaatioTeksti = kaannos;
       }
     }
-
-    return {
-      etunimi: formatProperNoun(etunimi),
-      sukunimi: formatProperNoun(sukunimi),
-      organisaatio: organisaatioTeksti,
-      puhelinnumero,
-      sahkoposti,
-      titteli,
-    };
+    return organisaatioTeksti;
   }
 
   get localizedPuh(): string {
