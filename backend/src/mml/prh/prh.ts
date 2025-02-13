@@ -83,12 +83,14 @@ function determineYhteystiedot(prhResponse: PrhResponse): Omistaja["yhteystiedot
   const hasOnlyForeignPostalAddress =
     !!prhResponse.ulkomaanosoite && !prhResponse.postiosoite && !prhResponse.postinumero && !prhResponse.toimipaikka && !prhResponse.maa;
   if (hasOnlyForeignPostalAddress) {
-    const maa = prhResponse.ulkomaanosoite?.maa;
-    const osoite = prhResponse.ulkomaanosoite?.osoite;
-    const maakoodi = maa ? lookup.countries.find((country) => country.country.toLowerCase() === maa.toLowerCase())?.iso2 : undefined;
+    const ulkomaa = prhResponse.ulkomaanosoite?.maa;
+    const ulkomaanOsoite = prhResponse.ulkomaanosoite?.osoite;
+    const maakoodi = ulkomaa
+      ? lookup.countries.find((country) => country.country.toLowerCase() === ulkomaa.toLowerCase())?.iso2
+      : undefined;
 
     // Jollei maatietoa saada muutettua maakoodiksi, lisätään se osoitteen perään
-    const jakeluosoite = maakoodi ? osoite : [osoite, maa].filter((str) => !!str).join(" ");
+    const jakeluosoite = maakoodi ? ulkomaanOsoite : [ulkomaanOsoite, ulkomaa].filter((str) => !!str).join(" ");
 
     return { jakeluosoite, maakoodi, paikkakunta: undefined, postinumero: undefined };
   }

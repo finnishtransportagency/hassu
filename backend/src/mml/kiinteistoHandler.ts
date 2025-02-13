@@ -461,17 +461,17 @@ async function updatePRHAddress(yhteystiedot: MmlKiinteisto[], uid: string) {
   const ytunnus = [...new Set(omistajat.map((o) => o.ytunnus!)).values()];
   const resp = await client.haeYritykset(ytunnus, uid);
   log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
-  resp.forEach((c) => {
+  resp.forEach((prhOmistaja) => {
     omistajat
-      .filter((o) => o.ytunnus === c.ytunnus && c.ytunnus !== undefined)
+      .filter((o) => o.ytunnus === prhOmistaja.ytunnus && prhOmistaja.ytunnus !== undefined)
       .forEach((o) => {
-        o.nimi = c.nimi ?? o.nimi;
-        if (c.yhteystiedot) {
+        o.nimi = prhOmistaja.nimi ?? o.nimi;
+        if (prhOmistaja.yhteystiedot) {
           o.yhteystiedot = {
-            postinumero: c.yhteystiedot.postinumero,
-            jakeluosoite: c.yhteystiedot.jakeluosoite,
-            paikkakunta: c.yhteystiedot.paikkakunta,
-            maakoodi: c.yhteystiedot.maakoodi,
+            postinumero: prhOmistaja.yhteystiedot.postinumero,
+            jakeluosoite: prhOmistaja.yhteystiedot.jakeluosoite,
+            paikkakunta: prhOmistaja.yhteystiedot.paikkakunta,
+            maakoodi: prhOmistaja.yhteystiedot.maakoodi,
           };
         }
       });
