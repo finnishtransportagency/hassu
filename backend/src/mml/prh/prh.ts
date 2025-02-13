@@ -119,6 +119,6 @@ function determineYhteystiedot(prhResponse: PrhResponse): Omistaja["yhteystiedot
   };
 }
 
-function convertCountryNameToIso2Code(ulkomaa: string | undefined) {
-  return ulkomaa ? lookup.countries.find((country) => country.country.toLowerCase() === ulkomaa.toLowerCase())?.iso2 : undefined;
+function convertCountryNameToIso2Code(maanimi: string | undefined) {
+  return maanimi ? lookup.countries.find((country) => country.country.toLowerCase() === maanimi.toLowerCase())?.iso2 : undefined;
 }
