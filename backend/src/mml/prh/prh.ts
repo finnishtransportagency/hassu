@@ -70,7 +70,20 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
           return omistaja;
         })
     );
-    omistajat.push(...(await Promise.all(promises)));
+
+    const allReponseOmistajas = await Promise.allSettled(promises);
+    const succeededOmistajas = allReponseOmistajas
+      .filter((promiseResult): promiseResult is PromiseFulfilledResult<Omistaja> => promiseResult.status === "fulfilled")
+      .map((response) => response.value);
+    const rejectedReasons = allReponseOmistajas
+      .filter((promiseResult): promiseResult is PromiseRejectedResult => promiseResult.status === "rejected")
+      .map((rejectedOmistaja) => rejectedOmistaja.reason);
+
+    if (rejectedReasons.length) {
+      auditLog.info("PRH tietojen haku epäonnistui", { uid, rejectedReasons });
+    }
+
+    omistajat.push(...succeededOmistajas);
   }
   return omistajat;
 }
@@ -83,11 +96,9 @@ function determineYhteystiedot(prhResponse: PrhResponse): Omistaja["yhteystiedot
   const hasOnlyForeignPostalAddress =
     !!prhResponse.ulkomaanosoite && !prhResponse.postiosoite && !prhResponse.postinumero && !prhResponse.toimipaikka && !prhResponse.maa;
   if (hasOnlyForeignPostalAddress) {
-    const ulkomaa = prhResponse.ulkomaanosoite?.maa;
-    const ulkomaanOsoite = prhResponse.ulkomaanosoite?.osoite;
-    const maakoodi = ulkomaa
-      ? lookup.countries.find((country) => country.country.toLowerCase() === ulkomaa.toLowerCase())?.iso2
-      : undefined;
+    const ulkomaa = trim(prhResponse.ulkomaanosoite?.maa);
+    const ulkomaanOsoite = trim(prhResponse.ulkomaanosoite?.osoite);
+    const maakoodi = convertCountryNameToIso2Code(ulkomaa);
 
     // Jollei maatietoa saada muutettua maakoodiksi, lisätään se osoitteen perään
     const jakeluosoite = maakoodi ? ulkomaanOsoite : [ulkomaanOsoite, ulkomaa].filter((str) => !!str).join(" ");
@@ -95,10 +106,19 @@ function determineYhteystiedot(prhResponse: PrhResponse): Omistaja["yhteystiedot
     return { jakeluosoite, maakoodi, paikkakunta: undefined, postinumero: undefined };
   }
 
+  // Taitaa maa-kenttä palauttaa maatiedon tekstinä esim. "FINLAND" tai "UNITED STATES" kuten ulkomaan osoitteeseen
+  // Tämä on vain olettamus, koska en ole löytänyt yritystä, jolle ei tulisi tyhjä merkkijono tähän kenttään
+  // Muunnetaan iso2-koodiksi, defaultataan suomeksi
+  const maakoodi = convertCountryNameToIso2Code(trim(prhResponse.maa)) ?? "FI";
+
   return {
     jakeluosoite: trim(prhResponse.postiosoite),
     postinumero: trim(prhResponse.postinumero),
     paikkakunta: trim(prhResponse.toimipaikka),
-    maakoodi: trim(prhResponse.maa) ?? "FI",
+    maakoodi,
   };
+}
+
+function convertCountryNameToIso2Code(ulkomaa: string | undefined) {
+  return ulkomaa ? lookup.countries.find((country) => country.country.toLowerCase() === ulkomaa.toLowerCase())?.iso2 : undefined;
 }
