@@ -51,7 +51,7 @@ const TIMEOUT = 120000;
 const MAX = 100;
 const CONCURRENT_MAX = 10;
 
-export function getMmlClient(options: MmlOptions): MmlClient {
+export function createMmlClient(options: MmlOptions): MmlClient {
   return {
     haeLainhuutotiedot: async (kiinteistotunnukset: string[], uid: string, debug = false) => {
       const all: MmlKiinteisto[] = [];
@@ -159,6 +159,7 @@ export function getMmlClient(options: MmlOptions): MmlClient {
                             etunimet: tiedot["y:etunimet"] ? tiedot["y:etunimet"][0] : undefined,
                             sukunimi: tiedot["y:sukunimi"] ? tiedot["y:sukunimi"][0] : undefined,
                             nimi: tiedot["y:nimi"] ? tiedot["y:nimi"][0] : undefined,
+                            ytunnus: tiedot["y:ytunnus"] ? tiedot["y:ytunnus"][0] : undefined,
                             yhteystiedot: {
                               jakeluosoite: osoite && osoite["muti:jakeluosoite"] ? osoite["muti:jakeluosoite"][0] : undefined,
                               paikkakunta: osoite && osoite["muti:paikkakunta"] ? osoite["muti:paikkakunta"][0] : undefined,
