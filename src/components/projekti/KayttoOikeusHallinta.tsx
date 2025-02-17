@@ -468,14 +468,7 @@ const UserFields = ({
           </IconButton>
         )}
       </Stack>
-      {kayttaja?.poistunut && (
-        <RedParagraph>
-          Henkilöä ei löytynyt käyttäjähallinnasta. Henkilön tili voi olla poistunut käytöstä ja henkilö ei siten pääse enää järjestelmään
-          muokkaamaan projektia.
-          {poistettavissa && " Jollei henkilön yhteystietoja enää tarvita projektissa, projekti voi poistaa ne."}
-          {" Ota tarvittaessa yhteyttä Väylävirastoon tuki.vayliensuunnittelu@vayla.fi."}
-        </RedParagraph>
-      )}
+      {kayttaja?.poistunut && <KayttajaPoistunutText muokattavissa={muokattavissa} poistettavissa={poistettavissa} />}
       {!isProjektiPaallikko && kayttaja?.uid && isAorLTunnus(kayttaja?.uid) && (
         <Controller
           name={`kayttoOikeudet.${index}.tyyppi`}
@@ -557,5 +550,19 @@ const UserFields = ({
 };
 
 const RedParagraph = styled("p")((theme) => ({ color: theme.theme.palette.error.main }));
+
+function KayttajaPoistunutText(props: { muokattavissa: boolean; poistettavissa: boolean }) {
+  const sentences = [
+    "Henkilöä ei löytynyt käyttäjähallinnasta.",
+    "Henkilön tili voi olla poistunut käytöstä ja henkilö ei siten pääse enää järjestelmään muokkaamaan projektia.",
+    !props.muokattavissa && "Tämä henkilö on vaihdettavissa Projektivelhosta.",
+    props.poistettavissa && "Jollei henkilön yhteystietoja enää tarvita projektissa, projekti voi poistaa ne.",
+    "Ota tarvittaessa yhteyttä tuki.vayliensuunnittelu@vayla.fi.",
+  ];
+
+  const message = sentences.filter((str): str is string => !!str).join(" ");
+
+  return <RedParagraph>{message}</RedParagraph>;
+}
 
 export default KayttoOikeusHallinta;
