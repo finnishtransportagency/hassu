@@ -3,7 +3,7 @@ import HassuAccordion from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
-import { NahtavillaoloVaihe } from "@services/api";
+import { AineistoTila, NahtavillaoloVaihe } from "@services/api";
 import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
 import React, { Key, useCallback, useMemo, useState } from "react";
@@ -47,16 +47,21 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
   );
 
   const poistaAineistot = useCallback(() => {
-    setValue(
-      "aineistoNahtavilla",
-      {},
-      {
-        shouldDirty: true,
-      }
+    const nykyisetAineistot = getValues("aineistoNahtavilla");
+    const nykyisetPoistetut = getValues("poistetutAineistoNahtavilla") || [];
+    const kaikkiAineistot = Object.entries(nykyisetAineistot).flatMap(([kategoriaId, aineistot]) =>
+      aineistot.map((aineisto) => ({
+        ...aineisto,
+        kategoriaId,
+        tila: AineistoTila.ODOTTAA_POISTOA,
+        jarjestys: aineisto.jarjestys || 0,
+      }))
     );
+    setValue("poistetutAineistoNahtavilla", [...nykyisetPoistetut, ...kaikkiAineistot], { shouldDirty: true });
+    setValue("aineistoNahtavilla", {}, { shouldDirty: true });
     setAineistojenPoistoDialogOpen(false);
     setExpandedAineisto([]);
-  }, [setValue, setAineistojenPoistoDialogOpen, setExpandedAineisto]);
+  }, [getValues, setValue, setAineistojenPoistoDialogOpen, setExpandedAineisto]);
 
   return (
     <Section>
