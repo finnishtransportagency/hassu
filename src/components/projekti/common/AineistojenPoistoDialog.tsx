@@ -9,14 +9,14 @@ interface Props {
   onAccept: () => void;
 }
 
-export default function VarmistusDialogi({ dialogiOnAuki, onClose, onAccept }: Props): ReactElement {
+export default function AineistojenPoistoDialog({ dialogiOnAuki, onClose, onAccept }: Props): ReactElement {
   return (
-    <HassuDialog open={dialogiOnAuki} title="Vahvista aineistolinkin poistaminen" onClose={onClose} maxWidth="sm">
+    <HassuDialog open={dialogiOnAuki} title="Vahvista kaikkien aineistojen poistaminen" onClose={onClose} maxWidth="sm">
       <DialogContent>
-        <p>Olet poistamassa lausuntopyyntöaineistoon liitettävän linkin ja sen sisällön. Haluatko varmasti poistaa linkin ja sisällön?</p>
+        <p>Olet poistamassa kaikki Velhosta tuodut aineistot. Haluatko varmasti poistaa kaikki?</p>
       </DialogContent>
       <DialogActions>
-        <Button primary type="button" id="accept_and_publish_vuorovaikutus" onClick={onAccept}>
+        <Button primary type="button" id="poista-kaikki-aineistot" onClick={onAccept}>
           Poista
         </Button>
         <Button type="button" onClick={onClose}>
