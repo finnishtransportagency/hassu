@@ -8,16 +8,19 @@ import {
   BehaviorOptions,
   CachePolicy,
   CfnPublicKey,
+  Distribution,
   KeyGroup,
   LambdaEdgeEventType,
   OriginAccessIdentity,
+  OriginProtocolPolicy,
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
+  SecurityPolicyProtocol,
   ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
-import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
+import { HttpOrigin, LoadBalancerV2Origin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
 import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
@@ -41,6 +44,19 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import { BaseConfig } from "../../common/BaseConfig";
 import { IHostedZone } from "aws-cdk-lib/aws-route53";
+import { IVpc, Peer, Port, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import assert from "assert";
+import { ApplicationLoadBalancer, ApplicationProtocol, ApplicationTargetGroup, Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import {
+  Cluster,
+  ContainerImage,
+  CpuArchitecture,
+  FargateService,
+  FargateTaskDefinition,
+  LogDrivers,
+  OperatingSystemFamily,
+} from "aws-cdk-lib/aws-ecs";
+import { Repository } from "aws-cdk-lib/aws-ecr";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
@@ -58,6 +74,7 @@ interface HassuFrontendStackProps {
   lyhytOsoiteTable: Table;
   eventQueue: Queue;
   asianhallintaQueue: Queue;
+  nextJsImageTag: string;
 }
 
 const REGION = "us-east-1";
@@ -218,7 +235,7 @@ export class HassuFrontendStack extends Stack {
       };
     }
 
-    let webAclId;
+    let webAclId: string | undefined;
     if (Config.getEnvConfig().waf) {
       webAclId = Fn.importValue("frontendWAFArn");
     }
@@ -251,7 +268,10 @@ export class HassuFrontendStack extends Stack {
       },
       invalidationPaths: ["/*"],
     });
-    this.configureNextJSAWSPermissions(nextJSLambdaEdge);
+
+    // this.newProcess(config, behaviours, logBucket, webAclId);
+
+    this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
 
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
@@ -297,12 +317,118 @@ export class HassuFrontendStack extends Stack {
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
+  private async getVpc(config: Config): Promise<IVpc> {
+    const vpcName = await config.getParameterNow("HassuVpcName");
+    assert(vpcName, "HassuVpcName SSM-parametri pitää olla olemassa");
+    const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
+    return vpc;
+  }
+
+  private async newProcess(
+    config: Config,
+    behaviours: Record<string, cloudfront.BehaviorOptions>,
+    logBucket: Bucket,
+    webAclId: string | undefined
+  ): Promise<void> {
+    const vpc = await this.getVpc(config);
+
+    const repository = Repository.fromRepositoryName(this, "EcrRepo", "hassu-nextjs");
+
+    const ecsTask = new FargateTaskDefinition(this, "ecsTask", {
+      memoryLimitMiB: 2048,
+      cpu: 1024,
+      runtimePlatform: {
+        operatingSystemFamily: OperatingSystemFamily.LINUX,
+        cpuArchitecture: CpuArchitecture.X86_64,
+      },
+    });
+
+    ecsTask.addContainer("NextJsContainer", {
+      image: ContainerImage.fromEcrRepository(repository, this.props.nextJsImageTag),
+      containerName: "nextJsApp",
+      portMappings: [{ containerPort: 3000, hostPort: 3000 }],
+      logging: LogDrivers.awsLogs({
+        streamPrefix: "nextJsApp",
+      }),
+    });
+
+    const taskSecurityGroup = new SecurityGroup(this, "taskSecurityGroups", {
+      vpc,
+    });
+    const cluster = new Cluster(this, "Cluster", {
+      vpc,
+      clusterName: "nextJsApp",
+    });
+
+    const fargateService = new FargateService(this, "nextJsAppFargateService", {
+      cluster,
+      taskDefinition: ecsTask,
+      assignPublicIp: true,
+      desiredCount: 1,
+      vpcSubnets: { subnetType: SubnetType.PUBLIC },
+      securityGroups: [taskSecurityGroup],
+    });
+
+    const fargateTargetGroup = new ApplicationTargetGroup(this, "nextJsAppTargetGroup", {
+      vpc,
+      port: 3000,
+      protocol: ApplicationProtocol.HTTP,
+      targets: [fargateService],
+      healthCheck: {
+        path: "/",
+        protocol: Protocol.HTTP,
+        port: "3000",
+      },
+    });
+
+    const applicationLoadBalancerSecurityGroup = new SecurityGroup(this, "applicationLoadBalancerSecurityGroup", {
+      vpc,
+      description: "Security Group for ALB",
+    });
+
+    applicationLoadBalancerSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(80));
+
+    const applicationLoadBalancer = new ApplicationLoadBalancer(this, "applicationLoadBalancer", {
+      vpc,
+      vpcSubnets: { subnetType: SubnetType.PUBLIC },
+      internetFacing: true,
+      securityGroup: applicationLoadBalancerSecurityGroup,
+    });
+
+    const cfnDistribution = new Distribution(this, "CloudfrontDistribution", {
+      minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021,
+      defaultBehavior: {
+        origin: new LoadBalancerV2Origin(applicationLoadBalancer, {
+          httpPort: 80,
+          protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+          originId: "default-origin",
+        }),
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        cachePolicy: CachePolicy.CACHING_DISABLED,
+        allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+        originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      },
+      additionalBehaviors: behaviours,
+      priceClass: PriceClass.PRICE_CLASS_100,
+      logBucket,
+      webAclId,
+      errorResponses: this.getErrorResponsesForCloudFront(),
+    });
+
+    new CfnOutput(this, "CfnPrivateDNSName", {
+      value: cfnDistribution.distributionDomainName || "",
+    });
+    new CfnOutput(this, "CfnDistributionId", {
+      value: cfnDistribution.distributionId || "",
+    });
+  }
+
   private getErrorResponsesForCloudFront() {
     return [{ responseHttpStatus: 404, ttl: Duration.seconds(10), httpStatus: 404, responsePagePath: "/404" }];
   }
 
-  private configureNextJSAWSPermissions(nextJSLambdaEdge: NextJSLambdaEdge) {
-    nextJSLambdaEdge.edgeLambdaRole.addToPolicy(
+  private configureNextJSAWSPermissions(lambdaRole: Role) {
+    lambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         actions: ["logs:*", "xray:*", "ssm:GetParameter"],
@@ -310,13 +436,14 @@ export class HassuFrontendStack extends Stack {
       })
     );
 
-    nextJSLambdaEdge.edgeLambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
+    lambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
 
-    this.props.internalBucket.grantReadWrite(nextJSLambdaEdge.edgeLambdaRole);
+    this.props.internalBucket.grantReadWrite(lambdaRole);
   }
 
   private static configureNextJSRequestHeaders(nextJSLambdaEdge: NextJSLambdaEdge) {
     // Enable forwarding the headers to the nextjs API lambda to get the authorization header
+    // eslint-disable-next-line
     const additionalBehaviors = (nextJSLambdaEdge.distribution as any).additionalBehaviors;
     for (const additionalBehavior of additionalBehaviors) {
       if (additionalBehavior.props.pathPattern == "api/*") {
