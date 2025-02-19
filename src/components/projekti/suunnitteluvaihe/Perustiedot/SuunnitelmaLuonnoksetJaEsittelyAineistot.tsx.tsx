@@ -3,7 +3,7 @@ import { AineistotSaavutettavuusOhje } from "@components/projekti/common/Aineist
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import { useProjekti } from "src/hooks/useProjekti";
-import { Key, useState } from "react";
+import { Key, useCallback, useState } from "react";
 import { SuunnittelunPerustiedotFormValues } from ".";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import find from "lodash/find";
@@ -15,6 +15,9 @@ import AineistojenValitseminenDialog from "@components/projekti/common/Aineistoj
 import { uuid } from "common/util/uuid";
 import { H2, H3 } from "../../../Headings";
 import { FormAineisto } from "src/util/FormAineisto";
+import { AineistoTila } from "@services/api";
+import { Stack } from "@mui/system";
+import AineistojenPoistoDialog from "@components/projekti/common/AineistojenPoistoDialog";
 
 export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
   const { data: projekti } = useProjekti();
@@ -22,8 +25,10 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
   const [expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset] = useState<Key[]>([]);
   const [esittelyAineistoDialogOpen, setEsittelyAineistoDialogOpen] = useState(false);
   const [suunnitelmaLuonnoksetDialogOpen, setSuunnitelmaLuonnoksetDialogOpen] = useState(false);
+  const [aineistojenPoistoDialogOpen, setAineistojenPoistoDialogOpen] = useState(false);
+  const [aineistojenPoistoDialogiTyyppi, setAineistojenPoistoDialogiTyyppi] = useState<AineistoTyyppi | null>(null);
 
-  const { control, watch, setValue } = useFormContext<SuunnittelunPerustiedotFormValues>();
+  const { control, watch, setValue, getValues } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
   const esittelyaineistotFieldArray = useFieldArray({ name: "vuorovaikutusKierros.esittelyaineistot", control });
   const poistetutEsittelyaineistotFieldArray = useFieldArray({ name: "vuorovaikutusKierros.poistetutEsittelyaineistot", control });
@@ -34,6 +39,46 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
+
+  type AineistoTyyppi = "esittelyaineistot" | "suunnitelmaluonnokset";
+
+  const poistaAineistot = useCallback(
+    (tyyppi: AineistoTyyppi) => {
+      if (tyyppi === "esittelyaineistot") {
+        const nykyisetEsittelyaineistot = getValues("vuorovaikutusKierros.esittelyaineistot") || [];
+        const nykyisetPoistetut = getValues("vuorovaikutusKierros.poistetutEsittelyaineistot") || [];
+
+        const poistetutAineistot = Array.isArray(nykyisetEsittelyaineistot)
+          ? nykyisetEsittelyaineistot.map((aineisto) => ({
+              ...aineisto,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              jarjestys: aineisto.jarjestys || 0,
+            }))
+          : [];
+        setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", [...nykyisetPoistetut, ...poistetutAineistot], { shouldDirty: true });
+        setValue("vuorovaikutusKierros.esittelyaineistot", [], { shouldDirty: true });
+        setExpandedEsittelyAineisto([]);
+      } else if (tyyppi === "suunnitelmaluonnokset") {
+        const nykyisetSuunnitelmaluonnokset = getValues("vuorovaikutusKierros.suunnitelmaluonnokset") || [];
+        const nykyisetPoistetutSuunnitelmat = getValues("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset") || [];
+
+        const poistetutSuunnitelmat = Array.isArray(nykyisetSuunnitelmaluonnokset)
+          ? nykyisetSuunnitelmaluonnokset.map((aineisto) => ({
+              ...aineisto,
+              tila: AineistoTila.ODOTTAA_POISTOA,
+              jarjestys: aineisto.jarjestys || 0,
+            }))
+          : [];
+        setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", [...nykyisetPoistetutSuunnitelmat, ...poistetutSuunnitelmat], {
+          shouldDirty: true,
+        });
+        setValue("vuorovaikutusKierros.suunnitelmaluonnokset", [], { shouldDirty: true });
+        setExpandedSuunnitelmaLuonnokset([]);
+      }
+      setAineistojenPoistoDialogOpen(false);
+    },
+    [getValues, setValue, setExpandedEsittelyAineisto, setExpandedSuunnitelmaLuonnokset]
+  );
 
   return (
     <Section noDivider>
@@ -91,9 +136,23 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
             },
           ]}
         />
-        <Button type="button" id="select_esittelyaineistot_button" onClick={() => setEsittelyAineistoDialogOpen(true)}>
-          Tuo Aineistoja
-        </Button>
+        <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
+          <Button type="button" id="select_esittelyaineistot_button" onClick={() => setEsittelyAineistoDialogOpen(true)}>
+            Tuo Aineistoja
+          </Button>
+          <Button
+            type="button"
+            id={"poista_kaikki_esittelyaineistot_button"}
+            className="pl-12 pr-12 pt-1 pb-1"
+            style={{ color: "orangered", borderColor: "orangered" }}
+            onClick={() => {
+              setAineistojenPoistoDialogiTyyppi("esittelyaineistot");
+              setAineistojenPoistoDialogOpen(true);
+            }}
+          >
+            Poista kaikki
+          </Button>
+        </Stack>
         <HassuAccordion
           expandedstate={[expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset]}
           items={[
@@ -117,9 +176,23 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
             },
           ]}
         />
-        <Button type="button" id="select_suunnitelmaluonnokset_button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
-          Tuo Aineistoja
-        </Button>
+        <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
+          <Button type="button" id="select_suunnitelmaluonnokset_button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
+            Tuo Aineistoja
+          </Button>
+          <Button
+            type="button"
+            id={"poista_kaikki_suunnitelmaluonnokset_button"}
+            className="pl-12 pr-12 pt-1 pb-1"
+            style={{ color: "orangered", borderColor: "orangered" }}
+            onClick={() => {
+              setAineistojenPoistoDialogiTyyppi("suunnitelmaluonnokset");
+              setAineistojenPoistoDialogOpen(true);
+            }}
+          >
+            Poista kaikki
+          </Button>
+        </Stack>
       </ContentSpacer>
       <AineistojenValitseminenDialog
         open={esittelyAineistoDialogOpen}
@@ -199,6 +272,16 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
             );
           setValue("vuorovaikutusKierros.esittelyaineistot", lisatytEa, { shouldDirty: true });
           setValue("vuorovaikutusKierros.suunnitelmaluonnokset", lisatytSl, { shouldDirty: true });
+        }}
+      />
+      <AineistojenPoistoDialog
+        dialogiOnAuki={!!aineistojenPoistoDialogOpen}
+        onClose={() => setAineistojenPoistoDialogOpen(false)}
+        onAccept={() => {
+          if (aineistojenPoistoDialogiTyyppi) {
+            poistaAineistot(aineistojenPoistoDialogiTyyppi);
+          }
+          setAineistojenPoistoDialogOpen(false);
         }}
       />
     </Section>
