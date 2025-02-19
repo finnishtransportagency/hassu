@@ -101,6 +101,57 @@ class MuistuttajaDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
+  async vaihdaProjektinKaytossaolevatMuistuttajat(oid: string, lisattavatMuistuttajat: DBMuistuttaja[]): Promise<void> {
+    try {
+      const items = await this.haeProjektinKaytossaolevatMuistuttajat(oid);
+      if (items.length) {
+        log.info("Otetaan käytöstä " + items.length + " omistaja(a)");
+        const transactItems = items.map<TransactionItem>((item) => ({
+          Update: {
+            ExpressionAttributeNames: {
+              "#kaytossa": "kaytossa",
+            },
+            ExpressionAttributeValues: {
+              ":kaytossa": false,
+            },
+            UpdateExpression: "set #kaytossa = :kaytossa",
+            TableName: this.tableName,
+            Key: {
+              id: item.id,
+              oid: item.oid,
+            },
+          },
+        }));
+
+        const oldMuistuttajaChunks = chunkArray(transactItems, 25);
+
+        for (const chunk of oldMuistuttajaChunks) {
+          const transactCommand = new TransactWriteCommand({
+            TransactItems: chunk,
+          });
+          await getDynamoDBDocumentClient().send(transactCommand);
+        }
+      }
+      log.info("Lisätään " + lisattavatMuistuttajat.length + " muistuttaja(a)");
+      const newTransactItems = lisattavatMuistuttajat.map<TransactionItem>((item) => ({
+        Put: {
+          TableName: this.tableName,
+          Item: item,
+        },
+      }));
+      const newMuistuttajaChunks = chunkArray(newTransactItems, 25);
+      for (const chunk of newMuistuttajaChunks) {
+        const transactCommand = new TransactWriteCommand({
+          TransactItems: chunk,
+        });
+        await getDynamoDBDocumentClient().send(transactCommand);
+      }
+    } catch (error) {
+      log.error("Projektin muistuttajien korvaaminen epäonnistui");
+      throw error;
+    }
+  }
+
   async scanMuistuttajat(startKey?: MuistuttajaKey): Promise<MuistuttajaScanResult> {
     try {
       const params = new ScanCommand({

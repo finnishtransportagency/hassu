@@ -25,6 +25,9 @@ import {
   HYVAKSYMISPAATOS_VAIHE_PAATTYY,
   JATKOPAATOS1_VAIHE_PAATTYY,
   JATKOPAATOS2_VAIHE_PAATTYY,
+  HYVAKSYMISPAATOS_VAIHE_EPAAKTIVOI,
+  JATKOPAATOS2_VAIHE_EPAAKTIVOI,
+  JATKOPAATOS_VAIHE_EPAAKTIVOI,
   PublishOrExpireEventType,
 } from "./projektiScheduleManager";
 import { lahetaSuomiFiViestit } from "../suomifi/suomifiHandler";
@@ -38,6 +41,8 @@ import {
 } from "../util/lausuntoPyyntoUtil";
 import { velho } from "../velho/velhoClient";
 import { linkHyvaksymisPaatos, linkJatkoPaatos1, linkJatkoPaatos2 } from "hassu-common/links";
+import { omistajaDatabase } from "../database/omistajaDatabase";
+import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -473,6 +478,14 @@ export const handlerFactory = (event: SQSEvent) => async () => {
         ) {
           // sähköposti Traficomille, projektipäällikölle ja varahenkilölle
           await lahetaVaihePaattynytSahkopostiTraficom(projekti, sqsEvent.reason);
+        } else if (
+          successfulSynchronization &&
+          sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE &&
+          sqsEvent.reason &&
+          [HYVAKSYMISPAATOS_VAIHE_EPAAKTIVOI, JATKOPAATOS2_VAIHE_EPAAKTIVOI, JATKOPAATOS_VAIHE_EPAAKTIVOI].includes(sqsEvent.reason)
+        ) {
+          // epäaktiiviseltä projektilta otetaan omistajat ja muistuttajat käytöstä
+          await poistaProjektinOmistajatJaMuistuttajatKaytosta(projekti, sqsEvent.reason);
         }
       }
       if (!successfulSynchronization) {
@@ -490,6 +503,13 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
   return wrapXRayAsync("handler", handlerFactory(event));
 };
+
+async function poistaProjektinOmistajatJaMuistuttajatKaytosta(projekti: DBProjekti, reason: string) {
+  log.info("Poistetaan projektin kiinteistönomistajat ja muistuttajat käytöstä, jottei niiden tiedot näy projektilla. Syy: " + reason);
+  await omistajaDatabase.vaihdaProjektinKaytossaolevatOmistajat(projekti.oid, []);
+  await muistuttajaDatabase.vaihdaProjektinKaytossaolevatMuistuttajat(projekti.oid, []);
+  log.info("Projektin kiinteistönomistajat ja muistuttajat poistettu käytöstä.");
+}
 
 async function lahetaVaihePaattynytSahkopostiTraficom(projekti: DBProjekti, reason: string) {
   log.info("Lähetetään sähköposti Traficomille: " + reason);
