@@ -105,7 +105,7 @@ class MuistuttajaDatabase {
     try {
       const items = await this.haeProjektinKaytossaolevatMuistuttajat(oid);
       if (items.length) {
-        log.info("Otetaan käytöstä " + items.length + " omistaja(a)");
+        log.info("Otetaan käytöstä " + items.length + " muistuttaja(a)");
         const transactItems = items.map<TransactionItem>((item) => ({
           Update: {
             ExpressionAttributeNames: {
