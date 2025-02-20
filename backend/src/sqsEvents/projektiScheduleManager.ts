@@ -289,6 +289,11 @@ export const HYVAKSYMISPAATOS_VAIHE_PAATTYY = HYVAKSYMISPAATOS_VAIHE + KUULUTUSV
 export const JATKOPAATOS1_VAIHE_PAATTYY = JATKOPAATOS1_VAIHE + KUULUTUSVAIHE_PAATTYY;
 export const JATKOPAATOS2_VAIHE_PAATTYY = JATKOPAATOS2_VAIHE + KUULUTUSVAIHE_PAATTYY;
 
+const EPAAKTIVOI = " muuttuu epäaktiiviseksi";
+export const HYVAKSYMISPAATOS_VAIHE_EPAAKTIVOI = HYVAKSYMISPAATOS_VAIHE + EPAAKTIVOI;
+export const JATKOPAATOS_VAIHE_EPAAKTIVOI = JATKOPAATOS1_VAIHE + EPAAKTIVOI;
+export const JATKOPAATOS2_VAIHE_EPAAKTIVOI = JATKOPAATOS2_VAIHE + EPAAKTIVOI;
+
 function getPublishExpireScheduleForVaiheJulkaisut(
   julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
   description: string,
@@ -316,7 +321,7 @@ function getPublishExpireScheduleForVaiheJulkaisut(
 
         if (epaAktiivinenDuration) {
           events.push({
-            reason: description + " muuttuu epäaktiiviseksi",
+            reason: description + EPAAKTIVOI,
             type: PublishOrExpireEventType.EXPIRE,
             date: kuulutusVaihePaattyyPaiva.add(epaAktiivinenDuration[0], epaAktiivinenDuration[1]).add(1, "day").startOf("day"),
           });

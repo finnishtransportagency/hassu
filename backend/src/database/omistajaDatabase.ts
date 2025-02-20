@@ -126,7 +126,7 @@ class OmistajaDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
-  async vaihdaProjektinKaytossaolevatOmistajat(oid: string, lisattavatOmistajat: DBOmistaja[]): Promise<void> {
+  async otaProjektinKiinteistonomistajatPoisKaytosta(oid: string) {
     try {
       const items = await this.haeProjektinKaytossaolevatOmistajat(oid);
       if (items.length) {
@@ -157,6 +157,15 @@ class OmistajaDatabase {
           await getDynamoDBDocumentClient().send(transactCommand);
         }
       }
+    } catch (error) {
+      log.error("Projektin kiinteistönomistajien käytöstä poistaminen epäonnistui");
+      throw error;
+    }
+  }
+
+  async vaihdaProjektinKaytossaolevatOmistajat(oid: string, lisattavatOmistajat: DBOmistaja[]): Promise<void> {
+    await this.otaProjektinKiinteistonomistajatPoisKaytosta(oid);
+    try {
       log.info("Lisätään " + lisattavatOmistajat.length + " omistaja(a)");
       const newTransactItems = lisattavatOmistajat.map<TransactionItem>((item) => ({
         Put: {

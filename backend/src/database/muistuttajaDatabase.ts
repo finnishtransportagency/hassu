@@ -101,6 +101,43 @@ class MuistuttajaDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
+  async otaProjektinMuistuttajatPoisKaytosta(oid: string): Promise<void> {
+    try {
+      const items = await this.haeProjektinKaytossaolevatMuistuttajat(oid);
+      if (items.length) {
+        log.info("Otetaan käytöstä " + items.length + " muistuttaja(a)");
+        const transactItems = items.map<TransactionItem>((item) => ({
+          Update: {
+            ExpressionAttributeNames: {
+              "#kaytossa": "kaytossa",
+            },
+            ExpressionAttributeValues: {
+              ":kaytossa": false,
+            },
+            UpdateExpression: "set #kaytossa = :kaytossa",
+            TableName: this.tableName,
+            Key: {
+              id: item.id,
+              oid: item.oid,
+            },
+          },
+        }));
+
+        const oldMuistuttajaChunks = chunkArray(transactItems, 25);
+
+        for (const chunk of oldMuistuttajaChunks) {
+          const transactCommand = new TransactWriteCommand({
+            TransactItems: chunk,
+          });
+          await getDynamoDBDocumentClient().send(transactCommand);
+        }
+      }
+    } catch (error) {
+      log.error("Projektin muistuttajien käytöstä poistaminen epäonnistui");
+      throw error;
+    }
+  }
+
   async scanMuistuttajat(startKey?: MuistuttajaKey): Promise<MuistuttajaScanResult> {
     try {
       const params = new ScanCommand({
