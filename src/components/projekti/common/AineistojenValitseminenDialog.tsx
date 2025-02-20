@@ -112,7 +112,7 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
                 }
               />
             ) : isLoading ? (
-              "Haetaan aineistotietoja Velhosta..."
+              "Haetaan aineistotietoja Projektivelhosta..."
             ) : (
               "Projektivelhossa ei ole aineistoa projektille."
             )}
