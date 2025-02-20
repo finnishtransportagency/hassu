@@ -397,11 +397,6 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           case SqsEventType.END_JATKOPAATOS2_AINEISTOMUOKKAUS:
             await jatkoPaatos2VaiheTilaManager.rejectAndPeruAineistoMuokkaus(projekti, "kuulutuspäivä koitti");
             break;
-          // deprecated, kept until next production deployment
-          // Tämä on täällä vielä siltä varalta, että tuotantoon viemisen hetkellä sqs-jonossa on IMPORT-eventtejä
-          case SqsEventType.IMPORT:
-            await handleChangedAineisto(ctx);
-            break;
           case SqsEventType.AINEISTO_CHANGED:
             await handleChangedAineisto(ctx);
             break;
@@ -410,9 +405,6 @@ export const handlerFactory = (event: SQSEvent) => async () => {
             break;
           case SqsEventType.AINEISTO_AND_FILES_CHANGED:
             await handleChangedAineistoAndFiles(ctx);
-            break;
-          case SqsEventType.ZIP:
-            await handleNahtavillaoloZipping(ctx);
             break;
           case SqsEventType.ZIP_NAHTAVILLAOLO:
             await handleNahtavillaoloZipping(ctx);
