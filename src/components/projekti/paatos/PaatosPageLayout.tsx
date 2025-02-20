@@ -81,8 +81,8 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
             -sivulta.
           </li>
           <li>
-            Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu painikkeesta ilmoituksen
-            esikatselu.
+            Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen esikatselu
+            -painikkeesta.
           </li>
           {projekti.asianhallinta.inaktiivinen && (
             <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan.</li>

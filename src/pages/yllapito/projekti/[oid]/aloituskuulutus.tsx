@@ -330,8 +330,8 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                           julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
                         </li>
                         <li>
-                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu
-                          painikkeesta ilmoituksen esikatselu.
+                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
+                          esikatselu -painikkeesta.
                         </li>
                         <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                         {projekti.asianhallinta.inaktiivinen && (
