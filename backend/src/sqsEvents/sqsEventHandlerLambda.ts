@@ -498,8 +498,8 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
 
 async function poistaProjektinOmistajatJaMuistuttajatKaytosta(projekti: DBProjekti, reason: string) {
   log.info("Poistetaan projektin kiinteistönomistajat ja muistuttajat käytöstä, jottei niiden tiedot näy projektilla. Syy: " + reason);
-  await omistajaDatabase.vaihdaProjektinKaytossaolevatOmistajat(projekti.oid, []);
-  await muistuttajaDatabase.vaihdaProjektinKaytossaolevatMuistuttajat(projekti.oid, []);
+  await omistajaDatabase.otaProjektinKiinteistonomistajatPoisKaytosta(projekti.oid);
+  await muistuttajaDatabase.otaProjektinMuistuttajatPoisKaytosta(projekti.oid);
   log.info("Projektin kiinteistönomistajat ja muistuttajat poistettu käytöstä.");
 }
 

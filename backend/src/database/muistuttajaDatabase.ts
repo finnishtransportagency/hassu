@@ -101,7 +101,7 @@ class MuistuttajaDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
-  async vaihdaProjektinKaytossaolevatMuistuttajat(oid: string, lisattavatMuistuttajat: DBMuistuttaja[]): Promise<void> {
+  async otaProjektinMuistuttajatPoisKaytosta(oid: string): Promise<void> {
     try {
       const items = await this.haeProjektinKaytossaolevatMuistuttajat(oid);
       if (items.length) {
@@ -132,22 +132,8 @@ class MuistuttajaDatabase {
           await getDynamoDBDocumentClient().send(transactCommand);
         }
       }
-      log.info("Lisätään " + lisattavatMuistuttajat.length + " muistuttaja(a)");
-      const newTransactItems = lisattavatMuistuttajat.map<TransactionItem>((item) => ({
-        Put: {
-          TableName: this.tableName,
-          Item: item,
-        },
-      }));
-      const newMuistuttajaChunks = chunkArray(newTransactItems, 25);
-      for (const chunk of newMuistuttajaChunks) {
-        const transactCommand = new TransactWriteCommand({
-          TransactItems: chunk,
-        });
-        await getDynamoDBDocumentClient().send(transactCommand);
-      }
     } catch (error) {
-      log.error("Projektin muistuttajien korvaaminen epäonnistui");
+      log.error("Projektin muistuttajien käytöstä poistaminen epäonnistui");
       throw error;
     }
   }
