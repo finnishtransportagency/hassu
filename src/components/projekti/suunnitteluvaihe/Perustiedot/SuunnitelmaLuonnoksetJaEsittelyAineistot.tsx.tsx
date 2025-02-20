@@ -25,8 +25,6 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
   const [expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset] = useState<Key[]>([]);
   const [esittelyAineistoDialogOpen, setEsittelyAineistoDialogOpen] = useState(false);
   const [suunnitelmaLuonnoksetDialogOpen, setSuunnitelmaLuonnoksetDialogOpen] = useState(false);
-  const [aineistojenPoistoDialogOpen, setAineistojenPoistoDialogOpen] = useState(false);
-  const [aineistojenPoistoDialogiTyyppi, setAineistojenPoistoDialogiTyyppi] = useState<AineistoTyyppi | null>(null);
 
   const { control, watch, setValue, getValues } = useFormContext<SuunnittelunPerustiedotFormValues>();
 
@@ -42,43 +40,44 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
 
   type AineistoTyyppi = "esittelyaineistot" | "suunnitelmaluonnokset";
 
-  const poistaAineistot = useCallback(
-    (tyyppi: AineistoTyyppi) => {
-      if (tyyppi === "esittelyaineistot") {
-        const nykyisetEsittelyaineistot = getValues("vuorovaikutusKierros.esittelyaineistot") || [];
-        const nykyisetPoistetut = getValues("vuorovaikutusKierros.poistetutEsittelyaineistot") || [];
+  const [aineistojenPoistoDialogiTyyppi, setAineistojenPoistoDialogiTyyppi] = useState<AineistoTyyppi | undefined>();
+  const [aineistojenPoistoDialogOpen, setAineistojenPoistoDialogOpen] = useState(false);
 
-        const poistetutAineistot = Array.isArray(nykyisetEsittelyaineistot)
-          ? nykyisetEsittelyaineistot.map((aineisto) => ({
-              ...aineisto,
-              tila: AineistoTila.ODOTTAA_POISTOA,
-              jarjestys: aineisto.jarjestys || 0,
-            }))
-          : [];
-        setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", [...nykyisetPoistetut, ...poistetutAineistot], { shouldDirty: true });
-        setValue("vuorovaikutusKierros.esittelyaineistot", [], { shouldDirty: true });
-        setExpandedEsittelyAineisto([]);
-      } else if (tyyppi === "suunnitelmaluonnokset") {
-        const nykyisetSuunnitelmaluonnokset = getValues("vuorovaikutusKierros.suunnitelmaluonnokset") || [];
-        const nykyisetPoistetutSuunnitelmat = getValues("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset") || [];
+  const poistaAineistot = useCallback(() => {
+    const tyyppi = aineistojenPoistoDialogiTyyppi;
+    if (tyyppi === "esittelyaineistot") {
+      const nykyisetEsittelyaineistot = getValues("vuorovaikutusKierros.esittelyaineistot") || [];
+      const nykyisetPoistetut = getValues("vuorovaikutusKierros.poistetutEsittelyaineistot") || [];
 
-        const poistetutSuunnitelmat = Array.isArray(nykyisetSuunnitelmaluonnokset)
-          ? nykyisetSuunnitelmaluonnokset.map((aineisto) => ({
-              ...aineisto,
-              tila: AineistoTila.ODOTTAA_POISTOA,
-              jarjestys: aineisto.jarjestys || 0,
-            }))
-          : [];
-        setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", [...nykyisetPoistetutSuunnitelmat, ...poistetutSuunnitelmat], {
-          shouldDirty: true,
-        });
-        setValue("vuorovaikutusKierros.suunnitelmaluonnokset", [], { shouldDirty: true });
-        setExpandedSuunnitelmaLuonnokset([]);
-      }
-      setAineistojenPoistoDialogOpen(false);
-    },
-    [getValues, setValue, setExpandedEsittelyAineisto, setExpandedSuunnitelmaLuonnokset]
-  );
+      const poistetutAineistot = Array.isArray(nykyisetEsittelyaineistot)
+        ? nykyisetEsittelyaineistot.map((aineisto) => ({
+            ...aineisto,
+            tila: AineistoTila.ODOTTAA_POISTOA,
+            jarjestys: aineisto.jarjestys || 0,
+          }))
+        : [];
+      setValue("vuorovaikutusKierros.poistetutEsittelyaineistot", [...nykyisetPoistetut, ...poistetutAineistot], { shouldDirty: true });
+      setValue("vuorovaikutusKierros.esittelyaineistot", [], { shouldDirty: true });
+      setExpandedEsittelyAineisto([]);
+    } else if (tyyppi === "suunnitelmaluonnokset") {
+      const nykyisetSuunnitelmaluonnokset = getValues("vuorovaikutusKierros.suunnitelmaluonnokset") || [];
+      const nykyisetPoistetutSuunnitelmat = getValues("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset") || [];
+
+      const poistetutSuunnitelmat = Array.isArray(nykyisetSuunnitelmaluonnokset)
+        ? nykyisetSuunnitelmaluonnokset.map((aineisto) => ({
+            ...aineisto,
+            tila: AineistoTila.ODOTTAA_POISTOA,
+            jarjestys: aineisto.jarjestys || 0,
+          }))
+        : [];
+      setValue("vuorovaikutusKierros.poistetutSuunnitelmaluonnokset", [...nykyisetPoistetutSuunnitelmat, ...poistetutSuunnitelmat], {
+        shouldDirty: true,
+      });
+      setValue("vuorovaikutusKierros.suunnitelmaluonnokset", [], { shouldDirty: true });
+      setExpandedSuunnitelmaLuonnokset([]);
+    }
+    setAineistojenPoistoDialogOpen(false);
+  }, [getValues, setValue, setExpandedEsittelyAineisto, setExpandedSuunnitelmaLuonnokset, aineistojenPoistoDialogiTyyppi]);
 
   return (
     <Section noDivider>
@@ -277,12 +276,8 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
       <AineistojenPoistoDialog
         dialogiOnAuki={!!aineistojenPoistoDialogOpen}
         onClose={() => setAineistojenPoistoDialogOpen(false)}
-        onAccept={() => {
-          if (aineistojenPoistoDialogiTyyppi) {
-            poistaAineistot(aineistojenPoistoDialogiTyyppi);
-          }
-          setAineistojenPoistoDialogOpen(false);
-        }}
+        onAccept={() => poistaAineistot()}
+        aineistoTyyppi={aineistojenPoistoDialogiTyyppi}
       />
     </Section>
   );
