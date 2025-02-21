@@ -46,6 +46,8 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
     [aineistoKategoriat]
   );
 
+  const aineistojaOn = aineistoNahtavillaFlat.length > 0;
+
   const poistaAineistot = useCallback(() => {
     const nykyisetAineistot = getValues("aineistoNahtavilla");
     const nykyisetPoistetut = getValues("poistetutAineistoNahtavilla") || [];
@@ -103,15 +105,17 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
         <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
           Tuo Aineistot
         </Button>
-        <Button
-          type="button"
-          id={"poista_kaikki_aineistot_button"}
-          className="pl-12 pr-12 pt-1 pb-1"
-          style={{ color: "orangered", borderColor: "orangered" }}
-          onClick={() => setAineistojenPoistoDialogOpen(true)}
-        >
-          Poista kaikki
-        </Button>
+        {aineistojaOn && (
+          <Button
+            type="button"
+            id={"poista_kaikki_aineistot_button"}
+            className="pl-12 pr-12 pt-1 pb-1"
+            style={{ color: "orangered", borderColor: "orangered" }}
+            onClick={() => setAineistojenPoistoDialogOpen(true)}
+          >
+            Poista kaikki
+          </Button>
+        )}
       </Stack>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}

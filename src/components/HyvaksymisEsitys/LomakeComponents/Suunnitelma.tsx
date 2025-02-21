@@ -29,6 +29,8 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
   const { t } = useTranslation("aineisto");
   const suunnitelmaFlat = Object.values(suunnitelma).flat();
 
+  const aineistojaOn = suunnitelmaFlat.length > 0;
+
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(suunnitelma));
 
   const poistaAineistot = useCallback(() => {
@@ -84,15 +86,17 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
         <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
           Tuo aineistot
         </Button>
-        <Button
-          type="button"
-          id={"poista_kaikki_aineistot_button"}
-          className="pl-12 pr-12 pt-1 pb-1"
-          style={{ color: "orangered", borderColor: "orangered" }}
-          onClick={() => setAineistojenPoistoDialogOpen(true)}
-        >
-          Poista kaikki
-        </Button>
+        {aineistojaOn && (
+          <Button
+            type="button"
+            id={"poista_kaikki_aineistot_button"}
+            className="pl-12 pr-12 pt-1 pb-1"
+            style={{ color: "orangered", borderColor: "orangered" }}
+            onClick={() => setAineistojenPoistoDialogOpen(true)}
+          >
+            Poista kaikki
+          </Button>
+        )}
       </Stack>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}

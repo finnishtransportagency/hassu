@@ -36,6 +36,9 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
   const esittelyaineistot = watch("vuorovaikutusKierros.esittelyaineistot");
   const suunnitelmaluonnokset = watch("vuorovaikutusKierros.suunnitelmaluonnokset");
 
+  const esittelyaineistojaOn = esittelyaineistot?.length > 0;
+  const suunnitelmaluonnoksiaOn = suunnitelmaluonnokset?.length > 0;
+
   const areAineistoKategoriesExpanded = !!expandedEsittelyAineisto.length || !!expandedSuunnitelmaLuonnokset.length;
 
   type AineistoTyyppi = "esittelyaineistot" | "suunnitelmaluonnokset";
@@ -139,18 +142,20 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
           <Button type="button" id="select_esittelyaineistot_button" onClick={() => setEsittelyAineistoDialogOpen(true)}>
             Tuo Aineistoja
           </Button>
-          <Button
-            type="button"
-            id={"poista_kaikki_esittelyaineistot_button"}
-            className="pl-12 pr-12 pt-1 pb-1"
-            style={{ color: "orangered", borderColor: "orangered" }}
-            onClick={() => {
-              setAineistojenPoistoDialogiTyyppi("esittelyaineistot");
-              setAineistojenPoistoDialogOpen(true);
-            }}
-          >
-            Poista kaikki
-          </Button>
+          {esittelyaineistojaOn && (
+            <Button
+              type="button"
+              id={"poista_kaikki_esittelyaineistot_button"}
+              className="pl-12 pr-12 pt-1 pb-1"
+              style={{ color: "orangered", borderColor: "orangered" }}
+              onClick={() => {
+                setAineistojenPoistoDialogiTyyppi("esittelyaineistot");
+                setAineistojenPoistoDialogOpen(true);
+              }}
+            >
+              Poista kaikki
+            </Button>
+          )}
         </Stack>
         <HassuAccordion
           expandedstate={[expandedSuunnitelmaLuonnokset, setExpandedSuunnitelmaLuonnokset]}
@@ -179,18 +184,20 @@ export default function SuunnitelmaLuonnoksetJaEsittelyAineistot() {
           <Button type="button" id="select_suunnitelmaluonnokset_button" onClick={() => setSuunnitelmaLuonnoksetDialogOpen(true)}>
             Tuo Aineistoja
           </Button>
-          <Button
-            type="button"
-            id={"poista_kaikki_suunnitelmaluonnokset_button"}
-            className="pl-12 pr-12 pt-1 pb-1"
-            style={{ color: "orangered", borderColor: "orangered" }}
-            onClick={() => {
-              setAineistojenPoistoDialogiTyyppi("suunnitelmaluonnokset");
-              setAineistojenPoistoDialogOpen(true);
-            }}
-          >
-            Poista kaikki
-          </Button>
+          {suunnitelmaluonnoksiaOn && (
+            <Button
+              type="button"
+              id={"poista_kaikki_suunnitelmaluonnokset_button"}
+              className="pl-12 pr-12 pt-1 pb-1"
+              style={{ color: "orangered", borderColor: "orangered" }}
+              onClick={() => {
+                setAineistojenPoistoDialogiTyyppi("suunnitelmaluonnokset");
+                setAineistojenPoistoDialogOpen(true);
+              }}
+            >
+              Poista kaikki
+            </Button>
+          )}
         </Stack>
       </ContentSpacer>
       <AineistojenValitseminenDialog
