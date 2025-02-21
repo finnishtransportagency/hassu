@@ -261,11 +261,11 @@ export class VelhoClient {
     const projektiApi = await this.createProjektiRekisteriApi();
     try {
       // Haetaan geometriatietoineen, sillä ne saatetaan tarvita bodyssä, kun projekti päivitetään put-pyynnöllä
-      const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
+      const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid, true);
       const data = loadProjektiResponse.data;
       const projekti = projektiDataUpdater(data);
       auditLog.info("Päivitetään velhoprojekti", { velho: { oid, projekti } });
-      await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
+      await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti, true);
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
     }
