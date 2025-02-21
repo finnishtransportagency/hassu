@@ -1,4 +1,4 @@
-import { Key, ReactElement, useState } from "react";
+import { Key, ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import { useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
@@ -13,6 +13,8 @@ import SectionContent from "@components/layout/SectionContent";
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoNewTable";
 import find from "lodash/find";
 import remove from "lodash/remove";
+import AineistojenPoistoDialog from "@components/projekti/common/AineistojenPoistoDialog";
+import { Stack } from "@mui/system";
 
 type Props = {
   aineistoKategoriat: AineistoKategoriat;
@@ -21,12 +23,29 @@ type Props = {
 
 export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: Readonly<Props>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
-  const { watch, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const [aineistojenPoistoDialogOpen, setAineistojenPoistoDialogOpen] = useState(false);
+  const { watch, setValue, getValues } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const suunnitelma = watch(ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma");
   const { t } = useTranslation("aineisto");
   const suunnitelmaFlat = Object.values(suunnitelma).flat();
 
+  const aineistojaOn = suunnitelmaFlat.length > 0;
+
   const [expandedAineisto, setExpandedAineisto] = useState<Key[]>(getInitialExpandedAineisto(suunnitelma));
+
+  const poistaAineistot = useCallback(() => {
+    const suunnitelmaPath = ennakkoneuvottelu ? "ennakkoNeuvottelu.suunnitelma" : "muokattavaHyvaksymisEsitys.suunnitelma";
+    const nykyisetAineistot = getValues(suunnitelmaPath);
+
+    const tyhjaRakenne = Object.keys(nykyisetAineistot).reduce((acc, kategoriaId) => {
+      acc[kategoriaId] = [];
+      return acc;
+    }, {} as { [kategoriaId: string]: FormAineistoNew[] });
+
+    setValue(suunnitelmaPath, tyhjaRakenne, { shouldDirty: true });
+    setAineistojenPoistoDialogOpen(false);
+    setExpandedAineisto([]);
+  }, [getValues, setValue, setAineistojenPoistoDialogOpen, setExpandedAineisto, ennakkoneuvottelu]);
 
   return (
     <>
@@ -63,9 +82,22 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
           id: paakategoria.id,
         }))}
       />
-      <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
-        Tuo aineistot
-      </Button>
+      <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
+        <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
+          Tuo aineistot
+        </Button>
+        {aineistojaOn && (
+          <Button
+            type="button"
+            id={"poista_kaikki_aineistot_button"}
+            className="pl-12 pr-12 pt-1 pb-1"
+            style={{ color: "orangered", borderColor: "orangered" }}
+            onClick={() => setAineistojenPoistoDialogOpen(true)}
+          >
+            Poista kaikki
+          </Button>
+        )}
+      </Stack>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
         onClose={() => setAineistoDialogOpen(false)}
@@ -86,6 +118,11 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
             );
           });
         }}
+      />
+      <AineistojenPoistoDialog
+        dialogiOnAuki={aineistojenPoistoDialogOpen}
+        onClose={() => setAineistojenPoistoDialogOpen(false)}
+        onAccept={poistaAineistot}
       />
     </>
   );

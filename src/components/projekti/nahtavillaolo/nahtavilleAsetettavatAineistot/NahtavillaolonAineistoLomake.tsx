@@ -3,10 +3,10 @@ import HassuAccordion from "@components/HassuAccordion";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
-import { NahtavillaoloVaihe } from "@services/api";
+import { AineistoTila, NahtavillaoloVaihe } from "@services/api";
 import { AineistoKategoriat, getNestedAineistoMaaraForCategory, kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import useTranslation from "next-translate/useTranslation";
-import React, { Key, useMemo, useState } from "react";
+import React, { Key, useCallback, useMemo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { SuunnitelmaAineistoPaakategoriaContent } from "@components/projekti/common/Aineistot/AineistoTable";
 import {
@@ -18,6 +18,8 @@ import { NahtavilleAsetettavatAineistotFormValues } from "./Muokkausnakyma";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import { AccordionToggleButton } from "../../common/Aineistot/AccordionToggleButton";
 import { H2, H3 } from "../../../Headings";
+import { Stack } from "@mui/system";
+import AineistojenPoistoDialog from "@components/projekti/common/AineistojenPoistoDialog";
 
 export interface SuunnitelmatJaAineistotProps {
   vaihe: NahtavillaoloVaihe | null | undefined;
@@ -34,6 +36,7 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
   const { t } = useTranslation("aineisto");
 
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
+  const [aineistojenPoistoDialogOpen, setAineistojenPoistoDialogOpen] = useState(false);
 
   const { kategoriat, kategoriaIdt } = useMemo(
     () => ({
@@ -42,6 +45,25 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
     }),
     [aineistoKategoriat]
   );
+
+  const aineistojaOn = aineistoNahtavillaFlat.length > 0;
+
+  const poistaAineistot = useCallback(() => {
+    const nykyisetAineistot = getValues("aineistoNahtavilla");
+    const nykyisetPoistetut = getValues("poistetutAineistoNahtavilla") || [];
+    const kaikkiAineistot = Object.entries(nykyisetAineistot).flatMap(([kategoriaId, aineistot]) =>
+      aineistot.map((aineisto) => ({
+        ...aineisto,
+        kategoriaId,
+        tila: AineistoTila.ODOTTAA_POISTOA,
+        jarjestys: aineisto.jarjestys || 0,
+      }))
+    );
+    setValue("poistetutAineistoNahtavilla", [...nykyisetPoistetut, ...kaikkiAineistot], { shouldDirty: true });
+    setValue("aineistoNahtavilla", {}, { shouldDirty: true });
+    setAineistojenPoistoDialogOpen(false);
+    setExpandedAineisto([]);
+  }, [getValues, setValue, setAineistojenPoistoDialogOpen, setExpandedAineisto]);
 
   return (
     <Section>
@@ -79,9 +101,22 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
           id: paakategoria.id,
         }))}
       />
-      <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
-        Tuo Aineistot
-      </Button>
+      <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
+        <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
+          Tuo Aineistot
+        </Button>
+        {aineistojaOn && (
+          <Button
+            type="button"
+            id={"poista_kaikki_aineistot_button"}
+            className="pl-12 pr-12 pt-1 pb-1"
+            style={{ color: "orangered", borderColor: "orangered" }}
+            onClick={() => setAineistojenPoistoDialogOpen(true)}
+          >
+            Poista kaikki
+          </Button>
+        )}
+      </Stack>
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
         infoText={"Valitse tiedostot, jotka haluat tuoda nähtäville."}
@@ -100,6 +135,11 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
             setExpandedAineisto([...expandedAineisto, kategorisoimattomatId]);
           }
         }}
+      />
+      <AineistojenPoistoDialog
+        dialogiOnAuki={aineistojenPoistoDialogOpen}
+        onClose={() => setAineistojenPoistoDialogOpen(false)}
+        onAccept={poistaAineistot}
       />
     </Section>
   );
