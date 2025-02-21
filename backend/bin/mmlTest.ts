@@ -1,6 +1,6 @@
 import { SSM } from "@aws-sdk/client-ssm";
 import { STS } from "@aws-sdk/client-sts";
-import { MmlKiinteisto, getMmlClient } from "../src/mml/mmlClient";
+import { MmlKiinteisto, createMmlClient } from "../src/mml/mmlClient";
 const euWestSSMClient = new SSM({ region: "eu-west-1" });
 const stsClient = new STS({ region: "eu-west-1" });
 
@@ -71,7 +71,7 @@ Promise.all([
     const ogcApiExamples = params.find((p) => p.name === "OgcApiExamples" + parameterSuffix)?.value;
     const uid = params.find((p) => p.name === "UserId")?.value;
     if (ktjBaseUrl && mmlApiKey && ogcBaseUrl && ogcApiKey && uid && ogcApiExamples) {
-      const client = getMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey, ogcApiExamples });
+      const client = createMmlClient({ endpoint: ktjBaseUrl, apiKey: mmlApiKey, ogcEndpoint: ogcBaseUrl, ogcApiKey, ogcApiExamples });
       const debug = process.argv.includes("--debug");
       if (process.argv.includes("-y")) {
         return client.haeYhteystiedot(process.argv[process.argv.length - 1].split(","), uid, debug);

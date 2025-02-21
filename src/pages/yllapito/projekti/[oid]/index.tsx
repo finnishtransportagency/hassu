@@ -40,6 +40,7 @@ import SuunnitelmaJaettuOsiin from "@components/projekti/SuunnitelmaJaettuOsiin"
 import { MenuItem } from "@mui/material";
 import ToiminnotMenuList from "@components/projekti/ToiminnotMenuList";
 import { JaaProjektiOsiinDialog } from "@components/JaaProjektiOsiinDialog";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -178,8 +179,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const projektiHasErrors = !isLoadingProjekti && !loadedProjektiValidationSchema.isValidSync(projekti);
   const disableFormEdit = !projekti?.nykyinenKayttaja.omaaMuokkausOikeuden || projektiHasErrors || isLoadingProjekti || formIsSubmitting;
 
-  const { showSuccessMessage } = useSnackbars();
-
   const defaultValues: FormValues = useMemo(() => {
     const { ensisijainenKieli, projektinNimiVieraskielella, toissijainenKieli } = projekti.kielitiedot ?? {};
     const vieraskielinen = [ensisijainenKieli, toissijainenKieli].some((kieli) => kieli === Kieli.POHJOISSAAME || kieli === Kieli.RUOTSI);
@@ -261,6 +260,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const api = useApi();
 
   const talletaLogo = useCallback(async (tiedosto: File) => await lataaTiedosto(api, tiedosto), [api]);
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
 
   const onSubmit = useCallback(
     (data: FormValues) =>
@@ -311,15 +311,15 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
             setStatusBeforeSave(projekti?.status);
 
-            await api.tallennaProjekti(apiData);
+            const response = await api.tallennaProjekti(apiData);
             await reloadProjekti();
-            showSuccessMessage("Tallennus onnistui");
+            showTallennaProjektiMessage(response);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
         })()
       ),
-    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showSuccessMessage, talletaLogo]
+    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo]
   );
 
   useEffect(() => {

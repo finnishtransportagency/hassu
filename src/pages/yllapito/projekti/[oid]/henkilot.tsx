@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import KayttoOikeusHallinta, { FormValues } from "@components/projekti/KayttoOikeusHallinta";
+import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
 import * as Yup from "yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -13,7 +13,6 @@ import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotific
 import { getProjektiValidationSchema, ProjektiTestType } from "../../../../schemas/projekti";
 import Section from "@components/layout/Section";
 import HassuStack from "@components/layout/HassuStack";
-import useSnackbars from "src/hooks/useSnackbars";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import HenkilotLukutila from "@components/projekti/lukutila/HenkilotLukutila";
@@ -21,7 +20,14 @@ import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotButton";
 import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import { TallennaProjektiInput } from "@services/api";
+
+// Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
+type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
+type FormValues = Required<{
+  [K in keyof RequiredFields]: NonNullable<RequiredFields[K]>;
+}>;
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
@@ -112,7 +118,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
-  const { showSuccessMessage } = useSnackbars();
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
 
   const api = useApi();
 
@@ -134,15 +140,15 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             ),
           };
           try {
-            await api.tallennaProjekti(tallennaProjektiInput);
+            const response = await api.tallennaProjekti(tallennaProjektiInput);
             await reloadProjekti();
-            showSuccessMessage("Henkilötietojen tallennus onnistui");
+            showTallennaProjektiMessage(response);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
         })()
       ),
-    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner]
+    [api, reloadProjekti, showTallennaProjektiMessage, withLoadingSpinner]
   );
 
   const context = useContext(ProjektiPageLayoutContext);

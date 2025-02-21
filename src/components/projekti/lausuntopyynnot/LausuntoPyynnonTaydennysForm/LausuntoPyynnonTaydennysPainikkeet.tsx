@@ -8,14 +8,14 @@ import { useFormContext } from "react-hook-form";
 import useApi from "src/hooks/useApi";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
-import useSnackbars from "src/hooks/useSnackbars";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { LausuntoPyynnonTaydennysFormValues, mapLausuntoPyynnonTaydennysFormValuesToLausuntoPyyntoInput } from "../types";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 export default function LausuntoPyynnonTaydennysPainikkeet({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>) {
   const { mutate: reloadProjekti } = useProjekti();
-  const { showSuccessMessage } = useSnackbars();
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -28,10 +28,10 @@ export default function LausuntoPyynnonTaydennysPainikkeet({ projekti }: Readonl
       (async () => {
         try {
           const tallennaProjektiInput: TallennaProjektiInput = mapLausuntoPyynnonTaydennysFormValuesToLausuntoPyyntoInput(formData);
-          await api.tallennaProjekti(tallennaProjektiInput);
+          const response = await api.tallennaProjekti(tallennaProjektiInput);
           await checkAineistoValmiit({ retries: 30 });
           await reloadProjekti();
-          showSuccessMessage("Tallennus onnistui");
+          showTallennaProjektiMessage(response);
         } catch (e) {
           log.error("OnSubmit Error", e);
         }

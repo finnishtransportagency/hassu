@@ -5,6 +5,7 @@ import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { log } from "../logger";
 import { SuomiFiConfig } from "../suomifi/viranomaispalvelutwsinterface/suomifi";
+import { PrhConfig } from "../mml/prh/prh";
 
 interface ParameterStoreResponse {
   Parameter: ParameterData;
@@ -201,6 +202,16 @@ class Parameters {
 
   getOgcApiExmaples() {
     return this.getRequiredParameter("OgcApiExamples");
+  }
+
+  async getPrhConfig() {
+    const param = await this.getRequiredParameter("PrhConfig");
+    const cfg: Partial<PrhConfig> = {};
+    param.split("\n").forEach((e) => {
+      const v = e.split("=");
+      cfg[v[0] as keyof PrhConfig] = v[1].trim();
+    });
+    return cfg as PrhConfig;
   }
 
   private async getRequiredAccountParameter(paramName: string): Promise<string> {

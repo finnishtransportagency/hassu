@@ -102,6 +102,7 @@ import {
   EnnakkoNeuvottelunAineistot,
   AktivoiProjektiJatkopaatettavaksiMutationVariables,
   JaaProjektiMutationVariables,
+  TallennaProjektiResponse,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -487,7 +488,7 @@ export abstract class AbstractApi {
     return await this.callAPI(apiConfig.lataaProjektiJulkinen, params);
   }
 
-  async tallennaProjekti(input: TallennaProjektiInput): Promise<string> {
+  async tallennaProjekti(input: TallennaProjektiInput): Promise<TallennaProjektiResponse> {
     return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
       projekti: input,
     } as TallennaProjektiMutationVariables);
