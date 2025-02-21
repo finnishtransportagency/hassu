@@ -179,8 +179,8 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                           Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
                         </li>
                         <li>
-                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta. Vähäisessä
-                          menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
+                          esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
                         </li>
                         {projekti.asianhallinta.inaktiivinen && (
                           <li>

@@ -329,7 +329,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                           Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
                           julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
                         </li>
-                        <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+                        <li>
+                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
+                          esikatselu -painikkeesta.
+                        </li>
                         <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                         {projekti.asianhallinta.inaktiivinen && (
                           <li>Muistathan viedä kuulutuksen sekä ilmoituksen kuulutuksesta asianhallintaan.</li>
