@@ -63,7 +63,7 @@ async function haeYritykset(ytunnus: string[], uid: string, options: Options): P
         .then((response) => {
           const prhResponse: PrhResponse = response.data;
           const omistaja: Omistaja = {
-            nimi: [trim(prhResponse.toiminimi), trim(prhResponse.coNimi)].filter((str) => !!str).join(", "),
+            nimi: trim(prhResponse.coNimi) ?? trim(prhResponse.toiminimi),
             ytunnus: trim(prhResponse.yTunnus),
             yhteystiedot: determineYhteystiedot(prhResponse),
           };
