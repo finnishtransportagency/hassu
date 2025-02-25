@@ -109,8 +109,11 @@ const handlerFactory = (event: SQSEvent) => async () => {
         );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu lainhuutotiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu yhteystiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu tiekuntatiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         let kiinteistoOmistajaCount = 0;
         kiinteistot.forEach((k) => (kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length));
         let yhteystietoOmistajaCount = 0;
