@@ -320,7 +320,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   if (!config.isProd()) {
     kiinteistotunnukset = input.kiinteistotunnukset.map((k) => {
       if (k.startsWith("491")) {
-        return k.replace("491", "998");
+        return k.replace(/^491/, "998");
       }
       return k;
     });
