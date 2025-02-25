@@ -108,14 +108,9 @@ const handlerFactory = (event: SQSEvent) => async () => {
           hakuEvent.kiinteistotunnukset.length
         );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-        const responses = await Promise.all([
-          client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-        ]);
-        const kiinteistot = responses[0];
-        const yhteystiedot = responses[1];
-        const tiekunnat = responses[2];
+        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
         let kiinteistoOmistajaCount = 0;
         kiinteistot.forEach((k) => (kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length));
         let yhteystietoOmistajaCount = 0;
