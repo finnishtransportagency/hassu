@@ -65,10 +65,16 @@ async function getPrhClient() {
   return prhClient;
 }
 
+const suomiFiEiTiedotettavatYritykset = [
+  // Väylävirasto
+  "1010547-1",
+];
+
 function isSuomifiLahetys(
   omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">
 ): boolean {
-  return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
+  const ytunnusOK = !!omistaja.ytunnus && !suomiFiEiTiedotettavatYritykset.includes(omistaja.ytunnus);
+  return (!!omistaja.henkilotunnus || ytunnusOK) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
 
 function getExpires() {
