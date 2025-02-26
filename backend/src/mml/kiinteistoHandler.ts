@@ -65,10 +65,16 @@ async function getPrhClient() {
   return prhClient;
 }
 
+const suomiFiEiTiedotettavatYritykset = [
+  // Väylävirasto
+  "1010547-1",
+];
+
 function isSuomifiLahetys(
   omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">
 ): boolean {
-  return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
+  const ytunnusOK = !!omistaja.ytunnus && !suomiFiEiTiedotettavatYritykset.includes(omistaja.ytunnus);
+  return (!!omistaja.henkilotunnus || ytunnusOK) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
 
 function getExpires() {
@@ -108,14 +114,12 @@ const handlerFactory = (event: SQSEvent) => async () => {
           hakuEvent.kiinteistotunnukset.length
         );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-        const responses = await Promise.all([
-          client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-        ]);
-        const kiinteistot = responses[0];
-        const yhteystiedot = responses[1];
-        const tiekunnat = responses[2];
+        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu lainhuutotiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu yhteystiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu tiekuntatiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         let kiinteistoOmistajaCount = 0;
         kiinteistot.forEach((k) => (kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length));
         let yhteystietoOmistajaCount = 0;
@@ -322,7 +326,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   if (!config.isProd()) {
     kiinteistotunnukset = input.kiinteistotunnukset.map((k) => {
       if (k.startsWith("491")) {
-        return k.replace("491", "998");
+        return k.replace(/^491/, "998");
       }
       return k;
     });
