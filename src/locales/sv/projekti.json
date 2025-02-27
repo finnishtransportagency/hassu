@@ -66,7 +66,7 @@
   "liittyvat-suunnitelmat": {
     "title": "Relaterade planer",
     "kaynnistetty-suunnitelmalla": "Planeringen har tidigare inletts med planen <suunnitelma/>. Informationen i publikationen nedan har kopierats från den.",
-    "suunnitelma-on-jaettu": "Planen har delats upp i planerna: {{suunnitelmaNimi}} och <suunnitelma2/>",
+    "suunnitelma-on-jaettu": "Planen har delats upp i planerna: {{suunnitelmaNimi}} och <suunnitelma2/>.",
     "kuulutettu-yhdessa": "Planen har tidigare kungjorts tillsammans med planen <suunnitelma/>.",
     "kuulutettu-yhdessa-pdf": "Planen har tidigare kungjorts tillsammans med planen {{kuulutettuYhdessaSuunnitelmanimi}}.",
     "ei-julkaisuja": "Planen har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas."
