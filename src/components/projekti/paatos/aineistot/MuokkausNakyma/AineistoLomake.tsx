@@ -86,32 +86,36 @@ export default function AineistoLomake({ dialogInfoText, sectionSubtitle, vaihe,
   return (
     <Section>
       {sectionSubtitle && <h4 className="vayla-small-title mt-10">{sectionSubtitle}</h4>}
-      <AccordionToggleButton
-        expandedAineisto={expandedAineisto}
-        setExpandedAineisto={setExpandedAineisto}
-        aineistoKategoriaIds={kategoriaIds}
-      />
-      <HassuAccordion
-        expandedstate={[expandedAineisto, setExpandedAineisto]}
-        items={kategoriat.map((paakategoria) => ({
-          title: (
-            <H4 className="vayla-small-title mb-0">{`${t(
-              `aineisto-kategoria-nimi.${paakategoria.id}`
-            )} (${getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})`}</H4>
-          ),
-          content: (
-            <SectionContent largeGaps>
-              <SuunnitelmaAineistoPaakategoriaContent
-                aineisto={vaihe?.aineistoNahtavilla}
-                paakategoria={paakategoria}
-                expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
-                kaikkiKategoriat={kategoriat}
-              />
-            </SectionContent>
-          ),
-          id: paakategoria.id,
-        }))}
-      />
+      {aineistojaOn && (
+        <>
+          <AccordionToggleButton
+            expandedAineisto={expandedAineisto}
+            setExpandedAineisto={setExpandedAineisto}
+            aineistoKategoriaIds={kategoriaIds}
+          />
+          <HassuAccordion
+            expandedstate={[expandedAineisto, setExpandedAineisto]}
+            items={kategoriat.map((paakategoria) => ({
+              title: (
+                <H4 className="vayla-small-title mb-0">{`${t(
+                  `aineisto-kategoria-nimi.${paakategoria.id}`
+                )} (${getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})`}</H4>
+              ),
+              content: (
+                <SectionContent largeGaps>
+                  <SuunnitelmaAineistoPaakategoriaContent
+                    aineisto={vaihe?.aineistoNahtavilla}
+                    paakategoria={paakategoria}
+                    expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+                    kaikkiKategoriat={kategoriat}
+                  />
+                </SectionContent>
+              ),
+              id: paakategoria.id,
+            }))}
+          />
+        </>
+      )}
       <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
         <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
           Tuo Aineistot
