@@ -61,69 +61,69 @@ const keraaApiJulkaisutJaDBJulkaisut = (adaptedProjekti: API.ProjektiJulkinen, p
         !!avainJaJulkaisut.dbJulkaisu
     );
 
-export async function lisaaJakotiedotJulkisilleJulkaisuille(adaptedProjekti: API.ProjektiJulkinen, projektiFromDB: DBProjekti) {
+export async function lisaaJakotiedotProjektilleJaSenJulkisilleJulkaisuille(
+  adaptedProjekti: API.ProjektiJulkinen,
+  projektiFromDB: DBProjekti
+): Promise<void> {
+  const jakautuminen = projektiFromDB.projektinJakautuminen;
+
+  // Projektia ei ole jaettu, keskeytetään
+  if (!jakautuminen) {
+    return;
+  }
   const dbJaApijulkaisutJaAvaimet = keraaApiJulkaisutJaDBJulkaisut(adaptedProjekti, projektiFromDB);
 
+  // Projektilla ei ole julkisia julkaisuja, keskeytetään
   if (!dbJaApijulkaisutJaAvaimet.length) {
     return;
   }
 
-  const viimeisinJulkaisu = dbJaApijulkaisutJaAvaimet[0].dbJulkaisu;
-  const jakautuminen = viimeisinJulkaisu.projektinJakautuminen;
-
-  const kopioituProjektista = jakautuminen?.jaettuProjektista
+  const julkaisuKopioituSuunnitelmasta = jakautuminen?.jaettuProjektista
     ? await haeLiittyvanProjektinTiedot(jakautuminen.jaettuProjektista)
     : undefined;
-  const kopioituProjekteihin = jakautuminen?.jaettuProjekteihin
-    ? (await Promise.all(jakautuminen.jaettuProjekteihin.map((oid) => haeLiittyvanProjektinTiedot(oid)))).filter(
-        (jakotieto): jakotieto is API.ProjektinJakotieto => !!jakotieto
-      )
+  const julkaisuKopioituSuunnitelmaan = jakautuminen.jaettuProjekteihin?.[0]
+    ? await haeLiittyvanProjektinTiedot(jakautuminen.jaettuProjekteihin[0])
     : undefined;
 
-  dbJaApijulkaisutJaAvaimet.forEach((avainJaJulkaisut) => {
-    avainJaJulkaisut.apiJulkaisu.suunnitelmaJaettu = adaptSuunnitelmaJaettuJulkinen(
-      avainJaJulkaisut.dbJulkaisu,
-      kopioituProjektista,
-      kopioituProjekteihin
-    );
-  });
+  const viimeisinJulkaisu = dbJaApijulkaisutJaAvaimet[0].dbJulkaisu;
+  // Jos viimeisimmällä julkaisulla on jakautumistiedot tai liittyvä projekti on julkinen, lisätään tiedot projektille ja julkaisuille
+  if (
+    viimeisinJulkaisu.projektinJakautuminen ||
+    julkaisuKopioituSuunnitelmasta?.julkinen === true ||
+    julkaisuKopioituSuunnitelmaan?.julkinen === true
+  ) {
+    adaptedProjekti.suunnitelmaJaettu = {
+      __typename: "SuunnitelmaJaettuJulkinen",
+      julkaisuKopioituSuunnitelmasta,
+      julkaisuKopioituSuunnitelmaan,
+    };
+
+    dbJaApijulkaisutJaAvaimet.forEach((avainJaJulkaisut) => {
+      avainJaJulkaisut.apiJulkaisu.suunnitelmaJaettu = adaptSuunnitelmaJaettuJulkinen(
+        avainJaJulkaisut.dbJulkaisu,
+        julkaisuKopioituSuunnitelmasta,
+        julkaisuKopioituSuunnitelmaan
+      );
+    });
+  }
 }
 
 function adaptSuunnitelmaJaettuJulkinen(
   dbJulkaisu: GenericDBJulkaisu,
   kopioituProjektista: API.ProjektinJakotieto | undefined,
-  kopioituProjekteihin: API.ProjektinJakotieto[] | undefined
+  kopioituProjektiin: API.ProjektinJakotieto | undefined
 ): API.SuunnitelmaJaettuJulkinen | undefined | null {
-  if (!kopioituProjektista && !kopioituProjekteihin?.length) {
+  if (!kopioituProjektista && !kopioituProjektiin) {
     return undefined;
   }
-  const liittyvatSuunnitelmat = [
-    ...(dbJulkaisu.projektinJakautuminen?.jaettuProjekteihin ?? []),
-    dbJulkaisu.projektinJakautuminen?.jaettuProjektista,
-  ]
-    .filter((oid): oid is string => !!oid)
-    .reduce<API.ProjektinJakotieto[]>((liittyvat, oid) => {
-      const jakotieto =
-        oid === kopioituProjektista?.oid ? kopioituProjektista : kopioituProjekteihin?.find((jakotiedot) => jakotiedot?.oid === oid);
-      if (jakotieto) {
-        liittyvat.push(jakotieto);
-      }
-      return liittyvat;
-    }, []);
 
-  const julkaisuKopioituSuunnitelmasta = dbJulkaisu.kopioituProjektista ? kopioituProjektista : undefined;
+  const julkaisuKopioituSuunnitelmasta = dbJulkaisu.projektinJakautuminen?.jaettuProjektista ? kopioituProjektista : undefined;
 
-  const julkaisuKopioituSuunnitelmiin = kopioituProjekteihin?.filter(
-    (jakotieto) => !dbJulkaisu.projektinJakautuminen?.jaettuProjekteihin?.includes(jakotieto.oid)
-  );
+  const julkaisuKopioituSuunnitelmaan = dbJulkaisu.projektinJakautuminen?.jaettuProjekteihin?.[0] ? kopioituProjektiin : undefined;
 
   const suunnitelmaJaettuJulkinen: API.SuunnitelmaJaettuJulkinen = {
     __typename: "SuunnitelmaJaettuJulkinen",
-    // Kaikki julkaisun liittyvät suunnitelmat
-    liittyvatSuunnitelma: liittyvatSuunnitelmat?.[0],
-    // Kaikki projektin liittyvät suunnitelmat, joille kopioitu tiedot ja jotka ei ole julkaisulla
-    julkaisuKopioituSuunnitelmaan: julkaisuKopioituSuunnitelmiin?.[0],
-    // Projektin liittyvä suunnitelma, josta kopioitu tiedot ja joka ei ole julkaisulla
+    julkaisuKopioituSuunnitelmaan,
     julkaisuKopioituSuunnitelmasta,
   };
   return suunnitelmaJaettuJulkinen;
