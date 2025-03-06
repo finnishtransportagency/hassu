@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useRef } from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
@@ -8,21 +8,78 @@ import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
+import { Stack } from "@mui/system";
+import { Checkbox, Typography } from "@mui/material";
 
 export default function KuulutuksetJaKutsu({
-  tuodut,
+  tuodut: alkuperaisetTuodut,
   tiedostot,
+  valitutTiedostot,
   ennakkoneuvottelu,
-}: Readonly<{ tuodut?: LadattavaTiedosto[] | null; tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
+}: Readonly<{
+  tuodut?: LadattavaTiedosto[] | null;
+  tiedostot?: LadattuTiedostoNew[] | null;
+  valitutTiedostot?: LadattuTiedostoNew[] | null;
+  ennakkoneuvottelu?: boolean;
+}>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { fields, remove, move } = useFieldArray({
     name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`,
     control,
   });
   const handleUploadedFiles = useHandleUploadedFiles(
-    `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`
+    `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`,
+    { allowOnlyOne: true }
   );
+
+  const [valitutTiedostonimet, setValitutTiedostonimet] = useState<string[]>([]);
+  const [alustettu, setAlustettu] = useState(false);
+
+  const paivitaLomakkeenValitutTiedostot = useCallback(
+    (kaikkiTuodutTiedostot: LadattavaTiedosto[] | null | undefined, valitutTiedostonimet: string[]) => {
+      if (!kaikkiTuodutTiedostot) return;
+
+      const valitutKuulutuksetJaKutsu = kaikkiTuodutTiedostot.filter((tiedosto) => valitutTiedostonimet.includes(tiedosto.nimi));
+
+      if (ennakkoneuvottelu) {
+        setValue(
+          "ennakkoNeuvottelu",
+          {
+            ...control._formValues.ennakkoNeuvottelu,
+            valitutKuulutuksetJaKutsu: valitutKuulutuksetJaKutsu,
+          },
+          { shouldDirty: true }
+        );
+      }
+    },
+    [ennakkoneuvottelu, setValue, control._formValues.ennakkoNeuvottelu]
+  );
+
+  useEffect(() => {
+    if (alkuperaisetTuodut && !alustettu) {
+      if (valitutTiedostot && valitutTiedostot.length > 0) {
+        const valitutNimet = valitutTiedostot.map((tiedosto) => tiedosto.nimi);
+        setValitutTiedostonimet(valitutNimet);
+        paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, valitutNimet);
+      } else {
+        const projekti = control._formValues.projekti;
+        const valitutTiedostotProjektissa = projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu || [];
+
+        if (valitutTiedostotProjektissa.length > 0) {
+          const valitutNimet = valitutTiedostotProjektissa.map((tiedosto: { nimi: string }) => tiedosto.nimi);
+          setValitutTiedostonimet(valitutNimet);
+          paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, valitutNimet);
+        } else {
+          const tuodutTiedostonimet = alkuperaisetTuodut.map((tiedosto) => tiedosto.nimi);
+          setValitutTiedostonimet(tuodutTiedostonimet);
+          paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, tuodutTiedostonimet);
+        }
+      }
+
+      setAlustettu(true);
+    }
+  }, [alkuperaisetTuodut, valitutTiedostot, alustettu, paivitaLomakkeenValitutTiedostot, control._formValues.projekti]);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -34,36 +91,66 @@ export default function KuulutuksetJaKutsu({
     (index: number) => {
       return register(`${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu.${index}.nimi`);
     },
-    [register]
+    [register, ennakkoneuvottelu]
   );
+
+  const handleTiedostonValintaMuutos = (tiedostonimi: string) => {
+    const paivitetytValitutTiedostonimet = valitutTiedostonimet.includes(tiedostonimi)
+      ? valitutTiedostonimet.filter((nimi) => nimi !== tiedostonimi)
+      : [...valitutTiedostonimet, tiedostonimi];
+
+    setValitutTiedostonimet(paivitetytValitutTiedostonimet);
+
+    paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, paivitetytValitutTiedostonimet);
+  };
 
   return (
     <>
       <H4 variant="h3">Kuulutukset ja kutsu vuorovaikutukseen</H4>
       <p>
-        Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
+        Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit myös halutessasi lisätä aineistoa omalta
         koneeltasi.
       </p>
-      <ul style={{ listStyle: "none" }} className="mt-4">
-        {!!tuodut?.length &&
-          tuodut.map((tiedosto, i) => (
-            <li key={tiedosto.nimi + i}>
-              <LadattavaTiedostoComponent tiedosto={tiedosto} />
-            </li>
-          ))}
-      </ul>
+      {ennakkoneuvottelu && alkuperaisetTuodut && alkuperaisetTuodut.length > 0 && (
+        <>
+          <p>
+            Valitse aineistolinkin sisältöön mukaan otettavat tiedostot. Valitsematta jätetyt tiedostot eivät tule näkyviin
+            aineistolinkissä.
+          </p>
+          <ul style={{ listStyle: "none" }} className="mt-2">
+            {alkuperaisetTuodut.map((tiedosto) => (
+              <li key={tiedosto.nimi} style={{ marginBottom: "8px" }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Checkbox
+                    checked={valitutTiedostonimet.includes(tiedosto.nimi)}
+                    onChange={() => handleTiedostonValintaMuutos(tiedosto.nimi)}
+                    id={`valitse_tuotu_${tiedosto.nimi.replace(/\s+/g, "_")}`}
+                  />
+                  <LadattavaTiedostoComponent tiedosto={tiedosto} />
+
+                  {!valitutTiedostonimet.includes(tiedosto.nimi) && (
+                    <Typography style={{ color: "grey" }}>Ei näytetä aineistolinkin sisällössä</Typography>
+                  )}
+                </Stack>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
       {!!fields?.length && (
-        <TiedostoInputNewTable
-          id="hyvaksymisesitys_files_table"
-          tiedostot={tiedostot}
-          remove={remove}
-          fields={fields}
-          move={move}
-          registerNimi={registerNimi}
-          ladattuTiedosto
-          noHeaders
-          showTuotu
-        />
+        <>
+          <TiedostoInputNewTable
+            id="hyvaksymisesitys_files_table"
+            tiedostot={tiedostot}
+            remove={remove}
+            fields={fields}
+            move={move}
+            registerNimi={registerNimi}
+            ladattuTiedosto
+            noHeaders
+            showTuotu
+          />
+        </>
       )}
       <input
         type="file"
@@ -78,11 +165,13 @@ export default function KuulutuksetJaKutsu({
           }
         }}
       />
-      <label htmlFor="kuulutuksetJaKutsu-input">
-        <Button className="mt-4" type="button" id="tuo_kuulutuksetJaKutsu_button" onClick={onButtonClick}>
-          Tuo tiedostot
-        </Button>
-      </label>
+      <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }} spacing={2}>
+        <label htmlFor="kuulutuksetJaKutsu-input">
+          <Button type="button" id="tuo_kuulutuksetJaKutsu_button" onClick={onButtonClick}>
+            Tuo tiedostot
+          </Button>
+        </label>
+      </Stack>
     </>
   );
 }

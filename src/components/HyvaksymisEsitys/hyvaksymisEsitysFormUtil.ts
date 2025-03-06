@@ -31,6 +31,7 @@ export type EnnakkoneuvotteluForm = {
   ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
     suunnitelma: { [key: string]: FormAineistoNew[] };
+    valitutKuulutuksetJaKutsu?: Array<LadattuTiedostoInputNew> | null;
   };
 };
 
@@ -139,6 +140,23 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
   const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
     ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
   );
+
+  const valitutKuulutuksetJaKutsu = formData.ennakkoNeuvottelu.valitutKuulutuksetJaKutsu
+    ?.filter((item) => item !== null)
+    .map((item, index) => ({
+      uuid: item.uuid || `valittu_${index}_${Math.random().toString(36).substring(2, 9)}`,
+      nimi: item.nimi,
+      tiedosto: item.tiedosto || null,
+    }));
+
+  const kuulutuksetJaKutsu = formData.ennakkoNeuvottelu.kuulutuksetJaKutsu
+    ?.filter((item) => item !== null)
+    .filter((item) => !valitutKuulutuksetJaKutsu?.some((valittu) => valittu.nimi === item.nimi))
+    .map((item, index) => ({
+      ...item,
+      uuid: item.uuid || `tiedosto_${index}_${Math.random().toString(36).substring(2, 9)}`,
+    }));
+
   return {
     ...formData,
     laheta,
@@ -147,6 +165,8 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,
+      kuulutuksetJaKutsu: kuulutuksetJaKutsu || null,
+      valitutKuulutuksetJaKutsu: valitutKuulutuksetJaKutsu || null,
     },
   };
 }

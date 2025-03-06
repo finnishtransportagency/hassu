@@ -24,12 +24,32 @@ export default async function createLadattavatTiedostot(
     maanomistajaluettelo,
   } = collectHyvaksymisEsitysAineistot(projekti, hyvaksymisEsitys, status, projekti.aineistoHandledAt);
 
+  let filteredKuulutuksetJaKutsu = kuulutuksetJaKutsu;
+  if ("valitutKuulutuksetJaKutsu" in hyvaksymisEsitys && hyvaksymisEsitys.valitutKuulutuksetJaKutsu) {
+    const naytettavatKuulutuksetJaKutsu = new Set([
+      ...(hyvaksymisEsitys.kuulutuksetJaKutsu?.map((kt) => kt.nimi) || []),
+      ...hyvaksymisEsitys.valitutKuulutuksetJaKutsu.map((valittu) => valittu.nimi),
+    ]);
+
+    const seen = new Set();
+    filteredKuulutuksetJaKutsu = kuulutuksetJaKutsu.filter((tiedosto) => {
+      if (!naytettavatKuulutuksetJaKutsu.has(tiedosto.nimi)) {
+        return false;
+      }
+      if (seen.has(tiedosto.nimi)) {
+        return false;
+      }
+      seen.add(tiedosto.nimi);
+      return true;
+    });
+  }
+
   return {
     hyvaksymisEsitys: await Promise.all(hyvaksymisEsitysTiedostot.map(adaptFileInfoToLadattavaTiedosto)),
     suunnitelma: await Promise.all(suunnitelma.map(adaptFileInfoToLadattavaTiedosto)),
     kuntaMuistutukset: await Promise.all(kuntaMuistutukset.map(adaptFileInfoToKunnallinenLadattavaTiedosto)),
     lausunnot: await Promise.all(lausunnot.map(adaptFileInfoToLadattavaTiedosto)),
-    kuulutuksetJaKutsu: await Promise.all(kuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
+    kuulutuksetJaKutsu: await Promise.all(filteredKuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
     muutAineistot: await Promise.all(muutAineistot.map(adaptFileInfoToLadattavaTiedosto)),
     maanomistajaluettelo: await Promise.all(maanomistajaluettelo.map(adaptFileInfoToLadattavaTiedosto)),
   };

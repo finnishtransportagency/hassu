@@ -51,6 +51,20 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
 
   const { suunnitelmanNimi } = perustiedot;
 
+  /*   const filteredKuulutuksetJaKutsu = useMemo(() => {
+    const seen = new Set();
+    return (
+      kuulutuksetJaKutsu?.filter((tiedosto) => {
+        if (!tiedosto) return false;
+        if (seen.has(tiedosto.nimi)) {
+          return false;
+        }
+        seen.add(tiedosto.nimi);
+        return true;
+      }) || []
+    );
+  }, [kuulutuksetJaKutsu]); */
+
   const muistutukset = useMemo(() => {
     const kunnat = perustiedot.kunnat ?? [];
     return kunnat.reduce<Record<string, LadattavaTiedosto[]>>((acc, kunta) => {

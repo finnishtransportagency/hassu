@@ -67,9 +67,17 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     }
     auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
+    console.log("Before clone:", JSON.stringify(newEnnakkoNeuvottelu));
+    const cloned = cloneDeep(newEnnakkoNeuvottelu);
+    console.log("After clone:", JSON.stringify(cloned));
     const newEnnakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined = laheta
-      ? { ...(cloneDeep(newEnnakkoNeuvottelu) as DBEnnakkoNeuvotteluJulkaisu), lahetetty: nyt().toISOString() }
+      ? {
+          ...(cloned as DBEnnakkoNeuvotteluJulkaisu),
+          lahetetty: nyt().toISOString(),
+          valitutKuulutuksetJaKutsu: newEnnakkoNeuvottelu.valitutKuulutuksetJaKutsu,
+        }
       : undefined;
+    console.log("Final julkaisu:", JSON.stringify(newEnnakkoNeuvotteluJulkaisu));
     await projektiDatabase.tallennaEnnakkoNeuvottelu({
       oid,
       versio,
@@ -77,6 +85,8 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       ennakkoNeuvotteluJulkaisu: newEnnakkoNeuvotteluJulkaisu,
       muokkaaja: nykyinenKayttaja.uid,
     });
+    console.log("After DB save, julkaisu:", JSON.stringify(newEnnakkoNeuvotteluJulkaisu));
+
     if (newEnnakkoNeuvotteluJulkaisu) {
       await poistaJulkaistunEnnakkoNeuvottelunTiedostot(oid, projektiInDB.ennakkoNeuvotteluJulkaisu);
       await copyMuokattavaEnnakkoNeuvotteluFilesToJulkaistu(oid, newEnnakkoNeuvotteluJulkaisu);

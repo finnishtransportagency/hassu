@@ -90,7 +90,25 @@ export default function collectHyvaksymisEsitysAineistot(
   }));
 
   const kuulutuksetJaKutsutProjektista = getKutsut(projekti, status);
-  const kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+
+  let kuulutuksetJaKutsu: FileInfo[] = [];
+  if ("valitutKuulutuksetJaKutsu" in hyvaksymisEsitys && hyvaksymisEsitys.valitutKuulutuksetJaKutsu) {
+    const naytettavatKuulutuksetJaKutsu = hyvaksymisEsitys.valitutKuulutuksetJaKutsu.map((valittu) => valittu.nimi);
+
+    const valitutProjektinTiedostot = kuulutuksetJaKutsutProjektista
+      .filter((tiedosto) => naytettavatKuulutuksetJaKutsu.includes(tiedosto.nimi))
+      .filter(
+        (projektinTiedosto) => !kuulutuksetJaKutsutOmaltaKoneelta.some((omaltaKoneelta) => omaltaKoneelta.nimi === projektinTiedosto.nimi)
+      );
+
+    kuulutuksetJaKutsu = [...kuulutuksetJaKutsutOmaltaKoneelta, ...valitutProjektinTiedostot];
+  } else {
+    const filteredProjektinTiedostot = kuulutuksetJaKutsutProjektista.filter(
+      (projektinTiedosto) => !kuulutuksetJaKutsutOmaltaKoneelta.some((omaltaKoneelta) => omaltaKoneelta.nimi === projektinTiedosto.nimi)
+    );
+
+    kuulutuksetJaKutsu = [...filteredProjektinTiedostot, ...kuulutuksetJaKutsutOmaltaKoneelta];
+  }
 
   const muuAineistoOmaltaKoneelta = (hyvaksymisEsitys?.muuAineistoKoneelta ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "muuAineistoKoneelta", adaptFileName(tiedosto.nimi)),

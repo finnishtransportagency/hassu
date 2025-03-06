@@ -40,7 +40,10 @@ export default function Maanomistajaluettelo({
   return (
     <>
       <H4 variant="h3">Maanomistajaluettelo</H4>
-      <p>Järjestelmä on tuonut alle automaattisesti maanomistajaluettelon. Voit halutessasi lisätä aineistoa omalta koneeltasi.</p>
+      <p>
+        Järjestelmä on tuonut alle automaattisesti maanomistajaluettelon. Voit poistaa valinnan niiden aineistojen kohdalta, joita et halua
+        mukaan aineistolinkin sisältöön. Voit myös halutessasi lisätä aineistoa omalta koneeltasi.
+      </p>
       <ul style={{ listStyle: "none" }} className="mt-4">
         {!!tuodut?.length &&
           tuodut.map((tiedosto) => (

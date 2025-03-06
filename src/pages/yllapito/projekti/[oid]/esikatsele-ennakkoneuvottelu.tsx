@@ -94,6 +94,8 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
       tuotu: projekti?.ennakkoNeuvottelu?.maanomistajaluettelo?.find((t) => t.uuid === k.uuid)?.lisatty,
     })
   );
+
+  //tässä pitäisi huomioida myös valitutKuulutuksetJaKutsu
   const allKuulutuksetJaKutsu: LadattavaTiedosto[] = [];
   projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) =>
     allKuulutuksetJaKutsu.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })

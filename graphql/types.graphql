@@ -508,6 +508,7 @@ type EnnakkoNeuvottelu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  valitutKuulutuksetJaKutsu: [LadattuTiedostoNew!]
 }
 
 type EnnakkoNeuvotteluJulkaisu {
@@ -523,6 +524,7 @@ type EnnakkoNeuvotteluJulkaisu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  valitutKuulutuksetJaKutsu: [LadattuTiedostoNew!]
   hash: String!
   lahetetty: String!
 }
