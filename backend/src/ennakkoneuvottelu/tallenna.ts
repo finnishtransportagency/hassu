@@ -48,12 +48,20 @@ async function validate(projektiInDB: DBProjekti, input: TallennaEnnakkoNeuvotte
 export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio, ennakkoNeuvottelu, laheta } = input;
+
   try {
     await projektiDatabase.setLock(oid);
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
     await validate(projektiInDB, input);
     const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu, nykyinenKayttaja);
+
+    auditLog.info("Ennen julkaisun luontia", {
+      oid,
+      laheta,
+      newEnnakkoNeuvotteluValiKuulutukset: newEnnakkoNeuvottelu.valitutKuulutuksetJaKutsu?.length,
+    });
+
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     if (poistetutTiedostot.length || poistetutAineistot.length) {
@@ -66,18 +74,28 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       );
     }
     auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
+
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
-    console.log("Before clone:", JSON.stringify(newEnnakkoNeuvottelu));
-    const cloned = cloneDeep(newEnnakkoNeuvottelu);
-    console.log("After clone:", JSON.stringify(cloned));
+
     const newEnnakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined = laheta
       ? {
-          ...(cloned as DBEnnakkoNeuvotteluJulkaisu),
+          ...(cloneDeep(newEnnakkoNeuvottelu) as DBEnnakkoNeuvotteluJulkaisu),
           lahetetty: nyt().toISOString(),
-          valitutKuulutuksetJaKutsu: newEnnakkoNeuvottelu.valitutKuulutuksetJaKutsu,
         }
       : undefined;
-    console.log("Final julkaisu:", JSON.stringify(newEnnakkoNeuvotteluJulkaisu));
+    if (newEnnakkoNeuvotteluJulkaisu) {
+      auditLog.info("Julkaisu luotu", {
+        oid,
+        julkaisuValiKuulutukset: newEnnakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu?.length,
+      });
+    }
+
+    auditLog.info("Ennen tietokantaan tallennusta", {
+      oid,
+      ennakkoNeuvotteluValiKuulutukset: newEnnakkoNeuvottelu.valitutKuulutuksetJaKutsu?.length,
+      julkaisuValiKuulutukset: newEnnakkoNeuvotteluJulkaisu?.valitutKuulutuksetJaKutsu?.length,
+    });
+
     await projektiDatabase.tallennaEnnakkoNeuvottelu({
       oid,
       versio,
@@ -85,7 +103,11 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       ennakkoNeuvotteluJulkaisu: newEnnakkoNeuvotteluJulkaisu,
       muokkaaja: nykyinenKayttaja.uid,
     });
-    console.log("After DB save, julkaisu:", JSON.stringify(newEnnakkoNeuvotteluJulkaisu));
+
+    auditLog.info("Tallennus suoritettu", {
+      oid,
+      julkaisuOlemassa: !!newEnnakkoNeuvotteluJulkaisu,
+    });
 
     if (newEnnakkoNeuvotteluJulkaisu) {
       await poistaJulkaistunEnnakkoNeuvottelunTiedostot(oid, projektiInDB.ennakkoNeuvotteluJulkaisu);

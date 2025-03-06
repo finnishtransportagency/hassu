@@ -23,7 +23,12 @@ export default function KuulutuksetJaKutsu({
   ennakkoneuvottelu?: boolean;
 }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const { control, register, setValue, watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const formValues = watch();
+  const watchedValitutTiedostot = ennakkoneuvottelu
+    ? formValues.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu
+    : formValues.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu;
+
   const { fields, remove, move } = useFieldArray({
     name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`,
     control,
@@ -57,12 +62,16 @@ export default function KuulutuksetJaKutsu({
   );
 
   useEffect(() => {
-    if (alkuperaisetTuodut && !alustettu) {
-      if (valitutTiedostot && valitutTiedostot.length > 0) {
+    if (alkuperaisetTuodut) {
+      if (watchedValitutTiedostot && watchedValitutTiedostot.length > 0) {
+        const valitutNimet = watchedValitutTiedostot.map((tiedosto) => tiedosto.nimi);
+        setValitutTiedostonimet(valitutNimet);
+      } else if (valitutTiedostot && valitutTiedostot.length > 0 && !alustettu) {
         const valitutNimet = valitutTiedostot.map((tiedosto) => tiedosto.nimi);
         setValitutTiedostonimet(valitutNimet);
         paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, valitutNimet);
-      } else {
+        setAlustettu(true);
+      } else if (!alustettu) {
         const projekti = control._formValues.projekti;
         const valitutTiedostotProjektissa = projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu || [];
 
@@ -75,11 +84,18 @@ export default function KuulutuksetJaKutsu({
           setValitutTiedostonimet(tuodutTiedostonimet);
           paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, tuodutTiedostonimet);
         }
-      }
 
-      setAlustettu(true);
+        setAlustettu(true);
+      }
     }
-  }, [alkuperaisetTuodut, valitutTiedostot, alustettu, paivitaLomakkeenValitutTiedostot, control._formValues.projekti]);
+  }, [
+    alkuperaisetTuodut,
+    valitutTiedostot,
+    alustettu,
+    paivitaLomakkeenValitutTiedostot,
+    control._formValues.projekti,
+    watchedValitutTiedostot,
+  ]);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -108,7 +124,7 @@ export default function KuulutuksetJaKutsu({
     <>
       <H4 variant="h3">Kuulutukset ja kutsu vuorovaikutukseen</H4>
       <p>
-        Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit myös halutessasi lisätä aineistoa omalta
+        Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
         koneeltasi.
       </p>
       {ennakkoneuvottelu && alkuperaisetTuodut && alkuperaisetTuodut.length > 0 && (
@@ -138,19 +154,17 @@ export default function KuulutuksetJaKutsu({
         </>
       )}
       {!!fields?.length && (
-        <>
-          <TiedostoInputNewTable
-            id="hyvaksymisesitys_files_table"
-            tiedostot={tiedostot}
-            remove={remove}
-            fields={fields}
-            move={move}
-            registerNimi={registerNimi}
-            ladattuTiedosto
-            noHeaders
-            showTuotu
-          />
-        </>
+        <TiedostoInputNewTable
+          id="hyvaksymisesitys_files_table"
+          tiedostot={tiedostot}
+          remove={remove}
+          fields={fields}
+          move={move}
+          registerNimi={registerNimi}
+          ladattuTiedosto
+          noHeaders
+          showTuotu
+        />
       )}
       <input
         type="file"

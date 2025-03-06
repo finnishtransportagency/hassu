@@ -9,6 +9,8 @@ import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/Ladattav
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
+// tänne myös poistomahdollisuus
+
 export default function Maanomistajaluettelo({
   tuodut,
   tiedostot,
