@@ -163,6 +163,7 @@ module.exports = (phase) => {
         return isDevServer ? [devExtension, extension] : prodExtension;
       })
       .flat(),
+      output: "standalone", // enable standalone mode for Next.js
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
