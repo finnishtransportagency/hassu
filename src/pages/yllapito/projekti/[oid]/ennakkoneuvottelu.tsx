@@ -205,24 +205,11 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
                   ennakkoneuvottelu={true}
                 />
                 <KuulutuksetJaKutsu
-                  tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.filter(
-                    (tiedosto) => !projekti.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.some((valittu) => valittu.nimi === tiedosto.nimi)
-                  )}
-                  tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
-                  valitutTiedostot={projekti.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.filter(
-                    (valittu) =>
-                      !projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu?.some((tuotu) => tuotu.nimi === valittu.nimi)
-                  )}
-                  ennakkoneuvottelu={true}
-                />
-                {/*                 <KuulutuksetJaKutsu
-                  tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.filter(
-                    (tiedosto) => !projekti.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.some((valittu) => valittu.nimi === tiedosto.nimi)
-                  )}
+                  tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu}
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
                   valitutTiedostot={projekti.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu}
                   ennakkoneuvottelu={true}
-                /> */}
+                />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>Voit halutessasi tuoda muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.</p>
                 <MuuAineistoVelhosta aineisto={projekti.ennakkoNeuvottelu?.muuAineistoVelhosta} ennakkoneuvottelu={true} />

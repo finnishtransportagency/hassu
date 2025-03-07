@@ -472,6 +472,7 @@ type HyvaksymisEsityksenTiedot {
 type HyvaksymisEsityksenTuodutTiedostot {
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   maanomistajaluettelo: [LadattavaTiedosto!]
+  valitutKuulutuksetJaKutsu: [LadattavaTiedosto!]
 }
 
 type ProjektinPerustiedot {
@@ -1382,6 +1383,7 @@ type EnnakkoNeuvottelunAineistot {
   lausunnot: [LadattavaTiedosto!]
   maanomistajaluettelo: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
+  valitutKuulutuksetJaKutsu: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
   aineistopaketti: String
 }

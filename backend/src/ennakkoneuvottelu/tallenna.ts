@@ -2,7 +2,7 @@ import { TallennaEnnakkoNeuvotteluInput } from "hassu-common/graphql/apiModel";
 import { EnnakkoneuvotteluValidationContext, ennakkoNeuvotteluSchema } from "hassu-common/schema/ennakkoNeuvotteluSchema";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { assertIsDefined } from "../util/assertions";
-import { auditLog, log } from "../logger";
+import { log } from "../logger";
 import projektiDatabase from "../HyvaksymisEsitys/dynamoKutsut";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
@@ -56,12 +56,6 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
     await validate(projektiInDB, input);
     const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu, nykyinenKayttaja);
 
-    auditLog.info("Ennen julkaisun luontia", {
-      oid,
-      laheta,
-      newEnnakkoNeuvotteluValiKuulutukset: newEnnakkoNeuvottelu.valitutKuulutuksetJaKutsu?.length,
-    });
-
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     if (poistetutTiedostot.length || poistetutAineistot.length) {
@@ -73,7 +67,6 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
         uudetTiedostot.map((ladattuTiedosto) => persistFile({ oid, ladattuTiedosto, vaihePrefix: ENNAKKONEUVOTTELU_PATH }))
       );
     }
-    auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
 
     assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
 
@@ -83,18 +76,6 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
           lahetetty: nyt().toISOString(),
         }
       : undefined;
-    if (newEnnakkoNeuvotteluJulkaisu) {
-      auditLog.info("Julkaisu luotu", {
-        oid,
-        julkaisuValiKuulutukset: newEnnakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu?.length,
-      });
-    }
-
-    auditLog.info("Ennen tietokantaan tallennusta", {
-      oid,
-      ennakkoNeuvotteluValiKuulutukset: newEnnakkoNeuvottelu.valitutKuulutuksetJaKutsu?.length,
-      julkaisuValiKuulutukset: newEnnakkoNeuvotteluJulkaisu?.valitutKuulutuksetJaKutsu?.length,
-    });
 
     await projektiDatabase.tallennaEnnakkoNeuvottelu({
       oid,
@@ -102,11 +83,6 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       ennakkoNeuvottelu: newEnnakkoNeuvottelu,
       ennakkoNeuvotteluJulkaisu: newEnnakkoNeuvotteluJulkaisu,
       muokkaaja: nykyinenKayttaja.uid,
-    });
-
-    auditLog.info("Tallennus suoritettu", {
-      oid,
-      julkaisuOlemassa: !!newEnnakkoNeuvotteluJulkaisu,
     });
 
     if (newEnnakkoNeuvotteluJulkaisu) {

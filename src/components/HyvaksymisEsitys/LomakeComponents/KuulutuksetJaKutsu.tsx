@@ -23,23 +23,21 @@ export default function KuulutuksetJaKutsu({
   ennakkoneuvottelu?: boolean;
 }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
-  const { control, register, setValue, watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
-  const formValues = watch();
-  const watchedValitutTiedostot = ennakkoneuvottelu
-    ? formValues.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu
-    : formValues.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu;
+  const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+
+  const valintojaMuutettu = useRef(false);
+  const alustettu = useRef(false);
+  const [valitutTiedostonimet, setValitutTiedostonimet] = useState<string[]>([]);
 
   const { fields, remove, move } = useFieldArray({
     name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`,
     control,
   });
+
   const handleUploadedFiles = useHandleUploadedFiles(
     `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`,
     { allowOnlyOne: true }
   );
-
-  const [valitutTiedostonimet, setValitutTiedostonimet] = useState<string[]>([]);
-  const [alustettu, setAlustettu] = useState(false);
 
   const paivitaLomakkeenValitutTiedostot = useCallback(
     (kaikkiTuodutTiedostot: LadattavaTiedosto[] | null | undefined, valitutTiedostonimet: string[]) => {
@@ -58,44 +56,24 @@ export default function KuulutuksetJaKutsu({
         );
       }
     },
-    [ennakkoneuvottelu, setValue, control._formValues.ennakkoNeuvottelu]
+    [setValue, control._formValues.ennakkoNeuvottelu, ennakkoneuvottelu]
   );
 
   useEffect(() => {
-    if (alkuperaisetTuodut) {
-      if (watchedValitutTiedostot && watchedValitutTiedostot.length > 0) {
-        const valitutNimet = watchedValitutTiedostot.map((tiedosto) => tiedosto.nimi);
-        setValitutTiedostonimet(valitutNimet);
-      } else if (valitutTiedostot && valitutTiedostot.length > 0 && !alustettu) {
-        const valitutNimet = valitutTiedostot.map((tiedosto) => tiedosto.nimi);
-        setValitutTiedostonimet(valitutNimet);
-        paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, valitutNimet);
-        setAlustettu(true);
-      } else if (!alustettu) {
-        const projekti = control._formValues.projekti;
-        const valitutTiedostotProjektissa = projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu || [];
+    if (alkuperaisetTuodut && !alustettu.current) {
+      let valinnat: string[] = [];
 
-        if (valitutTiedostotProjektissa.length > 0) {
-          const valitutNimet = valitutTiedostotProjektissa.map((tiedosto: { nimi: string }) => tiedosto.nimi);
-          setValitutTiedostonimet(valitutNimet);
-          paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, valitutNimet);
-        } else {
-          const tuodutTiedostonimet = alkuperaisetTuodut.map((tiedosto) => tiedosto.nimi);
-          setValitutTiedostonimet(tuodutTiedostonimet);
-          paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, tuodutTiedostonimet);
-        }
-
-        setAlustettu(true);
+      if (valitutTiedostot && valitutTiedostot.length > 0) {
+        valinnat = valitutTiedostot.map((tiedosto) => tiedosto.nimi);
+      } else {
+        valinnat = alkuperaisetTuodut.map((tiedosto) => tiedosto.nimi);
       }
+
+      setValitutTiedostonimet(valinnat);
+      paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, valinnat);
+      alustettu.current = true;
     }
-  }, [
-    alkuperaisetTuodut,
-    valitutTiedostot,
-    alustettu,
-    paivitaLomakkeenValitutTiedostot,
-    control._formValues.projekti,
-    watchedValitutTiedostot,
-  ]);
+  }, [alkuperaisetTuodut, valitutTiedostot, paivitaLomakkeenValitutTiedostot]);
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -111,12 +89,13 @@ export default function KuulutuksetJaKutsu({
   );
 
   const handleTiedostonValintaMuutos = (tiedostonimi: string) => {
+    valintojaMuutettu.current = true;
+
     const paivitetytValitutTiedostonimet = valitutTiedostonimet.includes(tiedostonimi)
       ? valitutTiedostonimet.filter((nimi) => nimi !== tiedostonimi)
       : [...valitutTiedostonimet, tiedostonimi];
 
     setValitutTiedostonimet(paivitetytValitutTiedostonimet);
-
     paivitaLomakkeenValitutTiedostot(alkuperaisetTuodut, paivitetytValitutTiedostonimet);
   };
 

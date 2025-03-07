@@ -60,6 +60,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
     maanomistajaluettelo,
     lausunnot,
     kuulutuksetJaKutsu,
+    valitutKuulutuksetJaKutsu,
     muuAineistoKoneelta,
     muuAineistoVelhosta,
     poistumisPaiva,
@@ -95,19 +96,29 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
     })
   );
 
-  //tässä pitäisi huomioida myös valitutKuulutuksetJaKutsu
   const allKuulutuksetJaKutsu: LadattavaTiedosto[] = [];
-  projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) =>
-    allKuulutuksetJaKutsu.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })
-  );
-  kuulutuksetJaKutsu?.forEach((k) =>
-    allKuulutuksetJaKutsu.push({
-      __typename: "LadattavaTiedosto",
-      nimi: k.nimi,
-      linkki: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.tiedosto,
-      tuotu: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
-    })
-  );
+  if (valitutKuulutuksetJaKutsu) {
+    valitutKuulutuksetJaKutsu?.forEach((k) =>
+      allKuulutuksetJaKutsu.push({
+        __typename: "LadattavaTiedosto",
+        nimi: k.nimi,
+        linkki: projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.tiedosto,
+        tuotu: projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
+      })
+    );
+  } else {
+    projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) =>
+      allKuulutuksetJaKutsu.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })
+    );
+    kuulutuksetJaKutsu?.forEach((k) =>
+      allKuulutuksetJaKutsu.push({
+        __typename: "LadattavaTiedosto",
+        nimi: k.nimi,
+        linkki: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.tiedosto,
+        tuotu: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
+      })
+    );
+  }
   return (
     <>
       <H1>Ennakkotarkastus/ennakkoneuvottelu (esikatselu)</H1>
