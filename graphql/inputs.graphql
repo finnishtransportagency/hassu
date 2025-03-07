@@ -292,6 +292,7 @@ input EnnakkoNeuvotteluInput {
   muuAineistoKoneelta: [LadattuTiedostoInputNew!]
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [SahkopostiVastaanottajaInput!]
+  valitutKuulutuksetJaKutsu: [LadattuTiedostoInputNew!]
 }
 
 input TallennaEnnakkoNeuvotteluInput {

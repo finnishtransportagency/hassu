@@ -223,6 +223,7 @@ export type DBEnnakkoNeuvottelu = {
   maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;
+  valitutKuulutuksetJaKutsu?: Array<LadattuTiedostoNew> | null;
 };
 
 export type DBEnnakkoNeuvotteluJulkaisu = DBEnnakkoNeuvottelu & { lahetetty: string; poistumisPaiva: string };
