@@ -9,7 +9,7 @@ import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
-import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
+import { SideCard, SideCardHeading, SideCardContent, VideoWrapper, VideoIframe } from "./SideCard";
 import axios from "axios";
 
 const ProjektiSideNavigation = styled((props) => {
@@ -55,6 +55,8 @@ const ProjektiSideNavigation = styled((props) => {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
     }
   };
+
+  const videoId = "dQw4w9WgXcQ";
 
   return (
     <Section noDivider {...props}>
@@ -106,6 +108,18 @@ const ProjektiSideNavigation = styled((props) => {
             <KarttaKansalaiselle geoJSON={geoJSON} />
           </>
         )}
+      </SideCard>
+      <SideCard>
+        <SideCardHeading>{t("vls-esittely")}</SideCardHeading>
+        <SideCardContent>{t("tutustu-videoiden-avulla")}</SideCardContent>
+        <VideoWrapper>
+          <VideoIframe
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </VideoWrapper>
       </SideCard>
     </Section>
   );
