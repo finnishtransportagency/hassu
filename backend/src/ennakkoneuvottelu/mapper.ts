@@ -66,9 +66,7 @@ export async function adaptEnnakkoNeuvotteluToAPI(
         __typename: "HyvaksymisEsityksenTuodutTiedostot",
         maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
         kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
-        valitutKuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)), //tarviiko täällä
       },
-      valitutKuulutuksetJaKutsu: [],
     };
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
@@ -121,7 +119,6 @@ export async function adaptEnnakkoNeuvotteluToAPI(
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
-      valitutKuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)), //tarviiko täällä?
     },
   };
 }
@@ -188,7 +185,6 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
-      valitutKuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
     hash: createEnnakkoNeuvotteluHash(oid, salt),
     lahetetty: ennakkoNeuvotteluJulkaisu.lahetetty,

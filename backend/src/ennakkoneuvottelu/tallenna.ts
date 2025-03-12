@@ -2,7 +2,7 @@ import { TallennaEnnakkoNeuvotteluInput } from "hassu-common/graphql/apiModel";
 import { EnnakkoneuvotteluValidationContext, ennakkoNeuvotteluSchema } from "hassu-common/schema/ennakkoNeuvotteluSchema";
 import { requirePermissionLuku, requirePermissionMuokkaa } from "../user";
 import { assertIsDefined } from "../util/assertions";
-import { log } from "../logger";
+import { auditLog, log } from "../logger";
 import projektiDatabase from "../HyvaksymisEsitys/dynamoKutsut";
 import { SimultaneousUpdateError } from "hassu-common/error";
 import { ValidationMode } from "hassu-common/ProjektiValidationContext";
@@ -48,14 +48,12 @@ async function validate(projektiInDB: DBProjekti, input: TallennaEnnakkoNeuvotte
 export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
   const { oid, versio, ennakkoNeuvottelu, laheta } = input;
-
   try {
     await projektiDatabase.setLock(oid);
     const projektiInDB = await projektiDatabase.loadProjektiByOid(oid);
     assertIsDefined(projektiInDB, "projekti pitää olla olemassa");
     await validate(projektiInDB, input);
     const newEnnakkoNeuvottelu = adaptEnnakkoNeuvotteluToSave(projektiInDB.ennakkoNeuvottelu, ennakkoNeuvottelu, nykyinenKayttaja);
-
     const poistetutTiedostot = getHyvaksymisEsityksenPoistetutTiedostot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     const poistetutAineistot = getHyvaksymisEsityksenPoistetutAineistot(projektiInDB.ennakkoNeuvottelu, newEnnakkoNeuvottelu);
     if (poistetutTiedostot.length || poistetutAineistot.length) {
@@ -68,13 +66,11 @@ export async function tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvottelu
       );
     }
 
-    assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
+    auditLog.info("Tallenna ennakkoneuvottelu", { oid, versio, newEnnakkoNeuvottelu });
 
+    assertIsDefined(nykyinenKayttaja.uid, "Nykyisellä käyttäjällä on oltava uid");
     const newEnnakkoNeuvotteluJulkaisu: DBEnnakkoNeuvotteluJulkaisu | undefined = laheta
-      ? {
-          ...(cloneDeep(newEnnakkoNeuvottelu) as DBEnnakkoNeuvotteluJulkaisu),
-          lahetetty: nyt().toISOString(),
-        }
+      ? { ...(cloneDeep(newEnnakkoNeuvottelu) as DBEnnakkoNeuvotteluJulkaisu), lahetetty: nyt().toISOString() }
       : undefined;
 
     await projektiDatabase.tallennaEnnakkoNeuvottelu({

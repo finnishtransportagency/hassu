@@ -9,8 +9,6 @@ import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/Ladattav
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 
-// tänne myös poistomahdollisuus
-
 export default function Maanomistajaluettelo({
   tuodut,
   tiedostot,
@@ -42,10 +40,7 @@ export default function Maanomistajaluettelo({
   return (
     <>
       <H4 variant="h3">Maanomistajaluettelo</H4>
-      <p>
-        Järjestelmä on tuonut alle automaattisesti maanomistajaluettelon. Voit poistaa valinnan niiden aineistojen kohdalta, joita et halua
-        mukaan aineistolinkin sisältöön. Voit myös halutessasi lisätä aineistoa omalta koneeltasi.
-      </p>
+      <p>Järjestelmä on tuonut alle automaattisesti maanomistajaluettelon. Voit halutessasi lisätä aineistoa omalta koneeltasi.</p>
       <ul style={{ listStyle: "none" }} className="mt-4">
         {!!tuodut?.length &&
           tuodut.map((tiedosto) => (

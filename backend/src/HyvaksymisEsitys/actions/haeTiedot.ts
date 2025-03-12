@@ -42,7 +42,6 @@ export default async function haeHyvaksymisEsityksenTiedot(oid: string): Promise
       __typename: "HyvaksymisEsityksenTuodutTiedostot",
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
-      valitutKuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)), //tarviiko täällä
     },
     ashaTila: await asianhallintaService.checkAsianhallintaStateForKnownProjekti(dbProjekti, "HYVAKSYMISESITYS"),
     asianhallinta: await adaptAsianhallintaToAPI(dbProjekti),

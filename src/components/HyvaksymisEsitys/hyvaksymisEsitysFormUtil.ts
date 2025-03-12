@@ -14,6 +14,7 @@ import {
   TallennaHyvaksymisEsitysInput,
 } from "@services/api";
 import { getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
+import { uuid } from "common/util/uuid";
 
 export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] };
 export type HyvaksymisEsitysForm = {
@@ -143,18 +144,18 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
 
   const valitutKuulutuksetJaKutsu = formData.ennakkoNeuvottelu.valitutKuulutuksetJaKutsu
     ?.filter((item) => item !== null)
-    .map((item, index) => ({
-      uuid: item.uuid || `valittu_${index}_${Math.random().toString(36).substring(2, 9)}`,
+    .map((item) => ({
+      uuid: item.uuid || uuid.v4(),
       nimi: item.nimi,
       tiedosto: item.tiedosto || null,
     }));
 
-  const kuulutuksetJaKutsu = formData.ennakkoNeuvottelu.kuulutuksetJaKutsu
+  const kuulutuksetJaKutsu = formData.ennakkoNeuvottelu.valitutKuulutuksetJaKutsu
     ?.filter((item) => item !== null)
     .filter((item) => !valitutKuulutuksetJaKutsu?.some((valittu) => valittu.nimi === item.nimi))
-    .map((item, index) => ({
+    .map((item) => ({
       ...item,
-      uuid: item.uuid || `tiedosto_${index}_${Math.random().toString(36).substring(2, 9)}`,
+      uuid: item.uuid || uuid.v4(),
     }));
 
   return {

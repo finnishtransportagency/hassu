@@ -472,7 +472,6 @@ type HyvaksymisEsityksenTiedot {
 type HyvaksymisEsityksenTuodutTiedostot {
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   maanomistajaluettelo: [LadattavaTiedosto!]
-  valitutKuulutuksetJaKutsu: [LadattavaTiedosto!]
 }
 
 type ProjektinPerustiedot {
