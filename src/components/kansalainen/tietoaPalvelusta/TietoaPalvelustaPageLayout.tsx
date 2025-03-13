@@ -11,6 +11,7 @@ type Props = {
 const routes: Omit<Route, "title">[] = [
   { id: "tietoa-palvelusta", pathname: "/tietoa-palvelusta", requireExactMatch: true },
   { id: "tietoa-suunnittelusta", pathname: "/tietoa-palvelusta/tietoa-suunnittelusta" },
+  { id: "tietoa-suomifi-palvelusta", pathname: "/tietoa-palvelusta/tietoa-suomifi-palvelusta" },
   { id: "yhteystiedot-ja-palaute", pathname: "/tietoa-palvelusta/yhteystiedot-ja-palaute" },
   { id: "saavutettavuus", pathname: "/tietoa-palvelusta/saavutettavuus" },
 ];
