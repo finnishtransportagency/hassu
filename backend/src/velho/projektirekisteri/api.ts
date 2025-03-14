@@ -513,7 +513,7 @@ export interface ProjektiProjektiLuontiOminaisuudet {
      * @type {boolean}
      * @memberof ProjektiProjektiLuontiOminaisuudet
      */
-    'sisaltaa-maantien-lakkauttamisen'?: boolean;
+    'sisaltaa-maantien-lakkauttamisen'?: boolean | null;
     /**
      * 
      * @type {object}
@@ -657,7 +657,7 @@ export interface ProjektiProjektiLuontiOminaisuudet {
      * @type {boolean}
      * @memberof ProjektiProjektiLuontiOminaisuudet
      */
-    'sisaltaa-toisen-vaylamuodon-suunnittelua'?: boolean;
+    'sisaltaa-toisen-vaylamuodon-suunnittelua'?: boolean | null;
     /**
      * 
      * @type {boolean}
@@ -687,7 +687,7 @@ export interface ProjektiProjektiLuontiOminaisuudet {
      * @type {boolean}
      * @memberof ProjektiProjektiLuontiOminaisuudet
      */
-    'yva-hanke'?: boolean;
+    'yva-hanke'?: boolean | null;
     /**
      * 
      * @type {ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos}
@@ -5071,6 +5071,40 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Palauttaa käyttäjäkohtaisen linkin toimeksiannolle Vektor vieweriin.
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet: async (toimeksiantoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'toimeksiantoOid' is not null or undefined
+            assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet', 'toimeksiantoOid', toimeksiantoOid)
+            const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}/vektorlinkki`
+                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -5126,6 +5160,17 @@ export const ToimeksiantoApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid, projektiToimeksiannonPaivitys, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
+        /**
+         * 
+         * @summary Palauttaa käyttäjäkohtaisen linkin toimeksiannolle Vektor vieweriin.
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
     }
 };
 
@@ -5176,6 +5221,16 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
          */
         projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: any): AxiosPromise<ProjektiToimeksianto> {
             return localVarFp.projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid, projektiToimeksiannonPaivitys, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa käyttäjäkohtaisen linkin toimeksiannolle Vektor vieweriin.
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: any): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
+            return localVarFp.projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -5234,6 +5289,18 @@ export class ToimeksiantoApi extends BaseAPI {
      */
     public projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: AxiosRequestConfig) {
         return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid, projektiToimeksiannonPaivitys, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa käyttäjäkohtaisen linkin toimeksiannolle Vektor vieweriin.
+     * @param {string} toimeksiantoOid 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ToimeksiantoApi
+     */
+    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: AxiosRequestConfig) {
+        return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
