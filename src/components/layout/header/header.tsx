@@ -66,6 +66,11 @@ const kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)
         requireExactMatch: true,
       },
       {
+        label: "tietoa-suomifi-palvelusta",
+        href: "/tietoa-palvelusta/tietoa-suomifi-palvelusta",
+        requireExactMatch: true,
+      },
+      {
         label: "yhteystiedot-ja-palaute",
         href: "/tietoa-palvelusta/yhteystiedot-ja-palaute",
         requireExactMatch: true,

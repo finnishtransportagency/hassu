@@ -54,6 +54,7 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, ki
     },
     "/tietoa-palvelusta": { label: "tietoa-palvelusta" },
     "/tietoa-palvelusta/tietoa-suunnittelusta": { label: "tietoa-suunnittelusta" },
+    "/tietoa-palvelusta/tietoa-suomifi-palvelusta": { label: "tietoa-suomifi-palvelusta" },
     "/tietoa-palvelusta/yhteystiedot-ja-palaute": { label: "yhteystiedot-ja-palaute" },
     "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
     "/tietoa-palvelusta/diehtu-planemis": { label: "diehtu-planemis" },
