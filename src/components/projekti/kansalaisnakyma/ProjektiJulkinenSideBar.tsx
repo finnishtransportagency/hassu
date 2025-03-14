@@ -9,8 +9,10 @@ import { styled } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
-import { SideCard, SideCardHeading, SideCardContent, VideoWrapper, VideoIframe } from "./SideCard";
+import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 import axios from "axios";
+import { DynaaminenVideoUpotus } from "./VideoUpotus";
+import { useRouter } from "next/router";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -56,7 +58,15 @@ const ProjektiSideNavigation = styled((props) => {
     }
   };
 
-  const videoId = "dQw4w9WgXcQ";
+  const router = useRouter();
+  const pathName = router.pathname;
+  const isVideoPage = pathName.includes("aloituskuulutus") || pathName.includes("suunnittelu") || pathName.includes("nahtavillaolo");
+
+  if (!isVideoPage) {
+    return null;
+  }
+
+  console.log(projekti);
 
   return (
     <Section noDivider {...props}>
@@ -109,17 +119,15 @@ const ProjektiSideNavigation = styled((props) => {
           </>
         )}
       </SideCard>
+
       <SideCard>
-        <SideCardHeading>{t("vls-esittely")}</SideCardHeading>
-        <SideCardContent>{t("tutustu-videoiden-avulla")}</SideCardContent>
-        <VideoWrapper>
-          <VideoIframe
-            src={`https://www.youtube.com/embed/${videoId}`}
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </VideoWrapper>
+        {isVideoPage && (
+          <>
+            <SideCardHeading>{t("vls-esittely")}</SideCardHeading>
+            <SideCardContent>{t("tutustu-videoiden-avulla")}</SideCardContent>
+            <DynaaminenVideoUpotus projekti={projekti} />
+          </>
+        )}
       </SideCard>
     </Section>
   );
