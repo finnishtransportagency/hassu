@@ -34,6 +34,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     maanomistajaluettelo,
     vastaanottajat,
     hyvaksymisEsitys,
+    valitutKuulutuksetJaKutsu,
     ...rest
   } = ennakkoNeuvotteluInput;
   const ennakko: DBEnnakkoNeuvottelu = {
@@ -47,6 +48,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     muokkaaja: nykyinenKayttaja.uid,
     hyvaksymisEsitys: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.hyvaksymisEsitys, hyvaksymisEsitys),
+    valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.valitutKuulutuksetJaKutsu, valitutKuulutuksetJaKutsu),
     ...rest,
   };
   return ennakko;
@@ -69,6 +71,7 @@ export async function adaptEnnakkoNeuvotteluToAPI(
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
+
   return {
     __typename: "EnnakkoNeuvottelu",
     poistumisPaiva: ennakkoNeuvottelu.poistumisPaiva ?? null,
@@ -86,6 +89,10 @@ export async function adaptEnnakkoNeuvotteluToAPI(
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvottelu.kuulutuksetJaKutsu,
       path: joinPath(path, "kuulutuksetJaKutsu"),
+    }),
+    valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvottelu.valitutKuulutuksetJaKutsu,
+      path: joinPath(path, "valitutKuulutuksetJaKutsu"),
     }),
     muuAineistoVelhosta: adaptAineistotToAPI({
       aineistot: ennakkoNeuvottelu.muuAineistoVelhosta,
@@ -119,6 +126,7 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
+
   return {
     __typename: "EnnakkoNeuvotteluJulkaisu",
     poistumisPaiva: ennakkoNeuvotteluJulkaisu.poistumisPaiva ?? null,
@@ -140,6 +148,10 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
     kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvotteluJulkaisu.kuulutuksetJaKutsu,
       path: joinPath(path, "kuulutuksetJaKutsu"),
+    }),
+    valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu,
+      path: joinPath(path, "valitutKuulutuksetJaKutsu"),
     }),
     muuAineistoVelhosta: adaptAineistotToAPI({
       aineistot: ennakkoNeuvotteluJulkaisu.muuAineistoVelhosta,

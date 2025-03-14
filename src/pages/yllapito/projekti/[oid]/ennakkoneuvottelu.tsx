@@ -68,6 +68,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
     muistutukset,
     lausunnot,
     kuulutuksetJaKutsu,
+    valitutKuulutuksetJaKutsu,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
     maanomistajaluettelo,
@@ -92,7 +93,10 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, velho.tyyppi),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
-      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
+      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(
+        kuulutuksetJaKutsu?.filter((k) => !valitutKuulutuksetJaKutsu?.some((v) => v.nimi === k.nimi))
+      ),
+      valitutKuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(valitutKuulutuksetJaKutsu),
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
@@ -138,6 +142,7 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
     [projekti?.velho.tyyppi]
   );
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
+  console.log("Koko projekti:", projekti);
   return (
     <ProjektiPageLayout title="Ennakkotarkastus/ennakkoneuvottelu" showInfo>
       {projekti.ennakkoNeuvotteluJulkaisu && (
@@ -202,6 +207,7 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
                 <KuulutuksetJaKutsu
                   tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu}
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
+                  valitutTiedostot={projekti.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu}
                   ennakkoneuvottelu={true}
                 />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
@@ -282,12 +288,13 @@ function MuokkausLomakePainikkeet({ projekti, kategoriat }: Readonly<PainikkeetP
             setIsOpen(false);
             const convertedFormData = transformToInput(formData, true);
             await api.tallennaEnnakkoNeuvottelu(convertedFormData);
-            showSuccessMessage("Tallennus ja lähettäminen onnistui");
+            await checkAineistoValmiit({ retries: 5 });
             reloadProjekti();
+            showSuccessMessage("Tallennus ja lähettäminen onnistui");
           } catch (error) {}
         })()
       ),
-    [api, reloadProjekti, showSuccessMessage, withLoadingSpinner, setIsOpen]
+    [withLoadingSpinner, api, checkAineistoValmiit, reloadProjekti, showSuccessMessage]
   );
   return (
     <>
