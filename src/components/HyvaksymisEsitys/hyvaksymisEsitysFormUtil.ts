@@ -141,21 +141,12 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
   const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
     ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
   );
-
   const valitutKuulutuksetJaKutsu = formData.ennakkoNeuvottelu.valitutKuulutuksetJaKutsu
     ?.filter((item) => item !== null)
     .map((item) => ({
       uuid: item.uuid || uuid.v4(),
       nimi: item.nimi,
       tiedosto: item.tiedosto || null,
-    }));
-
-  const kuulutuksetJaKutsu = formData.ennakkoNeuvottelu.valitutKuulutuksetJaKutsu
-    ?.filter((item) => item !== null)
-    .filter((item) => !valitutKuulutuksetJaKutsu?.some((valittu) => valittu.nimi === item.nimi))
-    .map((item) => ({
-      ...item,
-      uuid: item.uuid || uuid.v4(),
     }));
 
   return {
@@ -166,7 +157,6 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,
-      kuulutuksetJaKutsu: kuulutuksetJaKutsu || null,
       valitutKuulutuksetJaKutsu: valitutKuulutuksetJaKutsu || null,
     },
   };

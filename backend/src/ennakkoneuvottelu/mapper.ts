@@ -72,16 +72,6 @@ export async function adaptEnnakkoNeuvotteluToAPI(
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
 
-  const kuulutuksetJaKutsu = ennakkoNeuvottelu.valitutKuulutuksetJaKutsu?.length
-    ? adaptLadatutTiedostotToApi({
-        tiedostot: ennakkoNeuvottelu.valitutKuulutuksetJaKutsu,
-        path: joinPath(path, "valitutKuulutuksetJaKutsu"),
-      })
-    : adaptLadatutTiedostotToApi({
-        tiedostot: ennakkoNeuvottelu.kuulutuksetJaKutsu,
-        path: joinPath(path, "kuulutuksetJaKutsu"),
-      });
-
   return {
     __typename: "EnnakkoNeuvottelu",
     poistumisPaiva: ennakkoNeuvottelu.poistumisPaiva ?? null,
@@ -96,7 +86,10 @@ export async function adaptEnnakkoNeuvotteluToAPI(
       path: joinPath(path, "muistutukset"),
     }),
     lausunnot: adaptLadatutTiedostotToApi({ tiedostot: ennakkoNeuvottelu.lausunnot, path: joinPath(path, "lausunnot") }),
-    kuulutuksetJaKutsu,
+    kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvottelu.kuulutuksetJaKutsu,
+      path: joinPath(path, "kuulutuksetJaKutsu"),
+    }),
     valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvottelu.valitutKuulutuksetJaKutsu,
       path: joinPath(path, "valitutKuulutuksetJaKutsu"),
@@ -134,16 +127,6 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
 
-  const kuulutuksetJaKutsu = ennakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu?.length
-    ? adaptLadatutTiedostotToApi({
-        tiedostot: ennakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu,
-        path: joinPath(path, "valitutKuulutuksetJaKutsu"),
-      })
-    : adaptLadatutTiedostotToApi({
-        tiedostot: ennakkoNeuvotteluJulkaisu.kuulutuksetJaKutsu,
-        path: joinPath(path, "kuulutuksetJaKutsu"),
-      });
-
   return {
     __typename: "EnnakkoNeuvotteluJulkaisu",
     poistumisPaiva: ennakkoNeuvotteluJulkaisu.poistumisPaiva ?? null,
@@ -162,7 +145,10 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
       path: joinPath(path, "muistutukset"),
     }),
     lausunnot: adaptLadatutTiedostotToApi({ tiedostot: ennakkoNeuvotteluJulkaisu.lausunnot, path: joinPath(path, "lausunnot") }),
-    kuulutuksetJaKutsu,
+    kuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
+      tiedostot: ennakkoNeuvotteluJulkaisu.kuulutuksetJaKutsu,
+      path: joinPath(path, "kuulutuksetJaKutsu"),
+    }),
     valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu,
       path: joinPath(path, "valitutKuulutuksetJaKutsu"),
