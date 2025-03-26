@@ -445,7 +445,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
           })}
         </p>
         <br></br>
-        <Typography sx={{ fontSize: "1.125rem" }}>
+        <Typography component="div" sx={{ fontSize: "1.125rem" }}>
           <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</p>
         </Typography>
         <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_vastaa_kyselyyn")}</p>
