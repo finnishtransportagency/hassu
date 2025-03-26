@@ -208,7 +208,11 @@
     "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen.",
     "lue_lisaa": "Läs mer",
     "epaonnistui": "Det gick inte att skicka en anmärkning",
-    "epaonnistui_viesti": "Du kan försöka skicka anmärkningen igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
+    "epaonnistui_viesti": "Du kan försöka skicka anmärkningen igen eller skicka den via e-post till {{viranomainen}} registratorskontor.",
+    "kerro_kayttokokemuksestasi": "Berätta om dina erfarenheter av att använda tjänsten",
+    "kerro_kayttokokemuksestasi_vastaa_kyselyyn": "Svara på en kort enkät om tjänsten Planering av statens trafikleder.",
+    "kerro_kayttokokemuksestasi_saatu_palaute": "Responsen hjälper oss att utveckla tjänsten.",
+    "kerro_kayttokokemuksestasi_linkki": "TILL ENKÄT"
   },
   "asiakirja": {
     "aloituskuulutus": {

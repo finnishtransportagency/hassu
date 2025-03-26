@@ -209,7 +209,11 @@
     "muistutus_info_2": "Muistutuksen tekstisisältö voidaan laatia suoraan Valtion liikenneväylien suunnittelu -palvelun Muistutus-lomakkeeseen. Voit myös valmistella muistutuksen esimerkiksi Word-tiedostona omalla tietokoneella ja liittää tiedoston palvelun Muistutus-lomakkeeseen. Muistutukseen voi lisätä myös muita liitteitä.",
     "lue_lisaa": "Lue lisää",
     "epaonnistui": "Muistutuksen jättäminen epäonnistui",
-    "epaonnistui_viesti": "Voit kokeilla lähettää muistutuksen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon."
+    "epaonnistui_viesti": "Voit kokeilla lähettää muistutuksen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon.",
+    "kerro_kayttokokemuksestasi": "Kerro käyttökokemuksestasi",
+    "kerro_kayttokokemuksestasi_vastaa_kyselyyn": "Vastaa lyhyeen kyselyyn Valtion liikenneväylien suunnittelu -palvelusta.",
+    "kerro_kayttokokemuksestasi_saatu_palaute": "Saatu palaute auttaa kehittämään palvelua.",
+    "kerro_kayttokokemuksestasi_linkki": "KYSELYYN"
   },
   "asiakirja": {
     "aloituskuulutus": {

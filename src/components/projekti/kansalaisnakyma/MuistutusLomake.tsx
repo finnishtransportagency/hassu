@@ -38,6 +38,7 @@ import { joinStringArray } from "hassu-common/util/joinStringArray";
 import { useRouter } from "next/router";
 import { getSuomiFiLogoutURL } from "@services/userService";
 import dayjs from "dayjs";
+import ButtonLink from "@components/button/ButtonLink";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -395,7 +396,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
           <p>{t("common:istunto_vanhentunut_teksti")}</p>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeSessioDialog}>{t("sulje")}</Button>
+          <Button onClick={closeSessioDialog}>{t("common:sulje")}</Button>
         </DialogActions>
       </HassuDialog>
     </Section>
@@ -443,11 +444,26 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
             pvm: formatDateTime(paattyyPvm),
           })}
         </p>
+        <br></br>
+        <Typography sx={{ fontSize: "1.125rem" }}>
+          <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</p>
+        </Typography>
+        <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_vastaa_kyselyyn")}</p>
+        <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_saatu_palaute")}</p>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} primary id="close_kiitos_viestista">
+        <Button onClick={onClose} id="close_kiitos_viestista">
           {t("common:sulje")}
         </Button>
+        <ButtonLink
+          href="https://link.webropolsurveys.com/S/93F78A20D9689AB2"
+          target="_blank"
+          primary
+          id="link_kerro_kayttokokemuksesi"
+          endIcon="external-link-alt"
+        >
+          {t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_linkki")}
+        </ButtonLink>
       </DialogActions>
     </HassuDialog>
   );

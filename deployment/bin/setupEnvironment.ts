@@ -58,6 +58,7 @@ async function main() {
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
+      NEXT_PUBLIC_PALAUTE_KYSELY_AVOINNA: environmentVariables.NEXT_PUBLIC_PALAUTE_KYSELY_AVOINNA,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
       KEYCLOAK_DOMAIN: variables.KeycloakDomain,
       KEYCLOAK_CLIENT_SECRET: variables.KeycloakClientSecret,
