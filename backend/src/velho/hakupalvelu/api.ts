@@ -86,6 +86,12 @@ export interface HakulausekeAsetukset {
      * @type {string}
      * @memberof HakulausekeAsetukset
      */
+    'tilannepaivamaara'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HakulausekeAsetukset
+     */
     'tyyppi'?: HakulausekeAsetuksetTyyppiEnum;
     /**
      * 
@@ -135,6 +141,31 @@ export interface HakulausekeKysely {
      * @memberof HakulausekeKysely
      */
     'lauseke'?: object;
+    /**
+     * 
+     * @type {HakulausekeLisarajaukset}
+     * @memberof HakulausekeKysely
+     */
+    'lisarajaukset'?: HakulausekeLisarajaukset;
+}
+/**
+ * 
+ * @export
+ * @interface HakulausekeLisarajaukset
+ */
+export interface HakulausekeLisarajaukset {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof HakulausekeLisarajaukset
+     */
+    'kohdeluokat': Array<string>;
+    /**
+     * 
+     * @type {object}
+     * @memberof HakulausekeLisarajaukset
+     */
+    'lauseke': object;
 }
 /**
  * 
@@ -388,6 +419,12 @@ export interface HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke {
      * @memberof HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
      */
     'lauseke'?: object;
+    /**
+     * 
+     * @type {HakulausekeLisarajaukset}
+     * @memberof HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
+     */
+    'lisarajaukset'?: HakulausekeLisarajaukset;
 }
 /**
  * 
