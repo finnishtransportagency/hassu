@@ -11,7 +11,7 @@ import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil"
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
 import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 import axios from "axios";
-import { DynaaminenVideoUpotus } from "./VideoUpotus";
+import { DynaaminenVideoUpotus } from "./videoupotus/DynaaminenVideoUpotus";
 import { useRouter } from "next/router";
 
 const ProjektiSideNavigation = styled((props) => {
