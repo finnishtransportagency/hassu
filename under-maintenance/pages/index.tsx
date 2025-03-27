@@ -30,8 +30,8 @@ export default function RakenteillaSivu() {
           <p>Huoltokatkon vuoksi palvelu on tilapäisesti poissa käytöstä noin 30 minuutin ajan. Pahoittelemme tästä aiheutuvaa häiriötä.</p>
           <p className="vayla-lead">Serviceavbrott i tjänsten</p>
           <p>
-            På grund av serviceavbrottet är tjänsten tillfälligt ur bruk i cirka 30 minuter. Vi beklagar de olägenheter som avbrottet
-            orsakar.
+            På grund av serviceavbrottet är tjänsten tillfälligt ur bruk i cirka 30 minuter.<br></br> Vi beklagar de olägenheter som
+            avbrottet orsakar.
           </p>
         </ContentSpacer>
         <KuvaContainer className="justify-center">
