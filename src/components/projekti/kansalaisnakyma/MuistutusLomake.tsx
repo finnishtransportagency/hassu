@@ -449,9 +449,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
         {kyselyTiedot.isActive && (
           <>
             <br></br>
-            <Typography component="div" sx={{ fontSize: "1.125rem" }}>
-              <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</p>
-            </Typography>
+            <SomewhatLargerParagraph>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</SomewhatLargerParagraph>
             <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_vastaa_kyselyyn")}</p>
             <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_saatu_palaute")}</p>
           </>
@@ -462,13 +460,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
           {t("common:sulje")}
         </Button>
         {kyselyTiedot.isActive && (
-          <ButtonLink
-            href={kyselyTiedot.href}
-            target="_blank"
-            primary
-            id="link_kerro_kayttokokemuksesi"
-            endIcon="external-link-alt"
-          >
+          <ButtonLink href={kyselyTiedot.href} target="_blank" primary id="link_kerro_kayttokokemuksesi" endIcon="external-link-alt">
             {t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_linkki")}
           </ButtonLink>
         )}
@@ -511,3 +503,5 @@ function EpaonnistuiDialogi({ open, onClose, projekti, isMobile }: Readonly<Dial
     </HassuDialog>
   );
 }
+
+const SomewhatLargerParagraph = styled("p")({ fontSize: "1.125rem" });
