@@ -38,6 +38,8 @@ import { joinStringArray } from "hassu-common/util/joinStringArray";
 import { useRouter } from "next/router";
 import { getSuomiFiLogoutURL } from "@services/userService";
 import dayjs from "dayjs";
+import ButtonLink from "@components/button/ButtonLink";
+import { haePalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -395,7 +397,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
           <p>{t("common:istunto_vanhentunut_teksti")}</p>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeSessioDialog}>{t("sulje")}</Button>
+          <Button onClick={closeSessioDialog}>{t("common:sulje")}</Button>
         </DialogActions>
       </HassuDialog>
     </Section>
@@ -414,6 +416,7 @@ interface DialogProps {
 
 export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile }: Readonly<DialogProps>): ReactElement {
   const { t } = useTranslation();
+  const kyselyTiedot: PalauteKyselyAvoinna = haePalauteKyselyTiedot();
   const viranomaisenText = useMemo(() => {
     const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
     if (!viranomainen) {
@@ -428,7 +431,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
       scroll="paper"
       fullScreen={isMobile}
       open={open}
-      title={t("projekti:muistutuslomake.kiitos_viestista")}
+      title={t("projekti:muistutuslomake.kiitos_muistutuksesta")}
       onClose={onClose}
       maxWidth={"sm"}
     >
@@ -443,11 +446,24 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
             pvm: formatDateTime(paattyyPvm),
           })}
         </p>
+        {kyselyTiedot.isActive && (
+          <>
+            <br></br>
+            <SomewhatLargerParagraph>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</SomewhatLargerParagraph>
+            <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_vastaa_kyselyyn")}</p>
+            <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_saatu_palaute")}</p>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} primary id="close_kiitos_viestista">
+        <Button onClick={onClose} id="close_kiitos_viestista">
           {t("common:sulje")}
         </Button>
+        {kyselyTiedot.isActive && (
+          <ButtonLink href={kyselyTiedot.href} target="_blank" primary id="link_kerro_kayttokokemuksesi" endIcon="external-link-alt">
+            {t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_linkki")}
+          </ButtonLink>
+        )}
       </DialogActions>
     </HassuDialog>
   );
@@ -487,3 +503,5 @@ function EpaonnistuiDialogi({ open, onClose, projekti, isMobile }: Readonly<Dial
     </HassuDialog>
   );
 }
+
+const SomewhatLargerParagraph = styled("p")({ fontSize: "1.125rem" });
