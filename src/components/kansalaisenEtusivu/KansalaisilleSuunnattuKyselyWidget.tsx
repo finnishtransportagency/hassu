@@ -4,7 +4,11 @@ import Widget from "./Widget";
 import ButtonLink, { ButtonLinkProps } from "@components/button/ButtonLink";
 import { styled, experimental_sx as sx } from "@mui/material";
 
-function KansalaisilleSuunnattuKyselyWidget() {
+export type KansalaisilleSuunnattuKyselyWidgetProps = {
+  href: string | undefined
+}
+
+function KansalaisilleSuunnattuKyselyWidget({href}: KansalaisilleSuunnattuKyselyWidgetProps) {
   const { t, lang } = useTranslation("main-page-sidebar");
   return (
     <React.Fragment>
@@ -13,7 +17,7 @@ function KansalaisilleSuunnattuKyselyWidget() {
         <p>{t("widgetit.kerro-kayttokokemuksestasi-saatu-palaute")}</p>
         <ResponsiveButtonLink
           lang={lang}
-          href="https://link.webropolsurveys.com/S/93F78A20D9689AB2"
+          href={href}
           target="_blank"
           endIcon="external-link-alt"
           className="mt-8 mb-4"

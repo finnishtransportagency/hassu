@@ -39,6 +39,7 @@ import { useRouter } from "next/router";
 import { getSuomiFiLogoutURL } from "@services/userService";
 import dayjs from "dayjs";
 import ButtonLink from "@components/button/ButtonLink";
+import { haePalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -415,6 +416,7 @@ interface DialogProps {
 
 export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile }: Readonly<DialogProps>): ReactElement {
   const { t } = useTranslation();
+  const kyselyTiedot: PalauteKyselyAvoinna = haePalauteKyselyTiedot();
   const viranomaisenText = useMemo(() => {
     const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
     if (!viranomainen) {
@@ -444,26 +446,32 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
             pvm: formatDateTime(paattyyPvm),
           })}
         </p>
-        <br></br>
-        <Typography component="div" sx={{ fontSize: "1.125rem" }}>
-          <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</p>
-        </Typography>
-        <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_vastaa_kyselyyn")}</p>
-        <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_saatu_palaute")}</p>
+        {kyselyTiedot.isActive && (
+          <>
+            <br></br>
+            <Typography component="div" sx={{ fontSize: "1.125rem" }}>
+              <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi")}</p>
+            </Typography>
+            <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_vastaa_kyselyyn")}</p>
+            <p>{t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_saatu_palaute")}</p>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} id="close_kiitos_viestista">
           {t("common:sulje")}
         </Button>
-        <ButtonLink
-          href="https://link.webropolsurveys.com/S/93F78A20D9689AB2"
-          target="_blank"
-          primary
-          id="link_kerro_kayttokokemuksesi"
-          endIcon="external-link-alt"
-        >
-          {t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_linkki")}
-        </ButtonLink>
+        {kyselyTiedot.isActive && (
+          <ButtonLink
+            href={kyselyTiedot.href}
+            target="_blank"
+            primary
+            id="link_kerro_kayttokokemuksesi"
+            endIcon="external-link-alt"
+          >
+            {t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_linkki")}
+          </ButtonLink>
+        )}
       </DialogActions>
     </HassuDialog>
   );
