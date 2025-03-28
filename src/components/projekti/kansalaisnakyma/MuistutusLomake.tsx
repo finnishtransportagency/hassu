@@ -431,7 +431,7 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
       scroll="paper"
       fullScreen={isMobile}
       open={open}
-      title={t("projekti:muistutuslomake.kiitos_viestista")}
+      title={t("projekti:muistutuslomake.kiitos_muistutuksesta")}
       onClose={onClose}
       maxWidth={"sm"}
     >
