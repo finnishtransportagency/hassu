@@ -39,7 +39,7 @@ import { useRouter } from "next/router";
 import { getSuomiFiLogoutURL } from "@services/userService";
 import dayjs from "dayjs";
 import ButtonLink from "@components/button/ButtonLink";
-import { haePalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
+import { haehardCodedPalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
 
 interface Props {
   nahtavillaolo: NahtavillaoloVaiheJulkaisuJulkinen;
@@ -416,7 +416,7 @@ interface DialogProps {
 
 export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile }: Readonly<DialogProps>): ReactElement {
   const { t } = useTranslation();
-  const kyselyTiedot: PalauteKyselyAvoinna = haePalauteKyselyTiedot();
+  const kyselyTiedot: PalauteKyselyAvoinna = haehardCodedPalauteKyselyTiedot();
   const viranomaisenText = useMemo(() => {
     const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
     if (!viranomainen) {

@@ -7,11 +7,11 @@ import { Kieli } from "hassu-common/graphql/apiModel";
 import TietoaSuunnittelustaWidget from "./TietoaSuunnittelustaWidget";
 import TutustuVaylavirastoonJaElyynWidget from "./TutustuVaylavirastoonJaElyynWidget";
 import { KansalaisilleSuunnattuKyselyWidget } from "./KansalaisilleSuunnattuKyselyWidget";
-import { haePalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
+import { haehardCodedPalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
 
 const EtusivuSideNavigation = styled((props) => {
   const kieli = useKansalaiskieli();
-  const kyselyTiedot: PalauteKyselyAvoinna = haePalauteKyselyTiedot();
+  const kyselyTiedot: PalauteKyselyAvoinna = haehardCodedPalauteKyselyTiedot();
 
   return (
     <Section noDivider {...props}>
