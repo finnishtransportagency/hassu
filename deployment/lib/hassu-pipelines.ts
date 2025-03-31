@@ -208,10 +208,6 @@ export class HassuPipelineStack extends Stack {
           value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },
-        NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: {
-          value: config.getInfraParameterPath("PalauteKyselyTiedot"),
-          type: BuildEnvironmentVariableType.PARAMETER_STORE,
-        },
         NODE_OPTIONS: {
           value: "--max_old_space_size=4096 --max-old-space-size=4096",
           type: BuildEnvironmentVariableType.PLAINTEXT,
