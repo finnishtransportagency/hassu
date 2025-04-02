@@ -44,8 +44,8 @@ export const haePalauteKyselyTiedot = (): PalauteKyselyAvoinna => {
 
 export const haehardCodedPalauteKyselyTiedot = (): PalauteKyselyAvoinna => {
   const palauteKyselyTiedot = {
-    startDate: "2025-03-28",
-    endDate: "2025-04-30",
+    startDate: "2025-04-01",
+    endDate: "2025-05-11",
     href: "https://link.webropolsurveys.com/S/93F78A20D9689AB2",
   };
   return createPalauteKyselyAvoinna(palauteKyselyTiedot);
