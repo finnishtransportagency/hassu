@@ -50,7 +50,7 @@ export function PalauteKyselyMuistutusPopup(): ReactElement | null {
         <Button onClick={onClose} id="close_kerro_kayttokokemuksestasi">
           {t("common:sulje")}
         </Button>
-        <ButtonLink href={"foobar.foobar"} target="_blank" primary id="link_kerro_kayttokokemuksesi_popup" endIcon="external-link-alt">
+        <ButtonLink href={kyselyTiedot.href} target="_blank" primary id="link_kerro_kayttokokemuksesi_popup" endIcon="external-link-alt">
           {t("projekti:muistutuslomake.kerro_kayttokokemuksestasi_linkki")}
         </ButtonLink>
       </DialogActions>
