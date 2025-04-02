@@ -103,9 +103,11 @@ export default function ProjektiPageLayout({
                         }}
                         values={{ suunnitelmaNimi }}
                       />
-                      {/* tähän kohtaan tarvitaan todennäköisesti hieman muutettua ei-julkaisuja virkettä */}
                       {!projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.julkinen &&
-                        ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
+                        projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.nimi[kieli] &&
+                        ` ${t("liittyvat-suunnitelmat.ei-julkaisuja-nimella", {
+                          suunnitelmaNimi: projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.nimi[kieli],
+                        })}`}
                     </p>
                   </ContentSpacer>
                 </Notification>

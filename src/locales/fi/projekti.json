@@ -69,7 +69,8 @@
     "suunnitelma-on-jaettu": "Suunnitelma on jaettu suunnitelmiin: {{suunnitelmaNimi}} ja <suunnitelma2/>.",
     "kuulutettu-yhdessa": "Suunnitelma on aiemmin kuulutettu yhdessä suunnitelman <suunnitelma/> kanssa.",
     "kuulutettu-yhdessa-pdf": "Suunnitelma on aiemmin kuulutettu yhdessä suunnitelman {{kuulutettuYhdessaSuunnitelmanimi}} kanssa.",
-    "ei-julkaisuja": "Suunnitelmalla ei toistaiseksi ole esillä olevia julkaisuja, joten sen tietoja ei voi tarkastella."
+    "ei-julkaisuja": "Suunnitelmalla ei toistaiseksi ole esillä olevia julkaisuja, joten sen tietoja ei voi tarkastella.",
+    "ei-julkaisuja-nimella": "Suunnitelmalla {{suunnitelmaNimi}} ei toistaiseksi ole esillä olevia julkaisuja, joten sen tietoja ei voi tarkastella."
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Valtion liikenneväylien suunnittelu",

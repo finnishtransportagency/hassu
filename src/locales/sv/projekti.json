@@ -69,7 +69,8 @@
     "suunnitelma-on-jaettu": "Planen har delats upp i planerna: {{suunnitelmaNimi}} och <suunnitelma2/>.",
     "kuulutettu-yhdessa": "Planen har tidigare kungjorts tillsammans med planen <suunnitelma/>.",
     "kuulutettu-yhdessa-pdf": "Planen har tidigare kungjorts tillsammans med planen {{kuulutettuYhdessaSuunnitelmanimi}}.",
-    "ei-julkaisuja": "Planen har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas."
+    "ei-julkaisuja": "Planen har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas.",
+    "ei-julkaisuja-nimella": "Planen {{suunnitelmaNimi}} har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas."
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",
