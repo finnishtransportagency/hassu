@@ -14,6 +14,7 @@ import useApi from "src/hooks/useApi";
 import { langToKieli } from "../hooks/useProjektiJulkinen";
 import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";
 import { H1, H3 } from "@components/Headings";
+import { PalauteKyselyMuistutusPopup } from "@components/projekti/kansalaisnakyma/PalauteKyselyMuistutusPopup";
 
 const SIVUN_KOKO = 10;
 
@@ -90,6 +91,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
       <Grid container rowSpacing={4} columnSpacing={6}>
         <Grid item lg={9} md={12}>
           <H1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</H1>
+          <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
           <p>{t("etusivu:kappale1")}</p>
           <Hakuohje />
           <Hakulomake
