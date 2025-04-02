@@ -22,8 +22,17 @@ export default function RakenteillaSivu() {
       <ContentSpacer gap={12}>
         <ContentSpacer gap={7}>
           <h1 className="text-primary-dark">Valtion liikenneväylien suunnittelu</h1>
+          <h1 className="text-primary-dark" style={{ fontWeight: 400 }}>
+            Planering av statens trafikleder
+          </h1>
+          <br></br>
           <p className="vayla-subtitle">Palvelussa on huoltokatko</p>
           <p>Huoltokatkon vuoksi palvelu on tilapäisesti poissa käytöstä noin 30 minuutin ajan. Pahoittelemme tästä aiheutuvaa häiriötä.</p>
+          <p className="vayla-lead">Serviceavbrott i tjänsten</p>
+          <p>
+            På grund av serviceavbrottet är tjänsten tillfälligt ur bruk i cirka 30 minuter.<br></br> Vi beklagar de olägenheter som
+            avbrottet orsakar.
+          </p>
         </ContentSpacer>
         <KuvaContainer className="justify-center">
           <Img src="vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
