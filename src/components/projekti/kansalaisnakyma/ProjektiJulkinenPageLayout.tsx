@@ -77,7 +77,7 @@ export default function ProjektiPageLayout({
             {saameContent}
             <H2>{title}</H2>
             {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
-            {projekti.suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
+            {projekti.suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && !suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
               <Notification type={NotificationType.INFO_GRAY}>
                 <p>
                   <Trans
