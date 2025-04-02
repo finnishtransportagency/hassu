@@ -4,7 +4,6 @@ import { DialogActions, DialogContent } from "@mui/material";
 import Button from "@components/button/Button";
 import useTranslation from "next-translate/useTranslation";
 import { ReactElement, useEffect, useState } from "react";
-import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
 import { haehardCodedPalauteKyselyTiedot, PalauteKyselyAvoinna } from "src/util/haePalauteKyselyTiedot";
 
 const kyselyTiedot: PalauteKyselyAvoinna = haehardCodedPalauteKyselyTiedot();
@@ -13,7 +12,6 @@ const SESSION_STORAGE_KEY_FOR_PALAUTE_KYSELY_MUISTUTUS_POPUP = "palauteKyselyPop
 export function PalauteKyselyMuistutusPopup(): ReactElement | null {
   const { t } = useTranslation();
   const [showPopup, setShowPopup] = useState(false);
-  const isMobile = useIsBelowBreakpoint("md");
 
   useEffect(() => {
     if (kyselyTiedot.isActive) {
@@ -34,9 +32,8 @@ export function PalauteKyselyMuistutusPopup(): ReactElement | null {
   }
   return (
     <HassuDialog
-      PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
       scroll="paper"
-      fullScreen={isMobile}
+      fullScreen={false}
       open={showPopup}
       title={t("palautekyselymuistutus:kerro-kayttokokemuksestasi")}
       onClose={onClose}
