@@ -195,7 +195,7 @@
     "saat_tekemastasi_muistutuksesta_email": "Saat tekemästäsi muistutuksesta kopion sähköpostiviestinä, mikäli jätät sähköpostiosoitteesi.  Kun Liikenne- ja viestintävirasto on hyväksynyt suunnitelman, lähetämme sinulle tiedon hyväksymispäätöksestä. Tarkistathan, että tiedoissasi ei ole virheitä ja korjaat ne tarvittaessa.",
     "lisatietoja_henkilotietojesi": "<p>Lisätietoja henkilötietojesi käsittelystä löydät <a>tietosuojaselosteesta</a>.</p>",
     "muistutuksen_lahettajan_tiedot": "Muistutuksen lähettäjän tiedot",
-    "kiitos_viestista": "Kiitos viestistä",
+    "kiitos_muistutuksesta": "Kiitos muistutuksesta",
     "muistutus": "Muistutus",
     "ala_kirjoita": "Älä kirjoita tai liitä muistutukseen asiakirjoja, joissa on henkilötunnuksia, kotiosoitteita tai arkaluonteisia tietoja, kuten terveystietoja.",
     "muistutuksen_liitteet": "Muistutuksen liitteet",
@@ -210,7 +210,11 @@
     "muistutus_info_2": "Muistutuksen tekstisisältö voidaan laatia suoraan Valtion liikenneväylien suunnittelu -palvelun Muistutus-lomakkeeseen. Voit myös valmistella muistutuksen esimerkiksi Word-tiedostona omalla tietokoneella ja liittää tiedoston palvelun Muistutus-lomakkeeseen. Muistutukseen voi lisätä myös muita liitteitä.",
     "lue_lisaa": "Lue lisää",
     "epaonnistui": "Muistutuksen jättäminen epäonnistui",
-    "epaonnistui_viesti": "Voit kokeilla lähettää muistutuksen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon."
+    "epaonnistui_viesti": "Voit kokeilla lähettää muistutuksen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon.",
+    "kerro_kayttokokemuksestasi": "Kerro käyttökokemuksestasi",
+    "kerro_kayttokokemuksestasi_vastaa_kyselyyn": "Vastaa lyhyeen kyselyyn Valtion liikenneväylien suunnittelu -palvelusta.",
+    "kerro_kayttokokemuksestasi_saatu_palaute": "Saatu palaute auttaa kehittämään palvelua.",
+    "kerro_kayttokokemuksestasi_linkki": "KYSELYYN"
   },
   "asiakirja": {
     "aloituskuulutus": {

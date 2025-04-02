@@ -75,32 +75,37 @@ export default function SuunnitelmatJaAineistot({ vaihe, aineistoKategoriat }: R
         julkaisupäivänä.
       </p>
       <AineistotSaavutettavuusOhje />
-      <AccordionToggleButton
-        expandedAineisto={expandedAineisto}
-        setExpandedAineisto={setExpandedAineisto}
-        aineistoKategoriaIds={kategoriaIdt}
-      />
-      <HassuAccordion
-        expandedstate={[expandedAineisto, setExpandedAineisto]}
-        items={kategoriat.map((paakategoria) => ({
-          title: (
-            <H3 className="mb-0">
-              {t(`aineisto-kategoria-nimi.${paakategoria.id}`)} ({getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})
-            </H3>
-          ),
-          content: (
-            <SectionContent largeGaps>
-              <SuunnitelmaAineistoPaakategoriaContent
-                aineisto={vaihe?.aineistoNahtavilla}
-                paakategoria={paakategoria}
-                kaikkiKategoriat={kategoriat}
-                expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
-              />
-            </SectionContent>
-          ),
-          id: paakategoria.id,
-        }))}
-      />
+      {aineistojaOn && (
+        <>
+          <AccordionToggleButton
+            expandedAineisto={expandedAineisto}
+            setExpandedAineisto={setExpandedAineisto}
+            aineistoKategoriaIds={kategoriaIdt}
+          />
+          <HassuAccordion
+            expandedstate={[expandedAineisto, setExpandedAineisto]}
+            items={kategoriat.map((paakategoria) => ({
+              title: (
+                <H3 className="mb-0">
+                  {t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (
+                  {getNestedAineistoMaaraForCategory(aineistoNahtavillaFlat, paakategoria)})
+                </H3>
+              ),
+              content: (
+                <SectionContent largeGaps>
+                  <SuunnitelmaAineistoPaakategoriaContent
+                    aineisto={vaihe?.aineistoNahtavilla}
+                    paakategoria={paakategoria}
+                    kaikkiKategoriat={kategoriat}
+                    expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+                  />
+                </SectionContent>
+              ),
+              id: paakategoria.id,
+            }))}
+          />
+        </>
+      )}
       <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
         <Button type="button" id={"aineisto_nahtavilla_import_button"} onClick={() => setAineistoDialogOpen(true)}>
           Tuo Aineistot
