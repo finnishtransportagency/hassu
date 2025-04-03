@@ -208,7 +208,7 @@
     "prepare": "husky install",
     "dev": "cross-env VERSION=`git rev-parse --abbrev-ref HEAD` LOG_LEVEL=info next dev",
     "build": "next build",
-    "build:next-image": "./deployment/bin/buildAndPushNextImage.sh",
+    "build:next-image": "./deployment/bin/buildAndPushNextjsImage.sh",
     "start": "next start",
     "export-under-maintenance": "next build ./under-maintenance && next export -o ./under-maintenance/out ./under-maintenance && aws s3 cp ./under-maintenance/out/ s3://hassu-$ENVIRONMENT-public/huoltokatko --recursive",
     "dev-under-maintenance": "next dev ./under-maintenance",
