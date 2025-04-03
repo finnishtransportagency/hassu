@@ -42,7 +42,14 @@ type ApiJulkaisu =
   | API.NahtavillaoloVaiheJulkaisuJulkinen
   | API.HyvaksymisPaatosVaiheJulkaisuJulkinen;
 
-const keraaApiJulkaisutJaDBJulkaisut = (adaptedProjekti: API.ProjektiJulkinen, projektiFromDB: DBProjekti) =>
+const keraaApiJulkaisutJaDBJulkaisut = (
+  adaptedProjekti: API.ProjektiJulkinen,
+  projektiFromDB: DBProjekti
+): {
+  key: JulkaisuKey;
+  apiJulkaisu: ApiJulkaisu;
+  dbJulkaisu: GenericDBJulkaisu;
+}[] =>
   JULKAISU_KEYS_REVERSED.map<{ apiJulkaisu: ApiJulkaisu | undefined; key: JulkaisuKey }>((key) => ({
     apiJulkaisu: adaptedProjekti[key] ?? undefined,
     key,
@@ -71,6 +78,7 @@ export async function lisaaJakotiedotProjektilleJaSenJulkisilleJulkaisuille(
   if (!jakautuminen) {
     return;
   }
+
   const dbJaApijulkaisutJaAvaimet = keraaApiJulkaisutJaDBJulkaisut(adaptedProjekti, projektiFromDB);
 
   // Projektilla ei ole julkisia julkaisuja, keskeytetään
@@ -81,11 +89,15 @@ export async function lisaaJakotiedotProjektilleJaSenJulkisilleJulkaisuille(
   const julkaisuKopioituSuunnitelmasta = jakautuminen?.jaettuProjektista
     ? await haeLiittyvanProjektinTiedot(jakautuminen.jaettuProjektista)
     : undefined;
+
+  // Kannassa tyyppinä array, jotta myöhemmin olisi helpommin toteutettavissa useampaan kertaan projektin jakaminen
+  // Toteutuksessa useampaan kertaan jakamninen on estetty
   const julkaisuKopioituSuunnitelmaan = jakautuminen.jaettuProjekteihin?.[0]
     ? await haeLiittyvanProjektinTiedot(jakautuminen.jaettuProjekteihin[0])
     : undefined;
 
   const viimeisinJulkaisu = dbJaApijulkaisutJaAvaimet[0].dbJulkaisu;
+
   // Jos viimeisimmällä julkaisulla on jakautumistiedot tai liittyvä projekti on julkinen, lisätään tiedot projektille ja julkaisuille
   if (
     viimeisinJulkaisu.projektinJakautuminen ||
