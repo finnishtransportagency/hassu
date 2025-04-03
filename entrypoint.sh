@@ -8,10 +8,6 @@ set -e
 # Measure time taken to perform the search and replace operation
 START_TIME=$(date +%s%3N)
 
-# Debug: Check if environment variables are loaded
-echo "Loaded environment variables:"
-printenv | grep -E '^NEXT_PUBLIC_' || echo "No NEXT_PUBLIC_ variables found"
-
 # Iterate through environment variables that start with NEXT_PUBLIC_ and replace placeholders.
 printenv | grep -E '^NEXT_PUBLIC_' | while read -r ENV_LINE; do
   # Separate the key and value parts from the found lines.
@@ -31,8 +27,9 @@ ELAPSED_TIME=$((END_TIME - START_TIME))
 
 echo "Entrypoint script executed in ${ELAPSED_TIME} ms"
 
-# Drop the write permissions.
+# Drop write permissions for everything else except the cache directory
 chmod -R u-w /app
+chmod -R u+w /app/.next/cache
 
 # Execute the application main command (Next.js).
 echo "Starting the Nextjs application..."

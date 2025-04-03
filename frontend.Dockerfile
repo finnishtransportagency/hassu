@@ -98,12 +98,15 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Next.js writes at least images to .next/cache -> need to ensure write permissions there
 # Ensure the files are owned by nextjs:nodejs
-RUN chown -R nextjs:nodejs /app
-
 # Grant write access to /app to be able to search and replace bundled env variables runtime
 # Write access dropped in entrypoint.sh once done replacing
-RUN chmod -R u+w /app
+RUN mkdir -p /app/.next/cache && \
+    chown -R nextjs:nodejs /app && \
+    chmod -R u+w /app && \
+    chown -R nextjs:nodejs /app/.next/cache && \
+    chmod -R u+w /app/.next/cache
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
