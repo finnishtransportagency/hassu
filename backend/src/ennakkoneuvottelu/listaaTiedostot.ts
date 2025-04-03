@@ -20,7 +20,7 @@ export default async function listaaEnnakkoNeuvottelunTiedostot({
   const projekti: ProjektiTiedostoineen = await projektiDatabase.haeEnnakkoNeuvottelunTiedostoTiedot(oid);
   if (projekti) {
     const ennakkoNeuvotteluJulkaisu = projekti.ennakkoNeuvotteluJulkaisu;
-    const projari = projekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+    const projari = projekti.kayttoOikeudet.find((hlo) => hlo.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
     assertIsDefined(projari, "projektilla tulee olla projektipäällikkö");
     assertIsDefined(projekti.velho, "Projektilla tulee olla velho");
 

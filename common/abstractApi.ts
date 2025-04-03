@@ -101,6 +101,8 @@ import {
   ListaaEnnakkoNeuvottelunTiedostotQueryVariables,
   EnnakkoNeuvottelunAineistot,
   AktivoiProjektiJatkopaatettavaksiMutationVariables,
+  JaaProjektiMutationVariables,
+  TallennaProjektiResponse,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -455,6 +457,12 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.aktivoiProjektiJatkopaatettavaksi,
     isYllapitoOperation: true,
   },
+  jaaProjekti: {
+    name: "jaaProjekti",
+    operationType: OperationType.Mutation,
+    graphql: mutations.jaaProjekti,
+    isYllapitoOperation: true,
+  },
 };
 
 export abstract class AbstractApi {
@@ -480,7 +488,7 @@ export abstract class AbstractApi {
     return await this.callAPI(apiConfig.lataaProjektiJulkinen, params);
   }
 
-  async tallennaProjekti(input: TallennaProjektiInput): Promise<string> {
+  async tallennaProjekti(input: TallennaProjektiInput): Promise<TallennaProjektiResponse> {
     return await this.callYllapitoAPI(apiConfig.tallennaProjekti, {
       projekti: input,
     } as TallennaProjektiMutationVariables);
@@ -872,6 +880,10 @@ export abstract class AbstractApi {
 
   async aktivoiProjektiJatkopaatettavaksi(variables: AktivoiProjektiJatkopaatettavaksiMutationVariables): Promise<ProjektinTiedottaminen> {
     return await this.callYllapitoAPI(apiConfig.aktivoiProjektiJatkopaatettavaksi, variables);
+  }
+
+  async jaaProjekti(oid: string, versio: number, targetOid: string) {
+    return await this.callYllapitoAPI(apiConfig.jaaProjekti, { oid, versio, targetOid } as JaaProjektiMutationVariables);
   }
 
   abstract callYllapitoAPI(operation: OperationConfig, variables?: any): Promise<any>;

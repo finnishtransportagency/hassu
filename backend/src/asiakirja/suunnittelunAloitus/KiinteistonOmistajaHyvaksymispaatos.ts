@@ -13,6 +13,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
   protected kieli: KaannettavaKieli;
   private readonly hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
   private readonly kasittelynTila: KasittelynTila;
+  private readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
@@ -63,6 +64,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params, "lain2");
     super(kieli, params.oid, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.kieli = kieli;
+    this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
     this.kutsuAdapter.addTemplateResolver(this);
@@ -79,6 +81,12 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
 
   protected getIndention() {
     return toPdfPoints(25);
+  }
+
+  private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    if (this.kuulutettuYhdessaSuunnitelmanimi) {
+      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
+    }
   }
 
   pyydamme_valittamaan_ilmoituksen(): string {
@@ -127,6 +135,7 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     return [
       this.paragraphFromKey("otsikko"),
       this.paragraphFromKey("muistuttajille_kappale3"),
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("kappale5"),
       this.paragraphFromKey("muistuttajille_kappale4"),
       this.tietosuojaParagraph(),

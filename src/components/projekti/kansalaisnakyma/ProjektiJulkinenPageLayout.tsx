@@ -1,7 +1,7 @@
 import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { Kieli, Status } from "@services/api";
+import { Kieli, Status, SuunnitelmaJaettuJulkinen } from "@services/api";
 import React, { ReactElement, ReactNode } from "react";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
@@ -12,15 +12,28 @@ import useTranslation from "next-translate/useTranslation";
 import { H1, H2 } from "@components/Headings";
 import HassuWidget from "@components/layout/HassuWidget";
 import ExtLink from "@components/ExtLink";
+import { ProjektinJakotietoJulkinen } from "@components/kansalainen/ProjektinJakotietoJulkinen";
+import ContentSpacer from "@components/layout/ContentSpacer";
+import Trans from "next-translate/Trans";
+import { PalauteKyselyMuistutusPopup } from "./PalauteKyselyMuistutusPopup";
+
 interface Props {
   children: ReactNode;
   saameContent?: ReactNode;
   title: string;
   selectedStep: Status;
   vahainenMenettely?: boolean | null;
+  suunnitelmaJaettu?: SuunnitelmaJaettuJulkinen | null;
 }
 
-export default function ProjektiPageLayout({ children, saameContent, title, selectedStep, vahainenMenettely }: Props): ReactElement {
+export default function ProjektiPageLayout({
+  children,
+  saameContent,
+  title,
+  selectedStep,
+  vahainenMenettely,
+  suunnitelmaJaettu,
+}: Props): ReactElement {
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const { data: projekti } = useProjektiJulkinen();
@@ -32,6 +45,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
   }
 
   const velho = projekti.velho;
+  const suunnitelmaNimi = kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi;
   return (
     <section>
       <div className="flex flex-col md:flex-row gap-8 mb-3">
@@ -50,7 +64,7 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
         )}
         <div className="min-w-0">
           <Section noDivider className="mb-10">
-            <H1 id="mainPageContent">{kieli === Kieli.RUOTSI ? projekti.kielitiedot?.projektinNimiVieraskielella : velho?.nimi}</H1>
+            <H1 id="mainPageContent">{suunnitelmaNimi}</H1>
             <ProjektiJulkinenStepper
               oid={projekti.oid}
               activeStep={projekti.status}
@@ -60,10 +74,40 @@ export default function ProjektiPageLayout({ children, saameContent, title, sele
               vahainenMenettely={projekti.vahainenMenettely}
             />
           </Section>
+          <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
           <Section noDivider className="mb-10">
             {saameContent}
-            {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
             <H2>{title}</H2>
+            {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
+            {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                <p>
+                  <Trans
+                    i18nKey="projekti:liittyvat-suunnitelmat.kaynnistetty-suunnitelmalla"
+                    components={{
+                      suunnitelma: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta} />,
+                    }}
+                  />
+                  {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
+                </p>
+              </Notification>
+            )}
+            {suunnitelmaNimi && !!suunnitelmaJaettu?.julkaisuKopioituSuunnitelmaan && (
+              <Notification type={NotificationType.INFO_GRAY}>
+                <ContentSpacer gap={2}>
+                  <p>
+                    <Trans
+                      i18nKey="projekti:liittyvat-suunnitelmat.suunnitelma-on-jaettu"
+                      components={{
+                        suunnitelma2: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan} />,
+                      }}
+                      values={{ suunnitelmaNimi }}
+                    />
+                    {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
+                  </p>
+                </ContentSpacer>
+              </Notification>
+            )}
             {smallScreen && velho?.linkki && (
               <HassuWidget smallScreen>
                 <p>{t("lue_hankesivulta")}</p>

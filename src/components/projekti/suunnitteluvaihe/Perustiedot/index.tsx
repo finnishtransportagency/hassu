@@ -27,7 +27,6 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
 import useApi from "src/hooks/useApi";
 import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "hassu-common/util/dateUtils";
 import FormGroup from "@components/form/FormGroup";
 import { yhteystietoVirkamiehelleTekstiksi } from "src/util/kayttajaTransformationUtil";
 import useProjektiHenkilot from "src/hooks/useProjektiHenkilot";
@@ -49,6 +48,7 @@ import { getDefaultValuesForLokalisoituLinkkiLista } from "src/util/getDefaultVa
 import { FormAineisto } from "src/util/FormAineisto";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -289,6 +289,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
     reset(defaultValues);
   }, [defaultValues, reset]);
 
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
+
   const saveDraft = useCallback(
     (formData: SuunnittelunPerustiedotFormValues) =>
       withLoadingSpinner(
@@ -311,16 +313,16 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             },
           };
           try {
-            await api.tallennaProjekti(tallennaProjektiInput);
+            const response = await api.tallennaProjekti(tallennaProjektiInput);
             await checkAineistoValmiit({ retries: 5 });
             await reloadProjekti?.();
-            showSuccessMessage("Tallennus onnistui");
+            showTallennaProjektiMessage(response);
           } catch (e) {
             log.error("OnSubmit Error", e);
           }
         })()
       ),
-    [api, reloadProjekti, showSuccessMessage, checkAineistoValmiit, withLoadingSpinner]
+    [withLoadingSpinner, api, checkAineistoValmiit, reloadProjekti, showTallennaProjektiMessage]
   );
 
   const saveAfterPublish = useCallback(
@@ -373,7 +375,6 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
               <HassuDatePickerWithController<SuunnittelunPerustiedotFormValues>
                 className="mt-8"
                 label="Kysymykset ja palautteet viimeistään"
-                minDate={today()}
                 textFieldProps={{
                   required: true,
                   sx: { maxWidth: { md: "min-content" } },

@@ -20,6 +20,7 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
     return [
       ...paragraphs,
       this.hankkeenKuvausParagraph(),
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("asiakirja.aloituskuulutus.kappale2"),
       this.paragraphFromKey("asiakirja.aloituskuulutus.kappale3"),
       this.params.vahainenMenettely
@@ -29,6 +30,6 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
 
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, undefined, true)),
-    ];
+    ].filter((element): element is PDFKit.PDFStructureElement => !!element);
   }
 }

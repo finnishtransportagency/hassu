@@ -53,7 +53,7 @@ type Query {
 }
 
 type Mutation {
-  tallennaProjekti(projekti: TallennaProjektiInput!): String
+  tallennaProjekti(projekti: TallennaProjektiInput!): TallennaProjektiResponse
   tallennaJaSiirraTilaa(projekti: TallennaProjektiInput!, tilasiirtyma: TilaSiirtymaInput!): String
   tallennaHyvaksymisesitys(input: TallennaHyvaksymisEsitysInput!): String
   tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi(input: TallennaHyvaksymisEsitysInput!): String
@@ -87,4 +87,5 @@ type Mutation {
     paatoksenTiedot: HyvaksymispaatosInput!
   ): String
   tallennaEnnakkoNeuvottelu(input: TallennaEnnakkoNeuvotteluInput!): String
+  jaaProjekti(oid: String!, versio: Int!, targetOid: String!): String
 }

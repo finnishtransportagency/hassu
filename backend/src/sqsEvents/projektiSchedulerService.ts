@@ -202,8 +202,11 @@ function typeSuffix(type: SqsEventType, publishOrExpire: PublishOrExpireEventTyp
     return "PVU";
   } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOS_EPAAKTIVOITUU_KK) {
     return "PHE";
-  } else {
+  } else if (publishOrExpire === PublishOrExpireEventType.PUBLISH_VUOROVAIKUTUSTILAISUUS) {
     return "PVT";
+  } else {
+    // unknown (should never happen)
+    return "UNK";
   }
 }
 

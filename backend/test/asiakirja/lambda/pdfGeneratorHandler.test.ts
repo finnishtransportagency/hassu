@@ -70,6 +70,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
     createNahtavillaoloKuulutusPdf: {
       asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
       asianhallintaPaalla: false,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
       kayttoOikeudet: [
         {
           etunimi: "Teppo",

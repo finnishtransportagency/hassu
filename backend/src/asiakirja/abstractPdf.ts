@@ -65,9 +65,9 @@ export abstract class AbstractPdf {
     if (parts.length == 1) {
       const strings = text.split("*");
       if (strings.length === 1 || !options?.markupAllowed) {
-        return this.doc.struct("P", {}, [
-          () => this.doc.text(text, { baseline: this.baseline }).moveDown(1 + (options?.spacingAfter ?? 0)),
-        ]);
+        return this.doc.struct("P", {}, () =>
+          this.doc.text(text, { baseline: this.baseline, underline: false, link: undefined }).moveDown(1 + (options?.spacingAfter ?? 0))
+        );
       } else {
         return this.getParagraphWithBoldText(strings, options);
       }
@@ -76,69 +76,45 @@ export abstract class AbstractPdf {
   }
 
   private getParagraphWithLinks(parts: string[], options?: ParagraphOptions) {
-    const children = [];
-    let linkOpen = false;
-    for (const part of parts) {
-      if (part.startsWith("http")) {
-        children.push(
-          this.doc.struct("Link", { alt: part }, () => {
-            this.doc.fillColor("blue").text(part, {
-              baseline: this.baseline,
-              link: part,
-              continued: true,
-              underline: true,
-            });
-          })
-        );
-        linkOpen = true;
-      } else if (linkOpen) {
-        linkOpen = false;
-        children.push(() => {
-          this.doc.fillColor("black").text(part, { link: undefined, underline: false, continued: true, baseline: this.baseline });
-        });
-      } else {
-        children.push(() => {
-          this.doc.text(part, { continued: true, baseline: this.baseline });
-        });
-      }
-    }
+    const children = parts.map((part, index) => {
+      const isLink = index % 2 === 1;
+      const continued = index < parts.length - 1;
 
-    if (linkOpen) {
-      children.push(() => {
-        this.doc.fillColor("black").text("", { link: undefined, underline: false, continued: false, baseline: this.baseline });
+      const tag = isLink ? "Link" : "P";
+      const link = isLink ? part : null;
+      const alt = isLink ? part : undefined;
+      const color = isLink ? "blue" : "black";
+      const underline = !!isLink;
+
+      return this.doc.struct(tag, { alt }, () => {
+        this.doc.fillColor(color).text(part, {
+          baseline: this.baseline,
+          link,
+          continued,
+          underline,
+        });
+        if (!continued) {
+          // Jos viimeinen elementti on tyhjä, jostain syystä rivi ei vaihdu normaalilla tavalla,
+          // joten tehdään ylimääräinen rivivaihto
+          const moveDown = part === "" ? 2 : 1;
+          this.doc.moveDown(moveDown + (options?.spacingAfter ?? 0));
+        }
       });
-    }
-
-    children.push(() => this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(2 + (options?.spacingAfter ?? 0)));
+    });
 
     return this.doc.struct("P", {}, children);
   }
 
   private getParagraphWithBoldText(strings: string[], options?: ParagraphOptions) {
-    return this.doc.struct("P", {}, [
-      () => {
-        let bold = false;
-        let boldOn = false;
-        let first = true;
-        for (const string of strings) {
-          if (bold) {
-            this.doc.font("ArialMTBold");
-            boldOn = true;
-          }
-          if (!bold && boldOn) {
-            this.doc.font("ArialMT");
-            boldOn = false;
-          }
-          if (first) {
-            this.doc.text("", { continued: true, baseline: this.baseline });
-            first = false;
-          }
-          this.doc.text(string, { continued: true, baseline: boldOn ? "hanging" : "top" });
-          bold = !bold;
-        }
-        this.doc.text("", { continued: false, baseline: this.baseline }).moveDown(1 + (options?.spacingAfter ?? 0));
-      },
-    ]);
+    return this.doc.struct("P", {}, () => {
+      strings.forEach((string, index) => {
+        const bold = index % 2 === 1;
+        const last = index === strings.length - 1;
+        this.doc.font(bold ? "ArialMTBold" : "ArialMT");
+        this.doc.text(string, { continued: !last, baseline: bold ? "hanging" : "top" });
+      });
+      this.doc.moveDown(1 + (options?.spacingAfter ?? 0));
+    });
   }
 
   private setupAccessibleDocument(): void {

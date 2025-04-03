@@ -49,6 +49,7 @@ export type CreateNahtavillaoloKuulutusPdfOptions = {
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
   osoite?: Osoite;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 };
 
 export type CreatePalautteetPdfOptions = {
@@ -60,6 +61,7 @@ export interface YleisotilaisuusKutsuPdfOptions extends CommonKutsuAdapterProps 
   suunnitteluSopimus?: SuunnitteluSopimus;
   vuorovaikutusKierrosJulkaisu: VuorovaikutusKierrosJulkaisu;
   luonnos: boolean;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 }
 
 export type AloituskuulutusPdfOptions = {
@@ -74,6 +76,7 @@ export type AloituskuulutusPdfOptions = {
   vahainenMenettely?: boolean | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 };
 
 export type EnhancedPDF = PDF & { textContent: string };
@@ -92,6 +95,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   linkkiAsianhallintaan: string | undefined;
   osoite?: Osoite;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
+  kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 };
 
 export function determineAsiakirjaMuoto(

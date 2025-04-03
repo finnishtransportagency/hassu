@@ -34,7 +34,7 @@ const projariAsVaylaDBUser: DBVaylaUser = {
   sukunimi: "Projari",
   email: "pekka.projari@vayla.fi",
   organisaatio: "Väylävirasto",
-  puhelinnumero: "123456789",
+  puhelinnumero: "029123123",
 };
 const muokkaaja = UserFixture.manuMuokkaaja;
 const muokkaajaAsVaylaDBUser: DBVaylaUser = {
@@ -43,7 +43,7 @@ const muokkaajaAsVaylaDBUser: DBVaylaUser = {
   sukunimi: "Muokkaaja",
   email: "namu.muokkaaja@vayla.fi",
   organisaatio: "Väylävirasto",
-  puhelinnumero: "123456789",
+  puhelinnumero: "029123123",
 };
 
 const oid = "Testi1";

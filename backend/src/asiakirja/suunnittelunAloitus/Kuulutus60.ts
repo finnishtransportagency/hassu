@@ -15,6 +15,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
   private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   private kasittelynTila: KasittelynTila;
 
   constructor(
@@ -59,6 +60,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     this.asiakirjanMuoto = asiakirjanMuoto;
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
     this.kasittelynTila = kasittelynTila;
+    this.kuulutettuYhdessaSuunnitelmanimi = props.kuulutettuYhdessaSuunnitelmanimi;
 
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, this.asiakirjanMuoto, velho.tyyppi, kieli);
@@ -115,6 +117,7 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     return [
       this.uudelleenKuulutusParagraph(),
       kappale1,
+      this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale2"),
       this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale3"),
       this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.kappale4"),
@@ -128,6 +131,12 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
     if (this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
       return this.localizedParagraphFromMap(this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
+  }
+
+  private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
+    if (this.kuulutettuYhdessaSuunnitelmanimi) {
+      return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
     }
   }
 

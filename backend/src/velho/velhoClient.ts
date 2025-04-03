@@ -33,7 +33,7 @@ const accessTokenCache = new NodeCache({
 });
 const ACCESS_TOKEN_CACHE_KEY = "accessToken";
 
-type VelhoProjektiDataUpdater = (projekti: ProjektiRekisteri.ProjektiProjekti) => ProjektiRekisteri.ProjektiProjekti;
+type VelhoProjektiDataUpdater = (projekti: ProjektiRekisteri.ProjektiProjektiMuokkaus) => ProjektiRekisteri.ProjektiProjektiMuokkaus;
 
 export class VelhoClient {
   public async authenticate(): Promise<string> {
@@ -260,10 +260,12 @@ export class VelhoClient {
     }
     const projektiApi = await this.createProjektiRekisteriApi();
     try {
-      const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid);
-      const projekti = projektiDataUpdater(loadProjektiResponse.data);
+      // Haetaan ilman geometriatietoja, sillä niitä ei tarvita projektin päivityksessä
+      const loadProjektiResponse = await projektiApi.projektirekisteriApiV2ProjektiProjektiOidGet(oid, true);
+      const data = loadProjektiResponse.data;
+      const projekti = projektiDataUpdater(data);
       auditLog.info("Päivitetään velhoprojekti", { velho: { oid, projekti } });
-      await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti);
+      await projektiApi.projektirekisteriApiV2ProjektiProjektiOidPut(oid, projekti, true);
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
     }

@@ -31,6 +31,7 @@ import { DBMuistuttaja, muistuttajaDatabase } from "../database/muistuttajaDatab
 import { Asiakas1 } from "./viranomaispalvelutwsinterface";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -245,27 +246,29 @@ type GeneratedPdf = {
   kielet: Kieli[];
 };
 
-function createGenerateEvent(
+async function createGenerateEvent(
   tyyppi: PublishOrExpireEventType,
   asiakirjaTyyppi: AsiakirjaTyyppi,
   projektiFromDB: DBProjekti,
   kohde: Kohde
-): GeneratePDFEvent | undefined {
+): Promise<GeneratePDFEvent | undefined> {
   if (
     asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
     tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO &&
     projektiFromDB.nahtavillaoloVaiheJulkaisut
   ) {
+    const julkaisu = projektiFromDB.nahtavillaoloVaiheJulkaisut[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1];
     return {
       createNahtavillaoloKuulutusPdf: {
         asiakirjaTyyppi,
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
         asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
         kayttoOikeudet: projektiFromDB.kayttoOikeudet,
         kieli: Kieli.SUOMI,
         linkkiAsianhallintaan: undefined,
         luonnos: false,
         lyhytOsoite: projektiFromDB.lyhytOsoite,
-        nahtavillaoloVaihe: projektiFromDB.nahtavillaoloVaiheJulkaisut[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1],
+        nahtavillaoloVaihe: julkaisu,
         oid: projektiFromDB.oid,
         velho: projektiFromDB.velho!,
         vahainenMenettely: projektiFromDB.vahainenMenettely,
@@ -284,16 +287,18 @@ function createGenerateEvent(
     tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE &&
     projektiFromDB.hyvaksymisPaatosVaiheJulkaisut
   ) {
+    const julkaisu = projektiFromDB.hyvaksymisPaatosVaiheJulkaisut[projektiFromDB.hyvaksymisPaatosVaiheJulkaisut.length - 1];
     return {
       createHyvaksymisPaatosKuulutusPdf: {
         asiakirjaTyyppi,
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
         asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
         kayttoOikeudet: projektiFromDB.kayttoOikeudet,
         kieli: Kieli.SUOMI,
         linkkiAsianhallintaan: undefined,
         luonnos: false,
         lyhytOsoite: projektiFromDB.lyhytOsoite,
-        hyvaksymisPaatosVaihe: projektiFromDB.hyvaksymisPaatosVaiheJulkaisut[projektiFromDB.hyvaksymisPaatosVaiheJulkaisut.length - 1],
+        hyvaksymisPaatosVaihe: julkaisu,
         oid: projektiFromDB.oid,
         euRahoitusLogot: projektiFromDB.euRahoitusLogot,
         osoite: {
@@ -409,7 +414,7 @@ async function getFinnishFileAsBuffer(
   const result = await invokeLambda(
     config.pdfGeneratorLambdaArn,
     true,
-    JSON.stringify(createGenerateEvent(tyyppi, asiakirjaTyyppi, projektiFromDB, kohde))
+    JSON.stringify(await createGenerateEvent(tyyppi, asiakirjaTyyppi, projektiFromDB, kohde))
   );
   const response = JSON.parse(result!) as EnhancedPDF;
   return Buffer.from(response.sisalto, "base64");

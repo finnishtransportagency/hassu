@@ -16,7 +16,6 @@ import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import HassuStack from "@components/layout/HassuStack";
 import Button from "@components/button/Button";
-import useSnackbars from "src/hooks/useSnackbars";
 import log from "loglevel";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { kasittelynTilaSchema } from "src/schemas/kasittelynTila";
@@ -47,6 +46,7 @@ import { TextFieldWithController } from "@components/form/TextFieldWithControlle
 import RadioButton from "@components/form/RadioButton";
 import styled from "@emotion/styled";
 import FormGroup from "@components/form/FormGroup";
+import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 
 export type KasittelynTilaFormValues = Pick<TallennaProjektiInput, "oid" | "versio" | "kasittelynTila">;
 
@@ -253,8 +253,6 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
     context: { projekti },
   };
 
-  const { showSuccessMessage } = useSnackbars();
-
   const useFormReturn = useForm<KasittelynTilaFormValues, ProjektiValidationContext>(formOptions);
   const {
     register,
@@ -268,28 +266,27 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
+  const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
+
   const api = useApi();
 
   const save = useCallback(
-    async (data: KasittelynTilaFormValues, successMessage: string) => {
+    async (data: KasittelynTilaFormValues) => {
       try {
         const values = removeEmptyValues(data);
-        await api.tallennaProjekti(values);
+        const response = await api.tallennaProjekti(values);
         await reloadProjekti();
         // varmistetaan että isDirty menee false:ksi
         reset(undefined, { keepValues: true });
-        showSuccessMessage(successMessage);
+        showTallennaProjektiMessage(response);
       } catch (e) {
         log.log("OnSubmit Error", e);
       }
     },
-    [api, reloadProjekti, reset, showSuccessMessage]
+    [api, reloadProjekti, reset, showTallennaProjektiMessage]
   );
 
-  const onSubmit = useCallback(
-    (data: KasittelynTilaFormValues) => withLoadingSpinner(save(data, "Tallennus onnistui")),
-    [save, withLoadingSpinner]
-  );
+  const onSubmit = useCallback((data: KasittelynTilaFormValues) => withLoadingSpinner(save(data)), [save, withLoadingSpinner]);
 
   useEffect(() => {
     reset(defaultValues);

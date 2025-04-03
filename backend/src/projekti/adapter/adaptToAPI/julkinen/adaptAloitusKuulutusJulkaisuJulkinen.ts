@@ -31,9 +31,11 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
   if (!julkaisu) {
     return undefined;
   }
-  const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus } = julkaisu;
+  const { yhteystiedot, velho, suunnitteluSopimus, kielitiedot, tila, kuulutusPaiva, uudelleenKuulutus, id, kopioituProjektista } =
+    julkaisu;
   if (tila === API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "AloitusKuulutusJulkaisuJulkinen",
       tila,
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -48,6 +50,7 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
   const aloituskuulutusPath = new ProjektiPaths(oid).aloituskuulutus(julkaisu);
 
   const julkaisuJulkinen: API.AloitusKuulutusJulkaisuJulkinen = {
+    id,
     __typename: "AloitusKuulutusJulkaisuJulkinen",
     kuulutusPaiva,
     siirtyySuunnitteluVaiheeseen: julkaisu.siirtyySuunnitteluVaiheeseen,
@@ -60,21 +63,23 @@ export async function adaptAloitusKuulutusJulkaisuJulkinen(
     aloituskuulutusSaamePDFt: adaptKuulutusSaamePDFtToAPI(aloituskuulutusPath, julkaisu.aloituskuulutusSaamePDFt, true),
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
 
   if (kieli) {
     julkaisuJulkinen.kuulutusTekstit = new AloituskuulutusKutsuAdapter(
-      await createAloituskuulutusKutsuAdapterProps(
+      await createAloituskuulutusKutsuAdapterProps({
         oid,
-        projekti.lyhytOsoite,
-        projekti.kayttoOikeudet,
+        lyhytOsoite: projekti.lyhytOsoite,
+        kayttoOikeudet: projekti.kayttoOikeudet,
         kieli,
-        await isProjektiAsianhallintaIntegrationEnabled(projekti),
-        await getLinkkiAsianhallintaan(projekti),
-        julkaisu,
-        undefined,
-        projekti.vahainenMenettely
-      )
+        asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
+        linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+        aloitusKuulutusJulkaisu: julkaisu,
+        euRahoitusLogot: undefined,
+        vahainenMenettely: projekti.vahainenMenettely,
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
+      })
     ).userInterfaceFields;
   }
   return julkaisuJulkinen;

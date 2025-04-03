@@ -128,7 +128,7 @@ export class ProjektiFixture {
     sukunimi: "Projari",
     email: "pekka.projari@vayla.fi",
     organisaatio: "Väylävirasto",
-    puhelinnumero: "123456789",
+    puhelinnumero: "029312",
   };
 
   private static mattiMeikalainenProjektiKayttaja: ProjektiKayttaja = {
@@ -139,7 +139,7 @@ export class ProjektiFixture {
     sukunimi: "Meikalainen",
     email: "Matti.Meikalainen@vayla.fi",
     organisaatio: "Väylävirasto",
-    puhelinnumero: "123456789",
+    puhelinnumero: "0293123123",
   };
 
   private static aTunnus1Kayttaja: ProjektiKayttaja = {
@@ -150,7 +150,7 @@ export class ProjektiFixture {
     sukunimi: "Hassu",
     email: "mikko.haapamki@cgi.com",
     organisaatio: "CGI Suomi Oy",
-    puhelinnumero: "123456789",
+    puhelinnumero: "029123123",
   };
 
   private static kunnanYhteysHenkiloProjektiKayttaja: ProjektiKayttaja = {
@@ -161,7 +161,7 @@ export class ProjektiFixture {
     sukunimi: "Kuntalainen",
     email: "Kunta.Kuntalainen@vayla.fi",
     organisaatio: "Nokia",
-    puhelinnumero: "123456789",
+    puhelinnumero: "029123123",
   };
 
   private static elyProjektiKayttaja: ProjektiKayttaja = {

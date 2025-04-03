@@ -41,6 +41,7 @@ import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhall
 import { PublishOrExpireEventType } from "../../sqsEvents/projektiScheduleManager";
 import { log } from "../../logger";
 import { validateVuorovaikutusKierrosCanBeDeleted } from "hassu-common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
+import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
 class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu> {
   constructor() {
@@ -300,6 +301,7 @@ class VuorovaikutusKierrosTilaManager extends TilaManager<VuorovaikutusKierros, 
       luonnos: false,
       asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
       linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
     });
     emailOptions.attachments = attachments;
 
@@ -386,6 +388,7 @@ async function createVuorovaikutusKierrosPDF(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
   });
 
   const fullFilePathInProjekti = fileService.createFileToProjekti({

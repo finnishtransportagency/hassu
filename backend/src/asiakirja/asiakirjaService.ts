@@ -41,6 +41,7 @@ export class AsiakirjaService {
     kayttoOikeudet,
     euRahoitusLogot,
     vahainenMenettely,
+    kuulutettuYhdessaSuunnitelmanimi,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -52,7 +53,7 @@ export class AsiakirjaService {
     if (!aloitusKuulutusJulkaisu.kielitiedot) {
       throw new Error("aloitusKuulutusJulkaisu.kielitiedot puuttuu");
     }
-    const params = await createAloituskuulutusKutsuAdapterProps(
+    const params = await createAloituskuulutusKutsuAdapterProps({
       oid,
       lyhytOsoite,
       kayttoOikeudet,
@@ -61,8 +62,9 @@ export class AsiakirjaService {
       linkkiAsianhallintaan,
       aloitusKuulutusJulkaisu,
       euRahoitusLogot,
-      vahainenMenettely
-    );
+      vahainenMenettely,
+      kuulutettuYhdessaSuunnitelmanimi,
+    });
 
     switch (asiakirjaTyyppi) {
       case AsiakirjaTyyppi.ALOITUSKUULUTUS:
@@ -106,16 +108,18 @@ export class AsiakirjaService {
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     osoite,
+    kuulutettuYhdessaSuunnitelmanimi,
   }: CreateNahtavillaoloKuulutusPdfOptions): Promise<EnhancedPDF> {
     const suomiFiEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps(
-      { oid, kayttoOikeudet, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho },
-      nahtavillaoloVaihe,
+    const params: NahtavillaoloVaiheKutsuAdapterProps = await createNahtavillaoloVaiheKutsuAdapterProps({
+      projekti: { oid, kayttoOikeudet, euRahoitusLogot, lyhytOsoite, suunnitteluSopimus, vahainenMenettely, velho },
+      julkaisu: nahtavillaoloVaihe,
       kieli,
       asianhallintaPaalla,
       linkkiAsianhallintaan,
-      osoite
-    );
+      osoite,
+      kuulutettuYhdessaSuunnitelmanimi,
+    });
     let pdf: EnhancedPDF | undefined;
     if (asiakirjaTyyppi == AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS) {
       pdf = await new Kuulutus30(params, nahtavillaoloVaihe).pdf(luonnos);
@@ -146,18 +150,20 @@ export class AsiakirjaService {
     linkkiAsianhallintaan,
     osoite,
     suunnitteluSopimus,
+    kuulutettuYhdessaSuunnitelmanimi,
   }: CreateHyvaksymisPaatosKuulutusPdfOptions): Promise<EnhancedPDF> {
     assertIsDefined(kasittelynTila, "kasittelynTila puuttuu");
     log.debug("asiakirjaTyyppi: " + asiakirjaTyyppi);
-    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps(
-      { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila, suunnitteluSopimus },
+    const params = createHyvaksymisPaatosVaiheKutsuAdapterProps({
+      projekti: { oid, lyhytOsoite, kayttoOikeudet, euRahoitusLogot, kasittelynTila, suunnitteluSopimus },
       kieli,
       hyvaksymisPaatosVaihe,
-      getPaatosTyyppi(asiakirjaTyyppi),
+      paatosTyyppi: getPaatosTyyppi(asiakirjaTyyppi),
       asianhallintaPaalla,
       linkkiAsianhallintaan,
-      osoite
-    );
+      osoite,
+      kuulutettuYhdessaSuunnitelmanimi,
+    });
     const suomiFiEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     if (
       asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE ||

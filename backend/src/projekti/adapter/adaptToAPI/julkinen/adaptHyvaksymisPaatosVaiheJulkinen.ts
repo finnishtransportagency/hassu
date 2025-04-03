@@ -45,10 +45,13 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
     hallintoOikeus,
     tila,
     uudelleenKuulutus,
+    id,
+    kopioituProjektista,
   } = julkaisu;
 
   if (tila == API.KuulutusJulkaisuTila.MIGROITU) {
     return {
+      id,
       __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
       tila,
       yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),
@@ -81,6 +84,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
   }
 
   const julkaisuJulkinen: API.HyvaksymisPaatosVaiheJulkaisuJulkinen = {
+    id,
     __typename: "HyvaksymisPaatosVaiheJulkaisuJulkinen",
     hyvaksymisPaatos: apiHyvaksymisPaatosAineisto,
     hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
@@ -96,18 +100,21 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
     uudelleenKuulutus: adaptUudelleenKuulutusJulkinen(uudelleenKuulutus),
     kuulutusPDF: adaptHyvaksymispaatosPDFPaths(paths, julkaisu),
     hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, julkaisu.hyvaksymisPaatosVaiheSaamePDFt, true),
+    julkaisuOnKopio: !!kopioituProjektista,
   };
 
   if (kieli) {
     julkaisuJulkinen.kuulutusTekstit = new HyvaksymisPaatosVaiheKutsuAdapter(
-      createHyvaksymisPaatosVaiheKutsuAdapterProps(
-        dbProjekti,
+      createHyvaksymisPaatosVaiheKutsuAdapterProps({
+        projekti: dbProjekti,
         kieli,
-        julkaisu,
+        hyvaksymisPaatosVaihe: julkaisu,
         paatosTyyppi,
-        await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
-        await getLinkkiAsianhallintaan(dbProjekti)
-      )
+        asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(dbProjekti),
+        linkkiAsianhallintaan: await getLinkkiAsianhallintaan(dbProjekti),
+        osoite: undefined,
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
+      })
     ).userInterfaceFields;
   }
   return julkaisuJulkinen;

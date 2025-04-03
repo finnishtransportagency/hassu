@@ -12,6 +12,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import { chunkArray } from "./chunkArray";
 import { TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { uuid } from "hassu-common/util/uuid";
 
 export type DBMuistuttaja = {
   id: string;
@@ -100,6 +101,43 @@ class MuistuttajaDatabase {
     await getDynamoDBDocumentClient().send(params);
   }
 
+  async otaProjektinMuistuttajatPoisKaytosta(oid: string): Promise<void> {
+    try {
+      const items = await this.haeProjektinKaytossaolevatMuistuttajat(oid);
+      if (items.length) {
+        log.info("Otetaan käytöstä " + items.length + " muistuttaja(a)");
+        const transactItems = items.map<TransactionItem>((item) => ({
+          Update: {
+            ExpressionAttributeNames: {
+              "#kaytossa": "kaytossa",
+            },
+            ExpressionAttributeValues: {
+              ":kaytossa": false,
+            },
+            UpdateExpression: "set #kaytossa = :kaytossa",
+            TableName: this.tableName,
+            Key: {
+              id: item.id,
+              oid: item.oid,
+            },
+          },
+        }));
+
+        const oldMuistuttajaChunks = chunkArray(transactItems, 25);
+
+        for (const chunk of oldMuistuttajaChunks) {
+          const transactCommand = new TransactWriteCommand({
+            TransactItems: chunk,
+          });
+          await getDynamoDBDocumentClient().send(transactCommand);
+        }
+      }
+    } catch (error) {
+      log.error("Projektin muistuttajien käytöstä poistaminen epäonnistui");
+      throw error;
+    }
+  }
+
   async scanMuistuttajat(startKey?: MuistuttajaKey): Promise<MuistuttajaScanResult> {
     try {
       const params = new ScanCommand({
@@ -115,6 +153,25 @@ class MuistuttajaDatabase {
     } catch (e) {
       log.error(e);
       throw e;
+    }
+  }
+
+  async copyKaytossaolevatMuistuttajatToAnotherProjekti(srcOid: string, targetOid: string): Promise<void> {
+    const muistuttajat = await this.haeProjektinKaytossaolevatMuistuttajat(srcOid);
+    if (!muistuttajat.length) {
+      return;
+    }
+    const newTransactItems = muistuttajat.map<TransactionItem>((muistuttaja) => ({
+      Put: {
+        TableName: this.tableName,
+        Item: { ...muistuttaja, id: uuid.v4(), oid: targetOid },
+      },
+    }));
+    for (const chunk of chunkArray(newTransactItems, 25)) {
+      const transactCommand = new TransactWriteCommand({
+        TransactItems: chunk,
+      });
+      await getDynamoDBDocumentClient().send(transactCommand);
     }
   }
 

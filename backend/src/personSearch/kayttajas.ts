@@ -2,6 +2,7 @@ import { Kayttaja } from "hassu-common/graphql/apiModel";
 import { adaptPerson } from "./personAdapter";
 import { log } from "../logger";
 import { formatNimi } from "../util/userUtil";
+import { queryMatchesWithFullname } from "hassu-common/henkiloSearch/queryMatchesWithFullname";
 
 export type Person = {
   etuNimi: string;
@@ -74,10 +75,7 @@ export class Kayttajas {
     if (hakusana.length >= 3) {
       return Object.entries(this.personMap)
         .reduce((list, [uid, person]) => {
-          if (
-            (person.etuNimi.toLowerCase() + ", " + person.sukuNimi.toLowerCase()).includes(hakusana.toLowerCase()) ||
-            (person.etuNimi.toLowerCase() + " " + person.sukuNimi.toLowerCase()).includes(hakusana.toLowerCase())
-          ) {
+          if (queryMatchesWithFullname(hakusana, person.etuNimi, person.sukuNimi)) {
             list.push(adaptPerson(uid, person));
           }
           return list;

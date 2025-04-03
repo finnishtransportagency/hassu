@@ -5,6 +5,7 @@ import { EdellinenVaiheMigroituNotification } from "./EdellinenVaiheMigroituNoti
 import FormatDate from "@components/FormatDate";
 import dayjs from "dayjs";
 import { isInPast } from "common/util/dateUtils";
+import { JulkaisuOnKopioNotification } from "./common/JulkaisuOnKopioNotification";
 
 export const KuulutusInfoElement = ({
   projekti,
@@ -15,14 +16,19 @@ export const KuulutusInfoElement = ({
   projekti: ProjektiLisatiedolla;
   julkaisu: Pick<
     NahtavillaoloVaiheJulkaisu,
-    "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "aineistoMuokkaus"
+    "tila" | "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva" | "uudelleenKuulutus" | "aineistoMuokkaus" | "julkaisuOnKopio"
   >;
   edellinenVaiheMigroitu: boolean;
   vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined;
 }) => {
   const isAineistoMuokkaus = vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS;
 
-  if (vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS && julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva)) {
+  if (julkaisu.julkaisuOnKopio && vaihe?.muokkausTila !== MuokkausTila.MUOKKAUS) {
+    return <JulkaisuOnKopioNotification />;
+  } else if (julkaisu && vaihe?.muokkausTila === MuokkausTila.MUOKKAUS) {
+    // Ei näytetä uudelleenkuulutuksille mitään elementtiä, kun muokkaustilassa
+    return <></>;
+  } else if (vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS && julkaisu.kuulutusPaiva && isInPast(julkaisu.kuulutusPaiva)) {
     const tilakohtainenOsuus =
       julkaisu.tila === KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA
         ? "Palauta ja poistu aineistojen muokkaustilasta sivun alareunasta."

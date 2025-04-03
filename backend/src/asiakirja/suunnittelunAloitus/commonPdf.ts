@@ -33,21 +33,12 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return super.pdf(luonnos);
   }
 
-  protected selectText(suomiRuotsiParagraphs: string[]): string {
-    if (this.kieli == Kieli.SUOMI && suomiRuotsiParagraphs.length > 0) {
-      return suomiRuotsiParagraphs[0];
-    } else if (this.kieli == Kieli.RUOTSI && suomiRuotsiParagraphs.length > 1) {
-      return suomiRuotsiParagraphs[1];
-    }
-    return suomiRuotsiParagraphs[0];
-  }
-
   protected tietosuojaParagraph(): PDFStructureElement {
     return this.paragraphFromKey("asiakirja.tietosuoja");
   }
 
-  protected onKyseVahaisestaMenettelystaParagraph(prefix = ""): PDFStructureElement {
-    return this.paragraph(prefix + this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
+  protected onKyseVahaisestaMenettelystaParagraph(): PDFStructureElement {
+    return this.paragraph(this.kutsuAdapter.substituteText(this.kutsuAdapter.text("asiakirja.on_kyse_vahaisesta_menettelysta")));
   }
 
   isVaylaTilaaja(): boolean {
@@ -56,10 +47,6 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
 
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
     return this.paragraphBold(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
-  }
-
-  protected localizedParagraph(suomiRuotsiParagraphs: string[]): PDFStructureElement {
-    return this.paragraph(this.selectText(suomiRuotsiParagraphs));
   }
 
   protected paragraphFromKey(key: string, options?: ParagraphOptions): PDFStructureElement {
