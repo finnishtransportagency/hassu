@@ -60,7 +60,6 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
     maanomistajaluettelo,
     lausunnot,
     kuulutuksetJaKutsu,
-    valitutKuulutuksetJaKutsu,
     muuAineistoKoneelta,
     muuAineistoVelhosta,
     poistumisPaiva,
@@ -97,18 +96,19 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
   );
 
   const allKuulutuksetJaKutsu: LadattavaTiedosto[] = [];
-
-  if (valitutKuulutuksetJaKutsu) {
-    valitutKuulutuksetJaKutsu.forEach((k) =>
+  const poisValitutKuulutuksetJaKutsu = projekti.ennakkoNeuvottelu?.poisValitutKuulutuksetJaKutsu || [];
+  projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) => {
+    const s3Key = m.s3Key || m.linkki;
+    if (!s3Key || !poisValitutKuulutuksetJaKutsu.includes(s3Key)) {
       allKuulutuksetJaKutsu.push({
         __typename: "LadattavaTiedosto",
-        nimi: k.nimi,
-        linkki: projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.tiedosto,
-        tuotu: projekti?.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
-      })
-    );
-  }
-
+        nimi: m.nimi,
+        linkki: m.linkki,
+        s3Key: m.s3Key,
+        tuotu: m.tuotu,
+      });
+    }
+  });
   kuulutuksetJaKutsu?.forEach((k) =>
     allKuulutuksetJaKutsu.push({
       __typename: "LadattavaTiedosto",
@@ -117,6 +117,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
       tuotu: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
     })
   );
+
   return (
     <>
       <H1>Ennakkotarkastus/ennakkoneuvottelu (esikatselu)</H1>

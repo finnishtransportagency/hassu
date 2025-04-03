@@ -63,6 +63,9 @@ export default function collectHyvaksymisEsitysAineistot(
   aineistoHandledAt?: string | null
 ): ProjektinAineistot {
   let path: string;
+
+  const isEnnakkoneuvottelu = "lahetetty" in hyvaksymisEsitys;
+
   if ("lahetetty" in hyvaksymisEsitys) {
     path = joinPath(getYllapitoPathForProjekti(projekti.oid), ENNAKKONEUVOTTELU_JULKAISU_PATH);
   } else {
@@ -88,26 +91,17 @@ export default function collectHyvaksymisEsitysAineistot(
     tuotu: tiedosto.lisatty,
     valmis: true,
   }));
-
   const kuulutuksetJaKutsutProjektista = getKutsut(projekti, status);
+  let kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
 
-  let kuulutuksetJaKutsu: FileInfo[] = [];
-  if ("valitutKuulutuksetJaKutsu" in hyvaksymisEsitys && hyvaksymisEsitys.valitutKuulutuksetJaKutsu) {
-    const naytettavatKuulutuksetJaKutsu = hyvaksymisEsitys.valitutKuulutuksetJaKutsu.map((valittu) => valittu.nimi);
+  if (
+    isEnnakkoneuvottelu &&
+    Array.isArray(hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu) &&
+    hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu.length > 0
+  ) {
+    const poisvalitut = hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu;
 
-    const valitutProjektinTiedostot = kuulutuksetJaKutsutProjektista
-      .filter((tiedosto) => naytettavatKuulutuksetJaKutsu.includes(tiedosto.nimi))
-      .filter(
-        (projektinTiedosto) => !kuulutuksetJaKutsutOmaltaKoneelta.some((omaltaKoneelta) => omaltaKoneelta.nimi === projektinTiedosto.nimi)
-      );
-
-    kuulutuksetJaKutsu = [...kuulutuksetJaKutsutOmaltaKoneelta, ...valitutProjektinTiedostot];
-  } else {
-    const filteredProjektinTiedostot = kuulutuksetJaKutsutProjektista.filter(
-      (projektinTiedosto) => !kuulutuksetJaKutsutOmaltaKoneelta.some((omaltaKoneelta) => omaltaKoneelta.nimi === projektinTiedosto.nimi)
-    );
-
-    kuulutuksetJaKutsu = [...filteredProjektinTiedostot, ...kuulutuksetJaKutsutOmaltaKoneelta];
+    kuulutuksetJaKutsu = kuulutuksetJaKutsu.filter((tiedosto) => !tiedosto?.s3Key || !poisvalitut.includes(tiedosto.s3Key));
   }
 
   const muuAineistoOmaltaKoneelta = (hyvaksymisEsitys?.muuAineistoKoneelta ?? []).map((tiedosto) => ({

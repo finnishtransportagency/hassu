@@ -14,7 +14,6 @@ import {
   TallennaHyvaksymisEsitysInput,
 } from "@services/api";
 import { getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
-import { uuid } from "common/util/uuid";
 
 export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] };
 export type HyvaksymisEsitysForm = {
@@ -32,7 +31,6 @@ export type EnnakkoneuvotteluForm = {
   ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
     muistutukset: FormMuistutukset;
     suunnitelma: { [key: string]: FormAineistoNew[] };
-    valitutKuulutuksetJaKutsu?: Array<LadattuTiedostoInputNew> | null;
   };
 };
 
@@ -141,13 +139,6 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
   const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
     ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
   );
-  const valitutKuulutuksetJaKutsu = formData.ennakkoNeuvottelu.valitutKuulutuksetJaKutsu
-    ?.filter((item) => item !== null)
-    .map((item) => ({
-      uuid: item.uuid || uuid.v4(),
-      nimi: item.nimi,
-      tiedosto: item.tiedosto || null,
-    }));
 
   return {
     ...formData,
@@ -157,7 +148,6 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,
-      valitutKuulutuksetJaKutsu: valitutKuulutuksetJaKutsu || null,
     },
   };
 }

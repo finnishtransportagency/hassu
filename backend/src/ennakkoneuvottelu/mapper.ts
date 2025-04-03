@@ -29,12 +29,12 @@ export function adaptEnnakkoNeuvotteluToSave(
     muistutukset,
     lausunnot,
     kuulutuksetJaKutsu,
+    poisValitutKuulutuksetJaKutsu,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
     maanomistajaluettelo,
     vastaanottajat,
     hyvaksymisEsitys,
-    valitutKuulutuksetJaKutsu,
     ...rest
   } = ennakkoNeuvotteluInput;
   const ennakko: DBEnnakkoNeuvottelu = {
@@ -42,13 +42,13 @@ export function adaptEnnakkoNeuvotteluToSave(
     muistutukset: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muistutukset, muistutukset),
     lausunnot: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.lausunnot, lausunnot),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.kuulutuksetJaKutsu, kuulutuksetJaKutsu),
+    poisValitutKuulutuksetJaKutsu: poisValitutKuulutuksetJaKutsu || undefined,
     muuAineistoVelhosta: adaptAineistotToSave(dbEnnakkoNeuvottelu?.muuAineistoVelhosta, muuAineistoVelhosta),
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     muokkaaja: nykyinenKayttaja.uid,
     hyvaksymisEsitys: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.hyvaksymisEsitys, hyvaksymisEsitys),
-    valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.valitutKuulutuksetJaKutsu, valitutKuulutuksetJaKutsu),
     ...rest,
   };
   return ennakko;
@@ -90,10 +90,6 @@ export async function adaptEnnakkoNeuvotteluToAPI(
       tiedostot: ennakkoNeuvottelu.kuulutuksetJaKutsu,
       path: joinPath(path, "kuulutuksetJaKutsu"),
     }),
-    valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
-      tiedostot: ennakkoNeuvottelu.valitutKuulutuksetJaKutsu,
-      path: joinPath(path, "valitutKuulutuksetJaKutsu"),
-    }),
     muuAineistoVelhosta: adaptAineistotToAPI({
       aineistot: ennakkoNeuvottelu.muuAineistoVelhosta,
       aineistotHandledAt,
@@ -113,6 +109,7 @@ export async function adaptEnnakkoNeuvotteluToAPI(
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
+    poisValitutKuulutuksetJaKutsu: ennakkoNeuvottelu.poisValitutKuulutuksetJaKutsu || undefined,
   };
 }
 
@@ -149,10 +146,6 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
       tiedostot: ennakkoNeuvotteluJulkaisu.kuulutuksetJaKutsu,
       path: joinPath(path, "kuulutuksetJaKutsu"),
     }),
-    valitutKuulutuksetJaKutsu: adaptLadatutTiedostotToApi({
-      tiedostot: ennakkoNeuvotteluJulkaisu.valitutKuulutuksetJaKutsu,
-      path: joinPath(path, "valitutKuulutuksetJaKutsu"),
-    }),
     muuAineistoVelhosta: adaptAineistotToAPI({
       aineistot: ennakkoNeuvotteluJulkaisu.muuAineistoVelhosta,
       aineistotHandledAt,
@@ -172,6 +165,8 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
+    poisValitutKuulutuksetJaKutsu: ennakkoNeuvotteluJulkaisu.poisValitutKuulutuksetJaKutsu || undefined,
+
     hash: createEnnakkoNeuvotteluHash(oid, salt),
     lahetetty: ennakkoNeuvotteluJulkaisu.lahetetty,
   };

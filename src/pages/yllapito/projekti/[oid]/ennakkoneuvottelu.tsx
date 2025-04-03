@@ -68,7 +68,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
     muistutukset,
     lausunnot,
     kuulutuksetJaKutsu,
-    valitutKuulutuksetJaKutsu,
+    poisValitutKuulutuksetJaKutsu,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
     maanomistajaluettelo,
@@ -93,10 +93,8 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       suunnitelma: adaptSuunnitelmaAineistot(suunnitelma, velho.tyyppi),
       muistutukset: muistutuksetSorted,
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
-      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(
-        kuulutuksetJaKutsu?.filter((k) => !valitutKuulutuksetJaKutsu?.some((v) => v.nimi === k.nimi))
-      ),
-      valitutKuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(valitutKuulutuksetJaKutsu),
+      kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
+      poisValitutKuulutuksetJaKutsu: poisValitutKuulutuksetJaKutsu,
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
@@ -207,7 +205,7 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
                 <KuulutuksetJaKutsu
                   tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu}
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
-                  valitutTiedostot={projekti.ennakkoNeuvottelu?.valitutKuulutuksetJaKutsu}
+                  poisValitutTiedostot={projekti.ennakkoNeuvottelu?.poisValitutKuulutuksetJaKutsu}
                   ennakkoneuvottelu={true}
                 />
                 <H4 variant="h3">Muu tekninen aineisto</H4>

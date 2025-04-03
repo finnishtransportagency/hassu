@@ -25,22 +25,16 @@ export default async function createLadattavatTiedostot(
   } = collectHyvaksymisEsitysAineistot(projekti, hyvaksymisEsitys, status, projekti.aineistoHandledAt);
 
   let filteredKuulutuksetJaKutsu = kuulutuksetJaKutsu;
-  if ("valitutKuulutuksetJaKutsu" in hyvaksymisEsitys && hyvaksymisEsitys.valitutKuulutuksetJaKutsu) {
-    const naytettavatKuulutuksetJaKutsu = new Set([
-      ...(hyvaksymisEsitys.kuulutuksetJaKutsu?.map((kt) => kt.nimi) || []),
-      ...hyvaksymisEsitys.valitutKuulutuksetJaKutsu.map((valittu) => valittu.nimi),
-    ]);
+  if (
+    "lahetetty" in hyvaksymisEsitys &&
+    "poisValitutKuulutuksetJaKutsu" in hyvaksymisEsitys &&
+    Array.isArray(hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu) &&
+    hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu.length > 0
+  ) {
+    const poisvalitutS3Keys = hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu;
 
-    const seen = new Set();
     filteredKuulutuksetJaKutsu = kuulutuksetJaKutsu.filter((tiedosto) => {
-      if (!naytettavatKuulutuksetJaKutsu.has(tiedosto.nimi)) {
-        return false;
-      }
-      if (seen.has(tiedosto.nimi)) {
-        return false;
-      }
-      seen.add(tiedosto.nimi);
-      return true;
+      return !tiedosto?.s3Key || !poisvalitutS3Keys.includes(tiedosto.s3Key);
     });
   }
 
@@ -62,7 +56,14 @@ export async function adaptFileInfoToLadattavaTiedosto(fileInfo: FileInfo): Prom
   } else {
     linkki = "";
   }
-  return { __typename: "LadattavaTiedosto", nimi: fileInfo.nimi, linkki, kategoriaId: fileInfo.kategoriaId, tuotu: fileInfo.tuotu };
+  return {
+    __typename: "LadattavaTiedosto",
+    nimi: fileInfo.nimi,
+    linkki,
+    kategoriaId: fileInfo.kategoriaId,
+    tuotu: fileInfo.tuotu,
+    s3Key: fileInfo.s3Key,
+  };
 }
 export async function adaptFileInfoToKunnallinenLadattavaTiedosto(fileInfo: FileInfo): Promise<API.KunnallinenLadattavaTiedosto> {
   let linkki;

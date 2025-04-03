@@ -14,20 +14,20 @@ import { Checkbox, Typography } from "@mui/material";
 type Props = {
   tuodut?: LadattavaTiedosto[] | null;
   tiedostot?: LadattuTiedostoNew[] | null;
-  valitutTiedostot?: LadattuTiedostoNew[] | null;
+  poisValitutTiedostot?: (LadattavaTiedosto | LadattuTiedostoNew | string)[] | null;
   ennakkoneuvottelu?: boolean;
 };
 
 export default function KuulutuksetJaKutsu({
   tuodut,
   tiedostot,
-  valitutTiedostot,
+  poisValitutTiedostot,
   ennakkoneuvottelu = true,
 }: Readonly<Props>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
+  const [valitutTiedostot, setValitutTiedostot] = useState<string[]>([]);
   const [alustettu, setAlustettu] = useState(false);
-  const [valitutTiedostonimet, setValitutTiedostonimet] = useState<string[]>([]);
 
   const { fields, remove, move } = useFieldArray({
     name: `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`,
@@ -38,37 +38,70 @@ export default function KuulutuksetJaKutsu({
     `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`
   );
 
-  const paivitaLomakkeenValitutTiedostot = useCallback(
-    (kaikkiTuodutTiedostot: LadattavaTiedosto[] | null | undefined, valitutTiedostonimet: string[]) => {
-      if (!kaikkiTuodutTiedostot) return;
+  const getTiedostoS3Key = useCallback((tiedosto: LadattavaTiedosto) => {
+    if ("s3Key" in tiedosto && tiedosto.s3Key) {
+      return tiedosto.s3Key;
+    }
 
-      const valitutTiedostot = kaikkiTuodutTiedostot.filter((tiedosto) => valitutTiedostonimet.includes(tiedosto.nimi));
+    return tiedosto.nimi;
+  }, []);
 
-      if (ennakkoneuvottelu) {
-        setValue(
-          "ennakkoNeuvottelu",
-          {
-            ...control._formValues.ennakkoNeuvottelu,
-            valitutKuulutuksetJaKutsu: valitutTiedostot,
-          },
-          { shouldDirty: true }
-        );
-      }
+  const paivitaLomakkeenPoisValitutTiedostot = useCallback(
+    (valitutTiedostoUrlit: string[]) => {
+      if (!tuodut || !ennakkoneuvottelu) return;
+
+      const kaikkiS3Keys = tuodut.map((tiedosto) => getTiedostoS3Key(tiedosto));
+
+      const poisValitutS3Keys = kaikkiS3Keys.filter((s3Key) => !valitutTiedostoUrlit.includes(s3Key));
+
+      setValue(
+        "ennakkoNeuvottelu",
+        {
+          ...control._formValues.ennakkoNeuvottelu,
+          poisValitutKuulutuksetJaKutsu: poisValitutS3Keys.length > 0 ? poisValitutS3Keys : null,
+        },
+        { shouldDirty: true }
+      );
     },
-    [setValue, control._formValues.ennakkoNeuvottelu, ennakkoneuvottelu]
+    [setValue, control._formValues.ennakkoNeuvottelu, ennakkoneuvottelu, tuodut, getTiedostoS3Key]
   );
 
   useEffect(() => {
-    if (tuodut && !alustettu) {
-      const valinnat = valitutTiedostot?.length
-        ? valitutTiedostot.map((tiedosto) => tiedosto.nimi)
-        : tuodut.map((tiedosto) => tiedosto.nimi);
+    if (!tuodut || tuodut.length === 0 || alustettu) return;
 
-      setValitutTiedostonimet(valinnat);
-      paivitaLomakkeenValitutTiedostot(tuodut, valinnat);
-      setAlustettu(true);
+    let poisValitutS3Keys: string[] = [];
+
+    if (poisValitutTiedostot && Array.isArray(poisValitutTiedostot) && poisValitutTiedostot.length > 0) {
+      poisValitutTiedostot.forEach((tiedosto) => {
+        if (typeof tiedosto === "string") {
+          poisValitutS3Keys.push(tiedosto);
+        } else if (tiedosto && typeof tiedosto === "object" && "s3Key" in tiedosto && tiedosto.s3Key) {
+          poisValitutS3Keys.push(tiedosto.s3Key);
+        }
+      });
     }
-  }, [tuodut, valitutTiedostot, paivitaLomakkeenValitutTiedostot, alustettu]);
+
+    const valitutS3Keys = tuodut.map((tiedosto) => getTiedostoS3Key(tiedosto)).filter((s3Key) => !poisValitutS3Keys.includes(s3Key));
+
+    setValitutTiedostot(valitutS3Keys);
+
+    setAlustettu(true);
+  }, [tuodut, poisValitutTiedostot, getTiedostoS3Key, alustettu]);
+
+  const handleTiedostonValintaMuutos = (tiedosto: LadattavaTiedosto) => {
+    const tiedostoS3Key = getTiedostoS3Key(tiedosto);
+
+    let paivitetytValitutTiedostoUrlit;
+    if (valitutTiedostot.includes(tiedostoS3Key)) {
+      paivitetytValitutTiedostoUrlit = valitutTiedostot.filter((url) => url !== tiedostoS3Key);
+    } else {
+      paivitetytValitutTiedostoUrlit = [...valitutTiedostot, tiedostoS3Key];
+    }
+
+    setValitutTiedostot(paivitetytValitutTiedostoUrlit);
+
+    paivitaLomakkeenPoisValitutTiedostot(paivitetytValitutTiedostoUrlit);
+  };
 
   const onButtonClick = () => {
     if (hiddenInputRef.current) {
@@ -83,15 +116,6 @@ export default function KuulutuksetJaKutsu({
     [register, ennakkoneuvottelu]
   );
 
-  const handleTiedostonValintaMuutos = (tiedostonimi: string) => {
-    const paivitetytValitutTiedostonimet = valitutTiedostonimet.includes(tiedostonimi)
-      ? valitutTiedostonimet.filter((nimi) => nimi !== tiedostonimi)
-      : [...valitutTiedostonimet, tiedostonimi];
-
-    setValitutTiedostonimet(paivitetytValitutTiedostonimet);
-    paivitaLomakkeenValitutTiedostot(tuodut, paivitetytValitutTiedostonimet);
-  };
-
   return (
     <>
       <H4 variant="h3">Kuulutukset ja kutsu vuorovaikutukseen</H4>
@@ -99,7 +123,8 @@ export default function KuulutuksetJaKutsu({
         Järjestelmä on tuonut alle automaattisesti kuulutukset ja kutsun vuorovaikutukseen. Voit halutessasi lisätä aineistoa omalta
         koneeltasi.
       </p>
-      {ennakkoneuvottelu && tuodut && tuodut.length > 0 && (
+
+      {ennakkoneuvottelu && tuodut && tuodut.length > 0 ? (
         <>
           <p>
             Valitse aineistolinkin sisältöön mukaan otettavat tiedostot. Valitsematta jätetyt tiedostot eivät tule näkyviin
@@ -110,19 +135,31 @@ export default function KuulutuksetJaKutsu({
               <li key={tiedosto.nimi} style={{ marginBottom: "8px" }}>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Checkbox
-                    checked={valitutTiedostonimet.includes(tiedosto.nimi)}
-                    onChange={() => handleTiedostonValintaMuutos(tiedosto.nimi)}
+                    checked={valitutTiedostot.includes(getTiedostoS3Key(tiedosto))}
+                    onChange={() => handleTiedostonValintaMuutos(tiedosto)}
                     id={`valitse_tuotu_${tiedosto.nimi.replace(/\s+/g, "_")}`}
                   />
                   <LadattavaTiedostoComponent tiedosto={tiedosto} />
 
-                  {!valitutTiedostonimet.includes(tiedosto.nimi) && (
+                  {!valitutTiedostot.includes(getTiedostoS3Key(tiedosto)) && (
                     <Typography style={{ color: "grey" }}>Ei näytetä aineistolinkin sisällössä</Typography>
                   )}
                 </Stack>
               </li>
             ))}
           </ul>
+        </>
+      ) : (
+        <>
+          {!!tuodut?.length && (
+            <ul style={{ listStyle: "none" }} className="mt-4">
+              {tuodut.map((tiedosto, i) => (
+                <li key={tiedosto.nimi + i}>
+                  <LadattavaTiedostoComponent tiedosto={tiedosto} />
+                </li>
+              ))}
+            </ul>
+          )}
         </>
       )}
       {!!fields?.length && (
