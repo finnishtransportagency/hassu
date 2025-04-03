@@ -44,7 +44,7 @@ function setupLocalDevelopmentMode(config, env) {
   env.REACT_APP_API_URL = "http://localhost:3000/graphql";
   env.APPSYNC_URL = process.env.REACT_APP_API_URL;
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
-  env.VERSION = process.env.VERSION;
+  env.NEXT_PUBLIC_VERSION = process.env.VERSION;
   env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
 
   /**
@@ -112,7 +112,7 @@ module.exports = (phase) => {
     NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
     NEXT_PUBLIC_AJANSIIRTO_SALLITTU: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
-    ENVIRONMENT: BaseConfig.env,
+    NEXT_PUBLIC_ENVIRONMENT: BaseConfig.env,
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
     TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
@@ -167,11 +167,11 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
   } else {
-    env.VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
+    env.NEXT_PUBLIC_VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
     try {
       let buffer = fs.readFileSync(__dirname + "/.version");
       if (buffer) {
-        env.VERSION = buffer.toString("UTF-8");
+        env.NEXT_PUBLIC_VERSION = buffer.toString("UTF-8");
       }
     } catch (e) {
       // Ignore
