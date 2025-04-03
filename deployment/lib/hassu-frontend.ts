@@ -324,6 +324,8 @@ export class HassuFrontendStack extends Stack {
     return vpc;
   }
 
+  // ignore 'foo' is declared but its value is never read.ts(6133) temporary to test other parts
+  // @ts-ignore
   private async newProcess(
     config: Config,
     behaviours: Record<string, cloudfront.BehaviorOptions>,
@@ -369,6 +371,8 @@ export class HassuFrontendStack extends Stack {
       securityGroups: [taskSecurityGroup],
     });
 
+    // ignore 'foo' is declared but its value is never read.ts(6133) temporary to test other parts
+    // @ts-ignore
     const fargateTargetGroup = new ApplicationTargetGroup(this, "nextJsAppTargetGroup", {
       vpc,
       port: 3000,
