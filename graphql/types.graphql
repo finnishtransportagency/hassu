@@ -1412,8 +1412,8 @@ type LadattavaTiedosto implements ILadattavaTiedosto {
   nimi: String!
   tuotu: String
   jarjestys: Int
-  lisatty: String
-  tiedosto: String
+  #lisatty: String
+  #tiedosto: String
   s3Key: String
 }
 
