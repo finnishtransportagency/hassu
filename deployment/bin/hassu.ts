@@ -25,6 +25,19 @@ async function main() {
   } else {
     awsAccountId = "000000000000";
   }
+
+  let nextJsImageTag: string;
+  if (Config.isDeveloperEnvironment()) {
+    nextJsImageTag = Config.env;
+  } else {
+    const commitHash = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION;
+    if (commitHash) {
+      nextJsImageTag = commitHash;
+    } else {
+      throw new Error("Et voi asentaa ympäristöä '" + Config.env + "' kuin CodeBuildin kautta!");
+    }
+  }
+
   assertIsDefined(awsAccountId, "AWS-tilin ID pitää olla tiedossa");
   const app = new App();
   const hassuDatabaseStack = new HassuDatabaseStack(app, awsAccountId);
@@ -59,6 +72,7 @@ async function main() {
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       eventQueue: hassuBackendStack.eventQueue,
       asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
+      nextJsImageTag,
     });
     await hassuFrontendStack.process().catch((e) => {
       console.log("Deployment of HassuFrontendStack failed:", e);

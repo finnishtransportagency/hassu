@@ -206,6 +206,17 @@ export class HassuBackendStack extends Stack {
     new CfnOutput(this, "HyvaksymisEsitysSqsUrl", {
       value: hyvaksymisEsitysSQS.queueUrl ?? "",
     });
+
+    // CDK ei tue secure string parametrien luontia suoraan 
+    // esim. https://stackoverflow.com/questions/75607168/aws-cdk-how-to-encrypt-stringparameter-in-ssm-since-type-is-deprecated
+    // Next.js ECS task Tarvii näitä ajon aikana, jos luetaan parameter storesta, ei tallennu suoraan taskin määritelmään
+    // tosin CfnOutput on luettavissa suoraan..
+    new ssm.StringParameter(this, "AppSyncAPIKey", {
+      description: "Generated AppSyncAPIKey",
+      parameterName: "/" + Config.env + "/outputs/AppSyncAPIKey",
+      stringValue: api.apiKey ?? "",
+    });
+
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
         value: api.graphqlUrl ?? "",

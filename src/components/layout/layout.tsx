@@ -24,7 +24,7 @@ export default function Layout({ children }: Props): ReactElement {
   ) {
     return (
       <div className="min-h-screen relative flex flex-col">
-        {process.env.ENVIRONMENT !== "prod" && <NotificationBar />}
+        {process.env.NEXT_PUBLIC_ENVIRONMENT !== "prod" && <NotificationBar />}
 
         <Container sx={{ marginBottom: "110px", marginTop: "50px" }}>
           <main>{children}</main>
@@ -36,7 +36,7 @@ export default function Layout({ children }: Props): ReactElement {
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      {process.env.ENVIRONMENT !== "prod" && <NotificationBar />}
+      {process.env.NEXT_PUBLIC_ENVIRONMENT !== "prod" && <NotificationBar />}
       <Header />
       <Breadcrumbs />
       <Container sx={{ marginBottom: "110px" }}>
