@@ -16,11 +16,10 @@ import {
   OriginRequestPolicy,
   OriginSslPolicy,
   PriceClass,
-  SecurityPolicyProtocol,
   ViewerProtocolPolicy,
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
-import { HttpOrigin, LoadBalancerV2Origin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
+import { HttpOrigin, S3Origin, VpcOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
 import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
@@ -29,6 +28,7 @@ import * as fs from "fs";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
 import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as logs from "aws-cdk-lib/aws-logs";
 import {
   HassuSSMParameters,
   readAccountStackOutputs,
@@ -44,7 +44,7 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import { BaseConfig } from "../../common/BaseConfig";
 import { IHostedZone } from "aws-cdk-lib/aws-route53";
-import { IVpc, Peer, Port, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { IVpc, Peer, Port, PrefixList, SecurityGroup, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
 import assert from "assert";
 import { ApplicationLoadBalancer, ApplicationProtocol, ApplicationTargetGroup, Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import {
@@ -55,6 +55,7 @@ import {
   FargateTaskDefinition,
   LogDrivers,
   OperatingSystemFamily,
+  Secret
 } from "aws-cdk-lib/aws-ecs";
 import { Repository } from "aws-cdk-lib/aws-ecr";
 
@@ -269,7 +270,13 @@ export class HassuFrontendStack extends Stack {
       invalidationPaths: ["/*"],
     });
 
-    // this.newProcess(config, behaviours, logBucket, webAclId);
+    // Rajoitetaan rumasti vain deviin uusi prosessi tässä
+    // Palautetaan tässä vaiheessa taski, jotta helpompi luvittaa se (kauheus poistuu kun vanhasta eroon)
+    let ecsTask: FargateTaskDefinition | null = null
+    if (Config.env == "dev") {
+      const { SearchDomainEndpointOutput } = accountStackOutputs
+      ecsTask = await this.newProcess(config, edgeLambdas, behaviours, logBucket, webAclId, ssmParameters, {EventSqsUrl, HyvaksymisEsitysSqsUrl, SearchDomainEndpointOutput});
+    }
 
     this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
@@ -289,6 +296,23 @@ export class HassuFrontendStack extends Stack {
         this.props.publicBucket.grantReadWrite(nextApiLambda);
       }
       this.props.lyhytOsoiteTable.grantReadData(nextApiLambda);
+    }
+
+    if (ecsTask) {
+      searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", ecsTask.taskRole);
+      // Logic not needed as long as we run only in dev but keep it here as reminder when expanding to elsewhere
+      const environmentsBlacklistedFromTimeShift = ["prod", "training"];
+      const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
+      if (!isEnvironmentBlacklistedFromTimeShift) {
+        this.props.projektiTable.grantReadWriteData(ecsTask.taskRole);
+        this.props.eventQueue.grantSendMessages(ecsTask.taskRole);
+        // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+        this.props.asianhallintaQueue.grantSendMessages(ecsTask.taskRole);
+        this.props.yllapitoBucket.grantReadWrite(ecsTask.taskRole);
+        this.props.publicBucket.grantReadWrite(ecsTask.taskRole);
+      }
+      this.props.lyhytOsoiteTable.grantReadData(ecsTask.taskRole);
+      this.props.internalBucket.grantReadWrite(ecsTask.taskRole); // granted to lambda in this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
     }
 
     if (env == "dev" || env == "prod") {
@@ -324,21 +348,124 @@ export class HassuFrontendStack extends Stack {
     return vpc;
   }
 
-  // ignore 'foo' is declared but its value is never read.ts(6133) temporary to test other parts
-  // @ts-ignore
   private async newProcess(
     config: Config,
+    edgeLambdas: cloudfront.EdgeLambda[],
     behaviours: Record<string, cloudfront.BehaviorOptions>,
     logBucket: Bucket,
-    webAclId: string | undefined
-  ): Promise<void> {
+    webAclId: string | undefined,
+    ssmParameters: HassuSSMParameters,
+    stackOutputs: Record<string, string>
+  ): Promise<FargateTaskDefinition> {
+    // VPC
     const vpc = await this.getVpc(config);
 
-    const repository = Repository.fromRepositoryName(this, "EcrRepo", "hassu-nextjs");
+    // ALB
+    const albSecurityGroup = new SecurityGroup(this, "ALBSecurityGroup", {
+      vpc,
+      description: "Security group for ALB",
+      allowAllOutbound: true
+    })
+    
+    const cfPrefixList = PrefixList.fromPrefixListId(
+      this, 
+      "Cloudfront PrefixList",
+      "com.amazonaws.global.cloudfront.origin-facing"
+    );
 
-    const ecsTask = new FargateTaskDefinition(this, "ecsTask", {
+    // TODO the prefixList might need some adjustment or different approach all together
+    albSecurityGroup.addIngressRule(
+      Peer.prefixList(cfPrefixList.prefixListId),
+      Port.tcp(80),
+      "Allow Cloudfront access to ALB"
+    );
+
+    const alb = new ApplicationLoadBalancer(this, "NextjsALB", {
+      vpc,
+      internetFacing: false,
+      vpcSubnets: {
+        subnetType: SubnetType.PRIVATE_WITH_EGRESS
+      },
+      http2Enabled: true,
+      securityGroup: albSecurityGroup
+    })
+
+    // Parameters
+    // apinoitu next.config.js
+    let version = process.env.CODEBUILD_SOURCE_VERSION || "";
+    try {
+      let buffer = fs.readFileSync(__dirname + "/.version");
+      if (buffer) {
+        version = buffer.toString("utf8");
+      }
+    } catch (e) {
+      // Ignore
+    }
+
+    // Runtime env & secrets
+    const containerEnv: { [key: string]: string } = {
+      NEXT_PUBLIC_VERSION: version,
+      NEXT_PUBLIC_ENVIRONMENT: Config.env,
+      NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL || "", // asetetaan deployment/lib/hassu-pipelines.ts
+      NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL || "", // sama kuin ^^
+      NEXT_PUBLIC_AJANSIIRTO_SALLITTU: ssmParameters.AjansiirtoSallittu,
+      INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
+      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
+      TABLE_PROJEKTI: Config.projektiTableName,
+      TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
+      INTERNAL_BUCKET_NAME: Config.internalBucketName,
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
+      KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
+      KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
+      VELHO_API_URL: ssmParameters.VelhoApiUrl,
+      VELHO_AUTH_URL: ssmParameters.VelhoAuthenticationUrl,
+      EVENT_SQS_URL: stackOutputs.EventSqsUrl,
+      HYVAKSYMISESITYS_SQS_URL: stackOutputs.HyvaksymisEsitysSqsUrl,
+      SEARCH_DOMAIN: stackOutputs.SearchDomainEndpointOutput,
+    }
+
+    if (Config.env !== "prod") {
+      containerEnv.PUBLIC_BUCKET_NAME = Config.publicBucketName;
+      containerEnv.YLLAPITO_BUCKET_NAME = Config.internalBucketName;
+    }
+
+    // Secrets 
+    const velhoUsername = ssm.StringParameter.fromSecureStringParameterAttributes(this, "VelhoUsername", {
+      parameterName: `/${Config.env}/VelhoUsername`,
+    });
+
+    const velhoPassword = ssm.StringParameter.fromSecureStringParameterAttributes(this, "VelhoPassword", {
+      parameterName: `/${Config.env}/VelhoPassword`,
+    });
+
+    const appSyncAPIKey = ssm.StringParameter.fromStringParameterAttributes(this, "AppSyncAPIKey", {
+      parameterName: `/${Config.env}/output/AppSyncAPIKey`,
+    });
+
+    const containerSecrets: { [key: string]: Secret } = {
+      VELHO_USERNAME: Secret.fromSsmParameter(velhoUsername),
+      VELHO_PASSWORD: Secret.fromSsmParameter(velhoPassword),
+      REACT_APP_API_KEY: Secret.fromSsmParameter(appSyncAPIKey)
+    }
+
+    // ECS + Fargate
+    const cluster = new Cluster(this, "ECSCluster", {
+      vpc,
+      clusterName: "Next.js Cluster"
+    })
+
+    const logGroup = new logs.LogGroup(this, "EcsLogGroup", {
+      logGroupName: `ecs/nextjs-${Config.env}`,
+      retention: logs.RetentionDays.SIX_MONTHS // TODO tähän oikea politiikka
+    })
+
+    const repository = Repository.fromRepositoryName(this, "NextjsRepo", "hassu-nextjs");
+
+    const ecsTask = new FargateTaskDefinition(this, "EcsTask", {
+      // TODO seuraa onko tämä riittävä vai pitääkö tuunata suuntaan tai toiseen
       memoryLimitMiB: 2048,
-      cpu: 1024,
+      cpu: 1024, // = 1 vCPU
       runtimePlatform: {
         operatingSystemFamily: OperatingSystemFamily.LINUX,
         cpuArchitecture: CpuArchitecture.X86_64,
@@ -348,34 +475,36 @@ export class HassuFrontendStack extends Stack {
     ecsTask.addContainer("NextJsContainer", {
       image: ContainerImage.fromEcrRepository(repository, this.props.nextJsImageTag),
       containerName: "nextJsApp",
-      portMappings: [{ containerPort: 3000, hostPort: 3000 }],
+      portMappings: [{ containerPort: 3000, hostPort: 80 }],
       logging: LogDrivers.awsLogs({
         streamPrefix: "nextJsApp",
+        logGroup: logGroup
       }),
+      environment: containerEnv,
+      secrets: containerSecrets
     });
 
-    const taskSecurityGroup = new SecurityGroup(this, "taskSecurityGroups", {
+    const ecsSecurityGroup = new SecurityGroup(this, "ECSSecurityGroup", {
       vpc,
+      allowAllOutbound: true
     });
-    const cluster = new Cluster(this, "Cluster", {
-      vpc,
-      clusterName: "nextJsApp",
-    });
+
+    // Allow ALB to reach ECS
+    ecsSecurityGroup.addIngressRule(albSecurityGroup, Port.tcp(80))
 
     const fargateService = new FargateService(this, "nextJsAppFargateService", {
       cluster,
       taskDefinition: ecsTask,
-      assignPublicIp: true,
       desiredCount: 1,
-      vpcSubnets: { subnetType: SubnetType.PUBLIC },
-      securityGroups: [taskSecurityGroup],
+      minHealthyPercent: 100,
+      maxHealthyPercent: 200,
+      vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
+      securityGroups: [ecsSecurityGroup],
     });
 
-    // ignore 'foo' is declared but its value is never read.ts(6133) temporary to test other parts
-    // @ts-ignore
     const fargateTargetGroup = new ApplicationTargetGroup(this, "nextJsAppTargetGroup", {
       vpc,
-      port: 3000,
+      port: 80,
       protocol: ApplicationProtocol.HTTP,
       targets: [fargateService],
       healthCheck: {
@@ -385,30 +514,21 @@ export class HassuFrontendStack extends Stack {
       },
     });
 
-    const applicationLoadBalancerSecurityGroup = new SecurityGroup(this, "applicationLoadBalancerSecurityGroup", {
-      vpc,
-      description: "Security Group for ALB",
-    });
+    alb.addListener("Listener", {
+      port: 80,
+      defaultTargetGroups: [fargateTargetGroup]
+    })
 
-    applicationLoadBalancerSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.tcp(80));
-
-    const applicationLoadBalancer = new ApplicationLoadBalancer(this, "applicationLoadBalancer", {
-      vpc,
-      vpcSubnets: { subnetType: SubnetType.PUBLIC },
-      internetFacing: true,
-      securityGroup: applicationLoadBalancerSecurityGroup,
-    });
-
-    const cfnDistribution = new Distribution(this, "CloudfrontDistribution", {
-      minimumProtocolVersion: SecurityPolicyProtocol.TLS_V1_2_2021,
-      defaultBehavior: {
-        origin: new LoadBalancerV2Origin(applicationLoadBalancer, {
+    // Cloudfront
+    const distribution = new Distribution(this, "CloudfrontDistribution", {
+      defaultBehavior: { 
+        origin: VpcOrigin.withApplicationLoadBalancer(alb, {
           httpPort: 80,
           protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
-          originId: "default-origin",
         }),
+        edgeLambdas,
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        cachePolicy: CachePolicy.CACHING_DISABLED,
+        cachePolicy: CachePolicy.CACHING_DISABLED, // TODO selvitä mitä voidaan cachettaa.
         allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
         originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
       },
@@ -420,11 +540,13 @@ export class HassuFrontendStack extends Stack {
     });
 
     new CfnOutput(this, "CfnPrivateDNSName", {
-      value: cfnDistribution.distributionDomainName || "",
+      value: distribution.distributionDomainName || "",
     });
     new CfnOutput(this, "CfnDistributionId", {
-      value: cfnDistribution.distributionId || "",
+      value: distribution.distributionId || "",
     });
+
+    return ecsTask
   }
 
   private getErrorResponsesForCloudFront() {
