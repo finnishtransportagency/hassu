@@ -15,7 +15,6 @@ export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
 
 export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   private readonly vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
-  private readonly suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
   protected readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(props: SuunnitteluVaiheKutsuAdapterProps) {

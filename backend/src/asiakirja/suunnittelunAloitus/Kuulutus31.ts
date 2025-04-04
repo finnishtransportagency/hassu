@@ -67,7 +67,7 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       velho.tyyppi,
       params.kieli
     );
-    super(params.kieli, kutsuAdapter);
+    super(params.kieli, params.oid, kutsuAdapter);
     this.velho = velho;
     const language = params.kieli;
     this.header = headers[language];
@@ -78,13 +78,16 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
 
     this.kutsuAdapter.addTemplateResolver(this);
-    this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    this.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [this.addHeader(), ...this.addDocumentElements(), this.euLogoElement()].filter(
-      (element) => element
-    );
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      this.addHeader(),
+      ...this.addDocumentElements(),
+      this.euLogoElement(),
+      this.sopimusLogoElement(),
+    ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 

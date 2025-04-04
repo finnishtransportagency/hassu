@@ -1,8 +1,6 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
-import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
-import { assertIsDefined } from "../../util/assertions";
-import { fileService } from "../../files/fileService";
 
 export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
   constructor(params: AloituskuulutusKutsuAdapterProps) {
@@ -33,14 +31,5 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.params.yhteystiedot, undefined, true)),
     ].filter((element): element is PDFKit.PDFStructureElement => !!element);
-  }
-
-  async loadLogo(): Promise<string | Buffer> {
-    if (this.params.suunnitteluSopimus) {
-      const logo = this.params.suunnitteluSopimus.logo?.[this.kieli || Kieli.SUOMI];
-      assertIsDefined(logo, "suunnittelusopimuksessa tulee aina olla kunnan logo");
-      return fileService.getProjektiFile(this.params.oid, logo);
-    }
-    return super.loadLogo();
   }
 }
