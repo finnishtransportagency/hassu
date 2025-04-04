@@ -63,6 +63,9 @@ export default function collectHyvaksymisEsitysAineistot(
   aineistoHandledAt?: string | null
 ): ProjektinAineistot {
   let path: string;
+
+  const isEnnakkoneuvottelu = "lahetetty" in hyvaksymisEsitys;
+
   if ("lahetetty" in hyvaksymisEsitys) {
     path = joinPath(getYllapitoPathForProjekti(projekti.oid), ENNAKKONEUVOTTELU_JULKAISU_PATH);
   } else {
@@ -88,9 +91,18 @@ export default function collectHyvaksymisEsitysAineistot(
     tuotu: tiedosto.lisatty,
     valmis: true,
   }));
-
   const kuulutuksetJaKutsutProjektista = getKutsut(projekti, status);
-  const kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+  let kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+
+  if (
+    isEnnakkoneuvottelu &&
+    Array.isArray(hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu) &&
+    hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu.length > 0
+  ) {
+    const poisvalitut = hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu;
+
+    kuulutuksetJaKutsu = kuulutuksetJaKutsu.filter((tiedosto) => !tiedosto?.s3Key || !poisvalitut.includes(tiedosto.s3Key));
+  }
 
   const muuAineistoOmaltaKoneelta = (hyvaksymisEsitys?.muuAineistoKoneelta ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "muuAineistoKoneelta", adaptFileName(tiedosto.nimi)),

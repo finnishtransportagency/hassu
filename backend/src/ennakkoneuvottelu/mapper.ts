@@ -29,6 +29,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     muistutukset,
     lausunnot,
     kuulutuksetJaKutsu,
+    poisValitutKuulutuksetJaKutsu,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
     maanomistajaluettelo,
@@ -41,6 +42,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     muistutukset: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muistutukset, muistutukset),
     lausunnot: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.lausunnot, lausunnot),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.kuulutuksetJaKutsu, kuulutuksetJaKutsu),
+    poisValitutKuulutuksetJaKutsu: poisValitutKuulutuksetJaKutsu || undefined,
     muuAineistoVelhosta: adaptAineistotToSave(dbEnnakkoNeuvottelu?.muuAineistoVelhosta, muuAineistoVelhosta),
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
@@ -69,6 +71,7 @@ export async function adaptEnnakkoNeuvotteluToAPI(
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
+
   return {
     __typename: "EnnakkoNeuvottelu",
     poistumisPaiva: ennakkoNeuvottelu.poistumisPaiva ?? null,
@@ -106,6 +109,7 @@ export async function adaptEnnakkoNeuvotteluToAPI(
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
+    poisValitutKuulutuksetJaKutsu: ennakkoNeuvottelu.poisValitutKuulutuksetJaKutsu || undefined,
   };
 }
 
@@ -119,6 +123,7 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
   }
   const aineistotHandledAt = dbProjekti.aineistoHandledAt;
   const path = joinPath(getYllapitoPathForProjekti(oid), ENNAKKONEUVOTTELU_PATH);
+
   return {
     __typename: "EnnakkoNeuvotteluJulkaisu",
     poistumisPaiva: ennakkoNeuvotteluJulkaisu.poistumisPaiva ?? null,
@@ -160,6 +165,8 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
       maanomistajaluettelo: await Promise.all(getMaanomistajaLuettelo(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
+    poisValitutKuulutuksetJaKutsu: ennakkoNeuvotteluJulkaisu.poisValitutKuulutuksetJaKutsu || undefined,
+
     hash: createEnnakkoNeuvotteluHash(oid, salt),
     lahetetty: ennakkoNeuvotteluJulkaisu.lahetetty,
   };
