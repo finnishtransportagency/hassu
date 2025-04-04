@@ -11,6 +11,8 @@ import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil"
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
 import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 import axios from "axios";
+import { DynaaminenVideoUpotus } from "./videoupotus/DynaaminenVideoUpotus";
+import { useRouter } from "next/router";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -55,6 +57,16 @@ const ProjektiSideNavigation = styled((props) => {
       return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
     }
   };
+
+  const router = useRouter();
+  const pathName = router.pathname;
+  const isVideoPage = pathName.includes("aloituskuulutus") || pathName.includes("suunnittelu") || pathName.includes("nahtavillaolo");
+
+  if (!isVideoPage) {
+    return null;
+  }
+
+  console.log(projekti);
 
   return (
     <Section noDivider {...props}>
@@ -104,6 +116,16 @@ const ProjektiSideNavigation = styled((props) => {
           <>
             <SideCardHeading>{t("suunnitelma_kartalla")}</SideCardHeading>
             <KarttaKansalaiselle geoJSON={geoJSON} />
+          </>
+        )}
+      </SideCard>
+
+      <SideCard>
+        {isVideoPage && (
+          <>
+            <SideCardHeading>{t("vls-esittely")}</SideCardHeading>
+            <SideCardContent>{t("tutustu-videoiden-avulla")}</SideCardContent>
+            <DynaaminenVideoUpotus projekti={projekti} />
           </>
         )}
       </SideCard>
