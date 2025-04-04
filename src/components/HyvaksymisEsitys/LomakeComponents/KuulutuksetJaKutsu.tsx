@@ -18,12 +18,7 @@ type Props = {
   ennakkoneuvottelu?: boolean;
 };
 
-export default function KuulutuksetJaKutsu({
-  tuodut,
-  tiedostot,
-  poisValitutTiedostot,
-  ennakkoneuvottelu = true,
-}: Readonly<Props>): ReactElement {
+export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedostot, ennakkoneuvottelu }: Readonly<Props>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const [valitutTiedostot, setValitutTiedostot] = useState<string[]>([]);
@@ -151,15 +146,14 @@ export default function KuulutuksetJaKutsu({
         </>
       ) : (
         <>
-          {!!tuodut?.length && (
-            <ul style={{ listStyle: "none" }} className="mt-4">
-              {tuodut.map((tiedosto, i) => (
+          <ul style={{ listStyle: "none" }} className="mt-4">
+            {!!tuodut?.length &&
+              tuodut.map((tiedosto, i) => (
                 <li key={tiedosto.nimi + i}>
                   <LadattavaTiedostoComponent tiedosto={tiedosto} />
                 </li>
               ))}
-            </ul>
-          )}
+          </ul>
         </>
       )}
       {!!fields?.length && (
