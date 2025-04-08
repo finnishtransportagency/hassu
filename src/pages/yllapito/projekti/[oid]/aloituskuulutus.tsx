@@ -329,7 +329,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                           Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
                           julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
                         </li>
-                        <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kuulutuksen luonnosta.</li>
+                        <li>
+                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
+                          esikatselu -painikkeesta.
+                        </li>
                         <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                         {projekti.asianhallinta.inaktiivinen && (
                           <li>Muistathan viedä kuulutuksen sekä ilmoituksen kuulutuksesta asianhallintaan.</li>
@@ -421,15 +424,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
           <PdfPreviewForm ref={pdfFormRef} />
           {esikatselePdf && (
             <Section>
-              <H3>Kuulutuksen ja ilmoituksen esikatselu</H3>
-              <Notification type={NotificationType.INFO_GRAY}>
-                Esikatsele kuulutus ja ilmoitus ennen hyväksyntään lähettämistä.
-              </Notification>
+              <H2>Kuulutuksen ja ilmoituksen esikatselu</H2>
               {ensisijainenKaannettavaKieli && (
                 <>
                   <p>
                     {label({
-                      label: "Esitettävät tiedostot",
+                      label: "Esikatsele tiedostot.",
                       inputLanguage: ensisijainenKaannettavaKieli,
                       kielitiedot,
                     })}
@@ -463,7 +463,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                 <>
                   <p>
                     {label({
-                      label: "Esitettävät tiedostot",
+                      label: "Esikatsele tiedostot.",
                       inputLanguage: toissijainenKaannettavaKieli,
                       kielitiedot,
                     })}

@@ -132,6 +132,7 @@ export class HassuFrontendStack extends Stack {
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
+      PALAUTE_KYSELY_TIEDOT: ssmParameters.PalauteKyselyTiedot,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;

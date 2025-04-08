@@ -40,6 +40,7 @@ class MuistuttajaSearchService {
   }
 
   async searchById(id: string[]): Promise<DBMuistuttaja[]> {
+    log.info("search muistuttajas with ids", { muistuttajaIds: id });
     const results = await muistuttajaOpenSearchClient.query({
       query: {
         terms: {
@@ -54,6 +55,7 @@ class MuistuttajaSearchService {
   }
 
   async getMuistuttajaMaara(oid: string): Promise<number> {
+    log.info("querying muistuttaja amount for projekti");
     const response = await muistuttajaOpenSearchClient.query({
       query: {
         bool: {
@@ -72,6 +74,7 @@ class MuistuttajaSearchService {
   }
 
   async searchMuistuttajat(params: HaeMuistuttajatQueryVariables): Promise<Muistuttajat> {
+    log.info("fetching muistuttajat that match query", { oid: params.oid, isMuutMuistuttajat: params.muutMuistuttajat });
     const searchResult = await muistuttajaOpenSearchClient.query({
       query: this.buildQuery(params),
       size: params.size ?? 10000,

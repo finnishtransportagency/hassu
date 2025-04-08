@@ -1,0 +1,25 @@
+{
+  "paaotsikko": "Tietoa Suomi.fi-palvelusta",
+  "ingressi": "",
+  "tietoa-suomifista": {
+    "otsikko": "Suomi.fi",
+    "kappale1": "Suomi.fi on viranomaisten ja julkisten organisaatioiden käyttämä palvelu, joka tarjoaa kansalaisille ja yrityksille sähköisiä asiointipalveluja. Tunnistautumalla palveluun voit viestiä eri viranomaisten kanssa, antaa ja pyytää valtuuksia sekä tarkistaa omat rekisteritietosi. Valtion liikenneväylien suunnittelu käyttää Suomi.fi tunnistusta ja viestejä. ",
+    "kappale2": "Suomi.fi-viestit ovat luotettava ja tietoturvallinen tapa viestiä. Voit käyttää Suomi.fi-viestejä mobiilisovelluksella sekä tietokoneen tai mobiililaitteen verkkoselaimella. Suomi.fi kautta pystyt tunnistautumaan vahvasti pankkitunnuksella, mobiilivarmenteella, hightrust.id -sovelluksella tai varmennekortilla.",
+    "kappale3": "Valtion liikenneväylien suunnittelu -palvelussa Suomi.fi-viestejä käytetään tie-, rata- ja yleissuunnitelmista tiedottamiseen. Jos olet ottanut Suomi.fi-viestit käyttöön, saat viranomaisviestit sähköisessä muodossa. Voit tunnistautua Suomi.fi-palveluun lukeaksesi viestejä. Suomi.fi-tunnistautumista käytetään muistutusten jättämiseen."
+  },
+  "lisaa-suomifista": {
+    "otsikko": "Lue lisää Suomi.fi-palvelusta",
+    "linkki1": {
+      "teksti": "Mikä on Suomi.fi?",
+      "href": "https://www.suomi.fi/ohjeet-ja-tuki/yleista-suomifista/mika-on-suomifi"
+    },
+    "linkki2": {
+      "teksti": "Suomi.fi viestit",
+      "href": "https://www.suomi.fi/ohjeet-ja-tuki/viestit/mika-on-suomifi-viestit"
+    },
+    "linkki3": {
+      "teksti": "Suomi.fi tunnistautuminen",
+      "href": "https://www.suomi.fi/ohjeet-ja-tuki/viestit/viestien-kaytto/tunnistautuminen"
+    }
+  }
+}

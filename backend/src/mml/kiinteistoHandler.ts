@@ -1,7 +1,7 @@
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
-import { MmlClient, getMmlClient } from "./mmlClient";
+import { MmlClient, MmlKiinteisto, createMmlClient } from "./mmlClient";
 import { parameters } from "../aws/parameters";
 import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -28,6 +28,7 @@ import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
 import { adaptOmistajahakuTila } from "../projekti/adapter/adaptToAPI/adaptOmistajahakuTila";
+import { createPrhClient, PrhClient } from "./prh/prh";
 import { adaptOmistajaToIndex } from "../projektiSearch/omistajaSearch/kiinteistonomistajaSearchAdapter";
 
 export type OmistajaHakuEvent = {
@@ -38,23 +39,42 @@ export type OmistajaHakuEvent = {
 };
 
 let mmlClient: MmlClient | undefined = undefined;
+let prhClient: PrhClient | undefined = undefined;
 
-async function getClient() {
+async function getMmlClient() {
   if (mmlClient === undefined) {
     const endpoint = await parameters.getKtjBaseUrl();
     const apiKey = await parameters.getMmlApiKey();
     const ogcEndpoint = await parameters.getOgcBaseUrl();
     const ogcApiKey = await parameters.getOgcApiKey();
     const ogcApiExamples = await parameters.getOgcApiExmaples();
-    mmlClient = getMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey, ogcApiExamples });
+    mmlClient = createMmlClient({ endpoint, apiKey, ogcEndpoint, ogcApiKey, ogcApiExamples });
   }
   return mmlClient;
 }
 
+async function getPrhClient() {
+  if (prhClient === undefined) {
+    const conf = await parameters.getPrhConfig();
+    prhClient = await createPrhClient({
+      endpoint: conf.endpoint,
+      username: conf.username,
+      password: conf.password,
+    });
+  }
+  return prhClient;
+}
+
+const suomiFiEiTiedotettavatYritykset = [
+  // Väylävirasto
+  "1010547-1",
+];
+
 function isSuomifiLahetys(
   omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">
 ): boolean {
-  return (!!omistaja.henkilotunnus || !!omistaja.ytunnus) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
+  const ytunnusOK = !!omistaja.ytunnus && !suomiFiEiTiedotettavatYritykset.includes(omistaja.ytunnus);
+  return (!!omistaja.henkilotunnus || ytunnusOK) && !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
 
 function getExpires() {
@@ -81,7 +101,7 @@ function mapKey({ kiinteistotunnus, kayttooikeusyksikkotunnus, etunimet, sukunim
 
 const handlerFactory = (event: SQSEvent) => async () => {
   try {
-    const client = await getClient();
+    const client = await getMmlClient();
     for (const record of event.Records) {
       const hakuEvent: OmistajaHakuEvent = JSON.parse(record.body);
       setLogContextOid(hakuEvent.oid);
@@ -94,14 +114,12 @@ const handlerFactory = (event: SQSEvent) => async () => {
           hakuEvent.kiinteistotunnukset.length
         );
         auditLog.info("Haetaan kiinteistöjä", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-        const responses = await Promise.all([
-          client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-          client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid),
-        ]);
-        const kiinteistot = responses[0];
-        const yhteystiedot = responses[1];
-        const tiekunnat = responses[2];
+        const kiinteistot = await client.haeLainhuutotiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu lainhuutotiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu yhteystiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu tiekuntatiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         let kiinteistoOmistajaCount = 0;
         kiinteistot.forEach((k) => (kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length));
         let yhteystietoOmistajaCount = 0;
@@ -111,6 +129,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
+        await updatePRHAddress(yhteystiedot, hakuEvent.uid);
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
           aiemmatOmistajat.map<[string, DBOmistaja]>((aiempiOmistaja) => [mapKey(aiempiOmistaja), aiempiOmistaja])
@@ -135,14 +154,15 @@ const handlerFactory = (event: SQSEvent) => async () => {
               etunimet: o.etunimet,
               sukunimi: o.sukunimi,
               nimi: o.nimi,
+              ytunnus: o.ytunnus,
               jakeluosoite: o.yhteystiedot?.jakeluosoite,
               postinumero: o.yhteystiedot?.postinumero,
               paikkakunta: o.yhteystiedot?.paikkakunta,
               maakoodi: o.yhteystiedot?.maakoodi,
-              suomifiLahetys: false,
               kaytossa: true,
               expires,
             };
+            omistaja.suomifiLahetys = isSuomifiLahetys(omistaja);
             omistajaMap.set(
               mapKey({ kiinteistotunnus: k.kiinteistotunnus, kayttooikeusyksikkotunnus: k.kayttooikeusyksikkotunnus, ...o }),
               omistaja
@@ -248,8 +268,12 @@ const handlerFactory = (event: SQSEvent) => async () => {
   }
 };
 
-export function setClient(client: MmlClient | undefined) {
-  mmlClient = client;
+export function setPrhClient(prh: PrhClient | undefined) {
+  prhClient = prh;
+}
+
+export function setMmlClient(mml: MmlClient | undefined) {
+  mmlClient = mml;
 }
 
 export const handleEvent = async (event: SQSEvent) => {
@@ -302,7 +326,7 @@ export async function tuoKarttarajausJaTallennaKiinteistotunnukset(input: TuoKar
   if (!config.isProd()) {
     kiinteistotunnukset = input.kiinteistotunnukset.map((k) => {
       if (k.startsWith("491")) {
-        return k.replace("491", "998");
+        return k.replace(/^491/, "998");
       }
       return k;
     });
@@ -433,4 +457,27 @@ export async function haeKiinteistonOmistajat(variables: HaeKiinteistonOmistajat
   }
   kiinteistonOmistajatResponse.omistajat.forEach((o) => auditLog.info("Näytetään omistajan tiedot", { omistajaId: o.id }));
   return kiinteistonOmistajatResponse;
+}
+
+async function updatePRHAddress(yhteystiedot: MmlKiinteisto[], uid: string) {
+  const client = await getPrhClient();
+  const omistajat = yhteystiedot.flatMap((k) => k.omistajat).filter((o) => o.ytunnus);
+  const ytunnus = [...new Set(omistajat.map((o) => o.ytunnus!)).values()];
+  const resp = await client.haeYritykset(ytunnus, uid);
+  log.info("Vastauksena saatiin " + resp.length + " yritys(tä)");
+  resp.forEach((prhOmistaja) => {
+    omistajat
+      .filter((o) => o.ytunnus === prhOmistaja.ytunnus && prhOmistaja.ytunnus !== undefined)
+      .forEach((o) => {
+        o.nimi = prhOmistaja.nimi ?? o.nimi;
+        if (prhOmistaja.yhteystiedot) {
+          o.yhteystiedot = {
+            postinumero: prhOmistaja.yhteystiedot.postinumero,
+            jakeluosoite: prhOmistaja.yhteystiedot.jakeluosoite,
+            paikkakunta: prhOmistaja.yhteystiedot.paikkakunta,
+            maakoodi: prhOmistaja.yhteystiedot.maakoodi,
+          };
+        }
+      });
+  });
 }

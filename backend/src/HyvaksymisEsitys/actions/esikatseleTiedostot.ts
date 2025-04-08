@@ -69,7 +69,7 @@ export async function esikatseleHyvaksymisEsityksenTiedostot({
 }
 
 function validateProjari(dbProjekti: ProjektiTiedostoineen) {
-  const projari = dbProjekti.kayttoOikeudet.find((hlo) => (hlo.tyyppi = API.KayttajaTyyppi.PROJEKTIPAALLIKKO));
+  const projari = dbProjekti.kayttoOikeudet.find((hlo) => hlo.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO);
   assertIsDefined(projari, "Projektilta puuttuu projektipäällikkö");
   return projari;
 }

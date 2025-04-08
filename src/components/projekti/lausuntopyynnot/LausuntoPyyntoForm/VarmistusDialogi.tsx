@@ -13,7 +13,7 @@ export default function VarmistusDialogi({ dialogiOnAuki, onClose, onAccept }: P
   return (
     <HassuDialog open={dialogiOnAuki} title="Vahvista aineistolinkin poistaminen" onClose={onClose} maxWidth="sm">
       <DialogContent>
-        <p>Olet poistamassa lausuntopyyntöaineistoon liittettävän linkin ja sen sisällön. Haluatko varmasti poistaa linkin ja sisällön?</p>
+        <p>Olet poistamassa lausuntopyyntöaineistoon liitettävän linkin ja sen sisällön. Haluatko varmasti poistaa linkin ja sisällön?</p>
       </DialogContent>
       <DialogActions>
         <Button primary type="button" id="accept_and_publish_vuorovaikutus" onClick={onAccept}>

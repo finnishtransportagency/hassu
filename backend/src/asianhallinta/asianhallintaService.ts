@@ -153,16 +153,15 @@ class AsianhallintaService { //NOSONAR
       vaylaAsianhallinta: isVaylaAsianhallinta(projekti),
       correlationId: getCorrelationId() ?? uuid.v4(),
     };
-    log.info("getAsiaId", { body });
+    log.debug("Haetaan asiaId", { body });
     const result = await invokeLambda("hassu-asianhallinta-" + config.env, true, this.wrapAsFakeSQSEvent(body, "GET_ASIA_ID"));
-    log.info("getAsiaId", { result });
     if (result) {
       const response: CheckAsianhallintaStateResponse = JSON.parse(result);
       if (response.asiaId) {
-        log.info("getAsiaId", { response });
+        log.debug("asiaId löydetty projektille", { response });
         return response.asiaId;
       } else {
-        log.error("getAsiaId", { response });
+        log.debug("asiaId:tä ei löydetty projektille", { response });
       }
     }
   }
