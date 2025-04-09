@@ -33,19 +33,11 @@ export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedo
     `${ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.kuulutuksetJaKutsu`
   );
 
-  const getTiedostoS3Key = useCallback((tiedosto: LadattavaTiedosto) => {
-    if ("s3Key" in tiedosto && tiedosto.s3Key) {
-      return tiedosto.s3Key;
-    }
-
-    return tiedosto.nimi;
-  }, []);
-
   const paivitaLomakkeenPoisValitutTiedostot = useCallback(
     (valitutTiedostoUrlit: string[]) => {
       if (!tuodut || !ennakkoneuvottelu) return;
 
-      const kaikkiS3Keys = tuodut.map((tiedosto) => getTiedostoS3Key(tiedosto));
+      const kaikkiS3Keys = tuodut.map((tiedosto) => tiedosto.s3Key).filter((s3Key): s3Key is string => !!s3Key);
 
       const poisValitutS3Keys = kaikkiS3Keys.filter((s3Key) => !valitutTiedostoUrlit.includes(s3Key));
 
@@ -58,7 +50,7 @@ export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedo
         { shouldDirty: true }
       );
     },
-    [setValue, control._formValues.ennakkoNeuvottelu, ennakkoneuvottelu, tuodut, getTiedostoS3Key]
+    [setValue, control._formValues.ennakkoNeuvottelu, ennakkoneuvottelu, tuodut]
   );
 
   useEffect(() => {
@@ -76,15 +68,17 @@ export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedo
       });
     }
 
-    const valitutS3Keys = tuodut.map((tiedosto) => getTiedostoS3Key(tiedosto)).filter((s3Key) => !poisValitutS3Keys.includes(s3Key));
+    const valitutS3Keys = tuodut
+      .map((tiedosto) => tiedosto.s3Key)
+      .filter((s3Key): s3Key is string => !!s3Key && !poisValitutS3Keys.includes(s3Key));
 
     setValitutTiedostot(valitutS3Keys);
 
     setAlustettu(true);
-  }, [tuodut, poisValitutTiedostot, getTiedostoS3Key, alustettu]);
+  }, [tuodut, poisValitutTiedostot, alustettu]);
 
   const handleTiedostonValintaMuutos = (tiedosto: LadattavaTiedosto) => {
-    const tiedostoS3Key = getTiedostoS3Key(tiedosto);
+    const tiedostoS3Key = tiedosto.s3Key as string;
 
     let paivitetytValitutTiedostoUrlit;
     if (valitutTiedostot.includes(tiedostoS3Key)) {
@@ -130,13 +124,13 @@ export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedo
               <li key={tiedosto.nimi} style={{ marginBottom: "8px" }}>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <Checkbox
-                    checked={valitutTiedostot.includes(getTiedostoS3Key(tiedosto))}
+                    checked={valitutTiedostot.includes(tiedosto.s3Key as string)}
                     onChange={() => handleTiedostonValintaMuutos(tiedosto)}
                     id={`valitse_tuotu_${tiedosto.nimi.replace(/\s+/g, "_")}`}
                   />
                   <LadattavaTiedostoComponent tiedosto={tiedosto} />
 
-                  {!valitutTiedostot.includes(getTiedostoS3Key(tiedosto)) && (
+                  {!valitutTiedostot.includes(tiedosto.s3Key as string) && (
                     <Typography style={{ color: "grey" }}>Ei näytetä aineistolinkin sisällössä</Typography>
                   )}
                 </Stack>
