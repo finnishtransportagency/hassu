@@ -211,10 +211,11 @@ export class HassuBackendStack extends Stack {
     // esim. https://stackoverflow.com/questions/75607168/aws-cdk-how-to-encrypt-stringparameter-in-ssm-since-type-is-deprecated
     // Next.js ECS task Tarvii näitä ajon aikana, jos luetaan parameter storesta, ei tallennu suoraan taskin määritelmään
     // tosin CfnOutput on luettavissa suoraan..
-    new ssm.StringParameter(this, "AppSyncAPIKey", {
+    // Developer tilillä api avainta ei ole -> ei voida antaa tyhjää, niin laitetaan dummy arvo
+    new ssm.StringParameter(this, "AppSyncAPIKeySSMParam", {
       description: "Generated AppSyncAPIKey",
       parameterName: "/" + Config.env + "/outputs/AppSyncAPIKey",
-      stringValue: api.apiKey ?? "",
+      stringValue: api.apiKey ?? "developer-account-has-no-api-key", 
     });
 
     if (Config.isDeveloperEnvironment()) {
