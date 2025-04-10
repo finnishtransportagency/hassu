@@ -273,11 +273,11 @@ export class HassuFrontendStack extends Stack {
 
     // Rajoitetaan rumasti vain deviin uusi prosessi tässä
     // Palautetaan tässä vaiheessa taski, jotta helpompi luvittaa se (kauheus poistuu kun vanhasta eroon)
-    let ecsTask: FargateTaskDefinition | null = null
-    if (Config.env == "dev") {
-      const { SearchDomainEndpointOutput } = accountStackOutputs
-      ecsTask = await this.newProcess(config, edgeLambdas, behaviours, logBucket, webAclId, ssmParameters, {EventSqsUrl, HyvaksymisEsitysSqsUrl, SearchDomainEndpointOutput});
-    }
+    //let ecsTask: FargateTaskDefinition | null = null
+    //if (Config.env == "dev") {
+    //  const { SearchDomainEndpointOutput } = accountStackOutputs
+    //  ecsTask = await this.newProcess(config, edgeLambdas, behaviours, logBucket, webAclId, ssmParameters, {EventSqsUrl, HyvaksymisEsitysSqsUrl, SearchDomainEndpointOutput});
+    //}
 
     this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
@@ -299,22 +299,22 @@ export class HassuFrontendStack extends Stack {
       this.props.lyhytOsoiteTable.grantReadData(nextApiLambda);
     }
 
-    if (ecsTask) {
-      searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", ecsTask.taskRole);
-      // Logic not needed as long as we run only in dev but keep it here as reminder when expanding to elsewhere
-      const environmentsBlacklistedFromTimeShift = ["prod", "training"];
-      const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
-      if (!isEnvironmentBlacklistedFromTimeShift) {
-        this.props.projektiTable.grantReadWriteData(ecsTask.taskRole);
-        this.props.eventQueue.grantSendMessages(ecsTask.taskRole);
-        // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
-        this.props.asianhallintaQueue.grantSendMessages(ecsTask.taskRole);
-        this.props.yllapitoBucket.grantReadWrite(ecsTask.taskRole);
-        this.props.publicBucket.grantReadWrite(ecsTask.taskRole);
-      }
-      this.props.lyhytOsoiteTable.grantReadData(ecsTask.taskRole);
-      this.props.internalBucket.grantReadWrite(ecsTask.taskRole); // granted to lambda in this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
-    }
+    //if (ecsTask) {
+    //  searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", ecsTask.taskRole);
+    //  // Logic not needed as long as we run only in dev but keep it here as reminder when expanding to elsewhere
+    //  const environmentsBlacklistedFromTimeShift = ["prod", "training"];
+    //  const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
+    //  if (!isEnvironmentBlacklistedFromTimeShift) {
+    //    this.props.projektiTable.grantReadWriteData(ecsTask.taskRole);
+    //    this.props.eventQueue.grantSendMessages(ecsTask.taskRole);
+    //    // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+    //    this.props.asianhallintaQueue.grantSendMessages(ecsTask.taskRole);
+    //    this.props.yllapitoBucket.grantReadWrite(ecsTask.taskRole);
+    //    this.props.publicBucket.grantReadWrite(ecsTask.taskRole);
+    //  }
+    //  this.props.lyhytOsoiteTable.grantReadData(ecsTask.taskRole);
+    //  this.props.internalBucket.grantReadWrite(ecsTask.taskRole); // granted to lambda in this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
+    //}
 
     if (env == "dev" || env == "prod") {
       new CfnOutput(this, "nextStaticsCachePolicyId", {
@@ -348,7 +348,7 @@ export class HassuFrontendStack extends Stack {
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
     return vpc;
   }
-
+  //@ts-ignore
   private async newProcess(
     config: Config,
     edgeLambdas: cloudfront.EdgeLambda[],
