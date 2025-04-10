@@ -10,8 +10,8 @@ export default function NotificationBar(): ReactElement {
   return (
     <div style={{ zIndex: theme.zIndex.appBar }} className="sticky bg-green transition-all">
       <div style={{ width: "100%", textAlign: "center" }} className="">
-        <span>YMPÄRISTÖ: {process.env.ENVIRONMENT} </span>
-        <span>VERSIO: {process.env.VERSION} </span>
+        <span>YMPÄRISTÖ: {process.env.NEXT_PUBLIC_ENVIRONMENT} </span>
+        <span>VERSIO: {process.env.NEXT_PUBLIC_VERSION} </span>
       </div>
     </div>
   );
