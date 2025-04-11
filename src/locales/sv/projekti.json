@@ -66,10 +66,11 @@
   "liittyvat-suunnitelmat": {
     "title": "Relaterade planer",
     "kaynnistetty-suunnitelmalla": "Planeringen har tidigare inletts med planen <suunnitelma/>. Informationen i publikationen nedan har kopierats från den.",
-    "suunnitelma-on-jaettu": "Planen har delats upp i planerna: {{suunnitelmaNimi}} och <suunnitelma2/>",
+    "suunnitelma-on-jaettu": "Planen har delats upp i planerna: {{suunnitelmaNimi}} och <suunnitelma2/>.",
     "kuulutettu-yhdessa": "Planen har tidigare kungjorts tillsammans med planen <suunnitelma/>.",
     "kuulutettu-yhdessa-pdf": "Planen har tidigare kungjorts tillsammans med planen {{kuulutettuYhdessaSuunnitelmanimi}}.",
-    "ei-julkaisuja": "Planen har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas."
+    "ei-julkaisuja": "Planen har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas.",
+    "ei-julkaisuja-nimella": "Planen {{suunnitelmaNimi}} har för närvarande inga tillgängliga publikationer, så dess uppgifter kan inte granskas."
   },
   "ui-otsikot": {
     "valtion_liikennevaylien_suunnittelu": "Planering av statens trafikleder",
@@ -194,7 +195,7 @@
     "saat_tekemastasi_muistutuksesta_email": "Du får en kopia av din anmärkning per e-post om du uppger din e-postadress. När Transport- och kommunikationsverket har godkänt planen skickar vi information om beslut om godkännande till dig. Kontrollera att dina uppgifter inte innehåller fel och korrigera dem vid behov.",
     "lisatietoja_henkilotietojesi": "<p>Mer information om behandlingen av dina personuppgifter finns i <a>dataskyddsbeskrivningen</a>.</p>",
     "muistutuksen_lahettajan_tiedot": "Uppgifter om avsändaren av anmärkningen",
-    "kiitos_viestista": "Tack för meddelandet",
+    "kiitos_muistutuksesta": "Tack för meddelandet",
     "muistutus": "Anmärkning",
     "ala_kirjoita": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till anmärkningen.",
     "muistutuksen_liitteet": "Bilagor till anmärkningen",
@@ -208,7 +209,11 @@
     "muistutus_info_2": "Anmärkningens textinnehåll kan utarbetas direkt på blanketten Anmärkning i tjänsten Planering av statens trafikleder. Du kan också förbereda anmärkningen till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Anmärkning. Även andra bilagor kan läggas till anmärkningen.",
     "lue_lisaa": "Läs mer",
     "epaonnistui": "Det gick inte att skicka en anmärkning",
-    "epaonnistui_viesti": "Du kan försöka skicka anmärkningen igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
+    "epaonnistui_viesti": "Du kan försöka skicka anmärkningen igen eller skicka den via e-post till {{viranomainen}} registratorskontor.",
+    "kerro_kayttokokemuksestasi": "Berätta om dina erfarenheter av att använda tjänsten",
+    "kerro_kayttokokemuksestasi_vastaa_kyselyyn": "Svara på en kort enkät om tjänsten Planering av statens trafikleder.",
+    "kerro_kayttokokemuksestasi_saatu_palaute": "Responsen hjälper oss att utveckla tjänsten.",
+    "kerro_kayttokokemuksestasi_linkki": "TILL ENKÄT"
   },
   "asiakirja": {
     "aloituskuulutus": {

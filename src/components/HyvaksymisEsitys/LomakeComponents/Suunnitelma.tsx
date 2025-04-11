@@ -55,33 +55,37 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
         informatiivisiin aineistoihin sekä näiden alikansioihin. Aineistoja on mahdollista järjestellä, siirtää alikansioista toiseen tai
         poistaa.
       </p>
-      <AccordionToggleButton
-        aineistoKategoriaIds={aineistoKategoriat.listKategoriaIds()}
-        expandedAineisto={expandedAineisto}
-        setExpandedAineisto={setExpandedAineisto}
-      />
-      <HassuAccordion
-        expandedstate={[expandedAineisto, setExpandedAineisto]}
-        items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
-          title: (
-            <H3 className="mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
-              suunnitelmaFlat,
-              paakategoria
-            )})`}</H3>
-          ),
-          content: (
-            <SectionContent largeGaps>
-              <SuunnitelmaAineistoPaakategoriaContent
-                aineistoKategoriat={aineistoKategoriat}
-                paakategoria={paakategoria}
-                expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
-                ennakkoneuvottelu={ennakkoneuvottelu}
-              />
-            </SectionContent>
-          ),
-          id: paakategoria.id,
-        }))}
-      />
+      {aineistojaOn && (
+        <>
+          <AccordionToggleButton
+            aineistoKategoriaIds={aineistoKategoriat.listKategoriaIds()}
+            expandedAineisto={expandedAineisto}
+            setExpandedAineisto={setExpandedAineisto}
+          />
+          <HassuAccordion
+            expandedstate={[expandedAineisto, setExpandedAineisto]}
+            items={aineistoKategoriat.listKategoriat().map((paakategoria) => ({
+              title: (
+                <H3 className="mb-0">{`${t(`aineisto-kategoria-nimi.${paakategoria.id}`)} (${getNestedAineistoMaaraForCategory(
+                  suunnitelmaFlat,
+                  paakategoria
+                )})`}</H3>
+              ),
+              content: (
+                <SectionContent largeGaps>
+                  <SuunnitelmaAineistoPaakategoriaContent
+                    aineistoKategoriat={aineistoKategoriat}
+                    paakategoria={paakategoria}
+                    expandedAineistoState={[expandedAineisto, setExpandedAineisto]}
+                    ennakkoneuvottelu={ennakkoneuvottelu}
+                  />
+                </SectionContent>
+              ),
+              id: paakategoria.id,
+            }))}
+          />
+        </>
+      )}
       <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }}>
         <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
           Tuo aineistot

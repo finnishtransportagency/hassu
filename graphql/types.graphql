@@ -911,6 +911,7 @@ type ProjektiJulkinen implements IProjekti {
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
 }
 
 type Suunnitelma {
@@ -1102,7 +1103,6 @@ type AloitusKuulutusJulkaisuJulkinen {
 }
 
 type SuunnitelmaJaettuJulkinen {
-  liittyvatSuunnitelma: ProjektinJakotieto
   julkaisuKopioituSuunnitelmasta: ProjektinJakotieto
   julkaisuKopioituSuunnitelmaan: ProjektinJakotieto
 }

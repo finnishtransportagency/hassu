@@ -1142,7 +1142,6 @@ Object {
         "tietosuoja": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
-      "suunnitelmaJaettu": undefined,
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "a2@vayla.fi",
