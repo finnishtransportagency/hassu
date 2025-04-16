@@ -1153,6 +1153,11 @@ type SuunnitteluSopimus {
   kunta: Int!
   logo: LokalisoituTeksti
   yhteysHenkilo: String!
+  etunimi: String!
+  sukunimi: String!
+  puhelinnumero: String!
+  email: String!
+  yritys: String
 }
 
 type SuunnitteluSopimusJulkaisu {
@@ -1161,6 +1166,7 @@ type SuunnitteluSopimusJulkaisu {
   puhelinnumero: String!
   email: String!
   kunta: Int!
+  yritys: String
   logo: LokalisoituTeksti
 }
 

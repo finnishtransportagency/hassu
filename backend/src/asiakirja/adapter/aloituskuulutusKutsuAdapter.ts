@@ -204,7 +204,7 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
   }
 
   kutsuja(): string | undefined {
-    if (this.props.suunnitteluSopimus) {
+    if (this.props.suunnitteluSopimus && this.props.suunnitteluSopimus.kunta !== undefined) {
       return kuntametadata.nameForKuntaId(this.props.suunnitteluSopimus.kunta, this.kieli);
     }
     return super.kutsuja();

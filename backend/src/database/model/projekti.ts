@@ -90,6 +90,11 @@ export type SuunnitteluSopimus = {
   kunta: number;
   logo?: LocalizedMap<string> | null;
   yhteysHenkilo: string;
+  etunimi: string;
+  sukunimi: string;
+  puhelinnumero: string;
+  email: string;
+  yritys?: string;
 };
 
 export type SuunnitteluSopimusJulkaisu = {
@@ -99,6 +104,7 @@ export type SuunnitteluSopimusJulkaisu = {
   sukunimi: string;
   puhelinnumero: string;
   email: string;
+  yritys?: string;
 };
 
 export type Suunnitelma = {

@@ -18,6 +18,11 @@ export function adaptSuunnitteluSopimusToAPI(
       kunta: suunnitteluSopimus.kunta,
       yhteysHenkilo: suunnitteluSopimus.yhteysHenkilo ?? "", // "" here to not break old test data because of missing value in mandatory field
       logo: adaptLogotToAPI(oid, suunnitteluSopimus.logo),
+      etunimi: suunnitteluSopimus.etunimi,
+      sukunimi: suunnitteluSopimus.sukunimi,
+      puhelinnumero: suunnitteluSopimus.puhelinnumero,
+      email: suunnitteluSopimus.email,
+      yritys: suunnitteluSopimus.yritys,
     };
   }
   return suunnitteluSopimus;
@@ -48,6 +53,7 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
+      yritys: suunnitteluSopimus.yritys,
       logo,
       email: suunnitteluSopimus.email,
       etunimi: suunnitteluSopimus.etunimi,

@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
-import ProjektiSuunnittelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
+import ProjektiSuunnittelusopimusTiedot from "@components/projekti/projektintiedot/ProjektiSunnittelusopimusTiedot";
 import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTiedot";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
@@ -236,6 +236,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     formState: { errors, isDirty, isSubmitting },
     reset,
     watch,
+    getValues,
   } = useFormReturn;
 
   const kielitiedot = watch("kielitiedot");
@@ -268,18 +269,67 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         (async () => {
           const { suunnittelusopimusprojekti, kielitiedot, ...persistentData } = data;
           try {
-            if (suunnittelusopimusprojekti === "true" && persistentData.suunnitteluSopimus?.logo) {
-              const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
-              const originalInputLogo = persistentData.suunnitteluSopimus.logo;
-              const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
-              if (logoTiedostoFi instanceof File) {
-                ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
+            if (suunnittelusopimusprojekti === "true") {
+              if (!persistentData.suunnitteluSopimus) {
+                persistentData.suunnitteluSopimus = {};
               }
-              const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
-              if (logoTiedostoSv instanceof File) {
-                ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
+
+              if (persistentData.suunnitteluSopimus?.logo) {
+                const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
+                const originalInputLogo = persistentData.suunnitteluSopimus.logo;
+                const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
+                if (logoTiedostoFi instanceof File) {
+                  ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
+                }
+                const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
+                if (logoTiedostoSv instanceof File) {
+                  ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
+                }
+                persistentData.suunnitteluSopimus.logo = ssLogo;
               }
-              persistentData.suunnitteluSopimus.logo = ssLogo;
+
+              const osapuoliMaaraField = getValues("suunnitteluSopimus.osapuoliMaara" as any);
+              const osapuoliMaara = parseInt(osapuoliMaaraField) || 1;
+
+              const suunnitteluSopimusAny = persistentData.suunnitteluSopimus as any;
+              const puhdistettuSuunnitteluSopimus: any = {
+                kunta: suunnitteluSopimusAny.kunta,
+                logo: suunnitteluSopimusAny.logo,
+                etunimi: suunnitteluSopimusAny.etunimi,
+                sukunimi: suunnitteluSopimusAny.sukunimi,
+                puhelinnumero: suunnitteluSopimusAny.puhelinnumero,
+                email: suunnitteluSopimusAny.email,
+                yritys: suunnitteluSopimusAny.yritys,
+                osapuoliMaara: osapuoliMaara,
+                lisatytHenkilot: suunnitteluSopimusAny.lisatytHenkilot || [],
+              } as any;
+
+              for (let i = 1; i <= osapuoliMaara; i++) {
+                const osapuoliAvain = `osapuoli${i}` as any;
+                const osapuoliTyyppiAvain = `osapuoli${i}Tyyppi` as any;
+                const osapuoliTiedot = suunnitteluSopimusAny[osapuoliAvain];
+                const osapuoliTyyppi = suunnitteluSopimusAny[osapuoliTyyppiAvain];
+
+                if (osapuoliTiedot) {
+                  puhdistettuSuunnitteluSopimus[osapuoliAvain] = {
+                    etunimi: osapuoliTiedot.etunimi || "",
+                    sukunimi: osapuoliTiedot.sukunimi || "",
+                    puhelinnumero: osapuoliTiedot.puhelinnumero || "",
+                    email: osapuoliTiedot.email || "",
+                    yritys: osapuoliTiedot.yritys || "",
+                    kunta: osapuoliTiedot.kunta ? Number(osapuoliTiedot.kunta) : null,
+                    nimiEnsisijainen: osapuoliTiedot.nimiEnsisijainen || "",
+                    nimiToissijainen: osapuoliTiedot.nimiToissijainen || "",
+                  };
+                }
+                if (osapuoliTyyppi) {
+                  puhdistettuSuunnitteluSopimus[osapuoliTyyppiAvain] = osapuoliTyyppi;
+                }
+              }
+
+              persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
+            } else {
+              persistentData.suunnitteluSopimus = null;
             }
 
             if (persistentData.euRahoitus) {
@@ -319,7 +369,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           }
         })()
       ),
-    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo]
+    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo, getValues]
   );
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import React, { ReactElement, useMemo } from "react";
 import { ControllerProps, FieldValues } from "react-hook-form";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
-import { ControlledLogoInput } from "./ControlledLogoInput";
+import { ControlledLogoInput } from "../ControlledLogoInput";
 
 interface Props<TFieldValues extends FieldValues> {
   lang: KaannettavaKieli;

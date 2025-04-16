@@ -131,9 +131,14 @@ input MaakuntaVastaanottajaInput {
 }
 
 input SuunnitteluSopimusInput {
-  kunta: Int!
+  kunta: Int
   logo: LokalisoituTekstiInputEiPakollinen
-  yhteysHenkilo: String!
+  yhteysHenkilo: String
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  yritys: String
 }
 
 input VuorovaikutusKierrosInput {
