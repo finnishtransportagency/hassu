@@ -87,14 +87,14 @@ export default function SuunnittelusopimusOsapuoli({
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
               label="Kunnan nimi ensisijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.nimiEnsisijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.nimiEnsisijainen}
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiEnsisijainen` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiEnsisijainen}
               disabled={disabled}
             />
             <TextInput
               label="Kunnan nimi toissijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.nimiToissijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.nimiToissijainen}
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiToissijainen` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiToissijainen}
               disabled={disabled}
             />
           </HassuGrid>
@@ -102,14 +102,14 @@ export default function SuunnittelusopimusOsapuoli({
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
               label="Yrityksen nimi ensisijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.nimiEnsisijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.nimiEnsisijainen}
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiEnsisijainen` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiEnsisijainen}
               disabled={disabled}
             />
             <TextInput
               label="Yrityksen nimi toissijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.nimiToissijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.nimiToissijainen}
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiToissijainen` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiToissijainen}
               disabled={disabled}
             />
           </HassuGrid>

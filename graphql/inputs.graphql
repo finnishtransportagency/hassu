@@ -134,11 +134,24 @@ input SuunnitteluSopimusInput {
   kunta: Int
   logo: LokalisoituTekstiInputEiPakollinen
   yhteysHenkilo: String
+  osapuolet: [SuunnitteluSopimusOsapuoliInput]
+}
+
+input SuunnitteluSopimusOsapuoliInput {
+  osapuolenNimiEnsisijainen: String
+  osapuolenNimiToissijainen: String
+  osapuolenHenkilot: [OsapuolenHenkilotInput]
+  osapuolenTyyppi: String
+}
+
+input OsapuolenHenkilotInput {
   etunimi: String
   sukunimi: String
   puhelinnumero: String
   email: String
-  yritys: String
+  organisaatio: String
+  kunta: String
+  valittu: Boolean
 }
 
 input VuorovaikutusKierrosInput {

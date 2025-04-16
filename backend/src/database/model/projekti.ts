@@ -90,11 +90,7 @@ export type SuunnitteluSopimus = {
   kunta: number;
   logo?: LocalizedMap<string> | null;
   yhteysHenkilo: string;
-  etunimi: string;
-  sukunimi: string;
-  puhelinnumero: string;
-  email: string;
-  yritys?: string;
+  osapuolet?: SuunnitteluSopimusOsapuoli[];
 };
 
 export type SuunnitteluSopimusJulkaisu = {
@@ -104,7 +100,24 @@ export type SuunnitteluSopimusJulkaisu = {
   sukunimi: string;
   puhelinnumero: string;
   email: string;
-  yritys?: string;
+  osapuolet?: SuunnitteluSopimusOsapuoli[];
+};
+
+export type SuunnitteluSopimusOsapuoli = {
+  osapuolenNimiEnsisijainen: string;
+  osapuolenNimiToissijainen: string;
+  osapuolenHenkilot: OsapuolenHenkilo[];
+  osapuolenTyyppi: string;
+};
+
+export type OsapuolenHenkilo = {
+  etunimi: string;
+  sukunimi: string;
+  puhelinnumero: string;
+  email: string;
+  organisaatio: string;
+  kunta: string;
+  valittu?: boolean;
 };
 
 export type Suunnitelma = {

@@ -18,11 +18,22 @@ export function adaptSuunnitteluSopimusToAPI(
       kunta: suunnitteluSopimus.kunta,
       yhteysHenkilo: suunnitteluSopimus.yhteysHenkilo ?? "", // "" here to not break old test data because of missing value in mandatory field
       logo: adaptLogotToAPI(oid, suunnitteluSopimus.logo),
-      etunimi: suunnitteluSopimus.etunimi,
-      sukunimi: suunnitteluSopimus.sukunimi,
-      puhelinnumero: suunnitteluSopimus.puhelinnumero,
-      email: suunnitteluSopimus.email,
-      yritys: suunnitteluSopimus.yritys,
+      osapuolet:
+        suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
+          __typename: "SuunnitteluSopimusOsapuoli",
+          osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen,
+          osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen,
+          tyyppi: osapuoli.osapuolenTyyppi,
+          osapuolenHenkilot: osapuoli.osapuolenHenkilot.map((henkilo) => ({
+            __typename: "OsapuolenHenkilo",
+            etunimi: henkilo.etunimi,
+            sukunimi: henkilo.sukunimi,
+            puhelinnumero: henkilo.puhelinnumero,
+            email: henkilo.email,
+            organisaatio: henkilo.organisaatio,
+            valittu: henkilo.valittu,
+          })),
+        })) || null,
     };
   }
   return suunnitteluSopimus;
@@ -50,15 +61,18 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
       logo = adaptLogotToAPI(oid, suunnitteluSopimus.logo);
     }
 
+    const etunimi = suunnitteluSopimus.etunimi || "";
+    const sukunimi = suunnitteluSopimus.sukunimi || "";
+    const puhelinnumero = suunnitteluSopimus.puhelinnumero || "";
+
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      yritys: suunnitteluSopimus.yritys,
       logo,
       email: suunnitteluSopimus.email,
-      etunimi: suunnitteluSopimus.etunimi,
-      sukunimi: suunnitteluSopimus.sukunimi,
-      puhelinnumero: suunnitteluSopimus.puhelinnumero,
+      etunimi,
+      sukunimi,
+      puhelinnumero,
     };
   }
   return suunnitteluSopimus;

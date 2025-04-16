@@ -55,8 +55,13 @@ export const perustiedotValidationSchema = Yup.object()
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
       .shape({
-        kunta: Yup.string().required("Kunta on pakollinen"),
-        yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1).nullable(),
+        //osapuoli1: Yup.object().required("Osapuoli on pakollinen"),
+        // etunimi: Yup.string().required("Etunimi on pakollinen"),
+        // sukunimi: Yup.string().required("Sukunimi on pakollinen"),
+        // puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
+        // email: Yup.string().required("Email on pakollinen"),
+        // kunta: Yup.string().required("Kunta on pakollinen"),
+        // yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1).nullable(),
         logo: Yup.object()
           .shape({
             SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),

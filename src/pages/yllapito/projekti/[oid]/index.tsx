@@ -293,16 +293,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
               const suunnitteluSopimusAny = persistentData.suunnitteluSopimus as any;
               const puhdistettuSuunnitteluSopimus: any = {
-                kunta: suunnitteluSopimusAny.kunta,
+                kunta: 123, // Kovakoodattu väliaikaisesti
+                yhteysHenkilo: "default-kayttaja-id", // Kovakoodattu väliaikaisesti
                 logo: suunnitteluSopimusAny.logo,
-                etunimi: suunnitteluSopimusAny.etunimi,
-                sukunimi: suunnitteluSopimusAny.sukunimi,
-                puhelinnumero: suunnitteluSopimusAny.puhelinnumero,
-                email: suunnitteluSopimusAny.email,
-                yritys: suunnitteluSopimusAny.yritys,
-                osapuoliMaara: osapuoliMaara,
-                lisatytHenkilot: suunnitteluSopimusAny.lisatytHenkilot || [],
-              } as any;
+                osapuolet: [],
+              };
 
               for (let i = 1; i <= osapuoliMaara; i++) {
                 const osapuoliAvain = `osapuoli${i}` as any;
@@ -311,25 +306,27 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                 const osapuoliTyyppi = suunnitteluSopimusAny[osapuoliTyyppiAvain];
 
                 if (osapuoliTiedot) {
-                  puhdistettuSuunnitteluSopimus[osapuoliAvain] = {
-                    etunimi: osapuoliTiedot.etunimi || "",
-                    sukunimi: osapuoliTiedot.sukunimi || "",
-                    puhelinnumero: osapuoliTiedot.puhelinnumero || "",
-                    email: osapuoliTiedot.email || "",
-                    yritys: osapuoliTiedot.yritys || "",
-                    kunta: osapuoliTiedot.kunta ? Number(osapuoliTiedot.kunta) : null,
-                    nimiEnsisijainen: osapuoliTiedot.nimiEnsisijainen || "",
-                    nimiToissijainen: osapuoliTiedot.nimiToissijainen || "",
-                  };
-                }
-                if (osapuoliTyyppi) {
-                  puhdistettuSuunnitteluSopimus[osapuoliTyyppiAvain] = osapuoliTyyppi;
+                  const osapuolenHenkilot = (osapuoliTiedot.osapuolenHenkilot || []).map((henkilo: any) => ({
+                    etunimi: henkilo.etunimi || "",
+                    sukunimi: henkilo.sukunimi || "",
+                    puhelinnumero: henkilo.puhelinnumero || "",
+                    email: henkilo.email || "",
+                    organisaatio: henkilo.organisaatio || "",
+                    kunta: henkilo.kunta || "",
+                    valittu: henkilo.valittu,
+                  }));
+
+                  puhdistettuSuunnitteluSopimus.osapuolet.push({
+                    osapuolenNimiEnsisijainen: osapuoliTiedot.osapuolenNimiEnsisijainen || "",
+                    osapuolenNimiToissijainen: osapuoliTiedot.osapuolenNimiToissijainen || "",
+                    osapuolenHenkilot: osapuolenHenkilot,
+                    osapuolenTyyppi: osapuoliTyyppi || "",
+                  });
                 }
               }
 
               persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
-            } else {
-              persistentData.suunnitteluSopimus = null;
+              console.log("Lopullinen data:", JSON.stringify(persistentData.suunnitteluSopimus, null, 2));
             }
 
             if (persistentData.euRahoitus) {
@@ -358,6 +355,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               ...persistentData,
               kielitiedot: kielitiedotInput,
             };
+
+            console.log("API Data:", JSON.stringify(apiData.suunnitteluSopimus, null, 2));
 
             setStatusBeforeSave(projekti?.status);
 

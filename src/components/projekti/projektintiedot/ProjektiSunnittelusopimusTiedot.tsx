@@ -84,8 +84,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
               <Controller
                 name={"suunnitteluSopimus.osapuoliMaara" as any}
                 control={control}
-                defaultValue={null}
-                shouldUnregister={true}
+                defaultValue={1}
                 render={({ field: osapuoliMaaraField }) => {
                   const osapuoliMaara = parseInt(osapuoliMaaraField.value) || 1;
 

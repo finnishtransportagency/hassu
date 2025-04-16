@@ -17,6 +17,16 @@ interface HenkiloListaProps {
   watch: UseFormWatch<FormValues>;
 }
 
+interface Henkilo {
+  etunimi: string;
+  sukunimi: string;
+  email: string;
+  puhelinnumero: string;
+  kunta: string;
+  yritys: string;
+  valittu: boolean;
+}
+
 export default function HenkiloLista({
   osapuoliNumero,
   osapuoliTyyppi,
@@ -25,37 +35,39 @@ export default function HenkiloLista({
   kuntaOptions,
   watch,
 }: HenkiloListaProps): ReactElement {
-  const { setValue, getValues, register } = useFormContext<FormValues>();
+  const { setValue, getValues } = useFormContext<FormValues>();
 
-  const [lisatytHenkilot, setLisatytHenkilot] = useState<any[]>([]);
+  const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>(
+    getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || []
+  );
 
   const toggleHenkiloSelection = (index: number) => {
-    const updatedHenkilot = [...lisatytHenkilot];
-    updatedHenkilot[index] = {
-      ...updatedHenkilot[index],
-      selected: !updatedHenkilot[index].selected,
+    const paivitetytHenkilot = [...osapuolenHenkilot];
+    paivitetytHenkilot[index] = {
+      ...paivitetytHenkilot[index],
+      valittu: !paivitetytHenkilot[index].valittu,
     };
-    setLisatytHenkilot(updatedHenkilot);
-    setValue(`suunnitteluSopimus.lisatytHenkilot` as any, updatedHenkilot);
+    setOsapuolenHenkilot(paivitetytHenkilot);
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
   };
 
   const formatHenkilo = (henkilo: any) => {
     const etunimi = henkilo.etunimi || "";
     const sukunimi = henkilo.sukunimi || "";
     const email = henkilo.email || "";
-    const puhelin = henkilo.puhelin || "";
+    const puhelinnumero = henkilo.puhelinnumero || "";
 
     let sulkeetSisalto = "";
 
     if (osapuoliTyyppi === "kunta") {
       const kunta = henkilo.kunta || "";
 
-      const tiedot = [kunta, puhelin, email].filter((tieto) => tieto !== "");
+      const tiedot = [kunta, puhelinnumero, email].filter((tieto) => tieto !== "");
       sulkeetSisalto = tiedot.length > 0 ? `(${tiedot.join(", ")})` : "";
     } else {
       const organisaatio = henkilo.organisaatio || "";
 
-      const tiedot = [organisaatio, puhelin, email].filter((tieto) => tieto !== "");
+      const tiedot = [organisaatio, puhelinnumero, email].filter((tieto) => tieto !== "");
       sulkeetSisalto = tiedot.length > 0 ? `(${tiedot.join(", ")})` : "";
     }
 
@@ -72,14 +84,14 @@ export default function HenkiloLista({
             : "Yrityksen edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella projektin yleisissä yhteystiedoissa."}
         </p>
       </div>
-      {lisatytHenkilot.length > 0 && (
+      {osapuolenHenkilot.length > 0 && (
         <div style={{ marginTop: "1.5rem" }}>
           <div className="henkilot-list">
-            {lisatytHenkilot.map((henkilo, index) => (
+            {osapuolenHenkilot.map((henkilo: Henkilo, index) => (
               <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
                 <Checkbox
                   id={`henkilo-${index}-checkbox`}
-                  checked={henkilo.selected || false}
+                  checked={henkilo.valittu || false}
                   onChange={() => toggleHenkiloSelection(index)}
                   disabled={formDisabled}
                 />
@@ -107,22 +119,22 @@ export default function HenkiloLista({
                 const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
                 const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
                 const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
-                const puhelin = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
+                const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
 
-                if (etunimi && sukunimi && email && puhelin) {
+                if (etunimi && sukunimi && email && puhelinnumero) {
                   const uusiHenkilo = {
                     etunimi: etunimi,
                     sukunimi: sukunimi,
                     email: email,
-                    puhelin: puhelin,
+                    puhelinnumero: puhelinnumero,
                     kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
                     yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
-                    selected: false,
+                    valittu: false,
                   };
 
-                  const paivitetytHenkilot = [...lisatytHenkilot, uusiHenkilo];
-                  setLisatytHenkilot(paivitetytHenkilot);
-                  setValue("suunnitteluSopimus.lisatytHenkilot" as any, paivitetytHenkilot);
+                  const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
+                  setOsapuolenHenkilot(paivitetytHenkilot);
+                  setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
                   setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
                   setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
                   setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
@@ -145,7 +157,6 @@ export default function HenkiloLista({
           </div>
         </SectionContent>
       </div>
-      <input type="hidden" {...register("suunnitteluSopimus.lisatytHenkilot" as any, { shouldUnregister: true })} />
     </ContentSpacer>
   );
 }

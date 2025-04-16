@@ -11,14 +11,18 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
       throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
     }
 
+    const etunimi = suunnitteluSopimus.etunimi || "";
+    const sukunimi = suunnitteluSopimus.sukunimi || "";
+    const puhelinnumero = suunnitteluSopimus.puhelinnumero || "";
+
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
       logo: adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo),
       email: suunnitteluSopimus.email,
-      etunimi: suunnitteluSopimus.etunimi,
-      sukunimi: suunnitteluSopimus.sukunimi,
-      puhelinnumero: suunnitteluSopimus.puhelinnumero,
+      etunimi,
+      sukunimi,
+      puhelinnumero,
     };
   }
   return suunnitteluSopimus;
