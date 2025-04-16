@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement } from "react";
 import { Projekti, ProjektiTyyppi } from "@services/api";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): ReactElement {
-  const { watch, control, setValue } = useFormContext<FormValues>();
+  const { watch, control } = useFormContext<FormValues>();
 
   const kuntaOptions = kuntametadata.kuntaOptions("fi");
 
