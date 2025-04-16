@@ -23,7 +23,7 @@ export function adaptSuunnitteluSopimusToAPI(
           __typename: "SuunnitteluSopimusOsapuoli",
           osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen,
           osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen,
-          tyyppi: osapuoli.osapuolenTyyppi,
+          osapuolenTyyppi: osapuoli.osapuolenTyyppi,
           osapuolenHenkilot: osapuoli.osapuolenHenkilot.map((henkilo) => ({
             __typename: "OsapuolenHenkilo",
             etunimi: henkilo.etunimi,

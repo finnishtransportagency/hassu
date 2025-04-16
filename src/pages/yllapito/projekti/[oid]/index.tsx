@@ -198,9 +198,31 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       },
     };
     if (projekti.suunnitteluSopimus) {
-      const { __typename, logo, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
+      const { __typename, logo, osapuolet, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus as any;
       const { __typename: _t, ...logoInput } = logo || {};
-      tallentamisTiedot.suunnitteluSopimus = { ...suunnitteluSopimusInput, logo: logoInput };
+
+      const muunnettuSuunnitteluSopimus = {
+        ...suunnitteluSopimusInput,
+        logo: logoInput,
+        osapuoliMaara: osapuolet?.length || 0,
+      };
+      osapuolet?.forEach((osapuoli: any, index: number) => {
+        const { __typename: osapuoliTypename, osapuolenHenkilot, ...osapuoliTiedot } = osapuoli;
+        const osapuoliNumero = index + 1;
+
+        muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}`] = {
+          ...osapuoliTiedot,
+          osapuolenHenkilot:
+            osapuolenHenkilot?.map((henkilo: any) => {
+              const { __typename: henkiloTypename, ...henkiloTiedot } = henkilo;
+              return henkiloTiedot;
+            }) || [],
+        };
+
+        muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}Tyyppi`] = osapuoli.tyyppi || "kunta";
+      });
+
+      tallentamisTiedot.suunnitteluSopimus = muunnettuSuunnitteluSopimus;
     }
     if (projekti.euRahoitusLogot) {
       const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
