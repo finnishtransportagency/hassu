@@ -315,7 +315,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
               const suunnitteluSopimusAny = persistentData.suunnitteluSopimus as any;
               const puhdistettuSuunnitteluSopimus: any = {
-                kunta: 123, // Kovakoodattu väliaikaisesti
+                kunta: 859, // Kovakoodattu väliaikaisesti
                 yhteysHenkilo: "default-kayttaja-id", // Kovakoodattu väliaikaisesti
                 logo: suunnitteluSopimusAny.logo,
                 osapuolet: [],
