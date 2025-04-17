@@ -31,8 +31,8 @@ export default function OsapuolenYhteyshenkilot({
       <div style={{ marginTop: "1,5rem" }}>
         <H5>Uusi edustaja</H5>
         <p>
-          Lisää uudelle yhteystiedolle rivi Lisää uusi -painikkeella. Huomioi, että uusi yhteystieto ei tallennu Projektin henkilöt -sivulle
-          eikä henkilölle tule käyttöoikeuksia projektiin.
+          Lisää uusi edustaja Lisää uusi -painikkeella. Edustajia voi olla korkeintaan kaksi per osapuoli. Huomioi, että uusi edustaja ei
+          tallennu Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
         <HassuGrid cols={{ lg: 3 }}>
           {osapuoliTyyppi === "kunta" && (

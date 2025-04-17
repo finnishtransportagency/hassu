@@ -6,7 +6,8 @@ import Button from "@components/button/Button";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import OsapuolenYhteyshenkilot from "./SuunnittelusopimusOsapuoliHenkilo";
 import { H4 } from "@components/Headings";
-import { Checkbox } from "@mui/material";
+import { Checkbox, IconButton, SvgIcon } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface HenkiloListaProps {
   osapuoliNumero: number;
@@ -41,12 +42,21 @@ export default function HenkiloLista({
     getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || []
   );
 
+  const maxHenkilot = 2;
+
   const toggleHenkiloSelection = (index: number) => {
     const paivitetytHenkilot = [...osapuolenHenkilot];
     paivitetytHenkilot[index] = {
       ...paivitetytHenkilot[index],
       valittu: !paivitetytHenkilot[index].valittu,
     };
+    setOsapuolenHenkilot(paivitetytHenkilot);
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+  };
+
+  const poistaHenkilo = (index: number) => {
+    const paivitetytHenkilot = [...osapuolenHenkilot];
+    paivitetytHenkilot.splice(index, 1);
     setOsapuolenHenkilot(paivitetytHenkilot);
     setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
   };
@@ -65,9 +75,9 @@ export default function HenkiloLista({
       const tiedot = [kunta, puhelinnumero, email].filter((tieto) => tieto !== "");
       sulkeetSisalto = tiedot.length > 0 ? `(${tiedot.join(", ")})` : "";
     } else {
-      const organisaatio = henkilo.organisaatio || "";
+      const yritys = henkilo.yritys || "";
 
-      const tiedot = [organisaatio, puhelinnumero, email].filter((tieto) => tieto !== "");
+      const tiedot = [yritys, puhelinnumero, email].filter((tieto) => tieto !== "");
       sulkeetSisalto = tiedot.length > 0 ? `(${tiedot.join(", ")})` : "";
     }
 
@@ -96,6 +106,11 @@ export default function HenkiloLista({
                   disabled={formDisabled}
                 />
                 <span style={{ marginLeft: "0.5rem" }}>{formatHenkilo(henkilo)}</span>
+                <IconButton onClick={() => !formDisabled && poistaHenkilo(index)}>
+                  <SvgIcon fontSize="small" style={{ marginLeft: 10 }}>
+                    <FontAwesomeIcon icon="trash" />
+                  </SvgIcon>
+                </IconButton>
               </div>
             ))}
           </div>
@@ -112,49 +127,56 @@ export default function HenkiloLista({
         />
 
         <SectionContent>
-          <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
-            <Button
-              disabled={formDisabled}
-              onClick={() => {
-                const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
-                const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
-                const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
-                const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
+          {osapuolenHenkilot.length < maxHenkilot && (
+            <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
+              <Button
+                disabled={formDisabled}
+                onClick={() => {
+                  const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
+                  const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
+                  const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
+                  const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
 
-                if (etunimi && sukunimi && email && puhelinnumero) {
-                  const uusiHenkilo = {
-                    etunimi: etunimi,
-                    sukunimi: sukunimi,
-                    email: email,
-                    puhelinnumero: puhelinnumero,
-                    kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
-                    yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
-                    valittu: false,
-                  };
+                  if (etunimi && sukunimi && email && puhelinnumero) {
+                    const uusiHenkilo = {
+                      etunimi: etunimi,
+                      sukunimi: sukunimi,
+                      email: email,
+                      puhelinnumero: puhelinnumero,
+                      kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
+                      yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
+                      valittu: false,
+                    };
 
-                  const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
-                  setOsapuolenHenkilot(paivitetytHenkilot);
-                  setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
-                  setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
-                  setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
-                  setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
-                  setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, "");
-                  if (osapuoliTyyppi === "kunta") {
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any, "");
+                    const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
+                    setOsapuolenHenkilot(paivitetytHenkilot);
+                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
+                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
+                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
+                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, "");
+                    if (osapuoliTyyppi === "kunta") {
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any, "");
+                    } else {
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, "");
+                    }
                   } else {
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, "");
+                    alert("Täytä pakolliset tiedot");
                   }
-                } else {
-                  alert("Täytä pakolliset tiedot");
-                }
-              }}
-              type="button"
-              id="lisaa_uusi_henkilo"
-              className="primary"
-            >
-              Lisää uusi +
-            </Button>
-          </div>
+                }}
+                type="button"
+                id="lisaa_uusi_henkilo"
+                className="primary"
+              >
+                Lisää
+              </Button>
+            </div>
+          )}
+          {osapuolenHenkilot.length >= maxHenkilot && (
+            <div style={{ marginTop: "1rem", marginBottom: "3rem" }}>
+              <p style={{ color: "grey" }}>Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.</p>
+            </div>
+          )}
         </SectionContent>
       </div>
     </ContentSpacer>
