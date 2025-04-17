@@ -19,6 +19,13 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
       sukunimi: yhteysHenkilo?.sukunimi ?? "",
       email: yhteysHenkilo?.email ?? "",
       puhelinnumero: yhteysHenkilo?.puhelinnumero ?? "",
+      osapuolet:
+        suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
+          osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen,
+          osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen,
+          osapuolenTyyppi: osapuoli.osapuolenTyyppi,
+          osapuolenHenkilot: osapuoli.osapuolenHenkilot || [],
+        })) || undefined,
     };
   }
   return suunnitteluSopimus;

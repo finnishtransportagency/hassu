@@ -56,6 +56,8 @@ const ProjektiSideNavigation = styled((props) => {
     }
   };
 
+  console.log("suunnitteluSopimus:", suunnitteluSopimus);
+
   return (
     <Section noDivider {...props}>
       <SideCard>
@@ -79,7 +81,7 @@ const ProjektiSideNavigation = styled((props) => {
             })}
           </HassuStack>
           {suunnitteluSopimus && (
-            <HassuStack id="kuntatiedot">
+            <HassuStack id="kuntatiedot" marginTop={"2rem"}>
               {suunnitteluSopimus.logo && (
                 <img
                   src={suunnitteluSopimus.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
@@ -88,12 +90,33 @@ const ProjektiSideNavigation = styled((props) => {
               )}
               <div className="vayla-calling-card">
                 <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
-                <p>{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
+                {/* <p>{t("common:rooli.PROJEKTIPAALLIKKO")}</p> */}
                 <p>
                   <b>{formatNimi(suunnitteluSopimus)}</b>
                 </p>
+                <p>{suunnitteluSopimus.etunimi}</p>
                 <p>{suunnitteluSopimus.puhelinnumero}</p>
                 <p>{suunnitteluSopimus.email}</p>
+
+                {suunnitteluSopimus.osapuolet &&
+                  suunnitteluSopimus.osapuolet.map((osapuoli, index) => (
+                    <div key={index} className="osapuoli-tiedot">
+                      <h4>{osapuoli?.osapuolenNimiEnsisijainen}</h4>
+                      {osapuoli?.osapuolenNimiToissijainen && <p>{osapuoli?.osapuolenNimiToissijainen}</p>}
+                      <p>{osapuoli?.osapuolenTyyppi}</p>
+
+                      {osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0 && (
+                        <div className="osapuolen-henkilot">
+                          {osapuoli.osapuolenHenkilot.map((henkilo, henkiloIndex) => (
+                            <div key={henkiloIndex} className="henkilo-tiedot">
+                              <p>{henkilo?.etunimi}</p>
+                              {/* {henkilo?.kunta && <p>{kuntametadata.nameForKuntaId(henkilo.kunta, lang)}</p>} */}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
               </div>
             </HassuStack>
           )}
