@@ -94,29 +94,39 @@ const ProjektiSideNavigation = styled((props) => {
                 <p>
                   <b>{formatNimi(suunnitteluSopimus)}</b>
                 </p>
-                <p>{suunnitteluSopimus.etunimi}</p>
+                {/* <p>{suunnitteluSopimus.etunimi}</p> */}
                 <p>{suunnitteluSopimus.puhelinnumero}</p>
                 <p>{suunnitteluSopimus.email}</p>
+                <br></br>
+                <div className="vayla-calling-card">
+                  {suunnitteluSopimus.osapuolet &&
+                    suunnitteluSopimus.osapuolet.map((osapuoli, index) => (
+                      <div key={index} className="vayla-calling-card">
+                        <img
+                          src={suunnitteluSopimus.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
+                          alt={`${suunnitteluSopimus.kunta} logo`}
+                        />
+                        <p>{lang === "fi" ? osapuoli?.osapuolenNimiEnsisijainen : osapuoli?.osapuolenNimiToissijainen}</p>
 
-                {suunnitteluSopimus.osapuolet &&
-                  suunnitteluSopimus.osapuolet.map((osapuoli, index) => (
-                    <div key={index} className="osapuoli-tiedot">
-                      <h4>{osapuoli?.osapuolenNimiEnsisijainen}</h4>
-                      {osapuoli?.osapuolenNimiToissijainen && <p>{osapuoli?.osapuolenNimiToissijainen}</p>}
-                      <p>{osapuoli?.osapuolenTyyppi}</p>
-
-                      {osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0 && (
-                        <div className="osapuolen-henkilot">
-                          {osapuoli.osapuolenHenkilot.map((henkilo, henkiloIndex) => (
-                            <div key={henkiloIndex} className="henkilo-tiedot">
-                              <p>{henkilo?.etunimi}</p>
-                              {/* {henkilo?.kunta && <p>{kuntametadata.nameForKuntaId(henkilo.kunta, lang)}</p>} */}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                        {osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0 && (
+                          <div className="vayla-calling-card">
+                            {osapuoli.osapuolenHenkilot.map((henkilo, henkiloIndex) => (
+                              <div key={henkiloIndex} className="vayla-calling-card">
+                                <p>
+                                  <b>
+                                    {henkilo?.etunimi} {henkilo?.sukunimi}
+                                  </b>
+                                </p>
+                                <p>{henkilo?.puhelinnumero}</p>
+                                <p>{henkilo?.email}</p>
+                                <br></br>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                </div>
               </div>
             </HassuStack>
           )}
