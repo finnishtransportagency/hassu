@@ -333,7 +333,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     sukunimi: henkilo.sukunimi || "",
                     puhelinnumero: henkilo.puhelinnumero || "",
                     email: henkilo.email || "",
-                    organisaatio: henkilo.organisaatio || "",
+                    yritys: henkilo.yritys || "",
                     kunta: henkilo.kunta || "",
                     valittu: henkilo.valittu,
                   }));

@@ -30,7 +30,7 @@ export function adaptSuunnitteluSopimusToAPI(
             sukunimi: henkilo.sukunimi,
             puhelinnumero: henkilo.puhelinnumero,
             email: henkilo.email,
-            organisaatio: henkilo.organisaatio,
+            yritys: henkilo.yritys,
             valittu: henkilo.valittu,
           })),
         })) || null,

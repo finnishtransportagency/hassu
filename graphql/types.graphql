@@ -1161,7 +1161,7 @@ type OsapuolenHenkilo {
   sukunimi: String!
   puhelinnumero: String!
   email: String!
-  organisaatio: String!
+  yritys: String
   kunta: String
   valittu: Boolean
 }

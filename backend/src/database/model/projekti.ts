@@ -115,7 +115,7 @@ export type OsapuolenHenkilo = {
   sukunimi: string;
   puhelinnumero: string;
   email: string;
-  organisaatio: string;
+  yritys: string;
   kunta: string;
   valittu?: boolean;
 };
