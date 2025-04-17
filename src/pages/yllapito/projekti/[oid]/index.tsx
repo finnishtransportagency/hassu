@@ -348,6 +348,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               }
 
               persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
+
               console.log("Lopullinen data:", JSON.stringify(persistentData.suunnitteluSopimus, null, 2));
             }
 
@@ -377,8 +378,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               ...persistentData,
               kielitiedot: kielitiedotInput,
             };
-
-            console.log("API Data:", JSON.stringify(apiData.suunnitteluSopimus, null, 2));
 
             setStatusBeforeSave(projekti?.status);
 

@@ -103,7 +103,7 @@ export default function HenkiloLista({
                   id={`henkilo-${index}-checkbox`}
                   checked={henkilo.valittu || false}
                   onChange={() => toggleHenkiloSelection(index)}
-                  disabled={formDisabled}
+                  disabled={!formDisabled}
                 />
                 <span style={{ marginLeft: "0.5rem" }}>{formatHenkilo(henkilo)}</span>
                 <IconButton onClick={() => !formDisabled && poistaHenkilo(index)}>
@@ -130,7 +130,7 @@ export default function HenkiloLista({
           {osapuolenHenkilot.length < maxHenkilot && (
             <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
               <Button
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 onClick={() => {
                   const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
                   const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";

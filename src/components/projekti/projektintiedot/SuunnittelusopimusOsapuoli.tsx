@@ -18,6 +18,7 @@ interface SuunnittelusopimusOsapuoliProps {
   osapuoliTyyppi?: string;
   projekti?: Projekti | null;
   disabled?: boolean;
+  formDisabled?: boolean;
   kuntaOptions: { label: string; value: string }[];
   ensisijainenKaannettavaKieli?: KaannettavaKieli;
   toissijainenKaannettavaKieli?: KaannettavaKieli;
@@ -30,6 +31,7 @@ export default function SuunnittelusopimusOsapuoli({
   osapuoliNumero,
   projekti,
   disabled,
+  formDisabled,
   kuntaOptions,
   ensisijainenKaannettavaKieli,
   toissijainenKaannettavaKieli,
@@ -50,7 +52,7 @@ export default function SuunnittelusopimusOsapuoli({
       <SectionContent>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <H4>{osapuoliNumero}. osapuoli</H4>
-          <IconButton onClick={poistaOsapuoli} disabled={disabled} size="large" type="button">
+          <IconButton onClick={poistaOsapuoli} disabled={formDisabled} size="large" type="button">
             <SvgIcon>
               <FontAwesomeIcon icon="trash" />
             </SvgIcon>
@@ -74,8 +76,8 @@ export default function SuunnittelusopimusOsapuoli({
                 onBlur={osapuoliField.onBlur}
                 ref={osapuoliField.ref}
               >
-                <FormControlLabel value={"kunta"} disabled={disabled} control={<Radio />} label="Kunta" />
-                <FormControlLabel value={"yritys"} disabled={disabled} control={<Radio />} label="Yritys tai muu organisaatio" />
+                <FormControlLabel value={"kunta"} disabled={formDisabled} control={<Radio />} label="Kunta" />
+                <FormControlLabel value={"yritys"} disabled={formDisabled} control={<Radio />} label="Yritys tai muu organisaatio" />
               </RadioGroup>
             </FormGroup>
           )}
@@ -87,13 +89,13 @@ export default function SuunnittelusopimusOsapuoli({
               label="Kunnan nimi ensisijaisella kielellä *"
               {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiEnsisijainen` as any)}
               error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiEnsisijainen}
-              disabled={disabled}
+              disabled={formDisabled}
             />
             <TextInput
               label="Kunnan nimi toissijaisella kielellä *"
               {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiToissijainen` as any)}
               error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiToissijainen}
-              disabled={disabled}
+              disabled={formDisabled}
             />
           </HassuGrid>
         ) : (
@@ -102,13 +104,13 @@ export default function SuunnittelusopimusOsapuoli({
               label="Yrityksen nimi ensisijaisella kielellä *"
               {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiEnsisijainen` as any)}
               error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiEnsisijainen}
-              disabled={disabled}
+              disabled={formDisabled}
             />
             <TextInput
               label="Yrityksen nimi toissijaisella kielellä *"
               {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiToissijainen` as any)}
               error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiToissijainen}
-              disabled={disabled}
+              disabled={formDisabled}
             />
           </HassuGrid>
         )}
@@ -128,7 +130,7 @@ export default function SuunnittelusopimusOsapuoli({
               lang={ensisijainenKaannettavaKieli}
               isPrimaryLang
               name={`suunnitteluSopimus.logo.${ensisijainenKaannettavaKieli}`}
-              disabled={disabled}
+              disabled={formDisabled}
             />
           )}
           {toissijainenKaannettavaKieli && (
@@ -136,7 +138,7 @@ export default function SuunnittelusopimusOsapuoli({
               lang={toissijainenKaannettavaKieli}
               isPrimaryLang={false}
               name={`suunnitteluSopimus.logo.${toissijainenKaannettavaKieli}`}
-              disabled={disabled}
+              disabled={formDisabled}
             />
           )}
         </SectionContent>

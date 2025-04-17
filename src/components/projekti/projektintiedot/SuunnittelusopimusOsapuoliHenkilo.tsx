@@ -41,35 +41,35 @@ export default function OsapuolenYhteyshenkilot({
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_etunimi`}
                 label="Etunimi *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.etunimi}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sukunimi`}
                 label="Sukunimi *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.sukunimi}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_organisaatio`}
                 label="Organisaatio (jos muu kuin osapuoli)"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.organisaatio}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.organisaatio` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_puhelinnumero`}
                 label="Puhelinnumero *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.puhelinnumero}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sahkoposti`}
                 label="Sähköposti *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.email}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, { shouldUnregister: true })}
               />
             </>
@@ -81,35 +81,35 @@ export default function OsapuolenYhteyshenkilot({
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_etunimi`}
                 label="Etunimi *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.etunimi}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sukunimi`}
                 label="Sukunimi *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.sukunimi}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_yritys`}
                 label="Organisaatio (jos muu kuin osapuoli)"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.yritys}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_puhelinnumero`}
                 label="Puhelinnumero *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.puhelinnumero}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, { shouldUnregister: true })}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sahkoposti`}
                 label="Sähköposti *"
                 error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.email}
-                disabled={formDisabled}
+                disabled={!formDisabled}
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, { shouldUnregister: true })}
               />
             </>

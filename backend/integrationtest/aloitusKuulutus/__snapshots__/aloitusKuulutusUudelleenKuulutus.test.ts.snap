@@ -286,6 +286,7 @@ Object {
         "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
         "__typename": "LokalisoituTeksti",
       },
+      "osapuolet": null,
       "puhelinnumero": "029123123",
       "sukunimi": "Hassu",
     },

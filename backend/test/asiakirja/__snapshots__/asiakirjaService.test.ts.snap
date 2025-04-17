@@ -1853,6 +1853,7 @@ Object {
       "RUOTSI": "/suunnittelusopimus/logo.png",
       "SUOMI": "/suunnittelusopimus/logo.png",
     },
+    "osapuolet": undefined,
     "puhelinnumero": "029123123",
     "sukunimi": "Kuntalainen",
   },

@@ -95,7 +95,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                       </div>
                       <div style={{ marginBottom: "1rem", display: "flex", gap: "1rem" }}>
                         <Button
-                          disabled={disabled}
+                          disabled={formDisabled}
                           onClick={() => {
                             osapuoliMaaraField.onChange(osapuoliMaara + 1);
                           }}
