@@ -59,7 +59,7 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       throw new Error("kasittelynTila.hyvaksymispaatos.paatoksenPvm ei ole määritelty");
     }
     const kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(props);
-    super(kieli, kutsuAdapter);
+    super(kieli, props.oid, kutsuAdapter);
     this.hyvaksymisPaatosVaihe = hyvaksymisPaatosVaihe;
 
     this.kutsuAdapter.addTemplateResolver(this);
@@ -70,7 +70,7 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       kieli
     );
     this.header = kutsuAdapter.text("hyvaksymispaatoksesta_ilmoittaminen");
-    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, baseline);
+    super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus, baseline);
   }
 
   protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
@@ -97,6 +97,7 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       ...this.paragraphs(),
       this.toimivaltainenViranomainen(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }

@@ -14,11 +14,11 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   kutsuAdapter: T;
   protected euLogo?: string | Buffer;
   private osoite?: Osoite;
-  private asiaTunnusX?: number;
-  private logoX?: number;
+  private readonly asiaTunnusX?: number;
+  private readonly logoX?: number;
 
-  protected constructor(kieli: KaannettavaKieli, kutsuAdapter: T, osoite?: Osoite, asiaTunnusX?: number, logoX?: number) {
-    super();
+  protected constructor(kieli: KaannettavaKieli, oid: string, kutsuAdapter: T, osoite?: Osoite, asiaTunnusX?: number, logoX?: number) {
+    super(kieli, oid);
     this.kieli = kieli;
     this.kutsuAdapter = kutsuAdapter;
     this.osoite = osoite;
@@ -206,7 +206,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
 
   protected euLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      this.euLogo && this.doc.image(this.euLogo, { height: 75 });
+      this.euLogo && this.doc.image(this.euLogo, { height: 50 });
     });
   }
 

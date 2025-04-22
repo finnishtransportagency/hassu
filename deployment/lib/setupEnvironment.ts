@@ -114,6 +114,7 @@ export type HassuSSMParameters = {
   KeycloakClientId: string;
   KeycloakDomain: string;
   KeycloakClientSecret: string;
+  PalauteKyselyTiedot: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -181,6 +182,7 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,
     NEXT_PUBLIC_VELHO_BASE_URL: variables.VelhoBaseUrl,
+    NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: variables.PalauteKyselyTiedot,
 
     EMAILS_ON: variables.EmailsOn,
     EMAILS_TO: variables.EmailsTo,

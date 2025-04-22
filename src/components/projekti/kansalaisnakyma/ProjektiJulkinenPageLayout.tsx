@@ -15,6 +15,7 @@ import ExtLink from "@components/ExtLink";
 import { ProjektinJakotietoJulkinen } from "@components/kansalainen/ProjektinJakotietoJulkinen";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Trans from "next-translate/Trans";
+import { PalauteKyselyMuistutusPopup } from "./PalauteKyselyMuistutusPopup";
 
 interface Props {
   children: ReactNode;
@@ -73,6 +74,7 @@ export default function ProjektiPageLayout({
               vahainenMenettely={projekti.vahainenMenettely}
             />
           </Section>
+          <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
           <Section noDivider className="mb-10">
             {saameContent}
             <H2>{title}</H2>

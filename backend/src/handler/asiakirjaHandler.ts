@@ -152,6 +152,7 @@ async function handleHyvaksymisPaatosKuulutus(
     euRahoitusLogot: projekti.euRahoitusLogot,
     asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
     linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
+    suunnitteluSopimus: projekti.suunnitteluSopimus,
     kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(projekti.projektinJakautuminen, kieli),
   });
 }
