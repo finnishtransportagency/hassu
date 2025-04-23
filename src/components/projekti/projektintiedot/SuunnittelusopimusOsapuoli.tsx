@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Controller, useFormContext, UseFormWatch } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
@@ -15,7 +15,6 @@ import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLog
 
 interface SuunnittelusopimusOsapuoliProps {
   osapuoliNumero: number;
-  osapuoliTyyppi?: string;
   projekti?: Projekti | null;
   disabled?: boolean;
   formDisabled?: boolean;
@@ -42,6 +41,7 @@ export default function SuunnittelusopimusOsapuoli({
     register,
     formState: { errors },
     control,
+    getValues,
   } = useFormContext<FormValues>();
 
   const osapuoliTyyppiValue = watch(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
@@ -62,7 +62,7 @@ export default function SuunnittelusopimusOsapuoli({
         <Controller
           name={`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any}
           control={control}
-          defaultValue="kunta"
+          defaultValue={getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any) || "kunta"}
           render={({ field: osapuoliField, fieldState: osapuoliState }) => (
             <FormGroup label="Suunnittelusopimuksen osapuoli *" errorMessage={osapuoliState.error?.message} flexDirection="row">
               <RadioGroup
