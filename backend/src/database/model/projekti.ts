@@ -87,36 +87,37 @@ export type AloitusKuulutusJulkaisu = {
 };
 
 export type SuunnitteluSopimus = {
-  kunta: number;
+  kunta?: number | null;
   logo?: LocalizedMap<string> | null;
-  yhteysHenkilo: string;
-  osapuolet?: SuunnitteluSopimusOsapuoli[];
+  yhteysHenkilo?: string | null;
+  osapuolet?: SuunnitteluSopimusOsapuoli[] | null;
 };
 
 export type SuunnitteluSopimusJulkaisu = {
-  kunta: number;
+  kunta?: number | null;
   logo?: LocalizedMap<string> | null;
-  etunimi: string;
-  sukunimi: string;
-  puhelinnumero: string;
-  email: string;
-  osapuolet?: SuunnitteluSopimusOsapuoli[];
+  etunimi?: string | null;
+  sukunimi?: string | null;
+  puhelinnumero?: string | null;
+  email?: string | null;
+  osapuolet?: SuunnitteluSopimusOsapuoli[] | null;
 };
 
 export type SuunnitteluSopimusOsapuoli = {
-  osapuolenNimiEnsisijainen: string;
-  osapuolenNimiToissijainen: string;
-  osapuolenHenkilot: OsapuolenHenkilo[];
-  osapuolenTyyppi: string;
+  osapuolenNimiEnsisijainen?: string | null;
+  osapuolenNimiToissijainen?: string | null;
+  osapuolenHenkilot?: OsapuolenHenkilo[] | null;
+  osapuolenTyyppi?: string | null;
+  osapuolenLogo?: LocalizedMap<string> | null;
 };
 
 export type OsapuolenHenkilo = {
-  etunimi: string;
-  sukunimi: string;
-  puhelinnumero: string;
-  email: string;
-  yritys: string;
-  kunta: string;
+  etunimi?: string | null;
+  sukunimi?: string | null;
+  puhelinnumero?: string | null;
+  email?: string | null;
+  yritys?: string | null;
+  kunta?: string | null;
   valittu?: boolean;
 };
 

@@ -142,6 +142,7 @@ input SuunnitteluSopimusOsapuoliInput {
   osapuolenNimiToissijainen: String
   osapuolenHenkilot: [OsapuolenHenkilotInput]
   osapuolenTyyppi: String
+  osapuolenLogo: LokalisoituTekstiInputEiPakollinen
 }
 
 input OsapuolenHenkilotInput {

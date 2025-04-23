@@ -1150,29 +1150,30 @@ type MaakuntaVastaanottaja implements ISahkopostiVastaanottaja {
 }
 
 type SuunnitteluSopimusOsapuoli {
-  osapuolenNimiEnsisijainen: String!
-  osapuolenNimiToissijainen: String!
+  osapuolenNimiEnsisijainen: String
+  osapuolenNimiToissijainen: String
   osapuolenHenkilot: [OsapuolenHenkilo]
   osapuolenTyyppi: String
+  osapuolenLogo: LokalisoituTeksti
 }
 
 type OsapuolenHenkilo {
-  etunimi: String!
-  sukunimi: String!
-  puhelinnumero: String!
-  email: String!
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
   yritys: String
   kunta: String
   valittu: Boolean
 }
 
 type SuunnitteluSopimus {
-  yhteysHenkilo: String!
+  yhteysHenkilo: String
   etunimi: String
   sukunimi: String
   puhelinnumero: String
   email: String
-  kunta: Int!
+  kunta: Int
   yritys: String
   logo: LokalisoituTeksti
   osapuolet: [SuunnitteluSopimusOsapuoli]
@@ -1180,11 +1181,11 @@ type SuunnitteluSopimus {
 }
 
 type SuunnitteluSopimusJulkaisu {
-  etunimi: String!
-  sukunimi: String!
-  puhelinnumero: String!
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
   email: String
-  kunta: Int!
+  kunta: Int
   yritys: String
   logo: LokalisoituTeksti
   osapuolet: [SuunnitteluSopimusOsapuoli]
