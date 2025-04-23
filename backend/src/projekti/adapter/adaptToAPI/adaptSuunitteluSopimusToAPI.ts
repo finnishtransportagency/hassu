@@ -9,22 +9,19 @@ export function adaptSuunnitteluSopimusToAPI(
   suunnitteluSopimus: SuunnitteluSopimusField
 ): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
-    if (!suunnitteluSopimus.logo) {
-      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
-    }
-
     return {
       __typename: "SuunnitteluSopimus",
       kunta: suunnitteluSopimus.kunta,
       yhteysHenkilo: suunnitteluSopimus.yhteysHenkilo ?? "", // "" here to not break old test data because of missing value in mandatory field
-      logo: adaptLogotToAPI(oid, suunnitteluSopimus.logo),
+      logo: suunnitteluSopimus.logo ? adaptLogotToAPI(oid, suunnitteluSopimus.logo) : null,
       osapuolet:
         suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
           __typename: "SuunnitteluSopimusOsapuoli",
           osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen,
           osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen,
           osapuolenTyyppi: osapuoli.osapuolenTyyppi,
-          osapuolenHenkilot: osapuoli.osapuolenHenkilot.map((henkilo) => ({
+          osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPI(oid, osapuoli.osapuolenLogo) : null,
+          osapuolenHenkilot: osapuoli?.osapuolenHenkilot?.map((henkilo) => ({
             __typename: "OsapuolenHenkilo",
             etunimi: henkilo.etunimi,
             sukunimi: henkilo.sukunimi,
@@ -50,29 +47,56 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
   fileLocation: FileLocation
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {
   if (suunnitteluSopimus) {
-    if (!suunnitteluSopimus.logo) {
-      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
-    }
+    const adaptLogoFunction = fileLocation === FileLocation.PUBLIC ? adaptLogotToAPIJulkinen : adaptLogotToAPI;
 
-    let logo: API.LokalisoituTeksti | undefined;
-    if (fileLocation === FileLocation.PUBLIC) {
-      logo = adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo);
+    const valitutHenkilot =
+      suunnitteluSopimus.osapuolet?.flatMap((osapuoli) => osapuoli.osapuolenHenkilot?.filter((henkilo) => henkilo?.valittu) || []) || [];
+
+    let etunimi = "";
+    let sukunimi = "";
+    let email = "";
+    let puhelinnumero = "";
+
+    if (valitutHenkilot.length > 0) {
+      etunimi = valitutHenkilot[0].etunimi || "";
+      sukunimi = valitutHenkilot[0].sukunimi || "";
+      email = valitutHenkilot[0].email || "";
+      puhelinnumero = valitutHenkilot[0].puhelinnumero || "";
     } else {
-      logo = adaptLogotToAPI(oid, suunnitteluSopimus.logo);
+      etunimi = suunnitteluSopimus?.etunimi ?? "";
+      sukunimi = suunnitteluSopimus?.sukunimi ?? "";
+      email = suunnitteluSopimus?.email ?? "";
+      puhelinnumero = suunnitteluSopimus?.puhelinnumero ?? "";
     }
-
-    const etunimi = suunnitteluSopimus.etunimi || "";
-    const sukunimi = suunnitteluSopimus.sukunimi || "";
-    const puhelinnumero = suunnitteluSopimus.puhelinnumero || "";
 
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      logo,
-      email: suunnitteluSopimus.email,
+      logo: suunnitteluSopimus.logo ? adaptLogoFunction(oid, suunnitteluSopimus.logo) : null,
+      email,
       etunimi,
       sukunimi,
       puhelinnumero,
+      osapuolet: suunnitteluSopimus.osapuolet
+        ? suunnitteluSopimus.osapuolet.map((osapuoli) => ({
+            __typename: "SuunnitteluSopimusOsapuoli",
+            osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
+            osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
+            osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
+            osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogoFunction(oid, osapuoli.osapuolenLogo) : null,
+            osapuolenHenkilot: osapuoli.osapuolenHenkilot
+              ? osapuoli.osapuolenHenkilot.map((henkilo) => ({
+                  __typename: "OsapuolenHenkilo",
+                  etunimi: henkilo.etunimi || "",
+                  sukunimi: henkilo.sukunimi || "",
+                  puhelinnumero: henkilo.puhelinnumero || "",
+                  email: henkilo.email || "",
+                  yritys: henkilo.yritys || "",
+                  valittu: henkilo.valittu || false,
+                }))
+              : [],
+          }))
+        : null,
     };
   }
   return suunnitteluSopimus;

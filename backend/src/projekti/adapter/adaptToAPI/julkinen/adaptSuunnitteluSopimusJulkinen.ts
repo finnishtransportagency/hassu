@@ -7,10 +7,6 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
   suunnitteluSopimus: SuunnitteluSopimusJulkaisu | null | undefined
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {
   if (suunnitteluSopimus) {
-    if (!suunnitteluSopimus.logo) {
-      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
-    }
-
     const valitutHenkilot =
       suunnitteluSopimus.osapuolet?.flatMap((osapuoli) => osapuoli.osapuolenHenkilot?.filter((henkilo) => henkilo?.valittu) || []) || [];
 
@@ -34,7 +30,7 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      logo: adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo),
+      logo: suunnitteluSopimus.logo ? adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo) : null,
       email,
       etunimi,
       sukunimi,
@@ -45,7 +41,7 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
           osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
           osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
-          //osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
+          osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:
             osapuoli.osapuolenHenkilot
               ?.filter((henkilo) => henkilo.valittu)
@@ -67,12 +63,9 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
 export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(
   oid: string,
   suunnitteluSopimus: SuunnitteluSopimus | null | undefined,
-  yhteysHenkilo: DBVaylaUser | undefined
+  yhteysHenkilo?: DBVaylaUser | undefined
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {
   if (suunnitteluSopimus) {
-    if (!suunnitteluSopimus.logo) {
-      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
-    }
     const valitutHenkilot =
       suunnitteluSopimus.osapuolet?.flatMap((osapuoli) => osapuoli.osapuolenHenkilot?.filter((henkilo) => henkilo?.valittu) || []) || [];
 
@@ -96,7 +89,7 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      logo: adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo),
+      logo: suunnitteluSopimus.logo ? adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo) : null,
       etunimi,
       sukunimi,
       email,
@@ -107,7 +100,7 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(
           osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
           osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
-          //osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
+          osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:
             osapuoli.osapuolenHenkilot
               ?.filter((henkilo) => henkilo.valittu)

@@ -207,11 +207,14 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         osapuoliMaara: osapuolet?.length || 0,
       };
       osapuolet?.forEach((osapuoli: any, index: number) => {
-        const { __typename: osapuoliTypename, osapuolenHenkilot, ...osapuoliTiedot } = osapuoli;
+        const { __typename: osapuoliTypename, osapuolenHenkilot, osapuolenLogo, ...osapuoliTiedot } = osapuoli;
         const osapuoliNumero = index + 1;
+
+        const { __typename: _logoTypename, ...osapuolenLogoInput } = osapuolenLogo || {};
 
         muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}`] = {
           ...osapuoliTiedot,
+          osapuolenLogo: osapuolenLogoInput,
           osapuolenHenkilot:
             osapuolenHenkilot?.map((henkilo: any) => {
               const { __typename: henkiloTypename, ...henkiloTiedot } = henkilo;
@@ -315,9 +318,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
               const suunnitteluSopimusAny = persistentData.suunnitteluSopimus as any;
               const puhdistettuSuunnitteluSopimus: any = {
-                kunta: 859, // Kovakoodattu väliaikaisesti
-                yhteysHenkilo: "default-kayttaja-id", // Kovakoodattu väliaikaisesti
-                logo: suunnitteluSopimusAny.logo,
+                kunta: suunnitteluSopimusAny.kunta,
+                yhteysHenkilo: suunnitteluSopimusAny.yhteysHenkilo,
+                logo: suunnitteluSopimusAny.logo || null,
                 osapuolet: [],
               };
 
@@ -326,6 +329,22 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                 const osapuoliTyyppiAvain = `osapuoli${i}Tyyppi` as any;
                 const osapuoliTiedot = suunnitteluSopimusAny[osapuoliAvain];
                 const osapuoliTyyppi = suunnitteluSopimusAny[osapuoliTyyppiAvain];
+                if (osapuoliTiedot && osapuoliTiedot.osapuolenLogo) {
+                  const osapuolenLogo: LokalisoituTekstiInputEiPakollinen = {};
+                  const originalOsapuolenLogo = osapuoliTiedot.osapuolenLogo;
+
+                  const osapuolenLogoFi = originalOsapuolenLogo?.SUOMI as unknown as File | undefined | string;
+                  if (osapuolenLogoFi instanceof File) {
+                    osapuolenLogo.SUOMI = await talletaLogo(osapuolenLogoFi);
+                  }
+
+                  const osapuolenLogoSv = originalOsapuolenLogo?.RUOTSI as unknown as File | undefined | string;
+                  if (osapuolenLogoSv instanceof File) {
+                    osapuolenLogo.RUOTSI = await talletaLogo(osapuolenLogoSv);
+                  }
+
+                  osapuoliTiedot.osapuolenLogo = osapuolenLogo;
+                }
 
                 if (osapuoliTiedot) {
                   const osapuolenHenkilot = (osapuoliTiedot.osapuolenHenkilot || []).map((henkilo: any) => ({
@@ -343,9 +362,19 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     osapuolenNimiToissijainen: osapuoliTiedot.osapuolenNimiToissijainen || "",
                     osapuolenHenkilot: osapuolenHenkilot,
                     osapuolenTyyppi: osapuoliTyyppi || "",
+                    osapuolenLogo: osapuoliTiedot.osapuolenLogo || null,
                   });
                 }
               }
+
+              if (!puhdistettuSuunnitteluSopimus.logo) {
+                puhdistettuSuunnitteluSopimus.logo = null;
+              }
+
+              puhdistettuSuunnitteluSopimus.osapuolet = puhdistettuSuunnitteluSopimus.osapuolet.map((osapuoli: any) => ({
+                ...osapuoli,
+                osapuolenLogo: osapuoli.osapuolenLogo || null,
+              }));
 
               persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
 
