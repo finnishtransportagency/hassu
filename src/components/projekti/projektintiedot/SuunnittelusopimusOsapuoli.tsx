@@ -124,12 +124,12 @@ export default function SuunnittelusopimusOsapuoli({
           watch={watch}
         />
         <SectionContent>
-          <H4>Kunnan logo</H4>
+          <H4>{osapuoliTyyppi === "kunta" ? "Kunnan" : "Yrityksen"} logo</H4>
           {ensisijainenKaannettavaKieli && (
             <ProjektiSuunnittelusopimusLogoInput<FormValues>
               lang={ensisijainenKaannettavaKieli}
               isPrimaryLang
-              name={`suunnitteluSopimus.logo.${ensisijainenKaannettavaKieli}`}
+              name={`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenLogo.${ensisijainenKaannettavaKieli}` as any}
               disabled={formDisabled}
             />
           )}
@@ -137,7 +137,7 @@ export default function SuunnittelusopimusOsapuoli({
             <ProjektiSuunnittelusopimusLogoInput<FormValues>
               lang={toissijainenKaannettavaKieli}
               isPrimaryLang={false}
-              name={`suunnitteluSopimus.logo.${toissijainenKaannettavaKieli}`}
+              name={`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenLogo.${toissijainenKaannettavaKieli}` as any}
               disabled={formDisabled}
             />
           )}

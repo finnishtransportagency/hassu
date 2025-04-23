@@ -18,8 +18,7 @@ export default function ProjektiSuunnittelusopimusLogoInput<TFieldValues extends
   const langLabel = useMemo(
     () => (
       <>
-        Virallinen, kunnalta saatu logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (
-        <b>{lang.toLowerCase()}</b>). *
+        Virallinen logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (<b>{lang.toLowerCase()}</b>). *
       </>
     ),
     [isPrimaryLang, lang]
