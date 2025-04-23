@@ -222,7 +222,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             }) || [],
         };
 
-        muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}Tyyppi`] = osapuoli.tyyppi || "kunta";
+        muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}Tyyppi`] = osapuoli.osapuolenTyyppi || "kunta";
       });
 
       tallentamisTiedot.suunnitteluSopimus = muunnettuSuunnitteluSopimus;
