@@ -52,11 +52,13 @@ export default function SuunnittelusopimusOsapuoli({
       <SectionContent>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <H4>{osapuoliNumero}. osapuoli</H4>
-          <IconButton onClick={poistaOsapuoli} disabled={formDisabled} size="large" type="button">
-            <SvgIcon>
-              <FontAwesomeIcon icon="trash" />
-            </SvgIcon>
-          </IconButton>
+          {poistaOsapuoli && (
+            <IconButton onClick={poistaOsapuoli} disabled={formDisabled} size="large" type="button">
+              <SvgIcon>
+                <FontAwesomeIcon icon="trash" />
+              </SvgIcon>
+            </IconButton>
+          )}
         </div>
 
         <Controller

@@ -7,12 +7,15 @@ import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import Notification, { NotificationType } from "@components/notification/Notification";
-import { isAllowedToChangeSuunnittelusopimus } from "hassu-common/util/operationValidators";
 import { getKaannettavatKielet } from "common/kaannettavatKielet";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import Button from "@components/button/Button";
-import { H3 } from "@components/Headings";
+import { H3, H4 } from "@components/Headings";
 import SuunnittelusopimusOsapuoli from "./SuunnittelusopimusOsapuoli";
+import HassuGrid from "@components/HassuGrid";
+import { formatNimi } from "src/util/userUtil";
+import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
+import Select from "@components/form/Select";
 
 interface Props {
   projekti?: Projekti | null;
@@ -20,7 +23,12 @@ interface Props {
 }
 
 export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): ReactElement {
-  const { watch, control } = useFormContext<FormValues>();
+  const {
+    watch,
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const kuntaOptions = kuntametadata.kuntaOptions("fi");
 
@@ -30,9 +38,12 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     return <></>;
   }
 
-  const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
+  //palauta nämä ja disabledin käyttö alla sitten, kun palautetaan kyllä/ei-valinnan lukittuminen aloituskuulutuksen myötä.
+  //const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
+  //const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
 
-  const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
+  const isVanhatTiedotOlemassa =
+    typeof projekti.suunnitteluSopimus?.yhteysHenkilo === "string" && projekti.suunnitteluSopimus?.yhteysHenkilo.length > 0;
 
   const kielitiedot = watch("kielitiedot");
   const { ensisijainenKaannettavaKieli, toissijainenKaannettavaKieli } = getKaannettavatKielet({
@@ -43,10 +54,12 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
   return (
     <Section smallGaps>
       <H3>Suunnittelusopimus</H3>
-      {disabled && (
+      {/* {disabled && ( )} */}
+      {isVanhatTiedotOlemassa && (
         <Notification type={NotificationType.INFO_GRAY}>
-          Et voi muuttaa suunnittelusopimuksen olemassaoloa, koska aloituskuulutus on julkaistu tai odottaa hyväksyntää. Voit kuitenkin
-          muuttaa kunnan edustajan tietoja.
+          Voit poikkeuksellisesti muuttaa suunnittelusopimuksen olemassaoloa, vaikka aloituskuulutus on jo julkaistu. Jos haluat muuttaa
+          edustajan tietoja, poista ensin vanhat tiedot ja tallenna lomake. Lisää sen jälkeen niiden edustajien tiedot, joiden haluat
+          näkyvän kansalaispuolella sekä kirjeissä.
         </Notification>
       )}
       <Controller
@@ -70,17 +83,81 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 onBlur={field.onBlur}
                 ref={field.ref}
               >
-                <FormControlLabel value="true" disabled={disabled} control={<Radio />} label="Kyllä" />
-                <FormControlLabel value="false" disabled={disabled} control={<Radio />} label="Ei" />
+                <FormControlLabel value="true" disabled={false} control={<Radio />} label="Kyllä" />
+                <FormControlLabel value="false" disabled={false} control={<Radio />} label="Ei" />
               </RadioGroup>
             </FormGroup>
 
+            {/* Palauta tämä teksti ja poista alla oleva osio sitten, kun palautetaan kyllä/ei-valinnan lukittuminen aloituskuulutuksen myötä. 
             <p>
               Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista
               vaihtaa myös prosessin aikana.
-            </p>
+            </p> */}
 
-            {field.value === "true" && (
+            {field.value === "true" && isVanhatTiedotOlemassa && (
+              <Controller
+                name="suunnitteluSopimus"
+                control={control}
+                defaultValue={null}
+                shouldUnregister={true}
+                render={() => (
+                  <SectionContent largeGaps sx={{ marginLeft: 4 }}>
+                    <SectionContent>
+                      <H4>Kunnan edustajan tiedot</H4>
+                      <p>
+                        Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten
+                        yhteystiedoissa.
+                      </p>
+                      <HassuGrid cols={{ lg: 3 }}>
+                        <Select
+                          id="suunnittelusopimus_yhteyshenkilo"
+                          label="Henkilö *"
+                          options={
+                            projekti?.kayttoOikeudet?.map((kayttaja) => ({
+                              label: formatNimi(kayttaja),
+                              value: kayttaja.kayttajatunnus,
+                            })) || []
+                          }
+                          emptyOption="Valitse"
+                          error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
+                          disabled={false}
+                          {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}
+                        />
+                        <Select
+                          id="suunnittelusopimus_kunta"
+                          label="Kunta *"
+                          options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
+                          error={(errors as any).suunnitteluSopimus?.kunta}
+                          disabled={formDisabled}
+                          {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
+                        />
+                      </HassuGrid>
+                    </SectionContent>
+                    <SectionContent>
+                      <H4>Kunnan logo</H4>
+                      {ensisijainenKaannettavaKieli && (
+                        <ProjektiSuunnittelusopimusLogoInput<FormValues>
+                          lang={ensisijainenKaannettavaKieli}
+                          isPrimaryLang
+                          name={`suunnitteluSopimus.logo.${ensisijainenKaannettavaKieli}`}
+                          disabled={formDisabled}
+                        />
+                      )}
+                      {toissijainenKaannettavaKieli && (
+                        <ProjektiSuunnittelusopimusLogoInput<FormValues>
+                          lang={toissijainenKaannettavaKieli}
+                          isPrimaryLang={false}
+                          name={`suunnitteluSopimus.logo.${toissijainenKaannettavaKieli}`}
+                          disabled={formDisabled}
+                        />
+                      )}
+                    </SectionContent>
+                  </SectionContent>
+                )}
+              />
+            )}
+
+            {field.value === "true" && !isVanhatTiedotOlemassa && (
               <Controller
                 name={"suunnitteluSopimus.osapuoliMaara" as any}
                 control={control}
@@ -115,12 +192,12 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                         key={`osapuoli-${i}`}
                         osapuoliNumero={i}
                         projekti={projekti}
-                        disabled={disabled}
+                        disabled={false}
                         kuntaOptions={kuntaOptions}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli || undefined}
                         toissijainenKaannettavaKieli={toissijainenKaannettavaKieli || undefined}
                         watch={watch}
-                        poistaOsapuoli={i > 1 ? () => osapuoliMaaraField.onChange(osapuoliMaara - 1) : undefined}
+                        poistaOsapuoli={osapuoliMaara > 1 ? () => osapuoliMaaraField.onChange(osapuoliMaara - 1) : undefined}
                         onViimeinenOsapuoli={i === 3}
                       />
                     );
