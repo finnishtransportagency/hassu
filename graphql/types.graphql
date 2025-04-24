@@ -508,6 +508,7 @@ type EnnakkoNeuvottelu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  poisValitutKuulutuksetJaKutsu: [String!]
 }
 
 type EnnakkoNeuvotteluJulkaisu {
@@ -523,6 +524,7 @@ type EnnakkoNeuvotteluJulkaisu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  poisValitutKuulutuksetJaKutsu: [String!]
   hash: String!
   lahetetty: String!
 }
@@ -1410,6 +1412,7 @@ type LadattavaTiedosto implements ILadattavaTiedosto {
   nimi: String!
   tuotu: String
   jarjestys: Int
+  s3Key: String
 }
 
 type KunnallinenLadattavaTiedosto implements ILadattavaTiedosto {
