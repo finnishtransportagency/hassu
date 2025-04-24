@@ -168,7 +168,7 @@ export default function HenkiloLista({
                 id="lisaa_uusi_henkilo"
                 className="primary"
               >
-                Lisää
+                Lisää edustaja
               </Button>
             </div>
           )}
