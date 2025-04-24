@@ -436,7 +436,7 @@ export async function haeVelhoSynkronoinninMuutoksetTallennukseen(
   const kayttoOikeudetManager = new KayttoOikeudetManager(
     kayttoOikeudet,
     await personSearch.getKayttajas(),
-    oldProjekti.suunnitteluSopimus?.yhteysHenkilo
+    oldProjekti.suunnitteluSopimus?.yhteysHenkilo ?? undefined
   );
   kayttoOikeudetManager.resetHenkilot(reset, vastuuhenkilonEmail, varahenkilonEmail);
   kayttoOikeudetManager.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
@@ -483,6 +483,33 @@ async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
     });
     if (!input.suunnitteluSopimus.logo.RUOTSI) {
       throw new NotFoundError("Logoa ei löydy");
+    }
+  }
+
+  if (input.suunnitteluSopimus?.osapuolet?.length) {
+    for (const osapuoli of input.suunnitteluSopimus.osapuolet) {
+      if (osapuoli?.osapuolenLogo?.SUOMI) {
+        osapuoli.osapuolenLogo.SUOMI = await fileService.persistFileToProjekti({
+          uploadedFileSource: osapuoli.osapuolenLogo.SUOMI,
+          oid: input.oid,
+          targetFilePathInProjekti: "suunnittelusopimus",
+        });
+
+        if (!osapuoli.osapuolenLogo.SUOMI) {
+          throw new NotFoundError("Osapuolen logoa ei löydy");
+        }
+      }
+      if (osapuoli?.osapuolenLogo?.RUOTSI) {
+        osapuoli.osapuolenLogo.RUOTSI = await fileService.persistFileToProjekti({
+          uploadedFileSource: osapuoli.osapuolenLogo.RUOTSI,
+          oid: input.oid,
+          targetFilePathInProjekti: "suunnittelusopimus",
+        });
+
+        if (!osapuoli.osapuolenLogo.RUOTSI) {
+          throw new NotFoundError("Osapuolen logoa ei löydy");
+        }
+      }
     }
   }
 }
