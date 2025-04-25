@@ -6,7 +6,7 @@ import { fileService } from "../../../../files/fileService";
 export function adaptLogotToAPIJulkinen(oid: string, logot: LocalizedMap<string> | undefined): API.LokalisoituTeksti | undefined {
   if (logot) {
     if (!logot.SUOMI && !logot.RUOTSI) {
-      throw new Error("adaptLogot: logot määrittelemättä");
+      throw new Error("adaptLogot: logot määrittelemättä?");
     }
 
     return {

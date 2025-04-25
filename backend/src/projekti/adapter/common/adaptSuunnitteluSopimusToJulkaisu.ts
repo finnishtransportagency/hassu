@@ -57,10 +57,10 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
   return suunnitteluSopimus;
 }
 
-function adaptLogot(oid: string, logot: LocalizedMap<string> | undefined): LocalizedMap<string> | undefined {
+function adaptLogot(oid: string, logot: LocalizedMap<string> | null | undefined): LocalizedMap<string> | undefined {
   if (logot) {
     if (!logot.SUOMI && !logot.RUOTSI) {
-      throw new Error("adaptLogot: logot määrittelemättä");
+      throw new Error("adaptLogot: logot määrittelemättä!");
     }
 
     return {
