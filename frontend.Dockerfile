@@ -1,7 +1,10 @@
 # syntax=docker.io/docker/dockerfile:1
 
 # Template from https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
-FROM node:18-alpine AS base
+
+# Use AWS public ECR (mirrored from Docker Hub) to avoid 429 limits
+# and benefit from improved performance
+FROM public.ecr.aws/docker/library/node:18-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
