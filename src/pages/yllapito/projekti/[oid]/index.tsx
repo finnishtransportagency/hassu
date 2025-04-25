@@ -310,7 +310,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                 if (logoTiedostoSv instanceof File) {
                   ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
                 }
-                persistentData.suunnitteluSopimus.logo = ssLogo;
+                if (Object.keys(ssLogo).length > 0) {
+                  persistentData.suunnitteluSopimus.logo = ssLogo;
+                } else {
+                  persistentData.suunnitteluSopimus.logo = null;
+                }
               }
 
               const osapuoliMaaraField = getValues("suunnitteluSopimus.osapuoliMaara" as any);
