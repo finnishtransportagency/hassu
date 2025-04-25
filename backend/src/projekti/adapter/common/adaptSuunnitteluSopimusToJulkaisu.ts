@@ -60,7 +60,7 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
 function adaptLogot(oid: string, logot: LocalizedMap<string> | null | undefined): LocalizedMap<string> | undefined {
   if (logot) {
     if (!logot.SUOMI && !logot.RUOTSI) {
-      throw new Error("adaptLogot: logot määrittelemättä!");
+      return undefined;
     }
 
     return {
