@@ -248,7 +248,7 @@
     "deploy:backend:hotswap": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
     "deploy:backend:hotswap-fallback": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap-fallback",
     "predeploy:frontend": "rimraf build .next",
-    "deploy:frontend": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --debug --require-approval never",
+    "deploy:frontend": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend-core frontend --debug --require-approval never",
     "deploy:stackpolicies": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/setStackPolicies.ts",
     "postdeploy:frontend": "npm run setupenvironment",
     "deploy:account:dev": "cross-env AWS_PROFILE=hassudev ENVIRONMENT=dev ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-account\" deploy account --require-approval never",
