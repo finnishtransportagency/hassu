@@ -41,7 +41,6 @@ export default function HenkiloLista({
   const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>(
     getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || []
   );
-
   const maxHenkilot = 2;
 
   const toggleHenkiloSelection = (index: number) => {
@@ -89,9 +88,8 @@ export default function HenkiloLista({
       <div style={{ marginTop: "3rem" }}>
         <H4>{osapuoliTyyppi === "kunta" ? "Kunnan edustajan tiedot" : "Yrityksen edustajan tiedot"}</H4>
         <p>
-          {osapuoliTyyppi === "kunta"
-            ? "Kunnan edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella projektin yleisissä yhteystiedoissa."
-            : "Yrityksen edustajaksi merkitty henkilö näkyy automaattisesti valittuna aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella projektin yleisissä yhteystiedoissa."}
+          Lisättyjen edustajien listalta valittu henkilö näkyy aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella
+          puolella projektin yleisissä yhteystiedoissa.
         </p>
       </div>
       {osapuolenHenkilot.length > 0 && (
@@ -117,67 +115,70 @@ export default function HenkiloLista({
         </div>
       )}
       <div>
-        <OsapuolenYhteyshenkilot
-          osapuoliNumero={osapuoliNumero}
-          osapuoliTyyppi={osapuoliTyyppi}
-          projekti={projekti}
-          formDisabled={formDisabled}
-          kuntaOptions={kuntaOptions}
-          watch={watch}
-        />
+        {osapuolenHenkilot.length < maxHenkilot ? (
+          <>
+            <OsapuolenYhteyshenkilot
+              osapuoliNumero={osapuoliNumero}
+              osapuoliTyyppi={osapuoliTyyppi}
+              projekti={projekti}
+              formDisabled={formDisabled}
+              kuntaOptions={kuntaOptions}
+              watch={watch}
+            />
 
-        <SectionContent>
-          {osapuolenHenkilot.length < maxHenkilot && (
-            <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
-              <Button
-                disabled={false}
-                onClick={() => {
-                  const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
-                  const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
-                  const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
-                  const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
+            <SectionContent>
+              <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
+                <Button
+                  disabled={false}
+                  onClick={() => {
+                    const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
+                    const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
+                    const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
+                    const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
 
-                  if (etunimi && sukunimi && email && puhelinnumero) {
-                    const uusiHenkilo = {
-                      etunimi: etunimi,
-                      sukunimi: sukunimi,
-                      email: email,
-                      puhelinnumero: puhelinnumero,
-                      kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
-                      yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
-                      valittu: false,
-                    };
+                    if (etunimi && sukunimi && email && puhelinnumero) {
+                      const uusiHenkilo = {
+                        etunimi: etunimi,
+                        sukunimi: sukunimi,
+                        email: email,
+                        puhelinnumero: puhelinnumero,
+                        kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
+                        yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
+                        valittu: false,
+                      };
 
-                    const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
-                    setOsapuolenHenkilot(paivitetytHenkilot);
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
-                    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, "");
-                    if (osapuoliTyyppi === "kunta") {
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any, "");
+                      const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
+                      setOsapuolenHenkilot(paivitetytHenkilot);
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
+                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, "");
+                      if (osapuoliTyyppi === "kunta") {
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any, "");
+                      } else {
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, "");
+                      }
                     } else {
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, "");
+                      alert("Täytä pakolliset tiedot");
                     }
-                  } else {
-                    alert("Täytä pakolliset tiedot");
-                  }
-                }}
-                type="button"
-                id="lisaa_uusi_henkilo"
-                className="primary"
-              >
-                Lisää edustaja
-              </Button>
-            </div>
-          )}
-          {osapuolenHenkilot.length >= maxHenkilot && (
+                  }}
+                  type="button"
+                  id="lisaa_uusi_henkilo"
+                  className="primary"
+                >
+                  Lisää edustaja
+                </Button>
+              </div>
+            </SectionContent>
+          </>
+        ) : (
+          <SectionContent>
             <div style={{ marginTop: "1rem", marginBottom: "3rem" }}>
-              <p style={{ color: "grey" }}>Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.</p>
+              <p>Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.</p>
             </div>
-          )}
-        </SectionContent>
+          </SectionContent>
+        )}
       </div>
     </ContentSpacer>
   );
