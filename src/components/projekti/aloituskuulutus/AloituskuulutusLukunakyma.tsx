@@ -79,15 +79,50 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
             )}
             {aloituskuulutusjulkaisu.suunnitteluSopimus && (
               <Notification type={NotificationType.INFO_GRAY}>
-                Hankkeesta on tehty suunnittelusopimus kunnan kanssa
+                Hankkeesta on tehty suunnittelusopimus osapuolten kanssa
                 <br />
                 <br />
-                {capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))}
+                {aloituskuulutusjulkaisu.suunnitteluSopimus.kunta
+                  ? capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))
+                  : aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet &&
+                    aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet.length > 0 &&
+                    aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet
+                      .map((osapuoli) => osapuoli?.osapuolenNimiEnsisijainen)
+                      .filter((nimi) => nimi !== undefined && nimi !== null)
+                      .join(", ")}
                 <br />
-                {formatNimi(aloituskuulutusjulkaisu.suunnitteluSopimus)}, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero},{" "}
-                {aloituskuulutusjulkaisu.suunnitteluSopimus.email
-                  ? replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]")
-                  : ""}
+                {aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet &&
+                  aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet.length > 0 &&
+                  aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet
+                    .flatMap((osapuoli) => osapuoli?.osapuolenHenkilot || [])
+                    .filter((henkilo) => henkilo && henkilo.valittu)
+                    .map((henkilo, index, arr) => (
+                      <div key={index}>
+                        {henkilo?.etunimi} {henkilo?.sukunimi}
+                        {henkilo?.puhelinnumero && <>, puh. {henkilo.puhelinnumero}</>}
+                        {henkilo?.email && <>, {replace(henkilo.email, "@", "[at]")}</>}
+                        {index < arr.length - 1 && <br />}
+                      </div>
+                    ))}
+                {!aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet ||
+                !aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet.some(
+                  (osapuoli) => osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.some((h) => h?.valittu)
+                ) ? (
+                  <>
+                    {aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi &&
+                      aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi &&
+                      formatNimi({
+                        etunimi: aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi,
+                        sukunimi: aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi,
+                      })}
+                    {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero && (
+                      <>, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero}</>
+                    )}
+                    {aloituskuulutusjulkaisu.suunnitteluSopimus.email && (
+                      <>, {replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]")}</>
+                    )}
+                  </>
+                ) : null}
               </Notification>
             )}
             {aloituskuulutusjulkaisu.julkaisuOnKopio && <JulkaisuOnKopioNotification />}

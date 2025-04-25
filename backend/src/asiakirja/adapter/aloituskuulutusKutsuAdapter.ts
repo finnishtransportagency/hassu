@@ -204,8 +204,16 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
   }
 
   kutsuja(): string | undefined {
-    if (this.props.suunnitteluSopimus && this.props.suunnitteluSopimus.kunta !== undefined) {
+    if (this.props.suunnitteluSopimus && this.props.suunnitteluSopimus.kunta && this.props.suunnitteluSopimus.kunta !== undefined) {
       return kuntametadata.nameForKuntaId(this.props.suunnitteluSopimus.kunta, this.kieli);
+    }
+    if (this.props.suunnitteluSopimus && this.props.suunnitteluSopimus.osapuolet && this.props.suunnitteluSopimus.osapuolet.length > 0) {
+      const nimet = this.props.suunnitteluSopimus.osapuolet
+        .map((osapuoli) => osapuoli.osapuolenNimiEnsisijainen)
+        .filter((nimi) => nimi !== undefined && nimi !== null);
+      if (nimet.length > 0) {
+        return nimet.join(", ");
+      }
     }
     return super.kutsuja();
   }
