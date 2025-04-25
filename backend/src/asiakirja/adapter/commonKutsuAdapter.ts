@@ -540,7 +540,7 @@ export class CommonKutsuAdapter {
     };
   }
 
-  private getLocalizedOrganization(organisaatio: string | undefined, elyOrganisaatio: ELY | undefined, kunta: number | undefined) {
+  private getLocalizedOrganization(organisaatio: string | undefined, elyOrganisaatio: ELY | undefined, kunta: number | null | undefined) {
     let organisaatioTeksti = organisaatio ?? "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);

@@ -251,7 +251,7 @@ export class ProjektiAdapter {
     const kayttoOikeudetManager = new KayttoOikeudetManager(
       projekti.kayttoOikeudet,
       await personSearch.getKayttajas(),
-      projekti.suunnitteluSopimus?.yhteysHenkilo
+      projekti.suunnitteluSopimus?.yhteysHenkilo ? projekti.suunnitteluSopimus?.yhteysHenkilo : undefined
     );
     kayttoOikeudetManager.applyChanges(kayttoOikeudet);
     const aloitusKuulutusToSave = adaptAloitusKuulutusToSave(projekti.aloitusKuulutus, aloitusKuulutus);

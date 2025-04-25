@@ -62,7 +62,7 @@ class ProjektiAdapterJulkinen {
 
     const projektiHenkilot: API.ProjektiKayttajaJulkinen[] = adaptProjektiHenkilot(
       dbProjekti.kayttoOikeudet,
-      dbProjekti.suunnitteluSopimus?.yhteysHenkilo
+      dbProjekti.suunnitteluSopimus?.yhteysHenkilo ? dbProjekti.suunnitteluSopimus?.yhteysHenkilo : undefined
     );
 
     const vuorovaikutukset = adaptVuorovaikutusKierroksetJulkinen(dbProjekti);
