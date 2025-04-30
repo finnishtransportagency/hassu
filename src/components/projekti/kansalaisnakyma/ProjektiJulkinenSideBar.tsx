@@ -47,7 +47,7 @@ const ProjektiSideNavigation = styled((props) => {
 
   const suunnitteluSopimus = projekti.suunnitteluSopimus;
   const viranomainen = projekti?.velho.suunnittelustaVastaavaViranomainen;
-  const isVanhatTiedotOlemassa = projekti.suunnitteluSopimus?.kunta && projekti.suunnitteluSopimus?.kunta > 0;
+  const isVanhatTiedotOlemassa = projekti.suunnitteluSopimus?.kunta || projekti.suunnitteluSopimus?.logo;
 
   const getTilaajaLogoImg = () => {
     if (SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO === viranomainen) {
@@ -103,7 +103,7 @@ const ProjektiSideNavigation = styled((props) => {
                   <div key={index}>
                     {osapuoli?.osapuolenLogo?.[lang === "fi" ? Kieli.SUOMI : Kieli.RUOTSI] && (
                       <img
-                        src={osapuoli?.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
+                        src={osapuoli.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
                         alt={`${osapuoli?.osapuolenNimiEnsisijainen} logo`}
                       />
                     )}
