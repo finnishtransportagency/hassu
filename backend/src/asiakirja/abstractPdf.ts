@@ -27,6 +27,7 @@ export abstract class AbstractPdf {
   protected kieli: KaannettavaKieli;
   protected oid: string;
   protected sopimusLogo?: string | Buffer;
+  protected osapuoltenLogot: (string | Buffer)[] = [];
 
   constructor(kieli: KaannettavaKieli, oid: string) {
     this.kieli = kieli;
@@ -247,19 +248,59 @@ export abstract class AbstractPdf {
   }
 
   async loadSuunnitteluSopimus(): Promise<string | Buffer | undefined> {
-    if (this.sopimus) {
+    if (this.sopimus?.logo) {
       const tiedosto = this.sopimus.logo?.[this.kieli];
       assertIsDefined(tiedosto, "suunnittelusopimuksessa tulee aina olla kunnan logo");
       return await fileService.getProjektiFile(this.oid, tiedosto);
     }
   }
 
+  async loadOsapuoltenLogot(): Promise<(string | Buffer)[]> {
+    const logot: (string | Buffer)[] = [];
+    if (this.sopimus?.osapuolet && this.sopimus.osapuolet.length > 0) {
+      for (const osapuoli of this.sopimus.osapuolet) {
+        const osapuolenLogo = osapuoli.osapuolenLogo?.[this.kieli];
+        if (osapuolenLogo) {
+          const logoData = await fileService.getProjektiFile(this.oid, osapuolenLogo);
+          if (logoData) logot.push(logoData);
+        }
+      }
+    }
+    return logot;
+  }
+
   protected sopimusLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      if (this.sopimusLogo) {
-        this.doc.moveDown();
-        this.doc.image(this.sopimusLogo, { height: 50 });
+      const currentY = this.doc.y;
+      const bottomMargin = 100;
+      const logoHeight = 50;
+      const logoMargin = 30;
+
+      if (this.osapuoltenLogot && this.osapuoltenLogot.length > 0) {
+        const baseY = this.doc.page.height - bottomMargin;
+        const logoCount = Math.min(this.osapuoltenLogot.length, 3);
+        const logot = this.osapuoltenLogot.slice(0, logoCount);
+
+        const totalWidth = logoHeight * 1.5 * logoCount + logoMargin * (logoCount - 1);
+
+        let xPosition = this.doc.page.width / 2 - totalWidth / 2;
+
+        for (const logo of logot) {
+          const verticalCenter = baseY - logoHeight / 2;
+
+          this.doc.image(logo, xPosition, verticalCenter, { height: logoHeight });
+
+          xPosition += logoHeight * 1.5 + logoMargin;
+        }
+      } else if (this.sopimusLogo) {
+        const baseY = this.doc.page.height - bottomMargin;
+
+        const x = this.doc.page.width / 2 - logoHeight * 0.75;
+        const verticalCenter = baseY - logoHeight / 2;
+        this.doc.image(this.sopimusLogo, x, verticalCenter, { height: logoHeight });
       }
+
+      this.doc.y = currentY;
     });
   }
 
@@ -274,6 +315,8 @@ export abstract class AbstractPdf {
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
     this.logo = await this.loadLogo();
     this.sopimusLogo = await this.loadSuunnitteluSopimus();
+    this.osapuoltenLogot = await this.loadOsapuoltenLogot();
+
     this.doc.addStructure(
       this.doc.struct("Document", {}, () => {
         this.appendHeader();
