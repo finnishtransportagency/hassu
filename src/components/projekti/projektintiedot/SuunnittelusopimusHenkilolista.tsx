@@ -1,10 +1,10 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useFormContext, UseFormWatch } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import OsapuolenYhteyshenkilot from "./SuunnittelusopimusOsapuoliHenkilo";
+import SuunnittelusopimusOsapuoliHenkilo from "./SuunnittelusopimusOsapuoliHenkilo";
 import { H4 } from "@components/Headings";
 import { Checkbox, IconButton, SvgIcon } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,10 +12,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface HenkiloListaProps {
   osapuoliNumero: number;
   osapuoliTyyppi: string;
-  projekti?: any | null;
-  formDisabled?: boolean;
-  kuntaOptions: { label: string; value: string }[];
-  watch: UseFormWatch<FormValues>;
 }
 
 interface Henkilo {
@@ -28,19 +24,18 @@ interface Henkilo {
   valittu: boolean;
 }
 
-export default function HenkiloLista({
-  osapuoliNumero,
-  osapuoliTyyppi,
-  projekti,
-  formDisabled,
-  kuntaOptions,
-  watch,
-}: HenkiloListaProps): ReactElement {
+export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: HenkiloListaProps): ReactElement {
   const { setValue, getValues } = useFormContext<FormValues>();
 
-  const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>(
-    getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || []
-  );
+  const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>([]);
+
+  useEffect(() => {
+    const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
+    setOsapuolenHenkilot(henkilot);
+
+    console.log("Alustetaan henkilöt:", henkilot);
+  }, [getValues, osapuoliNumero, osapuoliTyyppi]);
+
   const maxHenkilot = 2;
 
   const toggleHenkiloSelection = (index: number) => {
@@ -117,14 +112,7 @@ export default function HenkiloLista({
       <div>
         {osapuolenHenkilot.length < maxHenkilot ? (
           <>
-            <OsapuolenYhteyshenkilot
-              osapuoliNumero={osapuoliNumero}
-              osapuoliTyyppi={osapuoliTyyppi}
-              projekti={projekti}
-              formDisabled={formDisabled}
-              kuntaOptions={kuntaOptions}
-              watch={watch}
-            />
+            <SuunnittelusopimusOsapuoliHenkilo osapuoliNumero={osapuoliNumero} osapuoliTyyppi={osapuoliTyyppi} />
 
             <SectionContent>
               <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>

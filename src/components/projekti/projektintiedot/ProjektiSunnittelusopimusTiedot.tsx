@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Projekti, ProjektiTyyppi } from "@services/api";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
@@ -27,12 +27,23 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     watch,
     control,
     register,
+    setValue,
+    getValues,
     formState: { errors },
   } = useFormContext<FormValues>();
 
   const kuntaOptions = kuntametadata.kuntaOptions("fi");
 
   const hide = projekti?.velho.tyyppi === ProjektiTyyppi.RATA || projekti?.velho.tyyppi === ProjektiTyyppi.YLEINEN;
+
+  const suunnittelusopimus = watch("suunnittelusopimusprojekti");
+
+  useEffect(() => {
+    if (!projekti) return;
+    if (suunnittelusopimus === "true" && !getValues("suunnitteluSopimus.osapuoliMaara" as any)) {
+      setValue("suunnitteluSopimus.osapuoliMaara" as any, 1);
+    }
+  }, [suunnittelusopimus, getValues, setValue, projekti]);
 
   if (!kuntaOptions || kuntaOptions.length == 0 || hide || !projekti) {
     return <></>;
@@ -191,9 +202,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                       <SuunnittelusopimusOsapuoli
                         key={`osapuoli-${i}`}
                         osapuoliNumero={i}
-                        projekti={projekti}
                         disabled={false}
-                        kuntaOptions={kuntaOptions}
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli || undefined}
                         toissijainenKaannettavaKieli={toissijainenKaannettavaKieli || undefined}
                         watch={watch}

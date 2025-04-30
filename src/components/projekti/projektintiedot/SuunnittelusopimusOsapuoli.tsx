@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Controller, useFormContext, UseFormWatch } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
@@ -7,7 +7,6 @@ import HassuGrid from "@components/HassuGrid";
 import TextInput from "@components/form/TextInput";
 import { FormControlLabel, Radio, RadioGroup, IconButton, SvgIcon } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Projekti } from "@services/api";
 import { H4 } from "@components/Headings";
 import HenkiloLista from "./SuunnittelusopimusHenkilolista";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
@@ -15,10 +14,8 @@ import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLog
 
 interface SuunnittelusopimusOsapuoliProps {
   osapuoliNumero: number;
-  projekti?: Projekti | null;
-  disabled?: boolean;
   formDisabled?: boolean;
-  kuntaOptions: { label: string; value: string }[];
+  disabled: boolean;
   ensisijainenKaannettavaKieli?: KaannettavaKieli;
   toissijainenKaannettavaKieli?: KaannettavaKieli;
   watch: UseFormWatch<FormValues>;
@@ -28,10 +25,8 @@ interface SuunnittelusopimusOsapuoliProps {
 
 export default function SuunnittelusopimusOsapuoli({
   osapuoliNumero,
-  projekti,
-  disabled,
   formDisabled,
-  kuntaOptions,
+  disabled,
   ensisijainenKaannettavaKieli,
   toissijainenKaannettavaKieli,
   watch,
@@ -42,7 +37,15 @@ export default function SuunnittelusopimusOsapuoli({
     formState: { errors },
     control,
     getValues,
+    setValue,
   } = useFormContext<FormValues>();
+
+  useEffect(() => {
+    const tyyppiArvo = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
+    if (!tyyppiArvo) {
+      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any, "kunta");
+    }
+  }, [osapuoliNumero, getValues, setValue]);
 
   const osapuoliTyyppiValue = watch(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
   const osapuoliTyyppi = Array.isArray(osapuoliTyyppiValue) ? osapuoliTyyppiValue[0]?.toString() : osapuoliTyyppiValue?.toString();
@@ -53,7 +56,7 @@ export default function SuunnittelusopimusOsapuoli({
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <H4>{osapuoliNumero}. osapuoli</H4>
           {poistaOsapuoli && (
-            <IconButton onClick={poistaOsapuoli} disabled={formDisabled} size="large" type="button">
+            <IconButton onClick={poistaOsapuoli} disabled={disabled} size="large" type="button">
               <SvgIcon>
                 <FontAwesomeIcon icon="trash" />
               </SvgIcon>
@@ -64,7 +67,7 @@ export default function SuunnittelusopimusOsapuoli({
         <Controller
           name={`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any}
           control={control}
-          defaultValue={getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any) || "kunta"}
+          defaultValue="kunta"
           render={({ field: osapuoliField, fieldState: osapuoliState }) => (
             <FormGroup label="Suunnittelusopimuksen osapuoli *" errorMessage={osapuoliState.error?.message} flexDirection="row">
               <RadioGroup
@@ -117,14 +120,7 @@ export default function SuunnittelusopimusOsapuoli({
           </HassuGrid>
         )}
 
-        <HenkiloLista
-          osapuoliNumero={osapuoliNumero}
-          osapuoliTyyppi={osapuoliTyyppi}
-          projekti={projekti}
-          formDisabled={disabled}
-          kuntaOptions={kuntaOptions}
-          watch={watch}
-        />
+        <HenkiloLista osapuoliNumero={osapuoliNumero} osapuoliTyyppi={osapuoliTyyppi || "kunta"} />
         <SectionContent>
           <H4>{osapuoliTyyppi === "kunta" ? "Kunnan" : "Yrityksen"} logo</H4>
           {ensisijainenKaannettavaKieli && (
