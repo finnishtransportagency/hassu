@@ -417,12 +417,13 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             const response = await api.tallennaProjekti(apiData);
             await reloadProjekti();
             showTallennaProjektiMessage(response);
+            reset(data);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
         })()
       ),
-    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo, getValues]
+    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo, getValues, reset]
   );
 
   useEffect(() => {
