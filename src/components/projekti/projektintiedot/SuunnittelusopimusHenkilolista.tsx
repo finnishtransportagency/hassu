@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { useFormContext, UseFormWatch } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
