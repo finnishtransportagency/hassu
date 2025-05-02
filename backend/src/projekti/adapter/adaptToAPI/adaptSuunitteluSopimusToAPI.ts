@@ -23,12 +23,12 @@ export function adaptSuunnitteluSopimusToAPI(
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPI(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot: osapuoli?.osapuolenHenkilot?.map((henkilo) => ({
             __typename: "OsapuolenHenkilo",
-            etunimi: henkilo.etunimi,
-            sukunimi: henkilo.sukunimi,
-            puhelinnumero: henkilo.puhelinnumero,
-            email: henkilo.email,
-            yritys: henkilo.yritys,
-            valittu: henkilo.valittu,
+            etunimi: henkilo.etunimi || "",
+            sukunimi: henkilo.sukunimi || "",
+            puhelinnumero: henkilo.puhelinnumero || "",
+            email: henkilo.email || "",
+            yritys: henkilo.yritys || "",
+            valittu: Boolean(henkilo.valittu),
           })),
         })) || null,
     };
@@ -49,41 +49,21 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
   if (suunnitteluSopimus) {
     const adaptLogoFunction = fileLocation === FileLocation.PUBLIC ? adaptLogotToAPIJulkinen : adaptLogotToAPI;
 
-    const valitutHenkilot =
-      suunnitteluSopimus.osapuolet?.flatMap((osapuoli) => osapuoli.osapuolenHenkilot?.filter((henkilo) => henkilo?.valittu) || []) || [];
-
-    let etunimi = "";
-    let sukunimi = "";
-    let email = "";
-    let puhelinnumero = "";
-
-    if (valitutHenkilot.length > 0) {
-      etunimi = valitutHenkilot[0].etunimi || "";
-      sukunimi = valitutHenkilot[0].sukunimi || "";
-      email = valitutHenkilot[0].email || "";
-      puhelinnumero = valitutHenkilot[0].puhelinnumero || "";
-    } else {
-      etunimi = suunnitteluSopimus?.etunimi ?? "";
-      sukunimi = suunnitteluSopimus?.sukunimi ?? "";
-      email = suunnitteluSopimus?.email ?? "";
-      puhelinnumero = suunnitteluSopimus?.puhelinnumero ?? "";
-    }
-
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
       logo: suunnitteluSopimus.logo ? adaptLogoFunction(oid, suunnitteluSopimus.logo) : null,
-      email,
-      etunimi,
-      sukunimi,
-      puhelinnumero,
+      etunimi: suunnitteluSopimus?.etunimi,
+      sukunimi: suunnitteluSopimus?.sukunimi,
+      email: suunnitteluSopimus?.email,
+      puhelinnumero: suunnitteluSopimus?.puhelinnumero,
       osapuolet: suunnitteluSopimus.osapuolet
         ? suunnitteluSopimus.osapuolet.map((osapuoli) => ({
             __typename: "SuunnitteluSopimusOsapuoli",
             osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
             osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
             osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
-            osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogoFunction(oid, osapuoli.osapuolenLogo) : null,
+            osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
             osapuolenHenkilot: osapuoli.osapuolenHenkilot
               ? osapuoli.osapuolenHenkilot.map((henkilo) => ({
                   __typename: "OsapuolenHenkilo",
@@ -92,7 +72,7 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
                   puhelinnumero: henkilo.puhelinnumero || "",
                   email: henkilo.email || "",
                   yritys: henkilo.yritys || "",
-                  valittu: henkilo.valittu || false,
+                  valittu: Boolean(henkilo.valittu),
                 }))
               : [],
           }))
