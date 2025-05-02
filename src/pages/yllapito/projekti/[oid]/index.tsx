@@ -358,7 +358,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     email: henkilo.email || "",
                     yritys: henkilo.yritys || "",
                     kunta: henkilo.kunta || "",
-                    valittu: henkilo.valittu,
+                    valittu: henkilo.valittu || true,
                   }));
 
                   puhdistettuSuunnitteluSopimus.osapuolet.push({

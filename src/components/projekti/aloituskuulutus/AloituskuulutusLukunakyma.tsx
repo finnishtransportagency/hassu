@@ -57,6 +57,67 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
 
+  const suunnitteluSopimus = projekti.suunnitteluSopimus;
+  // tämä vai aloituskuulutus.suunnittelusopimus??
+
+  const isVanhatTiedotOlemassa = suunnitteluSopimus?.kunta && suunnitteluSopimus.kunta !== null;
+  const isOsapuoletOlemassa = suunnitteluSopimus?.osapuolet && suunnitteluSopimus.osapuolet.length > 0;
+
+  const osapuoletSisalto = [] as JSX.Element[];
+
+  if (isOsapuoletOlemassa) {
+    projekti.suunnitteluSopimus?.osapuolet?.forEach((osapuoli, osapuoliIndex) => {
+      if (!osapuoli?.osapuolenNimiEnsisijainen) return;
+
+      const valitutHenkilot = (osapuoli?.osapuolenHenkilot || []).filter((henkilo) => henkilo && henkilo.valittu === true);
+
+      console.log("Valitut henkilöt:", valitutHenkilot);
+
+      const henkilotSisalto = [] as JSX.Element[];
+
+      if (valitutHenkilot.length > 0) {
+        for (let i = 0; i < valitutHenkilot.length; i++) {
+          const henkilo = valitutHenkilot[i];
+          henkilotSisalto.push(
+            <div key={`henkilo-${osapuoliIndex}-${i}`}>
+              {henkilo?.etunimi} {henkilo?.sukunimi}
+              {henkilo?.puhelinnumero && <>, puh. {henkilo.puhelinnumero}</>}
+              {henkilo?.email && <>, {replace(henkilo.email, "@", "[at]")}</>}
+            </div>
+          );
+        }
+      }
+
+      osapuoletSisalto.push(
+        <div key={`osapuoli-${osapuoliIndex}`}>
+          {osapuoli.osapuolenNimiEnsisijainen}
+          {henkilotSisalto}
+          {osapuoliIndex < projekti.suunnitteluSopimus!.osapuolet!.length - 1 && <br />}
+        </div>
+      );
+    });
+  }
+
+  const kuntaTiedot = isVanhatTiedotOlemassa ? (
+    <>
+      Hankkeesta on tehty suunnittelusopimus kunnan kanssa
+      <br />
+      <br />
+      {capitalize(kuntametadata.nameForKuntaId(projekti.suunnitteluSopimus!.kunta!, lang))}
+      <br />
+      {projekti.suunnitteluSopimus!.etunimi && projekti.suunnitteluSopimus!.sukunimi && (
+        <>
+          {formatNimi({
+            etunimi: projekti.suunnitteluSopimus!.etunimi,
+            sukunimi: projekti.suunnitteluSopimus!.sukunimi,
+          })}
+          {projekti.suunnitteluSopimus!.puhelinnumero && <>, puh. {projekti.suunnitteluSopimus!.puhelinnumero}</>}
+          {projekti.suunnitteluSopimus!.email && <>, {replace(projekti.suunnitteluSopimus!.email, "@", "[at]")}</>}
+        </>
+      )}
+    </>
+  ) : null;
+
   return (
     <>
       <Section>
@@ -77,52 +138,17 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                 Aloituskuulutus on hyväksyttävänä projektipäälliköllä. Jos kuulutusta tarvitsee muokata, ota yhteys projektipäällikköön.
               </Notification>
             )}
-            {aloituskuulutusjulkaisu.suunnitteluSopimus && (
+            {suunnitteluSopimus && (
               <Notification type={NotificationType.INFO_GRAY}>
-                Hankkeesta on tehty suunnittelusopimus osapuolten kanssa
-                <br />
-                <br />
-                {aloituskuulutusjulkaisu.suunnitteluSopimus.kunta
-                  ? capitalize(kuntametadata.nameForKuntaId(aloituskuulutusjulkaisu.suunnitteluSopimus.kunta, lang))
-                  : aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet &&
-                    aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet.length > 0 &&
-                    aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet
-                      .map((osapuoli) => osapuoli?.osapuolenNimiEnsisijainen)
-                      .filter((nimi) => nimi !== undefined && nimi !== null)
-                      .join(", ")}
-                <br />
-                {aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet &&
-                  aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet.length > 0 &&
-                  aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet
-                    .flatMap((osapuoli) => osapuoli?.osapuolenHenkilot || [])
-                    .filter((henkilo) => henkilo && henkilo.valittu)
-                    .map((henkilo, index, arr) => (
-                      <div key={index}>
-                        {henkilo?.etunimi} {henkilo?.sukunimi}
-                        {henkilo?.puhelinnumero && <>, puh. {henkilo.puhelinnumero}</>}
-                        {henkilo?.email && <>, {replace(henkilo.email, "@", "[at]")}</>}
-                        {index < arr.length - 1 && <br />}
-                      </div>
-                    ))}
-                {!aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet ||
-                !aloituskuulutusjulkaisu.suunnitteluSopimus.osapuolet.some(
-                  (osapuoli) => osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.some((h) => h?.valittu)
-                ) ? (
+                {kuntaTiedot}
+                {isOsapuoletOlemassa && !isVanhatTiedotOlemassa && (
                   <>
-                    {aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi &&
-                      aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi &&
-                      formatNimi({
-                        etunimi: aloituskuulutusjulkaisu.suunnitteluSopimus.etunimi,
-                        sukunimi: aloituskuulutusjulkaisu.suunnitteluSopimus.sukunimi,
-                      })}
-                    {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero && (
-                      <>, puh. {aloituskuulutusjulkaisu.suunnitteluSopimus.puhelinnumero}</>
-                    )}
-                    {aloituskuulutusjulkaisu.suunnitteluSopimus.email && (
-                      <>, {replace(aloituskuulutusjulkaisu.suunnitteluSopimus.email, "@", "[at]")}</>
-                    )}
+                    Hankkeesta on tehty suunnittelusopimus osapuolten kanssa
+                    <br />
+                    <br />
+                    {osapuoletSisalto}
                   </>
-                ) : null}
+                )}
               </Notification>
             )}
             {aloituskuulutusjulkaisu.julkaisuOnKopio && <JulkaisuOnKopioNotification />}
