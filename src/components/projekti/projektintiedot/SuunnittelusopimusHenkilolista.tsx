@@ -32,8 +32,6 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
   useEffect(() => {
     const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
     setOsapuolenHenkilot(henkilot);
-
-    console.log("Alustetaan henkilöt:", henkilot);
   }, [getValues, osapuoliNumero, osapuoliTyyppi]);
 
   const maxHenkilot = 2;
