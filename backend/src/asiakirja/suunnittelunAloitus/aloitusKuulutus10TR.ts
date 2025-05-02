@@ -1,6 +1,7 @@
 import { SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
+import { log } from "../../logger";
 
 export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
   constructor(params: AloituskuulutusKutsuAdapterProps) {
@@ -16,6 +17,8 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
     } else {
       paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1"));
     }
+
+    log.info("aloituskuulutus10TR");
 
     return [
       ...paragraphs,

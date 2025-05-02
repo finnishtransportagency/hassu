@@ -36,6 +36,7 @@ import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { log } from "../../logger";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -400,6 +401,23 @@ export class CommonKutsuAdapter {
         yt.push(vaylaUserToYhteystieto(user));
       });
     }
+
+    if (this.suunnitteluSopimus) {
+      this.suunnitteluSopimus.osapuolet?.forEach((osapuoli) => {
+        if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+          osapuoli.osapuolenHenkilot.forEach((henkilo) => {
+            yt.push({
+              etunimi: henkilo.etunimi || "",
+              sukunimi: henkilo.sukunimi || "",
+              sahkoposti: henkilo.email || "",
+              puhelinnumero: henkilo.puhelinnumero || "",
+              organisaatio: henkilo.yritys || osapuoli.osapuolenNimiEnsisijainen || "",
+            });
+          });
+        }
+      });
+    }
+
     if (pakotaProjariTaiKunnanEdustaja) {
       const projari = this.kayttoOikeudet?.find((ko) => ko.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO);
 
@@ -407,6 +425,8 @@ export class CommonKutsuAdapter {
         yt = [vaylaUserToYhteystieto(projari as DBVaylaUser)].concat(yt);
       }
     }
+
+    log.info("commonKutsuAdapter");
 
     return yt.map((y) => this.yhteystietoMapper(y));
   }

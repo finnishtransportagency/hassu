@@ -18,6 +18,7 @@ import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
+import { log } from "../../logger";
 
 type PropsCreatorOptions = {
   oid: string;
@@ -126,22 +127,41 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
         yt.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
       });
     }
+
+    if (this.suunnitteluSopimus && this.suunnitteluSopimus?.osapuolet) {
+      this.suunnitteluSopimus?.osapuolet?.forEach((osapuoli) => {
+        if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+          osapuoli.osapuolenHenkilot.forEach((henkilo) => {
+            yt.push({
+              etunimi: henkilo.etunimi || "",
+              sukunimi: henkilo.sukunimi || "",
+              sahkoposti: henkilo.email || "",
+              puhelinnumero: henkilo.puhelinnumero || "",
+              organisaatio: henkilo.yritys || osapuoli.osapuolenNimiEnsisijainen || "",
+            });
+          });
+        }
+      });
+    }
+
     if (pakotaProjariTaiKunnanEdustaja) {
       const projari = this.kayttoOikeudet?.find((ko) => ko.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO);
 
-      if (this.suunnitteluSopimus && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
+      if (this.suunnitteluSopimus && kunnanEdustaja && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
         yt = [vaylaUserToYhteystieto(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
-      } else if (!yt.find((t) => t.sahkoposti === projari?.email)) {
+      } else if (projari && !yt.find((t) => t.sahkoposti === projari?.email)) {
         yt = [vaylaUserToYhteystieto(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
       }
     }
+
+    log.info("aloituskuulutuskutsuadapter: ", this.suunnitteluSopimus);
 
     return yt.map((yt) => this.yhteystietoMapper(yt));
   }
 
   get suunnittelusopimusKunta(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (this.isOsapuoletInUse) {
+    if (this.isOsapuoletOlemassa) {
       const nimet = this.props
         .suunnitteluSopimus!.osapuolet!.map((osapuoli) => osapuoli.osapuolenNimiEnsisijainen)
         .filter((nimi) => nimi !== undefined && nimi !== null);
@@ -211,7 +231,7 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     return super.kuuluttaja_pitka;
   }
 
-  get isOsapuoletInUse(): boolean {
+  get isOsapuoletOlemassa(): boolean {
     if (this.props.suunnitteluSopimus && this.props.suunnitteluSopimus.osapuolet && this.props.suunnitteluSopimus.osapuolet.length > 0) {
       return true;
     }
@@ -222,7 +242,7 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     if (this.props.suunnitteluSopimus && this.props.suunnitteluSopimus.kunta && this.props.suunnitteluSopimus.kunta !== undefined) {
       return kuntametadata.nameForKuntaId(this.props.suunnitteluSopimus.kunta, this.kieli);
     }
-    if (this.isOsapuoletInUse) {
+    if (this.isOsapuoletOlemassa) {
       const nimet = this.props
         .suunnitteluSopimus!.osapuolet!.map((osapuoli) => osapuoli.osapuolenNimiEnsisijainen)
         .filter((nimi) => nimi !== undefined && nimi !== null);

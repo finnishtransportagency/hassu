@@ -6,6 +6,7 @@ import { AloituskuulutusKutsuAdapter, AloituskuulutusKutsuAdapterProps } from ".
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { log } from "../../logger";
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
@@ -74,6 +75,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       this.sopimusLogoElement(),
     ].filter((p) => p);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
+    log.info("suunnittelunAloitusPdf");
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {

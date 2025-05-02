@@ -8,6 +8,7 @@ import { AsiakirjanMuoto, EnhancedPDF, Osoite } from "../asiakirjaTypes";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { toPdfPoints } from "../asiakirjaUtil";
+import { log } from "../../logger";
 
 export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPdf {
   protected kieli: KaannettavaKieli;
@@ -191,6 +192,9 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     pakotaProjariTaiKunnanEdustaja = false
   ): PDFKit.PDFStructureElementChild[] {
     const allYhteystiedot = this.kutsuAdapter.yhteystiedot(yhteystiedot, yhteysHenkilot, pakotaProjariTaiKunnanEdustaja);
+
+    log.info("commonpdf", allYhteystiedot);
+
     return allYhteystiedot.map(({ organisaatio, etunimi, sukunimi, puhelinnumero, sahkoposti }) => {
       const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
       const organization = showOrganization ? ` (${organisaatio}), ` : ",";
