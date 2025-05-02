@@ -63,7 +63,7 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
             osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
             osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
             osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
-            osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
+            osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogoFunction(oid, osapuoli.osapuolenLogo) : null,
             osapuolenHenkilot: osapuoli.osapuolenHenkilot
               ? osapuoli.osapuolenHenkilot.map((henkilo) => ({
                   __typename: "OsapuolenHenkilo",
