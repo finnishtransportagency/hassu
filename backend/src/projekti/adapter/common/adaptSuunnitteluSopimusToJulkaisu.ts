@@ -17,8 +17,8 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
       puhelinnumero: yhteysHenkilo?.puhelinnumero,
       osapuolet:
         suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
-          osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
-          osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
+          osapuolenNimiFI: osapuoli.osapuolenNimiFI || "",
+          osapuolenNimiSV: osapuoli.osapuolenNimiSV || "",
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogot(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:

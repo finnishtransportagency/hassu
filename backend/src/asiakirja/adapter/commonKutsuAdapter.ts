@@ -405,13 +405,14 @@ export class CommonKutsuAdapter {
     if (this.suunnitteluSopimus) {
       this.suunnitteluSopimus.osapuolet?.forEach((osapuoli) => {
         if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+          const organisaationNimi = this.kieli == Kieli.SUOMI ? osapuoli.osapuolenNimiFI : osapuoli.osapuolenNimiSV;
           osapuoli.osapuolenHenkilot.forEach((henkilo) => {
             yt.push({
               etunimi: henkilo.etunimi || "",
               sukunimi: henkilo.sukunimi || "",
               sahkoposti: henkilo.email || "",
               puhelinnumero: henkilo.puhelinnumero || "",
-              organisaatio: henkilo.yritys || osapuoli.osapuolenNimiEnsisijainen || "",
+              organisaatio: henkilo.yritys || organisaationNimi || "",
             });
           });
         }

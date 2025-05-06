@@ -67,7 +67,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
 
   if (isOsapuoletOlemassa) {
     projekti.suunnitteluSopimus?.osapuolet?.forEach((osapuoli, osapuoliIndex) => {
-      if (!osapuoli?.osapuolenNimiEnsisijainen) return;
+      if (!osapuoli?.osapuolenNimiFI) return;
 
       const valitutHenkilot = (osapuoli?.osapuolenHenkilot || []).filter((henkilo) => henkilo && henkilo.valittu === true);
 
@@ -90,7 +90,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
 
       osapuoletSisalto.push(
         <div key={`osapuoli-${osapuoliIndex}`}>
-          {osapuoli.osapuolenNimiEnsisijainen}
+          {osapuoli.osapuolenNimiFI}
           {henkilotSisalto}
           {osapuoliIndex < projekti.suunnitteluSopimus!.osapuolet!.length - 1 && <br />}
         </div>

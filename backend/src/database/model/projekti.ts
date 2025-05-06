@@ -104,8 +104,8 @@ export type SuunnitteluSopimusJulkaisu = {
 };
 
 export type SuunnitteluSopimusOsapuoli = {
-  osapuolenNimiEnsisijainen?: string | null;
-  osapuolenNimiToissijainen?: string | null;
+  osapuolenNimiFI?: string | null;
+  osapuolenNimiSV?: string | null;
   osapuolenHenkilot?: OsapuolenHenkilo[] | null;
   osapuolenTyyppi?: string | null;
   osapuolenLogo?: LocalizedMap<string> | null;

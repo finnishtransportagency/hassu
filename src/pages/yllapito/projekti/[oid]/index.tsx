@@ -362,8 +362,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                   }));
 
                   puhdistettuSuunnitteluSopimus.osapuolet.push({
-                    osapuolenNimiEnsisijainen: osapuoliTiedot.osapuolenNimiEnsisijainen || "",
-                    osapuolenNimiToissijainen: osapuoliTiedot.osapuolenNimiToissijainen || "",
+                    osapuolenNimiFI: osapuoliTiedot.osapuolenNimiFI || "",
+                    osapuolenNimiSV: osapuoliTiedot.osapuolenNimiSV || "",
                     osapuolenHenkilot: osapuolenHenkilot,
                     osapuolenTyyppi: osapuoliTyyppi || "",
                     osapuolenLogo: osapuoliTiedot.osapuolenLogo || null,

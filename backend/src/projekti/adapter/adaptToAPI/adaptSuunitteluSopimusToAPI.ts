@@ -17,8 +17,8 @@ export function adaptSuunnitteluSopimusToAPI(
       osapuolet:
         suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
           __typename: "SuunnitteluSopimusOsapuoli",
-          osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen,
-          osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen,
+          osapuolenNimiFI: osapuoli.osapuolenNimiFI,
+          osapuolenNimiSV: osapuoli.osapuolenNimiSV,
           osapuolenTyyppi: osapuoli.osapuolenTyyppi,
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPI(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot: osapuoli?.osapuolenHenkilot?.map((henkilo) => ({
@@ -60,8 +60,8 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
       osapuolet: suunnitteluSopimus.osapuolet
         ? suunnitteluSopimus.osapuolet.map((osapuoli) => ({
             __typename: "SuunnitteluSopimusOsapuoli",
-            osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
-            osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
+            osapuolenNimiFI: osapuoli.osapuolenNimiFI || "",
+            osapuolenNimiSV: osapuoli.osapuolenNimiSV || "",
             osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
             osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogoFunction(oid, osapuoli.osapuolenLogo) : null,
             osapuolenHenkilot: osapuoli.osapuolenHenkilot

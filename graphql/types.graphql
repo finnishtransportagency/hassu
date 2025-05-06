@@ -1150,8 +1150,8 @@ type MaakuntaVastaanottaja implements ISahkopostiVastaanottaja {
 }
 
 type SuunnitteluSopimusOsapuoli {
-  osapuolenNimiEnsisijainen: String
-  osapuolenNimiToissijainen: String
+  osapuolenNimiFI: String
+  osapuolenNimiSV: String
   osapuolenHenkilot: [OsapuolenHenkilo]
   osapuolenTyyppi: String
   osapuolenLogo: LokalisoituTeksti

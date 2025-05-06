@@ -138,8 +138,8 @@ input SuunnitteluSopimusInput {
 }
 
 input SuunnitteluSopimusOsapuoliInput {
-  osapuolenNimiEnsisijainen: String
-  osapuolenNimiToissijainen: String
+  osapuolenNimiFI: String
+  osapuolenNimiSV: String
   osapuolenHenkilot: [OsapuolenHenkilotInput]
   osapuolenTyyppi: String
   osapuolenLogo: LokalisoituTekstiInputEiPakollinen

@@ -18,8 +18,8 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
       osapuolet:
         suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
           __typename: "SuunnitteluSopimusOsapuoli",
-          osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
-          osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
+          osapuolenNimiFI: osapuoli.osapuolenNimiFI || "",
+          osapuolenNimiSV: osapuoli.osapuolenNimiSV || "",
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:
@@ -56,8 +56,8 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(
       osapuolet:
         suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
           __typename: "SuunnitteluSopimusOsapuoli",
-          osapuolenNimiEnsisijainen: osapuoli.osapuolenNimiEnsisijainen || "",
-          osapuolenNimiToissijainen: osapuoli.osapuolenNimiToissijainen || "",
+          osapuolenNimiFI: osapuoli.osapuolenNimiFI || "",
+          osapuolenNimiSV: osapuoli.osapuolenNimiSV || "",
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:

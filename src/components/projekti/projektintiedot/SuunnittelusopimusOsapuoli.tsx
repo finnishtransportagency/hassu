@@ -91,36 +91,40 @@ export default function SuunnittelusopimusOsapuoli({
         {osapuoliTyyppi === "kunta" ? (
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
-              label="Kunnan nimi ensisijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiEnsisijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiEnsisijainen}
+              label="Kunnan nimi suomeksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiFI}
               disabled={formDisabled}
             />
             <TextInput
-              label="Kunnan nimi toissijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiToissijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiToissijainen}
+              label="Kunnan nimi ruotsiksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiSV}
               disabled={formDisabled}
             />
           </HassuGrid>
         ) : (
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
-              label="Yrityksen nimi ensisijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiEnsisijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiEnsisijainen}
+              label="Yrityksen nimi suomeksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiFI}
               disabled={formDisabled}
             />
             <TextInput
-              label="Yrityksen nimi toissijaisella kielellä *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiToissijainen` as any)}
-              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiToissijainen}
+              label="Yrityksen nimi ruotsiksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
+              error={(errors as any)?.suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.osapuolenNimiSV}
               disabled={formDisabled}
             />
           </HassuGrid>
         )}
 
-        <HenkiloLista osapuoliNumero={osapuoliNumero} osapuoliTyyppi={osapuoliTyyppi || "kunta"} />
+        <HenkiloLista
+          key={`henkilo-lista-osapuoli-${osapuoliNumero}-${Date.now()}`}
+          osapuoliNumero={osapuoliNumero}
+          osapuoliTyyppi={osapuoliTyyppi || "kunta"}
+        />
         <SectionContent>
           <H4>{osapuoliTyyppi === "kunta" ? "Kunnan" : "Yrityksen"} logo</H4>
           {ensisijainenKaannettavaKieli && (

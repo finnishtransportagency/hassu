@@ -9,7 +9,7 @@ import {
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { KayttajaTyyppi, KuulutusTekstit, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, KuulutusTekstit, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
@@ -131,13 +131,14 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     if (this.suunnitteluSopimus && this.suunnitteluSopimus?.osapuolet) {
       this.suunnitteluSopimus?.osapuolet?.forEach((osapuoli) => {
         if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+          const organisaationNimi = this.kieli == Kieli.SUOMI ? osapuoli.osapuolenNimiFI : osapuoli.osapuolenNimiSV;
           osapuoli.osapuolenHenkilot.forEach((henkilo) => {
             yt.push({
               etunimi: henkilo.etunimi || "",
               sukunimi: henkilo.sukunimi || "",
               sahkoposti: henkilo.email || "",
               puhelinnumero: henkilo.puhelinnumero || "",
-              organisaatio: henkilo.yritys || osapuoli.osapuolenNimiEnsisijainen || "",
+              organisaatio: henkilo.yritys || organisaationNimi || "",
             });
           });
         }
@@ -163,7 +164,9 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     const suunnitteluSopimus = this.suunnitteluSopimus;
     if (this.isOsapuoletOlemassa) {
       const nimet = this.props
-        .suunnitteluSopimus!.osapuolet!.map((osapuoli) => osapuoli.osapuolenNimiEnsisijainen)
+        .suunnitteluSopimus!.osapuolet!.map((osapuoli) => {
+          return this.kieli == Kieli.SUOMI ? osapuoli.osapuolenNimiFI : osapuoli.osapuolenNimiSV;
+        })
         .filter((nimi) => nimi !== undefined && nimi !== null);
       if (nimet.length > 0) {
         return nimet.join(", ");
@@ -244,7 +247,7 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     }
     if (this.isOsapuoletOlemassa) {
       const nimet = this.props
-        .suunnitteluSopimus!.osapuolet!.map((osapuoli) => osapuoli.osapuolenNimiEnsisijainen)
+        .suunnitteluSopimus!.osapuolet!.map((osapuoli) => osapuoli.osapuolenNimiFI)
         .filter((nimi) => nimi !== undefined && nimi !== null);
       if (nimet.length > 0) {
         return nimet.join(", ");

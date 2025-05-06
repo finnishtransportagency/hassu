@@ -104,13 +104,13 @@ const ProjektiSideNavigation = styled((props) => {
                     {osapuoli?.osapuolenLogo?.[lang === "fi" ? Kieli.SUOMI : Kieli.RUOTSI] && (
                       <img
                         src={osapuoli.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
-                        alt={`${osapuoli?.osapuolenNimiEnsisijainen} logo`}
+                        alt={`${osapuoli?.osapuolenNimiFI} logo`}
                       />
                     )}
 
                     {osapuoli?.osapuolenHenkilot && osapuoli?.osapuolenHenkilot?.length > 0 && (
                       <div className="vayla-calling-card" style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
-                        <p>{lang === "fi" ? osapuoli?.osapuolenNimiEnsisijainen : osapuoli?.osapuolenNimiToissijainen}</p>
+                        <p>{lang === "fi" ? osapuoli?.osapuolenNimiFI : osapuoli?.osapuolenNimiSV}</p>
                         {osapuoli.osapuolenHenkilot.map((henkilo, henkiloIndex) => (
                           <div key={henkiloIndex} className="vayla-calling-card">
                             <p>
