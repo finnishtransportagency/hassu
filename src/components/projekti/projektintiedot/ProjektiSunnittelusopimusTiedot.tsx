@@ -16,6 +16,7 @@ import HassuGrid from "@components/HassuGrid";
 import { formatNimi } from "src/util/userUtil";
 import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
 import Select from "@components/form/Select";
+import { isAllowedToChangeSuunnittelusopimus } from "common/util/operationValidators";
 
 interface Props {
   projekti?: Projekti | null;
@@ -49,9 +50,8 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     return <></>;
   }
 
-  //palauta nämä ja disabledin käyttö alla sitten, kun palautetaan kyllä/ei-valinnan lukittuminen aloituskuulutuksen myötä.
-  //const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
-  //const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
+  const suunnitteluSopimusCanBeChanged = isAllowedToChangeSuunnittelusopimus(projekti);
+  const disabled = formDisabled || !suunnitteluSopimusCanBeChanged;
 
   const isVanhatTiedotOlemassa =
     typeof projekti.suunnitteluSopimus?.yhteysHenkilo === "string" && projekti.suunnitteluSopimus?.yhteysHenkilo.length > 0;
@@ -65,12 +65,11 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
   return (
     <Section smallGaps>
       <H3>Suunnittelusopimus</H3>
-      {/* {disabled && ( )} */}
-      {isVanhatTiedotOlemassa && (
+      {disabled && isVanhatTiedotOlemassa && (
         <Notification type={NotificationType.INFO_GRAY}>
-          Voit poikkeuksellisesti muuttaa suunnittelusopimuksen olemassaoloa, vaikka aloituskuulutus on jo julkaistu. Jos haluat muuttaa
-          edustajan tietoja, poista ensin vanhat tiedot ja tallenna lomake. Lisää sen jälkeen niiden edustajien tiedot, joiden haluat
-          näkyvän kansalaispuolella sekä kirjeissä.
+          Jos haluat muuttaa edustajan tietoja, aseta ensin yhteyshenkilö-kohta tyhjäksi ja tallenna lomake. Tämän myötä näkyviin tulee
+          uudet kentät, joihin voit syöttää suunnittelusopimuksen osapuolet ja yhteyshenkilöt, joiden halutaan näkyvän kansalaispuolella
+          sekä kirjeissä.
         </Notification>
       )}
       <Controller
@@ -94,16 +93,15 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 onBlur={field.onBlur}
                 ref={field.ref}
               >
-                <FormControlLabel value="true" disabled={false} control={<Radio />} label="Kyllä" />
-                <FormControlLabel value="false" disabled={false} control={<Radio />} label="Ei" />
+                <FormControlLabel value="true" disabled={disabled} control={<Radio />} label="Kyllä" />
+                <FormControlLabel value="false" disabled={disabled} control={<Radio />} label="Ei" />
               </RadioGroup>
             </FormGroup>
 
-            {/* Palauta tämä teksti ja poista alla oleva osio sitten, kun palautetaan kyllä/ei-valinnan lukittuminen aloituskuulutuksen myötä. 
             <p>
-              Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu. Kunnan edustaja on mahdollista
-              vaihtaa myös prosessin aikana.
-            </p> */}
+              Valintaan voi vaikuttaa aloituskuulutuksen tekemiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksen osapuolten
+              edustajien tietoja on mahdollista muokata myös prosessin aikana.
+            </p>
 
             {field.value === "true" && isVanhatTiedotOlemassa && (
               <Controller
@@ -175,7 +173,38 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 defaultValue={1}
                 render={({ field: osapuoliMaaraField }) => {
                   const osapuoliMaara = parseInt(osapuoliMaaraField.value) || 1;
+                  const handlePoistaOsapuoli = (poistettavaIndex: number) => {
+                    const sailytettavatOsapuolet = [];
+                    for (let osapuoliIndeksi = 1; osapuoliIndeksi <= osapuoliMaara; osapuoliIndeksi++) {
+                      if (osapuoliIndeksi !== poistettavaIndex) {
+                        const tyyppi = getValues(`suunnitteluSopimus.osapuoli${osapuoliIndeksi}Tyyppi` as any);
+                        const osapuoli = getValues(`suunnitteluSopimus.osapuoli${osapuoliIndeksi}` as any);
 
+                        const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliIndeksi}.osapuolenHenkilot` as any) || [];
+                        osapuoli.osapuolenHenkilot = [...henkilot];
+
+                        sailytettavatOsapuolet.push({
+                          tyyppi,
+                          osapuoli,
+                        });
+                      }
+                    }
+                    for (let i = 1; i <= osapuoliMaara; i++) {
+                      setValue(`suunnitteluSopimus.osapuoli${i}` as any, {});
+                      setValue(`suunnitteluSopimus.osapuoli${i}Tyyppi` as any, undefined);
+                    }
+                    for (let i = 0; i < sailytettavatOsapuolet.length; i++) {
+                      const lomakeIndeksi = i + 1;
+                      const { tyyppi, osapuoli } = sailytettavatOsapuolet[i];
+
+                      setValue(`suunnitteluSopimus.osapuoli${lomakeIndeksi}Tyyppi` as any, tyyppi);
+                      setValue(`suunnitteluSopimus.osapuoli${lomakeIndeksi}` as any, osapuoli);
+                      if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+                        setValue(`suunnitteluSopimus.osapuoli${lomakeIndeksi}.osapuolenHenkilot` as any, osapuoli.osapuolenHenkilot);
+                      }
+                    }
+                    osapuoliMaaraField.onChange(osapuoliMaara - 1);
+                  };
                   const renderLisaaUusi = () => (
                     <SectionContent>
                       <div style={{ marginTop: "5rem" }}>
@@ -206,7 +235,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                         ensisijainenKaannettavaKieli={ensisijainenKaannettavaKieli || undefined}
                         toissijainenKaannettavaKieli={toissijainenKaannettavaKieli || undefined}
                         watch={watch}
-                        poistaOsapuoli={osapuoliMaara > 1 ? () => osapuoliMaaraField.onChange(osapuoliMaara - 1) : undefined}
+                        poistaOsapuoli={osapuoliMaara > 1 ? () => handlePoistaOsapuoli(i) : undefined}
                         onViimeinenOsapuoli={i === 3}
                       />
                     );
