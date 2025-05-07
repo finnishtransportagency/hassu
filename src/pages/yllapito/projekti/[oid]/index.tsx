@@ -330,6 +330,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
               if (!puhdistettuSuunnitteluSopimus.yhteysHenkilo || puhdistettuSuunnitteluSopimus.yhteysHenkilo === "") {
                 puhdistettuSuunnitteluSopimus.kunta = undefined;
+                puhdistettuSuunnitteluSopimus.logo = null;
               }
 
               for (let i = 1; i <= osapuoliMaara; i++) {
