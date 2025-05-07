@@ -324,9 +324,13 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               const puhdistettuSuunnitteluSopimus: any = {
                 kunta: suunnitteluSopimusAny.kunta,
                 yhteysHenkilo: suunnitteluSopimusAny.yhteysHenkilo,
-                logo: suunnitteluSopimusAny.logo || null,
+                logo: suunnitteluSopimusAny.logo,
                 osapuolet: [],
               };
+
+              if (!puhdistettuSuunnitteluSopimus.yhteysHenkilo || puhdistettuSuunnitteluSopimus.yhteysHenkilo === "") {
+                puhdistettuSuunnitteluSopimus.kunta = undefined;
+              }
 
               for (let i = 1; i <= osapuoliMaara; i++) {
                 const osapuoliAvain = `osapuoli${i}` as any;
@@ -356,8 +360,8 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     sukunimi: henkilo.sukunimi || "",
                     puhelinnumero: henkilo.puhelinnumero || "",
                     email: henkilo.email || "",
-                    yritys: henkilo.yritys || "",
-                    kunta: henkilo.kunta || "",
+                    yritys: henkilo.yritys || "", // tämä tulee organisaatioksi osapuolenNimen sijasta, jos annettu
+                    //kunta: henkilo.kunta || "", tätä ei välttämättä tarvitse enää erikseen
                     valittu: henkilo.valittu || true,
                   }));
 
@@ -369,10 +373,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     osapuolenLogo: osapuoliTiedot.osapuolenLogo || null,
                   });
                 }
-              }
-
-              if (!puhdistettuSuunnitteluSopimus.logo) {
-                puhdistettuSuunnitteluSopimus.logo = null;
               }
 
               puhdistettuSuunnitteluSopimus.osapuolet = puhdistettuSuunnitteluSopimus.osapuolet.map((osapuoli: any) => ({
