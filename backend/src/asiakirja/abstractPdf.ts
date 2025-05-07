@@ -273,31 +273,41 @@ export abstract class AbstractPdf {
     return this.doc.struct("DIV", {}, () => {
       const currentY = this.doc.y;
       const bottomMargin = 100;
-      const logoHeight = 50;
-      const logoMargin = 30;
+      const maxLogoHeight = 50;
 
       if (this.osapuoltenLogot && this.osapuoltenLogot.length > 0) {
         const baseY = this.doc.page.height - bottomMargin;
         const logoCount = Math.min(this.osapuoltenLogot.length, 3);
         const logot = this.osapuoltenLogot.slice(0, logoCount);
 
-        const totalWidth = logoHeight * 1.5 * logoCount + logoMargin * (logoCount - 1);
-
-        let xPosition = this.doc.page.width / 2 - totalWidth / 2;
+        const maxLogoAreaWidth = this.doc.page.width / 3;
+        const logoMargin = 20;
+        const logoAreaWidth = maxLogoAreaWidth - logoMargin;
+        const totalAreaWidth = logoCount * maxLogoAreaWidth;
+        let xPosition = this.doc.page.width / 2 - totalAreaWidth / 2;
 
         for (const logo of logot) {
-          const verticalCenter = baseY - logoHeight / 2;
+          const logoAreaCenterX = xPosition + logoAreaWidth / 2;
 
-          this.doc.image(logo, xPosition, verticalCenter, { height: logoHeight });
+          const center = "center" as const;
+          const logoOptions = {
+            fit: [logoAreaWidth, maxLogoHeight] as [number, number],
+            align: center,
+            valign: center,
+          };
 
-          xPosition += logoHeight * 1.5 + logoMargin;
+          this.doc.image(logo, logoAreaCenterX - logoAreaWidth / 2, baseY - maxLogoHeight, logoOptions);
+
+          xPosition += maxLogoAreaWidth;
         }
       } else if (this.sopimusLogo) {
         const baseY = this.doc.page.height - bottomMargin;
-
-        const x = this.doc.page.width / 2 - logoHeight * 0.75;
-        const verticalCenter = baseY - logoHeight / 2;
-        this.doc.image(this.sopimusLogo, x, verticalCenter, { height: logoHeight });
+        const x = this.doc.page.width / 2 - maxLogoHeight;
+        this.doc.image(this.sopimusLogo, x, baseY - maxLogoHeight, {
+          fit: [maxLogoHeight * 2, maxLogoHeight],
+          align: "center",
+          valign: "center",
+        });
       }
 
       this.doc.y = currentY;
