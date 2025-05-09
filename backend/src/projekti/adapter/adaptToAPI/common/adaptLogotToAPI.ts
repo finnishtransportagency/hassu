@@ -6,9 +6,8 @@ import { fileService } from "../../../../files/fileService";
 export function adaptLogotToAPI(oid: string, logot: LocalizedMap<string> | undefined): API.LokalisoituTeksti | undefined {
   if (logot) {
     if (!logot.SUOMI && !logot.RUOTSI) {
-      return undefined;
+      throw new Error("adaptLogot: logot määrittelemättä.");
     }
-
     return {
       __typename: "LokalisoituTeksti",
       SUOMI: logot.SUOMI ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), logot.SUOMI) : "",
@@ -16,5 +15,5 @@ export function adaptLogotToAPI(oid: string, logot: LocalizedMap<string> | undef
     };
   }
 
-  return undefined;
+  return logot as undefined;
 }

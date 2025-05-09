@@ -39,9 +39,8 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
 function adaptLogot(oid: string, logot: LocalizedMap<string> | null | undefined): LocalizedMap<string> | undefined {
   if (logot) {
     if (!logot.SUOMI && !logot.RUOTSI) {
-      return undefined;
+      throw new Error("adaptLogot: logot määrittelemättä!");
     }
-
     return {
       SUOMI: logot.SUOMI ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), logot.SUOMI) : "",
       RUOTSI: logot.RUOTSI ? "/" + fileService.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), logot.RUOTSI) : undefined,

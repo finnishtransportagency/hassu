@@ -53,10 +53,10 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
       logo: suunnitteluSopimus.logo ? adaptLogoFunction(oid, suunnitteluSopimus.logo) : null,
-      etunimi: suunnitteluSopimus?.etunimi,
-      sukunimi: suunnitteluSopimus?.sukunimi,
-      email: suunnitteluSopimus?.email,
-      puhelinnumero: suunnitteluSopimus?.puhelinnumero,
+      etunimi: suunnitteluSopimus.etunimi,
+      sukunimi: suunnitteluSopimus.sukunimi,
+      email: suunnitteluSopimus.email,
+      puhelinnumero: suunnitteluSopimus.puhelinnumero,
       osapuolet: suunnitteluSopimus.osapuolet
         ? suunnitteluSopimus.osapuolet.map((osapuoli) => ({
             __typename: "SuunnitteluSopimusOsapuoli",
