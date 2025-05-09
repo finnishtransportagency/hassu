@@ -67,9 +67,9 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
       <H3>Suunnittelusopimus</H3>
       {disabled && isVanhatTiedotOlemassa && (
         <Notification type={NotificationType.INFO_GRAY}>
-          Jos haluat muuttaa edustajan tietoja, aseta ensin yhteyshenkilö-kohta tyhjäksi ja tallenna lomake. Tämän myötä näkyviin tulee
-          uudet kentät, joihin voit syöttää suunnittelusopimuksen osapuolet ja yhteyshenkilöt, joiden halutaan näkyvän kansalaispuolella
-          sekä kirjeissä.
+          Jos haluat muuttaa edustajan tietoja, aseta ensin Henkilö-kohta tyhjäksi ja tallenna lomake. Tämän myötä näkyviin tulee uudet
+          kentät, joihin voit syöttää suunnittelusopimuksen osapuolet ja osapuolten edustajat, joiden halutaan näkyvän yhteyshenkilöinä
+          kansalaispuolella sekä kirjeissä.
         </Notification>
       )}
       <Controller
@@ -127,7 +127,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                               value: kayttaja.kayttajatunnus,
                             })) || []
                           }
-                          emptyOption="Valitse"
+                          emptyOption=" "
                           error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
                           disabled={false}
                           {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}

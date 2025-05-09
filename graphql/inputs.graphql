@@ -152,6 +152,7 @@ input OsapuolenHenkilotInput {
   email: String
   yritys: String
   kunta: String
+  organisaatio: String
   valittu: Boolean
 }
 

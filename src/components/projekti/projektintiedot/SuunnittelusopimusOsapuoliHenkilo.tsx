@@ -20,6 +20,8 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
     formState: { errors },
   } = useFormContext<FormValues>();
 
+  const fieldName = (field: string) => `suunnitteluSopimus.osapuoli${osapuoliNumero}.${field}`;
+
   return (
     <ContentSpacer gap={8}>
       <div style={{ marginTop: "1.5rem" }}>
@@ -34,37 +36,37 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_etunimi`}
                 label="Etunimi *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.etunimi}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.etunimi}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any)}
+                {...register(fieldName("etunimi") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sukunimi`}
                 label="Sukunimi *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.sukunimi}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.sukunimi}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any)}
+                {...register(fieldName("sukunimi") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_organisaatio`}
                 label="Organisaatio (jos muu kuin osapuoli)"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.organisaatio}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.organisaatio}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.organisaatio` as any)}
+                {...register(fieldName("organisaatio") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_puhelinnumero`}
                 label="Puhelinnumero *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.puhelinnumero}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.puhelinnumero}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any)}
+                {...register(fieldName("puhelinnumero") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sahkoposti`}
                 label="Sähköposti *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.email}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.email}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any)}
+                {...register(fieldName("email") as any)}
               />
             </>
           )}
@@ -73,37 +75,37 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_etunimi`}
                 label="Etunimi *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.etunimi}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.etunimi}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any)}
+                {...register(fieldName("etunimi") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sukunimi`}
                 label="Sukunimi *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.sukunimi}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.sukunimi}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any)}
+                {...register(fieldName("sukunimi") as any)}
               />
               <TextInput
-                id={`suunnittelusopimus_osapuoli${osapuoliNumero}_yritys`}
+                id={`suunnittelusopimus_osapuoli${osapuoliNumero}_organisaatio`}
                 label="Organisaatio (jos muu kuin osapuoli)"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.yritys}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.organisaatio}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any)}
+                {...register(fieldName("organisaatio") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_puhelinnumero`}
                 label="Puhelinnumero *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.puhelinnumero}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.puhelinnumero}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any)}
+                {...register(fieldName("puhelinnumero") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_sahkoposti`}
                 label="Sähköposti *"
-                error={(errors as any).suunnitteluSopimus?.osapuoli?.[osapuoliNumero]?.email}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.email}
                 disabled={false}
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any)}
+                {...register(fieldName("email") as any)}
               />
             </>
           )}
