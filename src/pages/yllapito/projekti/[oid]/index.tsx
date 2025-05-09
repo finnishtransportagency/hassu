@@ -259,7 +259,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = useMemo(() => {
     return {
       //resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
-      resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),      
+      resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
@@ -316,18 +316,19 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               if (persistentData.suunnitteluSopimus?.logo) {
                 const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
                 const originalInputLogo = persistentData.suunnitteluSopimus.logo;
+
                 const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
                 if (logoTiedostoFi instanceof File) {
                   ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
                 }
+
                 const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
                 if (logoTiedostoSv instanceof File) {
                   ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
                 }
+
                 if (Object.keys(ssLogo).length > 0) {
                   persistentData.suunnitteluSopimus.logo = ssLogo;
-                } else {
-                  persistentData.suunnitteluSopimus.logo = null;
                 }
               }
 
@@ -366,7 +367,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     osapuolenLogo.RUOTSI = await talletaLogo(osapuolenLogoSv);
                   }
 
-                  osapuoliTiedot.osapuolenLogo = osapuolenLogo;
+                  if (Object.keys(osapuolenLogo).length > 0) {
+                    osapuoliTiedot.osapuolenLogo = osapuolenLogo;
+                  }
                 }
 
                 if (osapuoliTiedot) {
