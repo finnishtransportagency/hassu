@@ -14,6 +14,25 @@ export const UIValuesSchema = Yup.object().shape({
     .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
 });
 
+const osapuolenHenkilotSchema = Yup.object().shape({
+  etunimi: Yup.string().required("Etunimi on pakollinen"),
+  sukunimi: Yup.string().required("Sukunimi on pakollinen"),
+  puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
+  email: Yup.string().email("Email on virheellistä muotoa").required("Email on pakollinen"),
+});
+
+const osapuoliSchema = Yup.object()
+  .required("osapuoli1 is required")
+  .shape({
+    osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen").min(1, "Kunnan nimi suomeksi on pakollinen"),
+    osapuolenNimiSV: Yup.string().required("Kunnan nimi ruotsiksi on pakollinen").min(1, "Kunnan nimi ruotsiksi on pakollinen"),
+    osapuolenHenkilot: Yup.array()
+      .of(osapuolenHenkilotSchema)
+      .min(1, "Ainakin yksi edustaja vaaditaan")
+      .max(2, "Enintään kaksi edustajaa sallitaan")
+      .required("Edustaja on pakollinen"),
+  });
+
 export const perustiedotValidationSchema = Yup.object()
   .shape({
     oid: Yup.string().required(),
@@ -54,6 +73,12 @@ export const perustiedotValidationSchema = Yup.object()
     vahainenMenettely: Yup.boolean().nullable().optional(),
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
+      .shape({
+        osapuoli1: osapuoliSchema.required("osapuoli1 is required"),
+        //osapuoli2: osapuoliSchema.nullable().optional(),
+        //osapuoli3: osapuoliSchema.nullable().optional(),
+      })
+
       // .shape({
       //   // etunimi: Yup.string().required("Etunimi on pakollinen"),
       //   // sukunimi: Yup.string().required("Sukunimi on pakollinen"),
