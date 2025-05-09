@@ -149,8 +149,12 @@ function adaptProjektiHenkilot(
 }
 
 function adaptRootSuunnitteluSopimusJulkaisu(dbProjekti: DBProjekti) {
-  const yhteysHenkilo = findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus?.yhteysHenkilo);
-  return adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(dbProjekti.oid, dbProjekti.suunnitteluSopimus, yhteysHenkilo);
+  if (dbProjekti.suunnitteluSopimus?.yhteysHenkilo) {
+    const yhteysHenkilo = findUserByKayttajatunnus(dbProjekti.kayttoOikeudet, dbProjekti.suunnitteluSopimus.yhteysHenkilo);
+    return adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(dbProjekti.oid, dbProjekti.suunnitteluSopimus, yhteysHenkilo);
+  }
+
+  return adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(dbProjekti.oid, dbProjekti.suunnitteluSopimus, undefined);
 }
 
 type ProjektiKayttajaJulkinenSortFunction = (a: API.ProjektiKayttajaJulkinen, b: API.ProjektiKayttajaJulkinen) => number;

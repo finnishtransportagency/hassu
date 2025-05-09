@@ -45,13 +45,38 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     }
 
     if (this.suunnitteluSopimus) {
-      const kunta = kuntametadata.nameForKuntaId(this.suunnitteluSopimus.kunta, this.kieli);
-      const ja = this.text("ja");
-      return kutsuja + " " + ja + " " + kunta;
+      if (this.suunnitteluSopimus.kunta) {
+        const kunta = kuntametadata.nameForKuntaId(this.suunnitteluSopimus.kunta, this.kieli);
+        const ja = this.text("ja");
+        return kutsuja + " " + ja + " " + kunta;
+      } else if (this.suunnitteluSopimus.osapuolet && this.suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = this.suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return kutsuja;
+        } else if (osapuoliNimet.length === 1) {
+          const ja = this.text("ja");
+          return kutsuja + " " + ja + " " + osapuoliNimet[0];
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return kutsuja + ", " + osapuoliNimet[0] + " " + ja + " " + osapuoliNimet[1];
+        } else {
+          const viimeinenNimi = osapuoliNimet.pop();
+          const ja = this.text("ja");
+          return kutsuja + ", " + osapuoliNimet.join(", ") + " " + ja + " " + viimeinenNimi;
+        }
+      }
     }
     return kutsuja;
   }
-
   get lakiviite_ilmoitus(): string {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.text(ASIAKIRJA_KUTSU_PREFIX + "lakiviite_ilmoitus_rata");
@@ -61,8 +86,26 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get kuuluttaja(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus?.kunta) {
-      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja;
+        } else {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        }
+      }
     }
     return super.kuuluttaja;
   }

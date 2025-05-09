@@ -41,11 +41,15 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
     let suunnitteluSopimusJulkaisu: SuunnitteluSopimusJulkaisu | undefined | null;
     if (props.suunnitteluSopimus) {
       assertIsDefined(props.kayttoOikeudet);
-      suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-        props.oid,
-        props.suunnitteluSopimus,
-        findUserByKayttajatunnus(props.kayttoOikeudet, props.suunnitteluSopimus?.yhteysHenkilo)
-      );
+      if (props.suunnitteluSopimus?.yhteysHenkilo) {
+        suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+          props.oid,
+          props.suunnitteluSopimus,
+          findUserByKayttajatunnus(props.kayttoOikeudet, props.suunnitteluSopimus.yhteysHenkilo)
+        );
+      } else {
+        suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(props.oid, props.suunnitteluSopimus, undefined);
+      }
     }
     const kutsuAdapter = new SuunnitteluVaiheKutsuAdapter({ ...props, suunnitteluSopimus: suunnitteluSopimusJulkaisu ?? undefined });
     assertIsDefined(props.vuorovaikutusKierrosJulkaisu, "vuorovaikutusKierrosJulkaisu pitää olla annettu");
