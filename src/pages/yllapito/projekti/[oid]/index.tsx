@@ -41,7 +41,7 @@ import { MenuItem } from "@mui/material";
 import ToiminnotMenuList from "@components/projekti/ToiminnotMenuList";
 import { JaaProjektiOsiinDialog } from "@components/JaaProjektiOsiinDialog";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
-import * as Yup from "yup";
+//import * as Yup from "yup";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -245,21 +245,21 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   const hasEuRahoitus = useRef(!!projekti.euRahoitus);
 
   // Tämä on debuggausta varten. Poistettava lopullisesta.
-  const debugResolver = (schema: Yup.ObjectSchema<any>, p0: { abortEarly: boolean; recursive: boolean }) => {
-    const original = yupResolver(schema, p0);
+  // const debugResolver = (schema: Yup.ObjectSchema<any>, p0: { abortEarly: boolean; recursive: boolean }) => {
+  //   const original = yupResolver(schema, p0);
 
-    return async (data: any, context: any, options: any) => {
-      console.log("🔍 Data before validation:", data);
-      const result = await original(data, context, options);
-      console.log("✅ Validation result:", result.errors);
-      return result;
-    };
-  };
+  //   return async (data: any, context: any, options: any) => {
+  //     console.log("🔍 Data before validation:", data);
+  //     const result = await original(data, context, options);
+  //     console.log("✅ Validation result:", result.errors);
+  //     return result;
+  //   };
+  // };
 
   const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = useMemo(() => {
     return {
-      //resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
-      resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+      resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+      //resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
