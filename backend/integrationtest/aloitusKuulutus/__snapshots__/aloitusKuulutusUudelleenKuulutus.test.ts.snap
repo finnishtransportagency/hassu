@@ -79,7 +79,9 @@ Array [
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
@@ -89,7 +91,9 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
   Object {
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 aloituskuulutus on hyväksytty.
+
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
 Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": "mikko.haapamaki@cgi.com",
   },
@@ -102,8 +106,11 @@ Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on 
     ],
     "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
     "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 aloituskuulutus on hyväksytty.
+
 Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+
 Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
 Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
     "to": Array [
       "mikko.haapamki@cgi.com",
@@ -123,16 +130,27 @@ Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. 
     ],
     "subject": "Ilmoitus Väyläviraston kuulutuksesta",
     "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
 HASSU AUTOMAATTITESTIPROJEKTI1
+
 Suomiseloste uudelleenkuulutuksen lähetekirjeeseen
+
 Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+
 Kuulutus julkaistaan 1.1.2031 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus.
+
 Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
+
 Lorem Ipsum
+
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
 Lisätietoja antaa 
+
 Nokia, Testi1 Hassu, puh. 029123123, mikko.haapamaki1@cgi.com
+
 Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
+
 ",
     "to": Array [
       "mikkeli@mikke.li",
@@ -152,15 +170,20 @@ Object {
     Object {
       "nimi": "T412 Aloituskuulutus.pdf",
       "textContent": "HASSU/123/2023
+
+
+
 Kuulutus suunnittelun aloittamisesta
 HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
 Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
 Lorem Ipsum
 Nokia on 1.1.2031 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2031 - 31.1.2031.
+
 Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
 Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
 Lisätietoja antaa 
 Testi1 Hassu (Nokia), 
 puh. 029123123, mikko.haapamaki1(at)cgi.com 
@@ -171,11 +194,17 @@ puh. 0293121213, markku.koi(at)koi.com
     Object {
       "nimi": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
       "textContent": "HASSU/123/2023
+
+
+
 Ilmoitus aloituskuulutuksesta
 HASSU AUTOMAATTITESTIPROJEKTI1
 Suomiseloste uudelleenkuulutukselle
 Nokia, sovittuaan asiasta Väyläviraston kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
 Kuulutus julkaistaan 1.1.2031 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus
+
+
+
 Kuulutus on nähtävillä 1.1.2031 - 31.1.2031 välisen ajan
 Lisätietoja antaa 
 Testi1 Hassu (Nokia), 
