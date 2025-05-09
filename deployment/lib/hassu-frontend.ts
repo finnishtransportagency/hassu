@@ -46,7 +46,13 @@ import { BaseConfig } from "../../common/BaseConfig";
 import { IHostedZone } from "aws-cdk-lib/aws-route53";
 import { IVpc, SecurityGroup, Vpc } from "aws-cdk-lib/aws-ec2";
 import assert from "assert";
-import { ApplicationListener, ApplicationProtocol, ApplicationTargetGroup, ListenerCondition, Protocol } from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import {
+  ApplicationListener,
+  ApplicationProtocol,
+  ApplicationTargetGroup,
+  ListenerCondition,
+  Protocol,
+} from "aws-cdk-lib/aws-elasticloadbalancingv2";
 import {
   Cluster,
   ContainerImage,
@@ -55,7 +61,7 @@ import {
   FargateTaskDefinition,
   LogDrivers,
   OperatingSystemFamily,
-  Secret
+  Secret,
 } from "aws-cdk-lib/aws-ecs";
 import { Repository } from "aws-cdk-lib/aws-ecr";
 
@@ -282,7 +288,7 @@ export class HassuFrontendStack extends Stack {
         origin: vaylaProxyOrigin,
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
-        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
       };
 
       const newDistribution = new Distribution(this, "NewDistribution", {
@@ -317,9 +323,8 @@ export class HassuFrontendStack extends Stack {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_ALL,
             cachePolicy: cachePolicies.nextLambdaCachePolicy,
-
           },
-          ...behaviours
+          ...behaviours,
         },
         priceClass: PriceClass.PRICE_CLASS_100,
         logBucket,
@@ -752,14 +757,14 @@ export class HassuFrontendCoreStack extends Stack {
     // import ALB Listener. ALB Defined in hassu-suomifi repo
 
     const listener = ApplicationListener.fromLookup(this, "ExistingListener", {
-      listenerArn: await config.getParameterNow(`/${Config.infraEnvironment}/ALBListenerArn`)
+      listenerArn: await config.getParameterNow(`/${Config.infraEnvironment}/ALBListenerArn`),
     });
 
     const securityGroup = new SecurityGroup(this, "NextjsSG", {
       vpc,
       description: "Security group for Next.js",
-      allowAllOutbound: true
-    })
+      allowAllOutbound: true,
+    });
 
     // Parameters
     // apinoitu next.config.js
@@ -783,7 +788,7 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_REACT_APP_API_KEY: await config.getParameterNow(`/${Config.infraEnvironment}/outputs/AppSyncAPIKey`),
       // ^^REMOVE above line and uncomment following beofre moving to dev (developer env has no api key..)
       //NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
-      // TODO change REACT_APP_API_URL to this `https://${config.frontendApiDomainName}/graphql` 
+      // TODO change REACT_APP_API_URL to this `https://${config.frontendApiDomainName}/graphql`
       NEXT_PUBLIC_REACT_APP_API_URL: `https://${NewCloudfrontPrivateDNSName}/graphql`,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
@@ -798,14 +803,14 @@ export class HassuFrontendCoreStack extends Stack {
       EVENT_SQS_URL: EventSqsUrl,
       HYVAKSYMISESITYS_SQS_URL: HyvaksymisEsitysSqsUrl,
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
-    }
+    };
 
     if (Config.env !== "prod") {
       containerEnv.PUBLIC_BUCKET_NAME = Config.publicBucketName;
       containerEnv.YLLAPITO_BUCKET_NAME = Config.internalBucketName;
     }
 
-    // Secrets 
+    // Secrets
     const velhoUsername = ssm.StringParameter.fromSecureStringParameterAttributes(this, "VelhoUsername", {
       parameterName: `/${Config.infraEnvironment}/VelhoUsername`,
     });
@@ -817,18 +822,18 @@ export class HassuFrontendCoreStack extends Stack {
     const containerSecrets: { [key: string]: Secret } = {
       VELHO_USERNAME: Secret.fromSsmParameter(velhoUsername),
       VELHO_PASSWORD: Secret.fromSsmParameter(velhoPassword),
-    }
+    };
 
     // ECS + Fargate
     const cluster = new Cluster(this, "ECSCluster", {
       vpc,
-      clusterName: "NextjsCluster"
-    })
+      clusterName: "NextjsCluster",
+    });
 
     const logGroup = new logs.LogGroup(this, "EcsLogGroup", {
       logGroupName: `ecs/nextjs-${Config.env}`,
-      retention: logs.RetentionDays.SIX_MONTHS // TODO tähän oikea politiikka
-    })
+      retention: logs.RetentionDays.SIX_MONTHS, // TODO tähän oikea politiikka
+    });
 
     const repository = Repository.fromRepositoryName(this, "NextjsRepo", "hassu-nextjs");
 
@@ -851,10 +856,10 @@ export class HassuFrontendCoreStack extends Stack {
       portMappings: [{ containerPort: containerPort }],
       logging: LogDrivers.awsLogs({
         streamPrefix: "NextJsContainer",
-        logGroup: logGroup
+        logGroup: logGroup,
       }),
       environment: containerEnv,
-      secrets: containerSecrets
+      secrets: containerSecrets,
     });
 
     const fargateService = new FargateService(this, "nextJsAppFargateService", {
@@ -877,8 +882,8 @@ export class HassuFrontendCoreStack extends Stack {
       targets: [
         fargateService.loadBalancerTarget({
           containerName: containerName,
-          containerPort: containerPort
-        })
+          containerPort: containerPort,
+        }),
       ],
       healthCheck: {
         enabled: true,
@@ -886,34 +891,31 @@ export class HassuFrontendCoreStack extends Stack {
         healthyThresholdCount: 3,
         protocol: Protocol.HTTP,
         port: containerPort.toString(),
-        
       },
     });
 
     // Lisätään "perus" autoskaalausta. Seurataan pitääkö tunkata suuntaan tai toiseen
     const scalableTarget = fargateService.autoScaleTaskCount({
       minCapacity: 1,
-      maxCapacity: 3
-    })
+      maxCapacity: 3,
+    });
 
     scalableTarget.scaleOnCpuUtilization("CPUScaling", {
       targetUtilizationPercent: 75,
       scaleOutCooldown: Duration.seconds(300), // Verbose default
       scaleInCooldown: Duration.seconds(300), // Verbose default
-    })
+    });
 
     scalableTarget.scaleOnMemoryUtilization("MemoryScaling", {
       targetUtilizationPercent: 75,
       scaleOutCooldown: Duration.seconds(300), // Verbose default
       scaleInCooldown: Duration.seconds(300), // Verbose default
-    })
+    });
 
     listener.addTargetGroups("Nextjs", {
       priority: 20,
-      conditions: [
-        ListenerCondition.pathPatterns(["/*"])
-      ],
-      targetGroups: [targetGroup]
+      conditions: [ListenerCondition.pathPatterns(["/*"])],
+      targetGroups: [targetGroup],
     });
 
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
