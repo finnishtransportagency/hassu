@@ -4,6 +4,9 @@ import { assertIsDefined } from "../util/assertions";
 import { convertPdfFileName, linkExtractRegEx } from "./asiakirjaUtil";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import PDFKitReference = PDFKit.PDFKitReference;
+import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../database/model";
+import { fileService } from "../files/fileService";
+import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
 const INDENTATION_BODY = 186;
 
@@ -20,14 +23,31 @@ export abstract class AbstractPdf {
   private textContent = "";
   private baseline: number | "alphabetic" | undefined;
   protected logo?: string | Buffer;
+  private sopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
+  protected kieli: KaannettavaKieli;
+  protected oid: string;
+  protected sopimusLogo?: string | Buffer;
+  protected osapuoltenLogot: (string | Buffer)[] = [];
 
-  setupPDF(header: string, nimi: string, fileName: string, baseline?: number | "alphabetic"): void {
+  constructor(kieli: KaannettavaKieli, oid: string) {
+    this.kieli = kieli;
+    this.oid = oid;
+  }
+
+  setupPDF(
+    header: string,
+    nimi: string,
+    fileName: string,
+    suunnitteluSopimus: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null | undefined,
+    baseline?: number | "alphabetic"
+  ): void {
     this.title = header + "; " + nimi;
     // Clean filename by joining allowed characters together
     this.fileName = convertPdfFileName(fileName);
     this.fileBasePath = __dirname;
     this.setupAccessibleDocument();
     this.baseline = baseline;
+    this.sopimus = suunnitteluSopimus;
   }
 
   protected paragraphBold(text: string, options?: ParagraphOptions): PDFStructureElement {
@@ -107,6 +127,7 @@ export abstract class AbstractPdf {
       lang: "fi",
       displayTitle: true,
       bufferPages: true,
+      margins: { bottom: 120, left: 72, right: 72, top: 72 },
     });
     this.doc = doc;
 
@@ -226,6 +247,73 @@ export abstract class AbstractPdf {
     return this.fileBasePath + (isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png");
   }
 
+  async loadSuunnitteluSopimus(): Promise<string | Buffer | undefined> {
+    if (this.sopimus?.logo) {
+      const tiedosto = this.sopimus.logo?.[this.kieli];
+      assertIsDefined(tiedosto, "suunnittelusopimuksessa tulee aina olla kunnan logo");
+      return await fileService.getProjektiFile(this.oid, tiedosto);
+    }
+  }
+
+  async loadOsapuoltenLogot(): Promise<(string | Buffer)[]> {
+    const logot: (string | Buffer)[] = [];
+    if (this.sopimus?.osapuolet && this.sopimus.osapuolet.length > 0) {
+      for (const osapuoli of this.sopimus.osapuolet) {
+        const osapuolenLogo = osapuoli.osapuolenLogo?.[this.kieli];
+        if (osapuolenLogo) {
+          const logoData = await fileService.getProjektiFile(this.oid, osapuolenLogo);
+          if (logoData) logot.push(logoData);
+        }
+      }
+    }
+    return logot;
+  }
+
+  protected sopimusLogoElement(): PDFKit.PDFStructureElement {
+    return this.doc.struct("DIV", {}, () => {
+      const currentY = this.doc.y;
+      const bottomMargin = 100;
+      const maxLogoHeight = 50;
+
+      if (this.osapuoltenLogot && this.osapuoltenLogot.length > 0) {
+        const baseY = this.doc.page.height - bottomMargin;
+        const logoCount = Math.min(this.osapuoltenLogot.length, 3);
+        const logot = this.osapuoltenLogot.slice(0, logoCount);
+
+        const maxLogoAreaWidth = this.doc.page.width / 3;
+        const logoMargin = 20;
+        const logoAreaWidth = maxLogoAreaWidth - logoMargin;
+        const totalAreaWidth = logoCount * maxLogoAreaWidth;
+        let xPosition = this.doc.page.width / 2 - totalAreaWidth / 2;
+
+        for (const logo of logot) {
+          const logoAreaCenterX = xPosition + logoAreaWidth / 2;
+
+          const center = "center" as const;
+          const logoOptions = {
+            fit: [logoAreaWidth, maxLogoHeight] as [number, number],
+            align: center,
+            valign: center,
+          };
+
+          this.doc.image(logo, logoAreaCenterX - logoAreaWidth / 2, baseY - maxLogoHeight, logoOptions);
+
+          xPosition += maxLogoAreaWidth;
+        }
+      } else if (this.sopimusLogo) {
+        const baseY = this.doc.page.height - bottomMargin;
+        const x = this.doc.page.width / 2 - maxLogoHeight;
+        this.doc.image(this.sopimusLogo, x, baseY - maxLogoHeight, {
+          fit: [maxLogoHeight * 2, maxLogoHeight],
+          align: "center",
+          valign: "center",
+        });
+      }
+
+      this.doc.y = currentY;
+    });
+  }
+
   protected addContent(): void {
     throw new Error("Method 'addContent()' must be implemented.");
   }
@@ -236,6 +324,9 @@ export abstract class AbstractPdf {
 
   public async pdf(luonnos: boolean): Promise<EnhancedPDF> {
     this.logo = await this.loadLogo();
+    this.sopimusLogo = await this.loadSuunnitteluSopimus();
+    this.osapuoltenLogot = await this.loadOsapuoltenLogot();
+
     this.doc.addStructure(
       this.doc.struct("Document", {}, () => {
         this.appendHeader();

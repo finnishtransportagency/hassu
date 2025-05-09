@@ -47,6 +47,7 @@ const ProjektiSideNavigation = styled((props) => {
 
   const suunnitteluSopimus = projekti.suunnitteluSopimus;
   const viranomainen = projekti?.velho.suunnittelustaVastaavaViranomainen;
+  const isVanhatTiedotOlemassa = projekti.suunnitteluSopimus?.kunta || projekti.suunnitteluSopimus?.logo;
 
   const getTilaajaLogoImg = () => {
     if (SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO === viranomainen) {
@@ -78,22 +79,53 @@ const ProjektiSideNavigation = styled((props) => {
               );
             })}
           </HassuStack>
-          {suunnitteluSopimus && (
-            <HassuStack id="kuntatiedot">
-              {suunnitteluSopimus.logo && (
-                <img
-                  src={suunnitteluSopimus.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
-                  alt={`${suunnitteluSopimus.kunta} logo`}
-                />
-              )}
+          {suunnitteluSopimus && isVanhatTiedotOlemassa && (
+            <HassuStack id="kuntatiedot" marginTop={"2rem"}>
+              <img
+                src={suunnitteluSopimus.logo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
+                alt={`${suunnitteluSopimus.kunta} logo`}
+              />
               <div className="vayla-calling-card">
-                <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, lang)}</p>
+                <p>{kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta as any, lang)}</p>
                 <p>{t("common:rooli.PROJEKTIPAALLIKKO")}</p>
                 <p>
-                  <b>{formatNimi(suunnitteluSopimus)}</b>
+                  <b>{formatNimi(suunnitteluSopimus as any)}</b>
                 </p>
                 <p>{suunnitteluSopimus.puhelinnumero}</p>
                 <p>{suunnitteluSopimus.email}</p>
+              </div>
+            </HassuStack>
+          )}
+          {suunnitteluSopimus && !isVanhatTiedotOlemassa && (
+            <HassuStack id="kuntatiedot" marginTop={"2rem"}>
+              <div className="vayla-calling-card">
+                {suunnitteluSopimus.osapuolet?.map((osapuoli, index) => (
+                  <div key={index}>
+                    {osapuoli?.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] && (
+                      <img
+                        src={osapuoli.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
+                        alt={`${osapuoli?.osapuolenNimiFI} logo`}
+                      />
+                    )}
+                    {osapuoli?.osapuolenHenkilot && osapuoli?.osapuolenHenkilot?.length > 0 && (
+                      <div className="vayla-calling-card" style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
+                        <p>{lang === "fi" ? osapuoli?.osapuolenNimiFI : osapuoli?.osapuolenNimiSV}</p>
+                        {osapuoli.osapuolenHenkilot.map((henkilo, henkiloIndex) => (
+                          <div key={henkiloIndex} className="vayla-calling-card">
+                            <p>
+                              <strong>
+                                {henkilo?.etunimi} {henkilo?.sukunimi}
+                              </strong>
+                            </p>
+                            {henkilo?.puhelinnumero && <p className="vayla-calling-card">{henkilo.puhelinnumero}</p>}
+                            {henkilo?.email && <p className="vayla-calling-card">{henkilo.email}</p>}
+                            <br></br>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </HassuStack>
           )}

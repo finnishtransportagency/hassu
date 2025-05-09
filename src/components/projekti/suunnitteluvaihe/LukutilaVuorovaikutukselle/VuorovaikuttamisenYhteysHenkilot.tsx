@@ -10,10 +10,24 @@ export const VuorovaikuttamisenYhteysHenkilot: FunctionComponent<{
 }> = ({ julkaisu }) => {
   const { t } = useTranslation("suunnittelu");
 
+  const uniikitYhteystiedot = julkaisu.yhteystiedot?.reduce<Array<(typeof julkaisu.yhteystiedot)[0]>>(
+    (uniikitTiedot, nykyinenYhteystieto) => {
+      if (!nykyinenYhteystieto.puhelinnumero) {
+        return [...uniikitTiedot, nykyinenYhteystieto];
+      }
+      const onkoJoListassa = uniikitTiedot.some((yhteystieto) => yhteystieto.puhelinnumero === nykyinenYhteystieto.puhelinnumero);
+      if (onkoJoListassa) {
+        return uniikitTiedot;
+      }
+      return [...uniikitTiedot, nykyinenYhteystieto];
+    },
+    []
+  );
+
   return (
     <Section>
       <H3>Kutsussa esitettävät yhteyshenkilöt</H3>
-      {julkaisu.yhteystiedot?.map((yhteystieto, index) => {
+      {uniikitYhteystiedot?.map((yhteystieto, index) => {
         return <p key={index}>{yhteystietoKansalaiselleTekstiksi("fi", yhteystieto, t)}</p>;
       })}
     </Section>

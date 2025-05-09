@@ -50,7 +50,7 @@ type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
 interface Props {
   disableFields?: boolean;
   projektiKayttajat: ProjektiKayttaja[];
-  suunnitteluSopimusYhteysHenkilo?: string | undefined;
+  suunnitteluSopimusYhteysHenkilo?: string | null | undefined;
   projekti: ProjektiLisatiedolla;
   includeTitle: boolean;
   ohjeetOpen: boolean;

@@ -9,15 +9,28 @@ export function adaptSuunnitteluSopimusToAPI(
   suunnitteluSopimus: SuunnitteluSopimusField
 ): API.SuunnitteluSopimus | undefined | null {
   if (suunnitteluSopimus) {
-    if (!suunnitteluSopimus.logo) {
-      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
-    }
-
     return {
       __typename: "SuunnitteluSopimus",
       kunta: suunnitteluSopimus.kunta,
       yhteysHenkilo: suunnitteluSopimus.yhteysHenkilo ?? "", // "" here to not break old test data because of missing value in mandatory field
-      logo: adaptLogotToAPI(oid, suunnitteluSopimus.logo),
+      logo: suunnitteluSopimus.logo ? adaptLogotToAPI(oid, suunnitteluSopimus.logo) : null,
+      osapuolet:
+        suunnitteluSopimus.osapuolet?.map((osapuoli) => ({
+          __typename: "SuunnitteluSopimusOsapuoli",
+          osapuolenNimiFI: osapuoli.osapuolenNimiFI,
+          osapuolenNimiSV: osapuoli.osapuolenNimiSV,
+          osapuolenTyyppi: osapuoli.osapuolenTyyppi,
+          osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPI(oid, osapuoli.osapuolenLogo) : null,
+          osapuolenHenkilot: osapuoli?.osapuolenHenkilot?.map((henkilo) => ({
+            __typename: "OsapuolenHenkilo",
+            etunimi: henkilo.etunimi || "",
+            sukunimi: henkilo.sukunimi || "",
+            puhelinnumero: henkilo.puhelinnumero || "",
+            email: henkilo.email || "",
+            yritys: henkilo.yritys || "",
+            valittu: Boolean(henkilo.valittu),
+          })),
+        })) || null,
     };
   }
   return suunnitteluSopimus;
@@ -34,25 +47,36 @@ export function adaptSuunnitteluSopimusJulkaisuToAPI(
   fileLocation: FileLocation
 ): API.SuunnitteluSopimusJulkaisu | undefined | null {
   if (suunnitteluSopimus) {
-    if (!suunnitteluSopimus.logo) {
-      throw new Error("adaptSuunnitteluSopimus: suunnitteluSopimus.logo määrittelemättä");
-    }
-
-    let logo: API.LokalisoituTeksti | undefined;
-    if (fileLocation === FileLocation.PUBLIC) {
-      logo = adaptLogotToAPIJulkinen(oid, suunnitteluSopimus.logo);
-    } else {
-      logo = adaptLogotToAPI(oid, suunnitteluSopimus.logo);
-    }
+    const adaptLogoFunction = fileLocation === FileLocation.PUBLIC ? adaptLogotToAPIJulkinen : adaptLogotToAPI;
 
     return {
       __typename: "SuunnitteluSopimusJulkaisu",
       kunta: suunnitteluSopimus.kunta,
-      logo,
-      email: suunnitteluSopimus.email,
+      logo: suunnitteluSopimus.logo ? adaptLogoFunction(oid, suunnitteluSopimus.logo) : null,
       etunimi: suunnitteluSopimus.etunimi,
       sukunimi: suunnitteluSopimus.sukunimi,
+      email: suunnitteluSopimus.email,
       puhelinnumero: suunnitteluSopimus.puhelinnumero,
+      osapuolet: suunnitteluSopimus.osapuolet
+        ? suunnitteluSopimus.osapuolet.map((osapuoli) => ({
+            __typename: "SuunnitteluSopimusOsapuoli",
+            osapuolenNimiFI: osapuoli.osapuolenNimiFI || "",
+            osapuolenNimiSV: osapuoli.osapuolenNimiSV || "",
+            osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
+            osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogoFunction(oid, osapuoli.osapuolenLogo) : null,
+            osapuolenHenkilot: osapuoli.osapuolenHenkilot
+              ? osapuoli.osapuolenHenkilot.map((henkilo) => ({
+                  __typename: "OsapuolenHenkilo",
+                  etunimi: henkilo.etunimi || "",
+                  sukunimi: henkilo.sukunimi || "",
+                  puhelinnumero: henkilo.puhelinnumero || "",
+                  email: henkilo.email || "",
+                  yritys: henkilo.yritys || "",
+                  valittu: Boolean(henkilo.valittu),
+                }))
+              : [],
+          }))
+        : null,
     };
   }
   return suunnitteluSopimus;

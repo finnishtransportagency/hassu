@@ -317,14 +317,36 @@ const VuorovaikutusTiedot: FunctionComponent<{
           {!!vuorovaikutus?.yhteystiedot?.length && (
             <ContentSpacer>
               <H4>{t("common:yhteystiedot")}</H4>
-              <p>
-                {t("common:lisatietoja_antavat", {
-                  count: vuorovaikutus.yhteystiedot.length,
-                })}
-              </p>
-              {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
-                <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
-              ))}
+              {(() => {
+                const uniikitYhteystiedot = vuorovaikutus.yhteystiedot.reduce<Array<(typeof vuorovaikutus.yhteystiedot)[0]>>(
+                  (uniikitTiedot, nykyinenYhteystieto) => {
+                    if (!nykyinenYhteystieto.puhelinnumero) {
+                      return [...uniikitTiedot, nykyinenYhteystieto];
+                    }
+                    const onkoJoListassa = uniikitTiedot.some(
+                      (yhteystieto) => yhteystieto.puhelinnumero === nykyinenYhteystieto.puhelinnumero
+                    );
+                    if (onkoJoListassa) {
+                      return uniikitTiedot;
+                    }
+                    return [...uniikitTiedot, nykyinenYhteystieto];
+                  },
+                  []
+                );
+
+                return (
+                  <>
+                    <p>
+                      {t("common:lisatietoja_antavat", {
+                        count: uniikitYhteystiedot.length,
+                      })}
+                    </p>
+                    {uniikitYhteystiedot.map((yhteystieto, index) => (
+                      <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+                    ))}
+                  </>
+                );
+              })()}
             </ContentSpacer>
           )}
           <ContentSpacer>

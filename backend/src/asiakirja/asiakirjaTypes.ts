@@ -94,6 +94,7 @@ export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
   osoite?: Osoite;
+  suunnitteluSopimus?: SuunnitteluSopimus | null;
   kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 };
 

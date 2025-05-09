@@ -308,6 +308,7 @@ async function createGenerateEvent(
           postitoimipaikka: kohde.postitoimipaikka,
         },
         kasittelynTila: projektiFromDB.kasittelynTila as KasittelynTila,
+        suunnitteluSopimus: projektiFromDB.suunnitteluSopimus,
       },
     };
   }

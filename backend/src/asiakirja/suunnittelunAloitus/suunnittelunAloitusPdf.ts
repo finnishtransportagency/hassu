@@ -6,6 +6,7 @@ import { AloituskuulutusKutsuAdapter, AloituskuulutusKutsuAdapterProps } from ".
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { NahtavillaoloVaiheKutsuAdapter, NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+import { log } from "../../logger";
 
 export type IlmoitusAsiakirjaTyyppi = Extract<
   AsiakirjaTyyppi,
@@ -53,7 +54,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       default:
         kutsuAdapter = new AloituskuulutusKutsuAdapter(params as AloituskuulutusKutsuAdapterProps);
     }
-    super(params.kieli, kutsuAdapter);
+    super(params.kieli, params.oid, kutsuAdapter);
     this.asiakirjaTyyppi = asiakirjaTyyppi;
     this.kutsuAdapter.addTemplateResolver(this);
 
@@ -61,7 +62,7 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
     const header = kutsuAdapter.text(headerKey);
     this.header = header;
     this.params = params;
-    super.setupPDF(header, kutsuAdapter.nimi, fileName);
+    super.setupPDF(header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   protected addContent(): void {
@@ -71,8 +72,10 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       this.uudelleenKuulutusParagraph(),
       ...this.addDocumentElements(),
       this.euLogoElement(),
+      this.sopimusLogoElement(),
     ].filter((p) => p);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
+    log.info("suunnittelunAloitusPdf");
   }
 
   protected addDocumentElements(): PDFKit.PDFStructureElementChild[] {

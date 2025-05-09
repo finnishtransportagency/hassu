@@ -100,7 +100,10 @@ export function findJulkaisuWithId<J extends ObjectWithNumberId>(julkaisut: J[] 
   return julkaisut?.filter((julkaisu) => julkaisu.id == id).pop();
 }
 
-export function findUserByKayttajatunnus(kayttoOikeudet: DBVaylaUser[], kayttajatunnus: string | undefined): DBVaylaUser | undefined {
+export function findUserByKayttajatunnus(
+  kayttoOikeudet: DBVaylaUser[],
+  kayttajatunnus: string | null | undefined
+): DBVaylaUser | undefined {
   if (!kayttajatunnus) {
     return undefined;
   }

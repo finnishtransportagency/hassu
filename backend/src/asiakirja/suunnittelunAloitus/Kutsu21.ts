@@ -33,11 +33,16 @@ export class Kutsu21 {
     let suunnitteluSopimusJulkaisu: SuunnitteluSopimusJulkaisu | undefined | null;
     if (suunnitteluSopimus) {
       assertIsDefined(kayttoOikeudet);
-      suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
-        oid,
-        suunnitteluSopimus,
-        findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus?.yhteysHenkilo)
-      );
+
+      if (suunnitteluSopimus?.yhteysHenkilo) {
+        suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
+          oid,
+          suunnitteluSopimus,
+          findUserByKayttajatunnus(kayttoOikeudet, suunnitteluSopimus.yhteysHenkilo)
+        );
+      } else {
+        suunnitteluSopimusJulkaisu = adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(oid, suunnitteluSopimus, undefined);
+      }
     }
 
     this.adapter = new SuunnitteluVaiheKutsuAdapter({

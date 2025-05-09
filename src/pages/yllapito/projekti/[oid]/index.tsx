@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
 import Textarea from "@components/form/Textarea";
-import ProjektiSuunnittelusopimusTiedot from "@components/projekti/ProjektiSunnittelusopimusTiedot";
+import ProjektiSuunnittelusopimusTiedot from "@components/projekti/projektintiedot/ProjektiSunnittelusopimusTiedot";
 import ProjektiEuRahoitusTiedot from "@components/projekti/ProjektiEuRahoitusTiedot";
 import { getProjektiValidationSchema, ProjektiTestType } from "src/schemas/projekti";
 import ProjektiErrorNotification from "@components/projekti/ProjektiErrorNotification";
@@ -41,6 +41,7 @@ import { MenuItem } from "@mui/material";
 import ToiminnotMenuList from "@components/projekti/ToiminnotMenuList";
 import { JaaProjektiOsiinDialog } from "@components/JaaProjektiOsiinDialog";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
+//import * as Yup from "yup";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -198,9 +199,34 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
       },
     };
     if (projekti.suunnitteluSopimus) {
-      const { __typename, logo, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus;
+      const { __typename, logo, osapuolet, ...suunnitteluSopimusInput } = projekti.suunnitteluSopimus as any;
       const { __typename: _t, ...logoInput } = logo || {};
-      tallentamisTiedot.suunnitteluSopimus = { ...suunnitteluSopimusInput, logo: logoInput };
+
+      const muunnettuSuunnitteluSopimus = {
+        ...suunnitteluSopimusInput,
+        logo: logoInput,
+        osapuoliMaara: osapuolet?.length || 0,
+      };
+      osapuolet?.forEach((osapuoli: any, index: number) => {
+        const { __typename: osapuoliTypename, osapuolenHenkilot, osapuolenLogo, ...osapuoliTiedot } = osapuoli;
+        const osapuoliNumero = index + 1;
+
+        const { __typename: _logoTypename, ...osapuolenLogoInput } = osapuolenLogo || {};
+
+        muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}`] = {
+          ...osapuoliTiedot,
+          osapuolenLogo: osapuolenLogoInput,
+          osapuolenHenkilot:
+            osapuolenHenkilot?.map((henkilo: any) => {
+              const { __typename: henkiloTypename, ...henkiloTiedot } = henkilo;
+              return henkiloTiedot;
+            }) || [],
+        };
+
+        muunnettuSuunnitteluSopimus[`osapuoli${osapuoliNumero}Tyyppi`] = osapuoli.osapuolenTyyppi || "kunta";
+      });
+
+      tallentamisTiedot.suunnitteluSopimus = muunnettuSuunnitteluSopimus;
     }
     if (projekti.euRahoitusLogot) {
       const { __typename, ...euRahoitusLogotInput } = projekti.euRahoitusLogot;
@@ -218,9 +244,22 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const hasEuRahoitus = useRef(!!projekti.euRahoitus);
 
+  // Tämä on debuggausta varten. Poistettava lopullisesta.
+  // const debugResolver = (schema: Yup.ObjectSchema<any>, p0: { abortEarly: boolean; recursive: boolean }) => {
+  //   const original = yupResolver(schema, p0);
+
+  //   return async (data: any, context: any, options: any) => {
+  //     console.log("🔍 Data before validation:", data);
+  //     const result = await original(data, context, options);
+  //     console.log("✅ Validation result:", result.errors);
+  //     return result;
+  //   };
+  // };
+
   const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = useMemo(() => {
     return {
       resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+      //resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
@@ -236,6 +275,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
     formState: { errors, isDirty, isSubmitting },
     reset,
     watch,
+    getValues,
   } = useFormReturn;
 
   const kielitiedot = watch("kielitiedot");
@@ -268,18 +308,99 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         (async () => {
           const { suunnittelusopimusprojekti, kielitiedot, ...persistentData } = data;
           try {
-            if (suunnittelusopimusprojekti === "true" && persistentData.suunnitteluSopimus?.logo) {
-              const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
-              const originalInputLogo = persistentData.suunnitteluSopimus.logo;
-              const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
-              if (logoTiedostoFi instanceof File) {
-                ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
+            if (suunnittelusopimusprojekti === "true") {
+              if (!persistentData.suunnitteluSopimus) {
+                persistentData.suunnitteluSopimus = {};
               }
-              const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
-              if (logoTiedostoSv instanceof File) {
-                ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
+
+              if (persistentData.suunnitteluSopimus?.logo) {
+                const ssLogo: LokalisoituTekstiInputEiPakollinen = {};
+                const originalInputLogo = persistentData.suunnitteluSopimus.logo;
+
+                const logoTiedostoFi = originalInputLogo?.SUOMI as unknown as File | undefined | string;
+                if (logoTiedostoFi instanceof File) {
+                  ssLogo.SUOMI = await talletaLogo(logoTiedostoFi);
+                }
+
+                const logoTiedostoSv = originalInputLogo?.RUOTSI as unknown as File | undefined | string;
+                if (logoTiedostoSv instanceof File) {
+                  ssLogo.RUOTSI = await talletaLogo(logoTiedostoSv);
+                }
+
+                if (Object.keys(ssLogo).length > 0) {
+                  persistentData.suunnitteluSopimus.logo = ssLogo;
+                }
               }
-              persistentData.suunnitteluSopimus.logo = ssLogo;
+
+              const osapuoliMaaraField = getValues("suunnitteluSopimus.osapuoliMaara" as any);
+              const osapuoliMaara = parseInt(osapuoliMaaraField) || 1;
+
+              const suunnitteluSopimusAny = persistentData.suunnitteluSopimus as any;
+              const puhdistettuSuunnitteluSopimus: any = {
+                kunta: suunnitteluSopimusAny.kunta,
+                yhteysHenkilo: suunnitteluSopimusAny.yhteysHenkilo,
+                logo: suunnitteluSopimusAny.logo,
+                osapuolet: [],
+              };
+
+              if (!puhdistettuSuunnitteluSopimus.yhteysHenkilo || puhdistettuSuunnitteluSopimus.yhteysHenkilo === "") {
+                puhdistettuSuunnitteluSopimus.kunta = undefined;
+                puhdistettuSuunnitteluSopimus.logo = null;
+              }
+
+              for (let i = 1; i <= osapuoliMaara; i++) {
+                const osapuoliAvain = `osapuoli${i}` as any;
+                const osapuoliTyyppiAvain = `osapuoli${i}Tyyppi` as any;
+                const osapuoliTiedot = suunnitteluSopimusAny[osapuoliAvain];
+                const osapuoliTyyppi = suunnitteluSopimusAny[osapuoliTyyppiAvain];
+                if (osapuoliTiedot && osapuoliTiedot.osapuolenLogo) {
+                  const osapuolenLogo: LokalisoituTekstiInputEiPakollinen = {};
+                  const originalOsapuolenLogo = osapuoliTiedot.osapuolenLogo;
+
+                  const osapuolenLogoFi = originalOsapuolenLogo?.SUOMI as unknown as File | undefined | string;
+                  if (osapuolenLogoFi instanceof File) {
+                    osapuolenLogo.SUOMI = await talletaLogo(osapuolenLogoFi);
+                  }
+
+                  const osapuolenLogoSv = originalOsapuolenLogo?.RUOTSI as unknown as File | undefined | string;
+                  if (osapuolenLogoSv instanceof File) {
+                    osapuolenLogo.RUOTSI = await talletaLogo(osapuolenLogoSv);
+                  }
+
+                  if (Object.keys(osapuolenLogo).length > 0) {
+                    osapuoliTiedot.osapuolenLogo = osapuolenLogo;
+                  }
+                }
+
+                if (osapuoliTiedot) {
+                  const osapuolenHenkilot = (osapuoliTiedot.osapuolenHenkilot || []).map((henkilo: any) => ({
+                    etunimi: henkilo.etunimi || "",
+                    sukunimi: henkilo.sukunimi || "",
+                    puhelinnumero: henkilo.puhelinnumero || "",
+                    email: henkilo.email || "",
+                    yritys: henkilo.yritys || "", // tämä tulee organisaatioksi osapuolenNimen sijasta, jos annettu
+                    //kunta: henkilo.kunta || "", tätä ei välttämättä tarvitse enää erikseen
+                    valittu: henkilo.valittu || true,
+                  }));
+
+                  puhdistettuSuunnitteluSopimus.osapuolet.push({
+                    osapuolenNimiFI: osapuoliTiedot.osapuolenNimiFI || "",
+                    osapuolenNimiSV: osapuoliTiedot.osapuolenNimiSV || "",
+                    osapuolenHenkilot: osapuolenHenkilot,
+                    osapuolenTyyppi: osapuoliTyyppi || "",
+                    osapuolenLogo: osapuoliTiedot.osapuolenLogo || null,
+                  });
+                }
+              }
+
+              puhdistettuSuunnitteluSopimus.osapuolet = puhdistettuSuunnitteluSopimus.osapuolet.map((osapuoli: any) => ({
+                ...osapuoli,
+                osapuolenLogo: osapuoli.osapuolenLogo || null,
+              }));
+
+              persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
+
+              console.log("Lopullinen data:", JSON.stringify(persistentData.suunnitteluSopimus, null, 2));
             }
 
             if (persistentData.euRahoitus) {
@@ -314,12 +435,13 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             const response = await api.tallennaProjekti(apiData);
             await reloadProjekti();
             showTallennaProjektiMessage(response);
+            reset(data);
           } catch (e) {
             log.log("OnSubmit Error", e);
           }
         })()
       ),
-    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo]
+    [withLoadingSpinner, projekti?.status, api, reloadProjekti, showTallennaProjektiMessage, talletaLogo, getValues, reset]
   );
 
   useEffect(() => {
