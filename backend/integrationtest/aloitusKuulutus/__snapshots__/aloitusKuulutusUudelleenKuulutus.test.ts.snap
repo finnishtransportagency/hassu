@@ -1,0 +1,319 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 1`] = `
+Object {
+  "description": "yllapitoProjekti aloituskuulutus uudelleenkuulutus avattu",
+  "mockedtime": "2020-01-01T02:00",
+  "obj": Object {
+    "uudelleenKuulutus": Object {
+      "__typename": "UudelleenKuulutus",
+      "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+      "alkuperainenKuulutusPaiva": "2000-01-01",
+      "selosteKuulutukselle": undefined,
+      "selosteLahetekirjeeseen": undefined,
+      "tiedotaKiinteistonomistajia": undefined,
+      "tila": "JULKAISTU_PERUUTETTU",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 2`] = `
+Object {
+  "description": "yllapitoProjekti aloituskuulutus uudelleenkuulutuksen selitystekstit täytetty",
+  "mockedtime": "2020-01-01T02:00",
+  "obj": Object {
+    "uudelleenKuulutus": Object {
+      "__typename": "UudelleenKuulutus",
+      "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+      "alkuperainenKuulutusPaiva": "2000-01-01",
+      "selosteKuulutukselle": Object {
+        "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
+        "SUOMI": "Suomiseloste uudelleenkuulutukselle",
+        "__typename": "LokalisoituTeksti",
+      },
+      "selosteLahetekirjeeseen": Object {
+        "RUOTSI": "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
+        "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
+        "__typename": "LokalisoituTeksti",
+      },
+      "tiedotaKiinteistonomistajia": undefined,
+      "tila": "JULKAISTU_PERUUTETTU",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 3`] = `
+Object {
+  "description": "yllapitoProjektialoituskuulutus uudelleenkuulutus hyväksytty",
+  "mockedtime": "2020-01-01T02:00",
+  "obj": Object {
+    "aloitusKuulutusJulkaisu": Object {
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+        "alkuperainenKuulutusPaiva": "2000-01-01",
+        "selosteKuulutukselle": Object {
+          "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
+          "SUOMI": "Suomiseloste uudelleenkuulutukselle",
+          "__typename": "LokalisoituTeksti",
+        },
+        "selosteLahetekirjeeseen": Object {
+          "RUOTSI": "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
+          "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
+          "__typename": "LokalisoituTeksti",
+        },
+        "tiedotaKiinteistonomistajia": undefined,
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+    },
+    "uudelleenKuulutus": null,
+  },
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 4`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi HASSU AUTOMAATTITESTIPROJEKTI1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 aloituskuulutus on hyväksytty.
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamaki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty HASSU/123/2023",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi HASSU AUTOMAATTITESTIPROJEKTI1 aloituskuulutus on hyväksytty.
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      },
+    ],
+    "cc": Array [
+      "mikko.haapamki@cgi.com",
+      "mikko.haapamaki02@cgi.com",
+    ],
+    "subject": "Ilmoitus Väyläviraston kuulutuksesta",
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+HASSU AUTOMAATTITESTIPROJEKTI1
+Suomiseloste uudelleenkuulutuksen lähetekirjeeseen
+Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+Kuulutus julkaistaan 1.1.2031 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
+Lorem Ipsum
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Lisätietoja antaa 
+Nokia, Testi1 Hassu, puh. 029123123, mikko.haapamaki1@cgi.com
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
+",
+    "to": Array [
+      "mikkeli@mikke.li",
+      "juva@ju.va",
+      "savonlinna@savonlin.na",
+      "kirjaamo.etela-savo@ely-keskus.fi",
+    ],
+  },
+]
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 5`] = `
+Object {
+  "description": "PDF:ien sisällöt",
+  "mockedtime": "2020-01-01T02:00",
+  "obj": Array [
+    Object {
+      "nimi": "T412 Aloituskuulutus.pdf",
+      "textContent": "HASSU/123/2023
+Kuulutus suunnittelun aloittamisesta
+HASSU AUTOMAATTITESTIPROJEKTI1
+Suomiseloste uudelleenkuulutukselle
+Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.
+Lorem Ipsum
+Nokia on 1.1.2031 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus. Kuulutus pidetään nähtävillä 1.1.2031 - 31.1.2031.
+Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).
+Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). 
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+Lisätietoja antaa 
+Testi1 Hassu (Nokia), 
+puh. 029123123, mikko.haapamaki1(at)cgi.com 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+",
+    },
+    Object {
+      "nimi": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      "textContent": "HASSU/123/2023
+Ilmoitus aloituskuulutuksesta
+HASSU AUTOMAATTITESTIPROJEKTI1
+Suomiseloste uudelleenkuulutukselle
+Nokia, sovittuaan asiasta Väyläviraston kanssa julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman suunnittelun ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+Kuulutus julkaistaan 1.1.2031 osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus
+Kuulutus on nähtävillä 1.1.2031 - 31.1.2031 välisen ajan
+Lisätietoja antaa 
+Testi1 Hassu (Nokia), 
+puh. 029123123, mikko.haapamaki1(at)cgi.com 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+",
+    },
+  ],
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 6`] = `Array []`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 7`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`AloitusKuulutuksen uudelleenkuuluttaminen should create uudelleenkuulutus for aloituskuulutus successfully 8`] = `
+Object {
+  "description": "publicProjekti  uudelleenkuulutuksen jälkeen",
+  "mockedtime": "2020-01-01T02:00",
+  "obj": Object {
+    "__typename": "AloitusKuulutusJulkaisuJulkinen",
+    "aloituskuulutusSaamePDFt": undefined,
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På Svenska",
+      "SUOMI": "Lorem Ipsum",
+      "__typename": "LokalisoituTeksti",
+    },
+    "id": 2,
+    "julkaisuOnKopio": false,
+    "kielitiedot": Object {
+      "__typename": "Kielitiedot",
+      "ensisijainenKieli": "SUOMI",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+    "kuulutusPaiva": "2000-01-01",
+    "kuulutusTekstit": Object {
+      "__typename": "KuulutusTekstit",
+      "infoTekstit": Array [
+        "Asianosaisten katsotaan saaneen tiedon suunnittelun käynnistymisestä ja tutkimusoikeudesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §). Tämän jälkeen suunnitelmasta vastaavalla on oikeus tehdä kiinteistöillä suunnittelutyön vaatimia mittauksia, maaperätutkimuksia ja muita valmistelevia toimenpiteitä. Asianosaisilla on oikeus olla tutkimuksissa paikalla ja ilmaista mielipiteensä asiassa. (laki liikennejärjestelmästä ja maanteistä LjMTL 16 §).",
+        "Suunnitelman luonnosvaiheessa tiedotetaan yleisesti mahdollisuudesta kertoa mielipide suunnitelmasta. Kun suunnitelma on valmis, se asetetaan yleisesti nähtäville. Nähtäville asettamisesta julkaistaan kuulutus ja tiedotetaan asianosaisia. Tässä vaiheessa suunnitelmasta on mahdollisuus tehdä kirjallinen muistutus. (LjMTL 27 § ja valtioneuvoston asetus maanteistä 3 §). ",
+      ],
+      "kuvausTekstit": Array [
+        "Nokia on 1.1.2000 julkaissut kuulutuksen suunnittelun aloittamisesta ja maastotutkimuksista osoitteessa <a href=\\"https://localhost:3000/s/3c1d/aloituskuulutus\\">https://localhost:3000/s/3c1d/aloituskuulutus</a>. Kuulutus pidetään nähtävillä <strong>1.1.2000 - 31.1.2000</strong>.",
+      ],
+      "leipaTekstit": Array [
+        "Nokia, sovittuaan asiasta Väyläviraston kanssa, aloittaa otsikon mukaisen tiesuunnitelman laatimisen ja suunnitelman vaatimat maastotyöt ja tutkimukset.",
+      ],
+      "tietosuoja": "Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.vayla.fi/tietosuoja\\">https://www.vayla.fi/tietosuoja</a>.",
+    },
+    "siirtyySuunnitteluVaiheeseen": "2023-01-01",
+    "suunnitelmaJaettu": undefined,
+    "suunnitteluSopimus": Object {
+      "__typename": "SuunnitteluSopimusJulkaisu",
+      "email": "mikko.haapamaki1@cgi.com",
+      "etunimi": "Testi1",
+      "kunta": 536,
+      "logo": Object {
+        "RUOTSI": undefined,
+        "SUOMI": "/tiedostot/suunnitelma/1.2.246.578.5.1.2978288874.2711575506/suunnittelusopimus/logo.png",
+        "__typename": "LokalisoituTeksti",
+      },
+      "osapuolet": null,
+      "puhelinnumero": "029123123",
+      "sukunimi": "Hassu",
+    },
+    "tila": "HYVAKSYTTY",
+    "uudelleenKuulutus": Object {
+      "__typename": "UudelleenKuulutus",
+      "alkuperainenHyvaksymisPaiva": "2022-01-02T00:00:01+02:00",
+      "selosteKuulutukselle": Object {
+        "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
+        "SUOMI": "Suomiseloste uudelleenkuulutukselle",
+        "__typename": "LokalisoituTeksti",
+      },
+      "selosteLahetekirjeeseen": null,
+      "tila": "JULKAISTU_PERUUTETTU",
+    },
+    "velho": Object {
+      "__typename": "VelhoJulkinen",
+      "asiatunnusELY": undefined,
+      "asiatunnusVayla": "HASSU/123/2023",
+      "geoJSON": undefined,
+      "kunnat": Array [
+        91,
+        92,
+      ],
+      "kuvaus": undefined,
+      "linkki": "https://linkki-hankesivulle.fi",
+      "maakunnat": Array [
+        1,
+      ],
+      "nimi": "HASSU AUTOMAATTITESTIPROJEKTI1",
+      "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+      "toteuttavaOrganisaatio": undefined,
+      "tyyppi": "TIE",
+      "vaylamuoto": Array [
+        "tie",
+      ],
+    },
+    "yhteystiedot": Array [
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Testi1",
+        "kunta": 536,
+        "organisaatio": "CGI Suomi Oy",
+        "puhelinnumero": "029123123",
+        "sahkoposti": "mikko.haapamaki1@cgi.com",
+        "sukunimi": "Hassu",
+      },
+      Object {
+        "__typename": "Yhteystieto",
+        "etunimi": "Marko",
+        "organisaatio": "Kajaani",
+        "puhelinnumero": "0293121213",
+        "sahkoposti": "markku.koi@koi.com",
+        "sukunimi": "Koi",
+      },
+    ],
+  },
+}
+`;
