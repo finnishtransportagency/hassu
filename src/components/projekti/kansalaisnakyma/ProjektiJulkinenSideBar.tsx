@@ -101,13 +101,12 @@ const ProjektiSideNavigation = styled((props) => {
               <div className="vayla-calling-card">
                 {suunnitteluSopimus.osapuolet?.map((osapuoli, index) => (
                   <div key={index}>
-                    {osapuoli?.osapuolenLogo?.[lang === "fi" ? Kieli.SUOMI : Kieli.RUOTSI] && (
+                    {osapuoli?.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] && (
                       <img
                         src={osapuoli.osapuolenLogo?.[lang == "fi" ? Kieli.SUOMI : Kieli.RUOTSI] || undefined}
                         alt={`${osapuoli?.osapuolenNimiFI} logo`}
                       />
                     )}
-
                     {osapuoli?.osapuolenHenkilot && osapuoli?.osapuolenHenkilot?.length > 0 && (
                       <div className="vayla-calling-card" style={{ marginTop: "1rem", marginBottom: "0.5rem" }}>
                         <p>{lang === "fi" ? osapuoli?.osapuolenNimiFI : osapuoli?.osapuolenNimiSV}</p>
