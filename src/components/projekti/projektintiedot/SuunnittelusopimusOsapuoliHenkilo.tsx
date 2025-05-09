@@ -48,11 +48,11 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
                 {...register(fieldName("sukunimi") as any)}
               />
               <TextInput
-                id={`suunnittelusopimus_osapuoli${osapuoliNumero}_organisaatio`}
+                id={`suunnittelusopimus_osapuoli${osapuoliNumero}_yritys`}
                 label="Organisaatio (jos muu kuin osapuoli)"
-                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.organisaatio}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.yritys}
                 disabled={false}
-                {...register(fieldName("organisaatio") as any)}
+                {...register(fieldName("yritys") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_puhelinnumero`}
@@ -87,11 +87,11 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
                 {...register(fieldName("sukunimi") as any)}
               />
               <TextInput
-                id={`suunnittelusopimus_osapuoli${osapuoliNumero}_organisaatio`}
+                id={`suunnittelusopimus_osapuoli${osapuoliNumero}_yritys`}
                 label="Organisaatio (jos muu kuin osapuoli)"
-                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.organisaatio}
+                error={(errors as any)?.suunnitteluSopimus?.["osapuoli" + osapuoliNumero]?.yritys}
                 disabled={false}
-                {...register(fieldName("organisaatio") as any)}
+                {...register(fieldName("yritys") as any)}
               />
               <TextInput
                 id={`suunnittelusopimus_osapuoli${osapuoliNumero}_puhelinnumero`}
