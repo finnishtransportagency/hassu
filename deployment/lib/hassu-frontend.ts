@@ -33,6 +33,7 @@ import {
   readAccountStackOutputs,
   readBackendStackOutputs,
   readDatabaseStackOutputs,
+  readFrontendStackOutputs,
   readParametersForEnv,
   readPipelineStackOutputs,
   Region,
@@ -63,6 +64,8 @@ export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
   CloudfrontDistributionId: string;
   FrontendPublicKeyIdOutput: string;
+  NewCloudfrontPrivateDNSName: string;
+  NewCloudfrontDistributionId: string;
 };
 
 interface HassuFrontendStackProps {
@@ -271,28 +274,63 @@ export class HassuFrontendStack extends Stack {
     });
 
     if (Config.infraEnvironment == "dev") {
+      const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2],
+      });
+
+      const commonNextBehaviourOptions: BehaviorOptions = {
+        origin: vaylaProxyOrigin,
+        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS
+      };
+
       const newDistribution = new Distribution(this, "NewDistribution", {
-        defaultBehavior: { 
-          origin: new HttpOrigin(config.dmzProxyEndpoint, {
-            originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2],
-          }),
+        defaultBehavior: {
+          ...commonNextBehaviourOptions,
           edgeLambdas,
-          viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          cachePolicy: CachePolicy.CACHING_DISABLED, // TODO selvitä mitä voidaan cachettaa.
-          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-          originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+          allowedMethods: AllowedMethods.ALLOW_ALL,
+          cachePolicy: cachePolicies.nextLambdaCachePolicy,
         },
-        additionalBehaviors: behaviours,
+        additionalBehaviors: {
+          "_next/image*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_ALL,
+            cachePolicy: cachePolicies.nextImageCachePolicy,
+          },
+          "_next/data/*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            cachePolicy: cachePolicies.nextLambdaCachePolicy,
+          },
+          "_next/*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            cachePolicy: cachePolicies.nextStaticsCachePolicy,
+          },
+          "static/*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            cachePolicy: cachePolicies.nextStaticsCachePolicy,
+          },
+          "api/*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_ALL,
+            cachePolicy: cachePolicies.nextLambdaCachePolicy,
+
+          },
+          ...behaviours
+        },
         priceClass: PriceClass.PRICE_CLASS_100,
         logBucket,
         webAclId,
         errorResponses: this.getErrorResponsesForCloudFront(),
       });
 
-      new CfnOutput(this, "CfnPrivateDNSName", {
+      new CfnOutput(this, "NewCloudfrontPrivateDNSName", {
         value: newDistribution.distributionDomainName || "",
       });
-      new CfnOutput(this, "CfnDistributionId", {
+      new CfnOutput(this, "NewCloudfrontDistributionId", {
         value: newDistribution.distributionId || "",
       });
     }
@@ -704,6 +742,7 @@ export class HassuFrontendCoreStack extends Stack {
     const config = await Config.instance(this);
 
     const { EventSqsUrl, HyvaksymisEsitysSqsUrl } = await readBackendStackOutputs();
+    const { NewCloudfrontPrivateDNSName } = await readFrontendStackOutputs();
     const accountStackOutputs = await readAccountStackOutputs();
     const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
@@ -741,13 +780,17 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL || "", // asetetaan deployment/lib/hassu-pipelines.ts
       NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL || "", // sama kuin ^^
       NEXT_PUBLIC_AJANSIIRTO_SALLITTU: ssmParameters.AjansiirtoSallittu,
+      NEXT_PUBLIC_REACT_APP_API_KEY: await config.getParameterNow(`/${Config.infraEnvironment}/outputs/AppSyncAPIKey`),
+      // ^^REMOVE above line and uncomment following beofre moving to dev (developer env has no api key..)
+      //NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
+      // TODO change REACT_APP_API_URL to this `https://${config.frontendApiDomainName}/graphql` 
+      NEXT_PUBLIC_REACT_APP_API_URL: `https://${NewCloudfrontPrivateDNSName}/graphql`,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
-      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-      REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
+      FRONTEND_DOMAIN_NAME: NewCloudfrontPrivateDNSName, // config.frontendDomainName,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
       VELHO_API_URL: ssmParameters.VelhoApiUrl,
@@ -771,14 +814,9 @@ export class HassuFrontendCoreStack extends Stack {
       parameterName: `/${Config.infraEnvironment}/VelhoPassword`,
     });
 
-    const appSyncAPIKey = ssm.StringParameter.fromStringParameterAttributes(this, "AppSyncAPIKey", {
-      parameterName: `/${Config.env}/outputs/AppSyncAPIKey`,
-    });
-
     const containerSecrets: { [key: string]: Secret } = {
       VELHO_USERNAME: Secret.fromSsmParameter(velhoUsername),
       VELHO_PASSWORD: Secret.fromSsmParameter(velhoPassword),
-      REACT_APP_API_KEY: Secret.fromSsmParameter(appSyncAPIKey)
     }
 
     // ECS + Fargate
@@ -823,8 +861,12 @@ export class HassuFrontendCoreStack extends Stack {
       cluster,
       taskDefinition: taskDefinition,
       desiredCount: 1,
-      minHealthyPercent: 100,
+      minHealthyPercent: 50,
       maxHealthyPercent: 200,
+      healthCheckGracePeriod: Duration.seconds(180),
+      circuitBreaker: {
+        rollback: true,
+      },
       securityGroups: [securityGroup],
     });
 
@@ -840,11 +882,31 @@ export class HassuFrontendCoreStack extends Stack {
       ],
       healthCheck: {
         enabled: true,
-        path: "/",
+        path: "/api/health",
+        healthyThresholdCount: 3,
         protocol: Protocol.HTTP,
         port: containerPort.toString(),
+        
       },
     });
+
+    // Lisätään "perus" autoskaalausta. Seurataan pitääkö tunkata suuntaan tai toiseen
+    const scalableTarget = fargateService.autoScaleTaskCount({
+      minCapacity: 1,
+      maxCapacity: 3
+    })
+
+    scalableTarget.scaleOnCpuUtilization("CPUScaling", {
+      targetUtilizationPercent: 75,
+      scaleOutCooldown: Duration.seconds(300), // Verbose default
+      scaleInCooldown: Duration.seconds(300), // Verbose default
+    })
+
+    scalableTarget.scaleOnMemoryUtilization("MemoryScaling", {
+      targetUtilizationPercent: 75,
+      scaleOutCooldown: Duration.seconds(300), // Verbose default
+      scaleInCooldown: Duration.seconds(300), // Verbose default
+    })
 
     listener.addTargetGroups("Nextjs", {
       priority: 20,
