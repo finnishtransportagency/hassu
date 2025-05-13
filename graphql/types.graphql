@@ -509,6 +509,7 @@ type EnnakkoNeuvottelu {
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
   poisValitutKuulutuksetJaKutsu: [String!]
+  poisValitutMaanomistajaluettelot: [String!]
 }
 
 type EnnakkoNeuvotteluJulkaisu {
@@ -525,6 +526,7 @@ type EnnakkoNeuvotteluJulkaisu {
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
   poisValitutKuulutuksetJaKutsu: [String!]
+  poisValitutMaanomistajaluettelot: [String!]
   hash: String!
   lahetetty: String!
 }

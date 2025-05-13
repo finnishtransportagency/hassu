@@ -38,6 +38,20 @@ export default async function createLadattavatTiedostot(
     });
   }
 
+  let filteredMaanomistajaluettelot = maanomistajaluettelo;
+  if (
+    "lahetetty" in hyvaksymisEsitys &&
+    "poisValitutMaanomistajaluettelot" in hyvaksymisEsitys &&
+    Array.isArray(hyvaksymisEsitys.poisValitutMaanomistajaluettelot) &&
+    hyvaksymisEsitys.poisValitutMaanomistajaluettelot.length > 0
+  ) {
+    const poisvalitutMaanomistajaS3Keys = hyvaksymisEsitys.poisValitutMaanomistajaluettelot;
+
+    filteredMaanomistajaluettelot = maanomistajaluettelo.filter((tiedosto) => {
+      return !tiedosto?.s3Key || !poisvalitutMaanomistajaS3Keys.includes(tiedosto.s3Key);
+    });
+  }
+
   return {
     hyvaksymisEsitys: await Promise.all(hyvaksymisEsitysTiedostot.map(adaptFileInfoToLadattavaTiedosto)),
     suunnitelma: await Promise.all(suunnitelma.map(adaptFileInfoToLadattavaTiedosto)),
@@ -45,7 +59,7 @@ export default async function createLadattavatTiedostot(
     lausunnot: await Promise.all(lausunnot.map(adaptFileInfoToLadattavaTiedosto)),
     kuulutuksetJaKutsu: await Promise.all(filteredKuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
     muutAineistot: await Promise.all(muutAineistot.map(adaptFileInfoToLadattavaTiedosto)),
-    maanomistajaluettelo: await Promise.all(maanomistajaluettelo.map(adaptFileInfoToLadattavaTiedosto)),
+    maanomistajaluettelo: await Promise.all(filteredMaanomistajaluettelot.map(adaptFileInfoToLadattavaTiedosto)),
   };
 }
 

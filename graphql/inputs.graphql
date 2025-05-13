@@ -313,6 +313,7 @@ input EnnakkoNeuvotteluInput {
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [SahkopostiVastaanottajaInput!]
   poisValitutKuulutuksetJaKutsu: [String!]
+  poisValitutMaanomistajaluettelot: [String!]
 }
 
 input TallennaEnnakkoNeuvotteluInput {

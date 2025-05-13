@@ -244,6 +244,7 @@ export type DBEnnakkoNeuvottelu = {
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;
   poisValitutKuulutuksetJaKutsu?: string[];
+  poisValitutMaanomistajaluettelot?: string[];
 };
 
 export type DBEnnakkoNeuvotteluJulkaisu = DBEnnakkoNeuvottelu & { lahetetty: string; poistumisPaiva: string };
