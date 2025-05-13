@@ -380,7 +380,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
                     email: henkilo.email || "",
                     yritys: henkilo.yritys || "", // tämä tulee organisaatioksi osapuolenNimen sijasta, jos annettu
                     //kunta: henkilo.kunta || "", tätä ei välttämättä tarvitse enää erikseen
-                    valittu: henkilo.valittu || true,
+                    valittu: henkilo.valittu ?? true,
                   }));
 
                   puhdistettuSuunnitteluSopimus.osapuolet.push({
