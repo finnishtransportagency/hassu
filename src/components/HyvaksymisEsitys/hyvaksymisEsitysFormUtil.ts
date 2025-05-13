@@ -139,6 +139,7 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
   const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
     ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
   );
+
   return {
     ...formData,
     laheta,

@@ -996,6 +996,7 @@ Object {
           "kategoriaId": undefined,
           "linkki": "http://localhost:4566/hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412%20Aloituskuulutus.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20220101%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20220101T220001Z&X-Amz-Expires=3600&X-Amz-Signature=7646786873e908af05075014822fed0e49775ca95763dd03cdaaa6e2f93a106d&X-Amz-SignedHeaders=host&x-id=GetObject",
           "nimi": "T412 Aloituskuulutus.pdf",
+          "s3Key": "yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
           "tuotu": undefined,
         },
         Object {
@@ -1003,6 +1004,7 @@ Object {
           "kategoriaId": undefined,
           "linkki": "http://localhost:4566/hassu-localstack-yllapito/yllapito/tiedostot/projekti/1/Saame.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=test%2F20220101%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20220101T220001Z&X-Amz-Expires=3600&X-Amz-Signature=386a6f4c7ca74f2737afc18be8afd27cfa8c64e52d42b10c7eead03487962a40&X-Amz-SignedHeaders=host&x-id=GetObject",
           "nimi": "Saame.pdf",
+          "s3Key": "yllapito/tiedostot/projekti/1/Saame.pdf",
           "tuotu": undefined,
         },
       ],
@@ -1144,7 +1146,6 @@ Object {
         "tietosuoja": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, <a external=\\"true\\" href=\\"https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely\\">https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely</a>.",
       },
       "siirtyySuunnitteluVaiheeseen": "2999-01-01",
-      "suunnitelmaJaettu": undefined,
       "suunnitteluSopimus": Object {
         "__typename": "SuunnitteluSopimusJulkaisu",
         "email": "a2@vayla.fi",

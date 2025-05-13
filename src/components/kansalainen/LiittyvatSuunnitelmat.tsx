@@ -1,15 +1,17 @@
 import React from "react";
 import useTranslation from "next-translate/useTranslation";
-import { ProjektinJakotieto } from "hassu-common/graphql/apiModel";
+import { SuunnitelmaJaettuJulkinen } from "hassu-common/graphql/apiModel";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { H3 } from "@components/Headings";
 import { ProjektinJakotietoJulkinen } from "./ProjektinJakotietoJulkinen";
 import Trans from "next-translate/Trans";
 
-export function LiittyvatSuunnitelmat({ liittyvatSuunnitelma }: { liittyvatSuunnitelma: ProjektinJakotieto | null | undefined }) {
+export function LiittyvatSuunnitelmat({ suunnitelmaJaettu }: { suunnitelmaJaettu: SuunnitelmaJaettuJulkinen | null | undefined }) {
   const { t } = useTranslation("projekti");
 
-  if (!liittyvatSuunnitelma) {
+  const liittyvaSuunnitelma = suunnitelmaJaettu?.julkaisuKopioituSuunnitelmaan ?? suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta;
+
+  if (!liittyvaSuunnitelma) {
     return <></>;
   }
 
@@ -20,10 +22,10 @@ export function LiittyvatSuunnitelmat({ liittyvatSuunnitelma }: { liittyvatSuunn
         <Trans
           i18nKey="projekti:liittyvat-suunnitelmat.kuulutettu-yhdessa"
           components={{
-            suunnitelma: <ProjektinJakotietoJulkinen jakotieto={liittyvatSuunnitelma} />,
+            suunnitelma: <ProjektinJakotietoJulkinen jakotieto={liittyvaSuunnitelma} />,
           }}
         />
-        {!liittyvatSuunnitelma.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
+        {!liittyvaSuunnitelma.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
       </p>
     </ContentSpacer>
   );

@@ -79,35 +79,41 @@ export default function ProjektiPageLayout({
             {saameContent}
             <H2>{title}</H2>
             {vahainenMenettely && <Notification type={NotificationType.INFO_GRAY}>{t("asiakirja.vahainen_menettely_info")}</Notification>}
-            {suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
+            {projekti.suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && !suunnitelmaJaettu?.julkaisuKopioituSuunnitelmasta && (
               <Notification type={NotificationType.INFO_GRAY}>
                 <p>
                   <Trans
                     i18nKey="projekti:liittyvat-suunnitelmat.kaynnistetty-suunnitelmalla"
                     components={{
-                      suunnitelma: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta} />,
+                      suunnitelma: <ProjektinJakotietoJulkinen jakotieto={projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta} />,
                     }}
                   />
-                  {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
+                  {!projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmasta.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
                 </p>
               </Notification>
             )}
-            {suunnitelmaNimi && !!suunnitelmaJaettu?.julkaisuKopioituSuunnitelmaan && (
-              <Notification type={NotificationType.INFO_GRAY}>
-                <ContentSpacer gap={2}>
-                  <p>
-                    <Trans
-                      i18nKey="projekti:liittyvat-suunnitelmat.suunnitelma-on-jaettu"
-                      components={{
-                        suunnitelma2: <ProjektinJakotietoJulkinen jakotieto={suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan} />,
-                      }}
-                      values={{ suunnitelmaNimi }}
-                    />
-                    {!suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.julkinen && ` ${t("liittyvat-suunnitelmat.ei-julkaisuja")}`}
-                  </p>
-                </ContentSpacer>
-              </Notification>
-            )}
+            {suunnitelmaNimi &&
+              projekti.suunnitelmaJaettu?.julkaisuKopioituSuunnitelmaan &&
+              !suunnitelmaJaettu?.julkaisuKopioituSuunnitelmaan && (
+                <Notification type={NotificationType.INFO_GRAY}>
+                  <ContentSpacer gap={2}>
+                    <p>
+                      <Trans
+                        i18nKey="projekti:liittyvat-suunnitelmat.suunnitelma-on-jaettu"
+                        components={{
+                          suunnitelma2: <ProjektinJakotietoJulkinen jakotieto={projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan} />,
+                        }}
+                        values={{ suunnitelmaNimi }}
+                      />
+                      {!projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.julkinen &&
+                        projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.nimi[kieli] &&
+                        ` ${t("liittyvat-suunnitelmat.ei-julkaisuja-nimella", {
+                          suunnitelmaNimi: projekti.suunnitelmaJaettu.julkaisuKopioituSuunnitelmaan.nimi[kieli],
+                        })}`}
+                    </p>
+                  </ContentSpacer>
+                </Notification>
+              )}
             {smallScreen && velho?.linkki && (
               <HassuWidget smallScreen>
                 <p>{t("lue_hankesivulta")}</p>

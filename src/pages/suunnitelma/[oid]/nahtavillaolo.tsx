@@ -132,7 +132,7 @@ export default function Nahtavillaolo(): ReactElement {
             <p key={index}>{renderTextAsHTML(teksti)}</p>
           ))}
         </ContentSpacer>
-        <LiittyvatSuunnitelmat liittyvatSuunnitelma={kuulutus.suunnitelmaJaettu?.liittyvatSuunnitelma} />
+        <LiittyvatSuunnitelmat suunnitelmaJaettu={kuulutus.suunnitelmaJaettu} />
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>

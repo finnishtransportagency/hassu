@@ -24,6 +24,7 @@ phases:
       - LOG_LEVEL=error npm run test
       - npm run localstack:stop &
       - npm run build
+      - npm run build:next-image -- --tag "$CODEBUILD_RESOLVED_SOURCE_VERSION" --build-only
 cache:
   paths:
     - "/root/.cache/**/*"

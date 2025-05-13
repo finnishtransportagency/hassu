@@ -508,6 +508,7 @@ type EnnakkoNeuvottelu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  poisValitutKuulutuksetJaKutsu: [String!]
 }
 
 type EnnakkoNeuvotteluJulkaisu {
@@ -523,6 +524,7 @@ type EnnakkoNeuvotteluJulkaisu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  poisValitutKuulutuksetJaKutsu: [String!]
   hash: String!
   lahetetty: String!
 }
@@ -909,6 +911,7 @@ type ProjektiJulkinen implements IProjekti {
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
 }
 
 type Suunnitelma {
@@ -1100,7 +1103,6 @@ type AloitusKuulutusJulkaisuJulkinen {
 }
 
 type SuunnitelmaJaettuJulkinen {
-  liittyvatSuunnitelma: ProjektinJakotieto
   julkaisuKopioituSuunnitelmasta: ProjektinJakotieto
   julkaisuKopioituSuunnitelmaan: ProjektinJakotieto
 }
@@ -1437,6 +1439,7 @@ type LadattavaTiedosto implements ILadattavaTiedosto {
   nimi: String!
   tuotu: String
   jarjestys: Int
+  s3Key: String
 }
 
 type KunnallinenLadattavaTiedosto implements ILadattavaTiedosto {
