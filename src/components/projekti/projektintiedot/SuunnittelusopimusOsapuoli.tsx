@@ -1,0 +1,164 @@
+import React, { ReactElement, useEffect } from "react";
+import { Controller, useFormContext, UseFormWatch } from "react-hook-form";
+import { FormValues } from "@pages/yllapito/projekti/[oid]";
+import FormGroup from "@components/form/FormGroup";
+import SectionContent from "@components/layout/SectionContent";
+import HassuGrid from "@components/HassuGrid";
+import TextInput from "@components/form/TextInput";
+import { FormControlLabel, Radio, RadioGroup, IconButton, SvgIcon } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { H4 } from "@components/Headings";
+import HenkiloLista from "./SuunnittelusopimusHenkilolista";
+import { KaannettavaKieli } from "common/kaannettavatKielet";
+import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
+
+interface SuunnittelusopimusOsapuoliProps {
+  osapuoliNumero: number;
+  formDisabled?: boolean;
+  disabled: boolean;
+  ensisijainenKaannettavaKieli?: KaannettavaKieli;
+  toissijainenKaannettavaKieli?: KaannettavaKieli;
+  watch: UseFormWatch<FormValues>;
+  poistaOsapuoli?: () => void;
+  onViimeinenOsapuoli?: boolean;
+}
+
+export default function SuunnittelusopimusOsapuoli({
+  osapuoliNumero,
+  formDisabled,
+  disabled,
+  ensisijainenKaannettavaKieli,
+  toissijainenKaannettavaKieli,
+  watch,
+  poistaOsapuoli,
+}: SuunnittelusopimusOsapuoliProps): ReactElement {
+  const {
+    register,
+    formState: { errors },
+    control,
+    getValues,
+    setValue,
+  } = useFormContext<FormValues>();
+
+  useEffect(() => {
+    const tyyppiArvo = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
+    if (!tyyppiArvo) {
+      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any, "kunta");
+    }
+  }, [osapuoliNumero, getValues, setValue]);
+
+  const osapuoliTyyppiValue = watch(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
+  const osapuoliTyyppi = Array.isArray(osapuoliTyyppiValue) ? osapuoliTyyppiValue[0]?.toString() : osapuoliTyyppiValue?.toString();
+
+  const getFieldError = (fieldPath: string) => {
+    const parts = fieldPath.split(".");
+    let current: any = errors;
+
+    for (const part of parts) {
+      if (!current || typeof current !== "object") return undefined;
+      current = current[part];
+    }
+
+    return current;
+  };
+
+  const fieldPath = (field: string) => `suunnitteluSopimus.osapuoli${osapuoliNumero}.${field}` as const as keyof FormValues;
+
+  return (
+    <SectionContent largeGaps sx={{ marginTop: 10, marginLeft: 10 }}>
+      <SectionContent>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <H4>{osapuoliNumero}. osapuoli</H4>
+          {poistaOsapuoli && (
+            <IconButton onClick={poistaOsapuoli} disabled={disabled} size="large" type="button">
+              <SvgIcon>
+                <FontAwesomeIcon icon="trash" />
+              </SvgIcon>
+            </IconButton>
+          )}
+        </div>
+
+        <Controller
+          name={`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any}
+          control={control}
+          defaultValue="kunta"
+          render={({ field: osapuoliField, fieldState: osapuoliState }) => (
+            <FormGroup label="Suunnittelusopimuksen osapuoli *" errorMessage={osapuoliState.error?.message} flexDirection="row">
+              <RadioGroup
+                aria-labelledby={`suunnittelusopimus-osapuoli-tyyppi-${osapuoliNumero}`}
+                row
+                value={osapuoliField.value}
+                onChange={(value) => {
+                  osapuoliField.onChange(value.target.value);
+                }}
+                name={osapuoliField.name}
+                onBlur={osapuoliField.onBlur}
+                ref={osapuoliField.ref}
+              >
+                <FormControlLabel value={"kunta"} disabled={formDisabled} control={<Radio />} label="Kunta" />
+                <FormControlLabel value={"yritys"} disabled={formDisabled} control={<Radio />} label="Yritys tai muu organisaatio" />
+              </RadioGroup>
+            </FormGroup>
+          )}
+        />
+
+        {osapuoliTyyppi === "kunta" ? (
+          <HassuGrid cols={{ lg: 3 }}>
+            <TextInput
+              label="Kunnan nimi suomeksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
+              error={getFieldError(fieldPath("osapuolenNimiFI"))}
+              disabled={formDisabled}
+            />
+            <TextInput
+              label="Kunnan nimi ruotsiksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
+              error={getFieldError(fieldPath("osapuolenNimiSV"))}
+              disabled={formDisabled}
+            />
+          </HassuGrid>
+        ) : (
+          <HassuGrid cols={{ lg: 3 }}>
+            <TextInput
+              label="Yrityksen nimi suomeksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
+              error={getFieldError(fieldPath("osapuolenNimiFI"))}
+              disabled={formDisabled}
+            />
+            <TextInput
+              label="Yrityksen nimi ruotsiksi *"
+              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
+              error={getFieldError(fieldPath("osapuolenNimiSV"))}
+              disabled={formDisabled}
+            />
+          </HassuGrid>
+        )}
+
+        <HenkiloLista
+          key={`henkilo-lista-osapuoli-${osapuoliNumero}-${Date.now()}`}
+          osapuoliNumero={osapuoliNumero}
+          osapuoliTyyppi={osapuoliTyyppi || "kunta"}
+        />
+        <SectionContent>
+          <H4>{osapuoliTyyppi === "kunta" ? "Kunnan" : "Yrityksen"} logo</H4>
+          {ensisijainenKaannettavaKieli && (
+            <ProjektiSuunnittelusopimusLogoInput<FormValues>
+              lang={ensisijainenKaannettavaKieli}
+              isPrimaryLang
+              name={`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenLogo.${ensisijainenKaannettavaKieli}` as any}
+              disabled={formDisabled}
+            />
+          )}
+          {toissijainenKaannettavaKieli && (
+            <ProjektiSuunnittelusopimusLogoInput<FormValues>
+              lang={toissijainenKaannettavaKieli}
+              isPrimaryLang={false}
+              name={`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenLogo.${toissijainenKaannettavaKieli}` as any}
+              disabled={formDisabled}
+            />
+          )}
+        </SectionContent>
+      </SectionContent>
+    </SectionContent>
+  );
+}

@@ -1151,19 +1151,46 @@ type MaakuntaVastaanottaja implements ISahkopostiVastaanottaja {
   lahetysvirhe: Boolean
 }
 
+type SuunnitteluSopimusOsapuoli {
+  osapuolenNimiFI: String
+  osapuolenNimiSV: String
+  osapuolenHenkilot: [OsapuolenHenkilo]
+  osapuolenTyyppi: String
+  osapuolenLogo: LokalisoituTeksti
+}
+
+type OsapuolenHenkilo {
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  yritys: String
+  kunta: String
+  valittu: Boolean
+}
+
 type SuunnitteluSopimus {
-  kunta: Int!
+  yhteysHenkilo: String
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  kunta: Int
+  yritys: String
   logo: LokalisoituTeksti
-  yhteysHenkilo: String!
+  osapuolet: [SuunnitteluSopimusOsapuoli]
+  osapuoliMaara: Int
 }
 
 type SuunnitteluSopimusJulkaisu {
-  etunimi: String!
-  sukunimi: String!
-  puhelinnumero: String!
-  email: String!
-  kunta: Int!
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  kunta: Int
+  yritys: String
   logo: LokalisoituTeksti
+  osapuolet: [SuunnitteluSopimusOsapuoli]
 }
 
 type ProjektiKayttaja {

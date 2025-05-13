@@ -9,10 +9,29 @@ export function adaptSuunnitteluSopimusToSave(
   projektiAdaptationResult?: ProjektiAdaptationResult
 ): API.SuunnitteluSopimusInput | null | undefined {
   if (suunnitteluSopimusInput) {
-    const { logo, ...rest } = suunnitteluSopimusInput;
+    const { logo, osapuolet, ...rest } = suunnitteluSopimusInput;
+    const adaptedLogo = adaptLogoFilesToSave(projekti.suunnitteluSopimus?.logo, logo, projektiAdaptationResult);
+    let adaptedOsapuolet = osapuolet;
+    if (osapuolet) {
+      adaptedOsapuolet = osapuolet.map((osapuoli, index) => {
+        if (osapuoli) {
+          const { osapuolenLogo, ...osapuoliRest } = osapuoli;
+          return {
+            ...osapuoliRest,
+            osapuolenLogo: adaptLogoFilesToSave(
+              projekti.suunnitteluSopimus?.osapuolet?.[index]?.osapuolenLogo,
+              osapuolenLogo,
+              projektiAdaptationResult
+            ),
+          };
+        }
+        return osapuoli;
+      });
+    }
     return {
       ...rest,
-      logo: adaptLogoFilesToSave(projekti.suunnitteluSopimus?.logo, logo, projektiAdaptationResult),
+      logo: adaptedLogo,
+      osapuolet: adaptedOsapuolet,
     };
   }
   return suunnitteluSopimusInput;

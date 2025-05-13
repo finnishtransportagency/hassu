@@ -87,18 +87,38 @@ export type AloitusKuulutusJulkaisu = {
 };
 
 export type SuunnitteluSopimus = {
-  kunta: number;
+  kunta?: number | null;
   logo?: LocalizedMap<string> | null;
-  yhteysHenkilo: string;
+  yhteysHenkilo?: string | null;
+  osapuolet?: SuunnitteluSopimusOsapuoli[] | null;
 };
 
 export type SuunnitteluSopimusJulkaisu = {
-  kunta: number;
+  kunta?: number | null;
   logo?: LocalizedMap<string> | null;
-  etunimi: string;
-  sukunimi: string;
-  puhelinnumero: string;
-  email: string;
+  etunimi?: string | null;
+  sukunimi?: string | null;
+  puhelinnumero?: string | null;
+  email?: string | null;
+  osapuolet?: SuunnitteluSopimusOsapuoli[] | null;
+};
+
+export type SuunnitteluSopimusOsapuoli = {
+  osapuolenNimiFI?: string | null;
+  osapuolenNimiSV?: string | null;
+  osapuolenHenkilot?: OsapuolenHenkilo[] | null;
+  osapuolenTyyppi?: string | null;
+  osapuolenLogo?: LocalizedMap<string> | null;
+};
+
+export type OsapuolenHenkilo = {
+  etunimi?: string | null;
+  sukunimi?: string | null;
+  puhelinnumero?: string | null;
+  email?: string | null;
+  yritys?: string | null;
+  kunta?: string | null;
+  valittu?: boolean;
 };
 
 export type Suunnitelma = {
