@@ -57,10 +57,10 @@ Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä m
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, 
 
 
-https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 Lisätietoja antaa 
 Kunta Kuntalainen (Nokia), 
@@ -182,10 +182,10 @@ Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respo
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen 
 
 
-https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
+
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
@@ -260,10 +260,10 @@ Vuorovaikutuksessa voi tutustua suunnitelmaluonnoksiin sekä esittää niistä m
 
 Tilaisuus on avoin kaikille alueen asukkaille, maanomistajille ja muille asiasta kiinnostuneille.
 Kutsu on julkaistu ylläolevassa osoitteessa 23.3.2022.
-Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, 
 
 
-https://www.vayla.fi/tietosuoja.
+
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Lisätietoja antaa 
 Kunta Kuntalainen (Nokia), 
@@ -385,10 +385,10 @@ Under interaktionstillfällena kan man bekanta sig med planutkasten och ge respo
 
 Mötet är öppet för alla invånare, markägare och andra intresserade i området.
 Inbjudan har publicerats på adressen ovan 23.3.2022.
-Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen 
 
 
-https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
 Mer information om planen 
 Kunta Kuntalainen (Nokia), 
@@ -465,8 +465,14 @@ Matti Meikalainen (Väylävirasto),
 puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
+
+
+
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus
-LUONNOS",
+ELY/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -885,8 +891,14 @@ Matti Meikalainen (Trafikledsverket),
 tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+
+
 Närings-, trafik- och miljöcentralen i Nyland
-LUONNOS",
+ELY/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -1025,8 +1037,14 @@ Matti Meikalainen (Trafikledsverket),
 tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+
+
 Trafikledsverket
-LUONNOS",
+VAYLA/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -1165,8 +1183,14 @@ Matti Meikalainen (Trafikledsverket),
 tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+
+
 Trafikledsverket
-LUONNOS",
+VAYLA/2/2022
+
+
+LUONNOSLUONNOS",
 }
 `;
 
@@ -1853,6 +1877,7 @@ Object {
       "RUOTSI": "/suunnittelusopimus/logo.png",
       "SUOMI": "/suunnittelusopimus/logo.png",
     },
+    "osapuolet": undefined,
     "puhelinnumero": "029123123",
     "sukunimi": "Kuntalainen",
   },

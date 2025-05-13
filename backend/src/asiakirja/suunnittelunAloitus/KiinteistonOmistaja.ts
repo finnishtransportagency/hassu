@@ -60,6 +60,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
         asianhallintaPaalla: params.asianhallintaPaalla,
         linkkiAsianhallintaan: params.linkkiAsianhallintaan,
         yhteystiedot: params.yhteystiedot,
+        suunnitteluSopimus: params.suunnitteluSopimus,
         kuulutettuYhdessaSuunnitelmanimi: params.kuulutettuYhdessaSuunnitelmanimi,
       },
       "lakiviite_ilmoitus_rata2"
@@ -70,7 +71,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
       velho.tyyppi,
       params.kieli
     );
-    super(params.kieli, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
+    super(params.kieli, params.oid, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     this.velho = velho;
     const language = params.kieli;
     this.header = headers[language];
@@ -80,7 +81,7 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
 
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
     this.kutsuAdapter.addTemplateResolver(this);
-    this.setupPDF(this.header, kutsuAdapter.nimi, fileName);
+    this.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
   protected getIndention() {
@@ -88,9 +89,12 @@ export class KiinteistonOmistaja extends CommonPdf<NahtavillaoloVaiheKutsuAdapte
   }
 
   protected addContent(): void {
-    const elements: PDFKit.PDFStructureElementChild[] = [this.addHeader(), ...this.addDocumentElements(), this.euLogoElement()].filter(
-      (element) => element
-    );
+    const elements: PDFKit.PDFStructureElementChild[] = [
+      this.addHeader(),
+      ...this.addDocumentElements(),
+      this.euLogoElement(),
+      this.sopimusLogoElement(),
+    ].filter((element) => element);
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
