@@ -13,8 +13,12 @@ export function vaylaUserToYhteystieto(
     organisaatio: vaylaUser.organisaatio,
     elyOrganisaatio: vaylaUser.elyOrganisaatio,
     kunta:
-      vaylaUser.kayttajatunnus === (suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo ||
-      vaylaUser.email === (suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email
+      (vaylaUser.kayttajatunnus &&
+        (suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo &&
+        vaylaUser.kayttajatunnus === (suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo) ||
+      (vaylaUser.email &&
+        (suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email &&
+        vaylaUser.email === (suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email)
         ? suunnitteluSopimus?.kunta
         : undefined,
   };

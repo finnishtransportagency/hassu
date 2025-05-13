@@ -14,6 +14,25 @@ export const UIValuesSchema = Yup.object().shape({
     .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
 });
 
+// const osapuolenHenkilotSchema = Yup.object().shape({
+//   etunimi: Yup.string().required("Etunimi on pakollinen"),
+//   sukunimi: Yup.string().required("Sukunimi on pakollinen"),
+//   puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
+//   email: Yup.string().email("Email on virheellistä muotoa").required("Email on pakollinen"),
+// });
+
+// const osapuoliSchema = Yup.object()
+//   .required("osapuoli1 is required")
+//   .shape({
+//     osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen").min(1, "Kunnan nimi suomeksi on pakollinen"),
+//     osapuolenNimiSV: Yup.string().required("Kunnan nimi ruotsiksi on pakollinen").min(1, "Kunnan nimi ruotsiksi on pakollinen"),
+//     osapuolenHenkilot: Yup.array()
+//       .of(osapuolenHenkilotSchema)
+//       .min(1, "Ainakin yksi edustaja vaaditaan")
+//       .max(2, "Enintään kaksi edustajaa sallitaan")
+//       .required("Edustaja on pakollinen"),
+//   });
+
 export const perustiedotValidationSchema = Yup.object()
   .shape({
     oid: Yup.string().required(),
@@ -54,26 +73,59 @@ export const perustiedotValidationSchema = Yup.object()
     vahainenMenettely: Yup.boolean().nullable().optional(),
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
-      .shape({
-        kunta: Yup.string().required("Kunta on pakollinen"),
-        yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1).nullable(),
-        logo: Yup.object()
-          .shape({
-            SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
-            RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
-              is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => isRuotsinkielinenProjekti.current,
-              then: (schema) =>
-                schema.required("Ruotsinkielinen kunnan logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi."),
-            }),
-          })
-          .notRequired()
-          .nullable()
-          .default(null),
-      })
+      // .shape({
+      //   osapuoli1: osapuoliSchema.required("osapuoli1 is required"),
+      //   //osapuoli2: osapuoliSchema.nullable().optional(),
+      //   //osapuoli3: osapuoliSchema.nullable().optional(),
+      // })
+
+      // .shape({
+      //   yhteysHenkilo: Yup.string().nullable(),
+      //   kunta: Yup.string().when("yhteysHenkilo", {
+      //     is: (yhteysHenkilo: string | null | undefined) => yhteysHenkilo && yhteysHenkilo.length > 0,
+      //     then: Yup.string().required("Kunta on pakollinen"),
+      //     otherwise: Yup.string().nullable().optional(),
+      //   }),
+      //   logo: Yup.object()
+      //     .shape({
+      //       SUOMI: Yup.mixed().when("../yhteysHenkilo", {
+      //         is: (yhteysHenkilo: string | null | undefined) => yhteysHenkilo && yhteysHenkilo.length > 0,
+      //         then: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
+      //         otherwise: Yup.mixed().nullable().optional(),
+      //       }),
+      //       RUOTSI: Yup.mixed().nullable().optional(),
+      //     })
+      //     .nullable()
+      //     .optional(),
+      //   osapuoli1: Yup.object().when("yhteysHenkilo", {
+      //     is: (yhteysHenkilo: string | null | undefined) => !yhteysHenkilo || yhteysHenkilo.length === 0,
+      //     then: Yup.object().shape({
+      //       osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen").min(1, "Kunnan nimi suomeksi on pakollinen"),
+      //       osapuolenNimiSV: Yup.string().required("Kunnan nimi ruotsiksi on pakollinen").min(1, "Kunnan nimi ruotsiksi on pakollinen"),
+      //       osapuolenHenkilot: Yup.array().of(
+      //         Yup.object().shape({
+      //           etunimi: Yup.string().required("Etunimi on pakollinen"),
+      //           sukunimi: Yup.string().required("Sukunimi on pakollinen"),
+      //           puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
+      //           email: Yup.string().email("Virheellinen sähköposti").required("Email on pakollinen"),
+      //         })
+      //       ),
+      //       osapuolenLogo: Yup.object()
+      //         .shape({
+      //           SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
+      //           RUOTSI: Yup.mixed().nullable().optional(),
+      //         })
+      //         .nullable(),
+      //     }),
+      //     otherwise: Yup.object().nullable().optional(),
+      //   }),
+      //   osapuoli2: Yup.object().nullable().optional(),
+      //   osapuoli3: Yup.object().nullable().optional(),
+      // })
       .test(
         "vahainen-menettely-ei-voi-olla-samaan-aikaan",
         "Projektilla, jossa sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta",
-        (suunnitteluSopimus, context) => {
+        (suunnitteluSopimus: any, context: { parent: { vahainenMenettely: any } }) => {
           const vahainenMenettely = context.parent.vahainenMenettely;
           return !(vahainenMenettely && suunnitteluSopimus);
         }
