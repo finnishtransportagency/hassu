@@ -36,6 +36,12 @@ const osapuoliSchema = Yup.object()
     //sukunimi: Yup.string().required("Sukunimi on pakollinen"),
     //puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
     //email: Yup.string().email("Email on virheellistä muotoa").required("Email on pakollinen"),
+    osapuolenLogo: Yup.object()
+      .shape({
+        SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
+        RUOTSI: Yup.mixed().nullable().optional(),
+      })
+      .nullable(),
     osapuolenHenkilot: Yup.array()
       .of(Yup.object().shape({}))
       .min(1, "Ainakin yksi edustaja vaaditaan")
