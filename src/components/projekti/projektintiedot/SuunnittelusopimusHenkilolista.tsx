@@ -130,7 +130,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
                         puhelinnumero: puhelinnumero,
                         kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
                         yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
-                        valittu: false,
+                        valittu: true,
                       };
 
                       const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
