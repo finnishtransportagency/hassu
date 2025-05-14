@@ -27,8 +27,8 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
       <div style={{ marginTop: "1.5rem" }}>
         <H5>Uusi edustaja</H5>
         <p>
-          Lisää uusi edustaja Lisää edustaja -painikkeella. Edustajia voi olla korkeintaan kaksi per osapuoli. Huomioi, että uusi edustaja
-          ei tallennu Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
+          Lisää uusi edustaja valintalistalle Lisää edustaja -painikkeella. Edustajia voi olla korkeintaan kaksi per osapuoli. Huomioi, että
+          uusi edustaja ei tallennu Projektin henkilöt -sivulle eikä henkilölle tule käyttöoikeuksia projektiin.
         </p>
         <HassuGrid cols={{ lg: 3 }}>
           {osapuoliTyyppi === "kunta" && (

@@ -81,7 +81,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
       <div style={{ marginTop: "3rem" }}>
         <H4>{osapuoliTyyppi === "kunta" ? "Kunnan edustajan tiedot" : "Yrityksen edustajan tiedot"}</H4>
         <p>
-          Lisättyjen edustajien listalta valittu henkilö näkyy aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella
+          Lisättyjen edustajien valintalistalta valittu henkilö näkyy aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella
           puolella projektin yleisissä yhteystiedoissa.
         </p>
       </div>
@@ -153,7 +153,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
                   id="lisaa_uusi_henkilo"
                   className="primary"
                 >
-                  Lisää edustaja
+                  Lisää edustaja valintalistalle
                 </Button>
               </div>
             </SectionContent>
