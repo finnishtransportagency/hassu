@@ -104,6 +104,8 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
   ): LokalisoituYhteystieto[] {
     let yt: Yhteystieto[] = [];
     let suunnitteluSopimus: SuunnitteluSopimusJulkaisu;
+    const suunnitteluSopimusYhteystiedot: Yhteystieto[] = [];
+    let muutYhteystiedot: Yhteystieto[] = [];
     const kunnanEdustaja = this.kayttoOikeudet?.find(
       (ko) =>
         ko.email === (this.suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email ||
@@ -116,24 +118,13 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
         puhelinnumero: kunnanEdustaja.puhelinnumero ?? "",
       };
     }
-    if (yhteystiedot) {
-      yt = yt.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, suunnitteluSopimus)));
-    }
-    if (yhteysHenkilot) {
-      if (!this.kayttoOikeudet) {
-        throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
-      }
-      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
-        yt.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
-      });
-    }
 
     if (this.suunnitteluSopimus && this.suunnitteluSopimus?.osapuolet) {
       this.suunnitteluSopimus?.osapuolet?.forEach((osapuoli) => {
         if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
           const organisaationNimi = this.kieli == Kieli.SUOMI ? osapuoli.osapuolenNimiFI : osapuoli.osapuolenNimiSV;
           osapuoli.osapuolenHenkilot.forEach((henkilo) => {
-            yt.push({
+            suunnitteluSopimusYhteystiedot.push({
               etunimi: henkilo.etunimi || "",
               sukunimi: henkilo.sukunimi || "",
               sahkoposti: henkilo.email || "",
@@ -144,6 +135,20 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
         }
       });
     }
+
+    if (yhteystiedot) {
+      muutYhteystiedot = muutYhteystiedot.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, suunnitteluSopimus)));
+    }
+    if (yhteysHenkilot) {
+      if (!this.kayttoOikeudet) {
+        throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
+      }
+      this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
+        muutYhteystiedot.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
+      });
+    }
+
+    yt = suunnitteluSopimusYhteystiedot.concat(muutYhteystiedot);
 
     if (pakotaProjariTaiKunnanEdustaja) {
       const projari = this.kayttoOikeudet?.find((ko) => ko.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO);
@@ -220,16 +225,70 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
 
   get kuuluttaja(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus?.kunta) {
-      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja;
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
     }
     return super.kuuluttaja;
   }
 
   get kuuluttaja_pitka(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus?.kunta) {
-      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus?.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja_pitka;
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
     }
     return super.kuuluttaja_pitka;
   }
