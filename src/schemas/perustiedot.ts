@@ -21,17 +21,37 @@ export const UIValuesSchema = Yup.object().shape({
 //   email: Yup.string().email("Email on virheellistä muotoa").required("Email on pakollinen"),
 // });
 
-// const osapuoliSchema = Yup.object()
-//   .required("osapuoli1 is required")
-//   .shape({
-//     osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen").min(1, "Kunnan nimi suomeksi on pakollinen"),
-//     osapuolenNimiSV: Yup.string().required("Kunnan nimi ruotsiksi on pakollinen").min(1, "Kunnan nimi ruotsiksi on pakollinen"),
-//     osapuolenHenkilot: Yup.array()
-//       .of(osapuolenHenkilotSchema)
-//       .min(1, "Ainakin yksi edustaja vaaditaan")
-//       .max(2, "Enintään kaksi edustajaa sallitaan")
-//       .required("Edustaja on pakollinen"),
-//   });
+const osapuoliSchema = Yup.object()
+  .required("osapuoli1 on pakollinen")
+  .shape({
+    osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen").min(1, "Kunnan nimi suomeksi on pakollinen"),
+    osapuolenNimiSV: Yup.string().when("$isRuotsinkielinenProjekti", {
+      is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => {
+        return isRuotsinkielinenProjekti.current;
+      },
+      then: (schema) => schema.required("Kunnan nimi ruotsiksi on pakollinen"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    //etunimi: Yup.string().required("Etunimi on pakollinen"),
+    //sukunimi: Yup.string().required("Sukunimi on pakollinen"),
+    //puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
+    //email: Yup.string().email("Email on virheellistä muotoa").required("Email on pakollinen"),
+    osapuolenHenkilot: Yup.array()
+      .of(Yup.object().shape({}))
+      .min(1, "Ainakin yksi edustaja vaaditaan")
+      .max(2, "Enintään kaksi edustajaa sallitaan")
+      .required("Edustaja on pakollinen"),
+  });
+
+const maybeOsapuoliSchema: Yup.SchemaOf<Yup.InferType<typeof osapuoliSchema> | undefined> = osapuoliSchema
+  .notRequired()
+  .default(undefined)
+  .transform((value: any, originalValue: Record<string, any> | null | undefined) => {
+    if (originalValue == null || (typeof originalValue === "object" && Object.keys(originalValue).length === 0)) {
+      return undefined;
+    }
+    return value;
+  });
 
 export const perustiedotValidationSchema = Yup.object()
   .shape({
@@ -73,11 +93,11 @@ export const perustiedotValidationSchema = Yup.object()
     vahainenMenettely: Yup.boolean().nullable().optional(),
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
-      // .shape({
-      //   osapuoli1: osapuoliSchema.required("osapuoli1 is required"),
-      //   //osapuoli2: osapuoliSchema.nullable().optional(),
-      //   //osapuoli3: osapuoliSchema.nullable().optional(),
-      // })
+      .shape({
+        osapuoli1: osapuoliSchema.required("osapuoli1 on pakollinen"),
+        osapuoli2: maybeOsapuoliSchema,
+        osapuoli3: maybeOsapuoliSchema,
+      })
 
       // .shape({
       //   yhteysHenkilo: Yup.string().nullable(),
