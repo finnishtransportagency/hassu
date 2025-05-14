@@ -39,7 +39,13 @@ const osapuoliSchema = Yup.object()
     osapuolenLogo: Yup.object()
       .shape({
         SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
-        RUOTSI: Yup.mixed().nullable().optional(),
+        RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
+          is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => {
+            return isRuotsinkielinenProjekti.current;
+          },
+          then: (schema) => schema.required("Ruotsinkielinen Kunnan logo on pakollinen"),
+          otherwise: (schema) => schema.notRequired(),
+        }),
       })
       .nullable(),
     osapuolenHenkilot: Yup.array()
