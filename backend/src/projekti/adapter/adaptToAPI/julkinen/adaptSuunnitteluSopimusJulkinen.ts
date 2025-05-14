@@ -23,16 +23,18 @@ export function adaptSuunnitteluSopimusJulkaisuJulkinen(
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:
-            osapuoli.osapuolenHenkilot?.map((henkilo) => ({
-              __typename: "OsapuolenHenkilo",
-              etunimi: henkilo.etunimi || "",
-              sukunimi: henkilo.sukunimi || "",
-              puhelinnumero: henkilo.puhelinnumero || "",
-              email: henkilo.email || "",
-              yritys: henkilo.yritys || "",
-              kunta: henkilo.kunta || "",
-              valittu: Boolean(henkilo.valittu),
-            })) || [],
+            osapuoli.osapuolenHenkilot
+              ?.filter((henkilo) => henkilo.valittu)
+              .map((henkilo) => ({
+                __typename: "OsapuolenHenkilo",
+                etunimi: henkilo.etunimi || "",
+                sukunimi: henkilo.sukunimi || "",
+                puhelinnumero: henkilo.puhelinnumero || "",
+                email: henkilo.email || "",
+                yritys: henkilo.yritys || "",
+                kunta: henkilo.kunta || "",
+                //valittu: henkilo.valittu ?? true,
+              })) || [],
         })) || null,
     };
   }
@@ -61,15 +63,17 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisuJulkinen(
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogotToAPIJulkinen(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:
-            osapuoli.osapuolenHenkilot?.map((henkilo) => ({
-              __typename: "OsapuolenHenkilo",
-              etunimi: henkilo.etunimi || "",
-              sukunimi: henkilo.sukunimi || "",
-              puhelinnumero: henkilo.puhelinnumero || "",
-              email: henkilo.email || "",
-              yritys: henkilo.yritys || "",
-              valittu: Boolean(henkilo.valittu),
-            })) || [],
+            osapuoli.osapuolenHenkilot
+              ?.filter((henkilo) => henkilo.valittu)
+              .map((henkilo) => ({
+                __typename: "OsapuolenHenkilo",
+                etunimi: henkilo.etunimi || "",
+                sukunimi: henkilo.sukunimi || "",
+                puhelinnumero: henkilo.puhelinnumero || "",
+                email: henkilo.email || "",
+                yritys: henkilo.yritys || "",
+                // valittu: henkilo.valittu ?? true,
+              })) || [],
         })) || null,
     };
   }

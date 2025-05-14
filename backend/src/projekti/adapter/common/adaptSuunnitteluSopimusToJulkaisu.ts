@@ -22,14 +22,16 @@ export function adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu(
           osapuolenTyyppi: osapuoli.osapuolenTyyppi || "",
           osapuolenLogo: osapuoli.osapuolenLogo ? adaptLogot(oid, osapuoli.osapuolenLogo) : null,
           osapuolenHenkilot:
-            osapuoli.osapuolenHenkilot?.map((henkilo) => ({
-              etunimi: henkilo.etunimi || "",
-              sukunimi: henkilo.sukunimi || "",
-              puhelinnumero: henkilo.puhelinnumero || "",
-              email: henkilo.email || "",
-              yritys: henkilo.yritys || "",
-              valittu: Boolean(henkilo.valittu),
-            })) || [],
+            osapuoli.osapuolenHenkilot
+              ?.filter((henkilo) => henkilo.valittu)
+              .map((henkilo) => ({
+                etunimi: henkilo.etunimi || "",
+                sukunimi: henkilo.sukunimi || "",
+                puhelinnumero: henkilo.puhelinnumero || "",
+                email: henkilo.email || "",
+                yritys: henkilo.yritys || "",
+                //valittu: henkilo.valittu ?? true,
+              })) || [],
         })) || null,
     };
   }
