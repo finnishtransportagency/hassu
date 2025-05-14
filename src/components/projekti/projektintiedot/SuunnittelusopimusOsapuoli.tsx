@@ -11,6 +11,7 @@ import { H4 } from "@components/Headings";
 import HenkiloLista from "./SuunnittelusopimusHenkilolista";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
+import { Kieli } from "@services/api";
 
 interface SuunnittelusopimusOsapuoliProps {
   osapuoliNumero: number;
@@ -64,6 +65,8 @@ export default function SuunnittelusopimusOsapuoli({
 
   const fieldPath = (field: string) => `suunnitteluSopimus.osapuoli${osapuoliNumero}.${field}` as const as keyof FormValues;
 
+  const hasRuotsi = ensisijainenKaannettavaKieli === Kieli.RUOTSI || toissijainenKaannettavaKieli === Kieli.RUOTSI;
+
   return (
     <SectionContent largeGaps sx={{ marginTop: 10, marginLeft: 10 }}>
       <SectionContent>
@@ -110,12 +113,14 @@ export default function SuunnittelusopimusOsapuoli({
               error={getFieldError(fieldPath("osapuolenNimiFI"))}
               disabled={formDisabled}
             />
-            <TextInput
-              label="Kunnan nimi ruotsiksi *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
-              error={getFieldError(fieldPath("osapuolenNimiSV"))}
-              disabled={formDisabled}
-            />
+            {hasRuotsi && (
+              <TextInput
+                label="Kunnan nimi ruotsiksi *"
+                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
+                error={getFieldError(fieldPath("osapuolenNimiSV"))}
+                disabled={formDisabled}
+              />
+            )}
           </HassuGrid>
         ) : (
           <HassuGrid cols={{ lg: 3 }}>
@@ -125,12 +130,14 @@ export default function SuunnittelusopimusOsapuoli({
               error={getFieldError(fieldPath("osapuolenNimiFI"))}
               disabled={formDisabled}
             />
-            <TextInput
-              label="Yrityksen nimi ruotsiksi *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
-              error={getFieldError(fieldPath("osapuolenNimiSV"))}
-              disabled={formDisabled}
-            />
+            {hasRuotsi && (
+              <TextInput
+                label="Yrityksen nimi ruotsiksi *"
+                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
+                error={getFieldError(fieldPath("osapuolenNimiSV"))}
+                disabled={formDisabled}
+              />
+            )}
           </HassuGrid>
         )}
 
