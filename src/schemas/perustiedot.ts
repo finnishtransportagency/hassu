@@ -25,13 +25,13 @@ const osapuoliSchema = Yup.object()
   .required("osapuoli1 on pakollinen")
   .shape({
     osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen").min(1, "Kunnan nimi suomeksi on pakollinen"),
-    osapuolenNimiSV: Yup.string().when("$isRuotsinkielinenProjekti", {
-      is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => {
-        return isRuotsinkielinenProjekti.current;
-      },
-      then: (schema) => schema.required("Kunnan nimi ruotsiksi on pakollinen"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    // osapuolenNimiSV: Yup.string().when("$isRuotsinkielinenProjekti", {
+    //   is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => {
+    //     return isRuotsinkielinenProjekti.current;
+    //   },
+    //   then: (schema) => schema.required("Kunnan nimi ruotsiksi on pakollinen"),
+    //   otherwise: (schema) => schema.notRequired(),
+    // }),
     //etunimi: Yup.string().required("Etunimi on pakollinen"),
     //sukunimi: Yup.string().required("Sukunimi on pakollinen"),
     //puhelinnumero: Yup.string().required("Puhelinnumero on pakollinen"),
@@ -39,13 +39,13 @@ const osapuoliSchema = Yup.object()
     osapuolenLogo: Yup.object()
       .shape({
         SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
-        RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
-          is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => {
-            return isRuotsinkielinenProjekti.current;
-          },
-          then: (schema) => schema.required("Ruotsinkielinen Kunnan logo on pakollinen"),
-          otherwise: (schema) => schema.notRequired(),
-        }),
+        // RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
+        //   is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => {
+        //     return isRuotsinkielinenProjekti.current;
+        //   },
+        //   then: (schema) => schema.required("Ruotsinkielinen Kunnan logo on pakollinen"),
+        //   otherwise: (schema) => schema.notRequired(),
+        // }),
       })
       .nullable(),
     osapuolenHenkilot: Yup.array()
