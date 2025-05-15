@@ -70,6 +70,43 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
     return arr.map((hlo) => ({ kayttajatunnus: hlo.kayttajatunnus, ...projektiKayttajaToYhteystieto(hlo, projekti?.suunnitteluSopimus) }));
   }, [projekti]);
 
+  const suunnitteluSopimus = projekti?.suunnitteluSopimus;
+  const isSuunnitteluSopimus = suunnitteluSopimus?.osapuolet && suunnitteluSopimus?.osapuolet.length > 0;
+
+  const osapuoltenHenkilot = useMemo(() => {
+    if (!isSuunnitteluSopimus) return [];
+
+    const henkilot = [] as any;
+    suunnitteluSopimus?.osapuolet?.forEach((osapuoli) => {
+      if (osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+        const organisaationNimi = osapuoli.osapuolenNimiFI;
+        osapuoli.osapuolenHenkilot
+          .filter((henkilo) => henkilo?.valittu === true)
+          .forEach((henkilo) => {
+            henkilot.push({
+              ...henkilo,
+              organisaatio: henkilo?.yritys || organisaationNimi || "",
+            });
+          });
+      }
+    });
+    return henkilot;
+  }, [isSuunnitteluSopimus, suunnitteluSopimus]);
+
+  const henkiloListalle = (henkilo: { etunimi: any; sukunimi: any; organisaatio: string; email: string; puhelinnumero: string }) => {
+    const nimi = `${henkilo.etunimi || ""} ${henkilo.sukunimi || ""}`.trim();
+    const organisaatio = henkilo.organisaatio || "";
+    const email = henkilo.email || "";
+    const puhelin = henkilo.puhelinnumero || "";
+
+    let muotoiltuNimi = nimi;
+    if (organisaatio) muotoiltuNimi += `, (${organisaatio})`;
+    if (puhelin) muotoiltuNimi += `, ${puhelin}`;
+    if (email) muotoiltuNimi += `, ${email}`;
+
+    return muotoiltuNimi;
+  };
+
   return (
     <Section>
       <SectionContent>
@@ -80,6 +117,20 @@ function KuulutuksenYhteystiedot({ projekti, disableFields }: Props): ReactEleme
           tallennetuista tiedoista.
         </p>
       </SectionContent>
+      {isSuunnitteluSopimus && osapuoltenHenkilot.length > 0 && (
+        <FormGroup label="Suunnittelusopimukseen tallennetut osapuolten henkilöt" inlineFlex>
+          {osapuoltenHenkilot.map(
+            (henkilo: { etunimi: any; sukunimi: any; organisaatio: string; email: string; puhelinnumero: string }, index: any) => (
+              <FormControlLabel
+                key={`osapuoli-henkilo-${index}`}
+                sx={{ marginLeft: "0px" }}
+                label={henkiloListalle(henkilo)}
+                control={<Checkbox checked disabled />}
+              />
+            )
+          )}
+        </FormGroup>
+      )}
       {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
         <Controller
           control={control}
