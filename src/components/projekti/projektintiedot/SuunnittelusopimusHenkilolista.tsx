@@ -137,11 +137,18 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
           <div className="projekti-henkilot-list" style={{ marginTop: "1rem" }}>
             {projekti?.kayttoOikeudet?.map((kayttaja, index) => (
               <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
-                <span>{formatHenkilo(kayttaja)}</span>
+                <span
+                  style={{
+                    minWidth: "500px",
+                    display: "inline-block",
+                  }}
+                >
+                  {formatHenkilo(kayttaja)}
+                </span>
                 <Button
                   type="button"
                   onClick={() => lisaaKayttajaOsapuolenHenkiloksi(kayttaja)}
-                  style={{ marginLeft: "1rem" }}
+                  style={{ width: "auto" }}
                   id={`lisaa_projektihenkilö_${kayttaja.kayttajatunnus}`}
                 >
                   Lisää osapuolen edustajaksi
@@ -164,9 +171,9 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
                     onChange={() => toggleHenkiloSelection(index)}
                     disabled={false}
                   />
-                  <span style={{ marginLeft: "0.5rem" }}>{formatHenkilo(henkilo)}</span>
+                  <span style={{ marginLeft: "0.5rem", minWidth: "450px", display: "inline-block" }}>{formatHenkilo(henkilo)}</span>
                   <IconButton onClick={() => poistaHenkilo(index)}>
-                    <SvgIcon fontSize="small" style={{ marginLeft: 10 }}>
+                    <SvgIcon fontSize="small">
                       <FontAwesomeIcon icon="trash" />
                     </SvgIcon>
                   </IconButton>
