@@ -11,7 +11,7 @@ interface Props {
 
 export default function OsapuolenPoistoDialog({ dialogiOnAuki, onClose, onAccept }: Props): ReactElement {
   const getDialogContent = () => {
-    return <>Olet poistamassa osapuolen tiedot. Haluatko varmasti poistaa?</>;
+    return <>Olet poistamassa suunnittelusopimuksen osapuolen tiedot. Haluatko varmasti poistaa?</>;
   };
 
   return (
