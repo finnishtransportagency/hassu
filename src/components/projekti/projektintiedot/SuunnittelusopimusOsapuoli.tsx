@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { Controller, useFormContext, UseFormWatch } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import FormGroup from "@components/form/FormGroup";
@@ -12,6 +12,7 @@ import HenkiloLista from "./SuunnittelusopimusHenkilolista";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
 import { Kieli, Projekti } from "@services/api";
+import OsapuolenPoistoDialog from "../common/OsapuolenPoistoDialog";
 
 interface SuunnittelusopimusOsapuoliProps {
   osapuoliNumero: number;
@@ -42,6 +43,23 @@ export default function SuunnittelusopimusOsapuoli({
     getValues,
     setValue,
   } = useFormContext<FormValues>();
+
+  const [OsapuoltenPoistoDialogOpen, setOsapuolenPoistoDialogOpen] = useState(false);
+
+  const avaaVahvistusdialogi = () => {
+    setOsapuolenPoistoDialogOpen(true);
+  };
+
+  const peruutaPoisto = () => {
+    setOsapuolenPoistoDialogOpen(false);
+  };
+
+  const vahvistaPoisto = () => {
+    if (poistaOsapuoli) {
+      poistaOsapuoli();
+    }
+    setOsapuolenPoistoDialogOpen(false);
+  };
 
   const suunnittelusopimus = watch("suunnittelusopimusprojekti");
 
@@ -84,13 +102,26 @@ export default function SuunnittelusopimusOsapuoli({
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <H4>{osapuoliNumero}. osapuoli</H4>
           {poistaOsapuoli && (
-            <IconButton onClick={poistaOsapuoli} disabled={disabled} size="large" type="button">
+            <IconButton
+              onClick={avaaVahvistusdialogi}
+              disabled={disabled}
+              size="large"
+              type="button"
+              style={{
+                padding: 0,
+                marginLeft: "10px",
+                height: "fit-content",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <SvgIcon>
                 <FontAwesomeIcon icon="trash" />
               </SvgIcon>
             </IconButton>
           )}
         </div>
+        <OsapuolenPoistoDialog dialogiOnAuki={OsapuoltenPoistoDialogOpen} onClose={peruutaPoisto} onAccept={vahvistaPoisto} />
 
         <Controller
           name={`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any}
