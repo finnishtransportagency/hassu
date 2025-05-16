@@ -35,6 +35,13 @@ const lyhytOsoiteRedirects = [
   },
 ];
 
+const urlRewrites = [
+  {
+    source: `${BaseConfig.frontendPrefix}/:path*`,
+    destination: "/:path*"
+  },
+]
+
 function setupLocalDevelopmentMode(config, env) {
   process.env.AWS_SDK_LOAD_CONFIG = "true";
   env.AWS_REGION = "eu-west-1";
@@ -55,6 +62,7 @@ function setupLocalDevelopmentMode(config, env) {
     env,
     async rewrites() {
       return [
+        ...urlRewrites,
         {
           source: "/yllapito/tiedostot/:path*",
           destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/tiedostot/:path*",
@@ -133,6 +141,9 @@ module.exports = (phase) => {
     config.redirects = async () => {
       return lyhytOsoiteRedirects;
     };
+    config.rewrites = async () => {
+      return urlRewrites
+    }
   }
   return nextTranslate(config);
 };

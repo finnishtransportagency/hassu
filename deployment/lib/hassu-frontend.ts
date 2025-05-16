@@ -279,9 +279,16 @@ export class HassuFrontendStack extends Stack {
       invalidationPaths: ["/*"],
     });
 
+    // Do the new setup now only in dev or in developer env
     if (Config.infraEnvironment == "dev") {
+      // We need to add prefix to frontend requests so that we can define rules in Vayla proxy ALB level
+      const frontendPrefixRequestURIFunction = this.createFrontendPrefixRequestURIFunction(env, BaseConfig.frontendPrefix, edgeFunctionRole)
+      edgeLambdas.push({
+        functionVersion: frontendPrefixRequestURIFunction.currentVersion, eventType: LambdaEdgeEventType.ORIGIN_REQUEST
+      });
+
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
       });
 
       const commonNextBehaviourOptions: BehaviorOptions = {
@@ -299,31 +306,36 @@ export class HassuFrontendStack extends Stack {
           cachePolicy: cachePolicies.nextLambdaCachePolicy,
         },
         additionalBehaviors: {
-          "_next/image*": {
+          "/_next/image*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_ALL,
             cachePolicy: cachePolicies.nextImageCachePolicy,
           },
-          "_next/data/*": {
+          "/_next/data/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             cachePolicy: cachePolicies.nextLambdaCachePolicy,
           },
-          "_next/*": {
+          "/_next/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             cachePolicy: cachePolicies.nextStaticsCachePolicy,
           },
-          "static/*": {
+          //"static/*": {
+          //  ...commonNextBehaviourOptions,
+          //  allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          //  cachePolicy: cachePolicies.nextStaticsCachePolicy,
+          //},
+          "/assets/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             cachePolicy: cachePolicies.nextStaticsCachePolicy,
           },
-          "api/*": {
-            ...commonNextBehaviourOptions,
-            allowedMethods: AllowedMethods.ALLOW_ALL,
-            cachePolicy: cachePolicies.nextLambdaCachePolicy,
-          },
+          //"api/*": {
+          //  ...commonNextBehaviourOptions,
+          //  allowedMethods: AllowedMethods.ALLOW_ALL,
+          //  cachePolicy: cachePolicies.nextLambdaCachePolicy,
+          //},
           ...behaviours,
         },
         priceClass: PriceClass.PRICE_CLASS_100,
@@ -483,6 +495,20 @@ export class HassuFrontendStack extends Stack {
       handler: "index.handler",
       role,
     });
+  }
+
+  private createFrontendPrefixRequestURIFunction(env: string, prefix: string, role: Role): EdgeFunction {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendPrefixRequestURI.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      PREFIX: prefix
+    });
+    return new cloudfront.experimental.EdgeFunction(this, "frontendPrefixRequestURIFunction", {
+      runtime: Runtime.NODEJS_22_X,
+      functionName: "frontendPrefixRequestURIFunction" + env,
+      code: Code.fromInline(functionCode),
+      handler: "index.handler",
+      role
+    })
   }
 
   private async createDistributionProperties(
