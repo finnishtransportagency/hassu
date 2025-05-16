@@ -5,13 +5,15 @@ import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import SuunnittelusopimusOsapuoliHenkilo from "./SuunnittelusopimusOsapuoliHenkilo";
-import { H4 } from "@components/Headings";
+import { H4, H5 } from "@components/Headings";
 import { Checkbox, IconButton, SvgIcon } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Projekti } from "@services/api";
 
 interface HenkiloListaProps {
   osapuoliNumero: number;
   osapuoliTyyppi: string;
+  projekti?: Projekti | null;
 }
 
 interface Henkilo {
@@ -22,19 +24,43 @@ interface Henkilo {
   kunta: string;
   yritys: string;
   valittu: boolean;
+  kayttajatunnus?: string;
+  isProjektiHenkilo?: boolean;
 }
 
-export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: HenkiloListaProps): ReactElement {
-  const { setValue, getValues } = useFormContext<FormValues>();
+export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti }: HenkiloListaProps): ReactElement {
+  const { setValue, getValues, watch, setFocus } = useFormContext<FormValues>();
 
   const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>([]);
+  const [naytaUusiEdustajaKentat, setNaytaUusiEdustajaKentat] = useState(false);
+
+  const suunnittelusopimus = watch("suunnittelusopimusprojekti");
+
+  useEffect(() => {
+    if (!projekti) return;
+    if (suunnittelusopimus === "true" && !getValues("suunnitteluSopimus.osapuoliMaara" as any)) {
+      setValue("suunnitteluSopimus.osapuoliMaara" as any, 1);
+    }
+  }, [suunnittelusopimus, getValues, setValue, projekti]);
 
   useEffect(() => {
     const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
     setOsapuolenHenkilot(henkilot);
+    const tallennettuNayttoTila = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.naytaKentat` as any);
+    if (tallennettuNayttoTila !== undefined) {
+      setNaytaUusiEdustajaKentat(tallennettuNayttoTila);
+    }
   }, [getValues, osapuoliNumero, osapuoliTyyppi]);
 
-  const maxHenkilot = 2;
+  const vaihdaKenttienNakyvyys = (tila: boolean) => {
+    setNaytaUusiEdustajaKentat(tila);
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.naytaKentat` as any, tila);
+    if (tila) {
+      setTimeout(() => {
+        setFocus(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any);
+      }, 100);
+    }
+  };
 
   const toggleHenkiloSelection = (index: number) => {
     const paivitetytHenkilot = [...osapuolenHenkilot];
@@ -76,96 +102,181 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
     return `${etunimi} ${sukunimi} ${sulkeetSisalto}`;
   };
 
+  const maxHenkilot = 2;
+
+  const lisaaKayttajaOsapuolenHenkiloksi = (kayttaja: any) => {
+    if (osapuolenHenkilot.length >= maxHenkilot) {
+      alert("Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.");
+      return;
+    }
+
+    const onJoListalla = osapuolenHenkilot.some(
+      (henkilo) => henkilo.email === kayttaja.email || (kayttaja.kayttajatunnus && henkilo.kayttajatunnus === kayttaja.kayttajatunnus)
+    );
+
+    if (onJoListalla) {
+      alert("Tämä henkilö on jo lisätty osapuolen edustajiin.");
+      return;
+    }
+
+    const uusiHenkilo: Henkilo = {
+      etunimi: kayttaja.etunimi || "",
+      sukunimi: kayttaja.sukunimi || "",
+      email: kayttaja.email || "",
+      puhelinnumero: kayttaja.puhelinnumero || "",
+      kunta: osapuoliTyyppi === "kunta" ? kayttaja.kunta || "" : "",
+      yritys: osapuoliTyyppi !== "kunta" ? kayttaja.yritys || "" : "",
+      valittu: true,
+      kayttajatunnus: kayttaja.kayttajatunnus,
+      isProjektiHenkilo: true,
+    };
+
+    const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
+    setOsapuolenHenkilot(paivitetytHenkilot);
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+  };
+
   return (
     <ContentSpacer gap={8}>
-      <div style={{ marginTop: "3rem" }}>
-        <H4>{osapuoliTyyppi === "kunta" ? "Kunnan edustajan tiedot" : "Yrityksen edustajan tiedot"}</H4>
+      <div style={{ marginTop: "3rem", marginLeft: "2rem" }}>
+        <H4>{"Osapuolen edustajan tiedot"}</H4>
         <p>
-          Lisättyjen edustajien listalta valittu henkilö näkyy aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella
-          puolella projektin yleisissä yhteystiedoissa.
+          Voit valita osapuolen edustajaksi projektin henkilöitä tai lisätä kokonaan uusia edustajia. Lisää uusi edustaja valintalistalle
+          Lisää uusi -painikkeella. Edustajia voi olla korkeintaan kaksi per osapuoli.
         </p>
       </div>
-      {osapuolenHenkilot.length > 0 && (
-        <div style={{ marginTop: "1.5rem" }}>
-          <div className="henkilot-list">
-            {osapuolenHenkilot.map((henkilo: Henkilo, index) => (
-              <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
-                <Checkbox
-                  id={`henkilo-${index}-checkbox`}
-                  checked={henkilo.valittu || false}
-                  onChange={() => toggleHenkiloSelection(index)}
-                  disabled={false}
-                />
-                <span style={{ marginLeft: "0.5rem" }}>{formatHenkilo(henkilo)}</span>
-                <IconButton onClick={() => poistaHenkilo(index)}>
-                  <SvgIcon fontSize="small" style={{ marginLeft: 10 }}>
-                    <FontAwesomeIcon icon="trash" />
-                  </SvgIcon>
-                </IconButton>
-              </div>
-            ))}
+      <SectionContent largeGaps sx={{ marginLeft: 8 }}>
+        <H5>Projektin henkilöt</H5>
+        <div className="projekti-henkilot-list" style={{ marginTop: "1rem" }}>
+          {projekti?.kayttoOikeudet?.map((kayttaja, index) => (
+            <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+              <span
+                style={{
+                  minWidth: "500px",
+                  display: "inline-block",
+                }}
+              >
+                {formatHenkilo(kayttaja)}
+              </span>
+              <Button
+                type="button"
+                onClick={() => lisaaKayttajaOsapuolenHenkiloksi(kayttaja)}
+                style={{ width: "auto" }}
+                id={`lisaa_projektihenkilö_${kayttaja.kayttajatunnus}`}
+              >
+                Lisää edustajaksi
+              </Button>
+            </div>
+          ))}
+          <div style={{ display: "flex", alignItems: "center", marginTop: "2rem" }}>
+            {osapuolenHenkilot.length < maxHenkilot ? (
+              <>
+                <span style={{ minWidth: "500px", display: "inline-block" }}></span>
+                <Button
+                  type="button"
+                  onClick={() => vaihdaKenttienNakyvyys(!naytaUusiEdustajaKentat)}
+                  style={{ width: "auto" }}
+                  id="lisaa_uusi_edustaja_nappi"
+                >
+                  {naytaUusiEdustajaKentat ? "Piilota kentät" : "Lisää uusi +"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <span style={{ marginTop: "1rem" }}>
+                  <p>Edustajia lisätty maksimimäärä. Poista edustaja alla olevalta valintalistalta ennen uuden lisäämistä.</p>
+                </span>
+              </>
+            )}
           </div>
         </div>
-      )}
+      </SectionContent>
+
       <div>
-        {osapuolenHenkilot.length < maxHenkilot ? (
+        {naytaUusiEdustajaKentat && osapuolenHenkilot.length < maxHenkilot && (
           <>
-            <SuunnittelusopimusOsapuoliHenkilo osapuoliNumero={osapuoliNumero} osapuoliTyyppi={osapuoliTyyppi} />
+            <SuunnittelusopimusOsapuoliHenkilo
+              osapuoliNumero={osapuoliNumero}
+              osapuoliTyyppi={osapuoliTyyppi}
+              renderLisaaPainike={() => (
+                <div style={{ marginTop: "1rem", marginBottom: "3rem", marginLeft: "2rem", display: "flex", gap: "1rem" }}>
+                  <Button
+                    disabled={false}
+                    onClick={() => {
+                      const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
+                      const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
+                      const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
+                      const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
 
-            <SectionContent>
-              <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
-                <Button
-                  disabled={false}
-                  onClick={() => {
-                    const etunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any) || "";
-                    const sukunimi = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any) || "";
-                    const email = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any) || "";
-                    const puhelinnumero = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any) || "";
+                      if (etunimi && sukunimi && email && puhelinnumero) {
+                        const uusiHenkilo = {
+                          etunimi: etunimi,
+                          sukunimi: sukunimi,
+                          email: email,
+                          puhelinnumero: puhelinnumero,
+                          kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
+                          yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
+                          valittu: true,
+                        };
 
-                    if (etunimi && sukunimi && email && puhelinnumero) {
-                      const uusiHenkilo = {
-                        etunimi: etunimi,
-                        sukunimi: sukunimi,
-                        email: email,
-                        puhelinnumero: puhelinnumero,
-                        kunta: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any) || "",
-                        yritys: getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any) || "",
-                        valittu: false,
-                      };
-
-                      const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
-                      setOsapuolenHenkilot(paivitetytHenkilot);
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
-                      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, "");
-                      if (osapuoliTyyppi === "kunta") {
-                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any, "");
+                        const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
+                        setOsapuolenHenkilot(paivitetytHenkilot);
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.etunimi` as any, "");
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.sukunimi` as any, "");
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.email` as any, "");
+                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.puhelinnumero` as any, "");
+                        if (osapuoliTyyppi === "kunta") {
+                          setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.kunta` as any, "");
+                        } else {
+                          setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, "");
+                        }
+                        vaihdaKenttienNakyvyys(false);
                       } else {
-                        setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.yritys` as any, "");
+                        alert("Täytä pakolliset tiedot");
                       }
-                    } else {
-                      alert("Täytä pakolliset tiedot");
-                    }
-                  }}
-                  type="button"
-                  id="lisaa_uusi_henkilo"
-                  className="primary"
-                >
-                  Lisää edustaja
-                </Button>
-              </div>
-            </SectionContent>
+                    }}
+                    type="button"
+                    id="lisaa_uusi_henkilo"
+                    className="primary"
+                  >
+                    Lisää edustajaksi
+                  </Button>
+                </div>
+              )}
+            />
           </>
-        ) : (
-          <SectionContent>
-            <div style={{ marginTop: "1rem", marginBottom: "3rem" }}>
-              <p>Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.</p>
-            </div>
-          </SectionContent>
         )}
       </div>
+      <SectionContent largeGaps sx={{ marginLeft: 8 }}>
+        {osapuolenHenkilot.length > 0 && (
+          <div>
+            <H5>Suunnittelusopimuksen osapuolen edustajat</H5>
+            <p>
+              Valintalistalta valitut henkilöt näkyvät aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella
+              projektin yleisissä yhteystiedoissa.
+            </p>
+            <div className="henkilot-list">
+              {osapuolenHenkilot.map((henkilo, index) => (
+                <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <Checkbox
+                    id={`henkilo-${index}-checkbox`}
+                    checked={henkilo.valittu || false}
+                    onChange={() => toggleHenkiloSelection(index)}
+                    disabled={false}
+                  />
+                  <span style={{ marginLeft: "0.5rem", minWidth: "450px", display: "inline-block" }}>{formatHenkilo(henkilo)}</span>
+                  <IconButton onClick={() => poistaHenkilo(index)}>
+                    <SvgIcon fontSize="small">
+                      <FontAwesomeIcon icon="trash" />
+                    </SvgIcon>
+                  </IconButton>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </SectionContent>
     </ContentSpacer>
   );
 }
