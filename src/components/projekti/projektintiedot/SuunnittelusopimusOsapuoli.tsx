@@ -147,24 +147,7 @@ export default function SuunnittelusopimusOsapuoli({
           )}
         />
 
-        {osapuoliTyyppi === "kunta" ? (
-          <HassuGrid cols={{ lg: 3 }}>
-            <TextInput
-              label="Osapuolen nimi suomeksi *"
-              {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
-              error={getFieldError(fieldPath("osapuolenNimiFI"))}
-              disabled={formDisabled}
-            />
-            {hasRuotsi && (
-              <TextInput
-                label="Osapuolen nimi ruotsiksi *"
-                {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
-                error={getFieldError(fieldPath("osapuolenNimiSV"))}
-                disabled={formDisabled}
-              />
-            )}
-          </HassuGrid>
-        ) : (
+        {(osapuoliTyyppi === "kunta" || osapuoliTyyppi === "yritys") && (
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
               label="Osapuolen nimi suomeksi *"
