@@ -8,7 +8,7 @@ import ButtonLink, { ButtonLinkProps } from "@components/button/ButtonLink";
 
 const TutustuSection = styled(Section)(() => {
   return sx({
-    backgroundImage: "url(rata_ja_tie_background.jpeg)",
+    backgroundImage: "url(assets/rata_ja_tie_background.jpeg)",
     paddingLeft: "1em",
     paddingRight: "1em",
     paddingTop: "1.5em",
