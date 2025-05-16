@@ -237,6 +237,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                         watch={watch}
                         poistaOsapuoli={osapuoliMaara > 1 ? () => handlePoistaOsapuoli(i) : undefined}
                         onViimeinenOsapuoli={i === 3}
+                        projekti={projekti}
                       />
                     );
 

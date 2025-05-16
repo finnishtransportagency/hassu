@@ -24,7 +24,7 @@ export default function SuunnittelusopimusOsapuoliHenkilo({
 
   return (
     <ContentSpacer gap={8}>
-      <div style={{ marginTop: "1.5rem" }}>
+      <div style={{ marginTop: "1.5rem", marginLeft: "2rem" }}>
         <H5>Uusi edustaja</H5>
         <p>
           Lisää uusi edustaja valintalistalle Lisää edustaja -painikkeella. Edustajia voi olla korkeintaan kaksi per osapuoli. Huomioi, että

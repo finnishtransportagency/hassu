@@ -11,7 +11,7 @@ import { H4 } from "@components/Headings";
 import HenkiloLista from "./SuunnittelusopimusHenkilolista";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
 import ProjektiSuunnittelusopimusLogoInput from "./ProjektiSuunnittelusopimusLogoInput";
-import { Kieli } from "@services/api";
+import { Kieli, Projekti } from "@services/api";
 
 interface SuunnittelusopimusOsapuoliProps {
   osapuoliNumero: number;
@@ -22,6 +22,7 @@ interface SuunnittelusopimusOsapuoliProps {
   watch: UseFormWatch<FormValues>;
   poistaOsapuoli?: () => void;
   onViimeinenOsapuoli?: boolean;
+  projekti?: Projekti | null;
 }
 
 export default function SuunnittelusopimusOsapuoli({
@@ -32,6 +33,7 @@ export default function SuunnittelusopimusOsapuoli({
   toissijainenKaannettavaKieli,
   watch,
   poistaOsapuoli,
+  projekti,
 }: SuunnittelusopimusOsapuoliProps): ReactElement {
   const {
     register,
@@ -40,6 +42,15 @@ export default function SuunnittelusopimusOsapuoli({
     getValues,
     setValue,
   } = useFormContext<FormValues>();
+
+  const suunnittelusopimus = watch("suunnittelusopimusprojekti");
+
+  useEffect(() => {
+    if (!projekti) return;
+    if (suunnittelusopimus === "true" && !getValues("suunnitteluSopimus.osapuoliMaara" as any)) {
+      setValue("suunnitteluSopimus.osapuoliMaara" as any, 1);
+    }
+  }, [suunnittelusopimus, getValues, setValue, projekti]);
 
   useEffect(() => {
     const tyyppiArvo = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
@@ -68,7 +79,7 @@ export default function SuunnittelusopimusOsapuoli({
   const hasRuotsi = ensisijainenKaannettavaKieli === Kieli.RUOTSI || toissijainenKaannettavaKieli === Kieli.RUOTSI;
 
   return (
-    <SectionContent largeGaps sx={{ marginTop: 10, marginLeft: 10 }}>
+    <SectionContent largeGaps sx={{ marginTop: 15, marginLeft: 10 }}>
       <SectionContent>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <H4>{osapuoliNumero}. osapuoli</H4>
@@ -108,14 +119,14 @@ export default function SuunnittelusopimusOsapuoli({
         {osapuoliTyyppi === "kunta" ? (
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
-              label="Kunnan nimi suomeksi *"
+              label="Osapuolen nimi suomeksi *"
               {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
               error={getFieldError(fieldPath("osapuolenNimiFI"))}
               disabled={formDisabled}
             />
             {hasRuotsi && (
               <TextInput
-                label="Kunnan nimi ruotsiksi *"
+                label="Osapuolen nimi ruotsiksi *"
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
                 error={getFieldError(fieldPath("osapuolenNimiSV"))}
                 disabled={formDisabled}
@@ -125,14 +136,14 @@ export default function SuunnittelusopimusOsapuoli({
         ) : (
           <HassuGrid cols={{ lg: 3 }}>
             <TextInput
-              label="Yrityksen nimi suomeksi *"
+              label="Osapuolen nimi suomeksi *"
               {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiFI` as any)}
               error={getFieldError(fieldPath("osapuolenNimiFI"))}
               disabled={formDisabled}
             />
             {hasRuotsi && (
               <TextInput
-                label="Yrityksen nimi ruotsiksi *"
+                label="Osapuolen nimi ruotsiksi *"
                 {...register(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenNimiSV` as any)}
                 error={getFieldError(fieldPath("osapuolenNimiSV"))}
                 disabled={formDisabled}
@@ -145,8 +156,9 @@ export default function SuunnittelusopimusOsapuoli({
           key={`henkilo-lista-osapuoli-${osapuoliNumero}-${Date.now()}`}
           osapuoliNumero={osapuoliNumero}
           osapuoliTyyppi={osapuoliTyyppi || "kunta"}
+          projekti={projekti}
         />
-        <SectionContent>
+        <SectionContent largeGaps sx={{ marginTop: 15, marginLeft: 8 }}>
           <H4>{osapuoliTyyppi === "kunta" ? "Kunnan" : "Yrityksen"} logo</H4>
           {ensisijainenKaannettavaKieli && (
             <ProjektiSuunnittelusopimusLogoInput<FormValues>

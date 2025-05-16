@@ -5,13 +5,15 @@ import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import SuunnittelusopimusOsapuoliHenkilo from "./SuunnittelusopimusOsapuoliHenkilo";
-import { H4 } from "@components/Headings";
+import { H4, H5 } from "@components/Headings";
 import { Checkbox, IconButton, SvgIcon } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Projekti } from "@services/api";
 
 interface HenkiloListaProps {
   osapuoliNumero: number;
   osapuoliTyyppi: string;
+  projekti?: Projekti | null;
 }
 
 interface Henkilo {
@@ -22,12 +24,23 @@ interface Henkilo {
   kunta: string;
   yritys: string;
   valittu: boolean;
+  kayttajatunnus?: string;
+  isProjektiHenkilo?: boolean;
 }
 
-export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: HenkiloListaProps): ReactElement {
-  const { setValue, getValues } = useFormContext<FormValues>();
+export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti }: HenkiloListaProps): ReactElement {
+  const { setValue, getValues, watch } = useFormContext<FormValues>();
 
   const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>([]);
+
+  const suunnittelusopimus = watch("suunnittelusopimusprojekti");
+
+  useEffect(() => {
+    if (!projekti) return;
+    if (suunnittelusopimus === "true" && !getValues("suunnitteluSopimus.osapuoliMaara" as any)) {
+      setValue("suunnitteluSopimus.osapuoliMaara" as any, 1);
+    }
+  }, [suunnittelusopimus, getValues, setValue, projekti]);
 
   useEffect(() => {
     const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
@@ -76,44 +89,99 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
     return `${etunimi} ${sukunimi} ${sulkeetSisalto}`;
   };
 
+  const lisaaKayttajaOsapuolenHenkiloksi = (kayttaja: any) => {
+    if (osapuolenHenkilot.length >= maxHenkilot) {
+      alert("Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.");
+      return;
+    }
+
+    const onJoListalla = osapuolenHenkilot.some(
+      (henkilo) => henkilo.email === kayttaja.email || (kayttaja.kayttajatunnus && henkilo.kayttajatunnus === kayttaja.kayttajatunnus)
+    );
+
+    if (onJoListalla) {
+      alert("Tämä henkilö on jo lisätty osapuolen edustajiin.");
+      return;
+    }
+
+    const uusiHenkilo: Henkilo = {
+      etunimi: kayttaja.etunimi || "",
+      sukunimi: kayttaja.sukunimi || "",
+      email: kayttaja.email || "",
+      puhelinnumero: kayttaja.puhelinnumero || "",
+      kunta: osapuoliTyyppi === "kunta" ? kayttaja.kunta || "" : "",
+      yritys: osapuoliTyyppi !== "kunta" ? kayttaja.yritys || "" : "",
+      valittu: true,
+      kayttajatunnus: kayttaja.kayttajatunnus,
+      isProjektiHenkilo: true,
+    };
+
+    const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
+    setOsapuolenHenkilot(paivitetytHenkilot);
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+  };
+
   return (
     <ContentSpacer gap={8}>
-      <div style={{ marginTop: "3rem" }}>
-        <H4>{osapuoliTyyppi === "kunta" ? "Kunnan edustajan tiedot" : "Yrityksen edustajan tiedot"}</H4>
+      <div style={{ marginTop: "3rem", marginLeft: "2rem" }}>
+        <H4>{"Osapuolen edustajan tiedot"}</H4>
         <p>
-          Lisättyjen edustajien valintalistalta valittu henkilö näkyy aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella
-          puolella projektin yleisissä yhteystiedoissa.
+          Valintalistalta valitut henkilöt näkyvät aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella projektin
+          yleisissä yhteystiedoissa.
         </p>
       </div>
-      {osapuolenHenkilot.length > 0 && (
-        <div style={{ marginTop: "1.5rem" }}>
-          <div className="henkilot-list">
-            {osapuolenHenkilot.map((henkilo: Henkilo, index) => (
+
+      {osapuoliNumero === 1 && (
+        <SectionContent largeGaps sx={{ marginLeft: 8 }}>
+          <H5>Projektin henkilöt</H5>
+          <div className="projekti-henkilot-list" style={{ marginTop: "1rem" }}>
+            {projekti?.kayttoOikeudet?.map((kayttaja, index) => (
               <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
-                <Checkbox
-                  id={`henkilo-${index}-checkbox`}
-                  checked={henkilo.valittu || false}
-                  onChange={() => toggleHenkiloSelection(index)}
-                  disabled={false}
-                />
-                <span style={{ marginLeft: "0.5rem" }}>{formatHenkilo(henkilo)}</span>
-                <IconButton onClick={() => poistaHenkilo(index)}>
-                  <SvgIcon fontSize="small" style={{ marginLeft: 10 }}>
-                    <FontAwesomeIcon icon="trash" />
-                  </SvgIcon>
-                </IconButton>
+                <span>{formatHenkilo(kayttaja)}</span>
+                <Button
+                  type="button"
+                  onClick={() => lisaaKayttajaOsapuolenHenkiloksi(kayttaja)}
+                  style={{ marginLeft: "1rem" }}
+                  id={`lisaa_projektihenkilö_${kayttaja.kayttajatunnus}`}
+                >
+                  Lisää osapuolen edustajaksi
+                </Button>
               </div>
             ))}
           </div>
-        </div>
+        </SectionContent>
       )}
+      <SectionContent largeGaps sx={{ marginLeft: 8 }}>
+        {osapuolenHenkilot.length > 0 && (
+          <div style={{ marginTop: "1rem" }}>
+            <H5>Suunnittelusopimukseen lisätyt henkilöt</H5>
+            <div className="henkilot-list">
+              {osapuolenHenkilot.map((henkilo, index) => (
+                <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
+                  <Checkbox
+                    id={`henkilo-${index}-checkbox`}
+                    checked={henkilo.valittu || false}
+                    onChange={() => toggleHenkiloSelection(index)}
+                    disabled={false}
+                  />
+                  <span style={{ marginLeft: "0.5rem" }}>{formatHenkilo(henkilo)}</span>
+                  <IconButton onClick={() => poistaHenkilo(index)}>
+                    <SvgIcon fontSize="small" style={{ marginLeft: 10 }}>
+                      <FontAwesomeIcon icon="trash" />
+                    </SvgIcon>
+                  </IconButton>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </SectionContent>
       <div>
         {osapuolenHenkilot.length < maxHenkilot ? (
           <>
             <SuunnittelusopimusOsapuoliHenkilo osapuoliNumero={osapuoliNumero} osapuoliTyyppi={osapuoliTyyppi} />
-
             <SectionContent>
-              <div style={{ marginTop: "1rem", marginBottom: "3rem", display: "flex", gap: "1rem" }}>
+              <div style={{ marginTop: "1rem", marginBottom: "3rem", marginLeft: "2rem", display: "flex", gap: "1rem" }}>
                 <Button
                   disabled={false}
                   onClick={() => {
@@ -160,7 +228,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi }: Henkilo
           </>
         ) : (
           <SectionContent>
-            <div style={{ marginTop: "1rem", marginBottom: "3rem" }}>
+            <div style={{ marginTop: "1rem", marginBottom: "3rem", marginLeft: "2rem" }}>
               <p>Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.</p>
             </div>
           </SectionContent>
