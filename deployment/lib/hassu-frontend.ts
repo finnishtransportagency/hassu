@@ -858,7 +858,7 @@ export class HassuFrontendCoreStack extends Stack {
     // ECS + Fargate
     const cluster = new Cluster(this, "ECSCluster", {
       vpc,
-      clusterName: "NextjsCluster",
+      clusterName: "NextjsCluster-" + Config.env,
     });
 
     const logGroup = new logs.LogGroup(this, "EcsLogGroup", {
@@ -869,6 +869,7 @@ export class HassuFrontendCoreStack extends Stack {
     const repository = Repository.fromRepositoryName(this, "NextjsRepo", "hassu-nextjs");
 
     const taskDefinition = new FargateTaskDefinition(this, "TaskDefinition", {
+      family: "NextJsTaskDef-" + Config.env,
       // TODO seuraa onko tämä riittävä vai pitääkö tuunata suuntaan tai toiseen
       memoryLimitMiB: 2048,
       cpu: 1024, // = 1 vCPU
@@ -878,7 +879,7 @@ export class HassuFrontendCoreStack extends Stack {
       },
     });
 
-    const containerName = "NextJsContainer";
+    const containerName = "NextJsContainer-" + Config.env;
     const containerPort = 3000;
 
     taskDefinition.addContainer("NextJsContainer", {
@@ -895,6 +896,7 @@ export class HassuFrontendCoreStack extends Stack {
 
     const fargateService = new FargateService(this, "nextJsAppFargateService", {
       cluster,
+      serviceName: "nextjs-service-" + Config.env,
       taskDefinition: taskDefinition,
       desiredCount: 1,
       minHealthyPercent: 50,
@@ -907,6 +909,7 @@ export class HassuFrontendCoreStack extends Stack {
     });
 
     const targetGroup = new ApplicationTargetGroup(this, "NextjsTG", {
+      targetGroupName: "NextJsTG" + Config.env,
       vpc,
       port: containerPort,
       protocol: ApplicationProtocol.HTTP,
@@ -943,9 +946,10 @@ export class HassuFrontendCoreStack extends Stack {
       scaleInCooldown: Duration.seconds(300), // Verbose default
     });
 
+    // TODO priority needs to be unique, perhaps some env prio mapping to define those where training > test > dev > (developer) order
     listener.addTargetGroups("Nextjs", {
       priority: 20,
-      conditions: [ListenerCondition.pathPatterns(["/*"])],
+      conditions: [ListenerCondition.pathPatterns(["/*"])], // TODO can use same set of prefixes as we give to the vaylapilvi
       targetGroups: [targetGroup],
     });
 
