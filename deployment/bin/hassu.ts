@@ -26,10 +26,8 @@ async function main() {
     awsAccountId = "000000000000";
   }
 
-  let nextJsImageTag: string;
-  if (Config.isDeveloperEnvironment()) {
-    nextJsImageTag = Config.env;
-  } else {
+  let nextJsImageTag: string = Config.env;
+  if (Config.isPermanentEnvironment()) {
     const commitHash = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION;
     if (commitHash) {
       nextJsImageTag = commitHash;
