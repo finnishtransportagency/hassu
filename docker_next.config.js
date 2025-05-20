@@ -38,9 +38,9 @@ const lyhytOsoiteRedirects = [
 const urlRewrites = [
   {
     source: `${BaseConfig.frontendPrefix}/:path*`,
-    destination: "/:path*"
+    destination: "/:path*",
   },
-]
+];
 
 function setupLocalDevelopmentMode(config, env) {
   process.env.AWS_SDK_LOAD_CONFIG = "true";
@@ -142,8 +142,8 @@ module.exports = (phase) => {
       return lyhytOsoiteRedirects;
     };
     config.rewrites = async () => {
-      return urlRewrites
-    }
+      return urlRewrites;
+    };
   }
   return nextTranslate(config);
 };

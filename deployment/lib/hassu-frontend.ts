@@ -282,9 +282,14 @@ export class HassuFrontendStack extends Stack {
     // Do the new setup now only in dev or in developer env
     if (Config.infraEnvironment == "dev") {
       // We need to add prefix to frontend requests so that we can define rules in Vayla proxy ALB level
-      const frontendPrefixRequestURIFunction = this.createFrontendPrefixRequestURIFunction(env, BaseConfig.frontendPrefix, edgeFunctionRole)
+      const frontendPrefixRequestURIFunction = this.createFrontendPrefixRequestURIFunction(
+        env,
+        BaseConfig.frontendPrefix,
+        edgeFunctionRole
+      );
       edgeLambdas.push({
-        functionVersion: frontendPrefixRequestURIFunction.currentVersion, eventType: LambdaEdgeEventType.ORIGIN_REQUEST
+        functionVersion: frontendPrefixRequestURIFunction.currentVersion,
+        eventType: LambdaEdgeEventType.ORIGIN_REQUEST,
       });
 
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
@@ -500,15 +505,15 @@ export class HassuFrontendStack extends Stack {
   private createFrontendPrefixRequestURIFunction(env: string, prefix: string, role: Role): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendPrefixRequestURI.js`).toString("utf-8");
     const functionCode = Fn.sub(sourceCode, {
-      PREFIX: prefix
+      PREFIX: prefix,
     });
     return new cloudfront.experimental.EdgeFunction(this, "frontendPrefixRequestURIFunction", {
       runtime: Runtime.NODEJS_22_X,
       functionName: "frontendPrefixRequestURIFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",
-      role
-    })
+      role,
+    });
   }
 
   private async createDistributionProperties(
