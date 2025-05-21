@@ -166,7 +166,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
               />
             )}
 
-            {field.value === "true" && !isVanhatTiedotOlemassa && (
+            <div style={{ display: field.value === "true" && !isVanhatTiedotOlemassa ? "block" : "none" }}>
               <Controller
                 name={"suunnitteluSopimus.osapuoliMaara" as any}
                 control={control}
@@ -249,7 +249,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                   return <>{osapuolet}</>;
                 }}
               />
-            )}
+            </div>
           </>
         )}
       />
