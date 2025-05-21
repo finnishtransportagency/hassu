@@ -176,7 +176,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
 
     const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
     setOsapuolenHenkilot(paivitetytHenkilot);
-    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot, { shouldValidate: true });
 
     setLisatytHenkilot((prev) => new Set([...prev, henkiloId]));
   };
