@@ -29,13 +29,35 @@ interface Henkilo {
 }
 
 export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti }: HenkiloListaProps): ReactElement {
-  const { setValue, getValues, watch, setFocus } = useFormContext<FormValues>();
+  const {
+    setValue,
+    getValues,
+    watch,
+    setFocus,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>([]);
   const [naytaUusiEdustajaKentat, setNaytaUusiEdustajaKentat] = useState(false);
   const [lisatytHenkilot, setLisatytHenkilot] = useState<Set<string>>(new Set());
 
   const suunnittelusopimus = watch("suunnittelusopimusprojekti");
+
+  const hasEdustajaError = () => {
+    const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
+
+    const suunnitteluSopimusErrors = errors?.suunnitteluSopimus as any;
+    const osapuoliErrors = suunnitteluSopimusErrors?.[`osapuoli${osapuoliNumero}`];
+    const henkilotError = osapuoliErrors?.osapuolenHenkilot;
+
+    return henkilot.length === 0 || henkilotError;
+  };
+
+  const hasValittuEdustajaError = () => {
+    const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
+    const valitutHenkilot = henkilot.filter((h: Henkilo) => h.valittu);
+    return henkilot.length > 0 && valitutHenkilot.length === 0;
+  };
 
   useEffect(() => {
     if (!projekti) return;
@@ -226,6 +248,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
               </>
             )}
           </div>
+          <div>{hasEdustajaError() && <p style={{ color: "red" }}>Lisää vähintään yksi edustaja.</p>}</div>
         </div>
       </SectionContent>
 
@@ -293,6 +316,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
               Valintalistalta valitut henkilöt näkyvät aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella
               projektin yleisissä yhteystiedoissa.
             </p>
+            {hasValittuEdustajaError() && <p style={{ color: "red" }}>Valitse listalta vähintään yksi edustaja.</p>}
             <div className="henkilot-list">
               {osapuolenHenkilot.map((henkilo, index) => (
                 <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>
