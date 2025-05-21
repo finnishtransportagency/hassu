@@ -31,6 +31,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     setValue,
     getValues,
     formState: { errors },
+    unregister,
   } = useFormContext<FormValues>();
 
   const kuntaOptions = kuntametadata.kuntaOptions("fi");
@@ -87,7 +88,11 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 row
                 value={field.value}
                 onChange={(value) => {
-                  field.onChange(value.target.value);
+                  const newValue = value.target.value;
+                  if (newValue === "false" && field.value === "true") {
+                    unregister("suunnitteluSopimus", { keepValue: false });
+                  }
+                  field.onChange(newValue);
                 }}
                 name={field.name}
                 onBlur={field.onBlur}
@@ -166,7 +171,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
               />
             )}
 
-            <div style={{ display: field.value === "true" && !isVanhatTiedotOlemassa ? "block" : "none" }}>
+            {field.value === "true" && !isVanhatTiedotOlemassa && (
               <Controller
                 name={"suunnitteluSopimus.osapuoliMaara" as any}
                 control={control}
@@ -249,7 +254,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                   return <>{osapuolet}</>;
                 }}
               />
-            </div>
+            )}
           </>
         )}
       />
