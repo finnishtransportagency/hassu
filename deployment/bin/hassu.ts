@@ -61,8 +61,7 @@ async function main() {
       console.log("Deployment of HassuBackendStack failed:", e);
       process.exit(1);
     });
-
-    if (Config.infraEnvironment == "dev") {
+    if (["dev", "test"].includes(Config.infraEnvironment)) {
       const hassuFrontendCoreStack = new HassuFrontendCoreStack(app, {
         awsAccountId,
         internalBucket: hassuDatabaseStack.internalBucket,
@@ -75,7 +74,7 @@ async function main() {
         nextJsImageTag,
       });
       await hassuFrontendCoreStack.process().catch((e) => {
-        console.log("Deployment of HassuFrontendStack failed:", e);
+        console.log("Deployment of HassuFrontendCoreStack failed:", e);
         process.exit(1);
       });
     }

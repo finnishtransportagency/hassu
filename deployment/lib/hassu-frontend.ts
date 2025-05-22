@@ -782,11 +782,19 @@ export class HassuFrontendCoreStack extends Stack {
     const accountStackOutputs = await readAccountStackOutputs();
     const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
+    // Sama ALB käytössä muualla kuin prodissa, joten ne priorisoidaan keskenään
+    const listenerPriorityMap: { [key: string]: number } = {
+      prod: 20,
+      training: 20,
+      test: 30,
+      dev: 40,
+      developer: 50,
+    };
+
     // VPC
     const vpc = await this.getVpc(config);
 
     // import ALB Listener. ALB Defined in hassu-suomifi repo
-
     const listener = ApplicationListener.fromLookup(this, "ExistingListener", {
       listenerArn: await config.getParameterNow(`/${Config.infraEnvironment}/ALBListenerArn`),
     });
@@ -872,7 +880,7 @@ export class HassuFrontendCoreStack extends Stack {
       family: "NextJsTaskDef-" + Config.env,
       // TODO seuraa onko tämä riittävä vai pitääkö tuunata suuntaan tai toiseen
       memoryLimitMiB: 2048,
-      cpu: 1024, // = 1 vCPU
+      cpu: 1024,
       runtimePlatform: {
         operatingSystemFamily: OperatingSystemFamily.LINUX,
         cpuArchitecture: CpuArchitecture.X86_64,
@@ -946,10 +954,12 @@ export class HassuFrontendCoreStack extends Stack {
       scaleInCooldown: Duration.seconds(300), // Verbose default
     });
 
-    // TODO priority needs to be unique, perhaps some env prio mapping to define those where training > test > dev > (developer) order
     listener.addTargetGroups("Nextjs", {
-      priority: 20,
-      conditions: [ListenerCondition.pathPatterns(["/*"])], // TODO can use same set of prefixes as we give to the vaylapilvi
+      priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
+      conditions: [
+        ListenerCondition.pathPatterns(["/*"]),
+        ListenerCondition.hostHeaders([NewCloudfrontPrivateDNSName, config.frontendDomainName]),
+      ],
       targetGroups: [targetGroup],
     });
 
