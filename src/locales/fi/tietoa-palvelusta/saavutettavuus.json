@@ -61,10 +61,10 @@
   },
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "Valvontaviranomaisen yhteystiedot",
-    "kappale1": "<p>Etelä-Suomen aluehallintovirasto<br/>Saavutettavuuden valvonnan yksikkö</p>",
+    "kappale1": "<p>Liikenne- ja viestintävirasto Traficom<br/>Digitaalisen esteettömyyden ja saavutettavuuden valvontayksikkö</p>",
     "linkki1": { "teksti": "Saavutettavuusvaatimukset.fi-sivusto", "href": "https://www.saavutettavuusvaatimukset.fi" },
-    "email": "saavutettavuus@avi.fi",
-    "puhelin": "vaihde 0295 016 000"
+    "email": "saavutettavuus@traficom.fi",
+    "puhelin": "puhelinnumero vaihde 029 534 5000"
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Puutteiden korjaaminen",
