@@ -14,37 +14,8 @@ export const UIValuesSchema = Yup.object().shape({
     .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
 });
 
-const osapuoliSchema = Yup.object()
-  .required("Ainakin yksi osapuoli on pakollinen")
-  .shape({
-    osapuolenNimiFI: Yup.string().required("Nimi suomeksi on pakollinen").min(1, "Nimi suomeksi on pakollinen"),
-    osapuolenNimiSV: Yup.string().when("$isRuotsinkielinenProjekti", {
-      is: (isRuotsinkielinenProjekti: any) => {
-        return isRuotsinkielinenProjekti?.current === true;
-      },
-      then: (schema) => schema.required("Nimi ruotsiksi on pakollinen"),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-
-    osapuolenLogo: Yup.object().shape({
-      SUOMI: Yup.mixed().required("Suomenkielinen logo on pakollinen"),
-      RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
-        is: (isRuotsinkielinenProjekti: any) => {
-          return isRuotsinkielinenProjekti?.current === true;
-        },
-        then: (schema) => schema.required("Ruotsinkielinen logo on pakollinen"),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    }),
-    osapuolenHenkilot: Yup.array()
-      .of(Yup.object().shape({}))
-      .min(1, "Ainakin yksi edustaja vaaditaan")
-      .max(2, "Enintään kaksi edustajaa sallitaan")
-      .required("Edustaja on pakollinen"),
-  });
-
-const makeMaybeOsapuoliSchema = (isPrimary: boolean): Yup.AnySchema => {
-  const base = osapuoliSchema
+const makeMaybeOsapuoliSchema = (): Yup.AnySchema => {
+  return Yup.object()
     .notRequired()
     .default(undefined)
     .transform((value: any, originalValue: Record<string, any> | null | undefined) => {
@@ -52,13 +23,46 @@ const makeMaybeOsapuoliSchema = (isPrimary: boolean): Yup.AnySchema => {
         return undefined;
       }
       return value;
-    });
+    })
+    .shape({
+      osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen"),
+      osapuolenNimiSV: Yup.string().when("$isRuotsinkielinenProjekti", {
+        is: (isRuotsinkielinenProjekti: any) => {
+          return isRuotsinkielinenProjekti?.current === true;
+        },
+        then: (schema) => schema.required("Kunnan nimi ruotsiksi on pakollinen"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      osapuolenLogo: Yup.object()
+        .shape({
+          SUOMI: Yup.mixed().required("Suomenkielinen logo on pakollinen"),
+          RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
+            is: (isRuotsinkielinenProjekti: any) => {
+              return isRuotsinkielinenProjekti?.current === true;
+            },
+            then: (schema) => schema.required("Ruotsinkielinen logo on pakollinen"),
+            otherwise: (schema) => schema.notRequired(),
+          }),
+        })
+        .nullable(),
+      osapuolenHenkilot: Yup.array()
+        .of(Yup.object().shape({}))
+        .min(1, "Ainakin yksi edustaja vaaditaan")
+        .max(2, "Enintään kaksi edustajaa sallitaan")
+        .required("Edustaja on pakollinen")
+        .test("atleast-one-selected", "Vähintään yksi henkilö on valittava", (value) => {
+          if (!value || !Array.isArray(value)) {
+            return true;
+          }
+          const henkilot = value as any[];
 
-  return base.when("yhteysHenkilo", {
-    is: (val: any) => !val || (typeof val === "string" && val.trim() === ""),
-    then: (schema: Yup.AnySchema) => (isPrimary ? schema.required("osapuoli1 on pakollinen") : schema),
-    otherwise: (schema: Yup.AnySchema) => schema.notRequired(),
-  });
+          if (henkilot.length === 0) {
+            return true;
+          }
+
+          return henkilot.some((henkilo) => henkilo?.valittu === true);
+        }),
+    });
 };
 
 export const perustiedotValidationSchema = Yup.object()
@@ -102,9 +106,9 @@ export const perustiedotValidationSchema = Yup.object()
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
       .shape({
-        osapuoli1: makeMaybeOsapuoliSchema(true),
-        osapuoli2: makeMaybeOsapuoliSchema(false),
-        osapuoli3: makeMaybeOsapuoliSchema(false),
+        osapuoli1: makeMaybeOsapuoliSchema(),
+        osapuoli2: makeMaybeOsapuoliSchema(),
+        osapuoli3: makeMaybeOsapuoliSchema(),
         yhteysHenkilo: Yup.string().optional().nullable(),
         kunta: Yup.string()
           .nullable()
