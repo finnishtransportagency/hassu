@@ -73,7 +73,10 @@ export default function SuunnittelusopimusOsapuoli({
   useEffect(() => {
     const tyyppiArvo = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any);
     if (!tyyppiArvo) {
-      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any, "kunta");
+      setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any, "kunta", {
+        shouldDirty: false,
+        shouldTouch: false,
+      });
     }
   }, [osapuoliNumero, getValues, setValue]);
 
@@ -167,7 +170,7 @@ export default function SuunnittelusopimusOsapuoli({
         )}
 
         <HenkiloLista
-          key={`henkilo-lista-osapuoli-${osapuoliNumero}-${Date.now()}`}
+          key={`henkilo-lista-osapuoli-${osapuoliNumero}`}
           osapuoliNumero={osapuoliNumero}
           osapuoliTyyppi={osapuoliTyyppi || "kunta"}
           projekti={projekti}

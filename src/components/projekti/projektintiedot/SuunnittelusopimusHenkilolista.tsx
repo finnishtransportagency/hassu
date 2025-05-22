@@ -33,6 +33,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
 
   const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>([]);
   const [naytaUusiEdustajaKentat, setNaytaUusiEdustajaKentat] = useState(false);
+  const [lisatytHenkilot, setLisatytHenkilot] = useState<Set<string>>(new Set());
 
   const suunnittelusopimus = watch("suunnittelusopimusprojekti");
 
@@ -46,6 +47,17 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
   useEffect(() => {
     const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
     setOsapuolenHenkilot(henkilot);
+
+    const henkiloIdt = new Set<string>();
+    henkilot.forEach((henkilo: Henkilo) => {
+      if (henkilo.kayttajatunnus) {
+        henkiloIdt.add(henkilo.kayttajatunnus);
+      } else if (henkilo.email) {
+        henkiloIdt.add(henkilo.email);
+      }
+    });
+    setLisatytHenkilot(henkiloIdt);
+
     const tallennettuNayttoTila = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.naytaKentat` as any);
     if (tallennettuNayttoTila !== undefined) {
       setNaytaUusiEdustajaKentat(tallennettuNayttoTila);
@@ -73,10 +85,19 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
   };
 
   const poistaHenkilo = (index: number) => {
+    const poistettavaHenkilo = osapuolenHenkilot[index];
+    const henkiloId = poistettavaHenkilo.kayttajatunnus || poistettavaHenkilo.email;
+
     const paivitetytHenkilot = [...osapuolenHenkilot];
     paivitetytHenkilot.splice(index, 1);
     setOsapuolenHenkilot(paivitetytHenkilot);
     setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+
+    setLisatytHenkilot((prev) => {
+      const uusi = new Set([...prev]);
+      uusi.delete(henkiloId);
+      return uusi;
+    });
   };
 
   const formatHenkilo = (henkilo: any) => {
@@ -109,13 +130,13 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
       alert("Edustajia lisätty maksimimäärä. Poista edustaja ennen uuden lisäämistä.");
       return;
     }
-
+    const henkiloId = kayttaja.kayttajatunnus || kayttaja.email;
     const onJoListalla = osapuolenHenkilot.some(
       (henkilo) => henkilo.email === kayttaja.email || (kayttaja.kayttajatunnus && henkilo.kayttajatunnus === kayttaja.kayttajatunnus)
     );
 
     if (onJoListalla) {
-      alert("Tämä henkilö on jo lisätty osapuolen edustajiin.");
+      setLisatytHenkilot((prev) => new Set([...prev, henkiloId]));
       return;
     }
 
@@ -134,6 +155,8 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
     const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
     setOsapuolenHenkilot(paivitetytHenkilot);
     setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+
+    setLisatytHenkilot((prev) => new Set([...prev, henkiloId]));
   };
 
   return (
@@ -148,27 +171,38 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
       <SectionContent largeGaps sx={{ marginLeft: 8 }}>
         <H5>Projektin henkilöt</H5>
         <div className="projekti-henkilot-list" style={{ marginTop: "1rem" }}>
-          {projekti?.kayttoOikeudet?.map((kayttaja, index) => (
-            <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
-              <span
-                style={{
-                  minWidth: "500px",
-                  display: "inline-block",
-                }}
-              >
-                {formatHenkilo(kayttaja)}
-              </span>
-              <Button
-                type="button"
-                onClick={() => lisaaKayttajaOsapuolenHenkiloksi(kayttaja)}
-                style={{ width: "auto" }}
-                id={`lisaa_projektihenkilö_${kayttaja.kayttajatunnus}`}
-              >
-                Lisää edustajaksi
-              </Button>
-            </div>
-          ))}
-          <div style={{ display: "flex", alignItems: "center", marginTop: "2rem" }}>
+          {projekti?.kayttoOikeudet?.map((kayttaja, index) => {
+            const henkiloId = kayttaja.kayttajatunnus || kayttaja.email;
+            const onLisatty = lisatytHenkilot.has(henkiloId);
+
+            return (
+              <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
+                <span
+                  style={{
+                    minWidth: "500px",
+                    display: "inline-block",
+                  }}
+                >
+                  {formatHenkilo(kayttaja)}
+                </span>
+                {onLisatty ? (
+                  <span style={{ color: "#666", fontWeight: "bold" }}>Lisätty</span>
+                ) : osapuolenHenkilot.length >= maxHenkilot ? (
+                  <span style={{ color: "#666" }}>Maksimimäärä edustajia lisätty</span>
+                ) : (
+                  <Button
+                    type="button"
+                    onClick={() => lisaaKayttajaOsapuolenHenkiloksi(kayttaja)}
+                    style={{ width: "auto" }}
+                    id={`lisaa_projektihenkilö_${kayttaja.kayttajatunnus}`}
+                  >
+                    Lisää edustajaksi
+                  </Button>
+                )}
+              </div>
+            );
+          })}
+          <div style={{ display: "flex", alignItems: "center", marginTop: "1rem" }}>
             {osapuolenHenkilot.length < maxHenkilot ? (
               <>
                 <span style={{ minWidth: "500px", display: "inline-block" }}></span>
@@ -184,7 +218,10 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
             ) : (
               <>
                 <span style={{ marginTop: "1rem" }}>
-                  <p>Edustajia lisätty maksimimäärä. Poista edustaja alla olevalta valintalistalta ennen uuden lisäämistä.</p>
+                  <p>
+                    <strong>Edustajia voi olla korkeintaan kaksi.</strong> Poista edustaja alla olevalta valintalistalta ennen uuden
+                    lisäämistä.
+                  </p>
                 </span>
               </>
             )}
@@ -199,7 +236,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
               osapuoliNumero={osapuoliNumero}
               osapuoliTyyppi={osapuoliTyyppi}
               renderLisaaPainike={() => (
-                <div style={{ marginTop: "1rem", marginBottom: "3rem", marginLeft: "2rem", display: "flex", gap: "1rem" }}>
+                <div style={{ marginTop: "1.8rem", marginBottom: "3rem", marginLeft: "2rem", display: "flex", gap: "1rem" }}>
                   <Button
                     disabled={false}
                     onClick={() => {
