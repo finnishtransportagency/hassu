@@ -30,6 +30,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     lausunnot,
     kuulutuksetJaKutsu,
     poisValitutKuulutuksetJaKutsu,
+    poisValitutMaanomistajaluettelot,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
     maanomistajaluettelo,
@@ -43,6 +44,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     lausunnot: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.lausunnot, lausunnot),
     kuulutuksetJaKutsu: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.kuulutuksetJaKutsu, kuulutuksetJaKutsu),
     poisValitutKuulutuksetJaKutsu: poisValitutKuulutuksetJaKutsu || undefined,
+    poisValitutMaanomistajaluettelot: poisValitutMaanomistajaluettelot || undefined,
     muuAineistoVelhosta: adaptAineistotToSave(dbEnnakkoNeuvottelu?.muuAineistoVelhosta, muuAineistoVelhosta),
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
@@ -110,6 +112,7 @@ export async function adaptEnnakkoNeuvotteluToAPI(
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
     poisValitutKuulutuksetJaKutsu: ennakkoNeuvottelu.poisValitutKuulutuksetJaKutsu || undefined,
+    poisValitutMaanomistajaluettelot: ennakkoNeuvottelu.poisValitutMaanomistajaluettelot || undefined,
   };
 }
 
@@ -166,6 +169,7 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
       kuulutuksetJaKutsu: await Promise.all(getKutsut(dbProjekti, status).map(adaptFileInfoToLadattavaTiedosto)),
     },
     poisValitutKuulutuksetJaKutsu: ennakkoNeuvotteluJulkaisu.poisValitutKuulutuksetJaKutsu || undefined,
+    poisValitutMaanomistajaluettelot: ennakkoNeuvotteluJulkaisu.poisValitutMaanomistajaluettelot || undefined,
 
     hash: createEnnakkoNeuvotteluHash(oid, salt),
     lahetetty: ennakkoNeuvotteluJulkaisu.lahetetty,

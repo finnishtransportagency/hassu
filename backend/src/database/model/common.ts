@@ -35,7 +35,7 @@ export type Yhteystieto = {
   etunimi: string;
   sukunimi: string;
   organisaatio?: string;
-  kunta?: number;
+  kunta?: number | null;
   elyOrganisaatio?: ELY;
   puhelinnumero: string;
   sahkoposti: string;

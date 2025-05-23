@@ -343,6 +343,27 @@ async function synchronizeKuntaLogo(ctx: ImportContext) {
   }
 }
 
+async function synchronizeOsapuolenLogo(ctx: ImportContext) {
+  const osapuolenLogoPaths: string[] = [];
+  if (ctx.projekti.suunnitteluSopimus?.osapuolet) {
+    for (const osapuoli of ctx.projekti.suunnitteluSopimus.osapuolet) {
+      if (osapuoli?.osapuolenLogo) {
+        osapuolenLogoPaths.push(osapuoli.osapuolenLogo as any);
+      }
+    }
+  }
+  const status = ctx.projektiStatus;
+  const projekti = ctx.projekti;
+  if (
+    osapuolenLogoPaths.length > 0 &&
+    status &&
+    status !== API.Status.EI_JULKAISTU &&
+    status !== API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT
+  ) {
+    await synchronizeFilesToPublic(projekti.oid, new ProjektiPaths(projekti.oid).suunnittelusopimus(), dayjs("2000-01-01"));
+  }
+}
+
 async function synchronizeSijaintitieto(ctx: ImportContext) {
   const status = ctx.projektiStatus;
   const projekti = ctx.projekti;
@@ -355,6 +376,7 @@ async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
   await synchronizeEULogot(ctx);
   await synchronizeKuntaLogo(ctx);
   await synchronizeSijaintitieto(ctx);
+  await synchronizeOsapuolenLogo(ctx);
 
   const manager: ProjektiTiedostoManager = ctx.manager;
   return (

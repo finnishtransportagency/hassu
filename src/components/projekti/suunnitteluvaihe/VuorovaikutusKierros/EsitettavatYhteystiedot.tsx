@@ -2,7 +2,7 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import { Yhteystieto, YhteystietoInput } from "@services/api";
 import Section from "@components/layout/Section";
-import { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement, useMemo } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import FormGroup from "@components/form/FormGroup";
@@ -45,6 +45,43 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
 
   const { t } = useTranslation();
 
+  const suunnitteluSopimus = projekti?.suunnitteluSopimus;
+  const isSuunnitteluSopimus = suunnitteluSopimus?.osapuolet && suunnitteluSopimus?.osapuolet.length > 0;
+
+  const osapuoltenHenkilot = useMemo(() => {
+    if (!isSuunnitteluSopimus) return [];
+
+    const henkilot = [] as any;
+    suunnitteluSopimus?.osapuolet?.forEach((osapuoli) => {
+      if (osapuoli?.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+        const organisaationNimi = osapuoli.osapuolenNimiFI;
+        osapuoli.osapuolenHenkilot
+          .filter((henkilo) => henkilo?.valittu === true)
+          .forEach((henkilo) => {
+            henkilot.push({
+              ...henkilo,
+              organisaatio: henkilo?.yritys || organisaationNimi || "",
+            });
+          });
+      }
+    });
+    return henkilot;
+  }, [isSuunnitteluSopimus, suunnitteluSopimus]);
+
+  const henkiloListalle = (henkilo: { etunimi: any; sukunimi: any; organisaatio: string; email: string; puhelinnumero: string }) => {
+    const nimi = `${henkilo.etunimi || ""} ${henkilo.sukunimi || ""}`.trim();
+    const organisaatio = henkilo.organisaatio || "";
+    const email = henkilo.email || "";
+    const puhelin = henkilo.puhelinnumero || "";
+
+    let muotoiltuNimi = nimi;
+    if (organisaatio) muotoiltuNimi += `, (${organisaatio})`;
+    if (puhelin) muotoiltuNimi += `, ${puhelin}`;
+    if (email) muotoiltuNimi += `, ${email}`;
+
+    return muotoiltuNimi;
+  };
+
   return (
     <Section className="mt-8">
       <SectionContent>
@@ -54,6 +91,20 @@ export default function EsitettavatYhteystiedot({ projektiHenkilot }: Props): Re
           tiedot esitetään aina. Projektiin tallennettujen henkilöiden yhteystiedot haetaan Projektin henkilöt -sivulle tallennetuista
           tiedoista.
         </p>
+        {isSuunnitteluSopimus && osapuoltenHenkilot.length > 0 && (
+          <FormGroup label="Suunnittelusopimukseen tallennetut osapuolten henkilöt" inlineFlex>
+            {osapuoltenHenkilot.map(
+              (henkilo: { etunimi: any; sukunimi: any; organisaatio: string; email: string; puhelinnumero: string }, index: any) => (
+                <FormControlLabel
+                  key={`osapuoli-henkilo-${index}`}
+                  sx={{ marginLeft: "0px" }}
+                  label={henkiloListalle(henkilo)}
+                  control={<Checkbox checked disabled />}
+                />
+              )
+            )}
+          </FormGroup>
+        )}
         {projekti?.kayttoOikeudet && projekti.kayttoOikeudet.length > 0 ? (
           <Controller
             control={control}

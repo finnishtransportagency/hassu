@@ -69,6 +69,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
     lausunnot,
     kuulutuksetJaKutsu,
     poisValitutKuulutuksetJaKutsu,
+    poisValitutMaanomistajaluettelot,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
     maanomistajaluettelo,
@@ -95,6 +96,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       lausunnot: adaptLadatutTiedostotNewToInput(lausunnot),
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
       poisValitutKuulutuksetJaKutsu: poisValitutKuulutuksetJaKutsu,
+      poisValitutMaanomistajaluettelot: poisValitutMaanomistajaluettelot,
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
@@ -200,6 +202,7 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
                 <Maanomistajaluettelo
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.maanomistajaluettelo}
                   tiedostot={projekti.ennakkoNeuvottelu?.maanomistajaluettelo}
+                  poisValitutTiedostot={projekti.ennakkoNeuvottelu?.poisValitutMaanomistajaluettelot}
                   ennakkoneuvottelu={true}
                 />
                 <KuulutuksetJaKutsu

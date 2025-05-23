@@ -157,7 +157,20 @@ export default function collectHyvaksymisEsitysAineistot(
     tuotu: tiedosto.lisatty,
     valmis: true,
   }));
-  const maanomistajaluettelo = maanomistajaluetteloProjektista.concat(maanomistajaluetteloOmaltaKoneelta);
+  let maanomistajaluettelo = maanomistajaluetteloProjektista.concat(maanomistajaluetteloOmaltaKoneelta);
+
+  if (
+    isEnnakkoneuvottelu &&
+    Array.isArray(hyvaksymisEsitys.poisValitutMaanomistajaluettelot) &&
+    hyvaksymisEsitys.poisValitutMaanomistajaluettelot.length > 0
+  ) {
+    const poisValitutMaanomistajaluettelot = hyvaksymisEsitys.poisValitutMaanomistajaluettelot;
+
+    maanomistajaluettelo = maanomistajaluettelo.filter(
+      (tiedosto) => !tiedosto?.s3Key || !poisValitutMaanomistajaluettelot.includes(tiedosto.s3Key)
+    );
+  }
+
   const lausunnot = (hyvaksymisEsitys?.lausunnot ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "lausunnot", adaptFileName(tiedosto.nimi)),
     zipFolder: "Vuorovaikutusaineisto (D\u29F8400)/Lausunnot",

@@ -131,9 +131,29 @@ input MaakuntaVastaanottajaInput {
 }
 
 input SuunnitteluSopimusInput {
-  kunta: Int!
+  kunta: Int
   logo: LokalisoituTekstiInputEiPakollinen
-  yhteysHenkilo: String!
+  yhteysHenkilo: String
+  osapuolet: [SuunnitteluSopimusOsapuoliInput]
+}
+
+input SuunnitteluSopimusOsapuoliInput {
+  osapuolenNimiFI: String
+  osapuolenNimiSV: String
+  osapuolenHenkilot: [OsapuolenHenkilotInput]
+  osapuolenTyyppi: String
+  osapuolenLogo: LokalisoituTekstiInputEiPakollinen
+}
+
+input OsapuolenHenkilotInput {
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  yritys: String
+  kunta: String
+  organisaatio: String
+  valittu: Boolean
 }
 
 input VuorovaikutusKierrosInput {
@@ -293,6 +313,7 @@ input EnnakkoNeuvotteluInput {
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [SahkopostiVastaanottajaInput!]
   poisValitutKuulutuksetJaKutsu: [String!]
+  poisValitutMaanomistajaluettelot: [String!]
 }
 
 input TallennaEnnakkoNeuvotteluInput {

@@ -3,7 +3,7 @@ module.exports = {
   defaultLocale: "fi",
   pages: {
     "*": ["common", "projekti", "footer", "error", "header", "breadcrumbs", "tietoa-palvelusta/palautetta-palvelusta-dialog"],
-    "/": ["etusivu", "main-page-sidebar",  "palautekyselymuistutus"],
+    "/": ["etusivu", "main-page-sidebar", "palautekyselymuistutus"],
     "rgx:^/suunnitelma/": ["projekti-side-bar", "kartta", "palautekyselymuistutus"],
     "rgx:^/tietoa-palvelusta": ["tietoa-palvelusta/navigation"],
     "/tietoa-palvelusta": ["tietoa-palvelusta/tietoa-palvelusta"],

@@ -1,4 +1,13 @@
-import { DBProjekti, DBVaylaUser, Kielitiedot, LocalizedMap, Velho, Yhteystieto } from "../../database/model";
+import {
+  DBProjekti,
+  DBVaylaUser,
+  Kielitiedot,
+  LocalizedMap,
+  SuunnitteluSopimus,
+  SuunnitteluSopimusJulkaisu,
+  Velho,
+  Yhteystieto,
+} from "../../database/model";
 import { ELY, KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -18,7 +27,7 @@ import {
   linkNahtavillaOloYllapito,
   linkSuunnitteluVaihe,
 } from "hassu-common/links";
-import { vaylaUserToYhteystieto } from "../../util/vaylaUserToYhteystieto";
+import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
@@ -27,6 +36,7 @@ import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
+import { log } from "../../logger";
 
 export interface CommonKutsuAdapterProps {
   oid: string;
@@ -40,6 +50,7 @@ export interface CommonKutsuAdapterProps {
   vahainenMenettely?: boolean | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
 }
 
 /**
@@ -78,12 +89,13 @@ export class CommonKutsuAdapter {
   readonly kielitiedot: Kielitiedot;
   readonly asianhallintaPaalla: boolean;
   readonly linkkiAsianhallintaan: string | undefined;
-  private templateResolvers: unknown[] = [];
+  private readonly templateResolvers: unknown[] = [];
   readonly hankkeenKuvausParam?: LocalizedMap<string>;
-  private localizationKeyPrefix?: string;
+  private readonly localizationKeyPrefix?: string;
 
   euRahoitusLogot?: LocalizedMap<string> | null;
   linkableProjekti: LinkableProjekti;
+  protected suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
     const {
@@ -97,6 +109,7 @@ export class CommonKutsuAdapter {
       euRahoitusLogot,
       asianhallintaPaalla,
       linkkiAsianhallintaan,
+      suunnitteluSopimus,
     } = params;
     this.oid = oid;
     this.linkableProjekti = { oid, lyhytOsoite };
@@ -115,6 +128,7 @@ export class CommonKutsuAdapter {
     this.euRahoitusLogot = euRahoitusLogot;
     this.asianhallintaPaalla = asianhallintaPaalla;
     this.linkkiAsianhallintaan = linkkiAsianhallintaan ? " " + linkkiAsianhallintaan : "";
+    this.suunnitteluSopimus = suunnitteluSopimus;
   }
 
   addTemplateResolver(value: unknown): void {
@@ -266,6 +280,10 @@ export class CommonKutsuAdapter {
     return this.nimi;
   }
 
+  get sopimus(): SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null | undefined {
+    return this.suunnitteluSopimus;
+  }
+
   get nimi(): string {
     if (this.isKieliSupported(this.kieli, this.kielitiedot)) {
       if (this.kieli == Kieli.SUOMI) {
@@ -374,24 +392,67 @@ export class CommonKutsuAdapter {
     yhteysHenkilot?: string[] | null,
     pakotaProjariTaiKunnanEdustaja?: boolean
   ): LokalisoituYhteystieto[] {
-    let yt: Yhteystieto[] = yhteystiedot ?? [];
+    let yt: Yhteystieto[] = [];
+    const suunnitteluSopimusYhteystiedot: Yhteystieto[] = [];
+    let muutYhteystiedot: Yhteystieto[] = [];
+    const kunnanEdustaja = this.kayttoOikeudet?.find(
+      (ko) =>
+        ko.email === (this.suunnitteluSopimus as SuunnitteluSopimusJulkaisu)?.email ||
+        ko.kayttajatunnus === (this.suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo
+    );
+    if (kunnanEdustaja && this.suunnitteluSopimus) {
+      this.suunnitteluSopimus = {
+        ...kunnanEdustaja,
+        kunta: this.suunnitteluSopimus.kunta,
+        puhelinnumero: kunnanEdustaja.puhelinnumero ?? "",
+      };
+    }
+
+    if (this.suunnitteluSopimus) {
+      this.suunnitteluSopimus.osapuolet?.forEach((osapuoli) => {
+        if (osapuoli.osapuolenHenkilot && osapuoli.osapuolenHenkilot.length > 0) {
+          const organisaationNimi = this.kieli == Kieli.SUOMI ? osapuoli.osapuolenNimiFI : osapuoli.osapuolenNimiSV;
+          osapuoli.osapuolenHenkilot.forEach((henkilo) => {
+            suunnitteluSopimusYhteystiedot.push({
+              etunimi: henkilo.etunimi || "",
+              sukunimi: henkilo.sukunimi || "",
+              sahkoposti: henkilo.email || "",
+              puhelinnumero: henkilo.puhelinnumero || "",
+              organisaatio: henkilo.yritys || organisaationNimi || "",
+            });
+          });
+        }
+      });
+    }
+
+    if (yhteystiedot) {
+      muutYhteystiedot = muutYhteystiedot.concat(yhteystiedot.map((yt) => yhteystietoPlusKunta(yt, this.suunnitteluSopimus)));
+    }
+
     if (yhteysHenkilot) {
       if (!this.kayttoOikeudet) {
         throw new Error("BUG: Kayttöoikeudet pitää antaa jos yhteyshenkilöt on annettu.");
       }
       this.getUsersForUsernames(yhteysHenkilot).forEach((user) => {
-        yt.push(vaylaUserToYhteystieto(user));
+        muutYhteystiedot.push(vaylaUserToYhteystieto(user, this.suunnitteluSopimus));
       });
     }
+
+    yt = suunnitteluSopimusYhteystiedot.concat(muutYhteystiedot);
+
     if (pakotaProjariTaiKunnanEdustaja) {
       const projari = this.kayttoOikeudet?.find((ko) => ko.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO);
 
-      if (!yt.find((t) => t.sahkoposti === projari?.email)) {
-        yt = [vaylaUserToYhteystieto(projari as DBVaylaUser)].concat(yt);
+      if (this.suunnitteluSopimus && kunnanEdustaja && !yt.find((t) => t.sahkoposti === kunnanEdustaja?.email)) {
+        yt = [vaylaUserToYhteystieto(kunnanEdustaja as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
+      } else if (projari && !yt.find((t) => t.sahkoposti === projari?.email)) {
+        yt = [vaylaUserToYhteystieto(projari as DBVaylaUser, this.suunnitteluSopimus)].concat(yt);
       }
     }
 
-    return yt.map((y) => this.yhteystietoMapper(y));
+    log.info("commonKutsuAdapter: ", yt);
+
+    return yt.map((yt) => this.yhteystietoMapper(yt));
   }
 
   text(key: string): string {
@@ -523,7 +584,7 @@ export class CommonKutsuAdapter {
     };
   }
 
-  private getLocalizedOrganization(organisaatio: string | undefined, elyOrganisaatio: ELY | undefined, kunta: number | undefined) {
+  private getLocalizedOrganization(organisaatio: string | undefined, elyOrganisaatio: ELY | undefined, kunta: number | null | undefined) {
     let organisaatioTeksti = organisaatio ?? "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);

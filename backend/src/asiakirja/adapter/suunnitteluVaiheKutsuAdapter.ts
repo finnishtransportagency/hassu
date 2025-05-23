@@ -15,7 +15,6 @@ export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
 
 export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   private readonly vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
-  private readonly suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
   protected readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(props: SuunnitteluVaiheKutsuAdapterProps) {
@@ -46,9 +45,34 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     }
 
     if (this.suunnitteluSopimus) {
-      const kunta = kuntametadata.nameForKuntaId(this.suunnitteluSopimus.kunta, this.kieli);
-      const ja = this.text("ja");
-      return kutsuja + " " + ja + " " + kunta;
+      if (this.suunnitteluSopimus.kunta) {
+        const kunta = kuntametadata.nameForKuntaId(this.suunnitteluSopimus.kunta, this.kieli);
+        const ja = this.text("ja");
+        return kunta + " " + ja + " " + kutsuja;
+      } else if (this.suunnitteluSopimus.osapuolet && this.suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = this.suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return kutsuja;
+        } else if (osapuoliNimet.length === 1) {
+          const ja = this.text("ja");
+          return osapuoliNimet[0] + " " + ja + " " + kutsuja;
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return osapuoliNimet[0] + ", " + osapuoliNimet[1] + " " + ja + " " + kutsuja;
+        } else {
+          const ja = this.text("ja");
+          return osapuoliNimet.join(", ") + " " + ja + " " + kutsuja;
+        }
+      }
     }
     return kutsuja;
   }
@@ -62,16 +86,70 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
 
   get kuuluttaja(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus?.kunta) {
-      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja;
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
     }
     return super.kuuluttaja;
   }
 
   get kuuluttaja_pitka(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus?.kunta) {
-      return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus?.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja_pitka;
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
     }
     return super.kuuluttaja_pitka;
   }
