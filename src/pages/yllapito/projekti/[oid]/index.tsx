@@ -41,7 +41,6 @@ import { MenuItem } from "@mui/material";
 import ToiminnotMenuList from "@components/projekti/ToiminnotMenuList";
 import { JaaProjektiOsiinDialog } from "@components/JaaProjektiOsiinDialog";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
-import * as Yup from "yup";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
