@@ -244,22 +244,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const hasEuRahoitus = useRef(!!projekti.euRahoitus);
 
-  // Tämä on debuggausta varten. Poistettava lopullisesta.
-  const debugResolver = (schema: Yup.ObjectSchema<any>, p0: { abortEarly: boolean; recursive: boolean }) => {
-    const original = yupResolver(schema, p0);
-
-    return async (data: any, context: any, options: any) => {
-      console.log("🔍 Data before validation:", data);
-      const result = await original(data, context, options);
-      console.log("✅ Validation result:", result.errors);
-      return result;
-    };
-  };
-
   const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = useMemo(() => {
     return {
-      //resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
-      resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+      resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
@@ -316,7 +304,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           try {
             if (suunnittelusopimusprojekti === "false") {
               persistentData.suunnitteluSopimus = null;
-              console.log("Suunnittelusopimus tyhjennetty:", persistentData.suunnitteluSopimus);
             } else if (suunnittelusopimusprojekti === "true") {
               if (!persistentData.suunnitteluSopimus) {
                 persistentData.suunnitteluSopimus = {};
@@ -408,8 +395,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               }));
 
               persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
-
-              console.log("Lopullinen data:", JSON.stringify(persistentData.suunnitteluSopimus, null, 2));
             }
 
             if (persistentData.euRahoitus) {
