@@ -29,13 +29,52 @@ interface Henkilo {
 }
 
 export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti }: HenkiloListaProps): ReactElement {
-  const { setValue, getValues, watch, setFocus } = useFormContext<FormValues>();
+  const {
+    setValue,
+    getValues,
+    watch,
+    setFocus,
+    trigger,
+    formState: { errors },
+  } = useFormContext<FormValues>();
 
   const [osapuolenHenkilot, setOsapuolenHenkilot] = useState<Henkilo[]>([]);
   const [naytaUusiEdustajaKentat, setNaytaUusiEdustajaKentat] = useState(false);
   const [lisatytHenkilot, setLisatytHenkilot] = useState<Set<string>>(new Set());
 
+  const watchedHenkilot = watch(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any);
+
   const suunnittelusopimus = watch("suunnittelusopimusprojekti");
+
+  const hasEdustajaError = () => {
+    const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
+
+    const suunnitteluSopimusErrors = errors?.suunnitteluSopimus as any;
+    const osapuoliErrors = suunnitteluSopimusErrors?.[`osapuoli${osapuoliNumero}`];
+    const henkilotError = osapuoliErrors?.osapuolenHenkilot;
+
+    if (henkilot.length === 0) {
+      return true;
+    }
+    if (henkilotError?.message === "Vähintään yksi henkilö on valittava") {
+      return false;
+    }
+    return !!henkilotError;
+  };
+
+  const hasValittuEdustajaError = () => {
+    const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
+    const valitutHenkilot = henkilot.filter((h: Henkilo) => h.valittu);
+
+    const suunnitteluSopimusErrors = errors?.suunnitteluSopimus as any;
+    const osapuoliErrors = suunnitteluSopimusErrors?.[`osapuoli${osapuoliNumero}`];
+    const henkilotValidationError = osapuoliErrors?.osapuolenHenkilot;
+
+    const uiError = henkilot.length > 0 && valitutHenkilot.length === 0;
+    const yupError = henkilotValidationError?.message === "Vähintään yksi henkilö on valittava";
+
+    return uiError || yupError;
+  };
 
   useEffect(() => {
     if (!projekti) return;
@@ -45,14 +84,15 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
   }, [suunnittelusopimus, getValues, setValue, projekti]);
 
   useEffect(() => {
-    const henkilot = getValues(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any) || [];
+    const henkilot = watchedHenkilot || [];
     setOsapuolenHenkilot(henkilot);
 
     const henkiloIdt = new Set<string>();
     henkilot.forEach((henkilo: Henkilo) => {
       if (henkilo.kayttajatunnus) {
         henkiloIdt.add(henkilo.kayttajatunnus);
-      } else if (henkilo.email) {
+      }
+      if (henkilo.email) {
         henkiloIdt.add(henkilo.email);
       }
     });
@@ -62,7 +102,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
     if (tallennettuNayttoTila !== undefined) {
       setNaytaUusiEdustajaKentat(tallennettuNayttoTila);
     }
-  }, [getValues, osapuoliNumero, osapuoliTyyppi]);
+  }, [getValues, watchedHenkilot, osapuoliNumero, osapuoliTyyppi, projekti]);
 
   const vaihdaKenttienNakyvyys = (tila: boolean) => {
     setNaytaUusiEdustajaKentat(tila);
@@ -82,6 +122,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
     };
     setOsapuolenHenkilot(paivitetytHenkilot);
     setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+    trigger(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any);
   };
 
   const poistaHenkilo = (index: number) => {
@@ -92,6 +133,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
     paivitetytHenkilot.splice(index, 1);
     setOsapuolenHenkilot(paivitetytHenkilot);
     setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
+    trigger(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any);
 
     setLisatytHenkilot((prev) => {
       const uusi = new Set([...prev]);
@@ -154,8 +196,8 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
 
     const paivitetytHenkilot = [...osapuolenHenkilot, uusiHenkilo];
     setOsapuolenHenkilot(paivitetytHenkilot);
-    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot);
-
+    setValue(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any, paivitetytHenkilot, { shouldValidate: true });
+    trigger(`suunnitteluSopimus.osapuoli${osapuoliNumero}.osapuolenHenkilot` as any);
     setLisatytHenkilot((prev) => new Set([...prev, henkiloId]));
   };
 
@@ -172,19 +214,13 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
         <H5>Projektin henkilöt</H5>
         <div className="projekti-henkilot-list" style={{ marginTop: "1rem" }}>
           {projekti?.kayttoOikeudet?.map((kayttaja, index) => {
-            const henkiloId = kayttaja.kayttajatunnus || kayttaja.email;
-            const onLisatty = lisatytHenkilot.has(henkiloId);
+            const onLisattyKayttajatunnuksella = kayttaja.kayttajatunnus && lisatytHenkilot.has(kayttaja.kayttajatunnus);
+            const onLisattySahkopostilla = kayttaja.email && lisatytHenkilot.has(kayttaja.email);
+            const onLisatty = onLisattyKayttajatunnuksella || onLisattySahkopostilla;
 
             return (
               <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
-                <span
-                  style={{
-                    minWidth: "500px",
-                    display: "inline-block",
-                  }}
-                >
-                  {formatHenkilo(kayttaja)}
-                </span>
+                <span style={{ minWidth: "500px", display: "inline-block" }}>{formatHenkilo(kayttaja)}</span>
                 {onLisatty ? (
                   <span style={{ color: "#666", fontWeight: "bold" }}>Lisätty</span>
                 ) : osapuolenHenkilot.length >= maxHenkilot ? (
@@ -226,6 +262,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
               </>
             )}
           </div>
+          <div>{hasEdustajaError() && <p style={{ color: "red" }}>Lisää vähintään yksi edustaja.</p>}</div>
         </div>
       </SectionContent>
 
@@ -293,6 +330,7 @@ export default function HenkiloLista({ osapuoliNumero, osapuoliTyyppi, projekti 
               Valintalistalta valitut henkilöt näkyvät aloituskuulutuksen ja vuorovaikutusten yhteystiedoissa sekä julkisella puolella
               projektin yleisissä yhteystiedoissa.
             </p>
+            {hasValittuEdustajaError() && <p style={{ color: "red" }}>Valitse listalta vähintään yksi edustaja.</p>}
             <div className="henkilot-list">
               {osapuolenHenkilot.map((henkilo, index) => (
                 <div key={index} className="henkilo-item" style={{ display: "flex", alignItems: "center", marginBottom: "0.5rem" }}>

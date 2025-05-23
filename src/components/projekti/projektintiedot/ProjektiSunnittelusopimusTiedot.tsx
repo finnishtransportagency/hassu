@@ -31,6 +31,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
     setValue,
     getValues,
     formState: { errors },
+    unregister,
   } = useFormContext<FormValues>();
 
   const kuntaOptions = kuntametadata.kuntaOptions("fi");
@@ -87,7 +88,11 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 row
                 value={field.value}
                 onChange={(value) => {
-                  field.onChange(value.target.value);
+                  const newValue = value.target.value;
+                  if (newValue === "false" && field.value === "true") {
+                    unregister("suunnitteluSopimus", { keepValue: false });
+                  }
+                  field.onChange(newValue);
                 }}
                 name={field.name}
                 onBlur={field.onBlur}
@@ -108,7 +113,6 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                 name="suunnitteluSopimus"
                 control={control}
                 defaultValue={null}
-                shouldUnregister={true}
                 render={() => (
                   <SectionContent largeGaps sx={{ marginLeft: 4 }}>
                     <SectionContent>
@@ -130,7 +134,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                           emptyOption=" "
                           error={(errors as any).suunnitteluSopimus?.yhteysHenkilo}
                           disabled={false}
-                          {...register("suunnitteluSopimus.yhteysHenkilo", { shouldUnregister: true })}
+                          {...register("suunnitteluSopimus.yhteysHenkilo")}
                         />
                         <Select
                           id="suunnittelusopimus_kunta"
@@ -138,7 +142,7 @@ export default function ProjektiPerustiedot({ formDisabled, projekti }: Props): 
                           options={kuntaOptions ? kuntaOptions : [{ label: "", value: "" }]}
                           error={(errors as any).suunnitteluSopimus?.kunta}
                           disabled={formDisabled}
-                          {...register("suunnitteluSopimus.kunta", { shouldUnregister: true })}
+                          {...register("suunnitteluSopimus.kunta")}
                         />
                       </HassuGrid>
                     </SectionContent>
