@@ -60,10 +60,10 @@
   },
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "Tillsynsmyndighetens kontaktuppgifter",
-    "kappale1": "<p>Regionförvaltningsverket i Södra Finland<br/>Enheten för tillgänglighetsövervakning</p>",
+    "kappale1": "<p>Transport- och kommunikationsverket Traficom<br/>Enheten för tillsyn över digital tillgänglighet</p>",
     "linkki1": { "teksti": "Tillganglighetskrav.fi-sidan", "href": "https://www.tillganglighetskrav.fi/" },
-    "email": "saavutettavuus@avi.fi",
-    "puhelin": "växel 0295 016 000"
+    "email": "tillganglighet@traficom.fi",
+    "puhelin": "telefonnummer växeln 029 534 5000"
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Åtgärdande av brister",
