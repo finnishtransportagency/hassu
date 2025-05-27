@@ -20,6 +20,7 @@ export class HassuMonitoringStack extends Stack {
       stackName: "hassu-monitoring-" + Config.env,
       env: {
         region: "eu-west-1",
+        account: process.env.CDK_DEFAULT_ACCOUNT,
       },
       tags: Config.tags,
     });
