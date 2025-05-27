@@ -777,7 +777,7 @@ export class HassuFrontendCoreStack extends Stack {
     const env = Config.env;
     const config = await Config.instance(this);
 
-    const { EventSqsUrl, HyvaksymisEsitysSqsUrl } = await readBackendStackOutputs();
+    const { EventSqsUrl, HyvaksymisEsitysSqsUrl, AppSyncAPIKey } = await readBackendStackOutputs();
     const { NewCloudfrontPrivateDNSName } = await readFrontendStackOutputs();
     const accountStackOutputs = await readAccountStackOutputs();
     const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
@@ -824,11 +824,8 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL || "", // asetetaan deployment/lib/hassu-pipelines.ts
       NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL || "", // sama kuin ^^
       NEXT_PUBLIC_AJANSIIRTO_SALLITTU: ssmParameters.AjansiirtoSallittu,
-      NEXT_PUBLIC_REACT_APP_API_KEY: await config.getParameterNow(`/${Config.infraEnvironment}/outputs/AppSyncAPIKey`),
-      // ^^REMOVE above line and uncomment following beofre moving to dev (developer env has no api key..)
-      //NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
-      // TODO change REACT_APP_API_URL to this `https://${config.frontendApiDomainName}/graphql`
-      NEXT_PUBLIC_REACT_APP_API_URL: `https://${NewCloudfrontPrivateDNSName}/graphql`,
+      NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
+      NEXT_PUBLIC_REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       TABLE_PROJEKTI: Config.projektiTableName,
