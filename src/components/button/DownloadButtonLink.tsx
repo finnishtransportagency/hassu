@@ -35,7 +35,7 @@ function DownloadButtonLink(
       <ButtonContent primary={primary} startIcon={startIcon} endIcon={external ? "external-link-alt" : endIcon} disabled={disabled}>
         {children}{" "}
         <img
-          src="/download.svg"
+          src="/assets/download.svg"
           style={{ marginBottom: "5px", marginLeft: "5px", display: "inline", width: "25px", height: "22px" }}
           alt="Liite"
         />

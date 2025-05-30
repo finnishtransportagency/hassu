@@ -76,7 +76,7 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
                   </div>
                   <Img
                     aria-labelledby="saamenkielinen_projekti_sr"
-                    src="/saamen_lippu.svg"
+                    src="/assets/saamen_lippu.svg"
                     alt="Saamen lippu"
                     sx={{ maxHeight: "1.84em", paddingBottom: "3px", display: "inline" }}
                   />
@@ -104,7 +104,7 @@ export default function Hakutulokset({ hakutulos, ladataan }: Props) {
                     </div>
                     <Img
                       aria-labelledby="saamenkielinen_projekti_sr"
-                      src="/saamen_lippu.svg"
+                      src="/assets/saamen_lippu.svg"
                       alt="Saamen lippu"
                       sx={{ maxHeight: "1.75em", float: "right" }}
                     />

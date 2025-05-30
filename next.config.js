@@ -177,8 +177,8 @@ module.exports = (phase) => {
     } catch (e) {
       // Ignore
     }
-    env.REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
-    env.REACT_APP_API_URL = "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/graphql";
+    env.NEXT_PUBLIC_REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
+    env.NEXT_PUBLIC_REACT_APP_API_URL = "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/graphql";
     env.FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
     env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
 

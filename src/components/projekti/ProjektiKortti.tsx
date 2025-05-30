@@ -18,7 +18,7 @@ export default function ProjektiKortti(props: Props): ReactElement {
       <div className="flex">
         <img
           style={{ display: "inline", alignSelf: "start", marginLeft: "1rem", marginRight: "1rem" }}
-          src="/projektikortin-ikoni.svg"
+          src="/assets/projektikortin-ikoni.svg"
           alt="maapallo"
         />
         {nimi}

@@ -8,7 +8,7 @@ function TietoaSuunnittelustaWidget() {
   const { t, lang } = useTranslation("main-page-sidebar");
   return (
     <React.Fragment>
-      <img src="/rata_ja_tie_background.jpeg" alt="Kuva rautatiestä" />
+      <img src="/assets/rata_ja_tie_background.jpeg" alt="Kuva rautatiestä" />
       <Widget title={t("widgetit.tietoa-suunnittelusta")}>
         {t("widgetit.tutustu-hankesuunnittelun")}
         <ResponsiveButtonLink lang={lang} href="/tietoa-palvelusta/tietoa-suunnittelusta" className="mt-8 mb-4">

@@ -25,7 +25,7 @@ const DiehtuPlanemisWidget = styled((props) => {
         </div>
 
         <SectionContent className={styles["side-nav-content"]}>
-          <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "91px" }} />
+          <Img src="/assets/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "91px" }} />
           {"Oahpásmuva geaidno- ja raŧŧeplánaid plánenprosessii ja riikkavuložiid váikkuhanvejolašvuođaide "}
           <StyledLink sx={{ fontWeight: "bold" }} href="/tietoa-palvelusta/diehtu-planemis">
             davvisámegillii

@@ -18,7 +18,7 @@ const HassuWidget = styled(({ children, title, smallScreen = false, ...props }: 
   return (
     <Section noDivider {...props}>
       <div role="navigation" className={styles["side-nav"]}>
-        {!smallScreen && <Image src="/rata_ja_tie_background.jpeg" alt="kuvituskuva" width="345" height="194"></Image>}
+        {!smallScreen && <Image src="/assets/rata_ja_tie_background.jpeg" alt="kuvituskuva" width="345" height="194"></Image>}
         <SectionContent className={styles["side-nav-content"]}>
           <WidgetOtsikko>{title}</WidgetOtsikko>
           {children}

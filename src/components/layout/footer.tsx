@@ -99,10 +99,10 @@ export const Footer = () => {
             <div className="flex">
               <KuvaContainer className="justify-center">
                 <div className="my-auto text-center">
-                  <Image src="/vayla_alla_fi_sv_rgb.png" alt="" width="140.4" height="117" />
+                  <Image src="/assets/vayla_alla_fi_sv_rgb.png" alt="" width="140.4" height="117" />
                 </div>
                 <div className="my-auto text-center">
-                  <Image src="/ely_alla_fi_sv_rgb.png" alt="" width="170.61" height="91" />
+                  <Image src="/assets/ely_alla_fi_sv_rgb.png" alt="" width="170.61" height="91" />
                 </div>
               </KuvaContainer>
             </div>

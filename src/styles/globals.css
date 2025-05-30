@@ -88,110 +88,110 @@
 
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-Thin.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-Thin.ttf") format("truetype");
     font-weight: 100;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-ExtraLight.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-ExtraLight.ttf") format("truetype");
     font-weight: 200;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-Light.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-Light.ttf") format("truetype");
     font-weight: 300;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-Regular.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-Medium.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-Medium.ttf") format("truetype");
     font-weight: 500;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-SemiBold.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-SemiBold.ttf") format("truetype");
     font-weight: 600;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-Bold.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-Bold.ttf") format("truetype");
     font-weight: 700;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-ExtraBold.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-ExtraBold.ttf") format("truetype");
     font-weight: 800;
     font-style: normal;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-Black.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-Black.ttf") format("truetype");
     font-weight: 900;
     font-style: normal;
   }
 
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-ThinItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-ThinItalic.ttf") format("truetype");
     font-weight: 100;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-ExtraLightItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-ExtraLightItalic.ttf") format("truetype");
     font-weight: 200;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-LightItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-LightItalic.ttf") format("truetype");
     font-weight: 300;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-RegularItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-RegularItalic.ttf") format("truetype");
     font-weight: 400;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-MediumItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-MediumItalic.ttf") format("truetype");
     font-weight: 500;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-SemiBoldItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-SemiBoldItalic.ttf") format("truetype");
     font-weight: 600;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-BoldItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-BoldItalic.ttf") format("truetype");
     font-weight: 700;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-ExtraBoldItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-ExtraBoldItalic.ttf") format("truetype");
     font-weight: 800;
     font-style: italic;
   }
   @font-face {
     font-family: "Exo 2";
-    src: url("/fonts/Exo2/Exo2-BlackItalic.ttf") format("truetype");
+    src: url("/assets/fonts/Exo2/Exo2-BlackItalic.ttf") format("truetype");
     font-weight: 900;
     font-style: italic;
   }
