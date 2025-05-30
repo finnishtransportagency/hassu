@@ -954,7 +954,12 @@ export class HassuFrontendCoreStack extends Stack {
     listener.addTargetGroups("Nextjs", {
       priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
       conditions: [
-        ListenerCondition.pathPatterns(["/*"]),
+        ListenerCondition.pathPatterns([
+          "/_next*",
+          "/assets*",
+          "/frontend*",
+          "/robots.txt",
+        ]),
         ListenerCondition.hostHeaders([NewCloudfrontPrivateDNSName, config.frontendDomainName]),
       ],
       targetGroups: [targetGroup],
