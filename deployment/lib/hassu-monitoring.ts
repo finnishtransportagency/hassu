@@ -15,12 +15,12 @@ import { StringParameter } from "aws-cdk-lib/aws-ssm";
 type MonitoredLambda = { functionName: string; logGroupName: string; func: aws_lambda.IFunction };
 
 export class HassuMonitoringStack extends Stack {
-  constructor(scope: Construct) {
+  constructor(scope: Construct, awsAccountId: string) {
     super(scope, "monitoring", {
       stackName: "hassu-monitoring-" + Config.env,
       env: {
         region: "eu-west-1",
-        account: process.env.CDK_DEFAULT_ACCOUNT,
+        account: awsAccountId,
       },
       tags: Config.tags,
     });
