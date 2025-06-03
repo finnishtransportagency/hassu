@@ -130,6 +130,7 @@ export default function SuunnittelusopimusOsapuoli({
           name={`suunnitteluSopimus.osapuoli${osapuoliNumero}Tyyppi` as any}
           control={control}
           defaultValue="kunta"
+          shouldUnregister={true}
           render={({ field: osapuoliField, fieldState: osapuoliState }) => (
             <FormGroup label="Suunnittelusopimuksen osapuoli *" errorMessage={osapuoliState.error?.message} flexDirection="row">
               <RadioGroup

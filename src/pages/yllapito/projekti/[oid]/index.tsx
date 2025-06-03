@@ -41,7 +41,6 @@ import { MenuItem } from "@mui/material";
 import ToiminnotMenuList from "@components/projekti/ToiminnotMenuList";
 import { JaaProjektiOsiinDialog } from "@components/JaaProjektiOsiinDialog";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
-//import * as Yup from "yup";
 
 type TransientFormValues = {
   suunnittelusopimusprojekti: "true" | "false" | null;
@@ -244,26 +243,20 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const hasEuRahoitus = useRef(!!projekti.euRahoitus);
 
-  // Tämä on debuggausta varten. Poistettava lopullisesta.
-  // const debugResolver = (schema: Yup.ObjectSchema<any>, p0: { abortEarly: boolean; recursive: boolean }) => {
-  //   const original = yupResolver(schema, p0);
-
-  //   return async (data: any, context: any, options: any) => {
-  //     console.log("🔍 Data before validation:", data);
-  //     const result = await original(data, context, options);
-  //     console.log("✅ Validation result:", result.errors);
-  //     return result;
-  //   };
-  // };
-
   const formOptions: UseFormProps<FormValues, ProjektiValidationContext> = useMemo(() => {
     return {
       resolver: yupResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
-      //resolver: debugResolver(perustiedotValidationSchema.concat(UIValuesSchema), { abortEarly: false, recursive: true }),
+
       defaultValues,
       mode: "onChange",
       reValidateMode: "onChange",
-      context: { projekti, isRuotsinkielinenProjekti, hasEuRahoitus },
+      context: {
+        projekti,
+        isRuotsinkielinenProjekti: {
+          current: isRuotsinkielinenProjekti?.current ?? false,
+        },
+        hasEuRahoitus,
+      },
     };
   }, [defaultValues, projekti]);
 
@@ -308,7 +301,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         (async () => {
           const { suunnittelusopimusprojekti, kielitiedot, ...persistentData } = data;
           try {
-            if (suunnittelusopimusprojekti === "true") {
+            if (suunnittelusopimusprojekti === "false") {
+              persistentData.suunnitteluSopimus = null;
+            } else if (suunnittelusopimusprojekti === "true") {
               if (!persistentData.suunnitteluSopimus) {
                 persistentData.suunnitteluSopimus = {};
               }
@@ -399,8 +394,6 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
               }));
 
               persistentData.suunnitteluSopimus = puhdistettuSuunnitteluSopimus;
-
-              console.log("Lopullinen data:", JSON.stringify(persistentData.suunnitteluSopimus, null, 2));
             }
 
             if (persistentData.euRahoitus) {
