@@ -827,6 +827,7 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
       NEXT_PUBLIC_REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
+      ENVIRONMENT: Config.env,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
