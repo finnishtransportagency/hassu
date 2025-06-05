@@ -159,6 +159,7 @@ export class HassuFrontendStack extends Stack {
       env,
       config.basicAuthenticationUsername,
       config.basicAuthenticationPassword,
+      BaseConfig.frontendPrefix,
       edgeFunctionRole
     );
 
@@ -281,17 +282,6 @@ export class HassuFrontendStack extends Stack {
 
     // Do the new setup now only in dev or in developer env
     if (Config.infraEnvironment == "dev") {
-      // We need to add prefix to frontend requests so that we can define rules in Vayla proxy ALB level
-      const frontendPrefixRequestURIFunction = this.createFrontendPrefixRequestURIFunction(
-        env,
-        BaseConfig.frontendPrefix,
-        edgeFunctionRole
-      );
-      edgeLambdas.push({
-        functionVersion: frontendPrefixRequestURIFunction.currentVersion,
-        eventType: LambdaEdgeEventType.ORIGIN_REQUEST,
-      });
-
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2],
       });
@@ -436,17 +426,20 @@ export class HassuFrontendStack extends Stack {
     env: string,
     basicAuthenticationUsername: string,
     basicAuthenticationPassword: string,
+    prefix: string,
     role: Role
   ): EdgeFunction | undefined {
+    // TODO prodissa tarvitaan uudessa toteutuksessa myös (tosin siinä pitää olla vain prefixin lisäys ja "/" poisto, jos uri päättyy siihen)
     if (env !== "prod") {
       const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("utf-8");
       const functionCode = Fn.sub(sourceCode, {
         BASIC_USERNAME: basicAuthenticationUsername,
         BASIC_PASSWORD: basicAuthenticationPassword,
+        PREFIX: prefix,
         ENVIRONMENT: Config.env,
       });
       return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-        runtime: Runtime.NODEJS_18_X,
+        runtime: Runtime.NODEJS_22_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),
         handler: "index.handler",
@@ -496,20 +489,6 @@ export class HassuFrontendStack extends Stack {
     return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
       runtime: Runtime.NODEJS_18_X,
       functionName: "tiedostotOriginResponseFunction" + env,
-      code: Code.fromInline(functionCode),
-      handler: "index.handler",
-      role,
-    });
-  }
-
-  private createFrontendPrefixRequestURIFunction(env: string, prefix: string, role: Role): EdgeFunction {
-    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendPrefixRequestURI.js`).toString("utf-8");
-    const functionCode = Fn.sub(sourceCode, {
-      PREFIX: prefix,
-    });
-    return new cloudfront.experimental.EdgeFunction(this, "frontendPrefixRequestURIFunction", {
-      runtime: Runtime.NODEJS_22_X,
-      functionName: "frontendPrefixRequestURIFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",
       role,
