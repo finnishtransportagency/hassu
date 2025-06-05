@@ -336,11 +336,11 @@ export class HassuFrontendStack extends Stack {
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             cachePolicy: cachePolicies.nextStaticsCachePolicy,
           },
-          //"api/*": {
-          //  ...commonNextBehaviourOptions,
-          //  allowedMethods: AllowedMethods.ALLOW_ALL,
-          //  cachePolicy: cachePolicies.nextLambdaCachePolicy,
-          //},
+          "/api/*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_ALL,
+            cachePolicy: cachePolicies.nextLambdaCachePolicy,
+          },
           ...behaviours,
         },
         priceClass: PriceClass.PRICE_CLASS_100,
@@ -956,6 +956,7 @@ export class HassuFrontendCoreStack extends Stack {
       conditions: [
         ListenerCondition.pathPatterns([
           "/_next*",
+          "/api*",
           "/assets*",
           "/frontend*",
           "/robots.txt",
