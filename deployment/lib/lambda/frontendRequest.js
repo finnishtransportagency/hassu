@@ -3,6 +3,11 @@ exports.handler = (event, context, callback) => {
   const request = event.Records[0].cf.request;
   const headers = request.headers;
 
+  // Add X-Forwarded-Host header copying from Host header if exists
+  if (headers.host && headers.host.length > 0) {
+    headers["x-forwarded-host"] = [{ key: "X-Forwarded-Host", value: headers.host[0].value }];
+  }
+
   // Configure authentication
   const authUser = "${BASIC_USERNAME}";
   const authPass = "${BASIC_PASSWORD}";
