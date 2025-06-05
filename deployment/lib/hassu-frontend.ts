@@ -435,7 +435,6 @@ export class HassuFrontendStack extends Stack {
     prefix: string,
     role: Role
   ): EdgeFunction | undefined {
-    // TODO prodissa tarvitaan uudessa toteutuksessa myös (tosin siinä pitää olla vain prefixin lisäys ja "/" poisto, jos uri päättyy siihen)
     if (env !== "prod") {
       const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequest.js`).toString("utf-8");
       const functionCode = Fn.sub(sourceCode, {
@@ -453,6 +452,18 @@ export class HassuFrontendStack extends Stack {
       });
     }
   }
+
+  // Tarvitaan tulevaisuudessa prodissa, Toistaiseksi kommentoituna pois
+  //private createFrontendRequestFunctionProd(prefix: string): cloudfront.Function {
+  //  const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestProd.js`).toString("utf-8");
+  //  const functionCode = Fn.sub(sourceCode, {
+  //    PREFIX: prefix,
+  //  });
+  //  return new cloudfront.Function(this, "frontendRequestFunctionProd", {
+  //    functionName: "frontendRequestFunctionprod",
+  //    code: cloudfront.FunctionCode.fromInline(functionCode),
+  //  });
+  //}
 
   private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/suomifiHeader.js`).toString("utf-8");
