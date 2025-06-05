@@ -900,6 +900,14 @@ export class HassuFrontendCoreStack extends Stack {
       secrets: containerSecrets,
     });
 
+    taskDefinition.addToTaskRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["logs:*", "xray:*", "ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+
     const fargateService = new FargateService(this, "nextJsAppFargateService", {
       cluster,
       serviceName: "nextjs-service-" + Config.env,
@@ -955,13 +963,7 @@ export class HassuFrontendCoreStack extends Stack {
     listener.addTargetGroups("Nextjs", {
       priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
       conditions: [
-        ListenerCondition.pathPatterns([
-          "/_next*",
-          "/api*",
-          "/assets*",
-          "/frontend*",
-          "/robots.txt",
-        ]),
+        ListenerCondition.pathPatterns(["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"]),
         ListenerCondition.hostHeaders([NewCloudfrontPrivateDNSName, config.frontendDomainName]),
       ],
       targetGroups: [targetGroup],
