@@ -163,14 +163,19 @@ export class HassuFrontendStack extends Stack {
       edgeFunctionRole
     );
 
-    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, frontendRequestFunction);
+    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
+      config.dmzProxyEndpoint,
+      config.frontendDomainName,
+      frontendRequestFunction
+    );
 
-    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, config.frontendDomainName);
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
     const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(
       config.dmzProxyEndpoint,
+      config.frontendDomainName,
       env,
       edgeFunctionRole,
       frontendRequestFunction
@@ -284,6 +289,7 @@ export class HassuFrontendStack extends Stack {
     if (Config.infraEnvironment == "dev") {
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2],
+        customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
       });
 
       const commonNextBehaviourOptions: BehaviorOptions = {
@@ -542,11 +548,16 @@ export class HassuFrontendStack extends Stack {
     return props;
   }
 
-  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.experimental.EdgeFunction) {
+  private static createDmzProxyBehavior(
+    dmzProxyEndpoint: string,
+    frontendDomainName: string,
+    frontendRequestFunction?: cloudfront.experimental.EdgeFunction
+  ) {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
@@ -562,6 +573,7 @@ export class HassuFrontendStack extends Stack {
 
   private createPublicGraphqlDmzProxyBehavior(
     dmzProxyEndpoint: string,
+    frontendDomainName: string,
     env: string,
     role: Role,
     frontendRequestFunction?: cloudfront.experimental.EdgeFunction
@@ -577,6 +589,7 @@ export class HassuFrontendStack extends Stack {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
