@@ -11,6 +11,7 @@ import {
   Distribution,
   KeyGroup,
   LambdaEdgeEventType,
+  FunctionEventType,
   OriginAccessIdentity,
   OriginRequestPolicy,
   OriginSslPolicy,
@@ -162,17 +163,46 @@ export class HassuFrontendStack extends Stack {
       edgeFunctionRole
     );
 
-    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, frontendRequestFunction);
+    // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
+    let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
+    let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
 
-    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
+    // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
+    // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
+    // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
+    let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
+    let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
+
+    if (env !== "prod") {
+      frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
+        env,
+        config.basicAuthenticationUsername,
+        config.basicAuthenticationPassword,
+        edgeFunctionRole
+      );
+      edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
+    } else {
+      frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
+      edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
+    }
+
+    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
+      config.dmzProxyEndpoint,
+      config.frontendDomainName,
+      frontendRequestLambdaFunction
+    );
+
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, config.frontendDomainName);
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
     const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(
       config.dmzProxyEndpoint,
+      config.frontendDomainName,
       env,
       edgeFunctionRole,
-      frontendRequestFunction
+      frontendRequestLambdaFunction
     );
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
@@ -182,7 +212,7 @@ export class HassuFrontendStack extends Stack {
       apiBehavior,
       publicGraphqlBehavior,
       edgeFunctionRole,
-      frontendRequestFunction
+      frontendRequestLambdaFunction
     );
 
     let domain:
@@ -266,7 +296,6 @@ export class HassuFrontendStack extends Stack {
         imageLambda: `${id}Image`,
       },
       behaviours,
-      domain,
       defaultBehavior: {
         edgeLambdas,
       },
@@ -281,19 +310,9 @@ export class HassuFrontendStack extends Stack {
 
     // Do the new setup now only in dev or in developer env
     if (Config.infraEnvironment == "dev") {
-      // We need to add prefix to frontend requests so that we can define rules in Vayla proxy ALB level
-      const frontendPrefixRequestURIFunction = this.createFrontendPrefixRequestURIFunction(
-        env,
-        BaseConfig.frontendPrefix,
-        edgeFunctionRole
-      );
-      edgeLambdas.push({
-        functionVersion: frontendPrefixRequestURIFunction.currentVersion,
-        eventType: LambdaEdgeEventType.ORIGIN_REQUEST,
-      });
-
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2],
+        customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
       });
 
       const commonNextBehaviourOptions: BehaviorOptions = {
@@ -306,7 +325,8 @@ export class HassuFrontendStack extends Stack {
       const newDistribution = new Distribution(this, "NewDistribution", {
         defaultBehavior: {
           ...commonNextBehaviourOptions,
-          edgeLambdas,
+          functionAssociations: edgeFunctions,
+          edgeLambdas: edgeLambdasV2,
           allowedMethods: AllowedMethods.ALLOW_ALL,
           cachePolicy: cachePolicies.nextLambdaCachePolicy,
         },
@@ -336,13 +356,15 @@ export class HassuFrontendStack extends Stack {
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             cachePolicy: cachePolicies.nextStaticsCachePolicy,
           },
-          //"api/*": {
-          //  ...commonNextBehaviourOptions,
-          //  allowedMethods: AllowedMethods.ALLOW_ALL,
-          //  cachePolicy: cachePolicies.nextLambdaCachePolicy,
-          //},
+          "/api/*": {
+            ...commonNextBehaviourOptions,
+            allowedMethods: AllowedMethods.ALLOW_ALL,
+            cachePolicy: cachePolicies.nextLambdaCachePolicy,
+          },
           ...behaviours,
         },
+        domainNames: domain?.domainNames,
+        certificate: domain?.certificate,
         priceClass: PriceClass.PRICE_CLASS_100,
         logBucket,
         webAclId,
@@ -455,6 +477,38 @@ export class HassuFrontendStack extends Stack {
     }
   }
 
+  private createFrontendRequestFunctionV2(
+    env: string,
+    basicAuthenticationUsername: string,
+    basicAuthenticationPassword: string,
+    role: Role
+  ): EdgeFunction {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestV2.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      BASIC_USERNAME: basicAuthenticationUsername,
+      BASIC_PASSWORD: basicAuthenticationPassword,
+      PREFIX: BaseConfig.frontendPrefix,
+    });
+    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunctionV2", {
+      runtime: Runtime.NODEJS_22_X,
+      functionName: "frontendRequestFunctionV2" + env,
+      code: Code.fromInline(functionCode),
+      handler: "index.handler",
+      role,
+    });
+  }
+
+  private createFrontendRequestFunctionProd(env: string): cloudfront.Function {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestProd.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      PREFIX: BaseConfig.frontendPrefix,
+    });
+    return new cloudfront.Function(this, "frontendRequestFunctionProd", {
+      functionName: "frontendRequestFunctionprod",
+      code: cloudfront.FunctionCode.fromInline(functionCode),
+    });
+  }
+
   private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/suomifiHeader.js`).toString("utf-8");
     return new cloudfront.experimental.EdgeFunction(this, "suomifiRequestFunction", {
@@ -502,20 +556,6 @@ export class HassuFrontendStack extends Stack {
     });
   }
 
-  private createFrontendPrefixRequestURIFunction(env: string, prefix: string, role: Role): EdgeFunction {
-    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendPrefixRequestURI.js`).toString("utf-8");
-    const functionCode = Fn.sub(sourceCode, {
-      PREFIX: prefix,
-    });
-    return new cloudfront.experimental.EdgeFunction(this, "frontendPrefixRequestURIFunction", {
-      runtime: Runtime.NODEJS_22_X,
-      functionName: "frontendPrefixRequestURIFunction" + env,
-      code: Code.fromInline(functionCode),
-      handler: "index.handler",
-      role,
-    });
-  }
-
   private async createDistributionProperties(
     env: string,
     config: Config,
@@ -534,7 +574,7 @@ export class HassuFrontendStack extends Stack {
       originAccessIdentity
     );
     const props: Record<string, BehaviorOptions> = {
-      "/oauth2/*": dmzProxyBehaviorWithLambda,
+      "/oauth2/*": dmzProxyBehavior,
       "/jwtclaims": dmzProxyBehaviorWithLambda,
       "/graphql": publicGraphqlBehavior,
       "/huoltokatko/*": publicBucketBehaviour,
@@ -563,11 +603,16 @@ export class HassuFrontendStack extends Stack {
     return props;
   }
 
-  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.experimental.EdgeFunction) {
+  private static createDmzProxyBehavior(
+    dmzProxyEndpoint: string,
+    frontendDomainName: string,
+    frontendRequestFunction?: cloudfront.experimental.EdgeFunction
+  ) {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
@@ -583,6 +628,7 @@ export class HassuFrontendStack extends Stack {
 
   private createPublicGraphqlDmzProxyBehavior(
     dmzProxyEndpoint: string,
+    frontendDomainName: string,
     env: string,
     role: Role,
     frontendRequestFunction?: cloudfront.experimental.EdgeFunction
@@ -598,6 +644,7 @@ export class HassuFrontendStack extends Stack {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
@@ -827,6 +874,7 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
       NEXT_PUBLIC_REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
+      ENVIRONMENT: Config.env,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
@@ -899,6 +947,14 @@ export class HassuFrontendCoreStack extends Stack {
       secrets: containerSecrets,
     });
 
+    taskDefinition.addToTaskRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["logs:*", "xray:*", "ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+
     const fargateService = new FargateService(this, "nextJsAppFargateService", {
       cluster,
       serviceName: "nextjs-service-" + Config.env,
@@ -951,18 +1007,29 @@ export class HassuFrontendCoreStack extends Stack {
       scaleInCooldown: Duration.seconds(300), // Verbose default
     });
 
-    listener.addTargetGroups("Nextjs", {
-      priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
-      conditions: [
-        ListenerCondition.pathPatterns([
-          "/_next*",
-          "/assets*",
-          "/frontend*",
-          "/robots.txt",
-        ]),
-        ListenerCondition.hostHeaders([NewCloudfrontPrivateDNSName, config.frontendDomainName]),
-      ],
-      targetGroups: [targetGroup],
+    // ALB reitityssäännöt
+    const pathPatterns = ["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"];
+    const headerValues = [config.frontendDomainName, NewCloudfrontPrivateDNSName];
+    // ALB sallii vain 5 sääntöä per rule
+    const maxConditionValues = 5;
+
+    const maxPathsPerRule = maxConditionValues - headerValues.length;
+
+    if (maxPathsPerRule <= 0) {
+      throw new Error(`ALB sääntöjen luontia tarvitsee muuttaa!!`);
+    }
+
+    const chunks: string[][] = [];
+    for (let i = 0; i < pathPatterns.length; i += maxPathsPerRule) {
+      chunks.push(pathPatterns.slice(i, i + maxPathsPerRule));
+    }
+
+    chunks.forEach((chunk, index) => {
+      listener.addTargetGroups(`NextjsRule${index}`, {
+        priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"] + index,
+        conditions: [ListenerCondition.pathPatterns(chunk), ListenerCondition.httpHeader("X-Forwarded-Host", headerValues)],
+        targetGroups: [targetGroup],
+      });
     });
 
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
