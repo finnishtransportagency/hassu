@@ -114,6 +114,7 @@ module.exports = (phase) => {
     NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: process.env.NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
     NEXT_PUBLIC_ENVIRONMENT: BaseConfig.env,
+    ENVIRONMENT: BaseConfig.env,
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
     TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
     INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
