@@ -11,6 +11,7 @@ import {
   Distribution,
   KeyGroup,
   LambdaEdgeEventType,
+  FunctionEventType,
   OriginAccessIdentity,
   OriginRequestPolicy,
   OriginSslPolicy,
@@ -159,7 +160,6 @@ export class HassuFrontendStack extends Stack {
       env,
       config.basicAuthenticationUsername,
       config.basicAuthenticationPassword,
-      BaseConfig.frontendPrefix,
       edgeFunctionRole
     );
 
@@ -286,6 +286,56 @@ export class HassuFrontendStack extends Stack {
 
     // Do the new setup now only in dev or in developer env
     if (Config.infraEnvironment == "dev") {
+      // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
+      let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
+      let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
+
+      // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
+      // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
+      // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
+      // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
+      let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
+      let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
+
+      if (env !== "prod") {
+        frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
+          env,
+          config.basicAuthenticationUsername,
+          config.basicAuthenticationPassword,
+          edgeFunctionRole
+        );
+        edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
+      } else {
+        frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
+        edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
+      }
+
+      // Duplikoidaan behaviourit, jotta saadaan uuteen toteutukseen omalla Lambda@Edge funktiolla
+      const dmzProxyBehaviorWithLambdaV2 = HassuFrontendStack.createDmzProxyBehavior(
+        config.dmzProxyEndpoint,
+        config.frontendDomainName,
+        frontendRequestFunction
+      );
+
+      const publicGraphqlBehaviorV2 = this.createPublicGraphqlDmzProxyBehavior(
+        config.dmzProxyEndpoint,
+        config.frontendDomainName,
+        env,
+        edgeFunctionRole,
+        frontendRequestFunction
+      );
+
+      const behavioursV2: Record<string, BehaviorOptions> = await this.createDistributionProperties(
+        env,
+        config,
+        dmzProxyBehaviorWithLambdaV2,
+        dmzProxyBehavior,
+        apiBehavior,
+        publicGraphqlBehaviorV2,
+        edgeFunctionRole,
+        frontendRequestLambdaFunction
+      );
+
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
@@ -301,7 +351,8 @@ export class HassuFrontendStack extends Stack {
       const newDistribution = new Distribution(this, "NewDistribution", {
         defaultBehavior: {
           ...commonNextBehaviourOptions,
-          edgeLambdas,
+          functionAssociations: edgeFunctions,
+          edgeLambdas: edgeLambdasV2,
           allowedMethods: AllowedMethods.ALLOW_ALL,
           cachePolicy: cachePolicies.nextLambdaCachePolicy,
         },
@@ -336,7 +387,7 @@ export class HassuFrontendStack extends Stack {
             allowedMethods: AllowedMethods.ALLOW_ALL,
             cachePolicy: cachePolicies.nextLambdaCachePolicy,
           },
-          ...behaviours,
+          ...behavioursV2,
         },
         domainNames: domain?.domainNames,
         certificate: domain?.certificate,
@@ -452,17 +503,37 @@ export class HassuFrontendStack extends Stack {
     }
   }
 
-  // Tarvitaan tulevaisuudessa prodissa, Toistaiseksi kommentoituna pois
-  //private createFrontendRequestFunctionProd(prefix: string): cloudfront.Function {
-  //  const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestProd.js`).toString("utf-8");
-  //  const functionCode = Fn.sub(sourceCode, {
-  //    PREFIX: prefix,
-  //  });
-  //  return new cloudfront.Function(this, "frontendRequestFunctionProd", {
-  //    functionName: "frontendRequestFunctionprod",
-  //    code: cloudfront.FunctionCode.fromInline(functionCode),
-  //  });
-  //}
+  private createFrontendRequestFunctionV2(
+    env: string,
+    basicAuthenticationUsername: string,
+    basicAuthenticationPassword: string,
+    role: Role
+  ): EdgeFunction {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestV2.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      BASIC_USERNAME: basicAuthenticationUsername,
+      BASIC_PASSWORD: basicAuthenticationPassword,
+      PREFIX: BaseConfig.frontendPrefix,
+    });
+    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunctionV2", {
+      runtime: Runtime.NODEJS_22_X,
+      functionName: "frontendRequestFunctionV2" + env,
+      code: Code.fromInline(functionCode),
+      handler: "index.handler",
+      role,
+    });
+  }
+
+  private createFrontendRequestFunctionProd(env: string): cloudfront.Function {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestProd.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      PREFIX: BaseConfig.frontendPrefix,
+    });
+    return new cloudfront.Function(this, "frontendRequestFunctionProd", {
+      functionName: "frontendRequestFunctionprod",
+      code: cloudfront.FunctionCode.fromInline(functionCode),
+    });
+  }
 
   private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/suomifiHeader.js`).toString("utf-8");
