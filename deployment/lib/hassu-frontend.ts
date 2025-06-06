@@ -314,7 +314,7 @@ export class HassuFrontendStack extends Stack {
       const dmzProxyBehaviorWithLambdaV2 = HassuFrontendStack.createDmzProxyBehavior(
         config.dmzProxyEndpoint,
         config.frontendDomainName,
-        frontendRequestFunction
+        frontendRequestLambdaFunction
       );
 
       const publicGraphqlBehaviorV2 = this.createPublicGraphqlDmzProxyBehavior(
@@ -322,7 +322,7 @@ export class HassuFrontendStack extends Stack {
         config.frontendDomainName,
         env,
         edgeFunctionRole,
-        frontendRequestFunction
+        frontendRequestLambdaFunction
       );
 
       const behavioursV2: Record<string, BehaviorOptions> = await this.createDistributionProperties(
