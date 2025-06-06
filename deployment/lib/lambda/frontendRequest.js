@@ -1,36 +1,15 @@
 exports.handler = (event, context, callback) => {
   // Get request and request headers
   const request = event.Records[0].cf.request;
-  const headers = request.headers;
+  var headers = request.headers;
 
   // Configure authentication
-  const authUser = "${BASIC_USERNAME}";
-  const authPass = "${BASIC_PASSWORD}";
-  const environment = process.env.ENVIRONMENT || "${ENVIRONMENT}";
-
-  const prefix = "${PREFIX}";
+  var authUser = "${BASIC_USERNAME}";
+  var authPass = "${BASIC_PASSWORD}";
+  var environment = process.env.ENVIRONMENT || "${ENVIRONMENT}";
 
   // varruct the Basic Auth string
-  const authString = "Basic " + b2a(authUser + ":" + authPass);
-
-  let uri = request.uri;
-
-  // Normalize: remove trailing slash (except root)
-  if (uri.length > 1 && uri.endsWith("/")) {
-    uri = uri.slice(0, -1);
-  }
-
-  // Rewrite root to prefix
-  if (uri === "" || uri === "/") {
-    uri = prefix;
-  }
-
-  // Add prefix if not already present
-  if (!uri.startsWith(prefix)) {
-    uri = prefix + uri;
-  }
-
-  request.uri = uri;
+  var authString = "Basic " + b2a(authUser + ":" + authPass);
 
   // Require Basic authentication
   if (headers.authorization && headers.authorization.length > 0 && headers.authorization[0].value == authString) {

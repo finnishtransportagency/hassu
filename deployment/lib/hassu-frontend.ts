@@ -433,7 +433,6 @@ export class HassuFrontendStack extends Stack {
     env: string,
     basicAuthenticationUsername: string,
     basicAuthenticationPassword: string,
-    prefix: string,
     role: Role
   ): EdgeFunction | undefined {
     if (env !== "prod") {
@@ -441,11 +440,10 @@ export class HassuFrontendStack extends Stack {
       const functionCode = Fn.sub(sourceCode, {
         BASIC_USERNAME: basicAuthenticationUsername,
         BASIC_PASSWORD: basicAuthenticationPassword,
-        PREFIX: prefix,
         ENVIRONMENT: Config.env,
       });
       return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-        runtime: Runtime.NODEJS_22_X,
+        runtime: Runtime.NODEJS_18_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),
         handler: "index.handler",
@@ -531,7 +529,7 @@ export class HassuFrontendStack extends Stack {
       originAccessIdentity
     );
     const props: Record<string, BehaviorOptions> = {
-      "/oauth2/*": dmzProxyBehaviorWithLambda,
+      "/oauth2/*": dmzProxyBehavior,
       "/jwtclaims": dmzProxyBehaviorWithLambda,
       "/graphql": publicGraphqlBehavior,
       "/huoltokatko/*": publicBucketBehaviour,
