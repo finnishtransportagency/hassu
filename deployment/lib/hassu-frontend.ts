@@ -1011,7 +1011,7 @@ export class HassuFrontendCoreStack extends Stack {
       priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
       conditions: [
         ListenerCondition.pathPatterns(["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"]),
-        ListenerCondition.httpHeader("X-Forwarded-Host", [NewCloudfrontPrivateDNSName, config.frontendDomainName]),
+        ListenerCondition.httpHeader("X-Forwarded-Host", [config.frontendDomainName]),
       ],
       targetGroups: [targetGroup],
     });
