@@ -272,7 +272,6 @@ export class HassuFrontendStack extends Stack {
         imageLambda: `${id}Image`,
       },
       behaviours,
-      domain,
       defaultBehavior: {
         edgeLambdas,
       },
@@ -339,6 +338,8 @@ export class HassuFrontendStack extends Stack {
           },
           ...behaviours,
         },
+        domainNames: domain?.domainNames,
+        certificate: domain?.certificate,
         priceClass: PriceClass.PRICE_CLASS_100,
         logBucket,
         webAclId,
