@@ -1007,6 +1007,31 @@ export class HassuFrontendCoreStack extends Stack {
       scaleInCooldown: Duration.seconds(300), // Verbose default
     });
 
+    // ALB reitityssäännöt
+    const pathPatterns = ["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"];
+    const headerValues = [config.frontendDomainName, NewCloudfrontPrivateDNSName];
+    // ALB sallii vain 5 sääntöä per rule
+    const maxConditionValues = 5;
+
+    const maxPathsPerRule = maxConditionValues - headerValues.length;
+
+    if (maxPathsPerRule <= 0) {
+      throw new Error(`ALB sääntöjen luontia tarvitsee muuttaa!!`);
+    }
+
+    const chunks: string[][] = [];
+    for (let i = 0; i < pathPatterns.length; i += maxPathsPerRule) {
+      chunks.push(pathPatterns.slice(i, i + maxPathsPerRule));
+    }
+
+    chunks.forEach((chunk, index) => {
+      listener.addTargetGroups(`NextjsRule${index}`, {
+        priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"] + index,
+        conditions: [ListenerCondition.pathPatterns(chunk), ListenerCondition.httpHeader("X-Forwarded-Host", headerValues)],
+        targetGroups: [targetGroup],
+      });
+    });
+
     listener.addTargetGroups("Nextjs", {
       priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
       conditions: [
