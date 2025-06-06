@@ -1032,15 +1032,6 @@ export class HassuFrontendCoreStack extends Stack {
       });
     });
 
-    listener.addTargetGroups("Nextjs", {
-      priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"],
-      conditions: [
-        ListenerCondition.pathPatterns(["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"]),
-        ListenerCondition.httpHeader("X-Forwarded-Host", [config.frontendDomainName]),
-      ],
-      targetGroups: [targetGroup],
-    });
-
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
     searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", taskDefinition.taskRole);
     // Logic not needed as long as we run only in dev but keep it here as reminder when expanding to elsewhere
