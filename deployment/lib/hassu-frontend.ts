@@ -324,22 +324,22 @@ export class HassuFrontendStack extends Stack {
 
       // Käytä jo accountissa olevia cache policyjä
       const nextJsAppCachePolicy = CachePolicy.fromCachePolicyId(
-          this,
-          "nextJsLambdaCachePolicy",
-          Fn.importValue("nextLambdaCachePolicyId")
-        ) as CachePolicy
+        this,
+        "nextJsLambdaCachePolicy",
+        Fn.importValue("nextLambdaCachePolicyId")
+      ) as CachePolicy;
 
       const nextJsImageCachePolicy = CachePolicy.fromCachePolicyId(
-          this,
-          "nextJsImageCachePolicy",
-          Fn.importValue("nextImageCachePolicyId")
-        ) as CachePolicy
+        this,
+        "nextJsImageCachePolicy",
+        Fn.importValue("nextImageCachePolicyId")
+      ) as CachePolicy;
 
       const nextStaticsCachePolicy = CachePolicy.fromCachePolicyId(
-          this,
-          "nextJsStaticsCachePolicy",
-          Fn.importValue("nextStaticsCachePolicyId")
-        ) as CachePolicy
+        this,
+        "nextJsStaticsCachePolicy",
+        Fn.importValue("nextStaticsCachePolicyId")
+      ) as CachePolicy;
 
       const newDistribution = new Distribution(this, "NewDistribution", {
         defaultBehavior: {
@@ -363,7 +363,7 @@ export class HassuFrontendStack extends Stack {
           "/_next/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextStaticsCachePolicy
+            cachePolicy: nextStaticsCachePolicy,
           },
           //"static/*": {
           //  ...commonNextBehaviourOptions,
@@ -373,7 +373,7 @@ export class HassuFrontendStack extends Stack {
           "/assets/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextStaticsCachePolicy
+            cachePolicy: nextStaticsCachePolicy,
           },
           "/api/*": {
             ...commonNextBehaviourOptions,
