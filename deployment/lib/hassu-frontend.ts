@@ -365,11 +365,6 @@ export class HassuFrontendStack extends Stack {
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             cachePolicy: nextJsStaticsCachePolicy,
           },
-          //"static/*": {
-          //  ...commonNextBehaviourOptions,
-          //  allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-          //  cachePolicy: nextStaticsCachePolicy,
-          //},
           "/assets/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
