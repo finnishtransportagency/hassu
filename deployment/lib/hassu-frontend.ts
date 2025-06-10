@@ -335,7 +335,7 @@ export class HassuFrontendStack extends Stack {
         Fn.importValue("nextImageCachePolicyId")
       ) as CachePolicy;
 
-      const nextStaticsCachePolicy = CachePolicy.fromCachePolicyId(
+      const nextJsStaticsCachePolicy = CachePolicy.fromCachePolicyId(
         this,
         "nextJsStaticsCachePolicy",
         Fn.importValue("nextStaticsCachePolicyId")
@@ -363,7 +363,7 @@ export class HassuFrontendStack extends Stack {
           "/_next/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextStaticsCachePolicy,
+            cachePolicy: nextJsStaticsCachePolicy,
           },
           //"static/*": {
           //  ...commonNextBehaviourOptions,
@@ -373,7 +373,7 @@ export class HassuFrontendStack extends Stack {
           "/assets/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextStaticsCachePolicy,
+            cachePolicy: nextJsStaticsCachePolicy,
           },
           "/api/*": {
             ...commonNextBehaviourOptions,
