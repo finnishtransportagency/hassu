@@ -163,34 +163,10 @@ export class HassuFrontendStack extends Stack {
       edgeFunctionRole
     );
 
-    // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
-    let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
-    let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
-
-    // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
-    // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
-    // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
-    // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
-    let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
-    let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
-
-    if (env !== "prod") {
-      frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
-        env,
-        config.basicAuthenticationUsername,
-        config.basicAuthenticationPassword,
-        edgeFunctionRole
-      );
-      edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
-    } else {
-      frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
-      edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
-    }
-
     const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
       config.dmzProxyEndpoint,
       config.frontendDomainName,
-      frontendRequestLambdaFunction
+      frontendRequestFunction
     );
 
     const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, config.frontendDomainName);
@@ -202,7 +178,7 @@ export class HassuFrontendStack extends Stack {
       config.frontendDomainName,
       env,
       edgeFunctionRole,
-      frontendRequestLambdaFunction
+      frontendRequestFunction
     );
     const behaviours: Record<string, BehaviorOptions> = await this.createDistributionProperties(
       env,
@@ -212,7 +188,7 @@ export class HassuFrontendStack extends Stack {
       apiBehavior,
       publicGraphqlBehavior,
       edgeFunctionRole,
-      frontendRequestLambdaFunction
+      frontendRequestFunction
     );
 
     let domain:
@@ -310,6 +286,30 @@ export class HassuFrontendStack extends Stack {
 
     // Do the new setup now only in dev or in developer env
     if (Config.infraEnvironment == "dev") {
+      // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
+      let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
+      let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
+
+      // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
+      // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
+      // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
+      // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
+      let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
+      let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
+
+      if (env !== "prod") {
+        frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
+          env,
+          config.basicAuthenticationUsername,
+          config.basicAuthenticationPassword,
+          edgeFunctionRole
+        );
+        edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
+      } else {
+        frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
+        edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
+      }
+
       const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
