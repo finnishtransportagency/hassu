@@ -893,7 +893,7 @@ export class HassuFrontendCoreStack extends Stack {
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
-      FRONTEND_DOMAIN_NAME: NewCloudfrontPrivateDNSName, // config.frontendDomainName,
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
       VELHO_API_URL: ssmParameters.VelhoApiUrl,
