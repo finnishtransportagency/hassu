@@ -322,44 +322,63 @@ export class HassuFrontendStack extends Stack {
         cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
       };
 
+      // Käytä jo accountissa olevia cache policyjä
+      const nextJsAppCachePolicy = CachePolicy.fromCachePolicyId(
+          this,
+          "nextJsLambdaCachePolicy",
+          Fn.importValue("nextLambdaCachePolicyId")
+        ) as CachePolicy
+
+      const nextJsImageCachePolicy = CachePolicy.fromCachePolicyId(
+          this,
+          "nextJsImageCachePolicy",
+          Fn.importValue("nextImageCachePolicyId")
+        ) as CachePolicy
+
+      const nextStaticsCachePolicy = CachePolicy.fromCachePolicyId(
+          this,
+          "nextJsStaticsCachePolicy",
+          Fn.importValue("nextStaticsCachePolicyId")
+        ) as CachePolicy
+
       const newDistribution = new Distribution(this, "NewDistribution", {
         defaultBehavior: {
           ...commonNextBehaviourOptions,
           functionAssociations: edgeFunctions,
           edgeLambdas: edgeLambdasV2,
           allowedMethods: AllowedMethods.ALLOW_ALL,
-          cachePolicy: cachePolicies.nextLambdaCachePolicy,
+          cachePolicy: nextJsAppCachePolicy,
         },
         additionalBehaviors: {
           "/_next/image*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_ALL,
-            cachePolicy: cachePolicies.nextImageCachePolicy,
+            cachePolicy: nextJsImageCachePolicy,
           },
           "/_next/data/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: cachePolicies.nextLambdaCachePolicy,
+            cachePolicy: nextJsAppCachePolicy,
           },
           "/_next/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: cachePolicies.nextStaticsCachePolicy,
+            cachePolicy: nextStaticsCachePolicy
           },
           //"static/*": {
           //  ...commonNextBehaviourOptions,
           //  allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-          //  cachePolicy: cachePolicies.nextStaticsCachePolicy,
+          //  cachePolicy: nextStaticsCachePolicy,
           //},
           "/assets/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: cachePolicies.nextStaticsCachePolicy,
+            cachePolicy: nextStaticsCachePolicy
           },
           "/api/*": {
             ...commonNextBehaviourOptions,
             allowedMethods: AllowedMethods.ALLOW_ALL,
-            cachePolicy: cachePolicies.nextLambdaCachePolicy,
+            cachePolicy: nextJsAppCachePolicy,
           },
           ...behaviours,
         },
