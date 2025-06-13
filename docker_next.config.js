@@ -53,6 +53,7 @@ function setupLocalDevelopmentMode(config, env) {
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
   env.NEXT_PUBLIC_VERSION = process.env.VERSION;
   env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
+  env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
 
   /**
    * @type {import("next").NextConfig}
