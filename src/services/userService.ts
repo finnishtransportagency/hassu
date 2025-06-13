@@ -2,7 +2,7 @@ function getAppDomainUri() {
   if (process.env.NODE_ENV === "development") {
     return "http://localhost:3000/";
   } else {
-    return "https://" + process.env.FRONTEND_DOMAIN_NAME + "/";
+    return "https://" + process.env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME + "/";
   }
 }
 
