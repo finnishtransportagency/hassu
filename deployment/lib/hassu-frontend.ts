@@ -34,7 +34,6 @@ import {
   readAccountStackOutputs,
   readBackendStackOutputs,
   readDatabaseStackOutputs,
-  readFrontendStackOutputs,
   readParametersForEnv,
   readPipelineStackOutputs,
   Region,
@@ -71,8 +70,8 @@ export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
   CloudfrontDistributionId: string;
   FrontendPublicKeyIdOutput: string;
-  NewCloudfrontPrivateDNSName: string;
-  NewCloudfrontDistributionId: string;
+  //NewCloudfrontPrivateDNSName: string;
+  //NewCloudfrontDistributionId: string;
 };
 
 interface HassuFrontendStackProps {
@@ -385,10 +384,10 @@ export class HassuFrontendStack extends Stack {
         errorResponses: this.getErrorResponsesForCloudFront(),
       });
 
-      new CfnOutput(this, "NewCloudfrontPrivateDNSName", {
+      new CfnOutput(this, "CloudfrontPrivateDNSName", {
         value: newDistribution.distributionDomainName || "",
       });
-      new CfnOutput(this, "NewCloudfrontDistributionId", {
+      new CfnOutput(this, "CloudfrontDistributionId", {
         value: newDistribution.distributionId || "",
       });
     }
@@ -428,14 +427,14 @@ export class HassuFrontendStack extends Stack {
       });
     }
 
-    const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
+    //const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
 
-    new CfnOutput(this, "CloudfrontPrivateDNSName", {
-      value: distribution.distributionDomainName || "",
-    });
-    new CfnOutput(this, "CloudfrontDistributionId", {
-      value: distribution.distributionId || "",
-    });
+    //new CfnOutput(this, "CloudfrontPrivateDNSName", {
+    //  value: distribution.distributionDomainName || "",
+    //});
+    //new CfnOutput(this, "CloudfrontDistributionId", {
+    //  value: distribution.distributionId || "",
+    //});
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
@@ -839,7 +838,6 @@ export class HassuFrontendCoreStack extends Stack {
     const config = await Config.instance(this);
 
     const { EventSqsUrl, HyvaksymisEsitysSqsUrl, AppSyncAPIKey } = await readBackendStackOutputs();
-    const { NewCloudfrontPrivateDNSName } = await readFrontendStackOutputs();
     const accountStackOutputs = await readAccountStackOutputs();
     const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
@@ -1024,7 +1022,7 @@ export class HassuFrontendCoreStack extends Stack {
 
     // ALB reitityssäännöt
     const pathPatterns = ["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"];
-    const headerValues = [config.frontendDomainName, NewCloudfrontPrivateDNSName];
+    const headerValues = [config.frontendDomainName];
     // ALB sallii vain 5 sääntöä per rule
     const maxConditionValues = 5;
 
