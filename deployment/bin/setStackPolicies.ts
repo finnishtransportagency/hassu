@@ -25,7 +25,7 @@ function createPolicy(terminationProtection: boolean): string {
           StringEquals: {
             ResourceType: [
               "AWS::DynamoDB::Table",
-              "AWS::CloudFront::Distribution",
+              //"AWS::CloudFront::Distribution", // Pitää laittaa takaisin päälle kun vanhat on saatu poistettua
               "AWS::AppSync::GraphQLApi",
               "AWS::OpenSearchService::Domain",
             ],
