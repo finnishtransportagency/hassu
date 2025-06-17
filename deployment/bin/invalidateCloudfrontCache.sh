@@ -2,7 +2,7 @@
 
 STACK_NAME="hassu-frontend-${ENVIRONMENT}"
 REGION="us-east-1"
-CFN_OUTPUT_KEY="NewCloudfrontDistributionId"
+CFN_OUTPUT_KEY="CloudfrontDistributionId"
 
 DISTRIBUTION_ID=$(aws cloudformation describe-stacks \
   --region "$REGION" \
