@@ -54,6 +54,8 @@ function setupLocalDevelopmentMode(config, env) {
   env.NEXT_PUBLIC_VERSION = process.env.VERSION;
   env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
   env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
+  env.NEXT_PUBLIC_KEYCLOAK_DOMAIN = process.env.KEYCLOAK_DOMAIN;
+  env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID;
 
   /**
    * @type {import("next").NextConfig}

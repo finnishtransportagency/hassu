@@ -7,8 +7,8 @@ function getAppDomainUri() {
 }
 
 export function getSuomiFiAuthenticationURL(state?: string): string | undefined {
-  const domain = process.env.KEYCLOAK_DOMAIN;
-  const clientId = process.env.KEYCLOAK_CLIENT_ID;
+  const domain = process.env.NEXT_PUBLIC_KEYCLOAK_DOMAIN;
+  const clientId = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID;
   if (domain && clientId) {
     const url = new URL(domain);
     url.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/auth";

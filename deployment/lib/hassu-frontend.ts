@@ -34,7 +34,6 @@ import {
   readAccountStackOutputs,
   readBackendStackOutputs,
   readDatabaseStackOutputs,
-  readFrontendStackOutputs,
   readParametersForEnv,
   readPipelineStackOutputs,
   Region,
@@ -839,7 +838,6 @@ export class HassuFrontendCoreStack extends Stack {
     const config = await Config.instance(this);
 
     const { EventSqsUrl, HyvaksymisEsitysSqsUrl, AppSyncAPIKey } = await readBackendStackOutputs();
-    const { CloudfrontPrivateDNSName } = await readFrontendStackOutputs();
     const accountStackOutputs = await readAccountStackOutputs();
     const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
 
@@ -888,6 +886,8 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
       NEXT_PUBLIC_REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
       NEXT_PUBLIC_FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
+      NEXT_PUBLIC_KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       ENVIRONMENT: Config.env,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
@@ -895,8 +895,6 @@ export class HassuFrontendCoreStack extends Stack {
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
       FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-      KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
-      KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
       VELHO_API_URL: ssmParameters.VelhoApiUrl,
       VELHO_AUTH_URL: ssmParameters.VelhoAuthenticationUrl,
       EVENT_SQS_URL: EventSqsUrl,
@@ -1024,7 +1022,7 @@ export class HassuFrontendCoreStack extends Stack {
 
     // ALB reitityssäännöt
     const pathPatterns = ["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"];
-    const headerValues = [config.frontendDomainName, CloudfrontPrivateDNSName];
+    const headerValues = [config.frontendDomainName];
     // ALB sallii vain 5 sääntöä per rule
     const maxConditionValues = 5;
 
