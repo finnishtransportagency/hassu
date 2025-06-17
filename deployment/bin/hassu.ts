@@ -61,7 +61,7 @@ async function main() {
       console.log("Deployment of HassuBackendStack failed:", e);
       process.exit(1);
     });
-    if (["dev", "test"].includes(Config.infraEnvironment)) {
+    if (Config.isPermanentEnvironment()) {
       const hassuFrontendCoreStack = new HassuFrontendCoreStack(app, {
         awsAccountId,
         internalBucket: hassuDatabaseStack.internalBucket,

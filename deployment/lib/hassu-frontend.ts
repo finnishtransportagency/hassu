@@ -365,8 +365,8 @@ export class HassuFrontendStack extends Stack {
         },
         ...behaviours,
       },
-      domainNames: domain?.domainNames,
-      certificate: domain?.certificate,
+      domainNames: env === "dev" ? domain?.domainNames : undefined, // ei voida kiinnittää domainia suoraan, koska on kiinni nykytoteutuksessa. Poistetaan kun tehty ensin manuaalisesti
+      certificate: env === "dev" ? domain?.certificate : undefined, // ei voida kiinnittää domainia suoraan, koska on kiinni nykytoteutuksessa. Poistetaan kun tehty ensin manuaalisesti
       priceClass: PriceClass.PRICE_CLASS_100,
       logBucket,
       webAclId,
