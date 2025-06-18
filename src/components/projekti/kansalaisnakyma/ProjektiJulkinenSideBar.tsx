@@ -62,12 +62,6 @@ const ProjektiSideNavigation = styled((props) => {
   const pathName = router.pathname;
   const isVideoPage = pathName.includes("aloituskuulutus") || pathName.includes("suunnittelu") || pathName.includes("nahtavillaolo");
 
-  if (!isVideoPage) {
-    return null;
-  }
-
-  console.log(projekti);
-
   return (
     <Section noDivider {...props}>
       <SideCard>
