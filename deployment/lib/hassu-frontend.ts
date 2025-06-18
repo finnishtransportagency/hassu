@@ -222,17 +222,17 @@ export class HassuFrontendStack extends Stack {
         nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
           this,
           "nextStaticsCachePolicy",
-          Fn.importValue("nextStaticsCachePolicyId")
+          "2dbac21f-2ff9-43f0-9a8d-2409fc3c7496"
         ) as CachePolicy,
         nextImageCachePolicy: CachePolicy.fromCachePolicyId(
           this,
           "nextImageCachePolicy",
-          Fn.importValue("nextImageCachePolicyId")
+          "76fad4f5-9b81-44f2-9eac-9b5a5173aedb"
         ) as CachePolicy,
         nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
           this,
           "nextLambdaCachePolicy",
-          Fn.importValue("nextLambdaCachePolicyId")
+          "79a029fc-9258-43dc-bec8-9df9dd4972be"
         ) as CachePolicy,
       };
     }
