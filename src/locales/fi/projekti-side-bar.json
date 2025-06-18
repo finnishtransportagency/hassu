@@ -1,6 +1,7 @@
 {
   "suunnitteluhankkeen_yhteystiedot": "Suunnitteluhankkeen yhteyshenkilöt",
   "suunnitelma_kartalla": "Suunnitelma kartalla",
-  "vls-esittely": "VLS-järjestelmän esittely",
-  "tutustu-videoiden-avulla": "Tutustu VLS-järjestelmään ohjevideoiden avulla."
+  "tutustu-videoiden-avulla-TIE": "Tutustu tiesuunnitteluun",
+  "tutustu-videoiden-avulla-RATA": "Tutustu ratasuunnitteluun",
+  "tutustu-videoiden-avulla-YLEINEN": "Tutustu yleissuunnitteluun"
 }

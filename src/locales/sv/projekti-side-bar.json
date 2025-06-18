@@ -1,6 +1,7 @@
 {
   "suunnitteluhankkeen_yhteystiedot": "Kontaktpersoner för planeringsprojektet",
   "suunnitelma_kartalla": "Planera på kartan",
-  "vls-esittely": "KÄÄNNÖS TARVITAAN: VLS-järjestelmän esittely",
-  "tutustu-videoiden-avulla": "KÄÄNNÖS TARVITAAN: Tutustu VLS-järjestelmään ohjevideoiden avulla."
+  "tutustu-videoiden-avulla-TIE": "Bekanta dig med vägplanering",
+  "tutustu-videoiden-avulla-RATA": "Bekanta dig med järnvägsplanering",
+  "tutustu-videoiden-avulla-YLEINEN": "Bekanta dig med utredningsplanering"
 }

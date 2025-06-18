@@ -5,7 +5,8 @@ export const SideVideoContainer = styled("div")(() => ({
   flexDirection: "column",
   width: "80%",
   margin: "0 auto",
-  paddingBottom: "20px",
+  paddingTop: "30px",
+  paddingBottom: "30px",
 }));
 
 export const DialogVideoContainer = styled("div")(() => ({

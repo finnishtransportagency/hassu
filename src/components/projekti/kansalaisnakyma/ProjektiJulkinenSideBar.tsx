@@ -113,16 +113,7 @@ const ProjektiSideNavigation = styled((props) => {
           </>
         )}
       </SideCard>
-
-      <SideCard>
-        {isVideoPage && (
-          <>
-            <SideCardHeading>{t("vls-esittely")}</SideCardHeading>
-            <SideCardContent>{t("tutustu-videoiden-avulla")}</SideCardContent>
-            <DynaaminenVideoUpotus projekti={projekti} />
-          </>
-        )}
-      </SideCard>
+      <SideCard>{isVideoPage && <DynaaminenVideoUpotus projekti={projekti} />}</SideCard>
     </Section>
   );
 })<ComponentProps<typeof Section>>({});
