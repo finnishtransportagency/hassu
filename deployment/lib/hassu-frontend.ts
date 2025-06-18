@@ -21,7 +21,7 @@ import {
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
-import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
+import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
@@ -216,39 +216,113 @@ export class HassuFrontendStack extends Stack {
       enforceSSL: true,
     });
 
-    let cachePolicies: Partial<Props>;
-    const staticsCachePolicyName = "NextJsAppStaticsCache";
-    const imageCachePolicyName = "NextJsAppImageCache";
-    const lambdaCachePolicyName = "NextJsAppLambdaCache";
+    // Cache policyt on luotu suoraan sen perusteella mitä serverless-next luo defaulttina
+    let nextJsStaticsCachePolicy: cloudfront.CachePolicy;
+    let nextJsImageCachePolicy: cloudfront.CachePolicy;
+    let nextJsAppCachePolicy: cloudfront.CachePolicy;
     if (env == "dev" || env == "prod") {
-      // Cache policyt luodaan vain kerran per account
-      cachePolicies = {
-        cachePolicyName: {
-          staticsCache: staticsCachePolicyName,
-          imageCache: imageCachePolicyName,
-          lambdaCache: lambdaCachePolicyName,
-        },
-      };
+      nextJsStaticsCachePolicy = new cloudfront.CachePolicy(this, "NextJsStaticsCachePolicy", {
+        cachePolicyName: "NextJsStaticsCachePolicy",
+        defaultTtl: Duration.seconds(2592000),
+        minTtl: Duration.seconds(2592000),
+        maxTtl: Duration.seconds(2592000),
+        cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+        headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+        queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
+        enableAcceptEncodingBrotli: true,
+        enableAcceptEncodingGzip: true,
+      });
+
+      new ssm.StringParameter(this, "NextJsStaticsCachePolicyId", {
+        parameterName: "/NextJsStaticsCachePolicyId",
+        stringValue: nextJsStaticsCachePolicy.cachePolicyId,
+      });
+
+      nextJsImageCachePolicy = new cloudfront.CachePolicy(this, "NextJsImageCachePolicy", {
+        cachePolicyName: "NextJsImageCachePolicy",
+        defaultTtl: Duration.seconds(86400),
+        minTtl: Duration.seconds(0),
+        maxTtl: Duration.seconds(31536000),
+        cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+        headerBehavior: cloudfront.CacheHeaderBehavior.allowList("Accept"),
+        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
+        enableAcceptEncodingBrotli: true,
+        enableAcceptEncodingGzip: true,
+      });
+
+      new ssm.StringParameter(this, "NextJsImageCachePolicyId", {
+        parameterName: "/NextJsImageCachePolicyId",
+        stringValue: nextJsImageCachePolicy.cachePolicyId,
+      });
+
+      nextJsAppCachePolicy = new cloudfront.CachePolicy(this, "NextJsAppCachePolicy", {
+        cachePolicyName: "NextJsAppCachePolicy",
+        defaultTtl: Duration.seconds(0),
+        minTtl: Duration.seconds(0),
+        maxTtl: Duration.seconds(31536000),
+        cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+        headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
+        enableAcceptEncodingBrotli: true,
+        enableAcceptEncodingGzip: true,
+      });
+
+      new ssm.StringParameter(this, "NextJsAppCachePolicyId", {
+        parameterName: "/NextJsAppCachePolicyId",
+        stringValue: nextJsAppCachePolicy.cachePolicyId,
+      });
     } else {
-      // Käytä jo accountissa olevia cache policyjä
-      cachePolicies = {
-        nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
-          this,
-          "nextStaticsCachePolicy",
-          Fn.importValue("nextStaticsCachePolicyId")
-        ) as CachePolicy,
-        nextImageCachePolicy: CachePolicy.fromCachePolicyId(
-          this,
-          "nextImageCachePolicy",
-          Fn.importValue("nextImageCachePolicyId")
-        ) as CachePolicy,
-        nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
-          this,
-          "nextLambdaCachePolicy",
-          Fn.importValue("nextLambdaCachePolicyId")
-        ) as CachePolicy,
-      };
+      const nextJsStaticsCachePolicyId = await config.getGlobalSecureInfraParameter("NextJsStaticsCachePolicyId", "");
+      nextJsStaticsCachePolicy = CachePolicy.fromCachePolicyId(
+        this,
+        "NextJsStaticsCachePolicyImportedId",
+        nextJsStaticsCachePolicyId
+      ) as CachePolicy;
+
+      const nextJsImageCachePolicyId = await config.getGlobalSecureInfraParameter("NextJsImageCachePolicyId", "");
+      nextJsImageCachePolicy = CachePolicy.fromCachePolicyId(
+        this,
+        "NextJsImageCachePolicyImportedId",
+        nextJsImageCachePolicyId
+      ) as CachePolicy;
+
+      const nextJsAppCachePolicyId = await config.getGlobalSecureInfraParameter("NextJsAppCachePolicyId", "");
+      nextJsAppCachePolicy = CachePolicy.fromCachePolicyId(this, "NextJsAppCachePolicyImportedId", nextJsAppCachePolicyId) as CachePolicy;
     }
+
+    //let cachePolicies: Partial<Props>;
+    //const staticsCachePolicyName = "NextJsAppStaticsCache";
+    //const imageCachePolicyName = "NextJsAppImageCache";
+    //const lambdaCachePolicyName = "NextJsAppLambdaCache";
+    //if (env == "dev" || env == "prod") {
+    //  // Cache policyt luodaan vain kerran per account
+    //  cachePolicies = {
+    //    cachePolicyName: {
+    //      staticsCache: staticsCachePolicyName,
+    //      imageCache: imageCachePolicyName,
+    //      lambdaCache: lambdaCachePolicyName,
+    //    },
+    //  };
+    //} else {
+    //  // Käytä jo accountissa olevia cache policyjä
+    //  cachePolicies = {
+    //    nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
+    //      this,
+    //      "nextStaticsCachePolicy",
+    //      Fn.importValue("nextStaticsCachePolicyId")
+    //    ) as CachePolicy,
+    //    nextImageCachePolicy: CachePolicy.fromCachePolicyId(
+    //      this,
+    //      "nextImageCachePolicy",
+    //      Fn.importValue("nextImageCachePolicyId")
+    //    ) as CachePolicy,
+    //    nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
+    //      this,
+    //      "nextLambdaCachePolicy",
+    //      Fn.importValue("nextLambdaCachePolicyId")
+    //    ) as CachePolicy,
+    //  };
+    //}
 
     let webAclId: string | undefined;
     if (Config.getEnvConfig().waf) {
@@ -260,7 +334,9 @@ export class HassuFrontendStack extends Stack {
       edgeLambdas = [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
     }
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
-      ...cachePolicies,
+      nextStaticsCachePolicy: nextJsStaticsCachePolicy,
+      nextImageCachePolicy: nextJsImageCachePolicy,
+      nextLambdaCachePolicy: nextJsAppCachePolicy,
       serverlessBuildOutDir: "./build",
       runtime: Runtime.NODEJS_18_X,
       env: { region: "us-east-1" },
@@ -283,114 +359,92 @@ export class HassuFrontendStack extends Stack {
       invalidationPaths: ["/*"],
     });
 
-    // Do the new setup now only in dev or in developer env
-    if (Config.infraEnvironment == "dev") {
-      // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
-      let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
-      let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
+    // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
+    let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
+    let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
 
-      // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
-      // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
-      // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
-      // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
-      let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
-      let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
+    // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
+    // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
+    // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
+    // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
+    let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
+    let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
 
-      if (env !== "prod") {
-        frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
-          env,
-          config.basicAuthenticationUsername,
-          config.basicAuthenticationPassword,
-          edgeFunctionRole
-        );
-        edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
-      } else {
-        frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
-        edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
-      }
+    if (env !== "prod") {
+      frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
+        env,
+        config.basicAuthenticationUsername,
+        config.basicAuthenticationPassword,
+        edgeFunctionRole
+      );
+      edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
+    } else {
+      frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
+      edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
+    }
 
-      const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
-        customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
-      });
+    const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
+      originSslProtocols: [OriginSslPolicy.TLS_V1_2],
+      customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
+    });
 
-      const commonNextBehaviourOptions: BehaviorOptions = {
-        origin: vaylaProxyOrigin,
-        viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-        originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
-        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
-      };
+    const commonNextBehaviourOptions: BehaviorOptions = {
+      origin: vaylaProxyOrigin,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+    };
 
-      // Käytä jo accountissa olevia cache policyjä
-      const nextJsAppCachePolicy = CachePolicy.fromCachePolicyId(
-        this,
-        "nextJsLambdaCachePolicy",
-        Fn.importValue("nextLambdaCachePolicyId")
-      ) as CachePolicy;
-
-      const nextJsImageCachePolicy = CachePolicy.fromCachePolicyId(
-        this,
-        "nextJsImageCachePolicy",
-        Fn.importValue("nextImageCachePolicyId")
-      ) as CachePolicy;
-
-      const nextJsStaticsCachePolicy = CachePolicy.fromCachePolicyId(
-        this,
-        "nextJsStaticsCachePolicy",
-        Fn.importValue("nextStaticsCachePolicyId")
-      ) as CachePolicy;
-
-      const newDistribution = new Distribution(this, "NewDistribution", {
-        defaultBehavior: {
+    const newDistribution = new Distribution(this, "NewDistribution", {
+      defaultBehavior: {
+        ...commonNextBehaviourOptions,
+        functionAssociations: edgeFunctions,
+        edgeLambdas: edgeLambdasV2,
+        allowedMethods: AllowedMethods.ALLOW_ALL,
+        cachePolicy: nextJsAppCachePolicy,
+      },
+      additionalBehaviors: {
+        "/_next/image*": {
           ...commonNextBehaviourOptions,
-          functionAssociations: edgeFunctions,
-          edgeLambdas: edgeLambdasV2,
+          allowedMethods: AllowedMethods.ALLOW_ALL,
+          cachePolicy: nextJsImageCachePolicy,
+        },
+        "/_next/data/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          cachePolicy: nextJsAppCachePolicy,
+        },
+        "/_next/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          cachePolicy: nextJsStaticsCachePolicy,
+        },
+        "/assets/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          cachePolicy: nextJsStaticsCachePolicy,
+        },
+        "/api/*": {
+          ...commonNextBehaviourOptions,
           allowedMethods: AllowedMethods.ALLOW_ALL,
           cachePolicy: nextJsAppCachePolicy,
         },
-        additionalBehaviors: {
-          "/_next/image*": {
-            ...commonNextBehaviourOptions,
-            allowedMethods: AllowedMethods.ALLOW_ALL,
-            cachePolicy: nextJsImageCachePolicy,
-          },
-          "/_next/data/*": {
-            ...commonNextBehaviourOptions,
-            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextJsAppCachePolicy,
-          },
-          "/_next/*": {
-            ...commonNextBehaviourOptions,
-            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextJsStaticsCachePolicy,
-          },
-          "/assets/*": {
-            ...commonNextBehaviourOptions,
-            allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-            cachePolicy: nextJsStaticsCachePolicy,
-          },
-          "/api/*": {
-            ...commonNextBehaviourOptions,
-            allowedMethods: AllowedMethods.ALLOW_ALL,
-            cachePolicy: nextJsAppCachePolicy,
-          },
-          ...behaviours,
-        },
-        domainNames: domain?.domainNames,
-        certificate: domain?.certificate,
-        priceClass: PriceClass.PRICE_CLASS_100,
-        logBucket,
-        webAclId,
-        errorResponses: this.getErrorResponsesForCloudFront(),
-      });
+        ...behaviours,
+      },
+      domainNames: domain?.domainNames,
+      certificate: domain?.certificate,
+      priceClass: PriceClass.PRICE_CLASS_100,
+      logBucket,
+      webAclId,
+      errorResponses: this.getErrorResponsesForCloudFront(),
+    });
 
-      new CfnOutput(this, "CloudfrontPrivateDNSName", {
-        value: newDistribution.distributionDomainName || "",
-      });
-      new CfnOutput(this, "CloudfrontDistributionId", {
-        value: newDistribution.distributionId || "",
-      });
-    }
+    new CfnOutput(this, "CloudfrontPrivateDNSName", {
+      value: newDistribution.distributionDomainName || "",
+    });
+    new CfnOutput(this, "CloudfrontDistributionId", {
+      value: newDistribution.distributionId || "",
+    });
 
     this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
@@ -414,15 +468,15 @@ export class HassuFrontendStack extends Stack {
 
     if (env == "dev" || env == "prod") {
       new CfnOutput(this, "nextStaticsCachePolicyId", {
-        value: nextJSLambdaEdge.nextStaticsCachePolicy.cachePolicyId || "",
+        value: env === "dev" ? "7f91a1cf-d9bd-4a8f-8317-cf1f9eec0fbe" : "08a7fd7f-be24-4f5d-a79b-fa6c8ecec537",
         exportName: "nextStaticsCachePolicyId",
       });
       new CfnOutput(this, "nextImageCachePolicyId", {
-        value: nextJSLambdaEdge.nextImageCachePolicy.cachePolicyId || "",
+        value: env === "dev" ? "8baf3519-0793-4195-af4d-0d83a04e45db" : "9d9f0807-03d2-4921-a2ee-ca2d5e1f34ad",
         exportName: "nextImageCachePolicyId",
       });
       new CfnOutput(this, "nextLambdaCachePolicyId", {
-        value: nextJSLambdaEdge.nextLambdaCachePolicy.cachePolicyId || "",
+        value: env === "dev" ? "c52cf4e4-7465-489f-8780-77b125b9b706" : "8e12fc51-b5d3-4ae7-8d81-17df74c93c10",
         exportName: "nextLambdaCachePolicyId",
       });
     }

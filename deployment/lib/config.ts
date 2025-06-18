@@ -174,7 +174,7 @@ export class Config extends BaseConfig {
     if (Config.isLocalStack()) {
       return "dummy";
     }
-    const name = `/${params.infraEnvironment}/` + params.parameterName;
+    const name = params.infraEnvironment ? `/${params.infraEnvironment}/` + params.parameterName : `/${params.parameterName}`;
     return this.getParameterFromSSMNow(regionalSsm, name);
   }
 
