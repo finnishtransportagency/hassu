@@ -19,12 +19,10 @@ import {
   FormGroup,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { HassuDatePickerWithController } from "@components/form/HassuDatePicker";
-import { today } from "common/util/dateUtils";
-import { useForm } from "react-hook-form";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { Tiedote } from "common/graphql/apiModel";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import TiedoteDatePicker from "./TiedoteDatePicker";
 
 type Props = {
   open: boolean;
@@ -34,7 +32,6 @@ type Props = {
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
 export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: Props) {
-  const { control } = useForm();
   const isEditing = editTiedote !== null;
   const [errors, setErrors] = useState<string[]>([]);
   const [formData, setFormData] = useState({
@@ -48,6 +45,8 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
     voimassaPaattyen: "",
     status: "",
   });
+  const maxSisalto = 300;
+  const scrollElement = useRef<HTMLDivElement>(null);
 
   const handleSubmit = () => {
     const validationErrors = validateForm();
@@ -55,12 +54,10 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
       setErrors(validationErrors);
       return;
     }
-
     const tiedoteData = {
       id: editTiedote?.id,
       ...formData,
     };
-
     onSubmit(tiedoteData);
   };
 
@@ -69,6 +66,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
     if (!formData.otsikko?.trim()) errors.push("Otsikko on pakollinen");
     if (!formData.tiedoteFI?.trim()) errors.push("Sisältö suomeksi on pakollinen");
     if (!formData.voimassaAlkaen) errors.push("Voimassaolon alkupäivä on pakollinen");
+    if (!formData.tiedoteTyyppi) errors.push("Tiedotteen tyyppi on pakollinen");
     if (formData.kenelleNaytetaan.length === 0) errors.push("Valitse vähintään yksi kohderyhmä");
     return errors;
   };
@@ -81,11 +79,6 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
     if (errors.length > 0) {
       setErrors([]);
     }
-  };
-
-  const handleDateChange = (field: string) => (date: Dayjs | null) => {
-    const dateStr: string | null = date === null ? null : dayjs(date).format("YYYY-MM-DD");
-    handleChange(field, dateStr);
   };
 
   const handleCheckboxChange = (field: string, value: string, checked: boolean) => {
@@ -105,12 +98,9 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
     });
   };
 
-  const maxSisalto = 300;
-
-  const scrollElement = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     if (editTiedote) {
+      const today = dayjs();
       setFormData({
         aktiivinen: editTiedote.aktiivinen || false,
         otsikko: editTiedote.otsikko || "",
@@ -118,7 +108,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
         tiedoteFI: editTiedote.tiedoteFI || "",
         tiedoteSV: editTiedote.tiedoteSV || "",
         tiedoteTyyppi: editTiedote.tiedoteTyyppi || "",
-        voimassaAlkaen: editTiedote.voimassaAlkaen || "",
+        voimassaAlkaen: today.format("YYYY-MM-DD") + "T00:00:00",
         voimassaPaattyen: editTiedote.voimassaPaattyen || "",
         status: editTiedote.status || "",
       });
@@ -161,12 +151,13 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                   size="small"
                 />
               </Box>
-
+              {/* 
               <Box sx={{ flex: 0.5 }}>
                 <HassuDatePickerWithController
+                  field="voimassaAlkaen"
+                  value={formData.voimassaAlkaen ? dayjs(formData.voimassaAlkaen).format("YYYY-MM-DD") : ""}
+                  onChange={handleDateChange}
                   label="Voimassa alkaen"
-                  value={formData.voimassaAlkaen ? dayjs(formData.voimassaAlkaen) : null}
-                  onChange={handleDateChange("voimassaAlkaen")}
                   minDate={today()}
                   textFieldProps={{ required: true }}
                   controllerProps={{ control, name: "tiedote.aloituspaiva" }}
@@ -181,6 +172,28 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                   minDate={today()}
                   textFieldProps={{ required: true }}
                   controllerProps={{ control, name: "tiedote.lopetuspaiva" }}
+                />
+              </Box> */}
+
+              <Box sx={{ flex: 0.5 }}>
+                <TiedoteDatePicker
+                  field="voimassaAlkaen"
+                  value={formData.voimassaAlkaen}
+                  onChange={handleChange}
+                  label="Voimassa alkaen"
+                  minDate={dayjs()}
+                  required={true}
+                />
+              </Box>
+
+              <Box sx={{ flex: 0.5 }}>
+                <TiedoteDatePicker
+                  field="voimassaPaattyen"
+                  value={formData.voimassaPaattyen}
+                  onChange={handleChange}
+                  label="Voimassa päättyen"
+                  minDate={dayjs()}
+                  required={false}
                 />
               </Box>
 
@@ -250,6 +263,8 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                 rows={3}
                 value={formData.tiedoteFI}
                 onChange={(e) => handleChange("tiedoteFI", e.target.value)}
+                error={errors.some((error) => error.includes("Sisältö"))}
+                helperText={errors.find((error) => error.includes("Sisältö"))}
                 inputProps={{ maxLength: maxSisalto }}
               />
               <Typography variant="body2" color="text.secondary" sx={{ mt: -2, display: "block", textAlign: "right" }}>
