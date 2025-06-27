@@ -56,6 +56,7 @@ async function main() {
       publicBucket: hassuDatabaseStack.publicBucket,
       kiinteistonomistajaTable: hassuDatabaseStack.kiinteistonOmistajaTable,
       projektiMuistuttajaTable: hassuDatabaseStack.projektiMuistuttajaTable,
+      tiedoteTable: hassuDatabaseStack.tiedoteTable,
     });
     await hassuBackendStack.process().catch((e) => {
       console.log("Deployment of HassuBackendStack failed:", e);
