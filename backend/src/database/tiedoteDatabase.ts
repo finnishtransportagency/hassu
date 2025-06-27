@@ -9,6 +9,7 @@ import {
   QueryCommand,
   TransactWriteCommand,
   TransactWriteCommandInput,
+  GetCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
 
@@ -65,6 +66,19 @@ class TiedoteDatabase {
       log.error(e);
       throw e;
     }
+  }
+
+  async haeTiedote(id: string, expression?: string): Promise<DBTiedote | undefined> {
+    const command = new GetCommand({
+      TableName: this.tableName,
+      Key: {
+        id: id,
+      },
+      ProjectionExpression: expression,
+    });
+
+    const data = await getDynamoDBDocumentClient().send(command);
+    return data.Item as DBTiedote | undefined;
   }
 
   async haeKaikkiTiedotteet(expression?: string): Promise<DBTiedote[]> {

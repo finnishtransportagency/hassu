@@ -47,7 +47,7 @@ type Query {
   ): KiinteistonOmistajat
   lataaTiedotettavatExcel(oid: String!, suomifi: Boolean, kiinteisto: Boolean!): Excel
   haeMuistuttajat(oid: String!, muutMuistuttajat: Boolean!, query: String, from: Int, size: Int): Muistuttajat
-  listaaTiedotteet: [Tiedote!]
+  listaaTiedotteet(id: String): [Tiedote!]
   haeProjektinTiedottamistiedot(oid: String!): ProjektinTiedottaminen
   haeKayttoOikeudet(oid: String!): KayttoOikeusTiedot!
   listaaEnnakkoNeuvottelunTiedostot(oid: String!, hash: String!): EnnakkoNeuvottelunAineistot!
@@ -81,7 +81,7 @@ type Mutation {
   tuoKarttarajausJaTallennaKiinteistotunnukset(oid: String!, geoJSON: String!, kiinteistotunnukset: [String!]!, status: Status): String
   tallennaKiinteistonOmistajat(oid: String!, muutOmistajat: [OmistajaInput!]!, poistettavatOmistajat: [String!]!): [String]
   tallennaMuistuttajat(oid: String!, muutMuistuttajat: [MuistuttajaInput!]!, poistettavatMuistuttajat: [String!]!): [String]
-  tallennaTiedote(id: String!, tiedotteet: [TiedoteInput!]!, poistettavatTiedotteet: [String!]!): [String]
+  tallennaTiedote(tiedotteet: [TiedoteInput!]!, poistettavatTiedotteet: [String!]!): [String]
   aktivoiProjektiJatkopaatettavaksi(
     oid: String!
     versio: Int!

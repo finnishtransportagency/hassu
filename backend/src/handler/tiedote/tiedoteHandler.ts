@@ -1,20 +1,27 @@
 import * as API from "hassu-common/graphql/apiModel";
 import orderBy from "lodash/orderBy";
 import { adaptTiedoteInput, adaptTiedotteetToAPI } from "./tiedoteAdapter";
-import { tiedoteDatabase } from "../../database/tiedoteDatabase";
+import { DBTiedote, tiedoteDatabase } from "../../database/tiedoteDatabase";
 import { requirePermissionLuku } from "../../user";
-import { log, setLogContextOid } from "../../logger";
+import { log } from "../../logger";
+import { TallennaTiedoteMutationVariables } from "hassu-common/graphql/apiModel";
 
 class TiedoteHandler {
-  //lisää tänne yhden tiedotteen haku tiedotteen näyttämistä varten?
-
-  async listaaTiedotteet(): Promise<API.Tiedote[] | undefined> {
+  async listaaTiedotteet(id?: string): Promise<API.Tiedote[] | undefined> {
     requirePermissionLuku();
     log.info("listaaTiedotteet");
-    const tiedotteet = (await tiedoteDatabase.haeKaikkiTiedotteet()) ?? [];
+    let tiedotteet: DBTiedote[];
+    if (id) {
+      const tiedote = await tiedoteDatabase.haeTiedote(id);
+      tiedotteet = tiedote ? [tiedote] : [];
+    } else {
+      tiedotteet = (await tiedoteDatabase.haeKaikkiTiedotteet()) ?? [];
+    }
+
     if (tiedotteet.length === 0) {
       return [];
     }
+
     let apiTiedotteet = adaptTiedotteetToAPI(tiedotteet);
     if (apiTiedotteet) {
       apiTiedotteet = orderBy(apiTiedotteet, ["voimassaAlkaen"], ["desc"]);
@@ -22,18 +29,17 @@ class TiedoteHandler {
     return apiTiedotteet;
   }
 
-  async tallennaTiedote(id: string, tiedotteet: API.TiedoteInput[], poistettavatTiedotteet: string[]): Promise<string[]> {
-    setLogContextOid(id);
+  async tallennaTiedote(input: TallennaTiedoteMutationVariables): Promise<string[]> {
     log.info("tallennaTiedote");
 
     const tulokset: string[] = [];
 
-    for (const tiedoteId of poistettavatTiedotteet) {
+    for (const tiedoteId of input.poistettavatTiedotteet) {
       await tiedoteDatabase.poistaTiedoteById(tiedoteId);
       tulokset.push(`Poistettu: ${tiedoteId}`);
     }
 
-    for (const tiedoteInput of tiedotteet) {
+    for (const tiedoteInput of input.tiedotteet) {
       const tiedoteData = adaptTiedoteInput(tiedoteInput);
       await tiedoteDatabase.tallennaTiedote(tiedoteData);
       tulokset.push(`Tallennettu: ${tiedoteData.id}`);
