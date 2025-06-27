@@ -1,17 +1,21 @@
 import { H1, H2 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import TiedoteLista from "@components/paakayttaja/TiedoteLista";
 import TiedoteDialog from "@components/paakayttaja/TiedoteDialog";
-import { Tiedote } from "common/graphql/apiModel";
+import { TallennaTiedoteMutationVariables, Tiedote } from "common/graphql/apiModel";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { v4 as uuidv4 } from "uuid";
+import log from "loglevel";
+import useSnackbars from "src/hooks/useSnackbars";
+import { api } from "@services/api";
 
 export default function Jarjestelmatiedotteet(): ReactElement {
   const [tiedoteDialogOpen, setTiedoteDialogOpen] = useState(false);
   const [editTiedote, setEditTiedote] = useState<Tiedote | null>(null);
-  // kesken
-  // const { data, loading, error, refetch } = useQuery(LISTAA_TIEDOTTEET);
-  // const [tallennaTiedote] = useMutation(TALLENNA_TIEDOTE);
+  const { withLoadingSpinner } = useLoadingSpinner();
+  const { showErrorMessage, showSuccessMessage } = useSnackbars();
 
   const handleLuoUusi = () => {
     setEditTiedote(null);
@@ -28,32 +32,52 @@ export default function Jarjestelmatiedotteet(): ReactElement {
     setTiedoteDialogOpen(false);
   };
 
-  const handleSubmit = () => {
-    setEditTiedote(null);
-    setTiedoteDialogOpen(false);
+  const handleSubmit = useCallback(
+    async (tiedoteData: any) => {
+      withLoadingSpinner(
+        (async () => {
+          let apiData: TallennaTiedoteMutationVariables | undefined = undefined;
+
+          try {
+            apiData = mapTiedoteFormDataForApi(tiedoteData);
+          } catch (error) {
+            log.error("Virhe tiedotteen tietojen muuttamisessa tallennettavaan muotoon \n", error, tiedoteData);
+            showErrorMessage("Tiedotteen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
+          }
+
+          if (apiData) {
+            try {
+              const result = await api.tallennaTiedote(apiData);
+              console.log("Tallennus onnistui:", result);
+
+              setEditTiedote(null);
+              setTiedoteDialogOpen(false);
+
+              showSuccessMessage("Tiedote tallennettu");
+            } catch (error) {
+              log.error("Virhe tiedotetietojen tallennuksessa: \n", error, apiData);
+              showErrorMessage("Tiedotteen tallennus epäonnistui");
+            }
+          }
+        })()
+      );
+    },
+    [api, showErrorMessage, showSuccessMessage, withLoadingSpinner]
+  );
+
+  const mapTiedoteFormDataForApi = (formData: any): TallennaTiedoteMutationVariables => {
+    const tiedoteId = formData.id || uuidv4();
+
+    return {
+      tiedotteet: [
+        {
+          ...formData,
+          id: tiedoteId,
+        },
+      ],
+      poistettavatTiedotteet: [],
+    };
   };
-
-  //const tiedotteet = data?.listaaTiedotteet || [];
-
-  // const handleSubmit = async (tiedoteData: any) => {
-  //   try {
-  //     const tiedoteId = tiedoteData.id || uuidv4();
-
-  //     await tallennaTiedote({
-  //       variables: {
-  //         id: tiedoteId,
-  //         tiedotteet: [{ ...tiedoteData, id: tiedoteId }],
-  //         poistettavatTiedotteet: [],
-  //       },
-  //     });
-
-  //     refetch();
-  //     setEditTiedote(null);
-  //     setTiedoteDialogOpen(false);
-  //   } catch (error) {
-  //     console.error("Tallennus epäonnistui:", error);
-  //   }
-  // };
 
   return (
     <>
