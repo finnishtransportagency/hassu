@@ -42,6 +42,11 @@ const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[]
     label: "Ohjeet",
     href: "/yllapito/ohjeet",
   },
+  {
+    label: "Pääkäyttäjätoiminnot",
+    href: "/paakayttaja",
+    collection: [{ label: "Järjestelmätiedotteet", href: "/yllapito/paakayttaja/jarjestelmatiedotteet", requireExactMatch: true }],
+  },
 ];
 
 const kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
