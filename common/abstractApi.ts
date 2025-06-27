@@ -433,6 +433,17 @@ export const apiConfig: ApiConfig = {
     graphql: mutations.tallennaMuistuttajat,
     isYllapitoOperation: true,
   },
+  tallennaTiedote: {
+    name: "tallennaTiedote",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaTiedote,
+  },
+  listaaTiedotteet: {
+    name: "listaaTiedotteet",
+    operationType: OperationType.Query,
+    graphql: queries.listaaTiedotteet,
+    isYllapitoOperation: true,
+  },
   lataaTiedotettavatExcel: {
     name: "lataaTiedotettavatExcel",
     operationType: OperationType.Query,
