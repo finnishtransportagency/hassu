@@ -649,3 +649,16 @@ input MuistuttajaInput {
   sahkoposti: String
   tiedotustapa: String
 }
+
+input TiedoteInput {
+  id: String!
+  aktiivinen: Boolean!
+  kenelleNaytetaan: [String!]
+  otsikko: String!
+  tiedoteFI: String!
+  tiedoteSV: String
+  tiedoteTyyppi: String!
+  voimassaAlkaen: String!
+  voimassaPaattyen: String
+  status: String!
+}

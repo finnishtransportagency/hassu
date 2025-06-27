@@ -1599,3 +1599,16 @@ type KayttoOikeusTiedot {
   onProjektipaallikkoTaiVarahenkilo: Boolean!
   onYllapitaja: Boolean!
 }
+
+type Tiedote {
+  id: String!
+  aktiivinen: Boolean
+  kenelleNaytetaan: [String!]
+  otsikko: String!
+  tiedoteFI: String!
+  tiedoteSV: String
+  tiedoteTyyppi: String!
+  voimassaAlkaen: String!
+  voimassaPaattyen: String
+  status: String!
+}
