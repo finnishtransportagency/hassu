@@ -1,11 +1,11 @@
-FROM public.ecr.aws/lambda/nodejs:18 AS nodesource
+FROM public.ecr.aws/lambda/nodejs:20 AS nodesource
 
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:11
 ENV PATH="$PATH:/var/lang/bin"
 COPY --from=nodesource /var/lang /var/lang
 
 USER root
-RUN npm install -g npm@9.6.7
+RUN npm install -g npm@10.8.2
 RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 
 RUN amazon-linux-extras install docker -y
