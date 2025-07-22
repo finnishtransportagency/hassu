@@ -6,7 +6,7 @@ COPY --from=nodesource /var/lang /var/lang
 
 USER root
 RUN npm install -g npm@9.6.7
-RUN npm install -f -g @aws-amplify/cli@10.7.3 && amplify
+RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 
 RUN amazon-linux-extras install docker -y
 
