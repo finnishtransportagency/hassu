@@ -679,7 +679,7 @@ export class HassuFrontendStack extends Stack {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
@@ -711,7 +711,7 @@ export class HassuFrontendStack extends Stack {
     const graphqlBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
@@ -733,7 +733,7 @@ export class HassuFrontendStack extends Stack {
     const apiBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(apiEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "x-api-key": apiKey },
       }),
       cachePolicy: new CachePolicy(this, "MML-cache-policy-" + env, {
