@@ -32,7 +32,7 @@ import assert from "assert";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
-const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
+const lambdaRuntime = lambda.Runtime.NODEJS_20_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];

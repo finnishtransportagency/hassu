@@ -57,7 +57,7 @@ export class HassuAccountStack extends Stack {
   private async createKeycloakLambda(vpc: IVpc) {
     const keycloak = new NodejsFunction(this, "KeycloakLambda", {
       functionName: "hassu-keycloak-" + Config.env,
-      runtime: Runtime.NODEJS_18_X,
+      runtime: Runtime.NODEJS_20_X,
       entry: `${__dirname}/../../backend/src/suomifi/deleteExpiredKeycloakUsers.ts`,
       handler: "handleScheduledEvent",
       memorySize: 512,
@@ -74,7 +74,7 @@ export class HassuAccountStack extends Stack {
       layers: [
         new LayerVersion(this, "BaseLayer-" + Config.env, {
           code: Code.fromAsset("./layers/lambda-base"),
-          compatibleRuntimes: [Runtime.NODEJS_18_X],
+          compatibleRuntimes: [Runtime.NODEJS_20_X],
           description: "Lambda base layer",
         }),
         LayerVersion.fromLayerVersionArn(
