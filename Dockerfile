@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/nodejs:20 AS nodesource
+FROM public.ecr.aws/lambda/nodejs:18 AS nodesource
 
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:11
 ENV PATH="$PATH:/var/lang/bin"
