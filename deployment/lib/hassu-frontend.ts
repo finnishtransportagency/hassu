@@ -118,8 +118,6 @@ export class HassuFrontendStack extends Stack {
     this.cloudFrontOriginAccessIdentity = (await readDatabaseStackOutputs()).CloudFrontOriginAccessIdentity || ""; // Empty default string for localstack deployment
     this.cloudFrontOriginAccessIdentityReportBucket = (await readPipelineStackOutputs()).CloudfrontOriginAccessIdentityReportBucket || ""; // Empty default string for localstack deployment
 
-    const accountStackOutputs = await readAccountStackOutputs();
-
     const edgeFunctionRole = this.createEdgeFunctionRole();
 
     const frontendRequestFunction = this.createFrontendRequestFunction(
