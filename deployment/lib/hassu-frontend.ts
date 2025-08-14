@@ -68,8 +68,6 @@ export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
   CloudfrontDistributionId: string;
   FrontendPublicKeyIdOutput: string;
-  //NewCloudfrontPrivateDNSName: string;
-  //NewCloudfrontDistributionId: string;
 };
 
 interface HassuFrontendStackProps {
