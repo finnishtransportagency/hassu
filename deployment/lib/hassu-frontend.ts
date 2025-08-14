@@ -89,7 +89,6 @@ const REGION = "us-east-1";
 export const frontendStackName = "hassu-frontend-" + Config.env;
 
 export class HassuFrontendStack extends Stack {
-  private props: HassuFrontendStackProps;
   private cloudFrontOriginAccessIdentity!: string;
 
   private cloudFrontOriginAccessIdentityReportBucket!: string;
@@ -104,7 +103,6 @@ export class HassuFrontendStack extends Stack {
       },
       tags: Config.tags,
     });
-    this.props = props;
   }
 
   public async process(): Promise<void> {
@@ -168,8 +166,6 @@ export class HassuFrontendStack extends Stack {
         domainNames: config.getDomainNames(),
       };
     }
-
-    const id = `NextJsApp-${env}`;
 
     const logBucket = new Bucket(this, "CloudfrontLogs", {
       bucketName: `hassu-${Config.env}-cloudfront`,
