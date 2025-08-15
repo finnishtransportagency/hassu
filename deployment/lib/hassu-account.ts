@@ -3,7 +3,7 @@ import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { CfnRegistryPolicy, CfnReplicationConfiguration, Repository, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
+import { CfnRegistryPolicy, CfnReplicationConfiguration, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -246,7 +246,7 @@ export class HassuAccountStack extends Stack {
       const devAccountId = await config.getParameterNow("DevAccountId");
       new CfnRegistryPolicy(this, "NextjsRepoReplicationPolicy", {
         policyText: {
-          version: "2008-10-17",
+          Version: "2008-10-17",
           Statement: [
             {
               Sid: "AllowCrossAccountECRReplication",
