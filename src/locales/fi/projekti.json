@@ -124,7 +124,17 @@
     "POHJOIS_POHJANMAAN_ELY": "Pohjois-Pohjanmaan ELY-keskus",
     "PIRKANMAAN_ELY": "Pirkanmaan ELY-keskus",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus",
-    "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta"
+    "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
+    "UUDENMAAN_EVK": "Uudenmaan elinvoimakeskus",
+    "LOUNAIS_SUOMEN_EVK": "Lounais-Suomen elinvoimakeskus",
+    "KAAKKOIS_SUOMEN_EVK": "Kaakkois-Suomen elinvoimakeskus",
+    "SISA_SUOMEN_EVK": "Sisä-Suomen elinvoimakeskus",
+    "KESKI_SUOMEN_EVK": "Keski-Suomen elinvoimakeskus",
+    "ITA_SUOMEN_EVK": "Itä-Suomen elinvoimakeskus",
+    "ETELA_POHJANMAAN_EVK": "Etelä-Pohjanmaan elinvoimakeskus",
+    "POHJANMAAN_EVK": "Pohjanmaan elinvoimakeskus",
+    "POHJOIS_SUOMEN_EVK": "Pohjois-Suomen elinvoimakeskus",
+    "LAPIN_EVK": "Lapin elinvoimakeskus"
   },
   "jata_palaute_tai": "Jätä palaute tai esitä kysymys",
   "voit_jattaa_palautetta": "Voit jättää palautetta tai esittää kysymyksen suunnitteluhankkeeseen liittyen. Jos toivot kysymykseesi vastausta, jätäthän yhteystietosi ja toivotun yhteydenottotavan.",
