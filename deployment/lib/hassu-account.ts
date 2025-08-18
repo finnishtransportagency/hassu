@@ -52,7 +52,7 @@ export class HassuAccountStack extends Stack {
       await this.createBastionHost(config, vpc);
     }
     await this.createKeycloakLambda(vpc);
-    await this.replicateNextJSImageRepository(config);
+    await this.configureNextJSImageECR(config);
   }
 
   private async createKeycloakLambda(vpc: IVpc) {
@@ -217,7 +217,18 @@ export class HassuAccountStack extends Stack {
     codeartifactRepository.addDependency(codeartifactDomain);
   }
 
-  private async replicateNextJSImageRepository(config: Config) {
+  private async configureNextJSImageECR(config: Config) {
+    const repositoryName = Config.nextjsImageRepositoryName;
+    new aws_ecr.Repository(this, "NextJSECRRepo", {
+      repositoryName,
+      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: RepositoryEncryption.AES_256,
+      imageScanOnPush: true,
+    });
+    await this.replicateECR(repositoryName, config);
+  }
+
+  private async replicateECR(repository: string, config: Config) {
     if (Config.isDevAccount()) {
       const prodAccountId = await config.getParameterNow("ProdAccountId");
       new CfnReplicationConfiguration(this, "NextjsRepoReplicationConfig", {
@@ -232,7 +243,7 @@ export class HassuAccountStack extends Stack {
               ],
               repositoryFilters: [
                 {
-                  filter: Config.nextjsImageRepositoryName,
+                  filter: repository,
                   filterType: "PREFIX_MATCH",
                 },
               ],
@@ -254,8 +265,8 @@ export class HassuAccountStack extends Stack {
               Principal: {
                 AWS: `arn:aws:iam::${devAccountId}:root`,
               },
-              Action: ["ecr:CreateRepository", "ecr:ReplicateImage"],
-              Resource: [`arn:aws:ecr:${this.region}:${this.account}:repository/${Config.nextjsImageRepositoryName}`],
+              Action: ["ecr:ReplicateImage"],
+              Resource: [`arn:aws:ecr:${this.region}:${this.account}:repository/${repository}`],
             },
           ],
         },
