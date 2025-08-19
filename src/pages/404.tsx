@@ -8,7 +8,7 @@ export default function Custom404() {
   const { t } = useTranslation("common");
   const router = useRouter();
 
-  const isTiedostoSivu = /^(\/yllapito)?\/tiedostot/.test(router.asPath);
+  const isTiedostoSivu = /^(\/yllapito)?\/tiedostot/.test(router.pathname);
 
   return (
     <>
