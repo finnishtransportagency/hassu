@@ -200,7 +200,7 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
     case apiConfig.tallennaMuistuttajat.name:
       return await muistutusHandler.tallennaMuistuttajat(event.arguments as TallennaMuistuttajatMutationVariables);
     case apiConfig.listaaTiedotteet.name:
-      return await tiedoteHandler.listaaTiedotteet();
+      return await tiedoteHandler.listaaTiedotteet((event.arguments as { id?: string })?.id);
     case apiConfig.tallennaTiedote.name:
       return await tiedoteHandler.tallennaTiedote(event.arguments as TallennaTiedoteMutationVariables);
     case apiConfig.lataaTiedotettavatExcel.name:

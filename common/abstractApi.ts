@@ -104,6 +104,8 @@ import {
   JaaProjektiMutationVariables,
   TallennaProjektiResponse,
   TallennaTiedoteMutationVariables,
+  TiedoteInput,
+  Tiedote,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -877,9 +879,18 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, mutationVariables);
   }
 
-  async tallennaTiedote(mutationVariables: TallennaTiedoteMutationVariables): Promise<string[]> {
-    const result = await this.callYllapitoAPI(apiConfig.tallennaTiedote, mutationVariables);
+  async tallennaTiedote(input: TiedoteInput): Promise<string[]> {
+    const result = await this.callYllapitoAPI(apiConfig.tallennaTiedote, {
+      tiedotteet: [input],
+      poistettavatTiedotteet: [],
+    } as TallennaTiedoteMutationVariables);
     return result.tallennaTiedote || [];
+  }
+
+  async listaaTiedotteet(id?: string): Promise<Tiedote[]> {
+    const variables = id ? { id } : {};
+    const result = await this.callYllapitoAPI(apiConfig.listaaTiedotteet, variables);
+    return Array.isArray(result) ? result : result.listaaTiedotteet || [];
   }
 
   async lataaTiedotettavatExcel(oid: string, suomifi: boolean | undefined | null, kiinteisto: boolean): Promise<Excel> {

@@ -2,13 +2,12 @@ import * as API from "hassu-common/graphql/apiModel";
 import orderBy from "lodash/orderBy";
 import { adaptTiedoteInput, adaptTiedotteetToAPI } from "./tiedoteAdapter";
 import { DBTiedote, tiedoteDatabase } from "../../database/tiedoteDatabase";
-import { requirePermissionLuku } from "../../user";
 import { log } from "../../logger";
 import { TallennaTiedoteMutationVariables } from "hassu-common/graphql/apiModel";
 
 class TiedoteHandler {
   async listaaTiedotteet(id?: string): Promise<API.Tiedote[] | undefined> {
-    requirePermissionLuku();
+    //requirePermissionLuku();
     log.info("listaaTiedotteet");
     let tiedotteet: DBTiedote[];
     if (id) {

@@ -6,7 +6,7 @@ import { DBTiedote } from "../../database/tiedoteDatabase";
 type TiedoteData = Omit<Tiedote, "__typename">;
 
 export function adaptTiedoteInput(tiedote: API.TiedoteInput): TiedoteData {
-  return { ...tiedote, id: uuid.v4() };
+  return { ...tiedote, id: tiedote.id || uuid.v4() };
 }
 
 export function adaptTiedotteetToAPI(tiedotteet: DBTiedote[]): API.Tiedote[] | undefined {

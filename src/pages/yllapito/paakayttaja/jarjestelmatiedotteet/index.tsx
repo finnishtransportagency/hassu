@@ -4,7 +4,7 @@ import React, { ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import TiedoteLista from "@components/paakayttaja/TiedoteLista";
 import TiedoteDialog from "@components/paakayttaja/TiedoteDialog";
-import { TallennaTiedoteMutationVariables, Tiedote } from "common/graphql/apiModel";
+import { Tiedote, TiedoteInput } from "common/graphql/apiModel";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { v4 as uuidv4 } from "uuid";
 import log from "loglevel";
@@ -16,6 +16,7 @@ export default function Jarjestelmatiedotteet(): ReactElement {
   const [editTiedote, setEditTiedote] = useState<Tiedote | null>(null);
   const { withLoadingSpinner } = useLoadingSpinner();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleLuoUusi = () => {
     setEditTiedote(null);
@@ -36,26 +37,25 @@ export default function Jarjestelmatiedotteet(): ReactElement {
     async (tiedoteData: any) => {
       withLoadingSpinner(
         (async () => {
-          let apiData: TallennaTiedoteMutationVariables | undefined = undefined;
+          let tiedoteInput: TiedoteInput | undefined = undefined;
 
           try {
-            apiData = mapTiedoteFormDataForApi(tiedoteData);
+            tiedoteInput = mapTiedoteFormDataForApi(tiedoteData);
           } catch (error) {
             log.error("Virhe tiedotteen tietojen muuttamisessa tallennettavaan muotoon \n", error, tiedoteData);
             showErrorMessage("Tiedotteen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
+            return;
           }
 
-          if (apiData) {
+          if (tiedoteInput) {
             try {
-              const result = await api.tallennaTiedote(apiData);
-              console.log("Tallennus onnistui:", result);
-
+              await api.tallennaTiedote(tiedoteInput);
+              setRefreshTrigger((prev) => prev + 1);
               setEditTiedote(null);
               setTiedoteDialogOpen(false);
-
               showSuccessMessage("Tiedote tallennettu");
             } catch (error) {
-              log.error("Virhe tiedotetietojen tallennuksessa: \n", error, apiData);
+              log.error("Virhe tiedotetietojen tallennuksessa: \n", error, tiedoteInput);
               showErrorMessage("Tiedotteen tallennus epäonnistui");
             }
           }
@@ -65,18 +65,23 @@ export default function Jarjestelmatiedotteet(): ReactElement {
     [api, showErrorMessage, showSuccessMessage, withLoadingSpinner]
   );
 
-  const mapTiedoteFormDataForApi = (formData: any): TallennaTiedoteMutationVariables => {
+  const mapTiedoteFormDataForApi = (formData: any): TiedoteInput => {
     const tiedoteId = formData.id || uuidv4();
 
-    return {
-      tiedotteet: [
-        {
-          ...formData,
-          id: tiedoteId,
-        },
-      ],
-      poistettavatTiedotteet: [],
+    const result: TiedoteInput = {
+      id: tiedoteId,
+      aktiivinen: formData.aktiivinen !== undefined ? formData.aktiivinen : true,
+      kenelleNaytetaan: formData.kenelleNaytetaan || [],
+      otsikko: formData.otsikko || "",
+      tiedoteFI: formData.sisalto || formData.tiedoteFI || "",
+      tiedoteSV: formData.tiedoteSV || null,
+      tiedoteTyyppi: formData.tiedoteTyyppi || "YLEINEN",
+      voimassaAlkaen: formData.voimassaAlkaen || formData.julkaisupaiva || new Date().toISOString(),
+      voimassaPaattyen: formData.voimassaPaattyen || null,
+      status: formData.status || "JULKAISTU",
     };
+
+    return result;
   };
 
   return (
@@ -95,7 +100,7 @@ export default function Jarjestelmatiedotteet(): ReactElement {
         Luo uusi tiedote
       </Button>
 
-      <TiedoteLista onEdit={handleMuokkaa} />
+      <TiedoteLista onEdit={handleMuokkaa} refreshTrigger={refreshTrigger} />
 
       <TiedoteDialog open={tiedoteDialogOpen} onClose={handleSulje} onSubmit={handleSubmit} editTiedote={editTiedote} />
     </>
