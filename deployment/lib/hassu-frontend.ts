@@ -987,7 +987,7 @@ export class HassuFrontendCoreStack extends Stack {
       retention: logs.RetentionDays.SIX_MONTHS, // TODO tähän oikea politiikka
     });
 
-    const repository = Repository.fromRepositoryName(this, "NextjsRepo", "hassu-nextjs");
+    const repository = Repository.fromRepositoryName(this, "NextjsRepo", Config.nextjsImageRepositoryName);
 
     const taskDefinition = new FargateTaskDefinition(this, "TaskDefinition", {
       family: "NextJsTaskDef-" + Config.env,
