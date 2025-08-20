@@ -18,7 +18,7 @@ printenv | grep -E '^NEXT_PUBLIC_' | while read -r ENV_LINE; do
   echo "Replacing placeholder for: ${ENV_KEY}"
 
   # Find all instances of the placeholder and replace them with actual values
-  find /app -type f ! -path "/app/node_modules/*" | xargs sed -i "s|_${ENV_KEY}_|\"${ENV_VALUE}\"|g"
+  find /app -type f ! -path "/app/node_modules/*" | xargs sed -i "s|_${ENV_KEY}_|${ENV_VALUE}|g"
 done
 
 # End the timer and calculate elapsed time.
