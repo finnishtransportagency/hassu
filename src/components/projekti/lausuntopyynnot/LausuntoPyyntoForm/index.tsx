@@ -6,7 +6,7 @@ import LisaAineistot from "./LisaAineistot";
 import Muistiinpano from "./Muistiinpano";
 import { Stack } from "@mui/system";
 import Button from "@components/button/Button";
-import { UseFieldArrayRemove, useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, UseFieldArrayRemove, useFieldArray, useFormContext } from "react-hook-form";
 import { LausuntoPyynnotFormValues } from "../types";
 import VarmistusDialogi from "./VarmistusDialogi";
 import { useCallback, useState } from "react";
@@ -14,8 +14,9 @@ import { useCallback, useState } from "react";
 export default function LausuntoPyyntoForm({
   index,
   projekti,
+  errors,
   remove,
-}: Readonly<{ index: number; projekti: ProjektiLisatiedolla; remove: UseFieldArrayRemove }>) {
+}: Readonly<{ index: number; projekti: ProjektiLisatiedolla; remove: UseFieldArrayRemove; errors: FieldErrors }>) {
   const { getValues, control } = useFormContext<LausuntoPyynnotFormValues>();
   const { append: appendToPoistetut } = useFieldArray({ name: `poistetutLausuntoPyynnot`, control });
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -50,7 +51,7 @@ export default function LausuntoPyyntoForm({
       <PoistumisPaiva index={index} />
       <Muistiinpano index={index} />
       <Linkki index={index} projekti={projekti} uuid={formDataForThisLink.uuid} formData={formDataForThisLink} />
-      <LisaAineistot index={index} projekti={projekti} />
+      <LisaAineistot index={index} projekti={projekti} errors={errors}/>
       <VarmistusDialogi
         dialogiOnAuki={dialogOpen}
         onClose={() => setDialogOpen(false)}
