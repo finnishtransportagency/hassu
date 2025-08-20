@@ -65,12 +65,14 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
+  const ajansiirtoSallittu = isAjansiirtoSallittu();
+
   let { kuulutusPaiva } = examineKuulutusPaiva(julkaisu.kuulutusPaiva);
 
   return (
     <>
       <KuulutuksenSisalto alkupvm={kuulutusPaiva ?? ""} loppupvm={julkaisu.kuulutusVaihePaattyyPaiva ?? ""}>
-        {isAjansiirtoSallittu() && (
+        {ajansiirtoSallittu && (
           <div className="md:col-span-2 mb-0">
             <ButtonFlatWithIcon
               icon="history"
