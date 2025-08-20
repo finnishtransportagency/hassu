@@ -33,8 +33,20 @@ const getAineistoNewSchema = (kategoriaPakollinenJulkaisussa: boolean) =>
     nimi: Yup.string().required(),
     uuid: Yup.string().required(),
   });
-export const getAineistotNewSchema = (kategoriaPakollinenJulkaisussa: boolean) =>
-  Yup.array().of(getAineistoNewSchema(kategoriaPakollinenJulkaisussa)).nullable();
+
+export const getAineistotNewSchema = (kategoriaPakollinenJulkaisussa: boolean) => {
+  return Yup.array()
+    .of(getAineistoNewSchema(kategoriaPakollinenJulkaisussa))
+    .nullable()
+    .test("unique-file-names", "Samannimisiä tiedostoja", (value) => {
+      if (!value) return true;
+      const fileNames = value.map((file) => {
+        return file.nimi;
+      });
+      const uniqueFileNames = new Set(fileNames);
+      return uniqueFileNames.size === fileNames.length;
+    });
+};
 
 const getLadattuTiedostoSchema = () =>
   Yup.object().shape({
@@ -53,7 +65,19 @@ const getLadattuTiedostoNewSchema = () =>
     uuid: Yup.string().required(),
   });
 
-export const getLadatutTiedostotNewSchema = () => Yup.array().of(getLadattuTiedostoNewSchema()).nullable();
+export const getLadatutTiedostotNewSchema = () => {
+  return Yup.array()
+    .of(getLadattuTiedostoNewSchema())
+    .nullable()
+    .test("unique-file-names", "Samannimisiä tiedostoja", (value) => {
+      if (!value) return true;
+      const fileNames = value.map((file) => {
+        return file.nimi;
+      });
+      const uniqueFileNames = new Set(fileNames);
+      return uniqueFileNames.size === fileNames.length;
+    });
+};
 
 export const ilmoituksenVastaanottajat = () =>
   Yup.object()
@@ -122,4 +146,24 @@ export const standardiYhteystiedot = () =>
   Yup.object().shape({
     yhteysTiedot: Yup.array().of(yhteystietoSchema),
     yhteysHenkilot: Yup.array().of(Yup.string()),
+  });
+
+export const suunnitelmaFileNameSchema = () =>
+  Yup.object().test("unique-file-names", "Samannimisiä tiedostoja", (suunnitelma) => {
+    if (!suunnitelma || typeof suunnitelma !== "object") return true;
+
+    const allFileNames: string[] = [];
+    for (const key of Object.keys(suunnitelma)) {
+      const files = suunnitelma[key];
+
+      if (Array.isArray(files)) {
+        for (const file of files as { nimi?: string }[]) {
+          if (file && typeof file.nimi === "string") {
+            allFileNames.push(file.nimi);
+          }
+        }
+      }
+    }
+    const uniqueFileNames = new Set(allFileNames);
+    return uniqueFileNames.size === allFileNames.length;
   });

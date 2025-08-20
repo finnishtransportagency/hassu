@@ -1,6 +1,6 @@
 import { Key, ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, useFormContext } from "react-hook-form";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { H3, H4 } from "@components/Headings";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
@@ -19,9 +19,10 @@ import { Stack } from "@mui/system";
 type Props = {
   aineistoKategoriat: AineistoKategoriat;
   ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
 };
 
-export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: Readonly<Props>): ReactElement {
+export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu, errors }: Readonly<Props>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
   const [aineistojenPoistoDialogOpen, setAineistojenPoistoDialogOpen] = useState(false);
   const { watch, setValue, getValues } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
@@ -102,6 +103,9 @@ export default function Suunnitelma({ aineistoKategoriat, ennakkoneuvottelu }: R
           </Button>
         )}
       </Stack>
+      {errors?.ennakkoNeuvottelu?.suunnitelma && errors?.ennakkoNeuvottelu?.suunnitelma.message && (
+        <p className="text-red">Samannimisiä tiedostoja</p>
+      )}
       <AineistojenValitseminenDialog
         open={aineistoDialogOpen}
         onClose={() => setAineistoDialogOpen(false)}

@@ -3,7 +3,7 @@ import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattavaTiedosto, LadattuTiedostoNew } from "@services/api";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
@@ -16,9 +16,16 @@ type Props = {
   tiedostot?: LadattuTiedostoNew[] | null;
   poisValitutTiedostot?: (LadattavaTiedosto | LadattuTiedostoNew | string)[] | null;
   ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
 };
 
-export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedostot, ennakkoneuvottelu }: Readonly<Props>): ReactElement {
+export default function KuulutuksetJaKutsu({
+  tuodut,
+  tiedostot,
+  poisValitutTiedostot,
+  ennakkoneuvottelu,
+  errors,
+}: Readonly<Props>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const [valitutTiedostot, setValitutTiedostot] = useState<string[]>([]);
@@ -176,6 +183,7 @@ export default function KuulutuksetJaKutsu({ tuodut, tiedostot, poisValitutTiedo
           }
         }}
       />
+      {errors?.ennakkoNeuvottelu?.kuulutuksetJaKutsu && <p className="text-red">{errors.ennakkoNeuvottelu?.kuulutuksetJaKutsu.message}</p>}
       <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }} spacing={2}>
         <label htmlFor="kuulutuksetJaKutsu-input">
           <Button type="button" id="tuo_kuulutuksetJaKutsu_button" onClick={onButtonClick}>

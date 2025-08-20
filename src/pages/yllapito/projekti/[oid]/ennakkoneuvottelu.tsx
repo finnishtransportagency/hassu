@@ -129,6 +129,10 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
     context: { validationMode, testType: TestType.FRONTEND },
   };
   const useFormReturn = useForm<EnnakkoneuvotteluForm, EnnakkoneuvotteluValidationContext>(formOptions);
+  const {
+    formState: { errors },
+  } = useFormReturn;
+
   useEffect(() => {
     useFormReturn.reset(defaultValues);
   }, [useFormReturn, defaultValues]);
@@ -190,31 +194,34 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
               <Section>
                 <H3 variant="h2">Aineistolinkkiin liitettävä aineisto</H3>
                 <HyvaksymisEsitysTiedosto tiedostot={projekti.ennakkoNeuvottelu?.hyvaksymisEsitys} ennakkoneuvottelu={true} />
-                <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
+                <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} errors={errors} />
                 <H4 variant="h3">Vuorovaikutus</H4>
                 <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
                 <Muistutukset
                   kunnat={projekti.velho.kunnat}
                   tiedostot={projekti.ennakkoNeuvottelu?.muistutukset}
                   ennakkoneuvottelu={true}
+                  errors={errors}
                 />
-                <Lausunnot tiedostot={projekti.ennakkoNeuvottelu?.lausunnot} ennakkoneuvottelu={true} />
+                <Lausunnot tiedostot={projekti.ennakkoNeuvottelu?.lausunnot} ennakkoneuvottelu={true} errors={errors} />
                 <Maanomistajaluettelo
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.maanomistajaluettelo}
                   tiedostot={projekti.ennakkoNeuvottelu?.maanomistajaluettelo}
                   poisValitutTiedostot={projekti.ennakkoNeuvottelu?.poisValitutMaanomistajaluettelot}
                   ennakkoneuvottelu={true}
+                  errors={errors}
                 />
                 <KuulutuksetJaKutsu
                   tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu}
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
                   poisValitutTiedostot={projekti.ennakkoNeuvottelu?.poisValitutKuulutuksetJaKutsu}
                   ennakkoneuvottelu={true}
+                  errors={errors}
                 />
                 <H4 variant="h3">Muu tekninen aineisto</H4>
                 <p>Voit halutessasi tuoda muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.</p>
-                <MuuAineistoVelhosta aineisto={projekti.ennakkoNeuvottelu?.muuAineistoVelhosta} ennakkoneuvottelu={true} />
-                <MuuAineistoKoneelta tiedostot={projekti.ennakkoNeuvottelu?.muuAineistoKoneelta} ennakkoneuvottelu={true} />
+                <MuuAineistoVelhosta aineisto={projekti.ennakkoNeuvottelu?.muuAineistoVelhosta} ennakkoneuvottelu={true} errors={errors} />
+                <MuuAineistoKoneelta tiedostot={projekti.ennakkoNeuvottelu?.muuAineistoKoneelta} ennakkoneuvottelu={true} errors={errors} />
               </Section>
               <Section>
                 <Vastaanottajat ennakkoneuvottelu={true} />

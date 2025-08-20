@@ -3,7 +3,7 @@ import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import { H5 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
@@ -12,9 +12,11 @@ import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitys
 export default function MuuAineistoKoneelta({
   tiedostot,
   ennakkoneuvottelu,
+  errors,
 }: Readonly<{
   tiedostot?: LadattuTiedostoNew[] | null;
   ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
 }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
@@ -74,6 +76,7 @@ export default function MuuAineistoKoneelta({
           }
         }}
       />
+      {errors?.ennakkoNeuvottelu?.muuAineistoKoneelta && <p className="text-red">{errors?.ennakkoNeuvottelu?.muuAineistoKoneelta.message}</p>}
       <label htmlFor="muu-aineisto-koneelta-input">
         <Button className="mt-4" type="button" id="tuo_muu_aineisto_button" onClick={onButtonClick}>
           Tuo tiedostot

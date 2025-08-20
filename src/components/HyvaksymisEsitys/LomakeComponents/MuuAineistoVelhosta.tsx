@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useState } from "react";
 import Button from "@components/button/Button";
 import { AineistoNew } from "@services/api";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import AineistojenValitseminenDialog from "@components/projekti/common/AineistojenValitseminenDialog";
 import { H5 } from "@components/Headings";
@@ -12,9 +12,11 @@ import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitys
 
 export default function MuuAineistoVelhosta({
   aineisto,
+  errors,
   ennakkoneuvottelu,
 }: Readonly<{
   aineisto?: AineistoNew[] | null;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
   ennakkoneuvottelu?: boolean;
 }>): ReactElement {
   const [aineistoDialogOpen, setAineistoDialogOpen] = useState(false);
@@ -58,6 +60,7 @@ export default function MuuAineistoVelhosta({
           showTuotu
         />
       )}
+      {errors?.ennakkoNeuvottelu?.muuAineistoVelhosta && <p className="text-red">{errors?.ennakkoNeuvottelu?.muuAineistoVelhosta.message}</p>}
       <Button type="button" id="muu_aineisto_velhosta_import_button" onClick={() => setAineistoDialogOpen(true)}>
         Tuo aineistot
       </Button>
