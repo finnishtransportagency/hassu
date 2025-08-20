@@ -3,7 +3,7 @@ import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattavaTiedosto, LadattuTiedostoNew } from "@services/api";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import LadattavaTiedostoComponent from "@components/LadattavatTiedostot/LadattavaTiedosto";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
@@ -16,11 +16,13 @@ export default function Maanomistajaluettelo({
   tiedostot,
   poisValitutTiedostot,
   ennakkoneuvottelu,
+  errors,
 }: Readonly<{
   tuodut?: LadattavaTiedosto[] | null;
   tiedostot?: LadattuTiedostoNew[] | null;
   poisValitutTiedostot?: (LadattavaTiedosto | LadattuTiedostoNew | string)[] | null;
   ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
 }>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register, setValue } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
@@ -174,6 +176,9 @@ export default function Maanomistajaluettelo({
           }
         }}
       />
+      {errors?.ennakkoNeuvottelu?.maanomistajaluettelo && (
+        <p className="text-red">{errors.ennakkoNeuvottelu?.maanomistajaluettelo.message}</p>
+      )}
       <Stack justifyContent={{ md: "flex-start" }} direction={{ xs: "column", md: "row" }} spacing={2}>
         <label htmlFor="maanomistajaluettelo-input">
           <Button className="mt-4" type="button" id="tuo_maanomistajaluettelo_button" onClick={onButtonClick}>

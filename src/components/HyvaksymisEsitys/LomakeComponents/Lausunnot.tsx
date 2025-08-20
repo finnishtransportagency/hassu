@@ -3,7 +3,7 @@ import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import { H4 } from "@components/Headings";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
@@ -11,7 +11,12 @@ import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitys
 export default function Lausunnot({
   tiedostot,
   ennakkoneuvottelu,
-}: Readonly<{ tiedostot?: LadattuTiedostoNew[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
+  errors,
+}: Readonly<{
+  tiedostot?: LadattuTiedostoNew[] | null;
+  ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
+}>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { fields, remove, move } = useFieldArray({
@@ -62,6 +67,7 @@ export default function Lausunnot({
           }
         }}
       />
+      {errors?.ennakkoNeuvottelu?.lausunnot && <p className="text-red">{errors.ennakkoNeuvottelu?.lausunnot.message}</p>}
       <label htmlFor="lausunnot-input">
         <Button className="mt-4" type="button" id="tuo_lausunnot_button" onClick={onButtonClick}>
           Tuo tiedostot

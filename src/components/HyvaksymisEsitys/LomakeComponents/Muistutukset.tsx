@@ -4,7 +4,7 @@ import SectionContent from "@components/layout/SectionContent";
 import { allowedFileTypes } from "common/fileValidationSettings";
 import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useCallback, useRef } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { FieldErrors, useFieldArray, useFormContext } from "react-hook-form";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "../hyvaksymisEsitysFormUtil";
 import TiedostoInputNewTable from "./TiedostoInputNewTable";
@@ -14,17 +14,19 @@ export default function Muistutukset({
   kunnat,
   tiedostot,
   ennakkoneuvottelu,
+  errors,
 }: Readonly<{
   kunnat: number[] | null | undefined;
   tiedostot?: KunnallinenLadattuTiedosto[] | null;
   ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
 }>): ReactElement {
   return (
     <SectionContent>
       <H5 variant="h4">Muistutukset</H5>
       {kunnat?.length
         ? kunnat.map((kunta) => (
-            <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} ennakkoneuvottelu={ennakkoneuvottelu} />
+            <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} ennakkoneuvottelu={ennakkoneuvottelu} errors={errors} />
           ))
         : "Kunnat puuttuu"}
     </SectionContent>
@@ -35,7 +37,13 @@ function KunnanMuistutukset({
   kunta,
   tiedostot,
   ennakkoneuvottelu,
-}: Readonly<{ kunta: number; tiedostot?: KunnallinenLadattuTiedosto[] | null; ennakkoneuvottelu?: boolean }>): ReactElement {
+  errors,
+}: Readonly<{
+  kunta: number;
+  tiedostot?: KunnallinenLadattuTiedosto[] | null;
+  ennakkoneuvottelu?: boolean;
+  errors?: FieldErrors<EnnakkoneuvotteluForm>;
+}>): ReactElement {
   const hiddenInputRef = useRef<HTMLInputElement | null>();
   const { control, register } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
   const { remove, fields, move } = useFieldArray({
@@ -90,6 +98,9 @@ function KunnanMuistutukset({
           }
         }}
       />
+      {errors?.ennakkoNeuvottelu?.muistutukset && errors?.ennakkoNeuvottelu?.muistutukset[kunta]?.message && (
+        <p className="text-red">{errors?.ennakkoNeuvottelu?.muistutukset[kunta]?.message}</p>
+      )}
       <label htmlFor={`kunnan-${kunta}-muistutukset-input`}>
         <Button className="mt-4" type="button" id={`tuo_kunnan_${kunta}_muistutukset_button`} onClick={onButtonClick}>
           Tuo tiedostot
