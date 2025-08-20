@@ -88,7 +88,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
   const {
     control,
     reset,
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty, isSubmitting, errors },
   } = useFormReturn;
 
   useLeaveConfirm(!isSubmitting && isDirty);
@@ -107,7 +107,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
       <FormProvider {...useFormReturn}>
         {fields.map((field, index) => (
           <SectionContent key={field.id}>
-            <LausuntoPyyntoForm index={index} projekti={projekti} remove={remove} />
+            <LausuntoPyyntoForm index={index} projekti={projekti} remove={remove} errors={errors} />
           </SectionContent>
         ))}
         <Section marginBottom={10} marginTop={10} gap={6}>

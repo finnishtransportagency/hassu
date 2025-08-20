@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
 import LisaAineistotTable from "./Table";
@@ -12,7 +12,11 @@ import { uuid } from "common/util/uuid";
 import { allowedFileTypes } from "hassu-common/fileValidationSettings";
 import useSnackbars from "../../../../../hooks/useSnackbars";
 
-export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
+export default function LisaAineistot({
+  index,
+  projekti,
+  errors,
+}: Readonly<{ index: number; projekti: ProjektiLisatiedolla; errors: FieldErrors }>) {
   const { watch, setValue } = useFormContext<LausuntoPyynnotFormValues>();
 
   const lausuntoPyynto = watch(`lausuntoPyynnot.${index}`);
@@ -27,6 +31,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
     }
   };
 
+  const errorMsg = (errors.lausuntoPyynnot as any)?.[index]?.lisaAineistot?.message;
   const { showErrorMessage } = useSnackbars();
 
   const handleUploadedFiles = useCallback(
@@ -103,6 +108,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
           Hae tiedostot
         </Button>
       </label>
+      {errorMsg && <p className="text-red">{errorMsg}</p>}
     </SectionContent>
   );
 }
