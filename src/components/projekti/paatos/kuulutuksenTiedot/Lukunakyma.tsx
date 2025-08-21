@@ -65,7 +65,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const ajansiirtoSallittu = isAjansiirtoSallittu();
+  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
 
   let { kuulutusPaiva } = examineKuulutusPaiva(julkaisu.kuulutusPaiva);
 

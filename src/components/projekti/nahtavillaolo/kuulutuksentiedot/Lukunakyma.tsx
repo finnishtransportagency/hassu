@@ -53,7 +53,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
-  const ajansiirtoSallittu = isAjansiirtoSallittu();
+  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
 
   return (
     <>
