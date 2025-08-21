@@ -45,7 +45,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
     [projekti, router]
   );
 
-  const ajansiirtoSallittu = isAjansiirtoSallittu();
+  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
 
   useEffect(() => {
     if (!projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
