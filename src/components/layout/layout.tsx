@@ -15,7 +15,6 @@ const NotificationBar = dynamic(() => import("@components/notification/Notificat
   ssr: false,
 });
 
-
 interface Props {
   children?: ReactNode;
 }
