@@ -1,4 +1,5 @@
 import { HassuDatePicker } from "@components/form/HassuDatePicker";
+import { TextField } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 
 interface TiedoteDatePickerProps {
@@ -11,7 +12,18 @@ interface TiedoteDatePickerProps {
   [key: string]: any;
 }
 
-const TiedoteDatePicker = ({ field, value, onChange, label, required = false, minDate, ...otherProps }: TiedoteDatePickerProps) => {
+const TiedoteDatePicker = ({
+  field,
+  value,
+  onChange,
+  label,
+  required = false,
+  minDate,
+  error,
+  helperText,
+  renderInput,
+  ...otherProps
+}: TiedoteDatePickerProps) => {
   const dayjsValue: Dayjs | null = value ? dayjs(value) : null;
 
   const handleDateChange = (date: Dayjs | null) => {
@@ -28,6 +40,21 @@ const TiedoteDatePicker = ({ field, value, onChange, label, required = false, mi
     onChange(field, dateStr);
   };
 
+  const customRenderInput = (params: any) => {
+    return (
+      <TextField
+        {...params}
+        error={error}
+        helperText={helperText}
+        required={required}
+        variant="outlined"
+        size="small"
+        fullWidth
+        label={label}
+      />
+    );
+  };
+
   return (
     <HassuDatePicker
       value={dayjsValue}
@@ -35,6 +62,7 @@ const TiedoteDatePicker = ({ field, value, onChange, label, required = false, mi
       label={label}
       minDate={minDate}
       textFieldProps={{ required }}
+      renderInput={customRenderInput}
       {...otherProps}
     />
   );

@@ -28,10 +28,12 @@ type Props = {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  onDelete?: (tiedote: Tiedote) => void;
   editTiedote?: Tiedote | null;
+  tiedotteet: Tiedote[];
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
-export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: Props) {
+export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editTiedote, tiedotteet }: Props) {
   const isEditing = editTiedote !== null;
   const [errors, setErrors] = useState<string[]>([]);
   const [formData, setFormData] = useState({
@@ -44,14 +46,19 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
     voimassaAlkaen: "",
     voimassaPaattyen: "",
     status: "",
+    muokattu: "",
   });
+
   const maxSisalto = 300;
   const scrollElement = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = () => {
+  const handleFormSubmit = () => {
     const validationErrors = validateForm();
     if (validationErrors.length > 0) {
       setErrors(validationErrors);
+      return;
+    }
+    if (paallekkaisetTiedotteet?.onPaallekkainen) {
       return;
     }
     const tiedoteData = {
@@ -59,16 +66,6 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
       ...formData,
     };
     onSubmit(tiedoteData);
-  };
-
-  const validateForm = () => {
-    const errors = [];
-    if (!formData.otsikko?.trim()) errors.push("Otsikko on pakollinen");
-    if (!formData.tiedoteFI?.trim()) errors.push("Sisältö suomeksi on pakollinen");
-    if (!formData.voimassaAlkaen) errors.push("Voimassaolon alkupäivä on pakollinen");
-    if (!formData.tiedoteTyyppi) errors.push("Tiedotteen tyyppi on pakollinen");
-    if (formData.kenelleNaytetaan.length === 0) errors.push("Valitse vähintään yksi kohderyhmä");
-    return errors;
   };
 
   const handleChange = (field: string, value: any) => {
@@ -98,6 +95,12 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
     });
   };
 
+  const handleDeleteClick = () => {
+    if (editTiedote && onDelete) {
+      onDelete(editTiedote);
+    }
+  };
+
   useEffect(() => {
     if (editTiedote) {
       const today = dayjs();
@@ -108,24 +111,115 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
         tiedoteFI: editTiedote.tiedoteFI || "",
         tiedoteSV: editTiedote.tiedoteSV || "",
         tiedoteTyyppi: editTiedote.tiedoteTyyppi || "",
-        voimassaAlkaen: today.format("YYYY-MM-DD") + "T00:00:00",
-        voimassaPaattyen: editTiedote.voimassaPaattyen || "",
+        voimassaAlkaen: editTiedote.voimassaAlkaen
+          ? dayjs(editTiedote.voimassaAlkaen).format("YYYY-MM-DDTHH:mm")
+          : today.format("YYYY-MM-DD") + "T00:00",
+        voimassaPaattyen: editTiedote.voimassaPaattyen ? dayjs(editTiedote.voimassaPaattyen).format("YYYY-MM-DDTHH:mm") : "",
         status: editTiedote.status || "",
+        muokattu: editTiedote.muokattu || "",
       });
     } else {
+      const today = dayjs();
       setFormData({
         aktiivinen: false,
         otsikko: "",
         kenelleNaytetaan: [],
         tiedoteFI: "",
         tiedoteSV: "",
-        tiedoteTyyppi: "",
-        voimassaAlkaen: "",
+        tiedoteTyyppi: "info",
+        voimassaAlkaen: today.format("YYYY-MM-DD") + "T00:00",
         voimassaPaattyen: "",
         status: "",
+        muokattu: "",
       });
     }
   }, [editTiedote]);
+
+  useEffect(() => {
+    if (formData.aktiivinen && !formData.voimassaPaattyen) {
+      setFormData((prev) => ({
+        ...prev,
+        voimassaPaattyen: prev.voimassaAlkaen,
+      }));
+    }
+  }, [formData.aktiivinen, formData.voimassaPaattyen]);
+
+  const [paallekkaisetTiedotteet, setPaallekkaisetTiedotteet] = useState<{
+    onPaallekkainen: boolean;
+    viesti: string;
+  } | null>(null);
+
+  const onkoPaallekkainenAjanjakso = (
+    alku1: dayjs.Dayjs,
+    loppu1: dayjs.Dayjs | null,
+    alku2: dayjs.Dayjs,
+    loppu2: dayjs.Dayjs | null
+  ): boolean => {
+    const loppu1Effective = loppu1 || dayjs("2099-01-01");
+    const loppu2Effective = loppu2 || dayjs("2099-01-01");
+
+    const overlap1 = alku1.isSame(loppu2Effective, "day") || alku1.isBefore(loppu2Effective, "day");
+    const overlap2 = alku2.isSame(loppu1Effective, "day") || alku2.isBefore(loppu1Effective, "day");
+
+    return overlap1 && overlap2;
+  };
+
+  useEffect(() => {
+    if (!formData.aktiivinen) {
+      setPaallekkaisetTiedotteet(null);
+      return;
+    }
+    const alkaaDate = dayjs(formData.voimassaAlkaen);
+    const paattyyDate = formData.voimassaPaattyen ? dayjs(formData.voimassaPaattyen) : null;
+
+    const paallekkainenTiedote = tiedotteet?.find((t) => {
+      if (t.id === editTiedote?.id) return false;
+
+      if (t.status === "NAKYVILLA" || t.status === "AJASTETTU") {
+        const toinenAlkaa = dayjs(t.voimassaAlkaen);
+        const toinenPaattyy = t.voimassaPaattyen ? dayjs(t.voimassaPaattyen) : null;
+
+        return onkoPaallekkainenAjanjakso(alkaaDate, paattyyDate, toinenAlkaa, toinenPaattyy);
+      }
+      return false;
+    });
+
+    if (paallekkainenTiedote) {
+      let viesti = "";
+      const toinenAlkaa = dayjs(paallekkainenTiedote.voimassaAlkaen).format("DD.MM.YYYY");
+      const toinenPaattyy = paallekkainenTiedote.voimassaPaattyen
+        ? ` - ${dayjs(paallekkainenTiedote.voimassaPaattyen).format("DD.MM.YYYY")}`
+        : " alkaen";
+
+      if (paallekkainenTiedote.status === "NAKYVILLA") {
+        viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo näkyvillä (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
+      } else if (paallekkainenTiedote.status === "AJASTETTU") {
+        viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo ajastettu (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
+      }
+
+      setPaallekkaisetTiedotteet({
+        onPaallekkainen: true,
+        viesti: viesti,
+      });
+    } else {
+      setPaallekkaisetTiedotteet(null);
+    }
+  }, [formData.aktiivinen, formData.voimassaAlkaen, formData.voimassaPaattyen, tiedotteet, editTiedote]);
+
+  const validateForm = () => {
+    const errors = [];
+    if (!formData.otsikko?.trim()) errors.push("Otsikko on pakollinen");
+    if (!formData.voimassaAlkaen) errors.push("Voimassaolon alkupäivä on pakollinen");
+    if (!formData.tiedoteTyyppi) errors.push("Tiedotteen tyyppi on pakollinen");
+    if (formData.kenelleNaytetaan.length === 0) errors.push("Valitse, kenelle tiedote näytetään");
+    if (!formData.tiedoteFI?.trim()) errors.push("Sisältö suomeksi on pakollinen");
+    if (formData.kenelleNaytetaan.includes("Kansalainen")) {
+      if (!formData.tiedoteSV?.trim()) {
+        errors.push("Sisältö ruotsiksi on pakollinen, koska tiedote näytetään kansalaisille");
+      }
+    }
+    return errors;
+  };
 
   return (
     <HassuDialog
@@ -151,30 +245,6 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                   size="small"
                 />
               </Box>
-              {/* 
-              <Box sx={{ flex: 0.5 }}>
-                <HassuDatePickerWithController
-                  field="voimassaAlkaen"
-                  value={formData.voimassaAlkaen ? dayjs(formData.voimassaAlkaen).format("YYYY-MM-DD") : ""}
-                  onChange={handleDateChange}
-                  label="Voimassa alkaen"
-                  minDate={today()}
-                  textFieldProps={{ required: true }}
-                  controllerProps={{ control, name: "tiedote.aloituspaiva" }}
-                />
-              </Box>
-
-              <Box sx={{ flex: 0.5 }}>
-                <HassuDatePickerWithController
-                  label="Päättyen"
-                  value={formData.voimassaPaattyen ? dayjs(formData.voimassaPaattyen) : null}
-                  onChange={handleDateChange("voimassaPaattyen")}
-                  minDate={today()}
-                  textFieldProps={{ required: true }}
-                  controllerProps={{ control, name: "tiedote.lopetuspaiva" }}
-                />
-              </Box> */}
-
               <Box sx={{ flex: 0.5 }}>
                 <TiedoteDatePicker
                   field="voimassaAlkaen"
@@ -183,6 +253,8 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                   label="Voimassa alkaen"
                   minDate={dayjs()}
                   required={true}
+                  error={errors.some((error) => error.includes("alkupäivä"))}
+                  helperText={errors.find((error) => error.includes("alkupäivä"))}
                 />
               </Box>
 
@@ -204,6 +276,11 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                     control={<Switch checked={formData.aktiivinen} onChange={(e) => handleChange("aktiivinen", e.target.checked)} />}
                     label={formData.aktiivinen ? "Aktiivinen" : "Ei aktiivinen"}
                   />
+                  {paallekkaisetTiedotteet?.onPaallekkainen && (
+                    <Typography variant="body2" color="error" sx={{ mt: 1, mb: 2 }}>
+                      {paallekkaisetTiedotteet.viesti}
+                    </Typography>
+                  )}
                 </FormControl>
               </Box>
             </Stack>
@@ -231,6 +308,11 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                     label="Kansalainen"
                   />
                 </FormGroup>
+                {errors.some((error) => error.includes("kenelle")) && (
+                  <Typography variant="body2" color="error" sx={{ mt: 1, fontSize: "0.75rem" }}>
+                    {errors.find((error) => error.includes("kenelle"))}
+                  </Typography>
+                )}
               </Box>
 
               <Box sx={{ flex: 1 }}>
@@ -263,8 +345,8 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
                 rows={3}
                 value={formData.tiedoteFI}
                 onChange={(e) => handleChange("tiedoteFI", e.target.value)}
-                error={errors.some((error) => error.includes("Sisältö"))}
-                helperText={errors.find((error) => error.includes("Sisältö"))}
+                error={errors.some((error) => error.includes("suomeksi"))}
+                helperText={errors.find((error) => error.includes("suomeksi"))}
                 inputProps={{ maxLength: maxSisalto }}
               />
               <Typography variant="body2" color="text.secondary" sx={{ mt: -2, display: "block", textAlign: "right" }}>
@@ -275,13 +357,19 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
             <Stack sx={{ marginBottom: 3 }}>
               <TextField
                 fullWidth
-                label="Tiedote järjestelmän toissijaisella kielellä (ruotsi) (vain kansalaiselle) *"
+                label={
+                  formData.kenelleNaytetaan.includes("Kansalainen")
+                    ? "Tiedote järjestelmän toissijaisella kielellä (ruotsi) *"
+                    : "Tiedote järjestelmän toissijaisella kielellä (ruotsi)"
+                }
                 variant="outlined"
                 size="small"
                 multiline
                 rows={3}
                 value={formData.tiedoteSV}
                 onChange={(e) => handleChange("tiedoteSV", e.target.value)}
+                error={errors.some((error) => error.includes("ruotsiksi"))}
+                helperText={errors.find((error) => error.includes("ruotsiksi"))}
                 inputProps={{ maxLength: maxSisalto }}
               />
               <Typography variant="body2" color="text.secondary" sx={{ mt: -2, display: "block", textAlign: "right" }}>
@@ -292,28 +380,28 @@ export default function TiedoteDialog({ open, onClose, onSubmit, editTiedote }: 
             <Box sx={{ marginTop: 4, marginBottom: 3 }}>
               <Typography sx={{ marginBottom: 3 }}>Esikatselu</Typography>
 
-              <Notification sx={{ marginBottom: 5 }} type={NotificationType.WARN}>
+              <Notification sx={{ marginBottom: 5, whiteSpace: "pre-wrap" }} type={NotificationType.WARN}>
                 {formData.tiedoteFI || "Sisältö suomeksi"}
               </Notification>
 
-              <Notification sx={{ marginBottom: 5 }} type={NotificationType.WARN}>
+              <Notification sx={{ marginBottom: 5, whiteSpace: "pre-wrap" }} type={NotificationType.WARN}>
                 {formData.tiedoteSV || "Innehåll på svenska"}
               </Notification>
             </Box>
           </Box>
         </Stack>
       </DialogContent>
-      <DialogActions>
-        {/* {isEditing && (
-          <Button variant="outlined" color="error" onClick={handleDelete}>
+      <DialogActions style={{ paddingLeft: "40px", paddingRight: "40px", paddingBottom: "20px" }}>
+        {editTiedote && (
+          <Button type="button" onClick={handleDeleteClick} style={{ marginRight: "auto" }}>
             Poista tiedote
           </Button>
-        )} */}
+        )}
+        <Button primary type="button" id="save_tiedote_button" onClick={handleFormSubmit}>
+          Tallenna
+        </Button>
         <Button type="button" onClick={() => onClose?.({}, "escapeKeyDown")}>
           Peruuta
-        </Button>
-        <Button primary type="button" id="save_tiedote_button" onClick={handleSubmit}>
-          Tallenna
         </Button>
       </DialogActions>
     </HassuDialog>
