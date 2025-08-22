@@ -4,30 +4,58 @@ import SectionContent from "@components/layout/SectionContent";
 import { api } from "@services/api";
 import { Tiedote } from "common/graphql/apiModel";
 import { Fragment, useCallback, useEffect, useState } from "react";
+import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 interface TiedoteListaProps {
   onEdit: (tiedote: Tiedote) => void;
   refreshTrigger?: number;
+  tiedotteet: Tiedote[];
+  setTiedotteet: (tiedotteet: Tiedote[]) => void;
 }
 
-export default function TiedoteLista({ onEdit, refreshTrigger }: TiedoteListaProps) {
-  const [tiedotteet, setTiedotteet] = useState<Tiedote[]>([]);
-  const [loading, setLoading] = useState(false);
+export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTiedotteet }: TiedoteListaProps) {
+  const { withLoadingSpinner } = useLoadingSpinner();
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("fi-FI");
+  };
+
+  const jarjestaTiedotteet = (tiedotteet: Tiedote[]): Tiedote[] => {
+    return [...tiedotteet].sort((a, b) => {
+      if (a.status === "NAKYVILLA" && b.status !== "NAKYVILLA") return -1;
+      if (b.status === "NAKYVILLA" && a.status !== "NAKYVILLA") return 1;
+
+      if (a.status === "AJASTETTU" && b.status === "EI_NAKYVILLA") return -1;
+      if (b.status === "AJASTETTU" && a.status === "EI_NAKYVILLA") return 1;
+
+      if (a.status === "AJASTETTU" && b.status === "AJASTETTU") {
+        const aAlkaa = new Date(a.voimassaAlkaen);
+        const bAlkaa = new Date(b.voimassaAlkaen);
+        return aAlkaa.getTime() - bAlkaa.getTime();
+      }
+
+      const aMuokattu = new Date(a.muokattu || 0);
+      const bMuokattu = new Date(b.muokattu || 0);
+      return bMuokattu.getTime() - aMuokattu.getTime();
+    });
+  };
 
   const lataaTiedotteet = useCallback(async () => {
-    setLoading(true);
-    try {
-      const result = await api.listaaTiedotteet();
+    withLoadingSpinner(
+      (async () => {
+        try {
+          const result = await api.listaaTiedotteet();
 
-      if (Array.isArray(result) && result.length > 0) {
-      }
-      setTiedotteet(result);
-    } catch (error) {
-      console.error("Virhe tiedotteiden latauksessa:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+          if (Array.isArray(result) && result.length > 0) {
+          }
+          const jarjestetytTiedotteet = jarjestaTiedotteet(result);
+          setTiedotteet(jarjestetytTiedotteet);
+        } catch (error) {
+          console.error("Virhe tiedotteiden latauksessa:", error);
+        }
+      })()
+    );
+  }, [setTiedotteet, withLoadingSpinner]);
 
   useEffect(() => {
     lataaTiedotteet();
@@ -46,8 +74,6 @@ export default function TiedoteLista({ onEdit, refreshTrigger }: TiedoteListaPro
     return "vayla-table-odd";
   }
 
-  if (loading) return <div>Ladataan tiedotteita...</div>;
-
   return (
     <>
       <H5 style={{ paddingTop: 60, paddingBottom: 60 }}>Tiedotteet</H5>
@@ -65,9 +91,26 @@ export default function TiedoteLista({ onEdit, refreshTrigger }: TiedoteListaPro
                 {Array.isArray(tiedote.kenelleNaytetaan) ? tiedote.kenelleNaytetaan.join(", ") : tiedote.kenelleNaytetaan}
               </p>
               <p className={getStyleForRow(index)}>
-                {tiedote.voimassaAlkaen} {tiedote.voimassaPaattyen}
+                {formatDate(tiedote.voimassaAlkaen)} - {tiedote.voimassaPaattyen ? formatDate(tiedote.voimassaPaattyen) : ""}
               </p>
-              <p className={getStyleForRow(index)}>{tiedote.status}</p>
+              <div className={getStyleForRow(index)}>
+                <div
+                  style={{
+                    borderStyle: "solid",
+                    borderWidth: 1,
+                    borderColor: tiedote.status === "NAKYVILLA" ? "#54AC54" : tiedote.status === "AJASTETTU" ? "#F0AD4E" : "#999999",
+                    width: "150px",
+                    padding: 3,
+                    paddingLeft: "2em",
+                    paddingRight: "2em",
+                    borderRadius: 5,
+                    backgroundColor: tiedote.status === "NAKYVILLA" ? "#F5FFEF" : tiedote.status === "AJASTETTU" ? "#FFF6E8" : "#F8F8F8",
+                    textAlign: "center",
+                  }}
+                >
+                  {tiedote.status === "NAKYVILLA" ? "Näkyvillä" : tiedote.status === "AJASTETTU" ? "Ajastettu" : "Ei näkyvillä"}
+                </div>
+              </div>
               <p className={getStyleForRow(index)}>
                 <Button className="btn-small-primary" type="button" onClick={() => onEdit(tiedote)}>
                   Muokkaa
@@ -80,44 +123,3 @@ export default function TiedoteLista({ onEdit, refreshTrigger }: TiedoteListaPro
     </>
   );
 }
-
-//mock-data kehitystä varten, poistetaan kun voi tallentaa oikeita
-// const tiedotteet = [
-//   {
-//     __typename: "Tiedote" as const,
-//     id: "1",
-//     aktiivinen: true,
-//     otsikko: "Häiriöitä Suomi.fi-tunnistautumisessa",
-//     kenelleNaytetaan: ["Kansalainen / Virkamies"],
-//     tiedoteFI: "Tässä on tiedote",
-//     tiedoteSV: "Här är tiedote",
-//     tiedoteTyyppi: "Varoitus",
-//     voimassaAlkaen: "2025-06-26T00:00",
-//     voimassaPaattyen: "2025-09-26T23:59",
-//     status: "NAKYVILLA",
-//   },
-//   {
-//     __typename: "Tiedote" as const,
-//     id: "2",
-//     otsikko: "Hitautta järjestelmässä päivityksen vuoksi",
-//     kenelleNaytetaan: ["Virkamies"],
-//     tiedoteFI: "Tässä on tiedote",
-//     tiedoteSV: "Här är tiedote",
-//     tiedoteTyyppi: "Info",
-//     voimassaAlkaen: "2025-06-26T00:00",
-//     voimassaPaattyen: "2025-06-26T23:59",
-//     status: "AJASTETTU",
-//   },
-//   {
-//     __typename: "Tiedote" as const,
-//     id: "3",
-//     otsikko: "Järjestelmäpäivitys tulossa",
-//     kenelleNaytetaan: ["Kansalainen"],
-//     tiedoteFI: "Tässä on tiedote",
-//     tiedoteSV: "Här är tiedote",
-//     tiedoteTyyppi: "Varoitus",
-//     voimassaAlkaen: "2025-06-26T00:00",
-//     voimassaPaattyen: "2025-06-26T23:59",
-//     status: "EI_NAKYVILLA",
-//   },
-// ];
