@@ -879,12 +879,14 @@ export abstract class AbstractApi {
     return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, mutationVariables);
   }
 
-  async tallennaTiedote(input: TiedoteInput): Promise<string[]> {
-    const result = await this.callYllapitoAPI(apiConfig.tallennaTiedote, {
-      tiedotteet: [input],
-      poistettavatTiedotteet: [],
-    } as TallennaTiedoteMutationVariables);
-    return result.tallennaTiedote || [];
+  async tallennaTiedote(input?: TiedoteInput, poistettavatTiedotteet?: string[]): Promise<string[]> {
+    const variables: TallennaTiedoteMutationVariables = {
+      tiedotteet: input ? [input] : [],
+      poistettavatTiedotteet: poistettavatTiedotteet || [],
+    };
+
+    const result = await this.callYllapitoAPI(apiConfig.tallennaTiedote, variables);
+    return Array.isArray(result) ? result : result.tallennaTiedote || [];
   }
 
   async listaaTiedotteet(id?: string): Promise<Tiedote[]> {
