@@ -3,7 +3,7 @@ import { H5 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
 import { api } from "@services/api";
 import { Tiedote } from "common/graphql/apiModel";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect } from "react";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
 interface TiedoteListaProps {
