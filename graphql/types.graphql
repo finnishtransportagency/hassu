@@ -1611,4 +1611,5 @@ type Tiedote {
   voimassaAlkaen: String!
   voimassaPaattyen: String
   status: String!
+  muokattu: String!
 }
