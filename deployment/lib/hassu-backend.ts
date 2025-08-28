@@ -206,6 +206,7 @@ export class HassuBackendStack extends Stack {
     new CfnOutput(this, "HyvaksymisEsitysSqsUrl", {
       value: hyvaksymisEsitysSQS.queueUrl ?? "",
     });
+
     if (Config.isDeveloperEnvironment()) {
       new CfnOutput(this, "AppSyncAPIURL", {
         value: api.graphqlUrl ?? "",

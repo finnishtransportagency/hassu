@@ -1,0 +1,25 @@
+{
+  "paaotsikko": "Information om Suomi.fi-tjänsten",
+  "ingressi": "",
+  "tietoa-suomifista": {
+    "otsikko": "Suomi.fi",
+    "kappale1": "Suomi.fi är en tjänst som används av myndigheter och offentliga organisationer och som tillhandahåller e-tjänster för medborgare och företag. Genom att identifiera dig i tjänsten kan du kommunicera med olika myndigheter, ge och begära fullmakter samt kontrollera dina registeruppgifter. Planeringen av statens trafikleder använder Suomi.fi-identifikation och -meddelanden.",
+    "kappale2": "Suomi.fi-meddelanden är ett tillförlitligt och datasäkert sätt att kommunicera. Du kan använda Suomi.fi-meddelanden med mobilapplikationen samt med datorns eller mobilenhetens webbläsare. Via Suomi.fi kan du identifiera dig med stark autentisering med hjälp av bankkoder, mobilcertifikat, hightrust.id-applikationen eller certifikatkort.",
+    "kappale3": "I tjänsten Planering av statens trafikleder används Suomi.fi-meddelanden för att informera om väg-, järnvägs- och utredningsplaner. Om du har tagit Suomi.fi -meddelanden i bruk får du myndighetsmeddelanden i elektroniskt format. Du kan identifiera dig i Suomi.fi-tjänsten för att läsa meddelandena. Suomi.fi-identifikation används för att lämna in anmärkningar."
+  },
+  "lisaa-suomifista": {
+    "otsikko": "Läs mer om Suomi.fi-tjänsterna",
+    "linkki1": {
+      "teksti": "Vad är Suomi.fi?",
+      "href": "https://www.suomi.fi/anvisningar-och-stod/allman-information/vad-ar-suomifi"
+    },
+    "linkki2": {
+      "teksti": "Suomi.fi-meddelanden",
+      "href": "https://www.suomi.fi/anvisningar-och-stod/meddelanden/vad-ar-suomifi-meddelanden"
+    },
+    "linkki3": {
+      "teksti": "Suomi.fi-identifikation",
+      "href": "https://www.suomi.fi/anvisningar-och-stod/meddelanden/anvandning-av-meddelanden"
+    }
+  }
+}

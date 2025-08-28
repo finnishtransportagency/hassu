@@ -44,7 +44,7 @@ function setupLocalDevelopmentMode(config, env) {
   env.REACT_APP_API_URL = "http://localhost:3000/graphql";
   env.APPSYNC_URL = process.env.REACT_APP_API_URL;
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
-  env.VERSION = process.env.VERSION;
+  env.NEXT_PUBLIC_VERSION = process.env.VERSION;
   env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
 
   /**
@@ -111,7 +111,9 @@ module.exports = (phase) => {
     NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
     NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
     NEXT_PUBLIC_AJANSIIRTO_SALLITTU: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
+    NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: process.env.NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT,
     INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
+    NEXT_PUBLIC_ENVIRONMENT: BaseConfig.env,
     ENVIRONMENT: BaseConfig.env,
     TABLE_PROJEKTI: BaseConfig.projektiTableName,
     TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
@@ -167,17 +169,17 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config, env);
   } else {
-    env.VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
+    env.NEXT_PUBLIC_VERSION = process.env.CODEBUILD_SOURCE_VERSION; // default version info, overriden in test&prod by semantic version
     try {
       let buffer = fs.readFileSync(__dirname + "/.version");
       if (buffer) {
-        env.VERSION = buffer.toString("UTF-8");
+        env.NEXT_PUBLIC_VERSION = buffer.toString("UTF-8");
       }
     } catch (e) {
       // Ignore
     }
-    env.REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
-    env.REACT_APP_API_URL = "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/graphql";
+    env.NEXT_PUBLIC_REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
+    env.NEXT_PUBLIC_REACT_APP_API_URL = "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/graphql";
     env.FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
     env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
 

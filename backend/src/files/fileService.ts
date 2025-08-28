@@ -365,6 +365,9 @@ export class FileService {
   }
 
   getYllapitoPathForProjektiFile(paths: PathTuple, filePath: string): string {
+    if (!filePath || typeof filePath !== "string") {
+      throw new Error(`Error in filePath: expected string but got ${filePath}`);
+    }
     if (filePath.startsWith(FILE_PATH_DELETED_PREFIX)) {
       return filePath;
     }

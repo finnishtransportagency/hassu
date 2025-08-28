@@ -3,7 +3,7 @@ import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
+import { CfnRegistryPolicy, CfnReplicationConfiguration, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -52,6 +52,7 @@ export class HassuAccountStack extends Stack {
       await this.createBastionHost(config, vpc);
     }
     await this.createKeycloakLambda(vpc);
+    await this.configureNextJSImageECR(config);
   }
 
   private async createKeycloakLambda(vpc: IVpc) {
@@ -214,5 +215,62 @@ export class HassuAccountStack extends Stack {
       },
     });
     codeartifactRepository.addDependency(codeartifactDomain);
+  }
+
+  private async configureNextJSImageECR(config: Config) {
+    const repositoryName = Config.nextjsImageRepositoryName;
+    new aws_ecr.Repository(this, "NextJSECRRepo", {
+      repositoryName,
+      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: RepositoryEncryption.AES_256,
+      imageScanOnPush: true,
+    });
+    await this.replicateECR(repositoryName, config);
+  }
+
+  private async replicateECR(repository: string, config: Config) {
+    if (Config.isDevAccount()) {
+      const prodAccountId = await config.getParameterNow("ProdAccountId");
+      new CfnReplicationConfiguration(this, "NextjsRepoReplicationConfig", {
+        replicationConfiguration: {
+          rules: [
+            {
+              destinations: [
+                {
+                  region: this.region,
+                  registryId: prodAccountId,
+                },
+              ],
+              repositoryFilters: [
+                {
+                  filter: repository,
+                  filterType: "PREFIX_MATCH",
+                },
+              ],
+            },
+          ],
+        },
+      });
+    }
+
+    if (Config.isProdAccount()) {
+      const devAccountId = await config.getParameterNow("DevAccountId");
+      new CfnRegistryPolicy(this, "NextjsRepoReplicationPolicy", {
+        policyText: {
+          Version: "2008-10-17",
+          Statement: [
+            {
+              Sid: "AllowCrossAccountECRReplication",
+              Effect: "Allow",
+              Principal: {
+                AWS: `arn:aws:iam::${devAccountId}:root`,
+              },
+              Action: ["ecr:ReplicateImage"],
+              Resource: [`arn:aws:ecr:${this.region}:${this.account}:repository/${repository}`],
+            },
+          ],
+        },
+      });
+    }
   }
 }

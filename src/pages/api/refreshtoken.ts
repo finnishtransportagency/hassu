@@ -18,8 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const refresh_token = req.cookies["x-vls-refresh-token"];
   let status = 404;
   if (refresh_token) {
-    const client_id = process.env.KEYCLOAK_CLIENT_ID!;
-    const userPoolUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
+    const client_id = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID!;
+    const userPoolUrl = new URL(process.env.NEXT_PUBLIC_KEYCLOAK_DOMAIN!);
     userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/token";
     const details: Record<string, string> = {
       grant_type: "refresh_token",

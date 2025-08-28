@@ -1,11 +1,5 @@
 import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapter";
-import {
-  IlmoituksenVastaanottajat,
-  SuunnitteluSopimus,
-  SuunnitteluSopimusJulkaisu,
-  UudelleenKuulutus,
-  Yhteystieto,
-} from "../../database/model";
+import { IlmoituksenVastaanottajat, UudelleenKuulutus, Yhteystieto } from "../../database/model";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
 import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
@@ -16,7 +10,6 @@ import { Kieli } from "hassu-common/graphql/apiModel";
 export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
   kuulutusPaiva: string;
   kuulutusVaihePaattyyPaiva?: string;
-  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   uudelleenKuulutus?: UudelleenKuulutus | null;
@@ -24,7 +17,6 @@ export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
 }
 
 export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> extends CommonKutsuAdapter {
-  readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly uudelleenKuulutus?: UudelleenKuulutus | null;
   readonly props: T;

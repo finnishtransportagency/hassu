@@ -41,8 +41,8 @@ const KiinteistonOmistajienMuokkaus: FunctionComponent<{ projekti: ProjektiLisat
         <H3 variant="lead">{projekti.velho.nimi}</H3>
         <GrayBackgroundText>
           <p>
-            Kiinteistönomistajia on listalla yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} henkilöä</b>.
-            Kiinteistötunnuksia on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
+            Listalla on yhteensä <b>{projektinTiedottaminen?.kiinteistonomistajaMaara ?? "x"} kiinteistönomistajaa</b>. Kiinteistötunnuksia
+            on {projektinTiedottaminen?.kiinteistotunnusMaara ?? 0}.
           </p>
         </GrayBackgroundText>
         <p>

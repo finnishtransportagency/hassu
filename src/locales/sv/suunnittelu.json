@@ -9,7 +9,7 @@
     "otsikko": "Möjligheter att delta och påverka samt tidtabeller för detta",
     "voit_osallistua_vuorovaikutuksiin": "Du kan delta i interaktionstillfällen, bekanta dig med planerings- och presentationsmaterialet och lämna respons eller fråga om projektet. Genom att delta har du möjlighet att påverka planeringen av projektet.",
     "aineistot_ovat_tutustuttavissa": "<p> Planutkasten och presentationsmaterialet finns längre ner på denna sida. <a>Gå till materialet.</a></p>",
-    "kysymykset_ja_palautteet": "Frågor och respons bör lämnas in senast {{paivamaara}}.",
+    "kysymykset_ja_palautteet": "Vi önskar att frågor och respons framförs senast {{paivamaara}}. Efter detta kan responsen inte nödvändigtvis beaktas i planen.",
     "siirry_lomakkeelle": "<a>Gå till blanketten.</a>"
   },
   "videoesittely": {
@@ -36,7 +36,6 @@
       "VERKOSSA": "Webbevenemang"
     },
     "kiitos_osallistumisesta": "Tack för att du deltar!",
-    "kaikki_vastaanotetut": "Alla frågor och all respons behandlas och man strävar efter att beakta dem i planeringen. De färdiga planerna läggs senare fram för påseende.",
     "tulevat_tilaisuudet": "Kommande interaktionstillfällen",
     "menneet_tilaisuudet": "Tidigare interaktionstillfällen",
     "paikalla": {

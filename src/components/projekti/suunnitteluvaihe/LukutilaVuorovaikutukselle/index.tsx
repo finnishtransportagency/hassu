@@ -41,8 +41,10 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
 
   const api = useApi();
 
+  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
+
   const showAjansiirtopainikkeet = useMemo(
-    () => isAjansiirtoSallittu() && vuorovaikutusnro === projekti.vuorovaikutusKierros?.vuorovaikutusNumero,
+    () => ajansiirtoSallittu && vuorovaikutusnro === projekti.vuorovaikutusKierros?.vuorovaikutusNumero,
     [projekti.vuorovaikutusKierros?.vuorovaikutusNumero, vuorovaikutusnro]
   );
 

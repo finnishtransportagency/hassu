@@ -508,6 +508,8 @@ type EnnakkoNeuvottelu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  poisValitutKuulutuksetJaKutsu: [String!]
+  poisValitutMaanomistajaluettelot: [String!]
 }
 
 type EnnakkoNeuvotteluJulkaisu {
@@ -523,6 +525,8 @@ type EnnakkoNeuvotteluJulkaisu {
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
+  poisValitutKuulutuksetJaKutsu: [String!]
+  poisValitutMaanomistajaluettelot: [String!]
   hash: String!
   lahetetty: String!
 }
@@ -909,6 +913,7 @@ type ProjektiJulkinen implements IProjekti {
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos1Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
   jatkoPaatos2Vaihe: HyvaksymisPaatosVaiheJulkaisuJulkinen
+  suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
 }
 
 type Suunnitelma {
@@ -1100,7 +1105,6 @@ type AloitusKuulutusJulkaisuJulkinen {
 }
 
 type SuunnitelmaJaettuJulkinen {
-  liittyvatSuunnitelma: ProjektinJakotieto
   julkaisuKopioituSuunnitelmasta: ProjektinJakotieto
   julkaisuKopioituSuunnitelmaan: ProjektinJakotieto
 }
@@ -1149,19 +1153,46 @@ type MaakuntaVastaanottaja implements ISahkopostiVastaanottaja {
   lahetysvirhe: Boolean
 }
 
+type SuunnitteluSopimusOsapuoli {
+  osapuolenNimiFI: String
+  osapuolenNimiSV: String
+  osapuolenHenkilot: [OsapuolenHenkilo]
+  osapuolenTyyppi: String
+  osapuolenLogo: LokalisoituTeksti
+}
+
+type OsapuolenHenkilo {
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  yritys: String
+  kunta: String
+  valittu: Boolean
+}
+
 type SuunnitteluSopimus {
-  kunta: Int!
+  yhteysHenkilo: String
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  kunta: Int
+  yritys: String
   logo: LokalisoituTeksti
-  yhteysHenkilo: String!
+  osapuolet: [SuunnitteluSopimusOsapuoli]
+  osapuoliMaara: Int
 }
 
 type SuunnitteluSopimusJulkaisu {
-  etunimi: String!
-  sukunimi: String!
-  puhelinnumero: String!
-  email: String!
-  kunta: Int!
+  etunimi: String
+  sukunimi: String
+  puhelinnumero: String
+  email: String
+  kunta: Int
+  yritys: String
   logo: LokalisoituTeksti
+  osapuolet: [SuunnitteluSopimusOsapuoli]
 }
 
 type ProjektiKayttaja {
@@ -1410,6 +1441,7 @@ type LadattavaTiedosto implements ILadattavaTiedosto {
   nimi: String!
   tuotu: String
   jarjestys: Int
+  s3Key: String
 }
 
 type KunnallinenLadattavaTiedosto implements ILadattavaTiedosto {

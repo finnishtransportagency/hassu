@@ -24,14 +24,42 @@ export default async function createLadattavatTiedostot(
     maanomistajaluettelo,
   } = collectHyvaksymisEsitysAineistot(projekti, hyvaksymisEsitys, status, projekti.aineistoHandledAt);
 
+  let filteredKuulutuksetJaKutsu = kuulutuksetJaKutsu;
+  if (
+    "lahetetty" in hyvaksymisEsitys &&
+    "poisValitutKuulutuksetJaKutsu" in hyvaksymisEsitys &&
+    Array.isArray(hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu) &&
+    hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu.length > 0
+  ) {
+    const poisvalitutS3Keys = hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu;
+
+    filteredKuulutuksetJaKutsu = kuulutuksetJaKutsu.filter((tiedosto) => {
+      return !tiedosto?.s3Key || !poisvalitutS3Keys.includes(tiedosto.s3Key);
+    });
+  }
+
+  let filteredMaanomistajaluettelot = maanomistajaluettelo;
+  if (
+    "lahetetty" in hyvaksymisEsitys &&
+    "poisValitutMaanomistajaluettelot" in hyvaksymisEsitys &&
+    Array.isArray(hyvaksymisEsitys.poisValitutMaanomistajaluettelot) &&
+    hyvaksymisEsitys.poisValitutMaanomistajaluettelot.length > 0
+  ) {
+    const poisvalitutMaanomistajaS3Keys = hyvaksymisEsitys.poisValitutMaanomistajaluettelot;
+
+    filteredMaanomistajaluettelot = maanomistajaluettelo.filter((tiedosto) => {
+      return !tiedosto?.s3Key || !poisvalitutMaanomistajaS3Keys.includes(tiedosto.s3Key);
+    });
+  }
+
   return {
     hyvaksymisEsitys: await Promise.all(hyvaksymisEsitysTiedostot.map(adaptFileInfoToLadattavaTiedosto)),
     suunnitelma: await Promise.all(suunnitelma.map(adaptFileInfoToLadattavaTiedosto)),
     kuntaMuistutukset: await Promise.all(kuntaMuistutukset.map(adaptFileInfoToKunnallinenLadattavaTiedosto)),
     lausunnot: await Promise.all(lausunnot.map(adaptFileInfoToLadattavaTiedosto)),
-    kuulutuksetJaKutsu: await Promise.all(kuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
+    kuulutuksetJaKutsu: await Promise.all(filteredKuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
     muutAineistot: await Promise.all(muutAineistot.map(adaptFileInfoToLadattavaTiedosto)),
-    maanomistajaluettelo: await Promise.all(maanomistajaluettelo.map(adaptFileInfoToLadattavaTiedosto)),
+    maanomistajaluettelo: await Promise.all(filteredMaanomistajaluettelot.map(adaptFileInfoToLadattavaTiedosto)),
   };
 }
 
@@ -42,7 +70,14 @@ export async function adaptFileInfoToLadattavaTiedosto(fileInfo: FileInfo): Prom
   } else {
     linkki = "";
   }
-  return { __typename: "LadattavaTiedosto", nimi: fileInfo.nimi, linkki, kategoriaId: fileInfo.kategoriaId, tuotu: fileInfo.tuotu };
+  return {
+    __typename: "LadattavaTiedosto",
+    nimi: fileInfo.nimi,
+    linkki,
+    kategoriaId: fileInfo.kategoriaId,
+    tuotu: fileInfo.tuotu,
+    s3Key: fileInfo.s3Key,
+  };
 }
 export async function adaptFileInfoToKunnallinenLadattavaTiedosto(fileInfo: FileInfo): Promise<API.KunnallinenLadattavaTiedosto> {
   let linkki;

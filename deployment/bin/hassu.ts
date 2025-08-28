@@ -2,7 +2,7 @@
 /* tslint:disable:no-console */
 import "source-map-support/register";
 import { HassuBackendStack } from "../lib/hassu-backend";
-import { HassuFrontendStack } from "../lib/hassu-frontend";
+import { HassuFrontendCoreStack, HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuDatabaseStack } from "../lib/hassu-database";
 import { App } from "aws-cdk-lib";
 import { Config } from "../lib/config";
@@ -25,6 +25,17 @@ async function main() {
   } else {
     awsAccountId = "000000000000";
   }
+
+  let nextJsImageTag: string = Config.env;
+  if (Config.isPermanentEnvironment()) {
+    const commitHash = process.env.CODEBUILD_RESOLVED_SOURCE_VERSION;
+    if (commitHash) {
+      nextJsImageTag = commitHash;
+    } else {
+      throw new Error("Et voi asentaa ympäristöä '" + Config.env + "' kuin CodeBuildin kautta!");
+    }
+  }
+
   assertIsDefined(awsAccountId, "AWS-tilin ID pitää olla tiedossa");
   const app = new App();
   const hassuDatabaseStack = new HassuDatabaseStack(app, awsAccountId);
@@ -50,6 +61,23 @@ async function main() {
       console.log("Deployment of HassuBackendStack failed:", e);
       process.exit(1);
     });
+    if (Config.isPermanentEnvironment()) {
+      const hassuFrontendCoreStack = new HassuFrontendCoreStack(app, {
+        awsAccountId,
+        internalBucket: hassuDatabaseStack.internalBucket,
+        yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
+        publicBucket: hassuDatabaseStack.publicBucket,
+        projektiTable: hassuDatabaseStack.projektiTable,
+        lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
+        eventQueue: hassuBackendStack.eventQueue,
+        asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
+        nextJsImageTag,
+      });
+      await hassuFrontendCoreStack.process().catch((e) => {
+        console.log("Deployment of HassuFrontendCoreStack failed:", e);
+        process.exit(1);
+      });
+    }
     const hassuFrontendStack = new HassuFrontendStack(app, {
       awsAccountId,
       internalBucket: hassuDatabaseStack.internalBucket,
@@ -59,6 +87,7 @@ async function main() {
       lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
       eventQueue: hassuBackendStack.eventQueue,
       asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
+      nextJsImageTag,
     });
     await hassuFrontendStack.process().catch((e) => {
       console.log("Deployment of HassuFrontendStack failed:", e);

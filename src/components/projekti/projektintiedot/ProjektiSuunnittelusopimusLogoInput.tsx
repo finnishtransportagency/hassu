@@ -1,7 +1,7 @@
 import React, { ReactElement, useMemo } from "react";
 import { ControllerProps, FieldValues } from "react-hook-form";
 import { KaannettavaKieli } from "common/kaannettavatKielet";
-import { ControlledLogoInput } from "./ControlledLogoInput";
+import { ControlledLogoInput } from "../ControlledLogoInput";
 
 interface Props<TFieldValues extends FieldValues> {
   lang: KaannettavaKieli;
@@ -18,8 +18,7 @@ export default function ProjektiSuunnittelusopimusLogoInput<TFieldValues extends
   const langLabel = useMemo(
     () => (
       <>
-        Virallinen, kunnalta saatu logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (
-        <b>{lang.toLowerCase()}</b>). *
+        Virallinen logo suunnitelman {isPrimaryLang ? "ensisijaisella" : "toissijaisella"} kielellä (<b>{lang.toLowerCase()}</b>). *
       </>
     ),
     [isPrimaryLang, lang]

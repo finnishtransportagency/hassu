@@ -83,9 +83,19 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
     })
   );
   const allMaanomistajaluettelo: LadattavaTiedosto[] = [];
-  projekti.ennakkoNeuvottelu?.tuodutTiedostot?.maanomistajaluettelo?.forEach((m) =>
-    allMaanomistajaluettelo.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })
-  );
+  const poisValitutMaanomistajaluettelot = projekti.ennakkoNeuvottelu?.poisValitutMaanomistajaluettelot || [];
+  projekti.ennakkoNeuvottelu?.tuodutTiedostot?.maanomistajaluettelo?.forEach((m) => {
+    const s3Key = m.s3Key || m.linkki;
+    if (!s3Key || !poisValitutMaanomistajaluettelot.includes(s3Key)) {
+      allMaanomistajaluettelo.push({
+        __typename: "LadattavaTiedosto",
+        nimi: m.nimi,
+        linkki: m.linkki,
+        s3Key: m.s3Key,
+        tuotu: m.tuotu,
+      });
+    }
+  });
   maanomistajaluettelo?.forEach((k) =>
     allMaanomistajaluettelo.push({
       __typename: "LadattavaTiedosto",
@@ -94,10 +104,21 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
       tuotu: projekti?.ennakkoNeuvottelu?.maanomistajaluettelo?.find((t) => t.uuid === k.uuid)?.lisatty,
     })
   );
+
   const allKuulutuksetJaKutsu: LadattavaTiedosto[] = [];
-  projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) =>
-    allKuulutuksetJaKutsu.push({ __typename: "LadattavaTiedosto", nimi: m.nimi, linkki: m.linkki, tuotu: m.tuotu })
-  );
+  const poisValitutKuulutuksetJaKutsu = projekti.ennakkoNeuvottelu?.poisValitutKuulutuksetJaKutsu || [];
+  projekti.ennakkoNeuvottelu?.tuodutTiedostot?.kuulutuksetJaKutsu?.forEach((m) => {
+    const s3Key = m.s3Key || m.linkki;
+    if (!s3Key || !poisValitutKuulutuksetJaKutsu.includes(s3Key)) {
+      allKuulutuksetJaKutsu.push({
+        __typename: "LadattavaTiedosto",
+        nimi: m.nimi,
+        linkki: m.linkki,
+        s3Key: m.s3Key,
+        tuotu: m.tuotu,
+      });
+    }
+  });
   kuulutuksetJaKutsu?.forEach((k) =>
     allKuulutuksetJaKutsu.push({
       __typename: "LadattavaTiedosto",
@@ -106,6 +127,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
       tuotu: projekti?.ennakkoNeuvottelu?.kuulutuksetJaKutsu?.find((t) => t.uuid === k.uuid)?.lisatty,
     })
   );
+
   return (
     <>
       <H1>Ennakkotarkastus/ennakkoneuvottelu (esikatselu)</H1>

@@ -113,7 +113,7 @@ function Liitteet({ oid, liitteet }: Readonly<LiitteetProps>) {
           title={liite.skannausTulos === LiitteenSkannausTulos.SAASTUNUT ? "Liitteestä löytyi virus" : ""}
           href={`/yllapito/tiedostot/projekti/${oid}${liite.liite}`}
         >
-          <img src="/paperclip.svg" alt="Liite" />
+          <img src="/assets/paperclip.svg" alt="Liite" />
         </ExtLink>
       ))}
     </div>

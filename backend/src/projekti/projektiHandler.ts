@@ -436,7 +436,7 @@ export async function haeVelhoSynkronoinninMuutoksetTallennukseen(
   const kayttoOikeudetManager = new KayttoOikeudetManager(
     kayttoOikeudet,
     await personSearch.getKayttajas(),
-    oldProjekti.suunnitteluSopimus?.yhteysHenkilo
+    oldProjekti.suunnitteluSopimus?.yhteysHenkilo ?? undefined
   );
   kayttoOikeudetManager.resetHenkilot(reset, vastuuhenkilonEmail, varahenkilonEmail);
   kayttoOikeudetManager.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
@@ -463,26 +463,82 @@ async function haeAsiaId(oid: string) {
   }
 }
 
+function isLogoUrl(logoUrl: string, oid: string): boolean {
+  return typeof logoUrl === "string" && (logoUrl.includes(oid) || logoUrl.includes("/yllapito/tiedostot/"));
+}
+
+function shortLogoPath(logoUrl: string): string {
+  const match = logoUrl.match(/\/suunnittelusopimus\/[^/]+$/);
+  if (match) {
+    return match[0];
+  }
+
+  log.info("Logon URL-polkua ei voitu lyhentää:", logoUrl);
+  return logoUrl;
+}
+
 async function handleSuunnitteluSopimusFile(input: API.TallennaProjektiInput) {
   if (input.suunnitteluSopimus?.logo?.SUOMI) {
-    input.suunnitteluSopimus.logo.SUOMI = await fileService.persistFileToProjekti({
-      uploadedFileSource: input.suunnitteluSopimus.logo.SUOMI,
-      oid: input.oid,
-      targetFilePathInProjekti: "suunnittelusopimus",
-    });
-    if (!input.suunnitteluSopimus.logo.SUOMI) {
-      throw new NotFoundError("Logoa ei löydy");
+    if (isLogoUrl(input.suunnitteluSopimus.logo.SUOMI, input.oid)) {
+      input.suunnitteluSopimus.logo.SUOMI = shortLogoPath(input.suunnitteluSopimus.logo.SUOMI);
+    } else {
+      input.suunnitteluSopimus.logo.SUOMI = await fileService.persistFileToProjekti({
+        uploadedFileSource: input.suunnitteluSopimus.logo.SUOMI,
+        oid: input.oid,
+        targetFilePathInProjekti: "suunnittelusopimus",
+      });
+      if (!input.suunnitteluSopimus.logo.SUOMI) {
+        throw new NotFoundError("Logoa ei löydy");
+      }
     }
   }
 
   if (input.suunnitteluSopimus?.logo?.RUOTSI) {
-    input.suunnitteluSopimus.logo.RUOTSI = await fileService.persistFileToProjekti({
-      uploadedFileSource: input.suunnitteluSopimus.logo.RUOTSI,
-      oid: input.oid,
-      targetFilePathInProjekti: "suunnittelusopimus",
-    });
-    if (!input.suunnitteluSopimus.logo.RUOTSI) {
-      throw new NotFoundError("Logoa ei löydy");
+    if (isLogoUrl(input.suunnitteluSopimus.logo.RUOTSI, input.oid)) {
+      input.suunnitteluSopimus.logo.RUOTSI = shortLogoPath(input.suunnitteluSopimus.logo.RUOTSI);
+    } else {
+      input.suunnitteluSopimus.logo.RUOTSI = await fileService.persistFileToProjekti({
+        uploadedFileSource: input.suunnitteluSopimus.logo.RUOTSI,
+        oid: input.oid,
+        targetFilePathInProjekti: "suunnittelusopimus",
+      });
+      if (!input.suunnitteluSopimus.logo.RUOTSI) {
+        throw new NotFoundError("Logoa ei löydy");
+      }
+    }
+  }
+
+  if (input.suunnitteluSopimus?.osapuolet?.length) {
+    for (const osapuoli of input.suunnitteluSopimus.osapuolet) {
+      if (osapuoli?.osapuolenLogo?.SUOMI) {
+        if (isLogoUrl(osapuoli.osapuolenLogo.SUOMI, input.oid)) {
+          osapuoli.osapuolenLogo.SUOMI = shortLogoPath(osapuoli.osapuolenLogo.SUOMI);
+        } else {
+          osapuoli.osapuolenLogo.SUOMI = await fileService.persistFileToProjekti({
+            uploadedFileSource: osapuoli.osapuolenLogo.SUOMI,
+            oid: input.oid,
+            targetFilePathInProjekti: "suunnittelusopimus",
+          });
+          if (!osapuoli.osapuolenLogo.SUOMI) {
+            throw new NotFoundError("Osapuolen logoa ei löydy");
+          }
+        }
+      }
+
+      if (osapuoli?.osapuolenLogo?.RUOTSI) {
+        if (isLogoUrl(osapuoli.osapuolenLogo.RUOTSI, input.oid)) {
+          osapuoli.osapuolenLogo.RUOTSI = shortLogoPath(osapuoli.osapuolenLogo.RUOTSI);
+        } else {
+          osapuoli.osapuolenLogo.RUOTSI = await fileService.persistFileToProjekti({
+            uploadedFileSource: osapuoli.osapuolenLogo.RUOTSI,
+            oid: input.oid,
+            targetFilePathInProjekti: "suunnittelusopimus",
+          });
+          if (!osapuoli.osapuolenLogo.RUOTSI) {
+            throw new NotFoundError("Osapuolen logoa ei löydy");
+          }
+        }
+      }
     }
   }
 }

@@ -14,6 +14,57 @@ export const UIValuesSchema = Yup.object().shape({
     .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
 });
 
+const makeMaybeOsapuoliSchema = (): Yup.AnySchema => {
+  return Yup.object()
+    .notRequired()
+    .default(undefined)
+    .transform((value: any, originalValue: Record<string, any> | null | undefined) => {
+      if (originalValue == null || (typeof originalValue === "object" && Object.keys(originalValue).length === 0)) {
+        return undefined;
+      }
+      return value;
+    })
+    .shape({
+      osapuolenNimiFI: Yup.string().required("Kunnan nimi suomeksi on pakollinen"),
+      osapuolenNimiSV: Yup.string().when("$isRuotsinkielinenProjekti", {
+        is: (isRuotsinkielinenProjekti: any) => {
+          return isRuotsinkielinenProjekti?.current === true;
+        },
+        then: (schema) => schema.required("Kunnan nimi ruotsiksi on pakollinen"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+      osapuolenLogo: Yup.object()
+        .shape({
+          SUOMI: Yup.mixed().required("Suomenkielinen logo on pakollinen"),
+          RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
+            is: (isRuotsinkielinenProjekti: any) => {
+              return isRuotsinkielinenProjekti?.current === true;
+            },
+            then: (schema) => schema.required("Ruotsinkielinen logo on pakollinen"),
+            otherwise: (schema) => schema.notRequired(),
+          }),
+        })
+        .nullable(),
+      osapuolenHenkilot: Yup.array()
+        .of(Yup.object().shape({}))
+        .min(1, "Ainakin yksi edustaja vaaditaan")
+        .max(2, "Enintään kaksi edustajaa sallitaan")
+        .required("Edustaja on pakollinen")
+        .test("atleast-one-selected", "Vähintään yksi henkilö on valittava", (value) => {
+          if (!value || !Array.isArray(value)) {
+            return true;
+          }
+          const henkilot = value as any[];
+
+          if (henkilot.length === 0) {
+            return true;
+          }
+
+          return henkilot.some((henkilo) => henkilo?.valittu === true);
+        }),
+    });
+};
+
 export const perustiedotValidationSchema = Yup.object()
   .shape({
     oid: Yup.string().required(),
@@ -55,25 +106,29 @@ export const perustiedotValidationSchema = Yup.object()
     muistiinpano: Yup.string().max(maxNoteLength, `Muistiinpanoon voidaan kirjoittaa maksimissaan ${maxNoteLength} merkkiä.`),
     suunnitteluSopimus: Yup.object()
       .shape({
-        kunta: Yup.string().required("Kunta on pakollinen"),
-        yhteysHenkilo: Yup.string().required("Yhteyshenkilö on pakollinen").min(1).nullable(),
-        logo: Yup.object()
-          .shape({
-            SUOMI: Yup.mixed().required("Suomenkielinen kunnan logo on pakollinen."),
-            RUOTSI: Yup.mixed().when("$isRuotsinkielinenProjekti", {
-              is: (isRuotsinkielinenProjekti: MutableRefObject<boolean>) => isRuotsinkielinenProjekti.current,
-              then: (schema) =>
-                schema.required("Ruotsinkielinen kunnan logo on pakollinen, kun ruotsi on valittu projektin kuulutusten kieleksi."),
-            }),
-          })
-          .notRequired()
+        osapuoli1: makeMaybeOsapuoliSchema(),
+        osapuoli2: makeMaybeOsapuoliSchema(),
+        osapuoli3: makeMaybeOsapuoliSchema(),
+        yhteysHenkilo: Yup.string().optional().nullable(),
+        kunta: Yup.string()
           .nullable()
-          .default(null),
+          .when("yhteysHenkilo", {
+            is: (val: unknown) => typeof val === "string" && val.trim() !== "",
+            then: (schema) => schema.required("Kunta on pakollinen"),
+            otherwise: (schema) => schema.notRequired(),
+          }),
+        logo: Yup.object()
+          .nullable()
+          .when("yhteysHenkilo", {
+            is: (val: unknown) => typeof val === "string" && val.trim() !== "",
+            then: (schema) => schema.required("Suomenkielinen kunnan logo on pakollinen."),
+            otherwise: (schema) => schema.notRequired(),
+          }),
       })
       .test(
         "vahainen-menettely-ei-voi-olla-samaan-aikaan",
         "Projektilla, jossa sovelletaan vähäistä menettelyä, ei voi olla suunnittelusopimusta",
-        (suunnitteluSopimus, context) => {
+        (suunnitteluSopimus: any, context: { parent: { vahainenMenettely: any } }) => {
           const vahainenMenettely = context.parent.vahainenMenettely;
           return !(vahainenMenettely && suunnitteluSopimus);
         }

@@ -8,8 +8,10 @@ import {
   BehaviorOptions,
   CachePolicy,
   CfnPublicKey,
+  Distribution,
   KeyGroup,
   LambdaEdgeEventType,
+  FunctionEventType,
   OriginAccessIdentity,
   OriginRequestPolicy,
   OriginSslPolicy,
@@ -19,13 +21,15 @@ import {
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Builder } from "@sls-next/lambda-at-edge";
-import { NextJSLambdaEdge, Props } from "@sls-next/cdk-construct";
+import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
+import * as path from "path";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
 import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
+import * as logs from "aws-cdk-lib/aws-logs";
 import {
   HassuSSMParameters,
   readAccountStackOutputs,
@@ -41,12 +45,34 @@ import { Table } from "aws-cdk-lib/aws-dynamodb";
 import { Queue } from "aws-cdk-lib/aws-sqs";
 import { BaseConfig } from "../../common/BaseConfig";
 import { IHostedZone } from "aws-cdk-lib/aws-route53";
+import { IVpc, SecurityGroup, Vpc } from "aws-cdk-lib/aws-ec2";
+import assert from "assert";
+import {
+  ApplicationListener,
+  ApplicationProtocol,
+  ApplicationTargetGroup,
+  ListenerCondition,
+  Protocol,
+} from "aws-cdk-lib/aws-elasticloadbalancingv2";
+import {
+  Cluster,
+  ContainerImage,
+  CpuArchitecture,
+  FargateService,
+  FargateTaskDefinition,
+  LogDrivers,
+  OperatingSystemFamily,
+  Secret,
+} from "aws-cdk-lib/aws-ecs";
+import { Repository } from "aws-cdk-lib/aws-ecr";
 
 // These should correspond to CfnOutputs produced by this stack
 export type FrontendStackOutputs = {
   CloudfrontPrivateDNSName: string;
   CloudfrontDistributionId: string;
   FrontendPublicKeyIdOutput: string;
+  //NewCloudfrontPrivateDNSName: string;
+  //NewCloudfrontDistributionId: string;
 };
 
 interface HassuFrontendStackProps {
@@ -58,6 +84,7 @@ interface HassuFrontendStackProps {
   lyhytOsoiteTable: Table;
   eventQueue: Queue;
   asianhallintaQueue: Queue;
+  nextJsImageTag: string;
 }
 
 const REGION = "us-east-1";
@@ -114,6 +141,7 @@ export class HassuFrontendStack extends Stack {
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
+      PALAUTE_KYSELY_TIEDOT: ssmParameters.PalauteKyselyTiedot,
     };
     if (BaseConfig.env !== "prod") {
       envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;
@@ -135,14 +163,19 @@ export class HassuFrontendStack extends Stack {
       edgeFunctionRole
     );
 
-    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, frontendRequestFunction);
+    const dmzProxyBehaviorWithLambda = HassuFrontendStack.createDmzProxyBehavior(
+      config.dmzProxyEndpoint,
+      config.frontendDomainName,
+      frontendRequestFunction
+    );
 
-    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint);
+    const dmzProxyBehavior = HassuFrontendStack.createDmzProxyBehavior(config.dmzProxyEndpoint, config.frontendDomainName);
     const mmlApiKey = await config.getParameterNow("MmlApiKey");
     const apiEndpoint = await config.getParameterNow("ApiEndpoint");
     const apiBehavior = this.createApiBehavior(apiEndpoint, mmlApiKey, env);
     const publicGraphqlBehavior = this.createPublicGraphqlDmzProxyBehavior(
       config.dmzProxyEndpoint,
+      config.frontendDomainName,
       env,
       edgeFunctionRole,
       frontendRequestFunction
@@ -184,41 +217,115 @@ export class HassuFrontendStack extends Stack {
       enforceSSL: true,
     });
 
-    let cachePolicies: Partial<Props>;
-    const staticsCachePolicyName = "NextJsAppStaticsCache";
-    const imageCachePolicyName = "NextJsAppImageCache";
-    const lambdaCachePolicyName = "NextJsAppLambdaCache";
+    // Cache policyt on luotu suoraan sen perusteella mitä serverless-next luo defaulttina
+    let nextJsStaticsCachePolicy: cloudfront.CachePolicy;
+    let nextJsImageCachePolicy: cloudfront.CachePolicy;
+    let nextJsAppCachePolicy: cloudfront.CachePolicy;
     if (env == "dev" || env == "prod") {
-      // Cache policyt luodaan vain kerran per account
-      cachePolicies = {
-        cachePolicyName: {
-          staticsCache: staticsCachePolicyName,
-          imageCache: imageCachePolicyName,
-          lambdaCache: lambdaCachePolicyName,
-        },
-      };
+      nextJsStaticsCachePolicy = new cloudfront.CachePolicy(this, "NextJsStaticsCachePolicy", {
+        cachePolicyName: "NextJsStaticsCachePolicy",
+        defaultTtl: Duration.seconds(2592000),
+        minTtl: Duration.seconds(2592000),
+        maxTtl: Duration.seconds(2592000),
+        cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+        headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+        queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
+        enableAcceptEncodingBrotli: true,
+        enableAcceptEncodingGzip: true,
+      });
+
+      new ssm.StringParameter(this, "NextJsStaticsCachePolicyId", {
+        parameterName: "/NextJsStaticsCachePolicyId",
+        stringValue: nextJsStaticsCachePolicy.cachePolicyId,
+      });
+
+      nextJsImageCachePolicy = new cloudfront.CachePolicy(this, "NextJsImageCachePolicy", {
+        cachePolicyName: "NextJsImageCachePolicy",
+        defaultTtl: Duration.seconds(86400),
+        minTtl: Duration.seconds(0),
+        maxTtl: Duration.seconds(31536000),
+        cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+        headerBehavior: cloudfront.CacheHeaderBehavior.allowList("Accept"),
+        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
+        enableAcceptEncodingBrotli: true,
+        enableAcceptEncodingGzip: true,
+      });
+
+      new ssm.StringParameter(this, "NextJsImageCachePolicyId", {
+        parameterName: "/NextJsImageCachePolicyId",
+        stringValue: nextJsImageCachePolicy.cachePolicyId,
+      });
+
+      nextJsAppCachePolicy = new cloudfront.CachePolicy(this, "NextJsAppCachePolicy", {
+        cachePolicyName: "NextJsAppCachePolicy",
+        defaultTtl: Duration.seconds(0),
+        minTtl: Duration.seconds(0),
+        maxTtl: Duration.seconds(31536000),
+        cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+        headerBehavior: cloudfront.CacheHeaderBehavior.none(),
+        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
+        enableAcceptEncodingBrotli: true,
+        enableAcceptEncodingGzip: true,
+      });
+
+      new ssm.StringParameter(this, "NextJsAppCachePolicyId", {
+        parameterName: "/NextJsAppCachePolicyId",
+        stringValue: nextJsAppCachePolicy.cachePolicyId,
+      });
     } else {
-      // Käytä jo accountissa olevia cache policyjä
-      cachePolicies = {
-        nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
-          this,
-          "nextStaticsCachePolicy",
-          Fn.importValue("nextStaticsCachePolicyId")
-        ) as CachePolicy,
-        nextImageCachePolicy: CachePolicy.fromCachePolicyId(
-          this,
-          "nextImageCachePolicy",
-          Fn.importValue("nextImageCachePolicyId")
-        ) as CachePolicy,
-        nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
-          this,
-          "nextLambdaCachePolicy",
-          Fn.importValue("nextLambdaCachePolicyId")
-        ) as CachePolicy,
-      };
+      const nextJsStaticsCachePolicyId = await config.getGlobalSecureInfraParameter("NextJsStaticsCachePolicyId", "");
+      nextJsStaticsCachePolicy = CachePolicy.fromCachePolicyId(
+        this,
+        "NextJsStaticsCachePolicyImportedId",
+        nextJsStaticsCachePolicyId
+      ) as CachePolicy;
+
+      const nextJsImageCachePolicyId = await config.getGlobalSecureInfraParameter("NextJsImageCachePolicyId", "");
+      nextJsImageCachePolicy = CachePolicy.fromCachePolicyId(
+        this,
+        "NextJsImageCachePolicyImportedId",
+        nextJsImageCachePolicyId
+      ) as CachePolicy;
+
+      const nextJsAppCachePolicyId = await config.getGlobalSecureInfraParameter("NextJsAppCachePolicyId", "");
+      nextJsAppCachePolicy = CachePolicy.fromCachePolicyId(this, "NextJsAppCachePolicyImportedId", nextJsAppCachePolicyId) as CachePolicy;
     }
 
-    let webAclId;
+    //let cachePolicies: Partial<Props>;
+    //const staticsCachePolicyName = "NextJsAppStaticsCache";
+    //const imageCachePolicyName = "NextJsAppImageCache";
+    //const lambdaCachePolicyName = "NextJsAppLambdaCache";
+    //if (env == "dev" || env == "prod") {
+    //  // Cache policyt luodaan vain kerran per account
+    //  cachePolicies = {
+    //    cachePolicyName: {
+    //      staticsCache: staticsCachePolicyName,
+    //      imageCache: imageCachePolicyName,
+    //      lambdaCache: lambdaCachePolicyName,
+    //    },
+    //  };
+    //} else {
+    //  // Käytä jo accountissa olevia cache policyjä
+    //  cachePolicies = {
+    //    nextStaticsCachePolicy: CachePolicy.fromCachePolicyId(
+    //      this,
+    //      "nextStaticsCachePolicy",
+    //      Fn.importValue("nextStaticsCachePolicyId")
+    //    ) as CachePolicy,
+    //    nextImageCachePolicy: CachePolicy.fromCachePolicyId(
+    //      this,
+    //      "nextImageCachePolicy",
+    //      Fn.importValue("nextImageCachePolicyId")
+    //    ) as CachePolicy,
+    //    nextLambdaCachePolicy: CachePolicy.fromCachePolicyId(
+    //      this,
+    //      "nextLambdaCachePolicy",
+    //      Fn.importValue("nextLambdaCachePolicyId")
+    //    ) as CachePolicy,
+    //  };
+    //}
+
+    let webAclId: string | undefined;
     if (Config.getEnvConfig().waf) {
       webAclId = Fn.importValue("frontendWAFArn");
     }
@@ -228,7 +335,9 @@ export class HassuFrontendStack extends Stack {
       edgeLambdas = [{ functionVersion: frontendRequestFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
     }
     const nextJSLambdaEdge = new NextJSLambdaEdge(this, id, {
-      ...cachePolicies,
+      nextStaticsCachePolicy: nextJsStaticsCachePolicy,
+      nextImageCachePolicy: nextJsImageCachePolicy,
+      nextLambdaCachePolicy: nextJsAppCachePolicy,
       serverlessBuildOutDir: "./build",
       runtime: Runtime.NODEJS_18_X,
       env: { region: "us-east-1" },
@@ -239,7 +348,7 @@ export class HassuFrontendStack extends Stack {
         imageLambda: `${id}Image`,
       },
       behaviours,
-      domain,
+      ...(env !== "dev" ? { domain } : {}),
       defaultBehavior: {
         edgeLambdas,
       },
@@ -251,7 +360,95 @@ export class HassuFrontendStack extends Stack {
       },
       invalidationPaths: ["/*"],
     });
-    this.configureNextJSAWSPermissions(nextJSLambdaEdge);
+
+    // Luodaan omat Lambda@Edge ja Cloudfront Funktiot uutta toteutusta varten
+    let frontendRequestLambdaFunction: EdgeFunction | undefined = undefined;
+    let edgeLambdasV2: { functionVersion: IVersion; eventType: LambdaEdgeEventType }[] = [];
+
+    // Tuotannossa tarvitaan default behaviourissa (/*) URIn uudelleenkirjoitus, niin että
+    // pyyntöihin lisätään sisäisesti /frontend prefix (reititetään tällä Väyläpilven proxyssa)
+    // Muissa ympäristöissä uudelleenkirjoitus tehty frontendRequestLambdaFunction funktiossa
+    // Tehdään tuotannossa cloudfront.Function avulla koska hieman tehokkaampi ja muokataan vain URIa
+    let frontendRequestFunctionProd: cloudfront.Function | undefined = undefined;
+    let edgeFunctions: { function: cloudfront.Function; eventType: FunctionEventType }[] = [];
+
+    if (env !== "prod") {
+      frontendRequestLambdaFunction = this.createFrontendRequestFunctionV2(
+        env,
+        config.basicAuthenticationUsername,
+        config.basicAuthenticationPassword,
+        edgeFunctionRole
+      );
+      edgeLambdasV2 = [{ functionVersion: frontendRequestLambdaFunction.currentVersion, eventType: LambdaEdgeEventType.VIEWER_REQUEST }];
+    } else {
+      frontendRequestFunctionProd = this.createFrontendRequestFunctionProd(env);
+      edgeFunctions = [{ function: frontendRequestFunctionProd, eventType: FunctionEventType.VIEWER_REQUEST }];
+    }
+
+    const vaylaProxyOrigin = new HttpOrigin(config.dmzProxyEndpoint, {
+      originSslProtocols: [OriginSslPolicy.TLS_V1_2],
+      customHeaders: { "X-Forwarded-Host": config.frontendDomainName },
+    });
+
+    const commonNextBehaviourOptions: BehaviorOptions = {
+      origin: vaylaProxyOrigin,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+    };
+
+    const newDistribution = new Distribution(this, "NewDistribution", {
+      defaultBehavior: {
+        ...commonNextBehaviourOptions,
+        functionAssociations: edgeFunctions,
+        edgeLambdas: edgeLambdasV2,
+        allowedMethods: AllowedMethods.ALLOW_ALL,
+        cachePolicy: nextJsAppCachePolicy,
+      },
+      additionalBehaviors: {
+        "/_next/image*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_ALL,
+          cachePolicy: nextJsImageCachePolicy,
+        },
+        "/_next/data/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          cachePolicy: nextJsAppCachePolicy,
+        },
+        "/_next/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          cachePolicy: nextJsStaticsCachePolicy,
+        },
+        "/assets/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+          cachePolicy: nextJsStaticsCachePolicy,
+        },
+        "/api/*": {
+          ...commonNextBehaviourOptions,
+          allowedMethods: AllowedMethods.ALLOW_ALL,
+          cachePolicy: nextJsAppCachePolicy,
+        },
+        ...behaviours,
+      },
+      domainNames: env === "dev" ? domain?.domainNames : undefined,
+      certificate: env === "dev" ? domain?.certificate : undefined,
+      priceClass: PriceClass.PRICE_CLASS_100,
+      logBucket,
+      webAclId,
+      errorResponses: this.getErrorResponsesForCloudFront(),
+    });
+
+    new CfnOutput(this, "CloudfrontPrivateDNSName", {
+      value: newDistribution.distributionDomainName || "",
+    });
+    new CfnOutput(this, "CloudfrontDistributionId", {
+      value: newDistribution.distributionId || "",
+    });
+
+    this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
     HassuFrontendStack.configureNextJSRequestHeaders(nextJSLambdaEdge);
 
     const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
@@ -273,27 +470,27 @@ export class HassuFrontendStack extends Stack {
 
     if (env == "dev" || env == "prod") {
       new CfnOutput(this, "nextStaticsCachePolicyId", {
-        value: nextJSLambdaEdge.nextStaticsCachePolicy.cachePolicyId || "",
+        value: env === "dev" ? "7f91a1cf-d9bd-4a8f-8317-cf1f9eec0fbe" : "08a7fd7f-be24-4f5d-a79b-fa6c8ecec537",
         exportName: "nextStaticsCachePolicyId",
       });
       new CfnOutput(this, "nextImageCachePolicyId", {
-        value: nextJSLambdaEdge.nextImageCachePolicy.cachePolicyId || "",
+        value: env === "dev" ? "8baf3519-0793-4195-af4d-0d83a04e45db" : "9d9f0807-03d2-4921-a2ee-ca2d5e1f34ad",
         exportName: "nextImageCachePolicyId",
       });
       new CfnOutput(this, "nextLambdaCachePolicyId", {
-        value: nextJSLambdaEdge.nextLambdaCachePolicy.cachePolicyId || "",
+        value: env === "dev" ? "c52cf4e4-7465-489f-8780-77b125b9b706" : "8e12fc51-b5d3-4ae7-8d81-17df74c93c10",
         exportName: "nextLambdaCachePolicyId",
       });
     }
 
-    const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
+    //const distribution: cloudfront.Distribution = nextJSLambdaEdge.distribution;
 
-    new CfnOutput(this, "CloudfrontPrivateDNSName", {
-      value: distribution.distributionDomainName || "",
-    });
-    new CfnOutput(this, "CloudfrontDistributionId", {
-      value: distribution.distributionId || "",
-    });
+    //new CfnOutput(this, "CloudfrontPrivateDNSName", {
+    //  value: distribution.distributionDomainName || "",
+    //});
+    //new CfnOutput(this, "CloudfrontDistributionId", {
+    //  value: distribution.distributionId || "",
+    //});
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
@@ -301,8 +498,8 @@ export class HassuFrontendStack extends Stack {
     return [{ responseHttpStatus: 404, ttl: Duration.seconds(10), httpStatus: 404, responsePagePath: "/404" }];
   }
 
-  private configureNextJSAWSPermissions(nextJSLambdaEdge: NextJSLambdaEdge) {
-    nextJSLambdaEdge.edgeLambdaRole.addToPolicy(
+  private configureNextJSAWSPermissions(lambdaRole: Role) {
+    lambdaRole.addToPolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
         actions: ["logs:*", "xray:*", "ssm:GetParameter"],
@@ -310,13 +507,14 @@ export class HassuFrontendStack extends Stack {
       })
     );
 
-    nextJSLambdaEdge.edgeLambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
+    lambdaRole.grantPassRole(new ServicePrincipal("logger.cloudfront.amazonaws.com"));
 
-    this.props.internalBucket.grantReadWrite(nextJSLambdaEdge.edgeLambdaRole);
+    this.props.internalBucket.grantReadWrite(lambdaRole);
   }
 
   private static configureNextJSRequestHeaders(nextJSLambdaEdge: NextJSLambdaEdge) {
     // Enable forwarding the headers to the nextjs API lambda to get the authorization header
+    // eslint-disable-next-line
     const additionalBehaviors = (nextJSLambdaEdge.distribution as any).additionalBehaviors;
     for (const additionalBehavior of additionalBehaviors) {
       if (additionalBehavior.props.pathPattern == "api/*") {
@@ -346,6 +544,38 @@ export class HassuFrontendStack extends Stack {
         role,
       });
     }
+  }
+
+  private createFrontendRequestFunctionV2(
+    env: string,
+    basicAuthenticationUsername: string,
+    basicAuthenticationPassword: string,
+    role: Role
+  ): EdgeFunction {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestV2.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      BASIC_USERNAME: basicAuthenticationUsername,
+      BASIC_PASSWORD: basicAuthenticationPassword,
+      PREFIX: BaseConfig.frontendPrefix,
+    });
+    return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunctionV2", {
+      runtime: Runtime.NODEJS_22_X,
+      functionName: "frontendRequestFunctionV2" + env,
+      code: Code.fromInline(functionCode),
+      handler: "index.handler",
+      role,
+    });
+  }
+
+  private createFrontendRequestFunctionProd(env: string): cloudfront.Function {
+    const sourceCode = fs.readFileSync(`${__dirname}/lambda/frontendRequestProd.js`).toString("utf-8");
+    const functionCode = Fn.sub(sourceCode, {
+      PREFIX: BaseConfig.frontendPrefix,
+    });
+    return new cloudfront.Function(this, "frontendRequestFunctionProd", {
+      functionName: "frontendRequestFunctionprod",
+      code: cloudfront.FunctionCode.fromInline(functionCode),
+    });
   }
 
   private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
@@ -413,7 +643,7 @@ export class HassuFrontendStack extends Stack {
       originAccessIdentity
     );
     const props: Record<string, BehaviorOptions> = {
-      "/oauth2/*": dmzProxyBehaviorWithLambda,
+      "/oauth2/*": dmzProxyBehavior,
       "/jwtclaims": dmzProxyBehaviorWithLambda,
       "/graphql": publicGraphqlBehavior,
       "/huoltokatko/*": publicBucketBehaviour,
@@ -442,11 +672,16 @@ export class HassuFrontendStack extends Stack {
     return props;
   }
 
-  private static createDmzProxyBehavior(dmzProxyEndpoint: string, frontendRequestFunction?: cloudfront.experimental.EdgeFunction) {
+  private static createDmzProxyBehavior(
+    dmzProxyEndpoint: string,
+    frontendDomainName: string,
+    frontendRequestFunction?: cloudfront.experimental.EdgeFunction
+  ) {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
@@ -462,6 +697,7 @@ export class HassuFrontendStack extends Stack {
 
   private createPublicGraphqlDmzProxyBehavior(
     dmzProxyEndpoint: string,
+    frontendDomainName: string,
     env: string,
     role: Role,
     frontendRequestFunction?: cloudfront.experimental.EdgeFunction
@@ -477,6 +713,7 @@ export class HassuFrontendStack extends Stack {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
         originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
       originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
@@ -625,5 +862,266 @@ export class HassuFrontendStack extends Stack {
     }
 
     return { keyGroups, originAccessIdentity, originAccessIdentityReportBucket };
+  }
+}
+
+const CORE_REGION = "eu-west-1";
+
+export const frontendCoreStackName = "hassu-frontend-core-" + Config.env;
+
+export class HassuFrontendCoreStack extends Stack {
+  private props: HassuFrontendStackProps;
+
+  constructor(scope: Construct, props: HassuFrontendStackProps) {
+    super(scope, "frontend-core", {
+      stackName: frontendCoreStackName,
+      terminationProtection: Config.getEnvConfig().terminationProtection,
+      env: {
+        account: props.awsAccountId,
+        region: CORE_REGION,
+      },
+      tags: Config.tags,
+    });
+    this.props = props;
+  }
+
+  public async process(): Promise<void> {
+    if (Config.isHotswap) {
+      return;
+    }
+
+    const env = Config.env;
+    const config = await Config.instance(this);
+
+    const { EventSqsUrl, HyvaksymisEsitysSqsUrl, AppSyncAPIKey } = await readBackendStackOutputs();
+    const accountStackOutputs = await readAccountStackOutputs();
+    const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
+
+    // Sama ALB käytössä muualla kuin prodissa, joten ne priorisoidaan keskenään
+    const listenerPriorityMap: { [key: string]: number } = {
+      prod: 20,
+      training: 20,
+      test: 30,
+      dev: 40,
+      developer: 50,
+    };
+
+    // VPC
+    const vpc = await this.getVpc(config);
+
+    // import ALB Listener. ALB Defined in hassu-suomifi repo
+    const listener = ApplicationListener.fromLookup(this, "ExistingListener", {
+      listenerArn: await config.getParameterNow(`/${Config.infraEnvironment}/ALBListenerArn`),
+    });
+
+    const securityGroup = new SecurityGroup(this, "NextjsSG", {
+      vpc,
+      description: "Security group for Next.js",
+      allowAllOutbound: true,
+    });
+
+    // Parameters
+    // apinoitu next.config.js
+    let version = process.env.CODEBUILD_SOURCE_VERSION || "";
+    try {
+      let buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
+      if (buffer) {
+        version = buffer.toString("utf8");
+      }
+    } catch (e) {
+      // Ignore
+    }
+
+    // Runtime env & secrets
+    const containerEnv: { [key: string]: string } = {
+      NEXT_PUBLIC_VERSION: version,
+      NEXT_PUBLIC_ENVIRONMENT: Config.env,
+      NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL || "", // asetetaan deployment/lib/hassu-pipelines.ts
+      NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL || "", // sama kuin ^^
+      NEXT_PUBLIC_AJANSIIRTO_SALLITTU: ssmParameters.AjansiirtoSallittu,
+      NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
+      NEXT_PUBLIC_REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
+      NEXT_PUBLIC_FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
+      NEXT_PUBLIC_KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
+      INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
+      ENVIRONMENT: Config.env,
+      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
+      TABLE_PROJEKTI: Config.projektiTableName,
+      TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
+      INTERNAL_BUCKET_NAME: Config.internalBucketName,
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      VELHO_API_URL: ssmParameters.VelhoApiUrl,
+      VELHO_AUTH_URL: ssmParameters.VelhoAuthenticationUrl,
+      EVENT_SQS_URL: EventSqsUrl,
+      HYVAKSYMISESITYS_SQS_URL: HyvaksymisEsitysSqsUrl,
+      SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
+    };
+
+    if (Config.env !== "prod") {
+      containerEnv.PUBLIC_BUCKET_NAME = Config.publicBucketName;
+      containerEnv.YLLAPITO_BUCKET_NAME = Config.internalBucketName;
+    }
+
+    // Secrets
+    const velhoUsername = ssm.StringParameter.fromSecureStringParameterAttributes(this, "VelhoUsername", {
+      parameterName: `/${Config.infraEnvironment}/VelhoUsername`,
+    });
+
+    const velhoPassword = ssm.StringParameter.fromSecureStringParameterAttributes(this, "VelhoPassword", {
+      parameterName: `/${Config.infraEnvironment}/VelhoPassword`,
+    });
+
+    const containerSecrets: { [key: string]: Secret } = {
+      VELHO_USERNAME: Secret.fromSsmParameter(velhoUsername),
+      VELHO_PASSWORD: Secret.fromSsmParameter(velhoPassword),
+    };
+
+    // ECS + Fargate
+    const cluster = new Cluster(this, "ECSCluster", {
+      vpc,
+      clusterName: "NextjsCluster-" + Config.env,
+    });
+
+    const logGroup = new logs.LogGroup(this, "EcsLogGroup", {
+      logGroupName: `ecs/nextjs-${Config.env}`,
+      retention: logs.RetentionDays.SIX_MONTHS, // TODO tähän oikea politiikka
+    });
+
+    const repository = Repository.fromRepositoryName(this, "NextjsRepo", Config.nextjsImageRepositoryName);
+
+    const taskDefinition = new FargateTaskDefinition(this, "TaskDefinition", {
+      family: "NextJsTaskDef-" + Config.env,
+      // TODO seuraa onko tämä riittävä vai pitääkö tuunata suuntaan tai toiseen
+      memoryLimitMiB: 2048,
+      cpu: 1024,
+      runtimePlatform: {
+        operatingSystemFamily: OperatingSystemFamily.LINUX,
+        cpuArchitecture: CpuArchitecture.X86_64,
+      },
+    });
+
+    const containerName = "NextJsContainer-" + Config.env;
+    const containerPort = 3000;
+
+    taskDefinition.addContainer("NextJsContainer", {
+      image: ContainerImage.fromEcrRepository(repository, this.props.nextJsImageTag),
+      containerName: containerName,
+      portMappings: [{ containerPort: containerPort }],
+      logging: LogDrivers.awsLogs({
+        streamPrefix: "NextJsContainer",
+        logGroup: logGroup,
+      }),
+      environment: containerEnv,
+      secrets: containerSecrets,
+    });
+
+    taskDefinition.addToTaskRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["logs:*", "xray:*", "ssm:GetParameter"],
+        resources: ["*"],
+      })
+    );
+
+    const fargateService = new FargateService(this, "nextJsAppFargateService", {
+      cluster,
+      serviceName: "nextjs-service-" + Config.env,
+      taskDefinition: taskDefinition,
+      desiredCount: 1,
+      minHealthyPercent: 50,
+      maxHealthyPercent: 200,
+      healthCheckGracePeriod: Duration.seconds(180),
+      circuitBreaker: {
+        rollback: true,
+      },
+      securityGroups: [securityGroup],
+    });
+
+    const targetGroup = new ApplicationTargetGroup(this, "NextjsTG", {
+      targetGroupName: "NextJsTG" + Config.env,
+      vpc,
+      port: containerPort,
+      protocol: ApplicationProtocol.HTTP,
+      targets: [
+        fargateService.loadBalancerTarget({
+          containerName: containerName,
+          containerPort: containerPort,
+        }),
+      ],
+      healthCheck: {
+        enabled: true,
+        path: "/api/health",
+        healthyThresholdCount: 3,
+        protocol: Protocol.HTTP,
+        port: containerPort.toString(),
+      },
+    });
+
+    // Lisätään "perus" autoskaalausta. Seurataan pitääkö tunkata suuntaan tai toiseen
+    const scalableTarget = fargateService.autoScaleTaskCount({
+      minCapacity: 1,
+      maxCapacity: 3,
+    });
+
+    scalableTarget.scaleOnCpuUtilization("CPUScaling", {
+      targetUtilizationPercent: 75,
+      scaleOutCooldown: Duration.seconds(300), // Verbose default
+      scaleInCooldown: Duration.seconds(300), // Verbose default
+    });
+
+    scalableTarget.scaleOnMemoryUtilization("MemoryScaling", {
+      targetUtilizationPercent: 75,
+      scaleOutCooldown: Duration.seconds(300), // Verbose default
+      scaleInCooldown: Duration.seconds(300), // Verbose default
+    });
+
+    // ALB reitityssäännöt
+    const pathPatterns = ["/_next*", "/api*", "/assets*", "/frontend*", "/robots.txt"];
+    const headerValues = [config.frontendDomainName];
+    // ALB sallii vain 5 sääntöä per rule
+    const maxConditionValues = 5;
+
+    const maxPathsPerRule = maxConditionValues - headerValues.length;
+
+    if (maxPathsPerRule <= 0) {
+      throw new Error(`ALB sääntöjen luontia tarvitsee muuttaa!!`);
+    }
+
+    const chunks: string[][] = [];
+    for (let i = 0; i < pathPatterns.length; i += maxPathsPerRule) {
+      chunks.push(pathPatterns.slice(i, i + maxPathsPerRule));
+    }
+
+    chunks.forEach((chunk, index) => {
+      listener.addTargetGroups(`NextjsRule${index}`, {
+        priority: listenerPriorityMap[Config.isPermanentEnvironment() ? Config.env : "developer"] + index,
+        conditions: [ListenerCondition.pathPatterns(chunk), ListenerCondition.httpHeader("X-Forwarded-Host", headerValues)],
+        targetGroups: [targetGroup],
+      });
+    });
+
+    const searchDomain = await getOpenSearchDomain(this, accountStackOutputs);
+    searchDomain.grantIndexReadWrite("projekti-" + Config.env + "-*", taskDefinition.taskRole);
+    // Logic not needed as long as we run only in dev but keep it here as reminder when expanding to elsewhere
+    const environmentsBlacklistedFromTimeShift = ["prod", "training"];
+    const isEnvironmentBlacklistedFromTimeShift = environmentsBlacklistedFromTimeShift.includes(env);
+    if (!isEnvironmentBlacklistedFromTimeShift) {
+      this.props.projektiTable.grantReadWriteData(taskDefinition.taskRole);
+      this.props.eventQueue.grantSendMessages(taskDefinition.taskRole);
+      // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+      this.props.asianhallintaQueue.grantSendMessages(taskDefinition.taskRole);
+      this.props.yllapitoBucket.grantReadWrite(taskDefinition.taskRole);
+      this.props.publicBucket.grantReadWrite(taskDefinition.taskRole);
+    }
+    this.props.lyhytOsoiteTable.grantReadData(taskDefinition.taskRole);
+    this.props.internalBucket.grantReadWrite(taskDefinition.taskRole); // granted to lambda in this.configureNextJSAWSPermissions(nextJSLambdaEdge.edgeLambdaRole);
+  }
+
+  private async getVpc(config: Config): Promise<IVpc> {
+    const vpcName = await config.getParameterNow("HassuVpcName");
+    assert(vpcName, "HassuVpcName SSM-parametri pitää olla olemassa");
+    const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
+    return vpc;
   }
 }

@@ -142,7 +142,7 @@ const Perustiedot: FunctionComponent<{
   return (
     <Section>
       <KeyValueTable rows={keyValueData} kansalaisnakyma />
-      <LiittyvatSuunnitelmat liittyvatSuunnitelma={vuorovaikutusKierros.suunnitelmaJaettu?.liittyvatSuunnitelma} />
+      <LiittyvatSuunnitelmat suunnitelmaJaettu={vuorovaikutusKierros.suunnitelmaJaettu} />
       <ContentSpacer>
         <H3 variant="h4">{t(`suunnittelu:perustiedot.suunnitteluhankkeen_kuvaus`)}</H3>
         <PreWrapParagraph>{vuorovaikutusKierros.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
@@ -232,7 +232,6 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <ContentSpacer>
           <H4>{t("tilaisuudet.tulevat_tilaisuudet")}</H4>
           <TilaisuusLista tilaisuudet={tulevatTilaisuudet} />
-          <p>{isStatusGreaterOrEqualTo(projekti.status, Status.NAHTAVILLAOLO) ? null : t("tilaisuudet.kaikki_vastaanotetut")}</p>
         </ContentSpacer>
       )}
       {!!menneetTilaisuudet?.length && (
@@ -317,14 +316,36 @@ const VuorovaikutusTiedot: FunctionComponent<{
           {!!vuorovaikutus?.yhteystiedot?.length && (
             <ContentSpacer>
               <H4>{t("common:yhteystiedot")}</H4>
-              <p>
-                {t("common:lisatietoja_antavat", {
-                  count: vuorovaikutus.yhteystiedot.length,
-                })}
-              </p>
-              {vuorovaikutus.yhteystiedot.map((yhteystieto, index) => (
-                <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
-              ))}
+              {(() => {
+                const uniikitYhteystiedot = vuorovaikutus.yhteystiedot.reduce<Array<(typeof vuorovaikutus.yhteystiedot)[0]>>(
+                  (uniikitTiedot, nykyinenYhteystieto) => {
+                    if (!nykyinenYhteystieto.puhelinnumero) {
+                      return [...uniikitTiedot, nykyinenYhteystieto];
+                    }
+                    const onkoJoListassa = uniikitTiedot.some(
+                      (yhteystieto) => yhteystieto.puhelinnumero === nykyinenYhteystieto.puhelinnumero
+                    );
+                    if (onkoJoListassa) {
+                      return uniikitTiedot;
+                    }
+                    return [...uniikitTiedot, nykyinenYhteystieto];
+                  },
+                  []
+                );
+
+                return (
+                  <>
+                    <p>
+                      {t("common:lisatietoja_antavat", {
+                        count: uniikitYhteystiedot.length,
+                      })}
+                    </p>
+                    {uniikitYhteystiedot.map((yhteystieto, index) => (
+                      <Yhteystietokortti key={index} yhteystieto={yhteystieto} />
+                    ))}
+                  </>
+                );
+              })()}
             </ContentSpacer>
           )}
           <ContentSpacer>

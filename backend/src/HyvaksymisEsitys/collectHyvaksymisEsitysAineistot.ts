@@ -63,6 +63,9 @@ export default function collectHyvaksymisEsitysAineistot(
   aineistoHandledAt?: string | null
 ): ProjektinAineistot {
   let path: string;
+
+  const isEnnakkoneuvottelu = "lahetetty" in hyvaksymisEsitys;
+
   if ("lahetetty" in hyvaksymisEsitys) {
     path = joinPath(getYllapitoPathForProjekti(projekti.oid), ENNAKKONEUVOTTELU_JULKAISU_PATH);
   } else {
@@ -88,9 +91,18 @@ export default function collectHyvaksymisEsitysAineistot(
     tuotu: tiedosto.lisatty,
     valmis: true,
   }));
-
   const kuulutuksetJaKutsutProjektista = getKutsut(projekti, status);
-  const kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+  let kuulutuksetJaKutsu: FileInfo[] = kuulutuksetJaKutsutProjektista.concat(kuulutuksetJaKutsutOmaltaKoneelta);
+
+  if (
+    isEnnakkoneuvottelu &&
+    Array.isArray(hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu) &&
+    hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu.length > 0
+  ) {
+    const poisvalitut = hyvaksymisEsitys.poisValitutKuulutuksetJaKutsu;
+
+    kuulutuksetJaKutsu = kuulutuksetJaKutsu.filter((tiedosto) => !tiedosto?.s3Key || !poisvalitut.includes(tiedosto.s3Key));
+  }
 
   const muuAineistoOmaltaKoneelta = (hyvaksymisEsitys?.muuAineistoKoneelta ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "muuAineistoKoneelta", adaptFileName(tiedosto.nimi)),
@@ -145,7 +157,20 @@ export default function collectHyvaksymisEsitysAineistot(
     tuotu: tiedosto.lisatty,
     valmis: true,
   }));
-  const maanomistajaluettelo = maanomistajaluetteloProjektista.concat(maanomistajaluetteloOmaltaKoneelta);
+  let maanomistajaluettelo = maanomistajaluetteloProjektista.concat(maanomistajaluetteloOmaltaKoneelta);
+
+  if (
+    isEnnakkoneuvottelu &&
+    Array.isArray(hyvaksymisEsitys.poisValitutMaanomistajaluettelot) &&
+    hyvaksymisEsitys.poisValitutMaanomistajaluettelot.length > 0
+  ) {
+    const poisValitutMaanomistajaluettelot = hyvaksymisEsitys.poisValitutMaanomistajaluettelot;
+
+    maanomistajaluettelo = maanomistajaluettelo.filter(
+      (tiedosto) => !tiedosto?.s3Key || !poisValitutMaanomistajaluettelot.includes(tiedosto.s3Key)
+    );
+  }
+
   const lausunnot = (hyvaksymisEsitys?.lausunnot ?? []).map((tiedosto) => ({
     s3Key: joinPath(path, "lausunnot", adaptFileName(tiedosto.nimi)),
     zipFolder: "Vuorovaikutusaineisto (D\u29F8400)/Lausunnot",

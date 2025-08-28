@@ -34,6 +34,7 @@ exports.handler = (event, context, callback) => {
       request.uri.startsWith("/etusivu") ||
       request.uri.startsWith("/oauth2") ||
       request.uri.startsWith("/fonts") ||
+      request.uri.startsWith("/assets") ||
       request.uri === "/favicon.ico"
     ) {
       // Etusivu ennen palvelun avaamista yleisölle on suojaamaton.
