@@ -1,6 +1,6 @@
 FROM public.ecr.aws/lambda/nodejs:20 AS nodesource
 
-FROM public.ecr.aws/amazoncorretto/amazoncorretto:11-al2023
+FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023
 ENV PATH="$PATH:/var/lang/bin"
 COPY --from=nodesource /var/lang /var/lang
 
@@ -10,7 +10,7 @@ RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 
 # Swap full curl, install packages, setuptools
 RUN dnf swap -y curl-minimal curl && \
-    dnf install -y tar gzip python3 python3-pip python3-setuptools git unzip jq && \
+    dnf install -y tar gzip python3 python3-pip python3-setuptools git unzip jq findutils procps && \
     pip3 install docker-compose && \
     pip3 install --upgrade urllib3==1.26.15
 
