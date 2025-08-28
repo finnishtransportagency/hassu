@@ -51,9 +51,9 @@ const ProjektiSideNavigation = styled((props) => {
 
   const getTilaajaLogoImg = () => {
     if (SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO === viranomainen) {
-      return { src: "/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
+      return { src: "/assets/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
     } else {
-      return { src: "/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
+      return { src: "/assets/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
     }
   };
 

@@ -33,7 +33,9 @@ phases:
       - npm run export-under-maintenance
       - npm run maintenancemode set
       - npm run deploy:backend
+      - npm run build:next-image -- --tag "$CODEBUILD_RESOLVED_SOURCE_VERSION"
       - npm run deploy:frontend
+      - npm run invalidate:frontendcache
       - npm run deploy:monitoring
       - npm run deploy:stackpolicies
       - npm run release

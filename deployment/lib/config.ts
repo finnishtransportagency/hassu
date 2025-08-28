@@ -112,6 +112,7 @@ export class Config extends BaseConfig {
   public static readonly isHotswap = process.env.HASSU_HOTSWAP == "true";
   public static buildImageRepositoryName = "hassu-build-image";
   public static asianhallintaLambdaName = "hassu-asianhallinta-" + Config.env;
+  public static nextjsImageRepositoryName = "hassu-nextjs";
 
   private constructor(scope: Construct) {
     super();
@@ -174,7 +175,7 @@ export class Config extends BaseConfig {
     if (Config.isLocalStack()) {
       return "dummy";
     }
-    const name = `/${params.infraEnvironment}/` + params.parameterName;
+    const name = params.infraEnvironment ? `/${params.infraEnvironment}/` + params.parameterName : `/${params.parameterName}`;
     return this.getParameterFromSSMNow(regionalSsm, name);
   }
 

@@ -35,6 +35,13 @@ const lyhytOsoiteRedirects = [
   },
 ];
 
+const urlRewrites = [
+  {
+    source: `${BaseConfig.frontendPrefix}/:path*`,
+    destination: "/:path*",
+  },
+];
+
 function setupLocalDevelopmentMode(config, env) {
   process.env.AWS_SDK_LOAD_CONFIG = "true";
   env.AWS_REGION = "eu-west-1";
@@ -46,6 +53,9 @@ function setupLocalDevelopmentMode(config, env) {
   env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
   env.NEXT_PUBLIC_VERSION = process.env.VERSION;
   env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
+  env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
+  env.NEXT_PUBLIC_KEYCLOAK_DOMAIN = process.env.KEYCLOAK_DOMAIN;
+  env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID;
 
   /**
    * @type {import("next").NextConfig}
@@ -55,6 +65,7 @@ function setupLocalDevelopmentMode(config, env) {
     env,
     async rewrites() {
       return [
+        ...urlRewrites,
         {
           source: "/yllapito/tiedostot/:path*",
           destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/tiedostot/:path*",
@@ -114,15 +125,8 @@ module.exports = (phase) => {
     reactStrictMode: true,
     // trailingSlash: true,
 
-    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are only available in non-prod environments
-    pageExtensions: ["ts", "tsx", "js", "jsx"]
-      .map((extension) => {
-        const isDevServer = BaseConfig.env !== "prod";
-        const prodExtension = `(?<!dev\.)${extension}`;
-        const devExtension = `dev\.${extension}`;
-        return isDevServer ? [devExtension, extension] : prodExtension;
-      })
-      .flat(),
+    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are always bundled but 404 is shown in prod
+    pageExtensions: ["ts", "tsx", "js", "jsx"].map((ext) => [`dev.${ext}`, ext]).flat(),
     output: "standalone",
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
@@ -132,6 +136,9 @@ module.exports = (phase) => {
     // actual env variables are provided runtime
     config.redirects = async () => {
       return lyhytOsoiteRedirects;
+    };
+    config.rewrites = async () => {
+      return urlRewrites;
     };
   }
   return nextTranslate(config);
