@@ -129,3 +129,10 @@ const testCommandExecutor = (api: API) => async (_query: string, routerQuery: Pa
   }
   return { result, action: executor._action };
 };
+
+export async function getServerSideProps() {
+  if (process.env.ENVIRONMENT === "prod") {
+    return { notFound: true };
+  }
+  return { props: {} };
+}
