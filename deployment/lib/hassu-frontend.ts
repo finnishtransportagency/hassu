@@ -25,6 +25,7 @@ import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
+import * as path from "path";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
 import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
@@ -347,6 +348,7 @@ export class HassuFrontendStack extends Stack {
         imageLambda: `${id}Image`,
       },
       behaviours,
+      ...(env !== "dev" ? { domain } : {}),
       defaultBehavior: {
         edgeLambdas,
       },
@@ -431,8 +433,8 @@ export class HassuFrontendStack extends Stack {
         },
         ...behaviours,
       },
-      domainNames: domain?.domainNames,
-      certificate: domain?.certificate,
+      domainNames: env === "dev" ? domain?.domainNames : undefined,
+      certificate: env === "dev" ? domain?.certificate : undefined,
       priceClass: PriceClass.PRICE_CLASS_100,
       logBucket,
       webAclId,
@@ -922,7 +924,7 @@ export class HassuFrontendCoreStack extends Stack {
     // apinoitu next.config.js
     let version = process.env.CODEBUILD_SOURCE_VERSION || "";
     try {
-      let buffer = fs.readFileSync(__dirname + "/.version");
+      let buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
       if (buffer) {
         version = buffer.toString("utf8");
       }
@@ -986,7 +988,7 @@ export class HassuFrontendCoreStack extends Stack {
       retention: logs.RetentionDays.SIX_MONTHS, // TODO tähän oikea politiikka
     });
 
-    const repository = Repository.fromRepositoryName(this, "NextjsRepo", "hassu-nextjs");
+    const repository = Repository.fromRepositoryName(this, "NextjsRepo", Config.nextjsImageRepositoryName);
 
     const taskDefinition = new FargateTaskDefinition(this, "TaskDefinition", {
       family: "NextJsTaskDef-" + Config.env,
