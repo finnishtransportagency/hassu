@@ -20,3 +20,10 @@ export default function Arkistoi(): ReactElement {
   });
   return <p id="result">{data ?? "Arkistointi menossa..."}</p>;
 }
+
+export async function getServerSideProps() {
+  if (process.env.ENVIRONMENT === "prod") {
+    return { notFound: true };
+  }
+  return { props: {} };
+}

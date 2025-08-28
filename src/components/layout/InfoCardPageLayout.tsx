@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { styled } from "@mui/material";
 
 const Background = styled("div")(({ theme }) => ({
-  backgroundImage: "url(/huoltokatko/rata_ja_tie_background.jpeg)",
+  backgroundImage: "url(/huoltokatko/assets/rata_ja_tie_background.jpeg)",
   position: "relative",
   "::after": {
     content: "''",
