@@ -660,6 +660,5 @@ input TiedoteInput {
   tiedoteTyyppi: String!
   voimassaAlkaen: String!
   voimassaPaattyen: String
-  status: String!
   muokattu: String!
 }

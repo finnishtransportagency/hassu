@@ -23,6 +23,8 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import { Tiedote } from "common/graphql/apiModel";
 import dayjs from "dayjs";
 import TiedoteDatePicker from "./TiedoteDatePicker";
+import { nyt } from "backend/src/util/dateUtil";
+import { getDynaaminenStatus } from "./TiedoteLista";
 
 type Props = {
   open: boolean;
@@ -45,7 +47,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
     tiedoteTyyppi: "",
     voimassaAlkaen: "",
     voimassaPaattyen: "",
-    status: "",
+    status: getDynaaminenStatus,
     muokattu: "",
   });
 
@@ -103,7 +105,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
 
   useEffect(() => {
     if (editTiedote) {
-      const today = dayjs();
+      const today = nyt();
       setFormData({
         aktiivinen: editTiedote.aktiivinen || false,
         otsikko: editTiedote.otsikko || "",
@@ -112,14 +114,16 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
         tiedoteSV: editTiedote.tiedoteSV || "",
         tiedoteTyyppi: editTiedote.tiedoteTyyppi || "",
         voimassaAlkaen: editTiedote.voimassaAlkaen
-          ? dayjs(editTiedote.voimassaAlkaen).format("YYYY-MM-DDTHH:mm")
+          ? dayjs(editTiedote.voimassaAlkaen).tz("Europe/Helsinki").format("YYYY-MM-DDTHH:mm")
           : today.format("YYYY-MM-DD") + "T00:00",
-        voimassaPaattyen: editTiedote.voimassaPaattyen ? dayjs(editTiedote.voimassaPaattyen).format("YYYY-MM-DDTHH:mm") : "",
-        status: editTiedote.status || "",
+        voimassaPaattyen: editTiedote.voimassaPaattyen
+          ? dayjs(editTiedote.voimassaPaattyen).tz("Europe/Helsinki").format("YYYY-MM-DDTHH:mm")
+          : "",
         muokattu: editTiedote.muokattu || "",
+        status: getDynaaminenStatus,
       });
     } else {
-      const today = dayjs();
+      const today = nyt();
       setFormData({
         aktiivinen: false,
         otsikko: "",
@@ -129,8 +133,8 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
         tiedoteTyyppi: "info",
         voimassaAlkaen: today.format("YYYY-MM-DD") + "T00:00",
         voimassaPaattyen: "",
-        status: "",
         muokattu: "",
+        status: getDynaaminenStatus,
       });
     }
   }, [editTiedote]);
@@ -169,15 +173,15 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
       setPaallekkaisetTiedotteet(null);
       return;
     }
-    const alkaaDate = dayjs(formData.voimassaAlkaen);
-    const paattyyDate = formData.voimassaPaattyen ? dayjs(formData.voimassaPaattyen) : null;
+    const alkaaDate = dayjs(formData.voimassaAlkaen).tz("Europe/Helsinki");
+    const paattyyDate = formData.voimassaPaattyen ? dayjs(formData.voimassaPaattyen).tz("Europe/Helsinki") : null;
 
     const paallekkainenTiedote = tiedotteet?.find((t) => {
       if (t.id === editTiedote?.id) return false;
 
-      if (t.status === "NAKYVILLA" || t.status === "AJASTETTU") {
-        const toinenAlkaa = dayjs(t.voimassaAlkaen);
-        const toinenPaattyy = t.voimassaPaattyen ? dayjs(t.voimassaPaattyen) : null;
+      if (getDynaaminenStatus(t) === "NAKYVILLA" || getDynaaminenStatus(t) === "AJASTETTU") {
+        const toinenAlkaa = dayjs(t.voimassaAlkaen).tz("Europe/Helsinki");
+        const toinenPaattyy = t.voimassaPaattyen ? dayjs(t.voimassaPaattyen).tz("Europe/Helsinki") : null;
 
         return onkoPaallekkainenAjanjakso(alkaaDate, paattyyDate, toinenAlkaa, toinenPaattyy);
       }
@@ -186,14 +190,14 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
 
     if (paallekkainenTiedote) {
       let viesti = "";
-      const toinenAlkaa = dayjs(paallekkainenTiedote.voimassaAlkaen).format("DD.MM.YYYY");
+      const toinenAlkaa = dayjs(paallekkainenTiedote.voimassaAlkaen).tz("Europe/Helsinki").format("DD.MM.YYYY");
       const toinenPaattyy = paallekkainenTiedote.voimassaPaattyen
-        ? ` - ${dayjs(paallekkainenTiedote.voimassaPaattyen).format("DD.MM.YYYY")}`
+        ? ` - ${dayjs(paallekkainenTiedote.voimassaPaattyen).tz("Europe/Helsinki").format("DD.MM.YYYY")}`
         : " alkaen";
 
-      if (paallekkainenTiedote.status === "NAKYVILLA") {
+      if (getDynaaminenStatus(paallekkainenTiedote) === "NAKYVILLA") {
         viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo näkyvillä (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
-      } else if (paallekkainenTiedote.status === "AJASTETTU") {
+      } else if (getDynaaminenStatus(paallekkainenTiedote) === "AJASTETTU") {
         viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo ajastettu (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
       }
 
@@ -338,7 +342,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
             <Stack sx={{ marginBottom: 3 }}>
               <TextField
                 fullWidth
-                label="Tiedote järjestelmän ensisijaisella kielellä (suomi) *"
+                label="Tiedote suomeksi *"
                 variant="outlined"
                 size="small"
                 multiline
@@ -357,11 +361,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
             <Stack sx={{ marginBottom: 3 }}>
               <TextField
                 fullWidth
-                label={
-                  formData.kenelleNaytetaan.includes("Kansalainen")
-                    ? "Tiedote järjestelmän toissijaisella kielellä (ruotsi) *"
-                    : "Tiedote järjestelmän toissijaisella kielellä (ruotsi)"
-                }
+                label={formData.kenelleNaytetaan.includes("Kansalainen") ? "Tiedote ruotsiksi *" : "Tiedote ruotsiksi"}
                 variant="outlined"
                 size="small"
                 multiline
@@ -380,11 +380,17 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
             <Box sx={{ marginTop: 4, marginBottom: 3 }}>
               <Typography sx={{ marginBottom: 3 }}>Esikatselu</Typography>
 
-              <Notification sx={{ marginBottom: 5, whiteSpace: "pre-wrap" }} type={NotificationType.WARN}>
+              <Notification
+                sx={{ marginBottom: 5, whiteSpace: "pre-wrap" }}
+                type={formData.tiedoteTyyppi === "info" ? NotificationType.INFO_GRAY : NotificationType.WARN}
+              >
                 {formData.tiedoteFI || "Sisältö suomeksi"}
               </Notification>
 
-              <Notification sx={{ marginBottom: 5, whiteSpace: "pre-wrap" }} type={NotificationType.WARN}>
+              <Notification
+                sx={{ marginBottom: 5, whiteSpace: "pre-wrap" }}
+                type={formData.tiedoteTyyppi === "info" ? NotificationType.INFO_GRAY : NotificationType.WARN}
+              >
                 {formData.tiedoteSV || "Innehåll på svenska"}
               </Notification>
             </Box>

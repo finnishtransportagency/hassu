@@ -82,19 +82,6 @@ export default function Jarjestelmatiedotteet(): ReactElement {
   const mapTiedoteFormDataForApi = (formData: any): TiedoteInput => {
     const tiedoteId = formData.id || uuidv4();
 
-    const getStatus = () => {
-      if (!formData.aktiivinen) {
-        return "EI_NAKYVILLA";
-      }
-      const alkaaDate = new Date(formData.voimassaAlkaen || formData.julkaisupaiva);
-      const nyt = new Date();
-      if (alkaaDate > nyt) {
-        return "AJASTETTU";
-      } else {
-        return "NAKYVILLA";
-      }
-    };
-
     const result: TiedoteInput = {
       id: tiedoteId,
       aktiivinen: formData.aktiivinen !== undefined ? formData.aktiivinen : true,
@@ -105,7 +92,6 @@ export default function Jarjestelmatiedotteet(): ReactElement {
       tiedoteTyyppi: formData.tiedoteTyyppi || "INFO",
       voimassaAlkaen: formData.voimassaAlkaen || new Date().toISOString(),
       voimassaPaattyen: formData.voimassaPaattyen || null,
-      status: getStatus(),
       muokattu: new Date().toISOString(),
     };
 
@@ -173,6 +159,7 @@ export default function Jarjestelmatiedotteet(): ReactElement {
                 Kiinnitäthän huomiota tekstin selkeyteen. Voit kirjoittaa tekstin itse tai hyödyntää valmiita tekstipohjia (suomi ja ruotsi)
                 (linkki){" "}
               </li>
+              <li>Tiedotteita voi olla kerrallaan tallennettuna korkeintaan 10 kpl.</li>
               <li>Tiedotteen maksimipituus on 300 merkkiä. Tekstin voi jakaa eri riveille. </li>
               <li>Palvelun julkisella puolella julkaistavan häiriötiedotteen tulee aina olla sekä suomeksi että ruotsiksi. </li>
               <li>Näkyvillä olevan tiedotteen saa pois näkyviltä muuttamalla sen tilan ei aktiiviseksi.</li>
