@@ -4,6 +4,7 @@ class BaseConfig {
   static projektiTableName = "Projekti-" + process.env.ENVIRONMENT;
   static lyhytOsoiteTableName = "Lyhytosoite-" + process.env.ENVIRONMENT;
   static internalBucketName = `hassu-${process.env.ENVIRONMENT}-internal`;
+  static frontendPrefix = "/frontend";
 
   static isPermanentEnvironment() {
     return ["dev", "test", "training", "prod"].indexOf(BaseConfig.env) >= 0;

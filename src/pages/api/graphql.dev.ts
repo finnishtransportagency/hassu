@@ -4,6 +4,9 @@ import { HeaderBag } from "@aws-sdk/types";
 import { sendSignedRequest } from "../../../backend/src/aws/awsRequest";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (process.env.ENVIRONMENT === "prod") {
+    return res.status(404).setHeader("Content-Type", "text/plain; charset=UTF-8").send("Sivua ei löydy");
+  }
   let body = req.body;
   const urlObject = new URL(process.env["APPSYNC_URL"] || "");
   const isYllapito = req.query.yllapito == "true";
