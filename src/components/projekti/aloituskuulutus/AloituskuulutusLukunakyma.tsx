@@ -71,8 +71,6 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
 
       const valitutHenkilot = (osapuoli?.osapuolenHenkilot || []).filter((henkilo) => henkilo && henkilo.valittu === true);
 
-      console.log("Valitut henkilöt:", valitutHenkilot);
-
       const henkilotSisalto = [] as JSX.Element[];
 
       if (valitutHenkilot.length > 0) {
