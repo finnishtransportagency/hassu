@@ -125,15 +125,8 @@ module.exports = (phase) => {
     reactStrictMode: true,
     // trailingSlash: true,
 
-    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are only available in non-prod environments
-    pageExtensions: ["ts", "tsx", "js", "jsx"]
-      .map((extension) => {
-        const isDevServer = BaseConfig.env !== "prod";
-        const prodExtension = `(?<!dev\.)${extension}`;
-        const devExtension = `dev\.${extension}`;
-        return isDevServer ? [devExtension, extension] : prodExtension;
-      })
-      .flat(),
+    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are always bundled but 404 is shown in prod
+    pageExtensions: ["ts", "tsx", "js", "jsx"].map((ext) => [`dev.${ext}`, ext]).flat(),
     output: "standalone",
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
