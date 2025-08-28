@@ -49,7 +49,17 @@
     "UUDENMAAN_ELY": "Uudenmaan ELY-keskus",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskus",
     "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
-    "VAYLAVIRASTO": "Väylävirasto"
+    "VAYLAVIRASTO": "Väylävirasto",
+    "UUDENMAAN_EVK": "Uudenmaan elinvoimakeskus",
+    "LOUNAIS_SUOMEN_EVK": "Lounais-Suomen elinvoimakeskus",
+    "KAAKKOIS_SUOMEN_EVK": "Kaakkois-Suomen elinvoimakeskus",
+    "SISA_SUOMEN_EVK": "Sisä-Suomen elinvoimakeskus",
+    "KESKI_SUOMEN_EVK": "Keski-Suomen elinvoimakeskus",
+    "ITA_SUOMEN_EVK": "Itä-Suomen elinvoimakeskus",
+    "ETELA_POHJANMAAN_EVK": "Etelä-Pohjanmaan elinvoimakeskus",
+    "POHJANMAAN_EVK": "Pohjanmaan elinvoimakeskus",
+    "POHJOIS_SUOMEN_EVK": "Pohjois-Suomen elinvoimakeskus",
+    "LAPIN_EVK": "Lapin elinvoimakeskus"
   },
   "viranomaiselle": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskukselle",
@@ -68,7 +78,17 @@
     "UUDENMAAN_ELY": "Uudenmaan ELY-keskukselle",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen ELY-keskukselle",
     "AHVENANMAAN_ELY": "Ahvenanmaan maakunnalle",
-    "VAYLAVIRASTO": "Väylävirastolle"
+    "VAYLAVIRASTO": "Väylävirastolle",
+    "UUDENMAAN_EVK": "Uudenmaan elinvoimakeskukselle",
+    "LOUNAIS_SUOMEN_EVK": "Lounais-Suomen elinvoimakeskukselle",
+    "KAAKKOIS_SUOMEN_EVK": "Kaakkois-Suomen elinvoimakeskukselle",
+    "SISA_SUOMEN_EVK": "Sisä-Suomen elinvoimakeskukselle",
+    "KESKI_SUOMEN_EVK": "Keski-Suomen elinvoimakeskukselle",
+    "ITA_SUOMEN_EVK": "Itä-Suomen elinvoimakeskukselle",
+    "ETELA_POHJANMAAN_EVK": "Etelä-Pohjanmaan elinvoimakeskukselle",
+    "POHJANMAAN_EVK": "Pohjanmaan elinvoimakeskukselle",
+    "POHJOIS_SUOMEN_EVK": "Pohjois-Suomen elinvoimakeskukselle",
+    "LAPIN_EVK": "Lapin elinvoimakeskukselle"
   },
   "ely_alue_genetiivi": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan",
@@ -85,7 +105,17 @@
     "POHJOIS_SAVON_ELY": "Pohjois-Savon",
     "SATAKUNNAN_ELY": "Satakunnan",
     "UUDENMAAN_ELY": "Uudenmaan",
-    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen"
+    "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen",
+    "UUDENMAAN_EVK": "Uudenmaan",
+    "LOUNAIS_SUOMEN_EVK": "Lounais-Suomen",
+    "KAAKKOIS_SUOMEN_EVK": "Kaakkois-Suomen",
+    "SISA_SUOMEN_EVK": "Sisä-Suomen",
+    "KESKI_SUOMEN_EVK": "Keski-Suomen",
+    "ITA_SUOMEN_EVK": "Itä-Suomen",
+    "ETELA_POHJANMAAN_EVK": "Etelä-Pohjanmaan",
+    "POHJANMAAN_EVK": "Pohjanmaan",
+    "POHJOIS_SUOMEN_EVK": "Pohjois-Suomen",
+    "LAPIN_EVK": "Lapin"
   },
   "viranomainen_keskipitka": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus",
@@ -104,7 +134,17 @@
     "UUDENMAAN_ELY": "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus",
     "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
-    "VAYLAVIRASTO": "Väylävirasto"
+    "VAYLAVIRASTO": "Väylävirasto",
+    "UUDENMAAN_EVK": "Uudenmaan elinvoimakeskus",
+    "LOUNAIS_SUOMEN_EVK": "Lounais-Suomen elinvoimakeskus",
+    "KAAKKOIS_SUOMEN_EVK": "Kaakkois-Suomen elinvoimakeskus",
+    "SISA_SUOMEN_EVK": "Sisä-Suomen elinvoimakeskus",
+    "KESKI_SUOMEN_EVK": "Keski-Suomen elinvoimakeskus",
+    "ITA_SUOMEN_EVK": "Itä-Suomen elinvoimakeskus",
+    "ETELA_POHJANMAAN_EVK": "Etelä-Pohjanmaan elinvoimakeskus",
+    "POHJANMAAN_EVK": "Pohjanmaan elinvoimakeskus",
+    "POHJOIS_SUOMEN_EVK": "Pohjois-Suomen elinvoimakeskus",
+    "LAPIN_EVK": "Lapin elinvoimakeskus"
   },
   "viranomainen_pitka": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
@@ -123,7 +163,17 @@
     "UUDENMAAN_ELY": "Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "VARSINAIS_SUOMEN_ELY": "Varsinais-Suomen elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus)",
     "AHVENANMAAN_MAAKUNTA": "Ahvenanmaan maakunta",
-    "VAYLAVIRASTO": "Väylävirasto"
+    "VAYLAVIRASTO": "Väylävirasto",
+    "UUDENMAAN_EVK": "Uudenmaan elinvoimakeskus",
+    "LOUNAIS_SUOMEN_EVK": "Lounais-Suomen elinvoimakeskus",
+    "KAAKKOIS_SUOMEN_EVK": "Kaakkois-Suomen elinvoimakeskus",
+    "SISA_SUOMEN_EVK": "Sisä-Suomen elinvoimakeskus",
+    "KESKI_SUOMEN_EVK": "Keski-Suomen elinvoimakeskus",
+    "ITA_SUOMEN_EVK": "Itä-Suomen elinvoimakeskus",
+    "ETELA_POHJANMAAN_EVK": "Etelä-Pohjanmaan elinvoimakeskus",
+    "POHJANMAAN_EVK": "Pohjanmaan elinvoimakeskus",
+    "POHJOIS_SUOMEN_EVK": "Pohjois-Suomen elinvoimakeskus",
+    "LAPIN_EVK": "Lapin elinvoimakeskus"
   },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektipäällikkö"
