@@ -6,6 +6,7 @@ import { Container } from "@mui/material";
 import NotificationBar from "@components/notification/NotificationBar";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { useRouter } from "next/router";
+import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
 
 interface Props {
   children?: ReactNode;
@@ -38,6 +39,9 @@ export default function Layout({ children }: Props): ReactElement {
     <div className="min-h-screen relative flex flex-col">
       {process.env.NEXT_PUBLIC_ENVIRONMENT !== "prod" && <NotificationBar />}
       <Header />
+      <div style={{ width: "70%", margin: "10px auto 10px" }}>
+        <TiedoteNotification />
+      </div>
       <Breadcrumbs />
       <Container sx={{ marginBottom: "110px" }}>
         <main>{children}</main>
