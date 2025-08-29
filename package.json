@@ -30,7 +30,7 @@
     "@fortawesome/free-regular-svg-icons": "6.5.2",
     "@fortawesome/free-solid-svg-icons": "6.5.2",
     "@fortawesome/react-fontawesome": "0.2.2",
-    "@hassu/asianhallinta": "0.3.24",
+    "@hassu/asianhallinta": "0.3.27",
     "@hookform/error-message": "2.0.1",
     "@hookform/resolvers": "^2.9.11",
     "@mui/icons-material": "~5.10.6",
@@ -248,9 +248,10 @@
     "deploy:backend:hotswap": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap",
     "deploy:backend:hotswap-fallback": "cross-env HASSU_HOTSWAP=true ./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy backend --require-approval never --hotswap-fallback",
     "predeploy:frontend": "rimraf build .next",
-    "deploy:frontend": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend --debug --require-approval never",
+    "deploy:frontend": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" deploy frontend frontend-core --debug --require-approval never",
     "deploy:stackpolicies": "ts-node --project=deployment/tsconfig.json -r dotenv/config ./deployment/bin/setStackPolicies.ts",
     "postdeploy:frontend": "npm run setupenvironment",
+    "invalidate:frontendcache": "./deployment/bin/invalidateCloudfrontCache.sh",
     "deploy:account:dev": "cross-env AWS_PROFILE=hassudev ENVIRONMENT=dev ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-account\" deploy account --require-approval never",
     "diff:account:dev": "cross-env AWS_PROFILE=hassudev ENVIRONMENT=dev ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-account\" diff account --require-approval never",
     "diff:waf:dev": "cross-env AWS_PROFILE=hassudev ./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu-waf\" diff frontendwaf --require-approval never",
@@ -334,6 +335,6 @@
   },
   "engines": {
     "node": ">=18.17.0",
-    "npm": ">=9.6.7"
+    "npm": ">=10.8.2"
   }
 }

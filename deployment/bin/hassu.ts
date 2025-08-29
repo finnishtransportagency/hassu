@@ -2,7 +2,7 @@
 /* tslint:disable:no-console */
 import "source-map-support/register";
 import { HassuBackendStack } from "../lib/hassu-backend";
-import { HassuFrontendStack } from "../lib/hassu-frontend";
+import { HassuFrontendCoreStack, HassuFrontendStack } from "../lib/hassu-frontend";
 import { HassuDatabaseStack } from "../lib/hassu-database";
 import { App } from "aws-cdk-lib";
 import { Config } from "../lib/config";
@@ -62,6 +62,23 @@ async function main() {
       console.log("Deployment of HassuBackendStack failed:", e);
       process.exit(1);
     });
+    if (Config.isPermanentEnvironment()) {
+      const hassuFrontendCoreStack = new HassuFrontendCoreStack(app, {
+        awsAccountId,
+        internalBucket: hassuDatabaseStack.internalBucket,
+        yllapitoBucket: hassuDatabaseStack.yllapitoBucket,
+        publicBucket: hassuDatabaseStack.publicBucket,
+        projektiTable: hassuDatabaseStack.projektiTable,
+        lyhytOsoiteTable: hassuDatabaseStack.lyhytOsoiteTable,
+        eventQueue: hassuBackendStack.eventQueue,
+        asianhallintaQueue: hassuBackendStack.asianhallintaQueue,
+        nextJsImageTag,
+      });
+      await hassuFrontendCoreStack.process().catch((e) => {
+        console.log("Deployment of HassuFrontendCoreStack failed:", e);
+        process.exit(1);
+      });
+    }
     const hassuFrontendStack = new HassuFrontendStack(app, {
       awsAccountId,
       internalBucket: hassuDatabaseStack.internalBucket,

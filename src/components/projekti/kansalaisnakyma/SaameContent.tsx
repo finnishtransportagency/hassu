@@ -32,7 +32,7 @@ export default function SaameContent(props: SaameContentProps): ReactElement {
     return (
       <Notification type={NotificationType.INFO_GRAY} hideIcon aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
         <Grid>
-          <Img src="/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.75em" }} />
+          <Img src="/assets/saamen_lippu.svg" alt="Saamen lippu" sx={{ maxHeight: "1.75em" }} />
           <div>
             <h2 className="vayla-subtitle mb-4">{props.otsikko}</h2>
             <h3 className="vayla-smallest-title mb-0">{props.kielitiedot.projektinNimiVieraskielella}</h3>

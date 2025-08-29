@@ -92,7 +92,7 @@ export class HassuBackendStack extends Stack {
       LayerVersion.fromLayerVersionArn(
         this,
         "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:18"
       ),
     ];
   }
@@ -206,17 +206,6 @@ export class HassuBackendStack extends Stack {
     });
     new CfnOutput(this, "HyvaksymisEsitysSqsUrl", {
       value: hyvaksymisEsitysSQS.queueUrl ?? "",
-    });
-
-    // CDK ei tue secure string parametrien luontia suoraan
-    // esim. https://stackoverflow.com/questions/75607168/aws-cdk-how-to-encrypt-stringparameter-in-ssm-since-type-is-deprecated
-    // Next.js ECS task Tarvii näitä ajon aikana, jos luetaan parameter storesta, ei tallennu suoraan taskin määritelmään
-    // tosin CfnOutput on luettavissa suoraan..
-    // Developer tilillä api avainta ei ole -> ei voida antaa tyhjää, niin laitetaan dummy arvo
-    new ssm.StringParameter(this, "AppSyncAPIKeySSMParam", {
-      description: "Generated AppSyncAPIKey",
-      parameterName: "/" + Config.env + "/outputs/AppSyncAPIKey",
-      stringValue: api.apiKey ?? "developer-account-has-no-api-key",
     });
 
     if (Config.isDeveloperEnvironment()) {

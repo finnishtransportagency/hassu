@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const currenturl = new URL(req.headers.referer!);
-  const keycloakClientId = process.env.KEYCLOAK_CLIENT_ID!;
-  const redirect_uri = new URL(process.env.KEYCLOAK_DOMAIN!);
+  const keycloakClientId = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID!;
+  const redirect_uri = new URL(process.env.NEXT_PUBLIC_KEYCLOAK_DOMAIN!);
   redirect_uri.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/logout";
   redirect_uri.searchParams.set("client_id", keycloakClientId);
   redirect_uri.searchParams.set("post_logout_redirect_uri", currenturl.toString());

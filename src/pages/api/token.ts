@@ -26,8 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const code = req.query["code"] as string;
   const state = req.query["state"] as string;
   const redirect_uri = getRedirectUri();
-  const client_id = process.env.KEYCLOAK_CLIENT_ID!;
-  const userPoolUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
+  const client_id = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID!;
+  const userPoolUrl = new URL(process.env.NEXT_PUBLIC_KEYCLOAK_DOMAIN!);
   userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/token";
   const details: Record<string, string> = {
     grant_type: "authorization_code",
