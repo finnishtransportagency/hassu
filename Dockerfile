@@ -43,4 +43,4 @@ RUN cd /tools/velho && ./gradlew dependencies && \
     mkdir -p /packages/tools/velho/buildSrc && \
     mv /tools/velho/.gradle /packages/tools/velho/ && \
     mv /tools/velho/buildSrc/.gradle /packages/tools/velho/buildSrc/ && \
-    rm -rf /tools
+    rm -rf tools
