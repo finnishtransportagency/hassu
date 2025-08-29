@@ -9,7 +9,11 @@ RUN npm install -g npm@10.8.2
 RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 
 # Docker + Compose v2
-RUN dnf install -y docker containerd docker-compose-plugin
+RUN dnf install -y docker containerd
+RUN mkdir -p /usr/local/lib/docker/cli-plugins && \
+    curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-$(uname -m) \
+        -o /usr/local/lib/docker/cli-plugins/docker-compose && \
+    chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 # Swap full curl, install packages, setuptools
 RUN dnf swap -y curl-minimal curl && \
