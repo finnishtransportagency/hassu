@@ -318,7 +318,7 @@
       "kiinteistonomistaja_kappale7": "Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen. ({{lakiviite}}). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast {{kuulutusVaihePaattyyPaiva}}.",
       "kiinteistonomistaja_kappale7_vahainen_menettely": "Fastighetsägare och andra sakägare samt de vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att göra en anmärkning med anledning av planen ({{lakiviite_vahainen_menettely}}). Anmärkningen ska göras före utgången av den tid under vilken planen är framlagd, senast {{kuulutusVaihePaattyyPaiva}}.",
       "lahetetty_omistajille_tie_rata": "Detta tillkännagivande har skickats till alla ägare och innehavare av ({{lakiviite_omistajille}}): \n\n\t- de fastigheter från vilka det enligt planen ska inlösas område, \n\t- de fastigheter på vars område det bildas skydds- eller frisiktsområden, \n\t- de fastigheter till vars område det grundas någon annan rättighet eller \n\t- de fastigheter som gränsar till {{alueeseen}}.",
-      "lahetetty_omistajille_yleis": "Detta meddelande har skickats till alla ägare och innehavare av de fastigheter på vars område den planerade nya {{linjaus}} är belägen ({{lakiviite_omistajille}}).",
+      "lahetetty_omistajille_yleis": "Detta meddelande har skickats till alla de fastighetsägare och fastighetsinnehavare som enligt Lantmäteriverkets (LMV) fastighetsdatasystem äger en fastighet i planeringsområdet eller i dess närhet.",
       "linjaus_tie": "vägen",
       "linjaus_rata": "bansträckningen",
       "alueeseen_tie": "vägområdet",

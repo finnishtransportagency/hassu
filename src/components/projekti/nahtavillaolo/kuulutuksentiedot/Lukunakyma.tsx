@@ -53,13 +53,14 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
 
   return (
     <>
       <KuulutuksenSisalto alkupvm={kuulutusPaiva ?? ""} loppupvm={nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva ?? ""}>
-        {isAjansiirtoSallittu() && (
+        {ajansiirtoSallittu && (
           <div className="md:col-span-2 mb-0">
-            {isAjansiirtoSallittu() && (
+            {ajansiirtoSallittu && (
               <ButtonFlatWithIcon
                 icon="history"
                 onClick={() => {
