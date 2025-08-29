@@ -11,6 +11,8 @@ import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil"
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
 import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 import axios from "axios";
+import { DynaaminenVideoUpotus } from "./videoupotus/DynaaminenVideoUpotus";
+import { useRouter } from "next/router";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -56,6 +58,10 @@ const ProjektiSideNavigation = styled((props) => {
       return { src: "/assets/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
     }
   };
+
+  const router = useRouter();
+  const pathName = router.pathname;
+  const isVideoPage = pathName.includes("aloituskuulutus") || pathName.includes("suunnittelu") || pathName.includes("nahtavillaolo");
 
   return (
     <Section noDivider {...props}>
@@ -139,6 +145,7 @@ const ProjektiSideNavigation = styled((props) => {
           </>
         )}
       </SideCard>
+      <SideCard>{isVideoPage && <DynaaminenVideoUpotus projekti={projekti} />}</SideCard>
     </Section>
   );
 })<ComponentProps<typeof Section>>({});
