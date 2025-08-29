@@ -8,14 +8,12 @@ USER root
 RUN npm install -g npm@10.8.2
 RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 
-# Docker
-RUN dnf install -y docker containerd
+# Docker + Compose v2
+RUN dnf install -y docker containerd docker-compose-plugin
 
 # Swap full curl, install packages, setuptools
 RUN dnf swap -y curl-minimal curl && \
-    dnf install -y tar gzip python3 python3-pip python3-setuptools git unzip jq findutils procps && \
-    pip3 install docker-compose && \
-    pip3 install --upgrade urllib3==1.26.15
+    dnf install -y tar gzip python3 python3-pip python3-setuptools git unzip jq findutils procps
 
 # Install AWS CLI v2
 RUN if [ "$(uname -m)" == "x86_64" ]; then \
