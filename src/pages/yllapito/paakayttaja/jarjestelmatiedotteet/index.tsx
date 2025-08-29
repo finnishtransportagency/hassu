@@ -30,7 +30,7 @@ export default function Jarjestelmatiedotteet(): ReactElement {
 
   const handleLuoUusi = () => {
     if (tiedotteet.length >= 10) {
-      showErrorMessage("Maksimimäärä (10) tiedotteita on jo luotu. Poista ensin vanhoja tiedotteita tai muokkaa olemassaolevia.");
+      showErrorMessage("Maksimimäärä (10 kpl) tiedotteita on jo luotu. Poista vanhoja tiedotteita tai muokkaa olemassaolevia.");
       return;
     }
     setEditTiedote(null);
