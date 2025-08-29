@@ -8,6 +8,9 @@ USER root
 RUN npm install -g npm@10.8.2
 RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 
+# Docker
+RUN dnf install -y docker containerd
+
 # Swap full curl, install packages, setuptools
 RUN dnf swap -y curl-minimal curl && \
     dnf install -y tar gzip python3 python3-pip python3-setuptools git unzip jq findutils procps && \
