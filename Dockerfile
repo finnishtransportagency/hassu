@@ -15,11 +15,14 @@ RUN mkdir -p /usr/local/lib/docker/cli-plugins && \
         -o /usr/local/lib/docker/cli-plugins/docker-compose && \
     chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-# Swap full curl, install packages, setuptools
+# Vaihda täyteen curliin (syy: legacy), saattaa olla että minimal riittäisi..
+# asenna tarvittavat paketit
+# Tarvitaankohan python3 ja liittyviä paketteja missään? Docker compose v2 on Go binääri..
+# Jätetään legacy syystä toistaiseksi python
 RUN dnf swap -y curl-minimal curl && \
     dnf install -y tar gzip python3 python3-pip python3-setuptools git unzip jq findutils procps
 
-# Install AWS CLI v2
+# Asenna AWS CLI v2
 RUN if [ "$(uname -m)" == "x86_64" ]; then \
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
     else \
@@ -30,7 +33,7 @@ RUN if [ "$(uname -m)" == "x86_64" ]; then \
     rm -rf awscliv2.zip aws && \
     aws --version
 
-# Install Chrome (x86_64 only) + chrony
+# Asenna Chrome (x86_64 only) + chrony
 RUN if [ "$(uname -m)" == "x86_64" ]; then \
         dnf install -y xorg-x11-server-Xvfb wget ca-certificates xdg-utils openssl chrony && \
         systemctl enable chronyd || true && \
@@ -39,7 +42,6 @@ RUN if [ "$(uname -m)" == "x86_64" ]; then \
         rm google-chrome-stable_current_*.rpm ; \
     fi
 
-# Copy tools and setup Gradle cache
 COPY tools /tools
 RUN cd /tools/velho && ./gradlew dependencies && \
     mkdir -p /packages/tools/velho/buildSrc && \
