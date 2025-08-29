@@ -30,6 +30,7 @@ import {
   TuoKarttarajausJaTallennaKiinteistotunnuksetMutationVariables,
   HaeMuistuttajatQueryVariables,
   TallennaMuistuttajatMutationVariables,
+  TallennaTiedoteMutationVariables,
   LataaTiedotettavatExcelQueryVariables,
   HaeProjektinTiedottamistiedotQueryVariables,
   EsikatseleHyvaksymisEsityksenTiedostotQueryVariables,
@@ -95,6 +96,7 @@ import haeKayttoOikeudet from "../user/haeKayttoOikeudet";
 import { tallennaEnnakkoNeuvottelu } from "../ennakkoneuvottelu/tallenna";
 import { aktivoiProjektiJatkopaatettavaksi } from "../projekti/aktivoiProjektiJatkopaatettavaksi";
 import { jaaProjekti } from "../jaaProjekti";
+import { tiedoteHandler } from "../handler/tiedote/tiedoteHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -197,6 +199,10 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await muistutusHandler.haeMuistuttajat(event.arguments as HaeMuistuttajatQueryVariables);
     case apiConfig.tallennaMuistuttajat.name:
       return await muistutusHandler.tallennaMuistuttajat(event.arguments as TallennaMuistuttajatMutationVariables);
+    case apiConfig.listaaTiedotteet.name:
+      return await tiedoteHandler.listaaTiedotteet((event.arguments as { id?: string })?.id);
+    case apiConfig.tallennaTiedote.name:
+      return await tiedoteHandler.tallennaTiedote(event.arguments as TallennaTiedoteMutationVariables);
     case apiConfig.lataaTiedotettavatExcel.name:
       return await generateExcelByQuery(event.arguments as LataaTiedotettavatExcelQueryVariables);
     case apiConfig.haeProjektinTiedottamistiedot.name:
