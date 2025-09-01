@@ -123,8 +123,8 @@ module.exports = (phase) => {
     // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
     ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
 
-    KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
-    KEYCLOAK_DOMAIN: process.env.KEYCLOAK_DOMAIN,
+    NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
+    NEXT_PUBLIC_KEYCLOAK_DOMAIN: process.env.KEYCLOAK_DOMAIN,
   };
 
   if (BaseConfig.env !== "prod") {
@@ -181,6 +181,7 @@ module.exports = (phase) => {
     env.NEXT_PUBLIC_REACT_APP_API_KEY = process.env.REACT_APP_API_KEY;
     env.NEXT_PUBLIC_REACT_APP_API_URL = "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/graphql";
     env.FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
+    env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
     env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
 
     config.env = env;
