@@ -4,7 +4,7 @@
 
 # Use AWS public ECR (mirrored from Docker Hub) to avoid 429 limits
 # and benefit from improved performance
-FROM public.ecr.aws/docker/library/node:18-alpine AS base
+FROM public.ecr.aws/docker/library/node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
