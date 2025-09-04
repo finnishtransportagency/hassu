@@ -6,6 +6,8 @@ import { listClasses, Menu, MenuItem, styled } from "@mui/material";
 import router, { useRouter } from "next/router";
 import useEnterIsClick from "src/hooks/useEnterIsClick";
 import { Kieli } from "../../../../common/graphql/apiModel";
+import { userIsAdmin } from "common/util/userRights";
+import useCurrentUser from "src/hooks/useCurrentUser";
 export interface NavigationRoute {
   label: string;
   href: string;
@@ -32,6 +34,7 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
   const router = useRouter();
   const ref = useRef(null);
   useEnterIsClick("main-nav-dropdown-button");
+  const { data: kayttaja } = useCurrentUser();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -60,42 +63,46 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
   );
 
   return (
-    <div style={{ display: "inline-block" }} ref={ref}>
-      <a
-        id="main-nav-dropdown-button"
-        tabIndex={0}
-        className={`first-level-link${mobile ? " mobile" : ""}`}
-        onClick={
-          mobile
-            ? () => {
-                router.push(href);
-              }
-            : openMenu
-        }
-      >
-        {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
-        <span className={`underline-if-current-route${open ? " open" : " closed"}`}>
-          {label}
-          {mobile ? null : <FontAwesomeIcon className="ml-2 text-primary" icon="chevron-down" size="lg" />}
-        </span>
-      </a>
-      {collection && (
-        <HassuMenu
-          id="main-nav-dropdown-menu"
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          className={`${mobile ? " mobile" : ""}`}
-        >
-          {collection.map((route, key) => {
-            const isCurrentRoute = route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
-            return (
-              <DropdownItem onClick={handleClose} isCurrentRoute={isCurrentRoute} key={key} id={`item-in-dropdown-${key}`} {...route} />
-            );
-          })}
-        </HassuMenu>
+    <>
+      {(label !== "Pääkäyttäjätoiminnot" || userIsAdmin(kayttaja)) && (
+        <div style={{ display: "inline-block" }} ref={ref}>
+          <a
+            id="main-nav-dropdown-button"
+            tabIndex={0}
+            className={`first-level-link${mobile ? " mobile" : ""}`}
+            onClick={
+              mobile
+                ? () => {
+                    router.push(href);
+                  }
+                : openMenu
+            }
+          >
+            {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
+            <span className={`underline-if-current-route${open ? " open" : " closed"}`}>
+              {label}
+              {mobile ? null : <FontAwesomeIcon className="ml-2 text-primary" icon="chevron-down" size="lg" />}
+            </span>
+          </a>
+          {collection && (
+            <HassuMenu
+              id="main-nav-dropdown-menu"
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              className={`${mobile ? " mobile" : ""}`}
+            >
+              {collection.map((route, key) => {
+                const isCurrentRoute = route.requireExactMatch ? route.href === router.pathname : router.pathname.startsWith(route.href);
+                return (
+                  <DropdownItem onClick={handleClose} isCurrentRoute={isCurrentRoute} key={key} id={`item-in-dropdown-${key}`} {...route} />
+                );
+              })}
+            </HassuMenu>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

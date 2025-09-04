@@ -11,3 +11,10 @@ export function getKiinteistonomistajaTableName() {
   }
   throw new Error("Ympäristömuuttujaa TABLE_KIINTEISTONOMISTAJA ei löydy");
 }
+
+export function getTiedoteTableName() {
+  if (process.env.TABLE_TIEDOTE) {
+    return process.env.TABLE_TIEDOTE;
+  }
+  throw new Error("Ympäristömuuttujaa TABLE_TIEDOTE ei löydy");
+}
