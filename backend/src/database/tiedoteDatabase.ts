@@ -12,6 +12,7 @@ import {
   GetCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
+import { Tiedote } from "hassu-common/graphql/apiModel";
 
 export type TiedoteKey = {
   id: string;
@@ -42,7 +43,7 @@ class TiedoteDatabase {
     this.tableName = tableName;
   }
 
-  async tallennaTiedote(tiedote: any): Promise<PutCommandOutput> {
+  async tallennaTiedote(tiedote: Tiedote): Promise<PutCommandOutput> {
     const params = new PutCommand({
       TableName: this.tableName,
       Item: tiedote,
