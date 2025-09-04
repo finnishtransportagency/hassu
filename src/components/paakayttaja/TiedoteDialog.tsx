@@ -24,7 +24,7 @@ import { Tiedote } from "common/graphql/apiModel";
 import dayjs from "dayjs";
 import TiedoteDatePicker from "./TiedoteDatePicker";
 import { nyt } from "backend/src/util/dateUtil";
-import { getDynaaminenStatus, Status } from "./TiedoteLista";
+import { getDynaaminenStatus, TiedotteenStatus } from "./TiedoteLista";
 
 type Props = {
   open: boolean;
@@ -179,7 +179,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
     const paallekkainenTiedote = tiedotteet?.find((t) => {
       if (t.id === editTiedote?.id) return false;
 
-      if (getDynaaminenStatus(t) === Status.NAKYVILLA || getDynaaminenStatus(t) === Status.AJASTETTU) {
+      if (getDynaaminenStatus(t) === TiedotteenStatus.NAKYVILLA || getDynaaminenStatus(t) === TiedotteenStatus.AJASTETTU) {
         const toinenAlkaa = dayjs(t.voimassaAlkaen).tz("Europe/Helsinki");
         const toinenPaattyy = t.voimassaPaattyen ? dayjs(t.voimassaPaattyen).tz("Europe/Helsinki") : null;
 
@@ -195,9 +195,9 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
         ? ` - ${dayjs(paallekkainenTiedote.voimassaPaattyen).tz("Europe/Helsinki").format("DD.MM.YYYY")}`
         : " alkaen";
 
-      if (getDynaaminenStatus(paallekkainenTiedote) === Status.NAKYVILLA) {
+      if (getDynaaminenStatus(paallekkainenTiedote) === TiedotteenStatus.NAKYVILLA) {
         viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo näkyvillä (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
-      } else if (getDynaaminenStatus(paallekkainenTiedote) === Status.AJASTETTU) {
+      } else if (getDynaaminenStatus(paallekkainenTiedote) === TiedotteenStatus.AJASTETTU) {
         viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo ajastettu (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
       }
 

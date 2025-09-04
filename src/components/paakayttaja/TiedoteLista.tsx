@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { Fragment, useCallback, useEffect } from "react";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
-export enum Status {
+export enum TiedotteenStatus {
   NAKYVILLA = "NAKYVILLA",
   AJASTETTU = "AJASTETTU",
   EI_NAKYVILLA = "EI_NAKYVILLA",
@@ -23,7 +23,7 @@ interface TiedoteListaProps {
 
 export const getDynaaminenStatus = (tiedote: Tiedote): string => {
   if (!tiedote.aktiivinen) {
-    return Status.EI_NAKYVILLA;
+    return TiedotteenStatus.EI_NAKYVILLA;
   }
 
   const alkaa = dayjs(tiedote.voimassaAlkaen).tz("Europe/Helsinki");
@@ -31,14 +31,14 @@ export const getDynaaminenStatus = (tiedote: Tiedote): string => {
   const nykyhetki = nyt();
 
   if (paattyy && nykyhetki.isAfter(paattyy, "day")) {
-    return Status.EI_NAKYVILLA;
+    return TiedotteenStatus.EI_NAKYVILLA;
   }
 
   if (nykyhetki.isBefore(alkaa, "day")) {
-    return Status.AJASTETTU;
+    return TiedotteenStatus.AJASTETTU;
   }
 
-  return Status.NAKYVILLA;
+  return TiedotteenStatus.NAKYVILLA;
 };
 
 export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTiedotteet }: TiedoteListaProps) {
@@ -52,13 +52,13 @@ export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTi
     return [...tiedotteet].sort((a, b) => {
       const aStatus = getDynaaminenStatus(a);
       const bStatus = getDynaaminenStatus(b);
-      if (aStatus === Status.NAKYVILLA && bStatus !== Status.NAKYVILLA) return -1;
-      if (bStatus === Status.NAKYVILLA && aStatus !== Status.NAKYVILLA) return 1;
+      if (aStatus === TiedotteenStatus.NAKYVILLA && bStatus !== TiedotteenStatus.NAKYVILLA) return -1;
+      if (bStatus === TiedotteenStatus.NAKYVILLA && aStatus !== TiedotteenStatus.NAKYVILLA) return 1;
 
-      if (aStatus === Status.AJASTETTU && bStatus === Status.EI_NAKYVILLA) return -1;
-      if (bStatus === Status.AJASTETTU && aStatus === Status.EI_NAKYVILLA) return 1;
+      if (aStatus === TiedotteenStatus.AJASTETTU && bStatus === TiedotteenStatus.EI_NAKYVILLA) return -1;
+      if (bStatus === TiedotteenStatus.AJASTETTU && aStatus === TiedotteenStatus.EI_NAKYVILLA) return 1;
 
-      if (aStatus === Status.AJASTETTU && bStatus === Status.AJASTETTU) {
+      if (aStatus === TiedotteenStatus.AJASTETTU && bStatus === TiedotteenStatus.AJASTETTU) {
         const aAlkaa = new Date(a.voimassaAlkaen);
         const bAlkaa = new Date(b.voimassaAlkaen);
         return aAlkaa.getTime() - bAlkaa.getTime();
@@ -129,9 +129,9 @@ export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTi
                     borderStyle: "solid",
                     borderWidth: 1,
                     borderColor:
-                      getDynaaminenStatus(tiedote) === Status.NAKYVILLA
+                      getDynaaminenStatus(tiedote) === TiedotteenStatus.NAKYVILLA
                         ? "#54AC54"
-                        : getDynaaminenStatus(tiedote) === Status.AJASTETTU
+                        : getDynaaminenStatus(tiedote) === TiedotteenStatus.AJASTETTU
                         ? "#F0AD4E"
                         : "#999999",
                     width: "150px",
@@ -140,17 +140,17 @@ export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTi
                     paddingRight: "2em",
                     borderRadius: 5,
                     backgroundColor:
-                      getDynaaminenStatus(tiedote) === Status.NAKYVILLA
+                      getDynaaminenStatus(tiedote) === TiedotteenStatus.NAKYVILLA
                         ? "#F5FFEF"
-                        : getDynaaminenStatus(tiedote) === Status.AJASTETTU
+                        : getDynaaminenStatus(tiedote) === TiedotteenStatus.AJASTETTU
                         ? "#FFF6E8"
                         : "#F8F8F8",
                     textAlign: "center",
                   }}
                 >
-                  {getDynaaminenStatus(tiedote) === Status.NAKYVILLA
+                  {getDynaaminenStatus(tiedote) === TiedotteenStatus.NAKYVILLA
                     ? "Näkyvillä"
-                    : getDynaaminenStatus(tiedote) === Status.AJASTETTU
+                    : getDynaaminenStatus(tiedote) === TiedotteenStatus.AJASTETTU
                     ? "Ajastettu"
                     : "Ei näkyvillä"}
                 </div>
