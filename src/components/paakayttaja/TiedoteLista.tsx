@@ -8,6 +8,12 @@ import dayjs from "dayjs";
 import { Fragment, useCallback, useEffect } from "react";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 
+export enum Status {
+  NAKYVILLA = "NAKYVILLA",
+  AJASTETTU = "AJASTETTU",
+  EI_NAKYVILLA = "EI_NAKYVILLA",
+}
+
 interface TiedoteListaProps {
   onEdit: (tiedote: Tiedote) => void;
   refreshTrigger?: number;
@@ -17,7 +23,7 @@ interface TiedoteListaProps {
 
 export const getDynaaminenStatus = (tiedote: Tiedote): string => {
   if (!tiedote.aktiivinen) {
-    return "EI_NAKYVILLA";
+    return Status.EI_NAKYVILLA;
   }
 
   const alkaa = dayjs(tiedote.voimassaAlkaen).tz("Europe/Helsinki");
@@ -25,14 +31,14 @@ export const getDynaaminenStatus = (tiedote: Tiedote): string => {
   const nykyhetki = nyt();
 
   if (paattyy && nykyhetki.isAfter(paattyy, "day")) {
-    return "EI_NAKYVILLA";
+    return Status.EI_NAKYVILLA;
   }
 
   if (nykyhetki.isBefore(alkaa, "day")) {
-    return "AJASTETTU";
+    return Status.AJASTETTU;
   }
 
-  return "NAKYVILLA";
+  return Status.NAKYVILLA;
 };
 
 export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTiedotteet }: TiedoteListaProps) {
@@ -46,13 +52,13 @@ export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTi
     return [...tiedotteet].sort((a, b) => {
       const aStatus = getDynaaminenStatus(a);
       const bStatus = getDynaaminenStatus(b);
-      if (aStatus === "NAKYVILLA" && bStatus !== "NAKYVILLA") return -1;
-      if (bStatus === "NAKYVILLA" && aStatus !== "NAKYVILLA") return 1;
+      if (aStatus === Status.NAKYVILLA && bStatus !== Status.NAKYVILLA) return -1;
+      if (bStatus === Status.NAKYVILLA && aStatus !== Status.NAKYVILLA) return 1;
 
-      if (aStatus === "AJASTETTU" && bStatus === "EI_NAKYVILLA") return -1;
-      if (bStatus === "AJASTETTU" && aStatus === "EI_NAKYVILLA") return 1;
+      if (aStatus === Status.AJASTETTU && bStatus === Status.EI_NAKYVILLA) return -1;
+      if (bStatus === Status.AJASTETTU && aStatus === Status.EI_NAKYVILLA) return 1;
 
-      if (aStatus === "AJASTETTU" && bStatus === "AJASTETTU") {
+      if (aStatus === Status.AJASTETTU && bStatus === Status.AJASTETTU) {
         const aAlkaa = new Date(a.voimassaAlkaen);
         const bAlkaa = new Date(b.voimassaAlkaen);
         return aAlkaa.getTime() - bAlkaa.getTime();
@@ -123,9 +129,9 @@ export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTi
                     borderStyle: "solid",
                     borderWidth: 1,
                     borderColor:
-                      getDynaaminenStatus(tiedote) === "NAKYVILLA"
+                      getDynaaminenStatus(tiedote) === Status.NAKYVILLA
                         ? "#54AC54"
-                        : getDynaaminenStatus(tiedote) === "AJASTETTU"
+                        : getDynaaminenStatus(tiedote) === Status.AJASTETTU
                         ? "#F0AD4E"
                         : "#999999",
                     width: "150px",
@@ -134,17 +140,17 @@ export default function TiedoteLista({ onEdit, refreshTrigger, tiedotteet, setTi
                     paddingRight: "2em",
                     borderRadius: 5,
                     backgroundColor:
-                      getDynaaminenStatus(tiedote) === "NAKYVILLA"
+                      getDynaaminenStatus(tiedote) === Status.NAKYVILLA
                         ? "#F5FFEF"
-                        : getDynaaminenStatus(tiedote) === "AJASTETTU"
+                        : getDynaaminenStatus(tiedote) === Status.AJASTETTU
                         ? "#FFF6E8"
                         : "#F8F8F8",
                     textAlign: "center",
                   }}
                 >
-                  {getDynaaminenStatus(tiedote) === "NAKYVILLA"
+                  {getDynaaminenStatus(tiedote) === Status.NAKYVILLA
                     ? "Näkyvillä"
-                    : getDynaaminenStatus(tiedote) === "AJASTETTU"
+                    : getDynaaminenStatus(tiedote) === Status.AJASTETTU
                     ? "Ajastettu"
                     : "Ei näkyvillä"}
                 </div>

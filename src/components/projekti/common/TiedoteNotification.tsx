@@ -5,6 +5,7 @@ import { api, Tiedote } from "@services/api";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { nyt } from "backend/src/util/dateUtil";
+import { Status } from "@components/paakayttaja/TiedoteLista";
 
 export const TiedoteNotification = () => {
   const [aktiivinenTiedote, setAktiivinenTiedote] = useState<Tiedote | null>(null);
@@ -86,7 +87,7 @@ export const TiedoteNotification = () => {
 
   const getDynaaminenStatus = (tiedote: Tiedote): string => {
     if (!tiedote.aktiivinen) {
-      return "EI_NAKYVILLA";
+      return Status.EI_NAKYVILLA;
     }
 
     const alkaa = dayjs(tiedote.voimassaAlkaen).tz("Europe/Helsinki");
@@ -94,12 +95,12 @@ export const TiedoteNotification = () => {
     const nykyhetki = nyt();
 
     if (paattyy && nykyhetki.isAfter(paattyy, "day")) {
-      return "EI_NAKYVILLA";
+      return Status.EI_NAKYVILLA;
     }
     if (nykyhetki.isBefore(alkaa, "day")) {
-      return "AJASTETTU";
+      return Status.AJASTETTU;
     }
-    return "NAKYVILLA";
+    return Status.NAKYVILLA;
   };
 
   useEffect(() => {
@@ -108,7 +109,7 @@ export const TiedoteNotification = () => {
         const tiedotteet = await api.listaaTiedotteet();
         const nakyvillaTiedote = tiedotteet.find((t) => {
           const dynaaminenStatus = getDynaaminenStatus(t);
-          return dynaaminenStatus === "NAKYVILLA" && onkoTiedoteNakyvilla(t);
+          return dynaaminenStatus === Status.NAKYVILLA && onkoTiedoteNakyvilla(t);
         });
         setAktiivinenTiedote(nakyvillaTiedote || null);
       } catch (error) {
