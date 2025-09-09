@@ -11,7 +11,7 @@ RUN npm install -f -g @aws-amplify/cli@12.10.1 && amplify
 # Docker + Compose v2
 RUN dnf install -y docker containerd
 RUN mkdir -p /usr/local/lib/docker/cli-plugins && \
-    curl -SL https://github.com/docker/compose/releases/download/v2.27.0/docker-compose-linux-$(uname -m) \
+    curl -SL https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-linux-$(uname -m) \
         -o /usr/local/lib/docker/cli-plugins/docker-compose && \
     chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
