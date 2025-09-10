@@ -45,6 +45,7 @@ export type HassuBackendStackProps = {
   projektiArchiveTable: Table;
   kiinteistonomistajaTable: Table;
   projektiMuistuttajaTable: Table;
+  tiedoteTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -1029,10 +1030,13 @@ export class HassuBackendStack extends Stack {
   private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
+    const tiedoteTable = this.props.tiedoteTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
+      tiedoteTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
+      backendFn.addEnvironment("TABLE_TIEDOTE", tiedoteTable.tableName);
       this.props.kiinteistonomistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
       this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);
