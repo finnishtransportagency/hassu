@@ -141,12 +141,14 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
 
   useEffect(() => {
     if (formData.aktiivinen && !formData.voimassaPaattyen) {
+      const paattymispaiva = formData.voimassaAlkaen ? dayjs(formData.voimassaAlkaen).endOf("day").format("YYYY-MM-DDTHH:mm:ss") : "";
+
       setFormData((prev) => ({
         ...prev,
-        voimassaPaattyen: prev.voimassaAlkaen,
+        voimassaPaattyen: paattymispaiva,
       }));
     }
-  }, [formData.aktiivinen, formData.voimassaPaattyen]);
+  }, [formData.aktiivinen, formData.voimassaAlkaen, formData.voimassaPaattyen]);
 
   const [paallekkaisetTiedotteet, setPaallekkaisetTiedotteet] = useState<{
     onPaallekkainen: boolean;
@@ -230,6 +232,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
       PaperProps={{ sx: { maxHeight: "95vh", minHeight: "70vh" } }}
       title={isEditing ? "Muokkaa tiedotetta" : "Uusi tiedote"}
       open={open}
+      onClose={onClose}
       scroll="paper"
       maxWidth="lg"
     >
