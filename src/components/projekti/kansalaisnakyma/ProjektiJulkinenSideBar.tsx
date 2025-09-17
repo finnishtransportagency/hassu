@@ -52,10 +52,12 @@ const ProjektiSideNavigation = styled((props) => {
   const isVanhatTiedotOlemassa = projekti.suunnitteluSopimus?.kunta || projekti.suunnitteluSopimus?.logo;
 
   const getTilaajaLogoImg = () => {
-    if (SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO === viranomainen) {
+    if (viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return { src: "/assets/vayla_sivussa_fi_sv_rgb.png", alt: t(`common:vaylavirasto`) + " logo" };
-    } else {
+    } else if (viranomainen && viranomainen.endsWith("ELY")) {
       return { src: "/assets/ely-logo-vaaka.png", alt: t(`common:ely-keskus`) + " logo" };
+    } else {
+      return { src: "/assets/evk-logo-vaaka.png", alt: t(`common:elinvoimakeskus`) + " logo" };
     }
   };
 
