@@ -103,6 +103,9 @@ import {
   AktivoiProjektiJatkopaatettavaksiMutationVariables,
   JaaProjektiMutationVariables,
   TallennaProjektiResponse,
+  TallennaTiedoteMutationVariables,
+  TiedoteInput,
+  Tiedote,
 } from "./graphql/apiModel";
 import * as queries from "./graphql/queries";
 import * as mutations from "./graphql/mutations";
@@ -431,6 +434,18 @@ export const apiConfig: ApiConfig = {
     name: "tallennaMuistuttajat",
     operationType: OperationType.Mutation,
     graphql: mutations.tallennaMuistuttajat,
+    isYllapitoOperation: true,
+  },
+  tallennaTiedote: {
+    name: "tallennaTiedote",
+    operationType: OperationType.Mutation,
+    graphql: mutations.tallennaTiedote,
+    isYllapitoOperation: true,
+  },
+  listaaTiedotteet: {
+    name: "listaaTiedotteet",
+    operationType: OperationType.Query,
+    graphql: queries.listaaTiedotteet,
     isYllapitoOperation: true,
   },
   lataaTiedotettavatExcel: {
@@ -862,6 +877,22 @@ export abstract class AbstractApi {
 
   async tallennaMuistuttajat(mutationVariables: TallennaMuistuttajatMutationVariables): Promise<string[]> {
     return await this.callYllapitoAPI(apiConfig.tallennaMuistuttajat, mutationVariables);
+  }
+
+  async tallennaTiedote(input?: TiedoteInput, poistettavatTiedotteet?: string[]): Promise<string[]> {
+    const variables: TallennaTiedoteMutationVariables = {
+      tiedotteet: input ? [input] : [],
+      poistettavatTiedotteet: poistettavatTiedotteet || [],
+    };
+
+    const result = await this.callYllapitoAPI(apiConfig.tallennaTiedote, variables);
+    return Array.isArray(result) ? result : result.tallennaTiedote || [];
+  }
+
+  async listaaTiedotteet(id?: string): Promise<Tiedote[]> {
+    const variables = id ? { id } : {};
+    const result = await this.callYllapitoAPI(apiConfig.listaaTiedotteet, variables);
+    return Array.isArray(result) ? result : result.listaaTiedotteet || [];
   }
 
   async lataaTiedotettavatExcel(oid: string, suomifi: boolean | undefined | null, kiinteisto: boolean): Promise<Excel> {
