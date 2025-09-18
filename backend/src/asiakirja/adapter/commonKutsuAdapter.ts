@@ -8,7 +8,7 @@ import {
   Velho,
   Yhteystieto,
 } from "../../database/model";
-import { ELY, EVK, KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { ELY, KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -31,7 +31,7 @@ import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUs
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
-import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
@@ -225,12 +225,7 @@ export class CommonKutsuAdapter {
       throw new Error(`Projektipäällikkö tai sen organisaatiotieto puuttuu`);
     }
 
-    return this.getLocalizedOrganization(
-      projektiPaallikko.organisaatio,
-      projektiPaallikko.elyOrganisaatio,
-      projektiPaallikko.evkOrganisaatio,
-      undefined
-    );
+    return this.getLocalizedOrganization(projektiPaallikko.organisaatio, projektiPaallikko.elyOrganisaatio, undefined);
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: KaannettavaKieli): string {
@@ -587,36 +582,24 @@ export class CommonKutsuAdapter {
     sahkoposti,
     titteli,
     elyOrganisaatio,
-    evkOrganisaatio,
   }: Yhteystieto): LokalisoituYhteystieto {
     return {
       etunimi: formatProperNoun(etunimi),
       sukunimi: formatProperNoun(sukunimi),
-      organisaatio: this.getLocalizedOrganization(organisaatio, elyOrganisaatio, evkOrganisaatio, kunta),
+      organisaatio: this.getLocalizedOrganization(organisaatio, elyOrganisaatio, kunta),
       puhelinnumero,
       sahkoposti,
       titteli,
     };
   }
 
-  private getLocalizedOrganization(
-    organisaatio: string | undefined,
-    elyOrganisaatio: ELY | undefined,
-    evkOrganisaatio: EVK | undefined,
-    kunta: number | null | undefined
-  ) {
+  private getLocalizedOrganization(organisaatio: string | undefined, elyOrganisaatio: ELY | undefined, kunta: number | null | undefined) {
     let organisaatioTeksti = organisaatio ?? "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);
     } else if (organisaatioIsEly(organisaatio)) {
       const elyTranslateKey = elyOrganisaatio ? `viranomainen.${elyOrganisaatio}` : "ely-keskus";
       const kaannos = translate(elyTranslateKey, this.kieli);
-      if (kaannos) {
-        organisaatioTeksti = kaannos;
-      }
-    } else if (organisaatioIsEvk(organisaatio)) {
-      const evkTranslateKey = evkOrganisaatio ? `viranomainen.${evkOrganisaatio}` : "elinvoimakeskus";
-      const kaannos = translate(evkTranslateKey, this.kieli);
       if (kaannos) {
         organisaatioTeksti = kaannos;
       }
