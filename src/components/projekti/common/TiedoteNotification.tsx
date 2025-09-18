@@ -131,6 +131,7 @@ export const TiedoteNotification = () => {
       sx={{
         whiteSpace: "pre-wrap",
         width: "80%",
+        maxWidth: "1300px",
         margin: "10px auto 10px",
         position: "relative",
         paddingRight: "40px",
