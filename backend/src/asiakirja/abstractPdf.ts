@@ -232,7 +232,14 @@ export abstract class AbstractPdf {
 
   iPostLogo(): string {
     const isVaylaTilaaja = this.isVaylaTilaaja();
-    return this.fileBasePath + (isVaylaTilaaja ? "/files/vaylaipost.png" : "/files/elyipost.png");
+    const isElyTilaaja = this.isElyTilaaja();
+    if (isVaylaTilaaja) {
+      return this.fileBasePath + "/files/vaylaipost.png";
+    } else if (isElyTilaaja) {
+      return this.fileBasePath + "/files/elyipost.png";
+    } else {
+      return this.fileBasePath + "/files/evk.png";
+    }
   }
 
   protected appendHeader(asiaTunnusX = 350, logoX = 19) {
@@ -244,7 +251,14 @@ export abstract class AbstractPdf {
 
   async loadLogo(): Promise<string | Buffer> {
     const isVaylaTilaaja = this.isVaylaTilaaja();
-    return this.fileBasePath + (isVaylaTilaaja ? "/files/vayla.png" : "/files/ely.png");
+    const isElyTilaaja = this.isElyTilaaja();
+    if (isVaylaTilaaja) {
+      return this.fileBasePath + "/files/vayla.png";
+    } else if (isElyTilaaja) {
+      return this.fileBasePath + "/files/ely.png";
+    } else {
+      return this.fileBasePath + "/files/evk.png";
+    }
   }
 
   async loadSuunnitteluSopimus(): Promise<string | Buffer | undefined> {
@@ -361,7 +375,7 @@ export abstract class AbstractPdf {
 
   private finishPdfDocument() {
     return new Promise<EnhancedPDF>((resolve) => {
-      const buffers = Array<Buffer>();
+      const buffers = Array<Uint8Array>();
       this.doc.on("data", buffers.push.bind(buffers));
       this.doc.on("end", () => {
         const all = Buffer.concat(buffers);
@@ -373,6 +387,8 @@ export abstract class AbstractPdf {
   }
 
   abstract isVaylaTilaaja(): boolean;
+
+  abstract isElyTilaaja(): boolean;
 
   abstract asiatunnus(): string;
 }
