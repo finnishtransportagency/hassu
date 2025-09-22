@@ -1,5 +1,3 @@
-// This config file is used in frontend.Dockerfile
-// By keeping the existing as is we dont break working things
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
