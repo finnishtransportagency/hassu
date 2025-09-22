@@ -84,7 +84,17 @@ type Organisaatio =
   | "organisaatio/org08"
   | "organisaatio/org09"
   | "organisaatio/org10"
-  | "organisaatio/org11";
+  | "organisaatio/org11"
+  | "organisaatio/org12"
+  | "organisaatio/org13"
+  | "organisaatio/org14"
+  | "organisaatio/org15"
+  | "organisaatio/org16"
+  | "organisaatio/org17"
+  | "organisaatio/org18"
+  | "organisaatio/org19"
+  | "organisaatio/org20"
+  | "organisaatio/org21";
 
 type ProjektiVaiheToTyyppi = {
   readonly [PV in ProjektiVaihe]: ProjektiTyyppi;
@@ -116,6 +126,16 @@ const organisaatioToViranomainen: OrganisaatioToViranomainen = {
   "organisaatio/org09": SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY,
   "organisaatio/org10": SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
   "organisaatio/org11": SuunnittelustaVastaavaViranomainen.MUU,
+  "organisaatio/org12": SuunnittelustaVastaavaViranomainen.UUDENMAAN_EVK,
+  "organisaatio/org13": SuunnittelustaVastaavaViranomainen.LOUNAIS_SUOMEN_EVK,
+  "organisaatio/org14": SuunnittelustaVastaavaViranomainen.KAAKKOIS_SUOMEN_EVK,
+  "organisaatio/org15": SuunnittelustaVastaavaViranomainen.SISA_SUOMEN_EVK,
+  "organisaatio/org16": SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_EVK,
+  "organisaatio/org17": SuunnittelustaVastaavaViranomainen.ITA_SUOMEN_EVK,
+  "organisaatio/org18": SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK,
+  "organisaatio/org19": SuunnittelustaVastaavaViranomainen.POHJANMAAN_EVK,
+  "organisaatio/org20": SuunnittelustaVastaavaViranomainen.POHJOIS_SUOMEN_EVK,
+  "organisaatio/org21": SuunnittelustaVastaavaViranomainen.LAPIN_EVK,
 } as const;
 
 const numberSorter = (a: number, b: number) => a - b;

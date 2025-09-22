@@ -24,6 +24,7 @@ export class HassuDatabaseStack extends Stack {
   public feedbackTable!: ddb.Table;
   public kiinteistonOmistajaTable!: ddb.Table;
   public projektiMuistuttajaTable!: ddb.Table;
+  public tiedoteTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -51,6 +52,7 @@ export class HassuDatabaseStack extends Stack {
     this.feedbackTable = this.createFeedbackTable();
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
+    this.tiedoteTable = this.createTiedoteTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -166,6 +168,26 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       sortKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+      stream: StreamViewType.NEW_IMAGE,
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createTiedoteTable() {
+    const table = new ddb.Table(this, "TiedoteTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.tiedoteTableName,
+      partitionKey: {
         name: "id",
         type: ddb.AttributeType.STRING,
       },

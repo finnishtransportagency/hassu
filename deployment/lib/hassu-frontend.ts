@@ -23,6 +23,7 @@ import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as fs from "fs";
+import * as path from "path";
 import { EdgeFunction } from "aws-cdk-lib/aws-cloudfront/lib/experimental";
 import { BlockPublicAccess, Bucket, ObjectOwnership } from "aws-cdk-lib/aws-s3";
 import * as ssm from "aws-cdk-lib/aws-ssm";
@@ -326,8 +327,8 @@ export class HassuFrontendStack extends Stack {
         },
         ...behaviours,
       },
-      domainNames: env === "dev" ? domain?.domainNames : undefined,
-      certificate: env === "dev" ? domain?.certificate : undefined,
+      domainNames: domain?.domainNames,
+      certificate: domain?.certificate,
       priceClass: PriceClass.PRICE_CLASS_100,
       logBucket,
       webAclId,
@@ -379,7 +380,7 @@ export class HassuFrontendStack extends Stack {
         ENVIRONMENT: Config.env,
       });
       return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-        runtime: Runtime.NODEJS_18_X,
+        runtime: Runtime.NODEJS_20_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),
         handler: "index.handler",
@@ -423,7 +424,7 @@ export class HassuFrontendStack extends Stack {
   private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/suomifiHeader.js`).toString("utf-8");
     return new cloudfront.experimental.EdgeFunction(this, "suomifiRequestFunction", {
-      runtime: Runtime.NODEJS_18_X,
+      runtime: Runtime.NODEJS_20_X,
       functionName: "suomifiRequestFunction" + env,
       code: Code.fromInline(sourceCode),
       handler: "index.handler",
@@ -459,7 +460,7 @@ export class HassuFrontendStack extends Stack {
     const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("utf-8");
 
     return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
-      runtime: Runtime.NODEJS_18_X,
+      runtime: Runtime.NODEJS_20_X,
       functionName: "tiedostotOriginResponseFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",
@@ -522,7 +523,7 @@ export class HassuFrontendStack extends Stack {
     const dmzBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
@@ -554,7 +555,7 @@ export class HassuFrontendStack extends Stack {
     const graphqlBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(dmzProxyEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "X-Forwarded-Host": frontendDomainName },
       }),
       cachePolicy: CachePolicy.CACHING_DISABLED,
@@ -576,7 +577,7 @@ export class HassuFrontendStack extends Stack {
     const apiBehavior: BehaviorOptions = {
       compress: true,
       origin: new HttpOrigin(apiEndpoint, {
-        originSslProtocols: [OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1_2, OriginSslPolicy.TLS_V1, OriginSslPolicy.SSL_V3],
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
         customHeaders: { "x-api-key": apiKey },
       }),
       cachePolicy: new CachePolicy(this, "MML-cache-policy-" + env, {
@@ -766,7 +767,7 @@ export class HassuFrontendCoreStack extends Stack {
     // apinoitu next.config.js
     let version = process.env.CODEBUILD_SOURCE_VERSION || "";
     try {
-      let buffer = fs.readFileSync(__dirname + "/.version");
+      let buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
       if (buffer) {
         version = buffer.toString("utf8");
       }
@@ -830,7 +831,7 @@ export class HassuFrontendCoreStack extends Stack {
       retention: logs.RetentionDays.SIX_MONTHS, // TODO tähän oikea politiikka
     });
 
-    const repository = Repository.fromRepositoryName(this, "NextjsRepo", "hassu-nextjs");
+    const repository = Repository.fromRepositoryName(this, "NextjsRepo", Config.nextjsImageRepositoryName);
 
     const taskDefinition = new FargateTaskDefinition(this, "TaskDefinition", {
       family: "NextJsTaskDef-" + Config.env,

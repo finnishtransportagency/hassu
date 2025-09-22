@@ -32,7 +32,7 @@ import assert from "assert";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
-const lambdaRuntime = lambda.Runtime.NODEJS_18_X;
+const lambdaRuntime = lambda.Runtime.NODEJS_20_X;
 const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
@@ -45,6 +45,7 @@ export type HassuBackendStackProps = {
   projektiArchiveTable: Table;
   kiinteistonomistajaTable: Table;
   projektiMuistuttajaTable: Table;
+  tiedoteTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -91,7 +92,7 @@ export class HassuBackendStack extends Stack {
       LayerVersion.fromLayerVersionArn(
         this,
         "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:11"
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:18"
       ),
     ];
   }
@@ -1029,10 +1030,13 @@ export class HassuBackendStack extends Stack {
   private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
+    const tiedoteTable = this.props.tiedoteTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
+      tiedoteTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
+      backendFn.addEnvironment("TABLE_TIEDOTE", tiedoteTable.tableName);
       this.props.kiinteistonomistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
       this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);

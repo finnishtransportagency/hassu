@@ -58,7 +58,6 @@ export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $
 NPM_SCOPE="@hassu"
 NPM_REGISTRY="hassu-private-npm"
 
-aws ecr create-repository --repository-name $REPO_NAME || true
 docker buildx create --use
 
 # Using placeholder values at build time 

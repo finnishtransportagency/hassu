@@ -45,6 +45,8 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
     [projekti, router]
   );
 
+  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
+
   useEffect(() => {
     if (!projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {
       showInfoMessage("Et pääse tarkastelemaan projektin tietoja, sillä et ole projektin jäsen.");
@@ -57,7 +59,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
   return (
     <>
       <ProjektiKortti projekti={projekti}></ProjektiKortti>
-      {isAjansiirtoSallittu() && <Ajansiirto oid={projekti.oid} />}
+      {ajansiirtoSallittu && <Ajansiirto oid={projekti.oid} />}
       <div role="navigation" className="bg-gray-lightest">
         <ul>
           <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />

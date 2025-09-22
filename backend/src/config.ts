@@ -15,6 +15,7 @@ const config = {
 
   kiinteistonomistajaTableName: process.env.TABLE_KIINTEISTONOMISTAJA!,
   projektiMuistuttajaTableName: process.env.TABLE_PROJEKTI_MUISTUTTAJA!,
+  tiedoteTableName: process.env.TABLE_TIEDOTE!,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,
