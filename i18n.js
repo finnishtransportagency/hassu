@@ -1,3 +1,5 @@
+const { BaseConfig } = require("./common/BaseConfig");
+
 module.exports = {
   locales: ["fi", "sv"],
   defaultLocale: "fi",
@@ -36,7 +38,7 @@ module.exports = {
     "/yllapito/projekti/[oid]/esikatsele-ennakkoneuvottelu": ["aineisto"],
     "/suunnitelma/[oid]/ennakkoneuvotteluaineistot": ["aineisto"],
   },
-  ignoreRoutes: ["/api/", "/keycloak/"],
+  ignoreRoutes: ["/api/", "/keycloak/", ...(BaseConfig.frontendPrefix ? [`${BaseConfig.frontendPrefix}/`] : [])],
   loadLocaleFrom: (lang, ns) =>
     // You can use a dynamic import, fetch, whatever. You should
     // return a Promise with the JSON file.
