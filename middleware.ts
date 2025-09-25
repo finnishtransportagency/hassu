@@ -26,5 +26,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/frontend/:path*"],
+  matcher: [`${BaseConfig.frontendPrefix}/:path*`],
 };
