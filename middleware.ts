@@ -1,4 +1,10 @@
 /**
+ * Joudutaan säilyttämään tätä tiedostoa toistaiksesi projektin juuressa
+ * koska serverless nextjs ei salli middlewarea (build ei onnistu)
+ * frontend.Dockerfile hoitaa tiedoston siirtämisen /src hakemistoon kun buildataan imagea
+ * 
+ * Voidaan siirtää src/ hakemistoon kun serverless saatu pois projektista.
+ * 
  * Middleware, joka poistaa frontend-prefixin saapuvista pyynnöistä.
  *
  * Pilviympäristöissä Lambda@Edge tai Cloudfront function lisää prefixin pyyntöihin

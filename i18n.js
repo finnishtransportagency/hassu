@@ -1,5 +1,3 @@
-const { BaseConfig } = require("./common/BaseConfig.js");
-
 module.exports = {
   locales: ["fi", "sv"],
   defaultLocale: "fi",
