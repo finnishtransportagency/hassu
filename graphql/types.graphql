@@ -45,6 +45,9 @@ enum ELY {
   SATAKUNNAN_ELY
   UUDENMAAN_ELY
   VARSINAIS_SUOMEN_ELY
+}
+
+enum EVK {
   UUDENMAAN_EVK
   LOUNAIS_SUOMEN_EVK
   KAAKKOIS_SUOMEN_EVK
@@ -891,6 +894,7 @@ type Velho {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
+  asiatunnusEVK: String
   suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   toteuttavaOrganisaatio: String
   vastuuhenkilonNimi: String
@@ -911,6 +915,7 @@ type VelhoJulkinen {
   vaylamuoto: [String!]
   asiatunnusVayla: String
   asiatunnusELY: String
+  asiatunnusEVK: String
   suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen
   toteuttavaOrganisaatio: String
   maakunnat: [Int!]
@@ -956,6 +961,7 @@ type Yhteystieto {
   sukunimi: String!
   organisaatio: String
   elyOrganisaatio: ELY
+  evkOrganisaatio: EVK
   kunta: Int
   puhelinnumero: String!
   sahkoposti: String!
@@ -1232,6 +1238,7 @@ type ProjektiKayttaja {
   email: String!
   organisaatio: String
   elyOrganisaatio: ELY
+  evkOrganisaatio: EVK
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -1244,6 +1251,7 @@ type ProjektiKayttajaJulkinen {
   email: String!
   organisaatio: String
   elyOrganisaatio: ELY
+  evkOrganisaatio: EVK
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -1380,6 +1388,7 @@ type ProjektiHakutulosDokumentti {
   asiatunnus: String
   asiatunnusVayla: String
   asiatunnusELY: String
+  asiatunnusEVK: String
   maakunnat: [Int!]
   kunnat: [Int!]
   vaylamuoto: [String!]
