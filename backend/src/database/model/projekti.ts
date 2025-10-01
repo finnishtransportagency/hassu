@@ -1,4 +1,4 @@
-import { ELY, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
+import { ELY, EVK, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -34,6 +34,7 @@ export type DBVaylaUser = {
   muokattavissa?: boolean;
   yleinenYhteystieto?: boolean;
   elyOrganisaatio?: ELY;
+  evkOrganisaatio?: EVK;
 };
 
 export type AloitusKuulutus = {
