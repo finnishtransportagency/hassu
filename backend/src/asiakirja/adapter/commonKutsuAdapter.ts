@@ -167,6 +167,10 @@ export class CommonKutsuAdapter {
     return this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   }
 
+  isElyTilaaja(): boolean {
+    return this.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("ELY") ?? false;
+  }
+
   get viranomainen(): string {
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       const kaannos: string = translate("viranomainen.VAYLAVIRASTO", this.kieli) ?? "";
@@ -364,10 +368,15 @@ export class CommonKutsuAdapter {
   get tietosuojaurl(): string {
     if (this.isVaylaTilaaja()) {
       return this.selectText("https://www.vayla.fi/tietosuoja", "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy");
-    } else {
+    } else if (this.isElyTilaaja()) {
       return this.selectText(
         "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely",
         "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+      );
+    } else {
+      return this.selectText(
+        "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely",
+        "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
       );
     }
   }
