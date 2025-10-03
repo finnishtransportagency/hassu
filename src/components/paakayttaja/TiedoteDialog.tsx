@@ -141,12 +141,14 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
 
   useEffect(() => {
     if (formData.aktiivinen && !formData.voimassaPaattyen) {
+      const paattymispaiva = formData.voimassaAlkaen ? dayjs(formData.voimassaAlkaen).endOf("day").format("YYYY-MM-DDTHH:mm:ss") : "";
+
       setFormData((prev) => ({
         ...prev,
-        voimassaPaattyen: prev.voimassaAlkaen,
+        voimassaPaattyen: paattymispaiva,
       }));
     }
-  }, [formData.aktiivinen, formData.voimassaPaattyen]);
+  }, [formData.aktiivinen, formData.voimassaAlkaen, formData.voimassaPaattyen]);
 
   const [paallekkaisetTiedotteet, setPaallekkaisetTiedotteet] = useState<{
     onPaallekkainen: boolean;
@@ -183,7 +185,15 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
         const toinenAlkaa = dayjs(t.voimassaAlkaen).tz("Europe/Helsinki");
         const toinenPaattyy = t.voimassaPaattyen ? dayjs(t.voimassaPaattyen).tz("Europe/Helsinki") : null;
 
-        return onkoPaallekkainenAjanjakso(alkaaDate, paattyyDate, toinenAlkaa, toinenPaattyy);
+        const paallekkainenAjanjakso = onkoPaallekkainenAjanjakso(alkaaDate, paattyyDate, toinenAlkaa, toinenPaattyy);
+
+        if (!paallekkainenAjanjakso) return false;
+
+        const kenelleTamaNaytetaan = formData.kenelleNaytetaan || [];
+        const kenelleMuutNaytetaan = t.kenelleNaytetaan || [];
+        const paallekkainenKohderyhma = kenelleTamaNaytetaan.some((ryhma) => kenelleMuutNaytetaan.includes(ryhma));
+
+        return paallekkainenKohderyhma;
       }
       return false;
     });
@@ -194,11 +204,14 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
       const toinenPaattyy = paallekkainenTiedote.voimassaPaattyen
         ? ` - ${dayjs(paallekkainenTiedote.voimassaPaattyen).tz("Europe/Helsinki").format("DD.MM.YYYY")}`
         : " alkaen";
+      const paallekkainenKohderyhma = (formData.kenelleNaytetaan || []).filter((ryhma) =>
+        (paallekkainenTiedote.kenelleNaytetaan || []).includes(ryhma)
+      );
 
       if (getDynaaminenStatus(paallekkainenTiedote) === TiedotteenStatus.NAKYVILLA) {
-        viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo näkyvillä (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
+        viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo näkyvillä (${toinenAlkaa}${toinenPaattyy}) kohderyhmälle ${paallekkainenKohderyhma}. Muuta päivämääriä tai kohderyhmää tai poista aktiivisuus.`;
       } else if (getDynaaminenStatus(paallekkainenTiedote) === TiedotteenStatus.AJASTETTU) {
-        viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo ajastettu (${toinenAlkaa}${toinenPaattyy}). Muuta päivämääriä tai poista aktiivisuus.`;
+        viesti = `Tiedote "${paallekkainenTiedote.otsikko}" on jo ajastettu (${toinenAlkaa}${toinenPaattyy}) kohderyhmälle (${paallekkainenKohderyhma}). Muuta päivämääriä tai kohderyhmää tai poista aktiivisuus.`;
       }
 
       setPaallekkaisetTiedotteet({
@@ -208,7 +221,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
     } else {
       setPaallekkaisetTiedotteet(null);
     }
-  }, [formData.aktiivinen, formData.voimassaAlkaen, formData.voimassaPaattyen, tiedotteet, editTiedote]);
+  }, [formData.aktiivinen, formData.voimassaAlkaen, formData.voimassaPaattyen, tiedotteet, editTiedote, formData.kenelleNaytetaan]);
 
   const validateForm = () => {
     const errors = [];
@@ -230,6 +243,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
       PaperProps={{ sx: { maxHeight: "95vh", minHeight: "70vh" } }}
       title={isEditing ? "Muokkaa tiedotetta" : "Uusi tiedote"}
       open={open}
+      onClose={onClose}
       scroll="paper"
       maxWidth="lg"
     >

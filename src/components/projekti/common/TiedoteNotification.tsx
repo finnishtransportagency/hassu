@@ -77,14 +77,6 @@ export const TiedoteNotification = () => {
     return tiedote.tiedoteFI;
   };
 
-  const onkoTiedoteNakyvilla = (tiedote: Tiedote): boolean => {
-    const kayttajatyyppi = getKayttajatyyppi();
-    if (suljetutTiedotteet.includes(tiedote.id)) {
-      return false;
-    }
-    return tiedote.kenelleNaytetaan?.includes(kayttajatyyppi) || false;
-  };
-
   const getDynaaminenStatus = (tiedote: Tiedote): string => {
     if (!tiedote.aktiivinen) {
       return TiedotteenStatus.EI_NAKYVILLA;
@@ -104,23 +96,33 @@ export const TiedoteNotification = () => {
   };
 
   useEffect(() => {
+    const naytetaankoTalleKayttajalle = (tiedote: Tiedote): boolean => {
+      const kayttajatyyppi = getKayttajatyyppi();
+      if (suljetutTiedotteet.includes(tiedote.id)) {
+        return false;
+      }
+      return tiedote.kenelleNaytetaan?.includes(kayttajatyyppi) || false;
+    };
+
     const haeAktiivinenTiedote = async () => {
       try {
         const tiedotteet = await api.listaaTiedotteet();
-        const nakyvillaTiedote = tiedotteet.find((t) => {
+        const nakyvaTiedote = tiedotteet.find((t) => {
           const dynaaminenStatus = getDynaaminenStatus(t);
-          return dynaaminenStatus === TiedotteenStatus.NAKYVILLA && onkoTiedoteNakyvilla(t);
+          return dynaaminenStatus === TiedotteenStatus.NAKYVILLA && naytetaankoTalleKayttajalle(t);
         });
-        setAktiivinenTiedote(nakyvillaTiedote || null);
+        setAktiivinenTiedote(nakyvaTiedote || null);
       } catch (error) {
         console.error("Virhe tiedotteen haussa:", error);
       }
     };
 
-    haeAktiivinenTiedote();
-    const interval = setInterval(haeAktiivinenTiedote, 5 * 60 * 1000);
+    if (suljetutTiedotteet.length === 0) {
+      haeAktiivinenTiedote();
+    }
+    const interval = setInterval(haeAktiivinenTiedote, 5 * 1000 * 60);
     return () => clearInterval(interval);
-  }, [suljetutTiedotteet]);
+  }, [suljetutTiedotteet, suljetutTiedotteet.length]);
 
   if (!aktiivinenTiedote) return null;
 
@@ -129,6 +131,7 @@ export const TiedoteNotification = () => {
       sx={{
         whiteSpace: "pre-wrap",
         width: "80%",
+        maxWidth: "1300px",
         margin: "10px auto 10px",
         position: "relative",
         paddingRight: "40px",
