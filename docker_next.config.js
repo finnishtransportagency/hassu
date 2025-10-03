@@ -5,40 +5,35 @@ const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyPlugin = require("copy-webpack-plugin");
 
+// Sovellukselle tuleva liikenne on /frontend prefixin takana pilviympäristöissä
+// tulee huomioida redirecteissä
 const lyhytOsoiteRedirects = [
   {
-    source: "/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
-    source: "/fi/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/fi/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
-    source: "/sv/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/sv/s/:path*`,
     destination: "/api/sv/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
-    source: "/sv/keycloak/:path*",
+    source: `${BaseConfig.frontendPrefix}/sv/keycloak/:path*`,
     destination: "/keycloak/:path*",
     permanent: true,
-    locale: false,
-  },
-];
-
-const urlRewrites = [
-  {
-    source: `${BaseConfig.frontendPrefix}/:path*`,
-    destination: "/:path*",
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
 ];
 
@@ -65,7 +60,6 @@ function setupLocalDevelopmentMode(config, env) {
     env,
     async rewrites() {
       return [
-        ...urlRewrites,
         {
           source: "/yllapito/tiedostot/:path*",
           destination: "https://" + process.env.FRONTEND_DOMAIN_NAME + "/yllapito/tiedostot/:path*",
@@ -136,9 +130,6 @@ module.exports = (phase) => {
     // actual env variables are provided runtime
     config.redirects = async () => {
       return lyhytOsoiteRedirects;
-    };
-    config.rewrites = async () => {
-      return urlRewrites;
     };
   }
   return nextTranslate(config);
