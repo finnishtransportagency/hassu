@@ -6,7 +6,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
@@ -97,6 +97,11 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
           organisaatio = kuntametadata.nameForKuntaId(y.kunta, this.kieli);
         } else if (organisaatioIsEly(y.organisaatio) && y.elyOrganisaatio) {
           const kaannos = translate(`viranomainen.${y.elyOrganisaatio}`, this.kieli);
+          if (kaannos) {
+            organisaatio = kaannos;
+          }
+        } else if (organisaatioIsEvk(y.organisaatio) && y.evkOrganisaatio) {
+          const kaannos = translate(`viranomainen.${y.evkOrganisaatio}`, this.kieli);
           if (kaannos) {
             organisaatio = kaannos;
           }

@@ -162,7 +162,11 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
   }
 
   kuulutusosoite(): string {
-    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.ely-keskus.fi/kuulutukset";
+    return this.isVaylaTilaaja()
+      ? "https://www.vayla.fi/kuulutukset"
+      : this.isElyTilaaja()
+      ? "https://www.ely-keskus.fi/kuulutukset"
+      : "https://www.elinvoimakeskus.fi/kuulutukset";
   }
 
   get linkki_paatos(): string {
