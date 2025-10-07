@@ -54,7 +54,7 @@ export default function Layout({ children }: Props): ReactElement {
     <div className="min-h-screen relative flex flex-col">
       {env !== "prod" && <NotificationBar />}
       <Header />
-      <div style={{ width: "70%", margin: "10px auto 10px" }}>
+      <div style={{ minWidth: "90%", margin: "10px auto 10px" }}>
         <TiedoteNotification />
       </div>
       <Breadcrumbs />

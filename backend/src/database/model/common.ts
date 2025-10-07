@@ -1,6 +1,7 @@
 import {
   AineistoTila,
   ELY,
+  EVK,
   IlmoitettavaViranomainen,
   Kieli,
   ProjektiTyyppi,
@@ -37,6 +38,7 @@ export type Yhteystieto = {
   organisaatio?: string;
   kunta?: number | null;
   elyOrganisaatio?: ELY;
+  evkOrganisaatio?: EVK;
   puhelinnumero: string;
   sahkoposti: string;
   titteli?: string;
@@ -132,6 +134,7 @@ export type Velho = {
   vaylamuoto?: string[] | null;
   asiatunnusVayla?: string | null;
   asiatunnusELY?: string | null;
+  asiatunnusEVK?: string | null;
   suunnittelustaVastaavaViranomainen?: SuunnittelustaVastaavaViranomainen | null;
   toteuttavaOrganisaatio?: string | null;
   vastuuhenkilonNimi?: string | null;
