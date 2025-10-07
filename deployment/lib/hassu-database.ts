@@ -25,6 +25,7 @@ export class HassuDatabaseStack extends Stack {
   public kiinteistonOmistajaTable!: ddb.Table;
   public projektiMuistuttajaTable!: ddb.Table;
   public tiedoteTable!: ddb.Table;
+  public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -53,6 +54,7 @@ export class HassuDatabaseStack extends Stack {
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     this.tiedoteTable = this.createTiedoteTable();
+    this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -197,6 +199,25 @@ export class HassuDatabaseStack extends Stack {
     });
     HassuDatabaseStack.enableBackup(table);
 
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createNahtavillaoloVaiheJulkaisuTable(): ddb.Table {
+    const table = new ddb.Table(this, "NahtavillaoloVaiheJulkaisuTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.nahtavillaoloVaiheJulkaisuTableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      stream: StreamViewType.NEW_IMAGE,
+      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
