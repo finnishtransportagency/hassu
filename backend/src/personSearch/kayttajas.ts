@@ -15,6 +15,9 @@ export type Person = {
 export class Kayttajas {
   personMap: Record<string, Person>;
 
+  // Kohdellaan näitä domaineja samana -> email vertailu näiden osalta lokaalin osan perusteella
+  private readonly EQUIVALENT_EMAIL_DOMAINS = new Set(["ely-keskus.fi", "elinvoimakeskus.fi"]);
+
   constructor(personMap: Record<string, Person>) {
     this.personMap = personMap;
   }
@@ -27,10 +30,28 @@ export class Kayttajas {
     }
   }
 
+  private parseEmail(address: string): { local: string; domain: string } {
+    const [local, domain] = address.toLowerCase().trim().split("@");
+    return { local, domain };
+  }
+
+  private isEmailsMatch(a: { local: string; domain: string }, b: { local: string; domain: string }): boolean {
+    const bothEquivalent = this.EQUIVALENT_EMAIL_DOMAINS.has(a.domain) && this.EQUIVALENT_EMAIL_DOMAINS.has(b.domain);
+    return bothEquivalent
+      ? a.local === b.local // ely and evk are interchangeable
+      : a.local === b.local && a.domain === b.domain; // rest needs full match just like before
+  }
+
   findByEmail(email: string): Kayttaja | undefined {
-    const lowercaseEmail = email.toLowerCase().trim();
+    const search = this.parseEmail(email);
+
     for (const [uid, person] of Object.entries(this.personMap)) {
-      if (person.email.includes(lowercaseEmail)) {
+      if (
+        person.email.some((address) => {
+          const parsed = this.parseEmail(address);
+          return this.isEmailsMatch(search, parsed);
+        })
+      ) {
         return adaptPerson(uid, person);
       }
     }
