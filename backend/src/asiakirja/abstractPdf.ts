@@ -361,7 +361,7 @@ export abstract class AbstractPdf {
 
   private finishPdfDocument() {
     return new Promise<EnhancedPDF>((resolve) => {
-      const buffers = Array<Buffer>();
+      const buffers = Array<Uint8Array>();
       this.doc.on("data", buffers.push.bind(buffers));
       this.doc.on("end", () => {
         const all = Buffer.concat(buffers);
