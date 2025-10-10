@@ -95,7 +95,7 @@ export class CommonKutsuAdapter {
 
   euRahoitusLogot?: LocalizedMap<string> | null;
   linkableProjekti: LinkableProjekti;
-  protected suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
     const {
@@ -165,6 +165,10 @@ export class CommonKutsuAdapter {
 
   isVaylaTilaaja(): boolean {
     return this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+  }
+
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
   }
 
   get viranomainen(): string {
@@ -455,22 +459,37 @@ export class CommonKutsuAdapter {
     return yt.map((yt) => this.yhteystietoMapper(yt));
   }
 
-  text(key: string): string {
+  text(key: string, usePlural: boolean = false): string {
+    const pluralKey = key + "_monikko";
+
     let translation: string | undefined;
-    if (this.localizationKeyPrefix) {
-      translation = translate(this.localizationKeyPrefix + key, this.kieli);
+
+    if (usePlural) {
+      if (this.localizationKeyPrefix) {
+        translation = translate(this.localizationKeyPrefix + pluralKey, this.kieli);
+      }
+      if (!translation) {
+        translation = translate(pluralKey, this.kieli);
+      }
     }
+
     if (!translation) {
-      translation = translate(key, this.kieli);
+      if (this.localizationKeyPrefix) {
+        translation = translate(this.localizationKeyPrefix + key, this.kieli);
+      }
+      if (!translation) {
+        translation = translate(key, this.kieli);
+      }
     }
+
     if (!translation) {
       throw new Error(this.kieli + " translation missing for key " + key + " or " + this.localizationKeyPrefix + key);
     }
     return this.substituteText(translation);
   }
 
-  htmlText(key: string, options?: { extLinks?: boolean }): string {
-    const text = this.text(key);
+  htmlText(key: string, usePlural: boolean = false, options?: { extLinks?: boolean }): string {
+    const text = this.text(key, usePlural);
     const parts = text.split(linkExtractRegEx);
     if (parts.length == 1) {
       return text;

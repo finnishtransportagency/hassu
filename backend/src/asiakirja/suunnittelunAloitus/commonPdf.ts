@@ -46,12 +46,21 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.kutsuAdapter.isVaylaTilaaja();
   }
 
+  isUseitaOsapuolia(): boolean {
+    return this.kutsuAdapter.isUseitaOsapuolia();
+  }
+
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
     return this.paragraphBold(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
   }
 
   protected paragraphFromKey(key: string, options?: ParagraphOptions): PDFStructureElement {
     return this.paragraph(this.kutsuAdapter.text(key), { ...options, markupAllowed: true });
+  }
+
+  protected pluralParagraphFromKey(key: string, options?: ParagraphOptions): PDFStructureElement {
+    const textKey = this.isUseitaOsapuolia() ? key + "_monikko" : key;
+    return this.paragraph(this.kutsuAdapter.text(textKey), { ...options, markupAllowed: true });
   }
 
   protected localizedParagraphFromMap(localizations: { [key in Kieli]?: string }): PDFStructureElement {
