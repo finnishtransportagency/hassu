@@ -25,6 +25,10 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     this.kuulutettuYhdessaSuunnitelmanimi = kuulutettuYhdessaSuunnitelmanimi;
   }
 
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
+  }
+
   get subject(): string {
     return this.text(ASIAKIRJA_KUTSU_PREFIX + "otsikko");
   }

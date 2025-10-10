@@ -151,7 +151,7 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private paragraphs(): PDFStructureElement[] {
     return [
       this.headerElement(this.kutsuAdapter.title, false),
-      this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.lausunnonantajille_kappale1"),
+      this.pluralParagraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.lausunnonantajille_kappale1"),
       this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale2"),
       this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale3"),
       this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale4"),

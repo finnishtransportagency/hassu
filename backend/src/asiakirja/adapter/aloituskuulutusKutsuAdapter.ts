@@ -315,10 +315,15 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     return super.kutsuja();
   }
 
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
+  }
+
   get userInterfaceFields(): KuulutusTekstit {
+    const usePlural = this.isUseitaOsapuolia();
     let kappale1;
     if (this.suunnitteluSopimus) {
-      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus");
+      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus", usePlural);
     } else if (this.vahainenMenettely) {
       kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_vahainen_menettely");
     } else {
@@ -327,14 +332,14 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2_ui")],
+      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2_ui", usePlural)],
       infoTekstit: [
         this.htmlText("asiakirja.aloituskuulutus.kappale3"),
         this.vahainenMenettely
           ? this.htmlText("asiakirja.aloituskuulutus.kappale4_vahainen_menettely")
           : this.htmlText("asiakirja.aloituskuulutus.kappale4"),
       ],
-      tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
+      tietosuoja: this.htmlText("asiakirja.tietosuoja", usePlural, { extLinks: true }),
     };
   }
 }
