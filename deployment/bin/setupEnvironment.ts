@@ -30,6 +30,7 @@ async function main() {
     TABLE_KIINTEISTONOMISTAJA: Config.kiinteistonomistajaTableName,
     TABLE_PROJEKTI_MUISTUTTAJA: Config.projektiMuistuttajaTableName,
     TABLE_TIEDOTE: Config.tiedoteTableName,
+    TABLE_NAHTAVILLAOLOVAIHEJULKAISU: Config.nahtavillaoloVaiheJulkaisuTableName,
     INTERNAL_BUCKET_NAME: Config.internalBucketName,
     EVENT_SQS_URL: backendStackOutputs.EventSqsUrl,
     HYVAKSYMISESITYS_SQS_URL: backendStackOutputs.HyvaksymisEsitysSqsUrl,
