@@ -103,6 +103,7 @@ export class Config extends BaseConfig {
   public static readonly kiinteistonomistajaTableName = `Kiinteistonomistaja-${Config.env}`;
   public static readonly projektiMuistuttajaTableName = `ProjektiMuistuttaja-${Config.env}`;
   public static readonly tiedoteTableName = `Tiedote-${Config.env}`;
+  public static nahtavillaoloVaiheJulkaisuTableName = `NahtavillaoloVaiheJulkaisu-${Config.env}`;
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;

@@ -239,10 +239,14 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
         return lahetettavatPDFt;
       }, Promise.resolve([]));
     const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
     const virasto =
-      projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
         ? "Väyläviraston"
-        : translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI) + " ELY-keskuksen";
+        : viranomainen && viranomainen.endsWith("ELY")
+        ? translate("ely_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " ELY-keskuksen"
+        : translate("evk_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " Elinvoimakeskuksen";
+
     const projektiPaallikko = getProjektipaallikkoAndOrganisaatio(projekti, Kieli.SUOMI);
     const text = `Hei,
 Liitteenä on ${virasto} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksen voimassa olon pidentämistä koskevasta päätöksestä koskien suunnitelmaa ${

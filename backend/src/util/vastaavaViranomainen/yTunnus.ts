@@ -2,7 +2,7 @@ import { SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiMode
 
 const yTunnusVayla = "1010547-1";
 const yTunnusELY = "2296962-1";
-const yTunnusEVK = "123456-7";
+const yTunnusEVK = "2296962-1";
 
 const vastaavanViranomaisenYTunnusMap: Record<SuunnittelustaVastaavaViranomainen, string | undefined> = {
   ETELA_POHJANMAAN_ELY: yTunnusELY,
