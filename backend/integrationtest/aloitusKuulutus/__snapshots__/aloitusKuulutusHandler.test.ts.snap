@@ -1,5 +1,640 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 1`] = `
+Object {
+  "description": "Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+  "mockedtime": "2022-03-28T00:00",
+  "obj": Object {
+    "POHJOISSAAME": Object {
+      "__typename": "KuulutusSaamePDF",
+      "kirjeTiedotettavillePDF": undefined,
+      "kuulutusIlmoitusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "jarjestys": undefined,
+        "nimi": "saameilmoitus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saameilmoitus.pdf",
+        "tila": "VALMIS",
+        "tuotu": "2022-03-28T00:00",
+        "uuid": "00000004-4662-4301-bd53-67d296c1ac3b",
+      },
+      "kuulutusPDF": Object {
+        "__typename": "LadattuTiedosto",
+        "jarjestys": undefined,
+        "nimi": "saamekuulutus.pdf",
+        "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saamekuulutus.pdf",
+        "tila": "VALMIS",
+        "tuotu": "2022-03-28T00:00",
+        "uuid": "00000003-4662-4301-bd53-67d296c1ac3b",
+      },
+    },
+    "__typename": "KuulutusSaamePDFt",
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 2`] = `
+Object {
+  "yllapito S3 files Aloituskuulutus saamenkielisellä kuulutuksella ja ilmoituksella": Object {
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 3`] = `
+Object {
+  "description": "Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella",
+  "mockedtime": "2022-03-28T00:00",
+  "obj": Object {
+    "aloituskuulutusSaamePDFt": Object {
+      "__typename": "AloitusKuulutusJulkaisu",
+      "aloituskuulutusPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "AloitusKuulutusPDF",
+          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+        },
+        "__typename": "AloitusKuulutusPDFt",
+      },
+      "aloituskuulutusSaamePDFt": Object {
+        "POHJOISSAAME": Object {
+          "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": undefined,
+          "kuulutusIlmoitusPDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saameilmoitus.pdf",
+            "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saameilmoitus.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-03-28T00:00",
+            "uuid": "00000004-4662-4301-bd53-67d296c1ac3b",
+          },
+          "kuulutusPDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saamekuulutus.pdf",
+            "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/saamekuulutus.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-03-28T00:00",
+            "uuid": "00000003-4662-4301-bd53-67d296c1ac3b",
+          },
+        },
+        "__typename": "KuulutusSaamePDFt",
+      },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "hankkeenKuvaus": Object {
+        "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+        "__typename": "LokalisoituTeksti",
+      },
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "maakunnat": Array [],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "julkaisuOnKopio": false,
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2022-03-28",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": undefined,
+      },
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+        "tila": "VALMIS",
+        "tuotu": "2022-03-28T00:00",
+        "uuid": "00000005-4662-4301-bd53-67d296c1ac3b",
+      },
+      "muokkaaja": "A000111",
+      "muokkausTila": "MUOKKAUS",
+      "siirtyySuunnitteluVaiheeseen": "2022-04-28",
+      "suunnitteluSopimus": undefined,
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": undefined,
+      "velho": Object {
+        "__typename": "Velho",
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "linkitetytProjektit": undefined,
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "029123123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 4`] = `
+Object {
+  "yllapito S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
+    "/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 5`] = `
+Object {
+  "description": "Aloituskuulutusjulkaisu julkinen, saamenkieliset PDFt",
+  "mockedtime": "2022-03-28T00:00",
+  "obj": Object {
+    "aloituskuulutusSaamePDFt": Object {
+      "POHJOISSAAME": Object {
+        "__typename": "KuulutusSaamePDF",
+        "kirjeTiedotettavillePDF": undefined,
+        "kuulutusIlmoitusPDF": Object {
+          "__typename": "LadattuTiedosto",
+          "jarjestys": undefined,
+          "nimi": "saameilmoitus.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/3/aloituskuulutus/saameilmoitus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-03-28T00:00",
+          "uuid": "00000004-4662-4301-bd53-67d296c1ac3b",
+        },
+        "kuulutusPDF": Object {
+          "__typename": "LadattuTiedosto",
+          "jarjestys": undefined,
+          "nimi": "saamekuulutus.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/3/aloituskuulutus/saamekuulutus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-03-28T00:00",
+          "uuid": "00000003-4662-4301-bd53-67d296c1ac3b",
+        },
+      },
+      "__typename": "KuulutusSaamePDFt",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/3/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 6`] = `
+Object {
+  "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
+    "/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 7`] = `
+Object {
+  "description": "Aloituskuulutusjulkaisun uudelleenkuulutus saamenkielisellä kuulutuksella ja ilmoituksella",
+  "mockedtime": "2022-03-28T00:00",
+  "obj": Object {
+    "aloituskuulutusSaamePDFt": Object {
+      "__typename": "AloitusKuulutusJulkaisu",
+      "aloituskuulutusPDFt": Object {
+        "SUOMI": Object {
+          "__typename": "AloitusKuulutusPDF",
+          "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
+        },
+        "__typename": "AloitusKuulutusPDFt",
+      },
+      "aloituskuulutusSaamePDFt": Object {
+        "POHJOISSAAME": Object {
+          "__typename": "KuulutusSaamePDF",
+          "kirjeTiedotettavillePDF": undefined,
+          "kuulutusIlmoitusPDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saameilmoitus.pdf",
+            "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/saameilmoitus.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-03-28T00:00",
+            "uuid": "00000009-4662-4301-bd53-67d296c1ac3b",
+          },
+          "kuulutusPDF": Object {
+            "__typename": "LadattuTiedosto",
+            "jarjestys": undefined,
+            "nimi": "saamekuulutus.pdf",
+            "tiedosto": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/saamekuulutus.pdf",
+            "tila": "VALMIS",
+            "tuotu": "2022-03-28T00:00",
+            "uuid": "00000008-4662-4301-bd53-67d296c1ac3b",
+          },
+        },
+        "__typename": "KuulutusSaamePDFt",
+      },
+      "asianhallintaSynkronointiTila": "EI_TESTATTAVISSA",
+      "hankkeenKuvaus": Object {
+        "SUOMI": "Suunnittelu kohde on osa Hyvinkää-Hanko sähköistyshanketta, jossa toteutetaan myös tasoristeysten toimenpiteitä. Hyväksytyssä ratasuunnitelmassa kyseisessä kohdassa on hyväksytty suunnitelmaratkaisuna Kisan seisakkeen ja Leksvallin tasoristeysten poistaminen parantamalla Helmströmin tasoristeyksen kohdalle uusi tasoristeys. Nyt käynnistetään Rata-suunnitelman päivitys kyseisessä kohdassa ja suunnitellaan kaikkien kolmen tasoristeyksen poistaminen uudella Leksvallin ylikulkusillalla.",
+        "__typename": "LokalisoituTeksti",
+      },
+      "hyvaksyja": "A000112",
+      "hyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
+      "id": 2,
+      "ilmoituksenVastaanottajat": Object {
+        "__typename": "IlmoituksenVastaanottajat",
+        "kunnat": Array [
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 491,
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "mikkeli@mikke.li",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 178,
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "juva@ju.va",
+          },
+          Object {
+            "__typename": "KuntaVastaanottaja",
+            "id": 740,
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "maakunnat": Array [],
+        "viranomaiset": Array [
+          Object {
+            "__typename": "ViranomaisVastaanottaja",
+            "lahetetty": "2022-03-28T00:00",
+            "messageId": "messageId_test",
+            "nimi": "ETELA_SAVO_ELY",
+            "sahkoposti": "kirjaamo.etela-savo@ely-keskus.fi",
+          },
+        ],
+      },
+      "julkaisuOnKopio": false,
+      "kielitiedot": Object {
+        "__typename": "Kielitiedot",
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Projektinimi saameksi",
+        "toissijainenKieli": "POHJOISSAAME",
+      },
+      "kuulutusPaiva": "2020-01-23",
+      "kuulutusYhteystiedot": Object {
+        "__typename": "StandardiYhteystiedot",
+        "yhteysHenkilot": Array [
+          "A000112",
+        ],
+        "yhteysTiedot": undefined,
+      },
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/2/lähetekirje.eml",
+        "tila": "VALMIS",
+        "tuotu": "2022-03-28T00:00",
+        "uuid": "0000000a-4662-4301-bd53-67d296c1ac3b",
+      },
+      "muokkaaja": "A000111",
+      "muokkausTila": "MUOKKAUS",
+      "siirtyySuunnitteluVaiheeseen": "2022-04-28",
+      "suunnitteluSopimus": undefined,
+      "tila": "HYVAKSYTTY",
+      "uudelleenKuulutus": Object {
+        "__typename": "UudelleenKuulutus",
+        "alkuperainenHyvaksymisPaiva": "2022-03-28T00:00:01+03:00",
+        "alkuperainenKuulutusPaiva": "2022-03-28",
+        "selosteKuulutukselle": Object {
+          "RUOTSI": "Ruotsiseloste uudelleenkuulutukselle",
+          "SUOMI": "Suomiseloste uudelleenkuulutukselle",
+          "__typename": "LokalisoituTeksti",
+        },
+        "selosteLahetekirjeeseen": Object {
+          "RUOTSI": "Ruotsiseloste uudelleenkuulutuksen lähetekirjeeseen",
+          "SUOMI": "Suomiseloste uudelleenkuulutuksen lähetekirjeeseen",
+          "__typename": "LokalisoituTeksti",
+        },
+        "tiedotaKiinteistonomistajia": undefined,
+        "tila": "JULKAISTU_PERUUTETTU",
+      },
+      "velho": Object {
+        "__typename": "Velho",
+        "asiatunnusELY": "ELY/3/2022",
+        "asiatunnusVayla": "VAYLA/3/2022",
+        "kunnat": Array [
+          491,
+          178,
+          740,
+        ],
+        "linkitetytProjektit": undefined,
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 3",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vastuuhenkilonEmail": "pekka.projari@vayla.fi",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "__typename": "Yhteystieto",
+          "etunimi": "A-tunnus1",
+          "organisaatio": "CGI Suomi Oy",
+          "puhelinnumero": "029123123",
+          "sahkoposti": "mikko.haapamki@cgi.com",
+          "sukunimi": "Hassu",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 8`] = `
+Object {
+  "yllapito S3 files Aloituskuulutusjulkaisun uudelleenkuulutus saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
+    "/1/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
+    "/1/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
+    "/1/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+    },
+    "/1/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+    },
+    "/2/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/2/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+    },
+    "/2/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+    },
+    "/2/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 9`] = `
+Object {
+  "description": "Aloituskuulutusjulkaisun uudelleenkuulutus julkinen, saamenkieliset PDFt",
+  "mockedtime": "2022-03-28T00:00",
+  "obj": Object {
+    "aloituskuulutusSaamePDFt": Object {
+      "POHJOISSAAME": Object {
+        "__typename": "KuulutusSaamePDF",
+        "kirjeTiedotettavillePDF": undefined,
+        "kuulutusIlmoitusPDF": Object {
+          "__typename": "LadattuTiedosto",
+          "jarjestys": undefined,
+          "nimi": "saameilmoitus.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/3/aloituskuulutus/saameilmoitus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-03-28T00:00",
+          "uuid": "00000009-4662-4301-bd53-67d296c1ac3b",
+        },
+        "kuulutusPDF": Object {
+          "__typename": "LadattuTiedosto",
+          "jarjestys": undefined,
+          "nimi": "saamekuulutus.pdf",
+          "tiedosto": "/tiedostot/suunnitelma/3/aloituskuulutus/saamekuulutus.pdf",
+          "tila": "VALMIS",
+          "tuotu": "2022-03-28T00:00",
+          "uuid": "00000008-4662-4301-bd53-67d296c1ac3b",
+        },
+      },
+      "__typename": "KuulutusSaamePDFt",
+    },
+    "kuulutusPDF": Object {
+      "SUOMI": "/tiedostot/suunnitelma/3/aloituskuulutus/T412 Aloituskuulutus.pdf",
+      "__typename": "KuulutusPDFJulkinen",
+    },
+  },
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 10`] = `
+Object {
+  "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
+    "/T412 Aloituskuulutus.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/T412_1 Ilmoitus aloituskuulutuksesta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''T412_1%20Ilmoitus%20aloituskuulutuksesta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/lähetekirje.eml": FileMetadata {
+      "ContentDisposition": "attachment; filename*=UTF-8''l%C3%A4hetekirje.eml",
+      "ContentType": "message/rfc822",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS_LAHETEKIRJE",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/saameilmoitus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ILMOITUS_KUULUTUKSESTA",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+    "/saamekuulutus.pdf": FileMetadata {
+      "ContentDisposition": undefined,
+      "ContentType": "image/png",
+      "asiakirjaTyyppi": "ALOITUSKUULUTUS",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
+  },
+}
+`;
+
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 1`] = `
 Object {
   "aloitusKuulutus": Object {
@@ -416,4 +1051,324 @@ Object {
     },
   ],
 }
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 5`] = `
+Object {
+  "aloitusKuulutus": Object {
+    "hankkeenKuvaus": Object {
+      "RUOTSI": "På svenska",
+      "SUOMI": "Lorem Ipsum",
+    },
+    "id": 1,
+    "ilmoituksenVastaanottajat": Object {
+      "kunnat": Array [
+        Object {
+          "id": 837,
+          "sahkoposti": "837@email.com",
+        },
+        Object {
+          "id": 536,
+          "sahkoposti": "536@email.com",
+        },
+      ],
+      "viranomaiset": Array [
+        Object {
+          "nimi": "PIRKANMAAN_ELY",
+          "sahkoposti": "pirkanmaan-ely@email.com",
+        },
+      ],
+    },
+    "kuulutusPaiva": "2022-01-02",
+    "kuulutusYhteystiedot": Object {
+      "yhteysHenkilot": Array [
+        "A000124",
+      ],
+      "yhteysTiedot": Array [
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+    "palautusSyy": null,
+    "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  },
+  "aloitusKuulutusJulkaisut": Array [
+    Object {
+      "aloituskuulutusPDFt": Object {
+        "RUOTSI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
+        },
+        "SUOMI": Object {
+          "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
+        },
+      },
+      "hankkeenKuvaus": Object {
+        "RUOTSI": "På svenska",
+        "SUOMI": "Lorem Ipsum",
+      },
+      "hyvaksyja": "A123",
+      "hyvaksymisPaiva": "2022-11-04",
+      "id": 1,
+      "ilmoituksenVastaanottajat": Object {
+        "kunnat": Array [
+          Object {
+            "id": 837,
+            "lahetetty": "2020-01-01T02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "837@email.com",
+          },
+          Object {
+            "id": 536,
+            "lahetetty": "2020-01-01T02:00",
+            "messageId": "messageId_test",
+            "sahkoposti": "536@email.com",
+          },
+        ],
+        "viranomaiset": Array [
+          Object {
+            "lahetetty": "2020-01-01T02:00",
+            "messageId": "messageId_test",
+            "nimi": "PIRKANMAAN_ELY",
+            "sahkoposti": "pirkanmaan-ely@email.com",
+          },
+        ],
+      },
+      "kielitiedot": Object {
+        "ensisijainenKieli": "SUOMI",
+        "projektinNimiVieraskielella": "Namnet på svenska",
+        "toissijainenKieli": "RUOTSI",
+      },
+      "kuulutusPaiva": "2022-01-02",
+      "kuulutusYhteystiedot": Object {
+        "yhteysHenkilot": Array [
+          "A000123",
+          "A000124",
+        ],
+        "yhteysTiedot": Array [
+          Object {
+            "etunimi": "Marko",
+            "organisaatio": "Kajaani",
+            "puhelinnumero": "0293121213",
+            "sahkoposti": "markku.koi@koi.com",
+            "sukunimi": "Koi",
+          },
+        ],
+      },
+      "lahetekirje": Object {
+        "nimi": "lähetekirje.eml",
+        "tiedosto": "/aloituskuulutus/1/lähetekirje.eml",
+        "tila": "VALMIS",
+        "tuotu": "2020-01-01T02:00",
+        "uuid": "00000001-6041-4c97-9b54-f3f98a121bc1",
+      },
+      "muokkaaja": "A000111",
+      "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "suunnitteluSopimus": Object {
+        "email": "Kunta.Kuntalainen@vayla.fi",
+        "etunimi": "Kunta",
+        "kunta": 536,
+        "logo": Object {
+          "RUOTSI": "/suunnittelusopimus/logo.png",
+          "SUOMI": "/suunnittelusopimus/logo.png",
+        },
+        "puhelinnumero": "029123123",
+        "sukunimi": "Kuntalainen",
+      },
+      "tila": "HYVAKSYTTY",
+      "velho": Object {
+        "asiatunnusELY": "ELY/1/2022",
+        "asiatunnusVayla": "VAYLA/1/2022",
+        "kunnat": Array [
+          837,
+          536,
+        ],
+        "maakunnat": Array [
+          1,
+          6,
+        ],
+        "nimi": "Testiprojekti 1",
+        "suunnittelustaVastaavaViranomainen": "UUDENMAAN_ELY",
+        "tyyppi": "TIE",
+        "vaylamuoto": Array [
+          "tie",
+        ],
+      },
+      "yhteystiedot": Array [
+        Object {
+          "etunimi": "Kunta",
+          "kunta": 536,
+          "organisaatio": "Nokia",
+          "puhelinnumero": "029123123",
+          "sahkoposti": "Kunta.Kuntalainen@vayla.fi",
+          "sukunimi": "Kuntalainen",
+        },
+        Object {
+          "elyOrganisaatio": "PIRKANMAAN_ELY",
+          "etunimi": "Eemil",
+          "organisaatio": "ELY",
+          "puhelinnumero": "123456789",
+          "sahkoposti": "eemil.elylainen@ely.fi",
+          "sukunimi": "Elylainen",
+        },
+        Object {
+          "etunimi": "Marko",
+          "organisaatio": "Kajaani",
+          "puhelinnumero": "0293121213",
+          "sahkoposti": "markku.koi@koi.com",
+          "sukunimi": "Koi",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 6`] = `Array []`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 7`] = `
+Object {
+  "args": Object {
+    "DistributionId": "unit-test-distribution-id",
+    "InvalidationBatch": Object {
+      "CallerReference": "***unittest***",
+      "Paths": Object {
+        "Items": Array [
+          "/tiedostot/suunnitelma/1/*",
+        ],
+        "Quantity": 1,
+      },
+    },
+  },
+  "stub": "createInvalidation",
+}
+`;
+
+exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessin eri vaiheet onnistuneesti 8`] = `
+Array [
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "pekka.projari@vayla.fi",
+    ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus odottaa hyväksyntää ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektistasi Testiprojekti 1 on luotu aloituskuulutus, joka odottaa hyväksyntääsi.
+
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "pekka.projari@vayla.fi",
+    ],
+  },
+  Object {
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Testiprojekti 1 aloituskuulutus on hyväksytty.
+
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
+Sait tämän viestin, koska sinut on merkitty kuulutuksen laatijaksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": "mikko.haapamaki@cgi.com",
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412 Aloituskuulutus sv.pdf",
+      },
+    ],
+    "subject": "Valtion liikenneväylien suunnittelu: Aloituskuulutus hyväksytty ELY/1/2022",
+    "text": "Valtion liikenneväylien suunnittelu -järjestelmän projektisi Testiprojekti 1 aloituskuulutus on hyväksytty.
+
+Voit tarkastella kuulutusta osoitteessa https://localhost:3000/yllapito/projekti/1/aloituskuulutus
+
+Viethän sekä oheisen kuulutuksen että erillisen viestin, jossa on liitteenä ilmoitus kuulutuksesta, asianhallintaan suunnitelman hallinnollisen käsittelyn asialle. Toimi organisaatiosi asianhallinnan ohjeistusten mukaisesti.
+
+Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata.",
+    "to": Array [
+      "pekka.projari@vayla.fi",
+    ],
+  },
+  Object {
+    "attachments": Array [
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+      },
+      Object {
+        "contentType": "application/pdf",
+        "filename": "T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
+      },
+    ],
+    "cc": Array [
+      "pekka.projari@vayla.fi",
+    ],
+    "subject": "Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta",
+    "text": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.
+
+Testiprojekti 1
+
+Nokia ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman ja maastotöiden aloittamista. Nokia saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus.
+
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.
+
+Lorem Ipsum
+
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Lisätietoja antaa 
+
+Nokia, Kunta Kuntalainen, puh. 029123123, Kunta.Kuntalainen@vayla.fi
+
+Pirkanmaan ELY-keskus, Eemil Elylainen, puh. 123456789, eemil.elylainen@ely.fi
+
+Kajaani, Marko Koi, puh. 0293121213, markku.koi@koi.com
+
+Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.
+
+Namnet på svenska
+
+Nokia meddelar om publiceringen av en kungörelse som gäller inledande av den vägplan som nämns i rubriken samt terrängarbeten. Nokia delger ärendet offentligt genom kungörelse under minst 30 dagar på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen samt genom att publicera kungörelsen i flera dagstidningar med allmän spridning på området. (108 § i lagen om trafiksystem och landsvägar och 62 a § i förvaltningslagen)
+
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/1/aloituskuulutus.
+
+Kommunerna i planeringsområdet ombeds publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska i mån av möjlighet publiceras den ovan nämnda dagen då kungörelsen publiceras. Man behöver inte bekräfta för avsändaren att meddelandet är framlagt. Meddelandet kommer automatiskt upp på NTM-centralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder. 
+
+På svenska
+
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
+
+Mer information om planen 
+
+Nokia, Kunta Kuntalainen, tel. 029123123, Kunta.Kuntalainen@vayla.fi
+
+NTM-centralen i Birkaland, Eemil Elylainen, tel. 123456789, eemil.elylainen@ely.fi
+
+Kajaani, Marko Koi, tel. 0293121213, markku.koi@koi.com",
+    "to": Array [
+      "837@email.com",
+      "536@email.com",
+      "pirkanmaan-ely@email.com",
+    ],
+  },
+]
 `;
