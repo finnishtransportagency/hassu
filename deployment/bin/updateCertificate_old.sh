@@ -1,18 +1,21 @@
-# Usage: ./deployment/bin/updateCertificate.sh [aws profile] [environment name e.g. dev] <intermediate certificate filename> <cer filename> <key filename>
-# For example ./deployment/bin/updateCertificate.sh my_aws_profile dev ../Intermediate.crt somecertificate.cer someprivatekey.key
+# Deprekoitunut 14.10.2025, käytä updateCertificate.sh
+
+# Usage: ./deployment/bin/updateCertificate.sh [aws profile] [environment name e.g. dev] <intermediate certificate filename> <pfx filename>
+# For example ./deployment/bin/updateCertificate.sh my_aws_profile dev ../Intermediate.crt somecertificate.pfx
 set -e
 export AWS_PROFILE=$1
 ENV=$2
 INTERMEDIATE=$3
 INPUT_FILE=$4
-PRIVATEKEY_FILE=$5
 echo "Processing certificate $INPUT_FILE into $2 using AWS_PROFILE=$AWS_PROFILE"
 WORKDIR="ssl_$ENV"
 mkdir -p "$WORKDIR"
 
-cp "$PRIVATEKEY_FILE" "$WORKDIR/privatekey.pem" 
-cp "$INPUT_FILE" "$WORKDIR/cert.pem"
-
+if [ ! -f "$WORKDIR/privatekey.pem" ]; then
+  openssl pkcs12 -in "$INPUT_FILE" -out "$WORKDIR/privatekey.pem" -nocerts -nodes -legacy
+  openssl pkcs12 -in "$INPUT_FILE" -out "$WORKDIR/cert.pem" -nokeys -legacy
+fi
+# pfx filussa voi olla myös certicate chain
 NUMBER_OF_CERTS=$(grep -F "BEGIN CERTIFICATE" -c $WORKDIR/cert.pem)
 if [ $NUMBER_OF_CERTS -gt 1 ]; then
   echo "Edit $WORKDIR/cert.pem to contain only server certificate. You can put rest to Intermediate.crt. Then run script again."
@@ -28,6 +31,6 @@ if [ "$ENV" == "dev" ] || [ "$ENV" == "prod" ]; then
   aws ssm put-parameter --overwrite --region eu-west-1 --name "/SuomiFiCertificate" --value "$CERTIFICATE" --type SecureString
   aws ssm put-parameter --overwrite --region eu-west-1 --name "/SuomiFiPrivateKey" --value "$PRIVATEKEY" --type SecureString
 fi
-CN=$(openssl x509 -in $WORKDIR/cert.pem -noout -subject | sed -n 's/.*CN[ =]*\([^,\/]*\).*/\1/p')
+CN=$(openssl x509 -noout -subject -in $WORKDIR/cert.pem | awk -F= '{gsub(/^[ \t]+/,"",$6); print $6}')
 echo "Certificate $CN updated"
 rm -rf "$WORKDIR"
