@@ -61,6 +61,7 @@ async function main() {
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       NEXT_PUBLIC_VELHO_BASE_URL: environmentVariables.NEXT_PUBLIC_VELHO_BASE_URL,
       NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: environmentVariables.NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT,
+      NEXT_PUBLIC_EVK_ACTIVATION_DATE: environmentVariables.NEXT_PUBLIC_EVK_ACTIVATION_DATE,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
       KEYCLOAK_DOMAIN: variables.KeycloakDomain,
       KEYCLOAK_CLIENT_SECRET: variables.KeycloakClientSecret,

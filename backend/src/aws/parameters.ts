@@ -184,6 +184,10 @@ class Parameters {
     return this.getParameter("outputs/SuomiFiSQSUrl");
   }
 
+  async getIsEvkActivated() {
+    return this.getRequiredParameter("EvkActivationDate");
+  };
+
   getMmlApiKey() {
     return this.getRequiredParameter("MmlApiKey");
   }

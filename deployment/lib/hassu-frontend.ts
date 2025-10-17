@@ -923,7 +923,7 @@ export class HassuFrontendCoreStack extends Stack {
     // apinoitu next.config.js
     let version = process.env.CODEBUILD_SOURCE_VERSION || "";
     try {
-      let buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
+      const buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
       if (buffer) {
         version = buffer.toString("utf8");
       }
@@ -943,6 +943,7 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_FRONTEND_DOMAIN_NAME: config.frontendDomainName,
       NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       NEXT_PUBLIC_KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
+      NEXT_PUBLIC_EVK_ACTIVATION_DATE: ssmParameters.EvkActivationDate,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       ENVIRONMENT: Config.env,
       ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
