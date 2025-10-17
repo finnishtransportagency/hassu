@@ -85,7 +85,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
       this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
       this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
-      this.pluralParagraphFromKey("kappale2"),
+      this.paragraphFromKey("kappale2"),
       this.paragraphFromKey("kappale3"),
       this.vahainenMenettely ? this.paragraphFromKey("kappale4_vahainen_menettely") : this.paragraphFromKey("kappale4"),
       this.tietosuojaParagraph(),
@@ -102,7 +102,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.paragraphFromKey("rata_kappale1");
     } else {
-      return this.pluralParagraphFromKey("tie_kappale1");
+      return this.paragraphFromKey("tie_kappale1");
     }
   }
 

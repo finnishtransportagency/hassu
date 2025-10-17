@@ -50,13 +50,11 @@ export function createAloituskuulutusLahetekirjeEmail(adapter: AloituskuulutusKu
 }
 
 const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
-  const usePlural = adapter.isUseitaOsapuolia();
-
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
-    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1", usePlural),
+    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"),
     adapter.vahainenMenettely ? adapter.onKyseVahaisestaMenettelystaParagraph() : null,
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale2"),
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),

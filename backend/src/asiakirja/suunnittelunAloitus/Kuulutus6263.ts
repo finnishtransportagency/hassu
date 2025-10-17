@@ -142,7 +142,7 @@ export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private paragraphs(): PDFStructureElement[] {
     if (this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE) {
       return [
-        this.pluralParagraphFromKey("lausunnonantajille_kappale1"),
+        this.paragraphFromKey("lausunnonantajille_kappale1"),
         this.paragraphFromKey("kappale2"),
         this.paragraphFromKey("kappale3"),
         this.paragraphFromKey("kappale4"),
