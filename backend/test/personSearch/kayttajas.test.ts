@@ -54,7 +54,9 @@ describe("kayttajas", () => {
     expect(kayttajas.findByEmail("e11@foo.com")).to.eql(a1Kayttaja);
     expect(kayttajas.findByEmail("e2@foo.com")).to.eql(a2Kayttaja);
     expect(kayttajas.findByEmail("e3@ely-keskus.fi")).to.eql(a3Kayttaja);
+    expect(kayttajas.findByEmail("e3@elinvoimakeskus.fi")).to.eql(a3Kayttaja);
     expect(kayttajas.findByEmail("e4@elinvoimakeskus.fi")).to.eql(a4Kayttaja);
+    expect(kayttajas.findByEmail("e4@ely-keskus.fi")).to.eql(a4Kayttaja);
     expect(kayttajas.asList().sort(sortByUidFn)).to.eql([a1Kayttaja, a2Kayttaja, a3Kayttaja, a4Kayttaja]);
     expect(kayttajas.asMap()).to.eql(kayttajaMap);
   });
