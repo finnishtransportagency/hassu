@@ -135,72 +135,72 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.UUDENMAAN_EVK) {
       return {
         nimi: "Uudenmaan Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 10",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.LOUNAIS_SUOMEN_EVK) {
       return {
         nimi: "Lounais-Suomen Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 20",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KAAKKOIS_SUOMEN_EVK) {
       return {
         nimi: "Kaakkois-Suomen Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 30",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.SISA_SUOMEN_EVK) {
       return {
         nimi: "Sisä-Suomen Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 40",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.KESKI_SUOMEN_EVK) {
       return {
         nimi: "Keski-Suomen Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 50",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.ITA_SUOMEN_EVK) {
       return {
         nimi: "Itä-Suomen Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 60",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK) {
       return {
         nimi: "Etelä-Pohjanmaan Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 70",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.POHJANMAAN_EVK) {
       return {
         nimi: "Pohjanmaan Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 80",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.POHJOIS_SUOMEN_EVK) {
       return {
         nimi: "Pohjois-Suomen Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 90",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else if (viranomainen === SuunnittelustaVastaavaViranomainen.LAPIN_EVK) {
       return {
         nimi: "Lapin Elinvoimakeskus",
-        katuosoite: "PL 11",
-        postinumero: "11111",
-        postitoimipaikka: "111",
+        katuosoite: "PL 100",
+        postinumero: "00072",
+        postitoimipaikka: "Elinvoimakeskus",
       };
     } else {
       return {
