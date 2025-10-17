@@ -7,7 +7,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata ely ei osoit
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -48,7 +48,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata ely osoiteti
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -67,11 +67,11 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 
 Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
+
+
+
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-
-
-
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
 
 
@@ -95,7 +95,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -142,7 +142,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto
 
 Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
-Helsingfors har utarbetat en järnvägsplan enligt banlagen (110/2007): Projekti 1 på svenska.
+Trafikledsverket har utarbetat en järnvägsplan enligt banlagen (110/2007): Projekti 1 på svenska.
 
 Hankkeen kuvaus på svenska
 Planen hålls offentligt framlagd 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/nahtavillaolo.
@@ -189,7 +189,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata vaylavirasto
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
+Väylävirasto on laatinut ratalain (110/2007) mukaisen ratasuunnitelman: Projekti 1.
 
 Ratasuunnitelman osalta kyse on ratalain 23 §:n mukaisesta vähäisestä rautatien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Hankkeen kuvaus
@@ -237,7 +237,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie ely osoitetie
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -274,7 +274,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -315,7 +315,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -362,7 +362,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
-Helsingfors har utarbetat en vägplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Trafikledsverket har utarbetat en vägplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
 
 Hankkeen kuvaus på svenska
 Planen hålls offentligt framlagd 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/nahtavillaolo.
@@ -409,7 +409,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
 
 Tiesuunnitelman osalta kyse on lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä maantien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Hankkeen kuvaus
@@ -487,7 +487,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen ely osoit
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -529,7 +529,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -571,7 +571,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
-Helsingfors har utarbetat en utredningsplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Trafikledsverket har utarbetat en utredningsplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
 
 Hankkeen kuvaus på svenska
 Planen hålls offentligt framlagd 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/nahtavillaolo.
@@ -613,7 +613,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Helsinki on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
 
 Yleissuunnitelman osalta kyse on lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä maantien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Hankkeen kuvaus
