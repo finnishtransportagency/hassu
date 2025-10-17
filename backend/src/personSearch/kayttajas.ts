@@ -4,6 +4,9 @@ import { log } from "../logger";
 import { formatNimi } from "../util/userUtil";
 import { queryMatchesWithFullname } from "hassu-common/henkiloSearch/queryMatchesWithFullname";
 
+const ELY_EMAIL_DOMAIN = "ely-keskus.fi";
+const EVK_EMAIL_DOMAIN = "elinvoimakeskus.fi";
+
 export type Person = {
   etuNimi: string;
   sukuNimi: string;
@@ -16,7 +19,7 @@ export class Kayttajas {
   personMap: Record<string, Person>;
 
   // Kohdellaan näitä domaineja samana -> email vertailu näiden osalta lokaalin osan perusteella
-  private readonly EQUIVALENT_EMAIL_DOMAINS = new Set(["ely-keskus.fi", "elinvoimakeskus.fi"]);
+  private readonly EQUIVALENT_EMAIL_DOMAINS = new Set([ELY_EMAIL_DOMAIN, EVK_EMAIL_DOMAIN]);
 
   constructor(personMap: Record<string, Person>) {
     this.personMap = personMap;
@@ -30,7 +33,7 @@ export class Kayttajas {
     }
   }
 
-  private parseEmail(address: string): { local: string; domain: string } {
+  private splitEmailParts(address: string): { local: string; domain: string } {
     const [local, domain] = address.toLowerCase().trim().split("@");
     return { local, domain };
   }
@@ -43,13 +46,13 @@ export class Kayttajas {
   }
 
   findByEmail(email: string): Kayttaja | undefined {
-    const search = this.parseEmail(email);
+    const searchEmail = this.splitEmailParts(email);
 
     for (const [uid, person] of Object.entries(this.personMap)) {
       if (
         person.email.some((address) => {
-          const parsed = this.parseEmail(address);
-          return this.isEmailsMatch(search, parsed);
+          const personEmail = this.splitEmailParts(address);
+          return this.isEmailsMatch(searchEmail, personEmail);
         })
       ) {
         return adaptPerson(uid, person);
