@@ -184,6 +184,14 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
     return this.props.viimeinenVoimassaolovuosi;
   }
 
+  get kuuluttaja(): string {
+    return this.text("viranomainen." + this.velho?.suunnittelustaVastaavaViranomainen);
+  }
+
+  get kuuluttaja_pitka(): string {
+    return this.text("viranomainen_pitka." + this.velho?.suunnittelustaVastaavaViranomainen);
+  }
+
   get userInterfaceFields(): KuulutusTekstit | undefined {
     let kappale1;
     const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "hyvaksymispaatoksesta" : "jatkopaatos";
@@ -205,7 +213,7 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
       ],
       kuvausTekstit: [],
       infoTekstit: [this.htmlText(`asiakirja.kuulutus_${typeKey}.kappale5`)],
-      tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
+      tietosuoja: this.htmlText("asiakirja.tietosuoja", false, { extLinks: true }),
     };
   }
 }

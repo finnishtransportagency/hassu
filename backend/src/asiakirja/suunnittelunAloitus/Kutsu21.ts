@@ -61,13 +61,18 @@ export class Kutsu21 {
     });
   }
 
+  isUseitaOsapuolia(): boolean {
+    return this.adapter.isUseitaOsapuolia();
+  }
+
   createEmail(): EmailOptions {
+    const usePlural = this.isUseitaOsapuolia();
     const bodyArray = [this.adapter.title, ""];
     if (this.adapter.selosteVuorovaikutuskierrokselle) {
       bodyArray.push(this.adapter.selosteVuorovaikutuskierrokselle, "");
     }
     bodyArray.push(
-      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale1"),
+      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale1", usePlural),
       "",
       this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale2"),
       "",

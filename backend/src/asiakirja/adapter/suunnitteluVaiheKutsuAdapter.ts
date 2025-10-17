@@ -1,21 +1,24 @@
-import { CommonKutsuAdapter, CommonKutsuAdapterProps, LokalisoituYhteystieto } from "./commonKutsuAdapter";
-import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu } from "../../database/model";
+import { LokalisoituYhteystieto } from "./commonKutsuAdapter";
+import { SuunnitteluSopimus, SuunnitteluSopimusJulkaisu, VuorovaikutusKierrosJulkaisu, Yhteystieto } from "../../database/model";
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
-import { formatProperNoun } from "hassu-common/util/formatProperNoun";
+import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 
-export interface SuunnitteluVaiheKutsuAdapterProps extends CommonKutsuAdapterProps {
+export interface SuunnitteluVaiheKutsuAdapterProps extends KuulutusKutsuAdapterProps {
   vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
   suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu;
   kuulutettuYhdessaSuunnitelmanimi: string | undefined;
+  kuulutusPaiva?: string;
+  yhteystiedot?: Yhteystieto[];
 }
 
 export const ASIAKIRJA_KUTSU_PREFIX = "asiakirja.kutsu_vuorovaikutukseen.";
 
-export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
+export class SuunnitteluVaiheKutsuAdapter extends KuulutusKutsuAdapter<SuunnitteluVaiheKutsuAdapterProps> {
   private readonly vuorovaikutusKierrosJulkaisu?: VuorovaikutusKierrosJulkaisu;
   protected readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
+  readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
 
   constructor(props: SuunnitteluVaiheKutsuAdapterProps) {
     super(props);
@@ -23,6 +26,18 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
     this.vuorovaikutusKierrosJulkaisu = vuorovaikutusKierrosJulkaisu;
     this.suunnitteluSopimus = suunnitteluSopimus;
     this.kuulutettuYhdessaSuunnitelmanimi = kuulutettuYhdessaSuunnitelmanimi;
+  }
+
+  get kuulutusNimiCapitalized(): string {
+    return "Kutsu vuorovaikutukseen";
+  }
+
+  get kuulutusYllapitoUrl(): string {
+    return super.kutsuUrl;
+  }
+
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
   }
 
   get subject(): string {
@@ -85,72 +100,10 @@ export class SuunnitteluVaiheKutsuAdapter extends CommonKutsuAdapter {
   }
 
   get kuuluttaja(): string {
-    const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      if (suunnitteluSopimus.kunta) {
-        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
-      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
-        const osapuoliNimet = suunnitteluSopimus.osapuolet
-          .map((osapuoli) => {
-            if (this.kieli === "RUOTSI") {
-              return osapuoli.osapuolenNimiSV;
-            } else {
-              return osapuoli.osapuolenNimiFI;
-            }
-          })
-          .filter((nimi) => nimi && nimi.trim() !== "");
-
-        if (osapuoliNimet.length === 0) {
-          return super.kuuluttaja;
-        } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
-        } else if (osapuoliNimet.length === 2) {
-          const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
-        } else {
-          const ja = this.text("ja");
-          const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
-        }
-      }
-    }
     return super.kuuluttaja;
   }
 
   get kuuluttaja_pitka(): string {
-    const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      if (suunnitteluSopimus?.kunta) {
-        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
-      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
-        const osapuoliNimet = suunnitteluSopimus.osapuolet
-          .map((osapuoli) => {
-            if (this.kieli === "RUOTSI") {
-              return osapuoli.osapuolenNimiSV;
-            } else {
-              return osapuoli.osapuolenNimiFI;
-            }
-          })
-          .filter((nimi) => nimi && nimi.trim() !== "");
-
-        if (osapuoliNimet.length === 0) {
-          return super.kuuluttaja_pitka;
-        } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
-        } else if (osapuoliNimet.length === 2) {
-          const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
-        } else {
-          const ja = this.text("ja");
-          const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
-        }
-      }
-    }
     return super.kuuluttaja_pitka;
   }
 
