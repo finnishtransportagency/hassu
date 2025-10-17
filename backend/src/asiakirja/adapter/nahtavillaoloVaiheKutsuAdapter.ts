@@ -10,7 +10,6 @@ import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisa
 import { formatNimi } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
-import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 
 type PropsCreatorOptions = {
   projekti: Pick<
@@ -141,73 +140,11 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
   }
 
   get kuuluttaja(): string {
-    const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      if (suunnitteluSopimus.kunta) {
-        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
-      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
-        const osapuoliNimet = suunnitteluSopimus.osapuolet
-          .map((osapuoli) => {
-            if (this.kieli === "RUOTSI") {
-              return osapuoli.osapuolenNimiSV;
-            } else {
-              return osapuoli.osapuolenNimiFI;
-            }
-          })
-          .filter((nimi) => nimi && nimi.trim() !== "");
-
-        if (osapuoliNimet.length === 0) {
-          return super.kuuluttaja;
-        } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
-        } else if (osapuoliNimet.length === 2) {
-          const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
-        } else {
-          const ja = this.text("ja");
-          const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
-        }
-      }
-    }
-    return super.kuuluttaja;
+    return this.text("viranomainen." + this.velho?.suunnittelustaVastaavaViranomainen);
   }
 
   get kuuluttaja_pitka(): string {
-    const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      if (suunnitteluSopimus?.kunta) {
-        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
-      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
-        const osapuoliNimet = suunnitteluSopimus.osapuolet
-          .map((osapuoli) => {
-            if (this.kieli === "RUOTSI") {
-              return osapuoli.osapuolenNimiSV;
-            } else {
-              return osapuoli.osapuolenNimiFI;
-            }
-          })
-          .filter((nimi) => nimi && nimi.trim() !== "");
-
-        if (osapuoliNimet.length === 0) {
-          return super.kuuluttaja_pitka;
-        } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
-        } else if (osapuoliNimet.length === 2) {
-          const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
-        } else {
-          const ja = this.text("ja");
-          const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
-        }
-      }
-    }
-    return super.kuuluttaja_pitka;
+    return this.text("viranomainen_pitka." + this.velho?.suunnittelustaVastaavaViranomainen);
   }
 
   isUseitaOsapuolia(): boolean {
@@ -215,18 +152,17 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
   }
 
   get userInterfaceFields(): KuulutusTekstit {
-    const usePlural = this.isUseitaOsapuolia();
     let kappale1;
 
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.htmlText("rata_kappale1");
     } else {
-      kappale1 = this.htmlText("tie_kappale1", usePlural);
+      kappale1 = this.htmlText("tie_kappale1");
     }
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.htmlText("kappale2", usePlural), this.htmlText("kappale3_ui")],
+      kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
       infoTekstit: this.vahainenMenettely ? [this.htmlText("kappale4_vahainen_menettely")] : [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", false, { extLinks: true }),
     };
