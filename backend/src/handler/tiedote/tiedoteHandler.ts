@@ -28,6 +28,28 @@ class TiedoteHandler {
     return apiTiedotteet;
   }
 
+  async listaaTiedotteetJulkinen(id?: string): Promise<API.Tiedote[] | undefined> {
+    //requirePermissionLuku();
+    log.info("listaaTiedotteetJulkinen");
+    let tiedotteet: DBTiedote[];
+    if (id) {
+      const tiedote = await tiedoteDatabase.haeTiedote(id);
+      tiedotteet = tiedote ? [tiedote] : [];
+    } else {
+      tiedotteet = (await tiedoteDatabase.haeKaikkiTiedotteet()) ?? [];
+    }
+
+    if (tiedotteet.length === 0) {
+      return [];
+    }
+
+    let apiTiedotteet = adaptTiedotteetToAPI(tiedotteet);
+    if (apiTiedotteet) {
+      apiTiedotteet = orderBy(apiTiedotteet, ["voimassaAlkaen"], ["desc"]);
+    }
+    return apiTiedotteet;
+  }
+
   async tallennaTiedote(input: TallennaTiedoteMutationVariables): Promise<string[]> {
     log.info("tallennaTiedote");
 
@@ -40,7 +62,7 @@ class TiedoteHandler {
 
     for (const tiedoteInput of input.tiedotteet) {
       const tiedoteData = adaptTiedoteInput(tiedoteInput);
-      await tiedoteDatabase.tallennaTiedote(tiedoteData);
+      await tiedoteDatabase.tallennaTiedote({ ...tiedoteData, __typename: "Tiedote" });
       tulokset.push(`Tallennettu: ${tiedoteData.id}`);
     }
 
