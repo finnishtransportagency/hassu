@@ -5,11 +5,13 @@ import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavil
 import { EmailOptions } from "../model/emailOptions";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
+  const usePlural = adapter.isUseitaOsapuolia();
+
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
-    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1"),
+    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1", usePlural),
     adapter.vahainenMenettely ? adapter.onKyseVahaisestaMenettelystaParagraph() : null,
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale2"),
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale3"),
