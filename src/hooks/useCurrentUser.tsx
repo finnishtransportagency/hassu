@@ -6,12 +6,12 @@ import useApi from "./useApi";
 import { API } from "@services/api/commonApi";
 import { useMemo } from "react";
 
-export function useCurrentUser() {
+export function useCurrentUser(enabled = true) {
   const api = useApi();
 
   const userLoader = useMemo(() => getUserLoader(api), [api]);
 
-  return useSWR([apiConfig.nykyinenKayttaja.graphql], userLoader, {
+  return useSWR(enabled ? [apiConfig.nykyinenKayttaja.graphql] : null, userLoader, {
     refreshInterval: 1000 * 60 * 15, // Päivitä vartin välein
     compare: (a, b) => isEqual(omit(a, "keksit"), omit(b, "keksit")),
   });
