@@ -98,8 +98,9 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
   protected addDocumentElements(): PDFStructureElement[] {
     assertIsDefined(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus);
     assertIsDefined(this.vuorovaikutusKierrosJulkaisu.vuorovaikutusTilaisuudet);
+
     return [
-      this.paragraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale1"),
+      this.pluralParagraphFromKey(ASIAKIRJA_KUTSU_PREFIX + "kappale1"),
       this.localizedParagraphFromMap(this.vuorovaikutusKierrosJulkaisu.hankkeenKuvaus),
       this.kuulutettuYhdessaSuunnitelmaParagraph(),
       ...(this.vuorovaikutusTilaisuudet(
