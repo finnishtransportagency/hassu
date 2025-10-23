@@ -14,7 +14,6 @@ import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandler";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
@@ -224,72 +223,10 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
   }
 
   get kuuluttaja(): string {
-    const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      if (suunnitteluSopimus.kunta) {
-        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
-      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
-        const osapuoliNimet = suunnitteluSopimus.osapuolet
-          .map((osapuoli) => {
-            if (this.kieli === "RUOTSI") {
-              return osapuoli.osapuolenNimiSV;
-            } else {
-              return osapuoli.osapuolenNimiFI;
-            }
-          })
-          .filter((nimi) => nimi && nimi.trim() !== "");
-
-        if (osapuoliNimet.length === 0) {
-          return super.kuuluttaja;
-        } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
-        } else if (osapuoliNimet.length === 2) {
-          const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
-        } else {
-          const ja = this.text("ja");
-          const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
-        }
-      }
-    }
     return super.kuuluttaja;
   }
 
   get kuuluttaja_pitka(): string {
-    const suunnitteluSopimus = this.suunnitteluSopimus;
-    if (suunnitteluSopimus) {
-      if (suunnitteluSopimus?.kunta) {
-        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
-      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
-        const osapuoliNimet = suunnitteluSopimus.osapuolet
-          .map((osapuoli) => {
-            if (this.kieli === "RUOTSI") {
-              return osapuoli.osapuolenNimiSV;
-            } else {
-              return osapuoli.osapuolenNimiFI;
-            }
-          })
-          .filter((nimi) => nimi && nimi.trim() !== "");
-
-        if (osapuoliNimet.length === 0) {
-          return super.kuuluttaja_pitka;
-        } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
-        } else if (osapuoliNimet.length === 2) {
-          const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
-        } else {
-          const ja = this.text("ja");
-          const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
-        }
-      }
-    }
     return super.kuuluttaja_pitka;
   }
 
@@ -315,10 +252,15 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     return super.kutsuja();
   }
 
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
+  }
+
   get userInterfaceFields(): KuulutusTekstit {
+    const usePlural = this.isUseitaOsapuolia();
     let kappale1;
     if (this.suunnitteluSopimus) {
-      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus");
+      kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus", usePlural);
     } else if (this.vahainenMenettely) {
       kappale1 = this.htmlText("asiakirja.aloituskuulutus.kappale1_vahainen_menettely");
     } else {
@@ -327,14 +269,14 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2_ui")],
+      kuvausTekstit: [this.htmlText("asiakirja.aloituskuulutus.kappale2_ui", usePlural)],
       infoTekstit: [
         this.htmlText("asiakirja.aloituskuulutus.kappale3"),
         this.vahainenMenettely
           ? this.htmlText("asiakirja.aloituskuulutus.kappale4_vahainen_menettely")
           : this.htmlText("asiakirja.aloituskuulutus.kappale4"),
       ],
-      tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
+      tietosuoja: this.htmlText("asiakirja.tietosuoja", usePlural, { extLinks: true }),
     };
   }
 }

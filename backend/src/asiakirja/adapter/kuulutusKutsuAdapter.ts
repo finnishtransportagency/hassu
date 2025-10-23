@@ -6,14 +6,15 @@ import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisa
 import { translate } from "../../util/localization";
 import { formatDate } from "../asiakirjaUtil";
 import { Kieli } from "hassu-common/graphql/apiModel";
+import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 
 export interface KuulutusKutsuAdapterProps extends CommonKutsuAdapterProps {
-  kuulutusPaiva: string;
+  kuulutusPaiva?: string;
   kuulutusVaihePaattyyPaiva?: string;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   uudelleenKuulutus?: UudelleenKuulutus | null;
-  yhteystiedot: Yhteystieto[];
+  yhteystiedot?: Yhteystieto[];
 }
 
 export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> extends CommonKutsuAdapter {
@@ -39,6 +40,76 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
     return this.kuulutusNimiCapitalized.toLowerCase();
   }
 
+  get kuuluttaja(): string {
+    const suunnitteluSopimus = this.suunnitteluSopimus;
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja;
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
+    }
+    return super.kuuluttaja;
+  }
+
+  get kuuluttaja_pitka(): string {
+    const suunnitteluSopimus = this.suunnitteluSopimus;
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus?.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return super.kuuluttaja_pitka;
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
+    }
+    return super.kuuluttaja_pitka;
+  }
+
   get laheteKirjeVastaanottajat(): string[] {
     const result: string[] = [];
     const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
@@ -61,10 +132,16 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
   }
 
   get kuulutusNahtavillaAika(): string {
+    if (!this.props.kuulutusPaiva) {
+      return "";
+    }
     return this.formatDateRange(this.props.kuulutusPaiva, this.props.kuulutusVaihePaattyyPaiva);
   }
 
   get simple_yhteystiedot(): string[] {
+    if (!this.props.yhteystiedot) {
+      return [];
+    }
     return this.props.yhteystiedot.map((y) => {
       let organisaatio = y.organisaatio;
       if (y.kunta) {
