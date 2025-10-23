@@ -8,6 +8,8 @@ import useEnterIsClick from "src/hooks/useEnterIsClick";
 import { Kieli } from "../../../../common/graphql/apiModel";
 import { userIsAdmin } from "common/util/userRights";
 import useCurrentUser from "src/hooks/useCurrentUser";
+import { useIsYllapito } from "src/hooks/useIsYllapito";
+
 export interface NavigationRoute {
   label: string;
   href: string;
@@ -34,7 +36,8 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
   const router = useRouter();
   const ref = useRef(null);
   useEnterIsClick("main-nav-dropdown-button");
-  const { data: kayttaja } = useCurrentUser();
+  const isYllapito = useIsYllapito();
+  const { data: kayttaja } = useCurrentUser(isYllapito);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -64,7 +67,7 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
 
   return (
     <>
-      {(label !== "Pääkäyttäjätoiminnot" || userIsAdmin(kayttaja)) && (
+      {(label !== "Pääkäyttäjätoiminnot" || (isYllapito && userIsAdmin(kayttaja))) && (
         <div style={{ display: "inline-block" }} ref={ref}>
           <a
             id="main-nav-dropdown-button"
