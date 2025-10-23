@@ -122,7 +122,7 @@ export const TiedoteNotification = () => {
     }
     const interval = setInterval(haeAktiivinenTiedote, 5 * 1000 * 60);
     return () => clearInterval(interval);
-  }, [suljetutTiedotteet, suljetutTiedotteet.length]);
+  }, [suljetutTiedotteet.length]);
 
   if (!aktiivinenTiedote) return null;
 
