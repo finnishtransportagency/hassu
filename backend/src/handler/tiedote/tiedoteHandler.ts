@@ -7,8 +7,6 @@ import { TallennaTiedoteMutationVariables } from "hassu-common/graphql/apiModel"
 
 class TiedoteHandler {
   async listaaTiedotteet(id?: string): Promise<API.Tiedote[] | undefined> {
-    //requirePermissionLuku();
-    log.info("listaaTiedotteet");
     let tiedotteet: DBTiedote[];
     if (id) {
       const tiedote = await tiedoteDatabase.haeTiedote(id);
@@ -29,8 +27,6 @@ class TiedoteHandler {
   }
 
   async listaaTiedotteetJulkinen(id?: string): Promise<API.Tiedote[] | undefined> {
-    //requirePermissionLuku();
-    log.info("listaaTiedotteetJulkinen");
     let tiedotteet: DBTiedote[];
     if (id) {
       const tiedote = await tiedoteDatabase.haeTiedote(id);
