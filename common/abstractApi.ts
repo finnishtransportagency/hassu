@@ -448,6 +448,11 @@ export const apiConfig: ApiConfig = {
     graphql: queries.listaaTiedotteet,
     isYllapitoOperation: true,
   },
+  listaaTiedotteetJulkinen: {
+    name: "listaaTiedotteetJulkinen",
+    operationType: OperationType.Query,
+    graphql: queries.listaaTiedotteetJulkinen,
+  },
   lataaTiedotettavatExcel: {
     name: "lataaTiedotettavatExcel",
     operationType: OperationType.Query,
@@ -892,6 +897,12 @@ export abstract class AbstractApi {
   async listaaTiedotteet(id?: string): Promise<Tiedote[]> {
     const variables = id ? { id } : {};
     const result = await this.callYllapitoAPI(apiConfig.listaaTiedotteet, variables);
+    return Array.isArray(result) ? result : result.listaaTiedotteet || [];
+  }
+
+  async listaaTiedotteetJulkinen(id?: string): Promise<Tiedote[]> {
+    const variables = id ? { id } : {};
+    const result = await this.callAPI(apiConfig.listaaTiedotteet, variables);
     return Array.isArray(result) ? result : result.listaaTiedotteet || [];
   }
 

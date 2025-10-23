@@ -106,7 +106,7 @@ export const TiedoteNotification = () => {
 
     const haeAktiivinenTiedote = async () => {
       try {
-        const tiedotteet = await api.listaaTiedotteet();
+        const tiedotteet = await api.listaaTiedotteetJulkinen();
         const nakyvaTiedote = tiedotteet.find((t) => {
           const dynaaminenStatus = getDynaaminenStatus(t);
           return dynaaminenStatus === TiedotteenStatus.NAKYVILLA && naytetaankoTalleKayttajalle(t);
