@@ -8,11 +8,15 @@ import { nyt } from "backend/src/util/dateUtil";
 import { TiedotteenStatus } from "@components/paakayttaja/TiedoteLista";
 
 export const TiedoteNotification = () => {
+  console.log("TiedoteNotification alkaa");
+
   const [aktiivinenTiedote, setAktiivinenTiedote] = useState<Tiedote | null>(null);
   const [suljetutTiedotteet, setSuljetutTiedotteet] = useState<string[]>([]);
   const [kieli, setKieli] = useState<"fi" | "sv">("fi");
 
   useEffect(() => {
+    console.log("LocalStoragen useEffect");
+
     const suljetut = localStorage.getItem("suljetutTiedotteet");
     if (suljetut) {
       setSuljetutTiedotteet(JSON.parse(suljetut));
@@ -96,6 +100,8 @@ export const TiedoteNotification = () => {
   };
 
   useEffect(() => {
+    console.log("Tiedotteen useEffect");
+
     const naytetaankoTalleKayttajalle = (tiedote: Tiedote): boolean => {
       const kayttajatyyppi = getKayttajatyyppi();
       if (suljetutTiedotteet.includes(tiedote.id)) {
@@ -105,8 +111,12 @@ export const TiedoteNotification = () => {
     };
 
     const haeAktiivinenTiedote = async () => {
+      console.log("haeAktiivinenTiedote useEffect");
+
       try {
         const tiedotteet = await api.listaaTiedotteetJulkinen();
+        console.log("Tiedotteet haettu:", tiedotteet.length, tiedotteet);
+
         const nakyvaTiedote = tiedotteet.find((t) => {
           const dynaaminenStatus = getDynaaminenStatus(t);
           return dynaaminenStatus === TiedotteenStatus.NAKYVILLA && naytetaankoTalleKayttajalle(t);
@@ -124,37 +134,39 @@ export const TiedoteNotification = () => {
     return () => clearInterval(interval);
   }, [suljetutTiedotteet.length]);
 
-  if (!aktiivinenTiedote) return null;
-
   return (
-    <Notification
-      sx={{
-        whiteSpace: "pre-wrap",
-        width: "80%",
-        maxWidth: "1300px",
-        margin: "10px auto 10px",
-        position: "relative",
-        paddingRight: "40px",
-      }}
-      type={getTiedoteTyyppi(aktiivinenTiedote) === "info" ? NotificationType.INFO_GRAY : NotificationType.WARN}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div style={{ flex: 1, paddingRight: "16px" }}>{getTiedoteSisalto(aktiivinenTiedote)}</div>
-        <IconButton
-          size="small"
-          onClick={() => suljeTiedote(aktiivinenTiedote.id)}
+    <>
+      {aktiivinenTiedote && (
+        <Notification
           sx={{
-            position: "absolute",
-            top: "8px",
-            right: "8px",
-            color: "inherit",
-            opacity: 0.7,
-            "&:hover": { opacity: 1 },
+            whiteSpace: "pre-wrap",
+            width: "80%",
+            maxWidth: "1300px",
+            margin: "10px auto 10px",
+            position: "relative",
+            paddingRight: "40px",
           }}
+          type={getTiedoteTyyppi(aktiivinenTiedote) === "info" ? NotificationType.INFO_GRAY : NotificationType.WARN}
         >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </div>
-    </Notification>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ flex: 1, paddingRight: "16px" }}>{getTiedoteSisalto(aktiivinenTiedote)}</div>
+            <IconButton
+              size="small"
+              onClick={() => suljeTiedote(aktiivinenTiedote.id)}
+              sx={{
+                position: "absolute",
+                top: "8px",
+                right: "8px",
+                color: "inherit",
+                opacity: 0.7,
+                "&:hover": { opacity: 1 },
+              }}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </div>
+        </Notification>
+      )}
+    </>
   );
 };
