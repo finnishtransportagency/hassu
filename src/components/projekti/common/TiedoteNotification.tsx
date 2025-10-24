@@ -8,15 +8,11 @@ import { nyt } from "backend/src/util/dateUtil";
 import { TiedotteenStatus } from "@components/paakayttaja/TiedoteLista";
 
 export const TiedoteNotification = () => {
-  console.log("TiedoteNotification alkaa");
-
   const [aktiivinenTiedote, setAktiivinenTiedote] = useState<Tiedote | null>(null);
   const [suljetutTiedotteet, setSuljetutTiedotteet] = useState<string[]>([]);
   const [kieli, setKieli] = useState<"fi" | "sv">("fi");
 
   useEffect(() => {
-    console.log("LocalStoragen useEffect");
-
     const suljetut = localStorage.getItem("suljetutTiedotteet");
     if (suljetut) {
       setSuljetutTiedotteet(JSON.parse(suljetut));
@@ -100,8 +96,6 @@ export const TiedoteNotification = () => {
   };
 
   useEffect(() => {
-    console.log("Tiedotteen useEffect");
-
     const naytetaankoTalleKayttajalle = (tiedote: Tiedote): boolean => {
       const kayttajatyyppi = getKayttajatyyppi();
       if (suljetutTiedotteet.includes(tiedote.id)) {
@@ -111,12 +105,8 @@ export const TiedoteNotification = () => {
     };
 
     const haeAktiivinenTiedote = async () => {
-      console.log("haeAktiivinenTiedote useEffect");
-
       try {
         const tiedotteet = await api.listaaTiedotteetJulkinen();
-        console.log("Tiedotteet haettu:", tiedotteet.length, tiedotteet);
-
         const nakyvaTiedote = tiedotteet.find((t) => {
           const dynaaminenStatus = getDynaaminenStatus(t);
           return dynaaminenStatus === TiedotteenStatus.NAKYVILLA && naytetaankoTalleKayttajalle(t);
