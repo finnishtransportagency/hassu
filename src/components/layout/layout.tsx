@@ -6,7 +6,7 @@ import { Footer } from "./footer";
 import { Container } from "@mui/material";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { useRouter } from "next/router";
-//import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
+import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
 import { getEnvironment } from "src/util/getEnvironment";
 
 // Renderöidään NotificationBar vain clientilla (ssr: false),
@@ -54,9 +54,9 @@ export default function Layout({ children }: Props): ReactElement {
     <div className="min-h-screen relative flex flex-col">
       {env !== "prod" && <NotificationBar />}
       <Header />
-      {/* <div style={{ minWidth: "90%", margin: "10px auto 10px" }}>
+      <div style={{ minWidth: "90%", margin: "10px auto 10px" }}>
         <TiedoteNotification />
-      </div> */}
+      </div>
       <Breadcrumbs />
       <Container sx={{ marginBottom: "110px" }}>
         <main>{children}</main>
