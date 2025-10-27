@@ -10,6 +10,7 @@ import ContentSpacer from "./ContentSpacer";
 import { H2 } from "../Headings";
 import { useIsYllapito } from "../../hooks/useIsYllapito";
 import { focusStyleSecondary } from "./HassuMuiThemeProvider";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -79,6 +80,7 @@ export const Footer = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const isYllapito = useIsYllapito();
+  const isEvkAktiivinen = !isEvkAktivoitu();
 
   return (
     <StyledFooter>
@@ -101,9 +103,11 @@ export const Footer = () => {
                 <div className="my-auto text-center">
                   <Image src="/assets/vayla_alla_fi_sv_rgb.png" alt="" width="140.4" height="117" />
                 </div>
-                <div className="my-auto text-center">
+                {isEvkAktiivinen ? <div className="my-auto text-center">
+                  <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170.61" height="91" />
+                </div> : <div className="my-auto text-center">
                   <Image src="/assets/ely_alla_fi_sv_rgb.png" alt="" width="170.61" height="91" />
-                </div>
+                </div>}
               </KuvaContainer>
             </div>
             <p>{t("hankesuunnitelmista")}</p>
