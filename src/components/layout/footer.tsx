@@ -10,7 +10,6 @@ import ContentSpacer from "./ContentSpacer";
 import { H2 } from "../Headings";
 import { useIsYllapito } from "../../hooks/useIsYllapito";
 import { focusStyleSecondary } from "./HassuMuiThemeProvider";
-import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
