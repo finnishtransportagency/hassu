@@ -3,7 +3,7 @@ FROM public.ecr.aws/lambda/nodejs:20 AS nodesource
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023
 
 ENV NPM_VERSION=10.8.2
-ENV AMPLIFY_VERSION=12.14.4
+ENV AMPLIFY_CLI_VERSION=12.14.4
 ENV DOCKER_COMPOSE_VERSION=v2.40.2
 
 ENV PATH="$PATH:/var/lang/bin"
@@ -11,7 +11,7 @@ COPY --from=nodesource /var/lang /var/lang
 
 USER root
 RUN npm install -g npm@${NPM_VERSION}
-RUN npm install -f -g @aws-amplify/cli@${AMPLIFY_VERSION} && amplify
+RUN npm install -f -g @aws-amplify/cli@${AMPLIFY_CLI_VERSION} && amplify
 
 # Docker + Compose v2
 RUN dnf install -y docker containerd
