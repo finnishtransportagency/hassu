@@ -10,7 +10,6 @@ import ContentSpacer from "./ContentSpacer";
 import { H2 } from "../Headings";
 import { useIsYllapito } from "../../hooks/useIsYllapito";
 import { focusStyleSecondary } from "./HassuMuiThemeProvider";
-import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -80,7 +79,7 @@ export const Footer = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const isYllapito = useIsYllapito();
-  const isEvkAktiivinen = isEvkAktivoitu();
+  const isEvkAktiivinen = false;
 
   return (
     <StyledFooter>
