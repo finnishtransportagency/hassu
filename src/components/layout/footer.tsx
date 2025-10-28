@@ -80,7 +80,7 @@ export const Footer = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const isYllapito = useIsYllapito();
-  const isEvkAktiivinen = isEvkAktivoitu();
+  const isEvkAktiivinen = false;
 
   return (
     <StyledFooter>
