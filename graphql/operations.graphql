@@ -48,6 +48,7 @@ type Query {
   lataaTiedotettavatExcel(oid: String!, suomifi: Boolean, kiinteisto: Boolean!): Excel
   haeMuistuttajat(oid: String!, muutMuistuttajat: Boolean!, query: String, from: Int, size: Int): Muistuttajat
   listaaTiedotteet(id: String): [Tiedote!]
+  listaaTiedotteetJulkinen(id: String): [Tiedote!]
   haeProjektinTiedottamistiedot(oid: String!): ProjektinTiedottaminen
   haeKayttoOikeudet(oid: String!): KayttoOikeusTiedot!
   listaaEnnakkoNeuvottelunTiedostot(oid: String!, hash: String!): EnnakkoNeuvottelunAineistot!

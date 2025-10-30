@@ -106,7 +106,7 @@ export const TiedoteNotification = () => {
 
     const haeAktiivinenTiedote = async () => {
       try {
-        const tiedotteet = await api.listaaTiedotteet();
+        const tiedotteet = await api.listaaTiedotteetJulkinen();
         const nakyvaTiedote = tiedotteet.find((t) => {
           const dynaaminenStatus = getDynaaminenStatus(t);
           return dynaaminenStatus === TiedotteenStatus.NAKYVILLA && naytetaankoTalleKayttajalle(t);
@@ -122,39 +122,41 @@ export const TiedoteNotification = () => {
     }
     const interval = setInterval(haeAktiivinenTiedote, 5 * 1000 * 60);
     return () => clearInterval(interval);
-  }, [suljetutTiedotteet, suljetutTiedotteet.length]);
-
-  if (!aktiivinenTiedote) return null;
+  }, [suljetutTiedotteet.length]);
 
   return (
-    <Notification
-      sx={{
-        whiteSpace: "pre-wrap",
-        width: "80%",
-        maxWidth: "1300px",
-        margin: "10px auto 10px",
-        position: "relative",
-        paddingRight: "40px",
-      }}
-      type={getTiedoteTyyppi(aktiivinenTiedote) === "info" ? NotificationType.INFO_GRAY : NotificationType.WARN}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div style={{ flex: 1, paddingRight: "16px" }}>{getTiedoteSisalto(aktiivinenTiedote)}</div>
-        <IconButton
-          size="small"
-          onClick={() => suljeTiedote(aktiivinenTiedote.id)}
+    <>
+      {aktiivinenTiedote && (
+        <Notification
           sx={{
-            position: "absolute",
-            top: "8px",
-            right: "8px",
-            color: "inherit",
-            opacity: 0.7,
-            "&:hover": { opacity: 1 },
+            whiteSpace: "pre-wrap",
+            width: "80%",
+            maxWidth: "1300px",
+            margin: "10px auto 10px",
+            position: "relative",
+            paddingRight: "40px",
           }}
+          type={getTiedoteTyyppi(aktiivinenTiedote) === "info" ? NotificationType.INFO_GRAY : NotificationType.WARN}
         >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </div>
-    </Notification>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ flex: 1, paddingRight: "16px" }}>{getTiedoteSisalto(aktiivinenTiedote)}</div>
+            <IconButton
+              size="small"
+              onClick={() => suljeTiedote(aktiivinenTiedote.id)}
+              sx={{
+                position: "absolute",
+                top: "8px",
+                right: "8px",
+                color: "inherit",
+                opacity: 0.7,
+                "&:hover": { opacity: 1 },
+              }}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </div>
+        </Notification>
+      )}
+    </>
   );
 };
