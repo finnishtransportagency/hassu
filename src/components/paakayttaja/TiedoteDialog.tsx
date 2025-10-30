@@ -71,10 +71,21 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
   };
 
   const handleChange = (field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+
+      if (field === "voimassaAlkaen" && prev.voimassaPaattyen) {
+        const uusiAlku = dayjs(value);
+        const vanhaPaattyy = dayjs(prev.voimassaPaattyen);
+
+        if (vanhaPaattyy.isBefore(uusiAlku, "day")) {
+          updated.voimassaPaattyen = "";
+        }
+      }
+
+      return updated;
+    });
+
     if (errors.length > 0) {
       setErrors([]);
     }
@@ -282,7 +293,7 @@ export default function TiedoteDialog({ open, onClose, onSubmit, onDelete, editT
                   value={formData.voimassaPaattyen}
                   onChange={handleChange}
                   label="Voimassa päättyen"
-                  minDate={dayjs()}
+                  minDate={formData.voimassaAlkaen ? dayjs(formData.voimassaAlkaen) : dayjs()}
                   required={false}
                 />
               </Box>
