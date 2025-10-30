@@ -151,12 +151,20 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
     return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
   }
 
+  get osapuoli(): string {
+    return super.osapuoli;
+  }
+
   get userInterfaceFields(): KuulutusTekstit {
     let kappale1;
+    const usePlural = this.isUseitaOsapuolia();
 
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.htmlText("rata_kappale1");
     } else {
+      if (this.suunnitteluSopimus) {
+        kappale1 = this.htmlText("tie_kappale1_suunnittelusopimus", usePlural);
+      }
       kappale1 = this.htmlText("tie_kappale1");
     }
     return {
