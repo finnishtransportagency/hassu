@@ -306,6 +306,8 @@
       "otsikko": "Kungörelse om framläggande av plan",
       "otsikko2": "Anmälan till fastighetsägare om framläggande av plan",
       "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): *{{nimi}}*.",
+      "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} har publicerat en kungörelse om den plan som ska läggas fram till påseende: *{{nimi}}*. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av {{osapuoli}} i samarbete med {{tilaajaGenetiivi}}.",
+      "tie_kappale1_suunnittelusopimus_monikko": "{{kuuluttaja_pitka}} har publicerat en kungörelse om den plan som ska läggas fram till påseende: *{{nimi}}*. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av {{osapuoli}} i samarbete med {{tilaajaGenetiivi}}.",
       "rata_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt banlagen (110/2007): *{{nimi}}*.",
       "kappale2": "{{kuuluttaja}} har {{kuulutusPaiva}} publicerat en kungörelse om framläggandet av planen. Sakägarna anses ha fått kännedom om att planen har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
       "kappale3": "Planen hålls framlagd {{kuulutusNahtavillaAika}} på adressen {{nahtavillaoloUrl}}.",
