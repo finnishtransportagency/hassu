@@ -15,7 +15,7 @@ printenv | grep -E '^NEXT_PUBLIC_' | while read -r ENV_LINE; do
   ENV_VALUE=$(echo "$ENV_LINE" | cut -d "=" -f2-)
 
   # Escape forward slashes and ampersands for sed
-  ESCAPED_VALUE=$(printf '%s\n' "$ENV_VALUE" | sed -e 's/[\/&]/\\&/g')
+  ESCAPED_VALUE=$(printf '%s\n' "$ENV_VALUE" | sed -e 's/[\/&\\]/\\&/g')
 
   # Debug: Show which env variable we're replacing
   echo "Replacing placeholder for: ${ENV_KEY}"
