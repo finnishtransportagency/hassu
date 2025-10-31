@@ -24,7 +24,7 @@ printenv | grep -E '^NEXT_PUBLIC_' | while read -r ENV_LINE; do
   find /app -type f ! -path "/app/node_modules/*" | while read -r FILE; do
     if grep -q "_${ENV_KEY}_" "$FILE"; then
       echo "Modifying file: $FILE"
-      grep -n "_${ENV_KEY}_" "$FILE"
+      grep -n "_${ENV_KEY}_" "$FILE" | cut -c1-120
       sed -i "s|_${ENV_KEY}_|${ESCAPED_VALUE}|g" "$FILE"
     fi
   done
