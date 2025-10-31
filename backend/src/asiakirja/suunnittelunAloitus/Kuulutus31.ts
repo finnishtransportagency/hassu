@@ -121,6 +121,9 @@ export class Kuulutus31 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.paragraphFromKey("rata_kappale1");
     } else {
+      if (this.kutsuAdapter.suunnitteluSopimus) {
+        return this.pluralParagraphFromKey("tie_kappale1_suunnittelusopimus");
+      }
       return this.paragraphFromKey("tie_kappale1");
     }
   }

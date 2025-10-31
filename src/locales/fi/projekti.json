@@ -317,6 +317,8 @@
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
       "otsikko2": "Ilmoitus suunnitelman nähtäville asettamisesta",
       "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: *{{nimi}}*.",
+      "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: *{{nimi}}*. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut {{osapuoli}} yhteistyössä {{tilaajaGenetiivi}} kanssa.",
+      "tie_kappale1_suunnittelusopimus_monikko": "{{kuuluttaja_pitka}} on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: *{{nimi}}*. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman ovat laatineet {{osapuoli}} yhteistyössä {{tilaajaGenetiivi}} kanssa.",
       "rata_kappale1": "{{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: *{{nimi}}*.",
       "kappale2": "{{kuuluttaja}} on {{kuulutusPaiva}} julkaissut kuulutuksen suunnitelman nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon suunnitelman nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
       "kappale3": "Suunnitelma pidetään nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",
