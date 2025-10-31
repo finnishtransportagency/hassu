@@ -12,13 +12,22 @@ START_TIME=$(date +%s%3N)
 printenv | grep -E '^NEXT_PUBLIC_' | while read -r ENV_LINE; do
   # Separate the key and value parts from the found lines.
   ENV_KEY=$(echo "$ENV_LINE" | cut -d "=" -f1)
-  ENV_VALUE=$(echo "$ENV_LINE" | cut -d "=" -f2)
+  ENV_VALUE=$(echo "$ENV_LINE" | cut -d "=" -f2-)
+
+  # Escape forward slashes and ampersands for sed
+  ESCAPED_VALUE=$(printf '%s\n' "$ENV_VALUE" | sed -e 's/[\/&\\]/\\&/g')
 
   # Debug: Show which env variable we're replacing
   echo "Replacing placeholder for: ${ENV_KEY}"
 
   # Find all instances of the placeholder and replace them with actual values
-  find /app -type f ! -path "/app/node_modules/*" | xargs sed -i "s|_${ENV_KEY}_|${ENV_VALUE}|g"
+  find /app -type f ! -path "/app/node_modules/*" | while read -r FILE; do
+    if grep -q "_${ENV_KEY}_" "$FILE"; then
+      echo "Modifying file: $FILE"
+      grep -n "_${ENV_KEY}_" "$FILE" | cut -c1-120
+      sed -i "s|_${ENV_KEY}_|${ESCAPED_VALUE}|g" "$FILE"
+    fi
+  done
 done
 
 # End the timer and calculate elapsed time.
