@@ -110,6 +110,10 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
     return super.kuuluttaja_pitka;
   }
 
+  get osapuoli(): string {
+    return super.osapuoli;
+  }
+
   get laheteKirjeVastaanottajat(): string[] {
     const result: string[] = [];
     const kunnat = this.ilmoituksenVastaanottajat?.kunnat;
