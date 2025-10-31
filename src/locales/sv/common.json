@@ -47,7 +47,17 @@
     "POHJOIS_SAVON_ELY": "Norra Savolax",
     "SATAKUNNAN_ELY": "Satakunta",
     "UUDENMAAN_ELY": "Nyland",
-    "VARSINAIS_SUOMEN_ELY": "Egentliga Finland"
+    "VARSINAIS_SUOMEN_ELY": "Egentliga Finland",
+    "UUDENMAAN_EVK": "Nyland",
+    "LOUNAIS_SUOMEN_EVK": "Sydvästra Finland",
+    "KAAKKOIS_SUOMEN_EVK": "Sydöstra Finland",
+    "SISA_SUOMEN_EVK": "Inre Finland",
+    "KESKI_SUOMEN_EVK": "Mellersta Finland",
+    "ITA_SUOMEN_EVK": "Östra Finland",
+    "ETELA_POHJANMAAN_EVK": "Södra Österbotten",
+    "POHJANMAAN_EVK": "Österbotten",
+    "POHJOIS_SUOMEN_EVK": "Norra Finland",
+    "LAPIN_EVK": "Lappland"
   },
   "viranomainen": {
     "ETELA_POHJANMAAN_ELY": "NTM-centralen i Södra Österbotten",
@@ -66,7 +76,17 @@
     "UUDENMAAN_ELY": "NTM-centralen i Nyland",
     "VARSINAIS_SUOMEN_ELY": "NTM-centralen i Egentliga Finland",
     "AHVENANMAAN_MAAKUNTA": "Landskapet Åland",
-    "VAYLAVIRASTO": "Trafikledsverket"
+    "VAYLAVIRASTO": "Trafikledsverket",
+    "UUDENMAAN_EVK": "Livskraftscentralen i Nyland",
+    "LOUNAIS_SUOMEN_EVK": "Livskraftscentralen i Sydvästra Finland",
+    "KAAKKOIS_SUOMEN_EVK": "Livskraftscentralen i Sydöstra Finland",
+    "SISA_SUOMEN_EVK": "Livskraftscentralen i Inre Finland",
+    "KESKI_SUOMEN_EVK": "Livskraftscentralen i Mellersta Finland",
+    "ITA_SUOMEN_EVK": "Livskraftscentralen i Östra Finland",
+    "ETELA_POHJANMAAN_EVK": "Livskraftscentralen i Södra Österbotten",
+    "POHJANMAAN_EVK": "Livskraftscentralen i Österbotten",
+    "POHJOIS_SUOMEN_EVK": "Livskraftscentralen i Norra Finland",
+    "LAPIN_EVK": "Livskraftscentralen i Lappland"
   },
   "viranomaiselle": {
     "ETELA_POHJANMAAN_ELY": "till NTM-centralen i Södra Österbotten",
@@ -85,7 +105,17 @@
     "UUDENMAAN_ELY": "till NTM-centralen i Nyland",
     "VARSINAIS_SUOMEN_ELY": "till NTM-centralen i Egentliga Finland",
     "AHVENANMAAN_MAAKUNTA": "till landskapet Åland",
-    "VAYLAVIRASTO": "till Trafikledsverket"
+    "VAYLAVIRASTO": "till Trafikledsverket",
+    "UUDENMAAN_EVK": "till Livskraftscentralen i Nyland",
+    "LOUNAIS_SUOMEN_EVK": "till Livskraftscentralen i Sydvästra Finland",
+    "KAAKKOIS_SUOMEN_EVK": "till Livskraftscentralen i Sydöstra Finland",
+    "SISA_SUOMEN_EVK": "till Livskraftscentralen i Inre Finland",
+    "KESKI_SUOMEN_EVK": "till Livskraftscentralen i Mellersta Finland",
+    "ITA_SUOMEN_EVK": "till Livskraftscentralen i Östra Finland",
+    "ETELA_POHJANMAAN_EVK": "till Livskraftscentralen i Södra Österbotten",
+    "POHJANMAAN_EVK": "till Livskraftscentralen i Österbotten",
+    "POHJOIS_SUOMEN_EVK": "till Livskraftscentralen i Norra Finland",
+    "LAPIN_EVK": "till Livskraftscentralen i Lappland"
   },
   "viranomainen_keskipitka": {
     "ETELA_POHJANMAAN_ELY": "Närings-, trafik- och miljöcentralen i Södra Österbotten",
@@ -104,7 +134,17 @@
     "UUDENMAAN_ELY": "Närings-, trafik- och miljöcentralen i Nyland",
     "VARSINAIS_SUOMEN_ELY": "Närings-, trafik- och miljöcentralen i Egentliga Finland",
     "AHVENANMAAN_MAAKUNTA": "Landskapet Åland",
-    "VAYLAVIRASTO": "Trafikledsverket"
+    "VAYLAVIRASTO": "Trafikledsverket",
+    "UUDENMAAN_EVK": "Livskraftscentralen i Nyland",
+    "LOUNAIS_SUOMEN_EVK": "Livskraftscentralen i Sydvästra Finland",
+    "KAAKKOIS_SUOMEN_EVK": "Livskraftscentralen i Sydöstra Finland",
+    "SISA_SUOMEN_EVK": "Livskraftscentralen i Inre Finland",
+    "KESKI_SUOMEN_EVK": "Livskraftscentralen i Mellersta Finland",
+    "ITA_SUOMEN_EVK": "Livskraftscentralen i Östra Finland",
+    "ETELA_POHJANMAAN_EVK": "Livskraftscentralen i Södra Österbotten",
+    "POHJANMAAN_EVK": "Livskraftscentralen i Österbotten",
+    "POHJOIS_SUOMEN_EVK": "Livskraftscentralen i Norra Finland",
+    "LAPIN_EVK": "Livskraftscentralen i Lappland"
   },
   "viranomainen_pitka": {
     "ETELA_POHJANMAAN_ELY": "Närings-, trafik- och miljöcentralen (NTM-centralen) i Södra Österbotten",
@@ -123,7 +163,17 @@
     "UUDENMAAN_ELY": "Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland",
     "VARSINAIS_SUOMEN_ELY": "Närings-, trafik- och miljöcentralen (NTM-centralen) i Egentliga Finland",
     "AHVENANMAAN_MAAKUNTA": "Landskapet Åland",
-    "VAYLAVIRASTO": "Trafikledsverket"
+    "VAYLAVIRASTO": "Trafikledsverket",
+    "UUDENMAAN_EVK": "Livskraftscentralen i Nyland",
+    "LOUNAIS_SUOMEN_EVK": "Livskraftscentralen i Sydvästra Finland",
+    "KAAKKOIS_SUOMEN_EVK": "Livskraftscentralen i Sydöstra Finland",
+    "SISA_SUOMEN_EVK": "Livskraftscentralen i Inre Finland",
+    "KESKI_SUOMEN_EVK": "Livskraftscentralen i Mellersta Finland",
+    "ITA_SUOMEN_EVK": "Livskraftscentralen i Östra Finland",
+    "ETELA_POHJANMAAN_EVK": "Livskraftscentralen i Södra Österbotten",
+    "POHJANMAAN_EVK": "Livskraftscentralen i Österbotten",
+    "POHJOIS_SUOMEN_EVK": "Livskraftscentralen i Norra Finland",
+    "LAPIN_EVK": "Livskraftscentralen i Lappland"
   },
   "rooli": {
     "PROJEKTIPAALLIKKO": "Projektledare"
