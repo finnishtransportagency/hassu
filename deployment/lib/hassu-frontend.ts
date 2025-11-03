@@ -946,7 +946,6 @@ export class HassuFrontendCoreStack extends Stack {
       NEXT_PUBLIC_EVK_ACTIVATION_DATE: ssmParameters.EvkActivationDate,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       ENVIRONMENT: Config.env,
-      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
@@ -954,7 +953,9 @@ export class HassuFrontendCoreStack extends Stack {
       VELHO_API_URL: ssmParameters.VelhoApiUrl,
       VELHO_AUTH_URL: ssmParameters.VelhoAuthenticationUrl,
       EVENT_SQS_URL: EventSqsUrl,
-      HYVAKSYMISESITYS_SQS_URL: HyvaksymisEsitysSqsUrl,
+      HYVAKSYMISESITYS_SQS_URL: HyvaksymisEsitysSqsUrl, // TODO: tarvitseeko tätä?? Miksi??
+      // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
+      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
       SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
     };
 
