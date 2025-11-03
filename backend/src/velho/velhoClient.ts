@@ -143,13 +143,13 @@ export class VelhoClient {
 
   private getAineistoDokumenttityyppi(
     aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">
-  ): string | null | undefined {
-    // First check the 'dokumenttityyppi' field
+  ): string | null | undefined {    
+    // Use the new schema as the source for the data.
     if (typeof aineisto.ominaisuudet?.dokumenttityyppi === "string") {
       return aineisto.ominaisuudet.dokumenttityyppi;
     }
 
-    // Check 'metatiedot' if the property exists
+    // Use the legacy metatiedot schema as a fallback source for the data.
     if (this.aineistoHasMetatiedot(aineisto) && typeof aineisto.metatiedot.dokumenttityyppi === "string") {
       return aineisto.metatiedot.dokumenttityyppi;
     }
@@ -159,12 +159,12 @@ export class VelhoClient {
   }
 
   private getAineistoKuvaus(aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">): string | null | undefined {
-    // First check the 'kuvaus' field
+    // Use the new schema as the source for the data.
     if (typeof aineisto.ominaisuudet?.kuvaus === "string") {
       return aineisto.ominaisuudet.kuvaus;
     }
 
-    // Check 'metatiedot' if the property exists
+    // Use the legacy metatiedot schema as a fallback source for the data.
     if (this.aineistoHasMetatiedot(aineisto) && typeof aineisto.metatiedot.kuvaus === "string") {
       return aineisto.metatiedot.kuvaus;
     }
