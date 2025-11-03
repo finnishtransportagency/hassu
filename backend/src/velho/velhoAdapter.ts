@@ -9,8 +9,6 @@ import {
   ProjektiProjektiLuontiOminaisuudet,
   ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos,
   ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus,
-  ProjektiProjektiLuontiOminaisuudetVarahenkilo,
-  ProjektiProjektiLuontiOminaisuudetVastuuhenkilo,
   ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum,
   ProjektiProjektiMuokkaus,
 } from "./projektirekisteri";
@@ -154,7 +152,8 @@ function getAsiatunnus(hakutulos: ProjektiSearchResult) {
 export function adaptSearchResults(searchResults: ProjektiSearchResult[], kayttajas: Kayttajas): VelhoHakuTulos[] {
   if (searchResults) {
     return searchResults.map((result) => {
-      const projektiPaallikko = kayttajas.findByEmail(getVastuuhenkiloEmail(result.ominaisuudet.vastuuhenkilo));
+      const paallikkoEmail = getHenkiloEmail(result.ominaisuudet.vastuuhenkilo);
+      const projektiPaallikko = paallikkoEmail ? kayttajas.findByEmail(paallikkoEmail) : undefined;
       let projektiPaallikkoNimi: string | undefined;
       if (projektiPaallikko) {
         const user = adaptKayttaja(projektiPaallikko);
@@ -176,14 +175,15 @@ export function adaptSearchResults(searchResults: ProjektiSearchResult[], kaytta
   return [];
 }
 
-function getVastuuhenkiloEmail(
-  vastuuhenkilo: ProjektiProjektiLuontiOminaisuudetVastuuhenkilo | ProjektiProjektiLuontiOminaisuudetVarahenkilo | null
-): string {
-  if (vastuuhenkilo?.sahkoposti) {
-    return vastuuhenkilo?.sahkoposti;
+function getHenkiloEmail(henkilo: ProjektiProjektiLuontiOminaisuudet["vastuuhenkilo" | "varahenkilo"] | null): string | null | undefined {
+  if (henkilo?.sahkoposti) {
+    return henkilo.sahkoposti;
   }
   // Support the data based on the old schema
-  return vastuuhenkilo as unknown as string;
+  if (typeof henkilo === "string") {
+    return henkilo;
+  }
+  return null;
 }
 
 function getKunnat(data: ProjektiProjekti): number[] | undefined {
@@ -251,8 +251,8 @@ function getLinkitetytProjektit(data: ProjektiProjekti[]): LinkitettyVelhoProjek
 export async function adaptProjekti(data: ProjektiProjekti, linkitetytProjektit?: ProjektiProjekti[]): Promise<DBProjekti> {
   const projektiTyyppi = getProjektiTyyppi(data.ominaisuudet.vaihe as any);
   const viranomainen = getViranomainen(data.ominaisuudet.tilaajaorganisaatio as any);
-  const vastuuhenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.vastuuhenkilo);
-  const varahenkilonEmail = getVastuuhenkiloEmail(data.ominaisuudet.varahenkilo);
+  const vastuuhenkilonEmail = getHenkiloEmail(data.ominaisuudet.vastuuhenkilo);
+  const varahenkilonEmail = getHenkiloEmail(data.ominaisuudet.varahenkilo);
 
   const projekti: DBProjekti = {
     oid: "" + data.oid,

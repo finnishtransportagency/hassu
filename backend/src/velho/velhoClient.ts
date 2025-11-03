@@ -137,6 +137,42 @@ export class VelhoClient {
     }
   }
 
+  private aineistoHasMetatiedot<T extends Record<string, unknown>>(aineisto: T): aineisto is T & { metatiedot: Record<string, unknown> } {
+    return "metatiedot" in aineisto && typeof aineisto.metatiedot === "object" && aineisto.metatiedot != null;
+  }
+
+  private getAineistoDokumenttityyppi(
+    aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">
+  ): string | null | undefined {
+    // First check the 'dokumenttityyppi' field
+    if (typeof aineisto.ominaisuudet?.dokumenttityyppi === "string") {
+      return aineisto.ominaisuudet.dokumenttityyppi;
+    }
+
+    // Check 'metatiedot' if the property exists
+    if (this.aineistoHasMetatiedot(aineisto) && typeof aineisto.metatiedot.dokumenttityyppi === "string") {
+      return aineisto.metatiedot.dokumenttityyppi;
+    }
+
+    // No description found
+    return null;
+  }
+
+  private getAineistoKuvaus(aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">): string | null | undefined {
+    // First check the 'kuvaus' field
+    if (typeof aineisto.ominaisuudet?.kuvaus === "string") {
+      return aineisto.ominaisuudet.kuvaus;
+    }
+
+    // Check 'metatiedot' if the property exists
+    if (this.aineistoHasMetatiedot(aineisto) && typeof aineisto.metatiedot.kuvaus === "string") {
+      return aineisto.metatiedot.kuvaus;
+    }
+
+    // No kuvaus found
+    return null;
+  }
+
   public async loadProjektiAineistot(oid: string): Promise<VelhoToimeksianto[]> {
     try {
       const toimeksiannot: ProjektiToimeksiannotInner[] = await this.listToimeksiannot(oid);
@@ -151,15 +187,16 @@ export class VelhoClient {
               (aineisto): aineisto is PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio"> => !!aineisto["tuorein-versio"]
             )
             .map((aineisto) => {
-              const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${aineisto.metatiedot.dokumenttityyppi}`);
+              const { dokumenttiTyyppi } = adaptDokumenttiTyyppi(`${this.getAineistoDokumenttityyppi(aineisto)}`);
               const tiedostoNimi = aineisto["tuorein-versio"].nimi;
               const muokattu = aineisto["tuorein-versio"].muokattu;
               const koko = aineisto["tuorein-versio"].koko;
+              aineisto.ominaisuudet.kuvaus;
               return {
                 __typename: "VelhoAineisto",
                 oid: aineisto.oid,
                 tiedosto: tiedostoNimi,
-                kuvaus: aineisto.metatiedot.kuvaus ?? "",
+                kuvaus: this.getAineistoKuvaus(aineisto) ?? "",
                 dokumenttiTyyppi,
                 muokattu: dayjs(muokattu).format(),
                 koko,
