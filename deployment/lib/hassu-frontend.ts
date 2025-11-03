@@ -20,7 +20,6 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import { Config } from "./config";
 import { HttpOrigin, S3Origin } from "aws-cdk-lib/aws-cloudfront-origins";
-import { Builder } from "@sls-next/lambda-at-edge";
 import { NextJSLambdaEdge } from "@sls-next/cdk-construct";
 import { Code, IVersion, Runtime } from "aws-cdk-lib/aws-lambda";
 import { CompositePrincipal, Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
@@ -124,35 +123,6 @@ export class HassuFrontendStack extends Stack {
 
     const accountStackOutputs = await readAccountStackOutputs();
     const ssmParameters = await readParametersForEnv<HassuSSMParameters>(BaseConfig.infraEnvironment, Region.EU_WEST_1);
-
-    const envVariables: NodeJS.ProcessEnv = {
-      // Nämä muuttujat pitää välittää toteutukselle next.config.js:n kautta
-      ENVIRONMENT: Config.env,
-      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-      FRONTEND_API_DOMAIN_NAME: config.frontendApiDomainName,
-      REACT_APP_API_KEY: AppSyncAPIKey,
-      TABLE_PROJEKTI: Config.projektiTableName,
-      TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
-      SEARCH_DOMAIN: accountStackOutputs.SearchDomainEndpointOutput,
-      INTERNAL_BUCKET_NAME: Config.internalBucketName,
-      EVENT_SQS_URL: EventSqsUrl,
-      HYVAKSYMISESITYS_SQS_URL: HyvaksymisEsitysSqsUrl, // TODO: tarvitseeko tätä?? Miksi??
-      // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
-      ASIANHALLINTA_SQS_URL: this.props.asianhallintaQueue.queueUrl,
-      KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
-      KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
-      PALAUTE_KYSELY_TIEDOT: ssmParameters.PalauteKyselyTiedot,
-    };
-    if (BaseConfig.env !== "prod") {
-      envVariables.PUBLIC_BUCKET_NAME = Config.publicBucketName;
-      envVariables.YLLAPITO_BUCKET_NAME = Config.internalBucketName;
-    }
-    await new Builder(".", "./build", {
-      enableHTTPCompression: true,
-      minifyHandlers: true,
-      args: ["build"],
-      env: envVariables,
-    }).build();
 
     const edgeFunctionRole = this.createEdgeFunctionRole();
 
