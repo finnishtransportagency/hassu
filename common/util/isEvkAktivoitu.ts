@@ -6,18 +6,30 @@ export const isEvkAktivoitu = (): boolean => {
   if (envParam) {
     try {
       const evkAktivointiPvm = JSON.parse(envParam);
-      if (isValidEnvParamObject(evkAktivointiPvm)) {
-        const NOW = today().format("YYYY-MM-DD");
-        const isActive = !(dayjs(NOW).isBefore(evkAktivointiPvm.startDate));
-        return isActive;
+      return isEvkAktive(evkAktivointiPvm);
+    } catch {
+      try {
+        // param value might be "double-escaped"
+        const unescaped = envParam.replace(/\\"/g, '"');
+        const evkAktivointiPvm = JSON.parse(unescaped);
+        return isEvkAktive(evkAktivointiPvm);
+      } catch (error) {
+        // unable to parse envParam, return the 'default' values below
+        console.log('unable to parse envParam');
       }
-    } catch (error) {
-      // unable to parse envParam, return the 'default' values below
-      console.log('unable to parse envParam');
     }
   }
   return false;
 };
+
+function isEvkAktive(evkAktivointiPvm: string): boolean {
+  if (isValidEnvParamObject(evkAktivointiPvm)) {
+    const NOW = today().format("YYYY-MM-DD");
+    const isActive = !(dayjs(NOW).isBefore(evkAktivointiPvm.startDate));
+    return isActive;
+  }
+  return false;
+}
 
 function isValidEnvParamObject(obj: any): obj is { startDate: string } {
   return typeof obj === "object" && obj !== null && typeof obj.startDate === "string";
