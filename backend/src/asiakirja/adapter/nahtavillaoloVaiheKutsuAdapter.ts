@@ -74,11 +74,13 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly vahainenMenettely: boolean | null | undefined;
   readonly ratalakiKey: string;
+
   constructor(props: NahtavillaoloVaiheKutsuAdapterProps, ratalakiKey = "lakiviite_ilmoitus_rata") {
     super(props, "asiakirja.kuulutus_nahtavillaolosta.");
     this.ilmoituksenVastaanottajat = props.ilmoituksenVastaanottajat;
     this.vahainenMenettely = props.vahainenMenettely;
     this.ratalakiKey = ratalakiKey;
+    this.suunnitteluSopimus = props.suunnitteluSopimus;
   }
 
   get kuulutusNimiCapitalized(): string {
@@ -137,12 +139,32 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
     return "<kirjaamon " + this.velho.suunnittelustaVastaavaViranomainen + " osoitetta ei löydy>";
   }
 
+  get kuuluttaja(): string {
+    return this.text("viranomainen." + this.velho?.suunnittelustaVastaavaViranomainen);
+  }
+
+  get kuuluttaja_pitka(): string {
+    return this.text("viranomainen_pitka." + this.velho?.suunnittelustaVastaavaViranomainen);
+  }
+
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
+  }
+
+  get osapuoli(): string {
+    return super.osapuoli;
+  }
+
   get userInterfaceFields(): KuulutusTekstit {
     let kappale1;
+    const usePlural = this.isUseitaOsapuolia();
 
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.htmlText("rata_kappale1");
     } else {
+      if (this.suunnitteluSopimus) {
+        kappale1 = this.htmlText("tie_kappale1_suunnittelusopimus", usePlural);
+      }
       kappale1 = this.htmlText("tie_kappale1");
     }
     return {
@@ -150,7 +172,7 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
       leipaTekstit: [kappale1],
       kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
       infoTekstit: this.vahainenMenettely ? [this.htmlText("kappale4_vahainen_menettely")] : [this.htmlText("kappale4")],
-      tietosuoja: this.htmlText("asiakirja.tietosuoja", { extLinks: true }),
+      tietosuoja: this.htmlText("asiakirja.tietosuoja", false, { extLinks: true }),
     };
   }
 }

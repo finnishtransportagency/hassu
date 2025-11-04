@@ -95,7 +95,7 @@ export class CommonKutsuAdapter {
 
   euRahoitusLogot?: LocalizedMap<string> | null;
   linkableProjekti: LinkableProjekti;
-  protected suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
+  suunnitteluSopimus?: SuunnitteluSopimus | SuunnitteluSopimusJulkaisu | null;
 
   constructor(params: CommonKutsuAdapterProps, localizationKeyPrefix?: string) {
     const {
@@ -167,8 +167,47 @@ export class CommonKutsuAdapter {
     return this.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
   }
 
+  isUseitaOsapuolia(): boolean {
+    return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
+  }
+
   isElyTilaaja(): boolean {
     return this.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("ELY") ?? false;
+  }
+
+  get osapuoli(): string {
+    const suunnitteluSopimus = this.suunnitteluSopimus;
+    if (suunnitteluSopimus) {
+      if (suunnitteluSopimus.kunta) {
+        return formatProperNoun(kuntametadata.nameForKuntaId(suunnitteluSopimus.kunta, this.kieli));
+      } else if (suunnitteluSopimus.osapuolet && suunnitteluSopimus.osapuolet.length > 0) {
+        const osapuoliNimet = suunnitteluSopimus.osapuolet
+          .map((osapuoli) => {
+            if (this.kieli === "RUOTSI") {
+              return osapuoli.osapuolenNimiSV;
+            } else {
+              return osapuoli.osapuolenNimiFI;
+            }
+          })
+          .filter((nimi) => nimi && nimi.trim() !== "");
+
+        if (osapuoliNimet.length === 0) {
+          return "osapuoli";
+        } else if (osapuoliNimet.length === 1) {
+          return formatProperNoun(osapuoliNimet[0] as any);
+        } else if (osapuoliNimet.length === 2) {
+          const ja = this.text("ja");
+          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+        } else {
+          const ja = this.text("ja");
+          const viimeinenNimi = osapuoliNimet.pop();
+          return (
+            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
+          );
+        }
+      }
+    }
+    return "osapuoli";
   }
 
   get viranomainen(): string {
@@ -469,22 +508,37 @@ export class CommonKutsuAdapter {
     return yt.map((yt) => this.yhteystietoMapper(yt));
   }
 
-  text(key: string): string {
+  text(key: string, usePlural: boolean = false): string {
+    const pluralKey = key + "_monikko";
+
     let translation: string | undefined;
-    if (this.localizationKeyPrefix) {
-      translation = translate(this.localizationKeyPrefix + key, this.kieli);
+
+    if (usePlural) {
+      if (this.localizationKeyPrefix) {
+        translation = translate(this.localizationKeyPrefix + pluralKey, this.kieli);
+      }
+      if (!translation) {
+        translation = translate(pluralKey, this.kieli);
+      }
     }
+
     if (!translation) {
-      translation = translate(key, this.kieli);
+      if (this.localizationKeyPrefix) {
+        translation = translate(this.localizationKeyPrefix + key, this.kieli);
+      }
+      if (!translation) {
+        translation = translate(key, this.kieli);
+      }
     }
+
     if (!translation) {
       throw new Error(this.kieli + " translation missing for key " + key + " or " + this.localizationKeyPrefix + key);
     }
     return this.substituteText(translation);
   }
 
-  htmlText(key: string, options?: { extLinks?: boolean }): string {
-    const text = this.text(key);
+  htmlText(key: string, usePlural: boolean = false, options?: { extLinks?: boolean }): string {
+    const text = this.text(key, usePlural);
     const parts = text.split(linkExtractRegEx);
     if (parts.length == 1) {
       return text;

@@ -237,7 +237,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie ely osoitetie
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Uudenmaan ELY-keskuksen kanssa.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -254,11 +254,11 @@ Tämä ilmoitus on lähetetty kaikille niille kiinteistön omistajille ja haltij
 Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli kiinteistönne on vuokrattu, toivomme, että tiedotatte suunnitelman nähtäville asettamisesta vuokralaisianne.
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
-Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
+Teppo ProjektipäällikköProjektipäällikkö
+
+
+Uudenmaan ELY-keskus
 Lisätietoja antaa 
-
-
-
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
@@ -274,7 +274,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Väylävirasto on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Väyläviraston kanssa.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -315,7 +315,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Väylävirasto on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Väyläviraston kanssa.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -333,10 +333,10 @@ Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Teppo ProjektipäällikköProjektipäällikköVäylävirasto
+
+
+
 Lisätietoja antaa 
-
-
-
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
@@ -362,7 +362,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
-Trafikledsverket har utarbetat en vägplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Trafikledsverket har publicerat en kungörelse om den plan som ska läggas fram till påseende: Projekti 1 på svenska. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av Helsingfors i samarbete med Trafikledsverket.
 
 Hankkeen kuvaus på svenska
 Planen hålls offentligt framlagd 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/nahtavillaolo.
@@ -379,10 +379,10 @@ Detta tillkännagivande har skickats till alla ägare och innehavare av (lagen o
 Enligt markägaruppgifterna äger ni en fastighet i planområdet. Om er fastighet är arrenderad önskar vi att ni informerar era arrendatorer om att planen finns framlagd.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
 
-Teppo ProjektipäällikköProjektchefTrafikledsverket
+Teppo ProjektipäällikköProjektchef
 
 
-
+Trafikledsverket
 Mer information om planen 
 Testi Teppo (), 
 tel. 029, test(at)vayla.fi 
@@ -409,7 +409,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto 
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen tiesuunnitelman: Projekti 1.
+Väylävirasto on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Väyläviraston kanssa.
 
 Tiesuunnitelman osalta kyse on lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä maantien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Hankkeen kuvaus
@@ -487,7 +487,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen ely osoit
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Uudenmaan ELY-keskuksen kanssa.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -501,11 +501,11 @@ Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman la
 
 Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
+
+
+
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-
-
-
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
 
 
@@ -529,7 +529,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+Väylävirasto on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Väyläviraston kanssa.
 
 Hankkeen kuvaus
 Suunnitelma pidetään yleisesti nähtävänä 1.1.2024 - 8.2.2024 osoitteessa https://localhost:3000/s/lyhytOsoite/nahtavillaolo.
@@ -571,7 +571,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 Anmälan till fastighetsägare om framläggande av plan
 Bästa fastighetsägare i planeringsområdet,
-Trafikledsverket har utarbetat en utredningsplan enligt lagen om trafiksystem och landsvägar (503/2005): Projekti 1 på svenska.
+Trafikledsverket har publicerat en kungörelse om den plan som ska läggas fram till påseende: Projekti 1 på svenska. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av Helsingfors i samarbete med Trafikledsverket.
 
 Hankkeen kuvaus på svenska
 Planen hålls offentligt framlagd 1.1.2024 - 8.2.2024 på adressen https://localhost:3000/sv/s/lyhytOsoite/nahtavillaolo.
@@ -613,7 +613,7 @@ exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf yleinen vaylavira
 
 Ilmoitus suunnitelman nähtäville asettamisesta
 Hyvä suunnittelualueen kiinteistönomistaja,
-Väylävirasto on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen yleissuunnitelman: Projekti 1.
+Väylävirasto on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: Projekti 1. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut Helsinki yhteistyössä Väyläviraston kanssa.
 
 Yleissuunnitelman osalta kyse on lain liikennejärjestelmästä ja maanteistä 28 §:n mukaisesta vähäisestä maantien parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.
 Hankkeen kuvaus
@@ -627,10 +627,10 @@ Maanomistustietojen mukaan omistatte kiinteistön suunnitelma-alueella. Mikäli 
 Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 Teppo ProjektipäällikköProjektipäällikköVäylävirasto
+
+
+
 Lisätietoja antaa 
-
-
-
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
 JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123

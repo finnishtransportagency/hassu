@@ -13,7 +13,7 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
     if (this.params.vahainenMenettely) {
       paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1_vahainen_menettely"));
     } else if (this.params.suunnitteluSopimus) {
-      paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus"));
+      paragraphs.push(this.pluralParagraphFromKey("asiakirja.aloituskuulutus.kappale1_suunnittelusopimus"));
     } else {
       paragraphs.push(this.paragraphFromKey("asiakirja.aloituskuulutus.kappale1"));
     }
@@ -24,7 +24,7 @@ export class AloitusKuulutus10TR extends SuunnittelunAloitusPdf {
       ...paragraphs,
       this.hankkeenKuvausParagraph(),
       this.kuulutettuYhdessaSuunnitelmaParagraph(),
-      this.paragraphFromKey("asiakirja.aloituskuulutus.kappale2"),
+      this.pluralParagraphFromKey("asiakirja.aloituskuulutus.kappale2"),
       this.paragraphFromKey("asiakirja.aloituskuulutus.kappale3"),
       this.params.vahainenMenettely
         ? this.paragraphFromKey("asiakirja.aloituskuulutus.kappale4_vahainen_menettely")
