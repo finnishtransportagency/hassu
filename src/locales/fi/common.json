@@ -28,10 +28,13 @@
   "sivustonimi": "Valtion liikenneväylien suunnittelu",
   "vaylavirasto": "Väylävirasto",
   "ely-keskus": "ELY-keskus",
+  "elinvoimakeskus": "Elinvoimakeskus",
   "vaylavirastolle": "Väylävirastolle",
   "ely-keskukselle": "ELY-keskukselle",
+  "elinvoimakeskukselle": "Elinvoimakeskukselle",
   "vaylaviraston": "Väyläviraston",
   "ely-keskuksen": "ELY-keskuksen",
+  "elinvoimakeskuksen": "Elinvoimakeskuksen",
   "viranomainen": {
     "ETELA_POHJANMAAN_ELY": "Etelä-Pohjanmaan ELY-keskus",
     "ETELA_SAVO_ELY": "Etelä-Savon ELY-keskus",
