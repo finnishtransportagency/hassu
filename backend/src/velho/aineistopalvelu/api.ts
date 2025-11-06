@@ -29,22 +29,10 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface AineistoAineisto {
     /**
      * 
-     * @type {AineistoAineistoMetatiedot}
-     * @memberof AineistoAineisto
-     */
-    'metatiedot': AineistoAineistoMetatiedot;
-    /**
-     * 
      * @type {string}
      * @memberof AineistoAineisto
      */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
-    'vektor-malli-id'?: string;
     /**
      * 
      * @type {object}
@@ -59,10 +47,28 @@ export interface AineistoAineisto {
     'muutoksen-lahde-oid'?: string | null;
     /**
      * 
+     * @type {AineistoAineistoVektor}
+     * @memberof AineistoAineisto
+     */
+    'vektor'?: AineistoAineistoVektor;
+    /**
+     * 
      * @type {object}
      * @memberof AineistoAineisto
      */
     'paattyen': object | null;
+    /**
+     * 
+     * @type {AineistoAineistoOminaisuudet}
+     * @memberof AineistoAineisto
+     */
+    'ominaisuudet': AineistoAineistoOminaisuudet;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoAineisto
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -164,61 +170,67 @@ export interface AineistoAineistoLuoja {
 /**
  * 
  * @export
- * @interface AineistoAineistoMetatiedot
+ * @interface AineistoAineistoOminaisuudet
  */
-export interface AineistoAineistoMetatiedot {
+export interface AineistoAineistoOminaisuudet {
     /**
      * 
      * @type {string}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
-    'kuvaus'?: string;
+    'polku'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoAineistoOminaisuudet
+     */
+    'kuvaus'?: string | null;
     /**
      * 
      * @type {object}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
-    'rakennusosa'?: object;
+    'rakennusosa'?: object | null;
     /**
      * 
      * @type {object}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
     'tila': object;
     /**
      * 
-     * @type {string}
-     * @memberof AineistoAineistoMetatiedot
-     */
-    'zip-polku'?: string;
-    /**
-     * 
      * @type {Set<object>}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
     'tekniikka-alat'?: Set<object>;
     /**
      * 
      * @type {object}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
     'dokumenttityyppi': object;
     /**
      * 
+     * @type {string}
+     * @memberof AineistoAineistoOminaisuudet
+     */
+    'nimi': string;
+    /**
+     * 
      * @type {boolean}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
     'sisaltaa-henkilotietoja': boolean | null;
     /**
      * 
      * @type {object}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
     'laji': object | null;
     /**
      * 
      * @type {object}
-     * @memberof AineistoAineistoMetatiedot
+     * @memberof AineistoAineistoOminaisuudet
      */
     'ryhma': object;
 }
@@ -264,6 +276,25 @@ export interface AineistoAineistoTuoreinVersio {
      * @memberof AineistoAineistoTuoreinVersio
      */
     'muokattu': string;
+}
+/**
+ * 
+ * @export
+ * @interface AineistoAineistoVektor
+ */
+export interface AineistoAineistoVektor {
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoAineistoVektor
+     */
+    'version-id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoAineistoVektor
+     */
+    'vektor-malli-id': string;
 }
 /**
  * 
@@ -324,156 +355,15 @@ export interface AineistoAineistoVersiotInnerLuoja {
 /**
  * 
  * @export
- * @interface AineistoAineistotInner
- */
-export interface AineistoAineistotInner {
-    /**
-     * 
-     * @type {AineistoLisaystiedotMetatiedot}
-     * @memberof AineistoAineistotInner
-     */
-    'metatiedot': AineistoLisaystiedotMetatiedot;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'muokattu': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'vektor-malli-id'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'lahdejarjestelma': AineistoAineistotInnerLahdejarjestelmaEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistotInner
-     */
-    'paattyen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'oid': string;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoAineistotInner
-     */
-    'luoja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoAineistotInner
-     */
-    'linkit': Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoAineistotInner
-     */
-    'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistotInner
-     */
-    'alkaen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoAineistotInner
-     */
-    'muokkaaja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {Array<AineistoAineistoVersiotInner>}
-     * @memberof AineistoAineistotInner
-     */
-    'versiot'?: Array<AineistoAineistoVersiotInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'luontikohdeluokan-oid'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistotInner
-     */
-    'lahdejarjestelman-id': string | null;
-    /**
-     * 
-     * @type {AineistoAineistoTuoreinVersio}
-     * @memberof AineistoAineistotInner
-     */
-    'tuorein-versio'?: AineistoAineistoTuoreinVersio | null;
-}
-
-export const AineistoAineistotInnerLahdejarjestelmaEnum = {
-    Lj05: 'lahdejarjestelma/lj05',
-    Lj13: 'lahdejarjestelma/lj13',
-    Lj14: 'lahdejarjestelma/lj14',
-    Lj03: 'lahdejarjestelma/lj03',
-    Lj10: 'lahdejarjestelma/lj10',
-    Lj04: 'lahdejarjestelma/lj04',
-    Lj08: 'lahdejarjestelma/lj08',
-    Lj11: 'lahdejarjestelma/lj11',
-    Lj06: 'lahdejarjestelma/lj06',
-    Lj02: 'lahdejarjestelma/lj02',
-    Lj09: 'lahdejarjestelma/lj09',
-    Lj07: 'lahdejarjestelma/lj07',
-    Lj15: 'lahdejarjestelma/lj15',
-    Lj18: 'lahdejarjestelma/lj18',
-    Lj17: 'lahdejarjestelma/lj17',
-    Lj20: 'lahdejarjestelma/lj20',
-    Lj16: 'lahdejarjestelma/lj16',
-    Lj01: 'lahdejarjestelma/lj01',
-    Lj19: 'lahdejarjestelma/lj19',
-    Lj12: 'lahdejarjestelma/lj12'
-} as const;
-
-export type AineistoAineistotInnerLahdejarjestelmaEnum = typeof AineistoAineistotInnerLahdejarjestelmaEnum[keyof typeof AineistoAineistotInnerLahdejarjestelmaEnum];
-
-/**
- * 
- * @export
  * @interface AineistoLisaystiedot
  */
 export interface AineistoLisaystiedot {
     /**
      * 
-     * @type {AineistoLisaystiedotMetatiedot}
+     * @type {AineistoLisaystiedotOminaisuudet}
      * @memberof AineistoLisaystiedot
      */
-    'metatiedot': AineistoLisaystiedotMetatiedot;
+    'ominaisuudet': AineistoLisaystiedotOminaisuudet;
     /**
      * 
      * @type {number}
@@ -496,66 +386,133 @@ export interface AineistoLisaystiedot {
 /**
  * 
  * @export
- * @interface AineistoLisaystiedotMetatiedot
+ * @interface AineistoLisaystiedot1
  */
-export interface AineistoLisaystiedotMetatiedot {
+export interface AineistoLisaystiedot1 {
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedot1
      */
-    'kuvaus'?: string;
+    'muokattu': string | null;
+    /**
+     * 
+     * @type {AineistoLisaystiedotOminaisuudet}
+     * @memberof AineistoLisaystiedot1
+     */
+    'ominaisuudet': AineistoLisaystiedotOminaisuudet;
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedot1
      */
-    'rakennusosa'?: AineistoLisaystiedotMetatiedotRakennusosaEnum;
+    'oid': string;
+    /**
+     * 
+     * @type {AineistoAineistoLuoja}
+     * @memberof AineistoLisaystiedot1
+     */
+    'luoja': AineistoAineistoLuoja | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AineistoLisaystiedot1
+     */
+    'linkit': Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof AineistoLisaystiedot1
+     */
+    'schemaversio': number;
+    /**
+     * 
+     * @type {AineistoAineistoLuoja}
+     * @memberof AineistoLisaystiedot1
+     */
+    'muokkaaja': AineistoAineistoLuoja | null;
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedot1
      */
-    'tila': AineistoLisaystiedotMetatiedotTilaEnum;
+    'luotu': string;
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedot1
      */
-    'zip-polku'?: string;
+    'luontikohdeluokan-oid'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface AineistoLisaystiedotOminaisuudet
+ */
+export interface AineistoLisaystiedotOminaisuudet {
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoLisaystiedotOminaisuudet
+     */
+    'polku'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoLisaystiedotOminaisuudet
+     */
+    'kuvaus'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoLisaystiedotOminaisuudet
+     */
+    'rakennusosa'?: AineistoLisaystiedotOminaisuudetRakennusosaEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoLisaystiedotOminaisuudet
+     */
+    'tila': AineistoLisaystiedotOminaisuudetTilaEnum;
     /**
      * 
      * @type {Set<string>}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedotOminaisuudet
      */
-    'tekniikka-alat'?: Set<AineistoLisaystiedotMetatiedotTekniikkaAlatEnum>;
+    'tekniikka-alat'?: Set<AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum>;
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedotOminaisuudet
      */
-    'dokumenttityyppi': AineistoLisaystiedotMetatiedotDokumenttityyppiEnum;
+    'dokumenttityyppi': AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoLisaystiedotOminaisuudet
+     */
+    'nimi': string;
     /**
      * 
      * @type {boolean}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedotOminaisuudet
      */
     'sisaltaa-henkilotietoja': boolean | null;
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedotOminaisuudet
      */
-    'laji': AineistoLisaystiedotMetatiedotLajiEnum;
+    'laji': AineistoLisaystiedotOminaisuudetLajiEnum;
     /**
      * 
      * @type {string}
-     * @memberof AineistoLisaystiedotMetatiedot
+     * @memberof AineistoLisaystiedotOminaisuudet
      */
-    'ryhma': AineistoLisaystiedotMetatiedotRyhmaEnum;
+    'ryhma': AineistoLisaystiedotOminaisuudetRyhmaEnum;
 }
 
-export const AineistoLisaystiedotMetatiedotRakennusosaEnum = {
+export const AineistoLisaystiedotOminaisuudetRakennusosaEnum = {
     Ro285: 'rakennusosa/ro285',
     Ro391: 'rakennusosa/ro391',
     Ro105: 'rakennusosa/ro105',
@@ -1035,15 +992,15 @@ export const AineistoLisaystiedotMetatiedotRakennusosaEnum = {
     Ro79: 'rakennusosa/ro79'
 } as const;
 
-export type AineistoLisaystiedotMetatiedotRakennusosaEnum = typeof AineistoLisaystiedotMetatiedotRakennusosaEnum[keyof typeof AineistoLisaystiedotMetatiedotRakennusosaEnum];
-export const AineistoLisaystiedotMetatiedotTilaEnum = {
+export type AineistoLisaystiedotOminaisuudetRakennusosaEnum = typeof AineistoLisaystiedotOminaisuudetRakennusosaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRakennusosaEnum];
+export const AineistoLisaystiedotOminaisuudetTilaEnum = {
     Tila02: 'aineistotila/tila02',
     Tila03: 'aineistotila/tila03',
     Tila01: 'aineistotila/tila01'
 } as const;
 
-export type AineistoLisaystiedotMetatiedotTilaEnum = typeof AineistoLisaystiedotMetatiedotTilaEnum[keyof typeof AineistoLisaystiedotMetatiedotTilaEnum];
-export const AineistoLisaystiedotMetatiedotTekniikkaAlatEnum = {
+export type AineistoLisaystiedotOminaisuudetTilaEnum = typeof AineistoLisaystiedotOminaisuudetTilaEnum[keyof typeof AineistoLisaystiedotOminaisuudetTilaEnum];
+export const AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum = {
     Ta15: 'tekniikka-ala/ta15',
     Ta10: 'tekniikka-ala/ta10',
     Ta09: 'tekniikka-ala/ta09',
@@ -1063,8 +1020,8 @@ export const AineistoLisaystiedotMetatiedotTekniikkaAlatEnum = {
     Ta01: 'tekniikka-ala/ta01'
 } as const;
 
-export type AineistoLisaystiedotMetatiedotTekniikkaAlatEnum = typeof AineistoLisaystiedotMetatiedotTekniikkaAlatEnum[keyof typeof AineistoLisaystiedotMetatiedotTekniikkaAlatEnum];
-export const AineistoLisaystiedotMetatiedotDokumenttityyppiEnum = {
+export type AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum = typeof AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum[keyof typeof AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum];
+export const AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum = {
     Dt05: 'dokumenttityyppi/dt05',
     Dt100: 'dokumenttityyppi/dt100',
     Dt25: 'dokumenttityyppi/dt25',
@@ -1136,8 +1093,8 @@ export const AineistoLisaystiedotMetatiedotDokumenttityyppiEnum = {
     Dt87: 'dokumenttityyppi/dt87'
 } as const;
 
-export type AineistoLisaystiedotMetatiedotDokumenttityyppiEnum = typeof AineistoLisaystiedotMetatiedotDokumenttityyppiEnum[keyof typeof AineistoLisaystiedotMetatiedotDokumenttityyppiEnum];
-export const AineistoLisaystiedotMetatiedotLajiEnum = {
+export type AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum = typeof AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum[keyof typeof AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum];
+export const AineistoLisaystiedotOminaisuudetLajiEnum = {
     Al05: 'aineistolaji/al05',
     Al12: 'aineistolaji/al12',
     Al07: 'aineistolaji/al07',
@@ -1175,8 +1132,8 @@ export const AineistoLisaystiedotMetatiedotLajiEnum = {
     Al25: 'aineistolaji/al25'
 } as const;
 
-export type AineistoLisaystiedotMetatiedotLajiEnum = typeof AineistoLisaystiedotMetatiedotLajiEnum[keyof typeof AineistoLisaystiedotMetatiedotLajiEnum];
-export const AineistoLisaystiedotMetatiedotRyhmaEnum = {
+export type AineistoLisaystiedotOminaisuudetLajiEnum = typeof AineistoLisaystiedotOminaisuudetLajiEnum[keyof typeof AineistoLisaystiedotOminaisuudetLajiEnum];
+export const AineistoLisaystiedotOminaisuudetRyhmaEnum = {
     Ar06: 'aineistoryhma/ar06',
     Ar07: 'aineistoryhma/ar07',
     Ar10: 'aineistoryhma/ar10',
@@ -1189,7 +1146,7 @@ export const AineistoLisaystiedotMetatiedotRyhmaEnum = {
     Ar08: 'aineistoryhma/ar08'
 } as const;
 
-export type AineistoLisaystiedotMetatiedotRyhmaEnum = typeof AineistoLisaystiedotMetatiedotRyhmaEnum[keyof typeof AineistoLisaystiedotMetatiedotRyhmaEnum];
+export type AineistoLisaystiedotOminaisuudetRyhmaEnum = typeof AineistoLisaystiedotOminaisuudetRyhmaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRyhmaEnum];
 
 /**
  * 
@@ -1203,6 +1160,12 @@ export interface AineistoOperaatioOperaatiot {
      * @memberof AineistoOperaatioOperaatiot
      */
     'tila': AineistoOperaatioOperaatiotTilaEnum;
+    /**
+     * 
+     * @type {{ [key: string]: object; }}
+     * @memberof AineistoOperaatioOperaatiot
+     */
+    'tilan-tiedot'?: { [key: string]: object; };
     /**
      * 
      * @type {string}
@@ -1234,6 +1197,8 @@ export const AineistoOperaatioOperaatiotTilaEnum = {
     PurkuKaynnissa: 'purku-kaynnissa',
     Virhe: 'virhe',
     PurkuValmis: 'purku-valmis',
+    Valmis: 'valmis',
+    Kaynnissa: 'kaynnissa',
     PakkausValmis: 'pakkaus-valmis'
 } as const;
 
@@ -1247,10 +1212,10 @@ export type AineistoOperaatioOperaatiotTilaEnum = typeof AineistoOperaatioOperaa
 export interface AineistoPaivitystiedot {
     /**
      * 
-     * @type {AineistoLisaystiedotMetatiedot}
+     * @type {AineistoLisaystiedotOminaisuudet}
      * @memberof AineistoPaivitystiedot
      */
-    'metatiedot': AineistoLisaystiedotMetatiedot;
+    'ominaisuudet': AineistoLisaystiedotOminaisuudet;
     /**
      * 
      * @type {number}
@@ -1263,6 +1228,18 @@ export interface AineistoPaivitystiedot {
      * @memberof AineistoPaivitystiedot
      */
     'linkit': Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoPaivitystiedot
+     */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
+     * @type {AineistoAineistoVektor}
+     * @memberof AineistoPaivitystiedot
+     */
+    'vektor'?: AineistoAineistoVektor;
     /**
      * 
      * @type {string}
@@ -1302,6 +1279,18 @@ export interface AineistoViittaus {
     'paattyen': object | null;
     /**
      * 
+     * @type {ViittausLisaystiedotOminaisuudet}
+     * @memberof AineistoViittaus
+     */
+    'ominaisuudet': ViittausLisaystiedotOminaisuudet;
+    /**
+     * 
+     * @type {string}
+     * @memberof AineistoViittaus
+     */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
      * @type {string}
      * @memberof AineistoViittaus
      */
@@ -1335,12 +1324,6 @@ export interface AineistoViittaus {
      * @type {string}
      * @memberof AineistoViittaus
      */
-    'sisalto': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'edellinen-oid'?: string | null;
     /**
      * 
@@ -1366,18 +1349,101 @@ export interface AineistoViittaus {
      * @memberof AineistoViittaus
      */
     'lahdejarjestelman-id': string | null;
+}
+/**
+ * 
+ * @export
+ * @interface AineistopalveluApiV1AineistoMassamuokkausPostRequest
+ */
+export interface AineistopalveluApiV1AineistoMassamuokkausPostRequest {
     /**
      * 
-     * @type {string}
-     * @memberof AineistoViittaus
+     * @type {Array<string>}
+     * @memberof AineistopalveluApiV1AineistoMassamuokkausPostRequest
      */
-    'sijainti-muu'?: string;
+    'oidit': Array<string>;
     /**
      * 
-     * @type {string}
-     * @memberof AineistoViittaus
+     * @type {AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot}
+     * @memberof AineistopalveluApiV1AineistoMassamuokkausPostRequest
      */
-    'sijainti-url'?: string;
+    'paivitystiedot': AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot;
+}
+/**
+ * 
+ * @export
+ * @interface AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot
+ */
+export interface AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot {
+    /**
+     * 
+     * @type {object}
+     * @memberof AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot
+     */
+    'ominaisuudet': object;
+}
+/**
+ * 
+ * @export
+ * @interface AineistopalveluApiV1AineistoMassapoistoPost200Response
+ */
+export interface AineistopalveluApiV1AineistoMassapoistoPost200Response {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200Response
+     */
+    'poistetut-oidit': Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200Response
+     */
+    'epaonnistuneet-oidit': Array<string>;
+    /**
+     * 
+     * @type {AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200Response
+     */
+    'tilastot': AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot;
+}
+/**
+ * 
+ * @export
+ * @interface AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
+ */
+export interface AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot {
+    /**
+     * 
+     * @type {number}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
+     */
+    'onnistuneet-lkm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
+     */
+    'epaonnistuneet-lkm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
+     */
+    'yhteensa': number;
+}
+/**
+ * 
+ * @export
+ * @interface AineistopalveluApiV1AineistoMassapoistoPostRequest
+ */
+export interface AineistopalveluApiV1AineistoMassapoistoPostRequest {
+    /**
+     * 
+     * @type {Set<string>}
+     * @memberof AineistopalveluApiV1AineistoMassapoistoPostRequest
+     */
+    'oidit': Set<string>;
 }
 /**
  * 
@@ -1419,6 +1485,12 @@ export interface AineistopalveluApiV1MassakloonausAineistoPostRequest {
 export interface ViittausLisaystiedot {
     /**
      * 
+     * @type {ViittausLisaystiedotOminaisuudet}
+     * @memberof ViittausLisaystiedot
+     */
+    'ominaisuudet': ViittausLisaystiedotOminaisuudet;
+    /**
+     * 
      * @type {number}
      * @memberof ViittausLisaystiedot
      */
@@ -1429,24 +1501,6 @@ export interface ViittausLisaystiedot {
      * @memberof ViittausLisaystiedot
      */
     'linkit': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedot
-     */
-    'sisalto': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedot
-     */
-    'sijainti-url'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedot
-     */
-    'sijainti-muu'?: string;
     /**
      * 
      * @type {string}
@@ -1457,9 +1511,40 @@ export interface ViittausLisaystiedot {
 /**
  * 
  * @export
+ * @interface ViittausLisaystiedotOminaisuudet
+ */
+export interface ViittausLisaystiedotOminaisuudet {
+    /**
+     * 
+     * @type {string}
+     * @memberof ViittausLisaystiedotOminaisuudet
+     */
+    'sisalto': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ViittausLisaystiedotOminaisuudet
+     */
+    'sijainti-muu'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ViittausLisaystiedotOminaisuudet
+     */
+    'sijainti-url'?: string;
+}
+/**
+ * 
+ * @export
  * @interface ViittausPaivitystiedot
  */
 export interface ViittausPaivitystiedot {
+    /**
+     * 
+     * @type {ViittausLisaystiedotOminaisuudet}
+     * @memberof ViittausPaivitystiedot
+     */
+    'ominaisuudet': ViittausLisaystiedotOminaisuudet;
     /**
      * 
      * @type {number}
@@ -1472,24 +1557,6 @@ export interface ViittausPaivitystiedot {
      * @memberof ViittausPaivitystiedot
      */
     'linkit': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausPaivitystiedot
-     */
-    'sisalto': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausPaivitystiedot
-     */
-    'sijainti-url'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausPaivitystiedot
-     */
-    'sijainti-muu'?: string;
     /**
      * 
      * @type {string}
@@ -1536,6 +1603,78 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
+         * @summary Massamuokkaa aineistoja
+         * @param {AineistopalveluApiV1AineistoMassamuokkausPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoMassamuokkausPost: async (body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoMassamuokkausPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/massamuokkaus`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Poistaa useita aineistoja kerralla s3:sta ja tietokannasta
+         * @param {AineistopalveluApiV1AineistoMassapoistoPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoMassapoistoPost: async (body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoMassapoistoPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/massapoisto`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Poistaa aineiston.
          * @param {string} oid 
          * @param {*} [options] Override http request option.
@@ -1572,10 +1711,11 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * 
          * @summary Palauttaa oid:llä määritellyn aineiston tiedot.
          * @param {string} oid 
+         * @param {boolean} [haePoistetut] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidGet: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidGet: async (oid: string, haePoistetut?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}`
@@ -1590,6 +1730,10 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (haePoistetut !== undefined) {
+                localVarQueryParameter['hae-poistetut'] = haePoistetut;
+            }
 
 
     
@@ -1736,6 +1880,28 @@ export const AineistoApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Massamuokkaa aineistoja
+         * @param {AineistopalveluApiV1AineistoMassamuokkausPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoMassamuokkausPost(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Poistaa useita aineistoja kerralla s3:sta ja tietokannasta
+         * @param {AineistopalveluApiV1AineistoMassapoistoPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistopalveluApiV1AineistoMassapoistoPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoMassapoistoPost(body, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Poistaa aineiston.
          * @param {string} oid 
          * @param {*} [options] Override http request option.
@@ -1749,11 +1915,12 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * 
          * @summary Palauttaa oid:llä määritellyn aineiston tiedot.
          * @param {string} oid 
+         * @param {boolean} [haePoistetut] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidGet(oid, options);
+        async aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidGet(oid, haePoistetut, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1775,7 +1942,7 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
+        async aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoLisaystiedot1>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1811,6 +1978,26 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
+         * @summary Massamuokkaa aineistoja
+         * @param {AineistopalveluApiV1AineistoMassamuokkausPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: any): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1AineistoMassamuokkausPost(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Poistaa useita aineistoja kerralla s3:sta ja tietokannasta
+         * @param {AineistopalveluApiV1AineistoMassapoistoPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: any): AxiosPromise<AineistopalveluApiV1AineistoMassapoistoPost200Response> {
+            return localVarFp.aineistopalveluApiV1AineistoMassapoistoPost(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Poistaa aineiston.
          * @param {string} oid 
          * @param {*} [options] Override http request option.
@@ -1823,11 +2010,12 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * 
          * @summary Palauttaa oid:llä määritellyn aineiston tiedot.
          * @param {string} oid 
+         * @param {boolean} [haePoistetut] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidGet(oid: string, options?: any): AxiosPromise<AineistoAineisto> {
-            return localVarFp.aineistopalveluApiV1AineistoOidGet(oid, options).then((request) => request(axios, basePath));
+        aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: any): AxiosPromise<AineistoAineisto> {
+            return localVarFp.aineistopalveluApiV1AineistoOidGet(oid, haePoistetut, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1847,7 +2035,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: any): AxiosPromise<AineistoAineisto> {
+        aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: any): AxiosPromise<AineistoLisaystiedot1> {
             return localVarFp.aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1883,6 +2071,30 @@ export class AineistoApi extends BaseAPI {
 
     /**
      * 
+     * @summary Massamuokkaa aineistoja
+     * @param {AineistopalveluApiV1AineistoMassamuokkausPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AineistoApi
+     */
+    public aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: AxiosRequestConfig) {
+        return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoMassamuokkausPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Poistaa useita aineistoja kerralla s3:sta ja tietokannasta
+     * @param {AineistopalveluApiV1AineistoMassapoistoPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AineistoApi
+     */
+    public aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: AxiosRequestConfig) {
+        return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoMassapoistoPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Poistaa aineiston.
      * @param {string} oid 
      * @param {*} [options] Override http request option.
@@ -1897,12 +2109,13 @@ export class AineistoApi extends BaseAPI {
      * 
      * @summary Palauttaa oid:llä määritellyn aineiston tiedot.
      * @param {string} oid 
+     * @param {boolean} [haePoistetut] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoOidGet(oid: string, options?: AxiosRequestConfig) {
-        return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoOidGet(oid, options).then((request) => request(this.axios, this.basePath));
+    public aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: AxiosRequestConfig) {
+        return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoOidGet(oid, haePoistetut, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2630,7 +2843,7 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohdeOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async aineistopalveluApiV1KohdeOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidGet(oid, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2664,7 +2877,7 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohteetPost(body: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<AineistoAineistotInner>>> {
+        async aineistopalveluApiV1KohteetPost(body: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohteetPost(body, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2713,7 +2926,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidGet(oid: string, options?: any): AxiosPromise<object> {
+        aineistopalveluApiV1KohdeOidGet(oid: string, options?: any): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1KohdeOidGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2744,7 +2957,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohteetPost(body: Array<string>, options?: any): AxiosPromise<Set<AineistoAineistotInner>> {
+        aineistopalveluApiV1KohteetPost(body: Array<string>, options?: any): AxiosPromise<Array<object>> {
             return localVarFp.aineistopalveluApiV1KohteetPost(body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3034,6 +3247,104 @@ export class LatauspakettiApi extends BaseAPI {
      */
     public aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: AxiosRequestConfig) {
         return LatauspakettiApiFp(this.configuration).aineistopalveluApiV1LatauspakettiPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+/**
+ * TarkistusApi - axios parameter creator
+ * @export
+ */
+export const TarkistusApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1HallintaTarkistusAineistoGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/aineistopalvelu/api/v1/hallinta/tarkistus/aineisto`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * TarkistusApi - functional programming interface
+ * @export
+ */
+export const TarkistusApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = TarkistusApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1HallintaTarkistusAineistoGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+    }
+};
+
+/**
+ * TarkistusApi - factory interface
+ * @export
+ */
+export const TarkistusApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = TarkistusApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: any): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1HallintaTarkistusAineistoGet(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * TarkistusApi - object-oriented interface
+ * @export
+ * @class TarkistusApi
+ * @extends {BaseAPI}
+ */
+export class TarkistusApi extends BaseAPI {
+    /**
+     * 
+     * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof TarkistusApi
+     */
+    public aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: AxiosRequestConfig) {
+        return TarkistusApiFp(this.configuration).aineistopalveluApiV1HallintaTarkistusAineistoGet(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
