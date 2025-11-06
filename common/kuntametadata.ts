@@ -13,6 +13,7 @@ export type Kunta = {
   nimi: RequiredLocalizedMap<string>;
   ely: string;
   liikennevastuuEly: string;
+  elinvoimakeskus: string;
   lakkautettu?: boolean;
 };
 

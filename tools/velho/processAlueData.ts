@@ -22,6 +22,7 @@ type VelhoKunta = {
   otsikko: string; // "Oulainen",
   "liikennevastuu-ely": string; //"ely/ely13",
   ely: string; //"ely/ely13",
+  elinvoimakeskus: string; //"elinvoimakeskus/elinvoimakeskus09",
   avi: string; // "avi/avi5"
   lakkautettu?: string;
   Nro: string;
@@ -56,6 +57,7 @@ function parseKunnat(): Record<number, Kunta> {
         id: kuntaId,
         nimi,
         ely: velhoKunta.ely,
+        elinvoimakeskus: velhoKunta.elinvoimakeskus,
         liikennevastuuEly: velhoKunta["liikennevastuu-ely"],
         maakunta: velhoKunta.maakunta,
       };
