@@ -16,6 +16,10 @@
     "linkki1": {
       "teksti": "Kaikki Väyläviraston ja ELY-keskuksen väylähankkeiden sivut",
       "href": "https:/vayla.fi/suunnittelu-rakentaminen"
+    },
+    "linkki1_evk": {
+      "teksti": "Kaikki Väyläviraston ja Elinvoimakeskuksen väylähankkeiden sivut",
+      "href": "https:/vayla.fi/suunnittelu-rakentaminen"
     }
   },
   "tietoa-suunnittelusta": {
@@ -44,6 +48,10 @@
     "linkki2": {
       "teksti": "Tietosuoja Elinkeino-, liikenne- ja ympäristökeskuksessa",
       "href": "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
+    },
+    "linkki2_evk": {
+      "teksti": "Tietosuoja Elinvoimakeskuksessa",
+      "href": "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
     }
   }
 }

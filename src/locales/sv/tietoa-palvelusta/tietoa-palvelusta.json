@@ -16,6 +16,10 @@
     "linkki1": {
       "teksti": "Alla sidor om Trafikledsverkets och NTM-centralens trafikledsprojekt",
       "href": "https://vayla.fi/sv/planering-byggande"
+    },
+    "linkki1_evk": {
+      "teksti": "Alla sidor om Trafikledsverkets och Livskraftscentralens trafikledsprojekt",
+      "href": "https:/vayla.fi/sv/suunnittelu-rakentaminen"
     }
   },
   "tietoa-suunnittelusta": {
@@ -44,6 +48,10 @@
     "linkki2": {
       "teksti": "Dataskydd vid Närings-, trafik- och miljöcentralen",
       "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+    },
+    "linkki2_evk": {
+      "teksti": "Dataskydd vid Livskraftscentralen",
+      "href": "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     }
   }
 }
