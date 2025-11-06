@@ -52,6 +52,10 @@
     "linkki2": {
       "teksti": "De regionala närings-, trafik- och miljöcentralernas kungörelser",
       "href": "https://www.ely-keskus.fi/sv/kuulutukset"
+    },
+    "linkki2_evk": {
+      "teksti": "De regionala livskraftscentralernas kungörelser",
+      "href": "https://www.elinvoimakeskus.fi/sv/kuulutukset"
     }
   },
   "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {
