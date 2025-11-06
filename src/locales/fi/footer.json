@@ -5,9 +5,13 @@
       "teksti": "Väylävirasto.fi",
       "linkki": "https://www.vayla.fi"
     },
-    "ely": {
+    "linkki-ely": {
       "teksti": "Ely-keskus.fi",
-      "linkki": "https://www.ely-keskus.fi"
+      "href": "https://www.ely-keskus.fi"
+    },
+    "linkki-evk": {
+      "teksti": "Elinvoimakeskus.fi",
+      "href": "https://www.elinvoimakeskus.fi"
     },
     "tietoa_palvelusta": "Tietoa palvelusta",
     "saavutettavuus": "Saavutettavuus",
