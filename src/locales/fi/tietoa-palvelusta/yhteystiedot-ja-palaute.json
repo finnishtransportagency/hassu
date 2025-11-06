@@ -9,6 +9,10 @@
     "teksti": "Elinkeino-, liikenne- ja ympäristökeskuksen yhteystiedot",
     "href": "https://www.ely-keskus.fi/asiointi-ja-yhteystiedot"
   },
+  "linkki2_evk": {
+    "teksti": "Elinvoimakeskuksen yhteystiedot",
+    "href": "https://www.elinvoimakeskus.fi/asiointi-ja-yhteystiedot"
+  },
   "palvelun-yhteystiedot": {
     "otsikko": "Palvelun yhteystiedot",
     "kappale1": "<p>Mikäli Valtion liikenneväylien suunnittelu -palvelussa ilmenee ongelmia, ota sähköpostitse yhteyttä palvelun ylläpitoon <a>{{emailOsoite}}</a>. Yhteydenotot käsitellään virka-aikana.</p>",

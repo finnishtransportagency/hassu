@@ -9,6 +9,10 @@
     "teksti": "Närings-, trafik- och miljöcentralens kontaktuppgifter",
     "href": "https://www.ely-keskus.fi/sv/asiointi-ja-yhteystiedot"
   },
+  "linkki2_evk": {
+    "teksti": "Livskraftscentralens kontaktuppgifter",
+    "href": "https://www.elinvoimakeskus.fi/sv/asiointi-ja-yhteystiedot"
+  },
   "palvelun-yhteystiedot": {
     "otsikko": "Tjänstens kontaktuppgifter",
     "kappale1": "<p>Om det uppstår problem i tjänsten Planering av statens trafikleder, kontakta tjänstens underhåll per e-post <a>{{emailOsoite}}</a>. Meddelanden behandlas under tjänstetid.</p>",
