@@ -245,7 +245,7 @@ class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSe
         ? "Väyläviraston"
         : viranomainen && viranomainen.endsWith("ELY")
         ? translate("ely_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " ELY-keskuksen"
-        : translate("evk_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " Elinvoimakeskuksen";
+        : translate("ely_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " elinvoimakeskuksen";
 
     const projektiPaallikko = getProjektipaallikkoAndOrganisaatio(projekti, Kieli.SUOMI);
     const text = `Hei,

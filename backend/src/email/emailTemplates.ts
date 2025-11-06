@@ -279,7 +279,11 @@ export function createHyvaksymisesitysViranomaisilleEmail(
     text: `${projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? "Kiire hyväksymisesitys" : "Hyväksymisesitys"} ${projekti.velho?.nimi}
 
 ${
-  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
+  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+    ? "Väylävirasto"
+    : projekti.velho?.suunnittelustaVastaavaViranomainen?.endsWith("ELY")
+    ? "ELY-keskus"
+    : "Elinvoimakeskus"
 } lähettää suunnitelman ${projekti.velho?.nimi} hyväksyttäväksi Traficomiin${
       projekti.muokattavaHyvaksymisEsitys?.kiireellinen ? " kiireellisenä" : ""
     }. Suunnitelman hyväksymisesitys ja laskutustiedot hyväksymismaksua varten löytyy oheisen linkin takaa ${url.href}
@@ -508,7 +512,11 @@ Suunnitelman nimi: ${projekti.velho?.nimi ?? ""}
 Suunnitelman asiatunnus: ${asiatunnus}
 
 ${
-  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? "Väylävirasto" : "ELY-keskus"
+  projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+    ? "Väylävirasto"
+    : projekti.velho?.suunnittelustaVastaavaViranomainen?.endsWith("ELY")
+    ? "ELY-keskus"
+    : "Elinvoimakeskus"
 } käsittelee muistutustasi asiatunnuksella. Mikäli haluat olla yhteydessä suunnitelmaan liittyen ilmoitathan asiatunnuksen viestissäsi.
 
 Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}
@@ -527,7 +535,9 @@ Planens ärendekod: ${asiatunnus}
 ${
   projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
     ? "Trafikledsverket"
-    : "NTM-centralen"
+    : projekti.velho?.suunnittelustaVastaavaViranomainen?.endsWith("ELY")
+    ? "NTM-centralen"
+    : "Livskraftscentralen"
 } behandlar din anmärkning med en ärendekod. Om du vill kontakta oss i anslutning till planen, meddela ärendekoden i ditt meddelande.
 
 Du kommer till planens uppgifter via denna länk: ${linkNahtavillaOlo(projekti, Kieli.RUOTSI)}
@@ -606,8 +616,11 @@ export function createEnnakkoNeuvotteluViranomaisilleEmail(
   let viranomainen: string;
   if (projekti.velho?.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
     viranomainen = translate("viranomainen.VAYLAVIRASTO", API.Kieli.SUOMI) ?? "Väylävirasto";
-  } else {
+  } else if (projekti.velho?.suunnittelustaVastaavaViranomainen?.endsWith("ELY")) {
     viranomainen = translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) + " ELY-keskus";
+  } else {
+    viranomainen =
+      translate("ely_alue_genetiivi." + projekti.velho?.suunnittelustaVastaavaViranomainen, API.Kieli.SUOMI) + " elinvoimakeskus";
   }
   const muokkaajaEmail = projekti.kayttoOikeudet.find((ko) => ko.kayttajatunnus == projekti.ennakkoNeuvottelu?.muokkaaja)?.email;
   const cc = projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet);
