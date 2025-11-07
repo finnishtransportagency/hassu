@@ -3673,4 +3673,66 @@ export const alueData: AlueData = {
       sykeElyId: 1001,
     },
   },
+  elinvoimakeskukset: {
+    "elinvoimakeskus/elinvoimakeskus03": {
+      nro: "03",
+      lyhenne: "KAS",
+      sykeElinvoimakeskusId: 3,
+      nimiSuomi: "Kaakkois-Suomen elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus01": {
+      nro: "01",
+      lyhenne: "UUD",
+      sykeElinvoimakeskusId: 1,
+      nimiSuomi: "Uudenmaan elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus09": {
+      nro: "09",
+      lyhenne: "PSU",
+      sykeElinvoimakeskusId: 9,
+      nimiSuomi: "Pohjois-Suomen elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus10": {
+      nro: "10",
+      lyhenne: "LAP",
+      sykeElinvoimakeskusId: 10,
+      nimiSuomi: "Lapin elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus04": {
+      nro: "04",
+      lyhenne: "SIS",
+      sykeElinvoimakeskusId: 4,
+      nimiSuomi: "Sisä-Suomen elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus05": {
+      nro: "05",
+      lyhenne: "KES",
+      sykeElinvoimakeskusId: 5,
+      nimiSuomi: "Keski-Suomen elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus02": {
+      nro: "02",
+      lyhenne: "LOU",
+      sykeElinvoimakeskusId: 2,
+      nimiSuomi: "Lounais-Suomen elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus06": {
+      nro: "06",
+      lyhenne: "ITA",
+      sykeElinvoimakeskusId: 6,
+      nimiSuomi: "Itä-Suomen elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus07": {
+      nro: "07",
+      lyhenne: "EPO",
+      sykeElinvoimakeskusId: 7,
+      nimiSuomi: "Etelä-Pohjanmaan elinvoimakeskus",
+    },
+    "elinvoimakeskus/elinvoimakeskus08": {
+      nro: "08",
+      lyhenne: "POH",
+      sykeElinvoimakeskusId: 8,
+      nimiSuomi: "Pohjanmaan elinvoimakeskus",
+    },
+  },
 };

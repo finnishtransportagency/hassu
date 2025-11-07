@@ -31,10 +31,18 @@ export type Ely = {
   sykeElyId: number;
 };
 
+export type Elinvoimakeskus = {
+  nro: string;
+  lyhenne: string;
+  sykeElinvoimakeskusId: number;
+  nimiSuomi: string;
+};
+
 export type AlueData = {
   kunnat: Record<string, Kunta>;
   maakunnat: Record<string, Maakunta>;
   elyt: Record<string, Ely>;
+  elinvoimakeskukset: Record<string, Elinvoimakeskus>;
 };
 
 class KuntaMetadata {
@@ -167,7 +175,6 @@ class KuntaMetadata {
     return IlmoitettavaViranomainen.VAYLAVIRASTO;
   }
 
-
   public viranomainenForKuntaId(kuntaId: number): IlmoitettavaViranomainen {
     const kunta = alueData.kunnat[kuntaId];
     if (!kunta) {
@@ -197,12 +204,28 @@ class KuntaMetadata {
     return Object.keys(alueData.elyt).find((elyKey) => alueData.elyt[elyKey].lyhenne == key);
   }
 
+  /**
+   * Käytetään ilmoitustaulusyötteen avaimen muuttamiseen id:ksi (esim. UUD -> "elinvoimakeskus/elinvoimakeskus01")
+   * @param key
+   */
+  elinvoimakeskusIdFromKey(key: string) {
+    return Object.keys(alueData.elinvoimakeskukset).find((elinvoimakeskusKey) => alueData.elinvoimakeskukset[elinvoimakeskusKey].lyhenne == key);
+  }
+
   liikennevastuuElyIdFromKuntaId(kuntaId: number): string {
     const liikennevastuuEly = alueData.kunnat[kuntaId].liikennevastuuEly;
     if (liikennevastuuEly) {
       return liikennevastuuEly;
     }
     throw new IllegalArgumentError("Liikenne-ely ei löydy kuntaId:lle " + kuntaId);
+  }
+
+  elinvoimakeskusIdFromKuntaId(kuntaId: number): string {
+    const elinvoimakeskus = alueData.kunnat[kuntaId].elinvoimakeskus;
+    if (elinvoimakeskus) {
+      return elinvoimakeskus;
+    }
+    throw new IllegalArgumentError("Elinvoimakeskusta ei löydy kuntaId:lle " + kuntaId);
   }
 }
 

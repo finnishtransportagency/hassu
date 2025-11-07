@@ -3,13 +3,13 @@ import sykeMaakunnat from "./build/maakunnat.json";
 import sykeElyt from "./build/ely.json";
 import * as fs from "fs";
 import { Kieli } from "../../common/graphql/apiModel";
-import { Ely, Kunta, Maakunta } from "../../common/kuntametadata";
+import { Elinvoimakeskus, Ely, Kunta, Maakunta } from "../../common/kuntametadata";
 
 const metaDataJSON = JSON.parse(fs.readFileSync(__dirname + "/build/metadata.json").toString("utf8"));
 
 const velhometadata = {
   info: {
-    "x-velho-nimikkeistot": ["alueet/kunta", "alueet/maakunta", "alueet/ely"].reduce((catalog: any, key) => {
+    "x-velho-nimikkeistot": ["alueet/kunta", "alueet/maakunta", "alueet/ely", "alueet/elinvoimakeskus"].reduce((catalog: any, key) => {
       catalog[key] = (metaDataJSON.info["x-velho-nimikkeistot"] as any)[key];
       return catalog;
     }, {}),
@@ -37,6 +37,13 @@ type VelhoMaakunta = {
 
 type VelhoEly = {
   koodi: string;
+  otsikko: string;
+};
+
+type VelhoElinvoimakeskus = {
+  numero: number;
+  koodi: string;
+  kuvaus: string;
   otsikko: string;
 };
 
@@ -116,6 +123,20 @@ function parseVelhoElyt() {
   }, {} as Record<string, Ely>);
 }
 
+function parseVelhoElinvoimakeskukset() {
+  const keskukset = extractLatestVersionOfVelhoMetadata(velhometadata, "alueet/elinvoimakeskus") as Record<string, VelhoElinvoimakeskus>;
+  return Object.keys(keskukset).reduce((result: Record<string, Elinvoimakeskus>, velhoKeskusId) => {
+    const keskus = keskukset[velhoKeskusId];
+    result[velhoKeskusId] = {
+      nro: keskus.koodi,
+      lyhenne: keskus.kuvaus,
+      sykeElinvoimakeskusId: keskus.numero,
+      nimiSuomi: keskus.otsikko,
+    };
+    return result;
+  }, {} as Record<string, Elinvoimakeskus>);
+}
+
 function extractLatestVersionOfVelhoMetadata(velhoJSON: typeof velhometadata, field: string): unknown {
   const definition: any = (velhoJSON.info["x-velho-nimikkeistot"] as any)[field];
   return definition.nimikkeistoversiot[definition["uusin-nimikkeistoversio"]];
@@ -125,11 +146,12 @@ export function processAlueData() {
   const kunnat = parseKunnat();
   const maakunnat = parseMaakunnat();
   const elyt = parseVelhoElyt();
+  const elinvoimakeskukset = parseVelhoElinvoimakeskukset();
 
   fs.writeFileSync(
     __dirname + "/../../common/generated/aluedata.ts",
     `import { AlueData } from "../kuntametadata";
-export const alueData : AlueData = ${JSON.stringify({ kunnat, maakunnat, elyt }, null, 2)}`
+export const alueData : AlueData = ${JSON.stringify({ kunnat, maakunnat, elyt, elinvoimakeskukset }, null, 2)}`
   );
   console.log("Valmis.");
 }
