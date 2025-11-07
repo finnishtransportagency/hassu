@@ -257,7 +257,7 @@ export abstract class AbstractPdf {
     } else if (isElyTilaaja) {
       return this.fileBasePath + "/files/ely.png";
     } else {
-      return this.fileBasePath + "/files/evkipost_fi.png";
+      return this.fileBasePath + "/files/evk.png";
     }
   }
 

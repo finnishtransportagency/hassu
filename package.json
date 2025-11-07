@@ -267,6 +267,7 @@
     "login": "aws sso login",
     "postlogin": "cross-env ./deployment/node_modules/.bin/cdk-sso-sync $AWS_PROFILE && npm run loginNpm",
     "loginNpm": "aws codeartifact login --tool npm --domain hassu-domain --repository hassu-private-npm --namespace @hassu",
+    "prepare-initial-developer-install": "npx cross-env AWS_PROFILE=hassudev AWS_REGION=eu-west-1 sh -c 'aws sso login && npx cdk-sso-sync $AWS_PROFILE && npm run loginNpm && npm run ecrLogin'",
     "presynth": "rimraf build cdk.out .next",
     "synth": "./deployment/node_modules/.bin/cdk $NODE_DEBUG_OPTION --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" synth",
     "destroy": "./deployment/node_modules/.bin/cdk --app \"ts-node --project=tsconfig.cdk.json ./deployment/bin/hassu\" destroy \"*\" --require-approval never",
