@@ -41,10 +41,28 @@ export interface HakulausekeAsetukset {
     'liitoshaku'?: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof HakulausekeAsetukset
+     */
+    'oid-haku'?: boolean;
+    /**
+     * 
      * @type {Array<Array<string>>}
      * @memberof HakulausekeAsetukset
      */
     'palautettavat-kentat'?: Array<Array<string>>;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof HakulausekeAsetukset
+     */
+    'pilko-tiekohdehaun-lisarajauksilla?'?: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof HakulausekeAsetukset
+     */
+    'arvojarjestys?'?: boolean;
     /**
      * 
      * @type {number}
@@ -83,6 +101,12 @@ export interface HakulausekeAsetukset {
     'geometriat'?: Array<HakulausekeAsetuksetGeometriatEnum>;
     /**
      * 
+     * @type {boolean}
+     * @memberof HakulausekeAsetukset
+     */
+    'poista-duplikaatit?'?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof HakulausekeAsetukset
      */
@@ -102,10 +126,7 @@ export interface HakulausekeAsetukset {
 }
 
 export const HakulausekeAsetuksetGeometriatEnum = {
-    GeometriaWgs84: 'geometria-wgs84',
-    Geometria: 'geometria',
     KeskilinjageometriaWgs84: 'keskilinjageometria-wgs84',
-    Geometrycollection: 'geometrycollection',
     Keskilinjageometria: 'keskilinjageometria'
 } as const;
 
@@ -141,31 +162,6 @@ export interface HakulausekeKysely {
      * @memberof HakulausekeKysely
      */
     'lauseke'?: object;
-    /**
-     * 
-     * @type {HakulausekeLisarajaukset}
-     * @memberof HakulausekeKysely
-     */
-    'lisarajaukset'?: HakulausekeLisarajaukset;
-}
-/**
- * 
- * @export
- * @interface HakulausekeLisarajaukset
- */
-export interface HakulausekeLisarajaukset {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof HakulausekeLisarajaukset
-     */
-    'kohdeluokat': Array<string>;
-    /**
-     * 
-     * @type {object}
-     * @memberof HakulausekeLisarajaukset
-     */
-    'lauseke': object;
 }
 /**
  * 
@@ -336,118 +332,6 @@ export interface HakupalveluSpecHakuspecLukumaara {
 /**
  * 
  * @export
- * @interface HakupalveluSpecHakuspecTallennaHaku
- */
-export interface HakupalveluSpecHakuspecTallennaHaku {
-    /**
-     * 
-     * @type {string}
-     * @memberof HakupalveluSpecHakuspecTallennaHaku
-     */
-    'nimi': string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof HakupalveluSpecHakuspecTallennaHaku
-     */
-    'suosikki?': boolean;
-    /**
-     * 
-     * @type {HakupalveluSpecHakuspecTallennaHakuHaku}
-     * @memberof HakupalveluSpecHakuspecTallennaHaku
-     */
-    'haku': HakupalveluSpecHakuspecTallennaHakuHaku;
-    /**
-     * 
-     * @type {HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke}
-     * @memberof HakupalveluSpecHakuspecTallennaHaku
-     */
-    'muodostettu-hakulauseke': HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke;
-}
-/**
- * 
- * @export
- * @interface HakupalveluSpecHakuspecTallennaHakuHaku
- */
-export interface HakupalveluSpecHakuspecTallennaHakuHaku {
-    /**
-     * 
-     * @type {string}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuHaku
-     */
-    'valittu-osio': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuHaku
-     */
-    'haun-kohdistus': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuHaku
-     */
-    'haun-rakennus': object | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuHaku
-     */
-    'kohdeluokat': Array<string>;
-}
-/**
- * 
- * @export
- * @interface HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
- */
-export interface HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
-     */
-    'kohdeluokat': Array<string>;
-    /**
-     * 
-     * @type {HakulausekeAsetukset}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
-     */
-    'asetukset': HakulausekeAsetukset;
-    /**
-     * 
-     * @type {object}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
-     */
-    'lauseke'?: object;
-    /**
-     * 
-     * @type {HakulausekeLisarajaukset}
-     * @memberof HakupalveluSpecHakuspecTallennaHakuMuodostettuHakulauseke
-     */
-    'lisarajaukset'?: HakulausekeLisarajaukset;
-}
-/**
- * 
- * @export
- * @interface HakupalveluSpecHakuspecTallennetutHaut
- */
-export interface HakupalveluSpecHakuspecTallennetutHaut {
-    /**
-     * 
-     * @type {Array<object>}
-     * @memberof HakupalveluSpecHakuspecTallennetutHaut
-     */
-    'suosikit': Array<object>;
-    /**
-     * 
-     * @type {Array<object>}
-     * @memberof HakupalveluSpecHakuspecTallennetutHaut
-     */
-    'viimeaikaiset': Array<object>;
-}
-/**
- * 
- * @export
  * @interface HakupalveluSpecHakuspecTaustahakuTila
  */
 export interface HakupalveluSpecHakuspecTaustahakuTila {
@@ -486,7 +370,7 @@ export interface HakupalveluSpecHakuspecTaustahakuTila {
      * @type {number}
      * @memberof HakupalveluSpecHakuspecTaustahakuTila
      */
-    'metrit'?: number;
+    'metrit'?: number | null;
     /**
      * 
      * @type {string}
@@ -1293,173 +1177,6 @@ export class HakuApi extends BaseAPI {
 
 
 /**
- * TallennusApi - axios parameter creator
- * @export
- */
-export const TallennusApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @summary Hakee käyttäjätunnukselle tallennetut suosikki- ja viimeaikaiset haut
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        hakupalveluApiV1TallennusHaeGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/hakupalvelu/api/v1/tallennus/hae`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Tallenna hakulauseke käyttäjälle
-         * @param {HakupalveluSpecHakuspecTallennaHaku} hakupalveluSpecHakuspecTallennaHaku 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        hakupalveluApiV1TallennusTallennaPost: async (hakupalveluSpecHakuspecTallennaHaku: HakupalveluSpecHakuspecTallennaHaku, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hakupalveluSpecHakuspecTallennaHaku' is not null or undefined
-            assertParamExists('hakupalveluApiV1TallennusTallennaPost', 'hakupalveluSpecHakuspecTallennaHaku', hakupalveluSpecHakuspecTallennaHaku)
-            const localVarPath = `/hakupalvelu/api/v1/tallennus/tallenna`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(hakupalveluSpecHakuspecTallennaHaku, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * TallennusApi - functional programming interface
- * @export
- */
-export const TallennusApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = TallennusApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @summary Hakee käyttäjätunnukselle tallennetut suosikki- ja viimeaikaiset haut
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async hakupalveluApiV1TallennusHaeGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HakupalveluSpecHakuspecTallennetutHaut>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV1TallennusHaeGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Tallenna hakulauseke käyttäjälle
-         * @param {HakupalveluSpecHakuspecTallennaHaku} hakupalveluSpecHakuspecTallennaHaku 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async hakupalveluApiV1TallennusTallennaPost(hakupalveluSpecHakuspecTallennaHaku: HakupalveluSpecHakuspecTallennaHaku, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV1TallennusTallennaPost(hakupalveluSpecHakuspecTallennaHaku, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * TallennusApi - factory interface
- * @export
- */
-export const TallennusApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = TallennusApiFp(configuration)
-    return {
-        /**
-         * 
-         * @summary Hakee käyttäjätunnukselle tallennetut suosikki- ja viimeaikaiset haut
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        hakupalveluApiV1TallennusHaeGet(options?: any): AxiosPromise<HakupalveluSpecHakuspecTallennetutHaut> {
-            return localVarFp.hakupalveluApiV1TallennusHaeGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Tallenna hakulauseke käyttäjälle
-         * @param {HakupalveluSpecHakuspecTallennaHaku} hakupalveluSpecHakuspecTallennaHaku 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        hakupalveluApiV1TallennusTallennaPost(hakupalveluSpecHakuspecTallennaHaku: HakupalveluSpecHakuspecTallennaHaku, options?: any): AxiosPromise<object> {
-            return localVarFp.hakupalveluApiV1TallennusTallennaPost(hakupalveluSpecHakuspecTallennaHaku, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * TallennusApi - object-oriented interface
- * @export
- * @class TallennusApi
- * @extends {BaseAPI}
- */
-export class TallennusApi extends BaseAPI {
-    /**
-     * 
-     * @summary Hakee käyttäjätunnukselle tallennetut suosikki- ja viimeaikaiset haut
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TallennusApi
-     */
-    public hakupalveluApiV1TallennusHaeGet(options?: AxiosRequestConfig) {
-        return TallennusApiFp(this.configuration).hakupalveluApiV1TallennusHaeGet(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Tallenna hakulauseke käyttäjälle
-     * @param {HakupalveluSpecHakuspecTallennaHaku} hakupalveluSpecHakuspecTallennaHaku 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof TallennusApi
-     */
-    public hakupalveluApiV1TallennusTallennaPost(hakupalveluSpecHakuspecTallennaHaku: HakupalveluSpecHakuspecTallennaHaku, options?: AxiosRequestConfig) {
-        return TallennusApiFp(this.configuration).hakupalveluApiV1TallennusTallennaPost(hakupalveluSpecHakuspecTallennaHaku, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
  * TaustahakuApi - axios parameter creator
  * @export
  */
@@ -1861,7 +1578,7 @@ export const TaustahakuApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async hakupalveluApiV1TaustahakuTilaGet(tagit?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
+        async hakupalveluApiV1TaustahakuTilaGet(tagit?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV1TaustahakuTilaGet(tagit, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1973,7 +1690,7 @@ export const TaustahakuApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV1TaustahakuTilaGet(tagit?: string, options?: any): AxiosPromise<Array<object>> {
+        hakupalveluApiV1TaustahakuTilaGet(tagit?: string, options?: any): AxiosPromise<object> {
             return localVarFp.hakupalveluApiV1TaustahakuTilaGet(tagit, options).then((request) => request(axios, basePath));
         },
         /**

@@ -68,7 +68,10 @@ task fixSwagger(type: Copy) {
   from("${buildDir}") {
     include "*.json"
     filter { line -> line.replaceAll('"tieosuushaku","kohdeluokkahaku","kohdeluokkahaku","tieosuushaku"', '"tieosuushaku","kohdeluokkahaku"') }
+    // OLD HakulausekeAsetuksetGeometriatEnum for current version in prod
     filter { line -> line.replaceAll('"geometria-wgs84","geometria","keskilinjageometria-wgs84","geometrycollection","keskilinjageometria","geometrycollection","keskilinjageometria","geometria","keskilinjageometria-wgs84","geometria-wgs84"', '"geometria-wgs84","geometria","keskilinjageometria-wgs84","geometrycollection","keskilinjageometria"') }
+    // NEW HakulausekeAsetuksetGeometriatEnum for current version in stg
+    filter { line -> line.replaceAll('"keskilinjageometria-wgs84","keskilinjageometria","keskilinjageometria","keskilinjageometria-wgs84"', '"keskilinjageometria-wgs84","keskilinjageometria"') }
   }
   into "${buildDir}/fixed".toString()
 }
