@@ -13,11 +13,11 @@
   "yksittaisen-suunnitelman-sivu": {
     "otsikko": "Sida för enskild plan",
     "kappale1": "På projektens sidor finns grundläggande information om planeringsprojektet, dess framskridande och nuvarande status. Interaktionen i planeringen av projektet sköts via sidan. På sidan för en enskild plan finns också en länk till Trafikledsverkets projektsidor, om en projektsida har skapats om planen.",
-    "linkki1": {
+    "linkki1_ely": {
       "teksti": "Alla sidor om Trafikledsverkets och NTM-centralens trafikledsprojekt",
       "href": "https://vayla.fi/sv/planering-byggande"
     },
-    "linkki1_evk": {
+    "linkki1": {
       "teksti": "Alla sidor om Trafikledsverkets och Livskraftscentralens trafikledsprojekt",
       "href": "https:/vayla.fi/sv/suunnittelu-rakentaminen"
     }
@@ -45,11 +45,11 @@
       "teksti": "Dataskydd vid Trafikledsverket",
       "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy"
     },
-    "linkki2": {
+    "linkki2_ely": {
       "teksti": "Dataskydd vid Närings-, trafik- och miljöcentralen",
       "href": "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     },
-    "linkki2_evk": {
+    "linkki2": {
       "teksti": "Dataskydd vid Livskraftscentralen",
       "href": "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
     }

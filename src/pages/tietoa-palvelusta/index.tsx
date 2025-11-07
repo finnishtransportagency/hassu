@@ -37,8 +37,8 @@ export default function TietoaPalvelustaSivu() {
           <ExternalLinkkiLista
             linkkiTiedot={[
               {
-                href: t(`yksittaisen-suunnitelman-sivu.linkki1${isEvkAktivoitu() ? "_evk" : ""}.href`),
-                teksti: t(`yksittaisen-suunnitelman-sivu.linkki1${isEvkAktivoitu() ? "_evk" : ""}.teksti`),
+                href: t(`yksittaisen-suunnitelman-sivu.linkki1${isEvkAktivoitu() ? "" : "_ely"}.href`),
+                teksti: t(`yksittaisen-suunnitelman-sivu.linkki1${isEvkAktivoitu() ? "" : "_ely"}.teksti`),
               },
             ]}
           />
@@ -69,8 +69,8 @@ export default function TietoaPalvelustaSivu() {
                 teksti: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.teksti"),
               },
               {
-                href: t(`lisatietoja-henkilotietojen-kasittelysta.linkki2${isEvkAktivoitu() ? "_evk" : ""}.href`),
-                teksti: t(`lisatietoja-henkilotietojen-kasittelysta.linkki2${isEvkAktivoitu() ? "_evk" : ""}.teksti`),
+                href: t(`lisatietoja-henkilotietojen-kasittelysta.linkki2${isEvkAktivoitu() ? "" : "_ely"}.href`),
+                teksti: t(`lisatietoja-henkilotietojen-kasittelysta.linkki2${isEvkAktivoitu() ? "" : "_ely"}.teksti`),
               },
             ]}
           />
