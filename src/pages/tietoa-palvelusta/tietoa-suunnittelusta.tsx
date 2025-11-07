@@ -81,8 +81,8 @@ export default function TietoaPalvelustaSivu() {
                 teksti: t("kuulutussivut.linkki1.teksti"),
               },
               {
-                href: t(`kuulutussivut.linkki2${isEvkAktivoitu() ? "_evk" : ""}.href`),
-                teksti: t(`kuulutussivut.linkki2${isEvkAktivoitu() ? "_evk" : ""}.teksti`),
+                href: t(`kuulutussivut.linkki2${isEvkAktivoitu() ? "" : "_ely"}.href`),
+                teksti: t(`kuulutussivut.linkki2${isEvkAktivoitu() ? "" : "_ely"}.teksti`),
               },
             ]}
           />
