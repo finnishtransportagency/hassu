@@ -31,7 +31,7 @@ export default function TietoaPalvelustaSivu() {
           <ExternalLinkkiLista
             linkkiTiedot={[
               { href: t("linkki1.href"), teksti: t("linkki1.teksti") },
-              { href: t(`linkki2${isEvkAktivoitu() ? "_evk" : ""}.href`), teksti: t(`linkki2${isEvkAktivoitu() ? "_evk" : ""}.teksti`) },
+              { href: t(`linkki2${isEvkAktivoitu() ? "" : "_ely"}.href`), teksti: t(`linkki2${isEvkAktivoitu() ? "" : "_ely"}.teksti`) },
             ]}
           />
         </ContentSpacer>
