@@ -28,10 +28,13 @@
   "sivustonimi": "Planering av statens trafikleder",
   "vaylavirasto": "Trafikledsverket",
   "ely-keskus": "NTM-centralen",
+  "elinvoimakeskus": "Livskraftscentralen",
   "vaylavirastolle": "till Trafikledsverket",
   "ely-keskukselle": "till NTM-centralen",
+  "elinvoimakeskukselle": "till Livskraftscentralen",
   "vaylaviraston": "Trafikledsverkets",
   "ely-keskuksen": "NTM-centralens",
+  "elinvoimakeskuksen": "Livskraftscentralens",
   "ely_alue_genetiivi": {
     "ETELA_POHJANMAAN_ELY": "Södra Österbotten",
     "ETELA_SAVO_ELY": "Södra Savolax",
