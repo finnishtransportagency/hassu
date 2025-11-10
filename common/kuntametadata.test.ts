@@ -8,6 +8,7 @@ describe("Metadata", () => {
     const tampere = kuntametadata.kuntaForKuntaId(837);
     expect(tampere).to.not.be.undefined;
     expect(tampere).to.eql({
+      elinvoimakeskus: "elinvoimakeskus/elinvoimakeskus04",
       ely: "ely/ely05",
       id: 837,
       liikennevastuuEly: "ely/ely05",
@@ -40,6 +41,11 @@ describe("Metadata", () => {
   it("should handle ely lyhenne to ely successfully", () => {
     const uud = kuntametadata.elyIdFromKey("UUD");
     expect(uud).to.eq("ely/ely01");
+  });
+
+  it("should handle elinvoimakeskus lyhenne to elinvoimakeskus successfully", () => {
+    const uud = kuntametadata.elinvoimakeskusIdFromKey("UUD");
+    expect(uud).to.eq("elinvoimakeskus/elinvoimakeskus01");
   });
 
   it("should render maakuntaoptions correctly", () => {
