@@ -21,5 +21,10 @@
   "hakuohje1": "Du kan söka allmänna planer, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Närings-, trafik- och miljöcentralen (NTM-centralen) samt anmälningar och kungörelser om dessa med hjälp av fritextsökning, område och trafikledsform eller med en kombination av alla ovan nämnda.",
   "hakuohje2": "Sökningen fungerar så att sökkriterierna inte utesluter varandra. Ett undantag är sökvillkoret som gäller region. Om du har valt en region (landskap eller kommun), visar sökningen endast projekten i den valda regionen.",
   "hakuohje3": "Du kan också söka planer med hjälp av fritextsökning. Skriv till exempel in namnet på en ort eller det projekt som du söker i sökfältet.",
-  "hakuohje4": "Om du vill ha en lista över alla projekt, lämna valen tomma och klicka på ”Sök”."
+  "hakuohje4": "Om du vill ha en lista över alla projekt, lämna valen tomma och klicka på ”Sök”.",
+  "evk-tiedote-otsikko": "Reformen av statens regionförvältning: NTM-centralerna blir Livskraftscentraler",
+  "evk-tiedote": "Från början av 2026 övergår den vägplanering som NTM-centralerna har ansvarat för och publiceringen av tillhörande kungörelser till Livskraftscentralerna.",
+  "evk-linkki": "https://www.elinvoimakeskus.fi/sv/valtion-aluehallinnon-uudistus",
+  "ely-linkki": "https://www.ely-keskus.fi/sv/valtion-aluehallinnon-uudistus",
+  "lue-lisaa": "Läs mer om förändringen"
 }

@@ -15,6 +15,10 @@ import { langToKieli } from "../hooks/useProjektiJulkinen";
 import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";
 import { H1, H3 } from "@components/Headings";
 import { PalauteKyselyMuistutusPopup } from "@components/projekti/kansalaisnakyma/PalauteKyselyMuistutusPopup";
+import Notification, { NotificationType } from "@components/notification/Notification";
+import { DottedList } from "@components/notification/DottedList";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
+import StyledLink from "@components/StyledLink";
 
 const SIVUN_KOKO = 10;
 
@@ -92,6 +96,19 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
         <Grid item lg={9} md={12}>
           <H1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</H1>
           <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
+          <Notification closable type={NotificationType.INFO} style={{ marginBottom: 20, marginTop: 20 }}>
+            <div>
+              <H3 variant="h4">{t("etusivu:evk-tiedote-otsikko")}</H3>
+              <DottedList className="list-disc block pl-5">
+                <li>{t("etusivu:evk-tiedote")}</li>
+                <li>
+                  <StyledLink href={isEvkAktivoitu() ? t("etusivu:evk-linkki") : t("etusivu:ely-linkki")} target="blank">
+                    {t("etusivu:lue-lisaa")}
+                  </StyledLink>
+                </li>
+              </DottedList>
+            </div>
+          </Notification>
           <p>{t("etusivu:kappale1")}</p>
           <Hakuohje />
           <Hakulomake
