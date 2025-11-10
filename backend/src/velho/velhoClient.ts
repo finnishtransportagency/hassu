@@ -191,7 +191,6 @@ export class VelhoClient {
               const tiedostoNimi = aineisto["tuorein-versio"].nimi;
               const muokattu = aineisto["tuorein-versio"].muokattu;
               const koko = aineisto["tuorein-versio"].koko;
-              aineisto.ominaisuudet.kuvaus;
               return {
                 __typename: "VelhoAineisto",
                 oid: aineisto.oid,
