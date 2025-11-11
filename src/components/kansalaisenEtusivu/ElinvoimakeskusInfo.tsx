@@ -13,7 +13,7 @@ export const EVKinfo = ({ onClose }: EVKinfoProps) => {
   const { t } = useTranslation("etusivu");
 
   return (
-    <Notification closable onClick={onClose} type={NotificationType.INFO} style={{ marginBottom: 20, marginTop: 20 }}>
+    <Notification closable onClose={onClose} type={NotificationType.INFO} style={{ marginBottom: 20, marginTop: 20 }}>
       <div>
         <H3 variant="h4">{t("etusivu:evk-tiedote-otsikko")}</H3>
         <DottedList className="list-disc block pl-5">
