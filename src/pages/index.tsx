@@ -15,6 +15,8 @@ import { langToKieli } from "../hooks/useProjektiJulkinen";
 import EtusivuJulkinenSideBar from "@components/kansalaisenEtusivu/EtusivuJulkinenSideBar";
 import { H1, H3 } from "@components/Headings";
 import { PalauteKyselyMuistutusPopup } from "@components/projekti/kansalaisnakyma/PalauteKyselyMuistutusPopup";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
+import { EVKinfo } from "@components/kansalaisenEtusivu/ElinvoimakeskusInfo";
 
 const SIVUN_KOKO = 10;
 
@@ -50,10 +52,23 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, sivu } = query;
   const [ladataan, setLadataan] = useState<boolean>(false);
   const [hakutulos, setHakutulos] = useState<ProjektiHakutulosJulkinen>();
+  const [isInfoOpen, setIsInfoOpen] = useState(true);
 
   const sivuMaara = useMemo(() => Math.ceil((hakutulos?.hakutulosMaara || 0) / SIVUN_KOKO), [hakutulos]);
 
   const api = useApi();
+
+  useEffect(() => {
+    const isClosed = sessionStorage.getItem("infoClosed");
+    if (isClosed === "true") {
+      setIsInfoOpen(false);
+    }
+  }, []);
+
+  const handleClose = () => {
+    setIsInfoOpen(false);
+    sessionStorage.setItem("infoClosed", "true");
+  };
 
   useEffect(() => {
     async function fetchProjektit() {
@@ -92,7 +107,8 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
         <Grid item lg={9} md={12}>
           <H1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</H1>
           <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
-          <p>{t("etusivu:kappale1")}</p>
+          {isInfoOpen && <EVKinfo onClose={handleClose} />}
+          <p>{t(`etusivu:kappale1${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
           <Hakuohje />
           <Hakulomake
             hakutulostenMaara={hakutulos?.hakutulosMaara}

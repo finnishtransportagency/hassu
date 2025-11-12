@@ -1914,7 +1914,6 @@ export const alueData: AlueData = {
       id: 588,
       nimi: {
         SUOMI: "Pertunmaa",
-        RUOTSI: "Pertunmaa",
       },
       ely: "ely/ely07",
       liikennevastuuEly: "ely/ely08",

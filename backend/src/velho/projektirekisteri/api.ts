@@ -98,6 +98,12 @@ export interface ProjektiProjekti {
      * @type {string}
      * @memberof ProjektiProjekti
      */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjekti
+     */
     'oid': string;
     /**
      * 
@@ -306,6 +312,12 @@ export interface ProjektiProjektiLuonti {
      * @type {string}
      * @memberof ProjektiProjektiLuonti
      */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektiLuonti
+     */
     'projektijoukko': string | null;
     /**
      * 
@@ -432,10 +444,10 @@ export interface ProjektiProjektiLuontiOminaisuudet {
     'liikenteeseenluovutus'?: ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus;
     /**
      * 
-     * @type {ProjektiProjektiLuontiOminaisuudetVarahenkilo}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
      * @memberof ProjektiProjektiLuontiOminaisuudet
      */
-    'varahenkilo': ProjektiProjektiLuontiOminaisuudetVarahenkilo | null;
+    'varahenkilo': ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     /**
      * 
      * @type {Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>}
@@ -552,10 +564,10 @@ export interface ProjektiProjektiLuontiOminaisuudet {
     'vls-linkki'?: string | null;
     /**
      * 
-     * @type {ProjektiProjektiLuontiOminaisuudetVastuuhenkilo}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
      * @memberof ProjektiProjektiLuontiOminaisuudet
      */
-    'vastuuhenkilo': ProjektiProjektiLuontiOminaisuudetVastuuhenkilo;
+    'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
     /**
      * 
      * @type {string}
@@ -805,7 +817,7 @@ export interface ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys {
      * @type {object}
      * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys
      */
-    'lahetetty': object;
+    'lahetetty': object | null;
     /**
      * 
      * @type {object}
@@ -1110,44 +1122,6 @@ export interface ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos {
 /**
  * 
  * @export
- * @interface ProjektiProjektiLuontiOminaisuudetVarahenkilo
- */
-export interface ProjektiProjektiLuontiOminaisuudetVarahenkilo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetVarahenkilo
-     */
-    'sahkoposti': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetVarahenkilo
-     */
-    'nimi': string;
-}
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetVastuuhenkilo
- */
-export interface ProjektiProjektiLuontiOminaisuudetVastuuhenkilo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetVastuuhenkilo
-     */
-    'sahkoposti': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetVastuuhenkilo
-     */
-    'nimi': string;
-}
-/**
- * 
- * @export
  * @interface ProjektiProjektiLuontiOminaisuudetYmparisto
  */
 export interface ProjektiProjektiLuontiOminaisuudetYmparisto {
@@ -1347,7 +1321,19 @@ export interface ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne {
      * @type {Set<object>}
      * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
      */
+    'liikennesaarekkeet'?: Set<object>;
+    /**
+     * 
+     * @type {Set<object>}
+     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
+     */
     'erotusalueet'?: Set<object>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
+     */
+    'keskialue'?: ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum;
     /**
      * 
      * @type {Set<object>}
@@ -1367,6 +1353,13 @@ export interface ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne {
      */
     'kaistat'?: Set<object>;
 }
+
+export const ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum = {
+    Keskialue: 'keskialue'
+} as const;
+
+export type ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum = typeof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum[keyof typeof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum];
+
 /**
  * 
  * @export
@@ -1434,6 +1427,12 @@ export interface ProjektiProjektiMuokkaus {
      * @memberof ProjektiProjektiMuokkaus
      */
     'ominaisuudet': ProjektiProjektiLuontiOminaisuudet;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektiMuokkaus
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -1623,6 +1622,12 @@ export interface ProjektiProjektijoukko {
      * @type {string}
      * @memberof ProjektiProjektijoukko
      */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukko
+     */
     'oid': string;
     /**
      * 
@@ -1699,10 +1704,10 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'h-k-suhde': number | null;
     /**
      * 
-     * @type {string}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'varahenkilo': string | null;
+    'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     /**
      * 
      * @type {string}
@@ -1723,10 +1728,10 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'vaylamuoto': Set<ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum>;
     /**
      * 
-     * @type {string}
+     * @type {Set<object>}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'kunta': string | null;
+    'kunta': Set<object> | null;
     /**
      * 
      * @type {object}
@@ -1735,10 +1740,10 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'tila'?: object;
     /**
      * 
-     * @type {string}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'vastuuhenkilo': string;
+    'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
     /**
      * 
      * @type {number}
@@ -1747,10 +1752,10 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'kustannusarvio': number | null;
     /**
      * 
-     * @type {string}
+     * @type {Set<object>}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
-    'maakunta': string | null;
+    'maakunta': Set<object> | null;
     /**
      * 
      * @type {string}
@@ -1765,6 +1770,12 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'paattyy'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukkoOminaisuudet
+     */
+    'muu-kunta'?: string | null;
+    /**
+     * 
      * @type {object}
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
@@ -1775,6 +1786,12 @@ export interface ProjektiProjektijoukkoOminaisuudet {
      * @memberof ProjektiProjektijoukkoOminaisuudet
      */
     'nimi': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukkoOminaisuudet
+     */
+    'muu-maakunta'?: string | null;
     /**
      * 
      * @type {string}
@@ -1862,6 +1879,12 @@ export interface ProjektiProjektijoukonLisays {
      * @type {string}
      * @memberof ProjektiProjektijoukonLisays
      */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukonLisays
+     */
     'muutoksen-lahde-oid'?: string | null;
 }
 /**
@@ -1894,6 +1917,12 @@ export interface ProjektiProjektijoukonPaivitys {
      * @memberof ProjektiProjektijoukonPaivitys
      */
     'schemaversio': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukonPaivitys
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -1937,6 +1966,12 @@ export interface ProjektiProjektijoukotInner {
      * @memberof ProjektiProjektijoukotInner
      */
     'ominaisuudet': ProjektiProjektijoukotInnerOminaisuudet;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInner
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -2006,6 +2041,7 @@ export interface ProjektiProjektijoukotInner {
 }
 
 export const ProjektiProjektijoukotInnerLahdejarjestelmaEnum = {
+    Lj21: 'lahdejarjestelma/lj21',
     Lj05: 'lahdejarjestelma/lj05',
     Lj13: 'lahdejarjestelma/lj13',
     Lj14: 'lahdejarjestelma/lj14',
@@ -2069,10 +2105,10 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
     'h-k-suhde': number | null;
     /**
      * 
-     * @type {string}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'varahenkilo': string | null;
+    'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     /**
      * 
      * @type {string}
@@ -2093,10 +2129,10 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
     'vaylamuoto': Set<ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum>;
     /**
      * 
-     * @type {string}
+     * @type {Set<string>}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'kunta': string | null;
+    'kunta': Set<ProjektiProjektijoukotInnerOminaisuudetKuntaEnum>;
     /**
      * 
      * @type {string}
@@ -2105,10 +2141,10 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
     'tila'?: ProjektiProjektijoukotInnerOminaisuudetTilaEnum;
     /**
      * 
-     * @type {string}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'vastuuhenkilo': string;
+    'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
     /**
      * 
      * @type {number}
@@ -2117,10 +2153,10 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
     'kustannusarvio': number | null;
     /**
      * 
-     * @type {string}
+     * @type {Set<string>}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
-    'maakunta': string | null;
+    'maakunta': Set<ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum>;
     /**
      * 
      * @type {string}
@@ -2138,6 +2174,12 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
+    'muu-kunta'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudet
+     */
     'tilaajaorganisaatio': ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum;
     /**
      * 
@@ -2145,6 +2187,12 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
      * @memberof ProjektiProjektijoukotInnerOminaisuudet
      */
     'nimi': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudet
+     */
+    'muu-maakunta'?: string | null;
     /**
      * 
      * @type {string}
@@ -2196,6 +2244,469 @@ export const ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = {
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = typeof ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum];
+export const ProjektiProjektijoukotInnerOminaisuudetKuntaEnum = {
+    Kunta563: 'kunta/kunta563',
+    Kunta273: 'kunta/kunta273',
+    Kunta529: 'kunta/kunta529',
+    Kunta531: 'kunta/kunta531',
+    Kunta640: 'kunta/kunta640',
+    Kunta019: 'kunta/kunta019',
+    Kunta181: 'kunta/kunta181',
+    Kunta892: 'kunta/kunta892',
+    Kunta741: 'kunta/kunta741',
+    Kunta909: 'kunta/kunta909',
+    Kunta918: 'kunta/kunta918',
+    Kunta606: 'kunta/kunta606',
+    Kunta781: 'kunta/kunta781',
+    Kunta430: 'kunta/kunta430',
+    Kunta289: 'kunta/kunta289',
+    Kunta230: 'kunta/kunta230',
+    Kunta292: 'kunta/kunta292',
+    Kunta564: 'kunta/kunta564',
+    Kunta172: 'kunta/kunta172',
+    Kunta533: 'kunta/kunta533',
+    Kunta182: 'kunta/kunta182',
+    Kunta442: 'kunta/kunta442',
+    Kunta838: 'kunta/kunta838',
+    Kunta419: 'kunta/kunta419',
+    Kunta559: 'kunta/kunta559',
+    Kunta073: 'kunta/kunta073',
+    Kunta092: 'kunta/kunta092',
+    Kunta601: 'kunta/kunta601',
+    Kunta895: 'kunta/kunta895',
+    Kunta891: 'kunta/kunta891',
+    Kunta082: 'kunta/kunta082',
+    Kunta108: 'kunta/kunta108',
+    Kunta975: 'kunta/kunta975',
+    Kunta214: 'kunta/kunta214',
+    Kunta885: 'kunta/kunta885',
+    Kunta505: 'kunta/kunta505',
+    Kunta989: 'kunta/kunta989',
+    Kunta086: 'kunta/kunta086',
+    Kunta538: 'kunta/kunta538',
+    Kunta020: 'kunta/kunta020',
+    Kunta153: 'kunta/kunta153',
+    Kunta415: 'kunta/kunta415',
+    Kunta280: 'kunta/kunta280',
+    Kunta102: 'kunta/kunta102',
+    Kunta179: 'kunta/kunta179',
+    Kunta250: 'kunta/kunta250',
+    Kunta018: 'kunta/kunta018',
+    Kunta633: 'kunta/kunta633',
+    Kunta429: 'kunta/kunta429',
+    Kunta205: 'kunta/kunta205',
+    Kunta567: 'kunta/kunta567',
+    Kunta508: 'kunta/kunta508',
+    Kunta536: 'kunta/kunta536',
+    Kunta582: 'kunta/kunta582',
+    Kunta271: 'kunta/kunta271',
+    Kunta489: 'kunta/kunta489',
+    Kunta577: 'kunta/kunta577',
+    Kunta981: 'kunta/kunta981',
+    Kunta783: 'kunta/kunta783',
+    Kunta475: 'kunta/kunta475',
+    Kunta832: 'kunta/kunta832',
+    Kunta277: 'kunta/kunta277',
+    Kunta680: 'kunta/kunta680',
+    Kunta535: 'kunta/kunta535',
+    Kunta977: 'kunta/kunta977',
+    Kunta784: 'kunta/kunta784',
+    Kunta256: 'kunta/kunta256',
+    Kunta416: 'kunta/kunta416',
+    Kunta940: 'kunta/kunta940',
+    Kunta420: 'kunta/kunta420',
+    Kunta407: 'kunta/kunta407',
+    Kunta418: 'kunta/kunta418',
+    Kunta174: 'kunta/kunta174',
+    Kunta065: 'kunta/kunta065',
+    Kunta231: 'kunta/kunta231',
+    Kunta401: 'kunta/kunta401',
+    Kunta580: 'kunta/kunta580',
+    Kunta583: 'kunta/kunta583',
+    Kunta210: 'kunta/kunta210',
+    Kunta163: 'kunta/kunta163',
+    Kunta075: 'kunta/kunta075',
+    Kunta562: 'kunta/kunta562',
+    Kunta928: 'kunta/kunta928',
+    Kunta099: 'kunta/kunta099',
+    Kunta084: 'kunta/kunta084',
+    Kunta912: 'kunta/kunta912',
+    Kunta422: 'kunta/kunta422',
+    Kunta165: 'kunta/kunta165',
+    Kunta399: 'kunta/kunta399',
+    Kunta743: 'kunta/kunta743',
+    Kunta708: 'kunta/kunta708',
+    Kunta747: 'kunta/kunta747',
+    Kunta275: 'kunta/kunta275',
+    Kunta219: 'kunta/kunta219',
+    Kunta184: 'kunta/kunta184',
+    Kunta006: 'kunta/kunta006',
+    Kunta478: 'kunta/kunta478',
+    Kunta920: 'kunta/kunta920',
+    Kunta919: 'kunta/kunta919',
+    Kunta737: 'kunta/kunta737',
+    Kunta614: 'kunta/kunta614',
+    Kunta106: 'kunta/kunta106',
+    Kunta213: 'kunta/kunta213',
+    Kunta587: 'kunta/kunta587',
+    Kunta730: 'kunta/kunta730',
+    Kunta148: 'kunta/kunta148',
+    Kunta245: 'kunta/kunta245',
+    Kunta484: 'kunta/kunta484',
+    Kunta501: 'kunta/kunta501',
+    Kunta545: 'kunta/kunta545',
+    Kunta490: 'kunta/kunta490',
+    Kunta164: 'kunta/kunta164',
+    Kunta052: 'kunta/kunta052',
+    Kunta588: 'kunta/kunta588',
+    Kunta689: 'kunta/kunta689',
+    Kunta085: 'kunta/kunta085',
+    Kunta504: 'kunta/kunta504',
+    Kunta178: 'kunta/kunta178',
+    Kunta906: 'kunta/kunta906',
+    Kunta604: 'kunta/kunta604',
+    Kunta240: 'kunta/kunta240',
+    Kunta683: 'kunta/kunta683',
+    Kunta739: 'kunta/kunta739',
+    Kunta286: 'kunta/kunta286',
+    Kunta761: 'kunta/kunta761',
+    Kunta103: 'kunta/kunta103',
+    Kunta220: 'kunta/kunta220',
+    Kunta863: 'kunta/kunta863',
+    Kunta772: 'kunta/kunta772',
+    Kunta937: 'kunta/kunta937',
+    Kunta235: 'kunta/kunta235',
+    Kunta295: 'kunta/kunta295',
+    Kunta320: 'kunta/kunta320',
+    Kunta438: 'kunta/kunta438',
+    Kunta623: 'kunta/kunta623',
+    Kunta239: 'kunta/kunta239',
+    Kunta534: 'kunta/kunta534',
+    Kunta841: 'kunta/kunta841',
+    Kunta431: 'kunta/kunta431',
+    Kunta493: 'kunta/kunta493',
+    Kunta630: 'kunta/kunta630',
+    Kunta281: 'kunta/kunta281',
+    Kunta169: 'kunta/kunta169',
+    Kunta146: 'kunta/kunta146',
+    Kunta992: 'kunta/kunta992',
+    Kunta406: 'kunta/kunta406',
+    Kunta276: 'kunta/kunta276',
+    Kunta249: 'kunta/kunta249',
+    Kunta244: 'kunta/kunta244',
+    Kunta304: 'kunta/kunta304',
+    Kunta933: 'kunta/kunta933',
+    Kunta831: 'kunta/kunta831',
+    Kunta300: 'kunta/kunta300',
+    Kunta561: 'kunta/kunta561',
+    Kunta913: 'kunta/kunta913',
+    Kunta433: 'kunta/kunta433',
+    Kunta010: 'kunta/kunta010',
+    Kunta704: 'kunta/kunta704',
+    Kunta776: 'kunta/kunta776',
+    Kunta071: 'kunta/kunta071',
+    Kunta774: 'kunta/kunta774',
+    Kunta499: 'kunta/kunta499',
+    Kunta212: 'kunta/kunta212',
+    Kunta932: 'kunta/kunta932',
+    Kunta247: 'kunta/kunta247',
+    Kunta322: 'kunta/kunta322',
+    Kunta495: 'kunta/kunta495',
+    Kunta173: 'kunta/kunta173',
+    Kunta980: 'kunta/kunta980',
+    Kunta848: 'kunta/kunta848',
+    Kunta263: 'kunta/kunta263',
+    Kunta208: 'kunta/kunta208',
+    Kunta578: 'kunta/kunta578',
+    Kunta043: 'kunta/kunta043',
+    Kunta837: 'kunta/kunta837',
+    Kunta705: 'kunta/kunta705',
+    Kunta227: 'kunta/kunta227',
+    Kunta684: 'kunta/kunta684',
+    Kunta143: 'kunta/kunta143',
+    Kunta682: 'kunta/kunta682',
+    Kunta759: 'kunta/kunta759',
+    Kunta233: 'kunta/kunta233',
+    Kunta009: 'kunta/kunta009',
+    Kunta261: 'kunta/kunta261',
+    Kunta931: 'kunta/kunta931',
+    Kunta186: 'kunta/kunta186',
+    Kunta091: 'kunta/kunta091',
+    Kunta308: 'kunta/kunta308',
+    Kunta309: 'kunta/kunta309',
+    Kunta707: 'kunta/kunta707',
+    Kunta284: 'kunta/kunta284',
+    Kunta167: 'kunta/kunta167',
+    Kunta853: 'kunta/kunta853',
+    Kunta923: 'kunta/kunta923',
+    Kunta425: 'kunta/kunta425',
+    Kunta971: 'kunta/kunta971',
+    Kunta218: 'kunta/kunta218',
+    Kunta988: 'kunta/kunta988',
+    Kunta097: 'kunta/kunta097',
+    Kunta491: 'kunta/kunta491',
+    Kunta678: 'kunta/kunta678',
+    Kunta072: 'kunta/kunta072',
+    Kunta710: 'kunta/kunta710',
+    Kunta500: 'kunta/kunta500',
+    Kunta204: 'kunta/kunta204',
+    Kunta687: 'kunta/kunta687',
+    Kunta076: 'kunta/kunta076',
+    Kunta924: 'kunta/kunta924',
+    Kunta410: 'kunta/kunta410',
+    Kunta856: 'kunta/kunta856',
+    Kunta775: 'kunta/kunta775',
+    Kunta916: 'kunta/kunta916',
+    Kunta259: 'kunta/kunta259',
+    Kunta176: 'kunta/kunta176',
+    Kunta595: 'kunta/kunta595',
+    Kunta170: 'kunta/kunta170',
+    Kunta405: 'kunta/kunta405',
+    Kunta835: 'kunta/kunta835',
+    Kunta098: 'kunta/kunta098',
+    Kunta480: 'kunta/kunta480',
+    Kunta202: 'kunta/kunta202',
+    Kunta305: 'kunta/kunta305',
+    Kunta183: 'kunta/kunta183',
+    Kunta696: 'kunta/kunta696',
+    Kunta051: 'kunta/kunta051',
+    Kunta479: 'kunta/kunta479',
+    Kunta859: 'kunta/kunta859',
+    Kunta434: 'kunta/kunta434',
+    Kunta618: 'kunta/kunta618',
+    Kunta017: 'kunta/kunta017',
+    Kunta319: 'kunta/kunta319',
+    Kunta607: 'kunta/kunta607',
+    Kunta046: 'kunta/kunta046',
+    Kunta400: 'kunta/kunta400',
+    Kunta069: 'kunta/kunta069',
+    Kunta266: 'kunta/kunta266',
+    Kunta594: 'kunta/kunta594',
+    Kunta778: 'kunta/kunta778',
+    Kunta935: 'kunta/kunta935',
+    Kunta532: 'kunta/kunta532',
+    Kunta834: 'kunta/kunta834',
+    Kunta223: 'kunta/kunta223',
+    Kunta576: 'kunta/kunta576',
+    Kunta609: 'kunta/kunta609',
+    Kunta921: 'kunta/kunta921',
+    Kunta492: 'kunta/kunta492',
+    Kunta047: 'kunta/kunta047',
+    Kunta074: 'kunta/kunta074',
+    Kunta398: 'kunta/kunta398',
+    Kunta315: 'kunta/kunta315',
+    Kunta140: 'kunta/kunta140',
+    Kunta635: 'kunta/kunta635',
+    Kunta691: 'kunta/kunta691',
+    Kunta592: 'kunta/kunta592',
+    Kunta248: 'kunta/kunta248',
+    Kunta283: 'kunta/kunta283',
+    Kunta736: 'kunta/kunta736',
+    Kunta403: 'kunta/kunta403',
+    Kunta254: 'kunta/kunta254',
+    Kunta581: 'kunta/kunta581',
+    Kunta602: 'kunta/kunta602',
+    Kunta766: 'kunta/kunta766',
+    Kunta109: 'kunta/kunta109',
+    Kunta846: 'kunta/kunta846',
+    Kunta044: 'kunta/kunta044',
+    Kunta851: 'kunta/kunta851',
+    Kunta279: 'kunta/kunta279',
+    Kunta729: 'kunta/kunta729',
+    Kunta291: 'kunta/kunta291',
+    Kunta241: 'kunta/kunta241',
+    Kunta681: 'kunta/kunta681',
+    Kunta762: 'kunta/kunta762',
+    Kunta749: 'kunta/kunta749',
+    Kunta414: 'kunta/kunta414',
+    Kunta855: 'kunta/kunta855',
+    Kunta260: 'kunta/kunta260',
+    Kunta014: 'kunta/kunta014',
+    Kunta262: 'kunta/kunta262',
+    Kunta845: 'kunta/kunta845',
+    Kunta917: 'kunta/kunta917',
+    Kunta152: 'kunta/kunta152',
+    Kunta603: 'kunta/kunta603',
+    Kunta483: 'kunta/kunta483',
+    Kunta050: 'kunta/kunta050',
+    Kunta402: 'kunta/kunta402',
+    Kunta908: 'kunta/kunta908',
+    Kunta435: 'kunta/kunta435',
+    Kunta849: 'kunta/kunta849',
+    Kunta317: 'kunta/kunta317',
+    Kunta620: 'kunta/kunta620',
+    Kunta742: 'kunta/kunta742',
+    Kunta171: 'kunta/kunta171',
+    Kunta979: 'kunta/kunta979',
+    Kunta498: 'kunta/kunta498',
+    Kunta224: 'kunta/kunta224',
+    Kunta790: 'kunta/kunta790',
+    Kunta537: 'kunta/kunta537',
+    Kunta946: 'kunta/kunta946',
+    Kunta257: 'kunta/kunta257',
+    Kunta111: 'kunta/kunta111',
+    Kunta226: 'kunta/kunta226',
+    Kunta142: 'kunta/kunta142',
+    Kunta941: 'kunta/kunta941',
+    Kunta318: 'kunta/kunta318',
+    Kunta408: 'kunta/kunta408',
+    Kunta973: 'kunta/kunta973',
+    Kunta927: 'kunta/kunta927',
+    Kunta413: 'kunta/kunta413',
+    Kunta740: 'kunta/kunta740',
+    Kunta624: 'kunta/kunta624',
+    Kunta306: 'kunta/kunta306',
+    Kunta748: 'kunta/kunta748',
+    Kunta417: 'kunta/kunta417',
+    Kunta864: 'kunta/kunta864',
+    Kunta243: 'kunta/kunta243',
+    Kunta236: 'kunta/kunta236',
+    Kunta445: 'kunta/kunta445',
+    Kunta943: 'kunta/kunta943',
+    Kunta285: 'kunta/kunta285',
+    Kunta945: 'kunta/kunta945',
+    Kunta626: 'kunta/kunta626',
+    Kunta854: 'kunta/kunta854',
+    Kunta777: 'kunta/kunta777',
+    Kunta697: 'kunta/kunta697',
+    Kunta785: 'kunta/kunta785',
+    Kunta255: 'kunta/kunta255',
+    Kunta619: 'kunta/kunta619',
+    Kunta312: 'kunta/kunta312',
+    Kunta049: 'kunta/kunta049',
+    Kunta424: 'kunta/kunta424',
+    Kunta252: 'kunta/kunta252',
+    Kunta608: 'kunta/kunta608',
+    Kunta893: 'kunta/kunta893',
+    Kunta636: 'kunta/kunta636',
+    Kunta694: 'kunta/kunta694',
+    Kunta857: 'kunta/kunta857',
+    Kunta439: 'kunta/kunta439',
+    Kunta738: 'kunta/kunta738',
+    Kunta922: 'kunta/kunta922',
+    Kunta005: 'kunta/kunta005',
+    Kunta101: 'kunta/kunta101',
+    Kunta925: 'kunta/kunta925',
+    Kunta035: 'kunta/kunta035',
+    Kunta944: 'kunta/kunta944',
+    Kunta485: 'kunta/kunta485',
+    Kunta942: 'kunta/kunta942',
+    Kunta972: 'kunta/kunta972',
+    Kunta507: 'kunta/kunta507',
+    Kunta625: 'kunta/kunta625',
+    Kunta890: 'kunta/kunta890',
+    Kunta702: 'kunta/kunta702',
+    Kunta858: 'kunta/kunta858',
+    Kunta833: 'kunta/kunta833',
+    Kunta436: 'kunta/kunta436',
+    Kunta936: 'kunta/kunta936',
+    Kunta150: 'kunta/kunta150',
+    Kunta251: 'kunta/kunta251',
+    Kunta079: 'kunta/kunta079',
+    Kunta911: 'kunta/kunta911',
+    Kunta095: 'kunta/kunta095',
+    Kunta770: 'kunta/kunta770',
+    Kunta288: 'kunta/kunta288',
+    Kunta887: 'kunta/kunta887',
+    Kunta443: 'kunta/kunta443',
+    Kunta611: 'kunta/kunta611',
+    Kunta771: 'kunta/kunta771',
+    Kunta585: 'kunta/kunta585',
+    Kunta177: 'kunta/kunta177',
+    Kunta544: 'kunta/kunta544',
+    Kunta060: 'kunta/kunta060',
+    Kunta598: 'kunta/kunta598',
+    Kunta631: 'kunta/kunta631',
+    Kunta287: 'kunta/kunta287',
+    Kunta440: 'kunta/kunta440',
+    Kunta734: 'kunta/kunta734',
+    Kunta310: 'kunta/kunta310',
+    Kunta754: 'kunta/kunta754',
+    Kunta481: 'kunta/kunta481',
+    Kunta421: 'kunta/kunta421',
+    Kunta584: 'kunta/kunta584',
+    Kunta476: 'kunta/kunta476',
+    Kunta791: 'kunta/kunta791',
+    Kunta061: 'kunta/kunta061',
+    Kunta616: 'kunta/kunta616',
+    Kunta175: 'kunta/kunta175',
+    Kunta015: 'kunta/kunta015',
+    Kunta441: 'kunta/kunta441',
+    Kunta700: 'kunta/kunta700',
+    Kunta732: 'kunta/kunta732',
+    Kunta303: 'kunta/kunta303',
+    Kunta145: 'kunta/kunta145',
+    Kunta889: 'kunta/kunta889',
+    Kunta746: 'kunta/kunta746',
+    Kunta844: 'kunta/kunta844',
+    Kunta543: 'kunta/kunta543',
+    Kunta506: 'kunta/kunta506',
+    Kunta040: 'kunta/kunta040',
+    Kunta905: 'kunta/kunta905',
+    Kunta444: 'kunta/kunta444',
+    Kunta560: 'kunta/kunta560',
+    Kunta755: 'kunta/kunta755',
+    Kunta632: 'kunta/kunta632',
+    Kunta915: 'kunta/kunta915',
+    Kunta701: 'kunta/kunta701',
+    Kunta045: 'kunta/kunta045',
+    Kunta573: 'kunta/kunta573',
+    Kunta692: 'kunta/kunta692',
+    Kunta081: 'kunta/kunta081',
+    Kunta593: 'kunta/kunta593',
+    Kunta265: 'kunta/kunta265',
+    Kunta926: 'kunta/kunta926',
+    Kunta139: 'kunta/kunta139',
+    Kunta272: 'kunta/kunta272',
+    Kunta297: 'kunta/kunta297',
+    Kunta765: 'kunta/kunta765',
+    Kunta540: 'kunta/kunta540',
+    Kunta482: 'kunta/kunta482',
+    Kunta850: 'kunta/kunta850',
+    Kunta426: 'kunta/kunta426',
+    Kunta503: 'kunta/kunta503',
+    Kunta004: 'kunta/kunta004',
+    Kunta216: 'kunta/kunta216',
+    Kunta638: 'kunta/kunta638',
+    Kunta217: 'kunta/kunta217',
+    Kunta615: 'kunta/kunta615',
+    Kunta078: 'kunta/kunta078',
+    Kunta886: 'kunta/kunta886',
+    Kunta686: 'kunta/kunta686',
+    Kunta077: 'kunta/kunta077',
+    Kunta541: 'kunta/kunta541',
+    Kunta293: 'kunta/kunta293',
+    Kunta753: 'kunta/kunta753',
+    Kunta090: 'kunta/kunta090',
+    Kunta105: 'kunta/kunta105',
+    Kunta586: 'kunta/kunta586',
+    Kunta316: 'kunta/kunta316',
+    Kunta617: 'kunta/kunta617',
+    Kunta062: 'kunta/kunta062',
+    Kunta016: 'kunta/kunta016',
+    Kunta149: 'kunta/kunta149',
+    Kunta083: 'kunta/kunta083',
+    Kunta751: 'kunta/kunta751',
+    Kunta290: 'kunta/kunta290',
+    Kunta934: 'kunta/kunta934',
+    Kunta301: 'kunta/kunta301',
+    Kunta698: 'kunta/kunta698',
+    Kunta976: 'kunta/kunta976',
+    Kunta246: 'kunta/kunta246',
+    Kunta211: 'kunta/kunta211',
+    Kunta758: 'kunta/kunta758',
+    Kunta978: 'kunta/kunta978',
+    Kunta599: 'kunta/kunta599',
+    Kunta180: 'kunta/kunta180',
+    Kunta494: 'kunta/kunta494',
+    Kunta232: 'kunta/kunta232',
+    Kunta423: 'kunta/kunta423',
+    Kunta151: 'kunta/kunta151',
+    Kunta768: 'kunta/kunta768',
+    Kunta728: 'kunta/kunta728'
+} as const;
+
+export type ProjektiProjektijoukotInnerOminaisuudetKuntaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetKuntaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetKuntaEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetTilaEnum = {
     Tila16: 'tila/tila16',
     Tila18: 'tila/tila18',
@@ -2205,17 +2716,51 @@ export const ProjektiProjektijoukotInnerOminaisuudetTilaEnum = {
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetTilaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetTilaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetTilaEnum];
+export const ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum = {
+    Maakunta15: 'maakunta/maakunta15',
+    Maakunta21: 'maakunta/maakunta21',
+    Maakunta12: 'maakunta/maakunta12',
+    Maakunta08: 'maakunta/maakunta08',
+    Maakunta18: 'maakunta/maakunta18',
+    Maakunta16: 'maakunta/maakunta16',
+    Maakunta19: 'maakunta/maakunta19',
+    Maakunta13: 'maakunta/maakunta13',
+    Maakunta09: 'maakunta/maakunta09',
+    Maakunta20: 'maakunta/maakunta20',
+    Maakunta17: 'maakunta/maakunta17',
+    Maakunta10: 'maakunta/maakunta10',
+    Maakunta05: 'maakunta/maakunta05',
+    Maakunta06: 'maakunta/maakunta06',
+    Maakunta07: 'maakunta/maakunta07',
+    Maakunta14: 'maakunta/maakunta14',
+    Maakunta02: 'maakunta/maakunta02',
+    Maakunta04: 'maakunta/maakunta04',
+    Maakunta11: 'maakunta/maakunta11',
+    Maakunta01: 'maakunta/maakunta01'
+} as const;
+
+export type ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum = {
     Org08: 'organisaatio/org08',
     Org02: 'organisaatio/org02',
+    Org12: 'organisaatio/org12',
+    Org13: 'organisaatio/org13',
+    Org18: 'organisaatio/org18',
+    Org15: 'organisaatio/org15',
+    Org20: 'organisaatio/org20',
     Org11: 'organisaatio/org11',
+    Org16: 'organisaatio/org16',
     Org10: 'organisaatio/org10',
+    Org19: 'organisaatio/org19',
     Org06: 'organisaatio/org06',
+    Org17: 'organisaatio/org17',
+    Org14: 'organisaatio/org14',
     Org01: 'organisaatio/org01',
     Org07: 'organisaatio/org07',
     Org04: 'organisaatio/org04',
     Org09: 'organisaatio/org09',
     Org05: 'organisaatio/org05',
+    Org21: 'organisaatio/org21',
     Org03: 'organisaatio/org03'
 } as const;
 
@@ -2229,25 +2774,74 @@ export type ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum = typeof
 export const ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum = {
     Org08: 'organisaatio/org08',
     Org02: 'organisaatio/org02',
+    Org12: 'organisaatio/org12',
+    Org13: 'organisaatio/org13',
+    Org18: 'organisaatio/org18',
+    Org15: 'organisaatio/org15',
+    Org20: 'organisaatio/org20',
     Org11: 'organisaatio/org11',
+    Org16: 'organisaatio/org16',
     Org10: 'organisaatio/org10',
+    Org19: 'organisaatio/org19',
     Org06: 'organisaatio/org06',
+    Org17: 'organisaatio/org17',
+    Org14: 'organisaatio/org14',
     Org01: 'organisaatio/org01',
     Org07: 'organisaatio/org07',
     Org04: 'organisaatio/org04',
     Org09: 'organisaatio/org09',
     Org05: 'organisaatio/org05',
+    Org21: 'organisaatio/org21',
     Org03: 'organisaatio/org03'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum = typeof ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetVaiheEnum = {
+    Pjvaihe03: 'projektijoukon-vaihe/pjvaihe03',
     Pjvaihe02: 'projektijoukon-vaihe/pjvaihe02',
     Pjvaihe01: 'projektijoukon-vaihe/pjvaihe01'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetVaiheEnum = typeof ProjektiProjektijoukotInnerOminaisuudetVaiheEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetVaiheEnum];
 
+/**
+ * 
+ * @export
+ * @interface ProjektiProjektijoukotInnerOminaisuudetVarahenkilo
+ */
+export interface ProjektiProjektijoukotInnerOminaisuudetVarahenkilo {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudetVarahenkilo
+     */
+    'sahkoposti': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudetVarahenkilo
+     */
+    'nimi': string;
+}
+/**
+ * 
+ * @export
+ * @interface ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo
+ */
+export interface ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo {
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo
+     */
+    'sahkoposti': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo
+     */
+    'nimi': string;
+}
 /**
  * 
  * @export
@@ -2284,6 +2878,12 @@ export interface ProjektiToimeksiannonLisays {
      * @memberof ProjektiToimeksiannonLisays
      */
     'schemaversio': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksiannonLisays
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -2327,6 +2927,12 @@ export interface ProjektiToimeksiannonPaivitys {
      * @memberof ProjektiToimeksiannonPaivitys
      */
     'schemaversio': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksiannonPaivitys
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -2376,6 +2982,12 @@ export interface ProjektiToimeksiannotInner {
      * @memberof ProjektiToimeksiannotInner
      */
     'ominaisuudet': ProjektiToimeksiannotInnerOminaisuudet;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksiannotInner
+     */
+    'muutoksen-lahde-id'?: string | null;
     /**
      * 
      * @type {string}
@@ -2445,6 +3057,7 @@ export interface ProjektiToimeksiannotInner {
 }
 
 export const ProjektiToimeksiannotInnerLahdejarjestelmaEnum = {
+    Lj21: 'lahdejarjestelma/lj21',
     Lj05: 'lahdejarjestelma/lj05',
     Lj13: 'lahdejarjestelma/lj13',
     Lj14: 'lahdejarjestelma/lj14',
@@ -2480,13 +3093,25 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'toteuttava-organisaatio': string | null;
+    'toteuttava-organisaatio'?: ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum;
+    /**
+     * 
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
+    /**
+     * 
+     * @type {Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
     /**
      * 
      * @type {string}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'varahenkilo': string | null;
+    'asiatunnus-traficom'?: string | null;
     /**
      * 
      * @type {string}
@@ -2501,10 +3126,10 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
     'vaylamuoto': Set<ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum>;
     /**
      * 
-     * @type {string}
+     * @type {Set<string>}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'kunta': string | null;
+    'kunta': Set<ProjektiToimeksiannotInnerOminaisuudetKuntaEnum>;
     /**
      * 
      * @type {string}
@@ -2519,16 +3144,22 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
     'vesivaylanumerot': Set<string> | null;
     /**
      * 
-     * @type {string}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'vastuuhenkilo': string;
+    'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
     /**
      * 
      * @type {string}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'maakunta': string | null;
+    'asiatunnus-ely'?: string | null;
+    /**
+     * 
+     * @type {Set<string>}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'maakunta': Set<ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum>;
     /**
      * 
      * @type {string}
@@ -2540,7 +3171,7 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'asiatunnus': string | null;
+    'muu-kunta'?: string | null;
     /**
      * 
      * @type {string}
@@ -2552,13 +3183,25 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
      * @type {string}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
-    'toteuttavan-organisaation-yhteyshenkilo': string | null;
+    'muu-maakunta'?: string | null;
+    /**
+     * 
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'toteuttavan-organisaation-yhteyshenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     /**
      * 
      * @type {string}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
     'tehtava': ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'muu-toteuttava-organisaatio'?: string | null;
     /**
      * 
      * @type {Set<ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner>}
@@ -2573,6 +3216,12 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
     'muu-tehtava'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'asiatunnus-vaylavirasto'?: string | null;
+    /**
+     * 
      * @type {Set<ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner>}
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
@@ -2583,8 +3232,39 @@ export interface ProjektiToimeksiannotInnerOminaisuudet {
      * @memberof ProjektiToimeksiannotInnerOminaisuudet
      */
     'alkaa': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksiannotInnerOminaisuudet
+     */
+    'koordinaattijarjestelma'?: ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum;
 }
 
+export const ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum = {
+    Org08: 'organisaatio/org08',
+    Org02: 'organisaatio/org02',
+    Org12: 'organisaatio/org12',
+    Org13: 'organisaatio/org13',
+    Org18: 'organisaatio/org18',
+    Org15: 'organisaatio/org15',
+    Org20: 'organisaatio/org20',
+    Org11: 'organisaatio/org11',
+    Org16: 'organisaatio/org16',
+    Org10: 'organisaatio/org10',
+    Org19: 'organisaatio/org19',
+    Org06: 'organisaatio/org06',
+    Org17: 'organisaatio/org17',
+    Org14: 'organisaatio/org14',
+    Org01: 'organisaatio/org01',
+    Org07: 'organisaatio/org07',
+    Org04: 'organisaatio/org04',
+    Org09: 'organisaatio/org09',
+    Org05: 'organisaatio/org05',
+    Org21: 'organisaatio/org21',
+    Org03: 'organisaatio/org03'
+} as const;
+
+export type ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum = typeof ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = {
     Vesi: 'vesi',
     Tie: 'tie',
@@ -2592,6 +3272,469 @@ export const ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = {
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = typeof ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum];
+export const ProjektiToimeksiannotInnerOminaisuudetKuntaEnum = {
+    Kunta563: 'kunta/kunta563',
+    Kunta273: 'kunta/kunta273',
+    Kunta529: 'kunta/kunta529',
+    Kunta531: 'kunta/kunta531',
+    Kunta640: 'kunta/kunta640',
+    Kunta019: 'kunta/kunta019',
+    Kunta181: 'kunta/kunta181',
+    Kunta892: 'kunta/kunta892',
+    Kunta741: 'kunta/kunta741',
+    Kunta909: 'kunta/kunta909',
+    Kunta918: 'kunta/kunta918',
+    Kunta606: 'kunta/kunta606',
+    Kunta781: 'kunta/kunta781',
+    Kunta430: 'kunta/kunta430',
+    Kunta289: 'kunta/kunta289',
+    Kunta230: 'kunta/kunta230',
+    Kunta292: 'kunta/kunta292',
+    Kunta564: 'kunta/kunta564',
+    Kunta172: 'kunta/kunta172',
+    Kunta533: 'kunta/kunta533',
+    Kunta182: 'kunta/kunta182',
+    Kunta442: 'kunta/kunta442',
+    Kunta838: 'kunta/kunta838',
+    Kunta419: 'kunta/kunta419',
+    Kunta559: 'kunta/kunta559',
+    Kunta073: 'kunta/kunta073',
+    Kunta092: 'kunta/kunta092',
+    Kunta601: 'kunta/kunta601',
+    Kunta895: 'kunta/kunta895',
+    Kunta891: 'kunta/kunta891',
+    Kunta082: 'kunta/kunta082',
+    Kunta108: 'kunta/kunta108',
+    Kunta975: 'kunta/kunta975',
+    Kunta214: 'kunta/kunta214',
+    Kunta885: 'kunta/kunta885',
+    Kunta505: 'kunta/kunta505',
+    Kunta989: 'kunta/kunta989',
+    Kunta086: 'kunta/kunta086',
+    Kunta538: 'kunta/kunta538',
+    Kunta020: 'kunta/kunta020',
+    Kunta153: 'kunta/kunta153',
+    Kunta415: 'kunta/kunta415',
+    Kunta280: 'kunta/kunta280',
+    Kunta102: 'kunta/kunta102',
+    Kunta179: 'kunta/kunta179',
+    Kunta250: 'kunta/kunta250',
+    Kunta018: 'kunta/kunta018',
+    Kunta633: 'kunta/kunta633',
+    Kunta429: 'kunta/kunta429',
+    Kunta205: 'kunta/kunta205',
+    Kunta567: 'kunta/kunta567',
+    Kunta508: 'kunta/kunta508',
+    Kunta536: 'kunta/kunta536',
+    Kunta582: 'kunta/kunta582',
+    Kunta271: 'kunta/kunta271',
+    Kunta489: 'kunta/kunta489',
+    Kunta577: 'kunta/kunta577',
+    Kunta981: 'kunta/kunta981',
+    Kunta783: 'kunta/kunta783',
+    Kunta475: 'kunta/kunta475',
+    Kunta832: 'kunta/kunta832',
+    Kunta277: 'kunta/kunta277',
+    Kunta680: 'kunta/kunta680',
+    Kunta535: 'kunta/kunta535',
+    Kunta977: 'kunta/kunta977',
+    Kunta784: 'kunta/kunta784',
+    Kunta256: 'kunta/kunta256',
+    Kunta416: 'kunta/kunta416',
+    Kunta940: 'kunta/kunta940',
+    Kunta420: 'kunta/kunta420',
+    Kunta407: 'kunta/kunta407',
+    Kunta418: 'kunta/kunta418',
+    Kunta174: 'kunta/kunta174',
+    Kunta065: 'kunta/kunta065',
+    Kunta231: 'kunta/kunta231',
+    Kunta401: 'kunta/kunta401',
+    Kunta580: 'kunta/kunta580',
+    Kunta583: 'kunta/kunta583',
+    Kunta210: 'kunta/kunta210',
+    Kunta163: 'kunta/kunta163',
+    Kunta075: 'kunta/kunta075',
+    Kunta562: 'kunta/kunta562',
+    Kunta928: 'kunta/kunta928',
+    Kunta099: 'kunta/kunta099',
+    Kunta084: 'kunta/kunta084',
+    Kunta912: 'kunta/kunta912',
+    Kunta422: 'kunta/kunta422',
+    Kunta165: 'kunta/kunta165',
+    Kunta399: 'kunta/kunta399',
+    Kunta743: 'kunta/kunta743',
+    Kunta708: 'kunta/kunta708',
+    Kunta747: 'kunta/kunta747',
+    Kunta275: 'kunta/kunta275',
+    Kunta219: 'kunta/kunta219',
+    Kunta184: 'kunta/kunta184',
+    Kunta006: 'kunta/kunta006',
+    Kunta478: 'kunta/kunta478',
+    Kunta920: 'kunta/kunta920',
+    Kunta919: 'kunta/kunta919',
+    Kunta737: 'kunta/kunta737',
+    Kunta614: 'kunta/kunta614',
+    Kunta106: 'kunta/kunta106',
+    Kunta213: 'kunta/kunta213',
+    Kunta587: 'kunta/kunta587',
+    Kunta730: 'kunta/kunta730',
+    Kunta148: 'kunta/kunta148',
+    Kunta245: 'kunta/kunta245',
+    Kunta484: 'kunta/kunta484',
+    Kunta501: 'kunta/kunta501',
+    Kunta545: 'kunta/kunta545',
+    Kunta490: 'kunta/kunta490',
+    Kunta164: 'kunta/kunta164',
+    Kunta052: 'kunta/kunta052',
+    Kunta588: 'kunta/kunta588',
+    Kunta689: 'kunta/kunta689',
+    Kunta085: 'kunta/kunta085',
+    Kunta504: 'kunta/kunta504',
+    Kunta178: 'kunta/kunta178',
+    Kunta906: 'kunta/kunta906',
+    Kunta604: 'kunta/kunta604',
+    Kunta240: 'kunta/kunta240',
+    Kunta683: 'kunta/kunta683',
+    Kunta739: 'kunta/kunta739',
+    Kunta286: 'kunta/kunta286',
+    Kunta761: 'kunta/kunta761',
+    Kunta103: 'kunta/kunta103',
+    Kunta220: 'kunta/kunta220',
+    Kunta863: 'kunta/kunta863',
+    Kunta772: 'kunta/kunta772',
+    Kunta937: 'kunta/kunta937',
+    Kunta235: 'kunta/kunta235',
+    Kunta295: 'kunta/kunta295',
+    Kunta320: 'kunta/kunta320',
+    Kunta438: 'kunta/kunta438',
+    Kunta623: 'kunta/kunta623',
+    Kunta239: 'kunta/kunta239',
+    Kunta534: 'kunta/kunta534',
+    Kunta841: 'kunta/kunta841',
+    Kunta431: 'kunta/kunta431',
+    Kunta493: 'kunta/kunta493',
+    Kunta630: 'kunta/kunta630',
+    Kunta281: 'kunta/kunta281',
+    Kunta169: 'kunta/kunta169',
+    Kunta146: 'kunta/kunta146',
+    Kunta992: 'kunta/kunta992',
+    Kunta406: 'kunta/kunta406',
+    Kunta276: 'kunta/kunta276',
+    Kunta249: 'kunta/kunta249',
+    Kunta244: 'kunta/kunta244',
+    Kunta304: 'kunta/kunta304',
+    Kunta933: 'kunta/kunta933',
+    Kunta831: 'kunta/kunta831',
+    Kunta300: 'kunta/kunta300',
+    Kunta561: 'kunta/kunta561',
+    Kunta913: 'kunta/kunta913',
+    Kunta433: 'kunta/kunta433',
+    Kunta010: 'kunta/kunta010',
+    Kunta704: 'kunta/kunta704',
+    Kunta776: 'kunta/kunta776',
+    Kunta071: 'kunta/kunta071',
+    Kunta774: 'kunta/kunta774',
+    Kunta499: 'kunta/kunta499',
+    Kunta212: 'kunta/kunta212',
+    Kunta932: 'kunta/kunta932',
+    Kunta247: 'kunta/kunta247',
+    Kunta322: 'kunta/kunta322',
+    Kunta495: 'kunta/kunta495',
+    Kunta173: 'kunta/kunta173',
+    Kunta980: 'kunta/kunta980',
+    Kunta848: 'kunta/kunta848',
+    Kunta263: 'kunta/kunta263',
+    Kunta208: 'kunta/kunta208',
+    Kunta578: 'kunta/kunta578',
+    Kunta043: 'kunta/kunta043',
+    Kunta837: 'kunta/kunta837',
+    Kunta705: 'kunta/kunta705',
+    Kunta227: 'kunta/kunta227',
+    Kunta684: 'kunta/kunta684',
+    Kunta143: 'kunta/kunta143',
+    Kunta682: 'kunta/kunta682',
+    Kunta759: 'kunta/kunta759',
+    Kunta233: 'kunta/kunta233',
+    Kunta009: 'kunta/kunta009',
+    Kunta261: 'kunta/kunta261',
+    Kunta931: 'kunta/kunta931',
+    Kunta186: 'kunta/kunta186',
+    Kunta091: 'kunta/kunta091',
+    Kunta308: 'kunta/kunta308',
+    Kunta309: 'kunta/kunta309',
+    Kunta707: 'kunta/kunta707',
+    Kunta284: 'kunta/kunta284',
+    Kunta167: 'kunta/kunta167',
+    Kunta853: 'kunta/kunta853',
+    Kunta923: 'kunta/kunta923',
+    Kunta425: 'kunta/kunta425',
+    Kunta971: 'kunta/kunta971',
+    Kunta218: 'kunta/kunta218',
+    Kunta988: 'kunta/kunta988',
+    Kunta097: 'kunta/kunta097',
+    Kunta491: 'kunta/kunta491',
+    Kunta678: 'kunta/kunta678',
+    Kunta072: 'kunta/kunta072',
+    Kunta710: 'kunta/kunta710',
+    Kunta500: 'kunta/kunta500',
+    Kunta204: 'kunta/kunta204',
+    Kunta687: 'kunta/kunta687',
+    Kunta076: 'kunta/kunta076',
+    Kunta924: 'kunta/kunta924',
+    Kunta410: 'kunta/kunta410',
+    Kunta856: 'kunta/kunta856',
+    Kunta775: 'kunta/kunta775',
+    Kunta916: 'kunta/kunta916',
+    Kunta259: 'kunta/kunta259',
+    Kunta176: 'kunta/kunta176',
+    Kunta595: 'kunta/kunta595',
+    Kunta170: 'kunta/kunta170',
+    Kunta405: 'kunta/kunta405',
+    Kunta835: 'kunta/kunta835',
+    Kunta098: 'kunta/kunta098',
+    Kunta480: 'kunta/kunta480',
+    Kunta202: 'kunta/kunta202',
+    Kunta305: 'kunta/kunta305',
+    Kunta183: 'kunta/kunta183',
+    Kunta696: 'kunta/kunta696',
+    Kunta051: 'kunta/kunta051',
+    Kunta479: 'kunta/kunta479',
+    Kunta859: 'kunta/kunta859',
+    Kunta434: 'kunta/kunta434',
+    Kunta618: 'kunta/kunta618',
+    Kunta017: 'kunta/kunta017',
+    Kunta319: 'kunta/kunta319',
+    Kunta607: 'kunta/kunta607',
+    Kunta046: 'kunta/kunta046',
+    Kunta400: 'kunta/kunta400',
+    Kunta069: 'kunta/kunta069',
+    Kunta266: 'kunta/kunta266',
+    Kunta594: 'kunta/kunta594',
+    Kunta778: 'kunta/kunta778',
+    Kunta935: 'kunta/kunta935',
+    Kunta532: 'kunta/kunta532',
+    Kunta834: 'kunta/kunta834',
+    Kunta223: 'kunta/kunta223',
+    Kunta576: 'kunta/kunta576',
+    Kunta609: 'kunta/kunta609',
+    Kunta921: 'kunta/kunta921',
+    Kunta492: 'kunta/kunta492',
+    Kunta047: 'kunta/kunta047',
+    Kunta074: 'kunta/kunta074',
+    Kunta398: 'kunta/kunta398',
+    Kunta315: 'kunta/kunta315',
+    Kunta140: 'kunta/kunta140',
+    Kunta635: 'kunta/kunta635',
+    Kunta691: 'kunta/kunta691',
+    Kunta592: 'kunta/kunta592',
+    Kunta248: 'kunta/kunta248',
+    Kunta283: 'kunta/kunta283',
+    Kunta736: 'kunta/kunta736',
+    Kunta403: 'kunta/kunta403',
+    Kunta254: 'kunta/kunta254',
+    Kunta581: 'kunta/kunta581',
+    Kunta602: 'kunta/kunta602',
+    Kunta766: 'kunta/kunta766',
+    Kunta109: 'kunta/kunta109',
+    Kunta846: 'kunta/kunta846',
+    Kunta044: 'kunta/kunta044',
+    Kunta851: 'kunta/kunta851',
+    Kunta279: 'kunta/kunta279',
+    Kunta729: 'kunta/kunta729',
+    Kunta291: 'kunta/kunta291',
+    Kunta241: 'kunta/kunta241',
+    Kunta681: 'kunta/kunta681',
+    Kunta762: 'kunta/kunta762',
+    Kunta749: 'kunta/kunta749',
+    Kunta414: 'kunta/kunta414',
+    Kunta855: 'kunta/kunta855',
+    Kunta260: 'kunta/kunta260',
+    Kunta014: 'kunta/kunta014',
+    Kunta262: 'kunta/kunta262',
+    Kunta845: 'kunta/kunta845',
+    Kunta917: 'kunta/kunta917',
+    Kunta152: 'kunta/kunta152',
+    Kunta603: 'kunta/kunta603',
+    Kunta483: 'kunta/kunta483',
+    Kunta050: 'kunta/kunta050',
+    Kunta402: 'kunta/kunta402',
+    Kunta908: 'kunta/kunta908',
+    Kunta435: 'kunta/kunta435',
+    Kunta849: 'kunta/kunta849',
+    Kunta317: 'kunta/kunta317',
+    Kunta620: 'kunta/kunta620',
+    Kunta742: 'kunta/kunta742',
+    Kunta171: 'kunta/kunta171',
+    Kunta979: 'kunta/kunta979',
+    Kunta498: 'kunta/kunta498',
+    Kunta224: 'kunta/kunta224',
+    Kunta790: 'kunta/kunta790',
+    Kunta537: 'kunta/kunta537',
+    Kunta946: 'kunta/kunta946',
+    Kunta257: 'kunta/kunta257',
+    Kunta111: 'kunta/kunta111',
+    Kunta226: 'kunta/kunta226',
+    Kunta142: 'kunta/kunta142',
+    Kunta941: 'kunta/kunta941',
+    Kunta318: 'kunta/kunta318',
+    Kunta408: 'kunta/kunta408',
+    Kunta973: 'kunta/kunta973',
+    Kunta927: 'kunta/kunta927',
+    Kunta413: 'kunta/kunta413',
+    Kunta740: 'kunta/kunta740',
+    Kunta624: 'kunta/kunta624',
+    Kunta306: 'kunta/kunta306',
+    Kunta748: 'kunta/kunta748',
+    Kunta417: 'kunta/kunta417',
+    Kunta864: 'kunta/kunta864',
+    Kunta243: 'kunta/kunta243',
+    Kunta236: 'kunta/kunta236',
+    Kunta445: 'kunta/kunta445',
+    Kunta943: 'kunta/kunta943',
+    Kunta285: 'kunta/kunta285',
+    Kunta945: 'kunta/kunta945',
+    Kunta626: 'kunta/kunta626',
+    Kunta854: 'kunta/kunta854',
+    Kunta777: 'kunta/kunta777',
+    Kunta697: 'kunta/kunta697',
+    Kunta785: 'kunta/kunta785',
+    Kunta255: 'kunta/kunta255',
+    Kunta619: 'kunta/kunta619',
+    Kunta312: 'kunta/kunta312',
+    Kunta049: 'kunta/kunta049',
+    Kunta424: 'kunta/kunta424',
+    Kunta252: 'kunta/kunta252',
+    Kunta608: 'kunta/kunta608',
+    Kunta893: 'kunta/kunta893',
+    Kunta636: 'kunta/kunta636',
+    Kunta694: 'kunta/kunta694',
+    Kunta857: 'kunta/kunta857',
+    Kunta439: 'kunta/kunta439',
+    Kunta738: 'kunta/kunta738',
+    Kunta922: 'kunta/kunta922',
+    Kunta005: 'kunta/kunta005',
+    Kunta101: 'kunta/kunta101',
+    Kunta925: 'kunta/kunta925',
+    Kunta035: 'kunta/kunta035',
+    Kunta944: 'kunta/kunta944',
+    Kunta485: 'kunta/kunta485',
+    Kunta942: 'kunta/kunta942',
+    Kunta972: 'kunta/kunta972',
+    Kunta507: 'kunta/kunta507',
+    Kunta625: 'kunta/kunta625',
+    Kunta890: 'kunta/kunta890',
+    Kunta702: 'kunta/kunta702',
+    Kunta858: 'kunta/kunta858',
+    Kunta833: 'kunta/kunta833',
+    Kunta436: 'kunta/kunta436',
+    Kunta936: 'kunta/kunta936',
+    Kunta150: 'kunta/kunta150',
+    Kunta251: 'kunta/kunta251',
+    Kunta079: 'kunta/kunta079',
+    Kunta911: 'kunta/kunta911',
+    Kunta095: 'kunta/kunta095',
+    Kunta770: 'kunta/kunta770',
+    Kunta288: 'kunta/kunta288',
+    Kunta887: 'kunta/kunta887',
+    Kunta443: 'kunta/kunta443',
+    Kunta611: 'kunta/kunta611',
+    Kunta771: 'kunta/kunta771',
+    Kunta585: 'kunta/kunta585',
+    Kunta177: 'kunta/kunta177',
+    Kunta544: 'kunta/kunta544',
+    Kunta060: 'kunta/kunta060',
+    Kunta598: 'kunta/kunta598',
+    Kunta631: 'kunta/kunta631',
+    Kunta287: 'kunta/kunta287',
+    Kunta440: 'kunta/kunta440',
+    Kunta734: 'kunta/kunta734',
+    Kunta310: 'kunta/kunta310',
+    Kunta754: 'kunta/kunta754',
+    Kunta481: 'kunta/kunta481',
+    Kunta421: 'kunta/kunta421',
+    Kunta584: 'kunta/kunta584',
+    Kunta476: 'kunta/kunta476',
+    Kunta791: 'kunta/kunta791',
+    Kunta061: 'kunta/kunta061',
+    Kunta616: 'kunta/kunta616',
+    Kunta175: 'kunta/kunta175',
+    Kunta015: 'kunta/kunta015',
+    Kunta441: 'kunta/kunta441',
+    Kunta700: 'kunta/kunta700',
+    Kunta732: 'kunta/kunta732',
+    Kunta303: 'kunta/kunta303',
+    Kunta145: 'kunta/kunta145',
+    Kunta889: 'kunta/kunta889',
+    Kunta746: 'kunta/kunta746',
+    Kunta844: 'kunta/kunta844',
+    Kunta543: 'kunta/kunta543',
+    Kunta506: 'kunta/kunta506',
+    Kunta040: 'kunta/kunta040',
+    Kunta905: 'kunta/kunta905',
+    Kunta444: 'kunta/kunta444',
+    Kunta560: 'kunta/kunta560',
+    Kunta755: 'kunta/kunta755',
+    Kunta632: 'kunta/kunta632',
+    Kunta915: 'kunta/kunta915',
+    Kunta701: 'kunta/kunta701',
+    Kunta045: 'kunta/kunta045',
+    Kunta573: 'kunta/kunta573',
+    Kunta692: 'kunta/kunta692',
+    Kunta081: 'kunta/kunta081',
+    Kunta593: 'kunta/kunta593',
+    Kunta265: 'kunta/kunta265',
+    Kunta926: 'kunta/kunta926',
+    Kunta139: 'kunta/kunta139',
+    Kunta272: 'kunta/kunta272',
+    Kunta297: 'kunta/kunta297',
+    Kunta765: 'kunta/kunta765',
+    Kunta540: 'kunta/kunta540',
+    Kunta482: 'kunta/kunta482',
+    Kunta850: 'kunta/kunta850',
+    Kunta426: 'kunta/kunta426',
+    Kunta503: 'kunta/kunta503',
+    Kunta004: 'kunta/kunta004',
+    Kunta216: 'kunta/kunta216',
+    Kunta638: 'kunta/kunta638',
+    Kunta217: 'kunta/kunta217',
+    Kunta615: 'kunta/kunta615',
+    Kunta078: 'kunta/kunta078',
+    Kunta886: 'kunta/kunta886',
+    Kunta686: 'kunta/kunta686',
+    Kunta077: 'kunta/kunta077',
+    Kunta541: 'kunta/kunta541',
+    Kunta293: 'kunta/kunta293',
+    Kunta753: 'kunta/kunta753',
+    Kunta090: 'kunta/kunta090',
+    Kunta105: 'kunta/kunta105',
+    Kunta586: 'kunta/kunta586',
+    Kunta316: 'kunta/kunta316',
+    Kunta617: 'kunta/kunta617',
+    Kunta062: 'kunta/kunta062',
+    Kunta016: 'kunta/kunta016',
+    Kunta149: 'kunta/kunta149',
+    Kunta083: 'kunta/kunta083',
+    Kunta751: 'kunta/kunta751',
+    Kunta290: 'kunta/kunta290',
+    Kunta934: 'kunta/kunta934',
+    Kunta301: 'kunta/kunta301',
+    Kunta698: 'kunta/kunta698',
+    Kunta976: 'kunta/kunta976',
+    Kunta246: 'kunta/kunta246',
+    Kunta211: 'kunta/kunta211',
+    Kunta758: 'kunta/kunta758',
+    Kunta978: 'kunta/kunta978',
+    Kunta599: 'kunta/kunta599',
+    Kunta180: 'kunta/kunta180',
+    Kunta494: 'kunta/kunta494',
+    Kunta232: 'kunta/kunta232',
+    Kunta423: 'kunta/kunta423',
+    Kunta151: 'kunta/kunta151',
+    Kunta768: 'kunta/kunta768',
+    Kunta728: 'kunta/kunta728'
+} as const;
+
+export type ProjektiToimeksiannotInnerOminaisuudetKuntaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetKuntaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetKuntaEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetTilaEnum = {
     Tila16: 'tila/tila16',
     Tila18: 'tila/tila18',
@@ -2601,6 +3744,30 @@ export const ProjektiToimeksiannotInnerOminaisuudetTilaEnum = {
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetTilaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetTilaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetTilaEnum];
+export const ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum = {
+    Maakunta15: 'maakunta/maakunta15',
+    Maakunta21: 'maakunta/maakunta21',
+    Maakunta12: 'maakunta/maakunta12',
+    Maakunta08: 'maakunta/maakunta08',
+    Maakunta18: 'maakunta/maakunta18',
+    Maakunta16: 'maakunta/maakunta16',
+    Maakunta19: 'maakunta/maakunta19',
+    Maakunta13: 'maakunta/maakunta13',
+    Maakunta09: 'maakunta/maakunta09',
+    Maakunta20: 'maakunta/maakunta20',
+    Maakunta17: 'maakunta/maakunta17',
+    Maakunta10: 'maakunta/maakunta10',
+    Maakunta05: 'maakunta/maakunta05',
+    Maakunta06: 'maakunta/maakunta06',
+    Maakunta07: 'maakunta/maakunta07',
+    Maakunta14: 'maakunta/maakunta14',
+    Maakunta02: 'maakunta/maakunta02',
+    Maakunta04: 'maakunta/maakunta04',
+    Maakunta11: 'maakunta/maakunta11',
+    Maakunta01: 'maakunta/maakunta01'
+} as const;
+
+export type ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = {
     Tateh03: 'toimeksiantotehtava/tateh03',
     Tateh07: 'toimeksiantotehtava/tateh07',
@@ -2616,6 +3783,31 @@ export const ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = {
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum];
+export const ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum = {
+    Kj15: 'koordinaattijarjestelma-epsg/kj15',
+    Kj14: 'koordinaattijarjestelma-epsg/kj14',
+    Kj12: 'koordinaattijarjestelma-epsg/kj12',
+    Kj08: 'koordinaattijarjestelma-epsg/kj08',
+    Kj19: 'koordinaattijarjestelma-epsg/kj19',
+    Kj11: 'koordinaattijarjestelma-epsg/kj11',
+    Kj13: 'koordinaattijarjestelma-epsg/kj13',
+    Kj10: 'koordinaattijarjestelma-epsg/kj10',
+    Kj17: 'koordinaattijarjestelma-epsg/kj17',
+    Kj21: 'koordinaattijarjestelma-epsg/kj21',
+    Kj16: 'koordinaattijarjestelma-epsg/kj16',
+    Kj04: 'koordinaattijarjestelma-epsg/kj04',
+    Kj02: 'koordinaattijarjestelma-epsg/kj02',
+    Kj05: 'koordinaattijarjestelma-epsg/kj05',
+    Kj09: 'koordinaattijarjestelma-epsg/kj09',
+    Kj18: 'koordinaattijarjestelma-epsg/kj18',
+    Kj06: 'koordinaattijarjestelma-epsg/kj06',
+    Kj01: 'koordinaattijarjestelma-epsg/kj01',
+    Kj07: 'koordinaattijarjestelma-epsg/kj07',
+    Kj03: 'koordinaattijarjestelma-epsg/kj03',
+    Kj20: 'koordinaattijarjestelma-epsg/kj20'
+} as const;
+
+export type ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum];
 
 /**
  * 
@@ -2744,6 +3936,12 @@ export interface ProjektiToimeksianto {
      * @type {string}
      * @memberof ProjektiToimeksianto
      */
+    'muutoksen-lahde-id'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksianto
+     */
     'oid': string;
     /**
      * 
@@ -2814,16 +4012,28 @@ export interface ProjektiToimeksianto {
 export interface ProjektiToimeksiantoOminaisuudet {
     /**
      * 
-     * @type {string}
+     * @type {object}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'toteuttava-organisaatio': string | null;
+    'toteuttava-organisaatio'?: object | null;
+    /**
+     * 
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
+    /**
+     * 
+     * @type {Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
     /**
      * 
      * @type {string}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'varahenkilo': string | null;
+    'asiatunnus-traficom'?: string | null;
     /**
      * 
      * @type {string}
@@ -2838,10 +4048,10 @@ export interface ProjektiToimeksiantoOminaisuudet {
     'vaylamuoto': Set<ProjektiToimeksiantoOminaisuudetVaylamuotoEnum>;
     /**
      * 
-     * @type {string}
+     * @type {Set<object>}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'kunta': string | null;
+    'kunta': Set<object> | null;
     /**
      * 
      * @type {object}
@@ -2856,16 +4066,22 @@ export interface ProjektiToimeksiantoOminaisuudet {
     'vesivaylanumerot': Set<string> | null;
     /**
      * 
-     * @type {string}
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'vastuuhenkilo': string;
+    'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
     /**
      * 
      * @type {string}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'maakunta': string | null;
+    'asiatunnus-ely'?: string | null;
+    /**
+     * 
+     * @type {Set<object>}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'maakunta': Set<object> | null;
     /**
      * 
      * @type {string}
@@ -2877,7 +4093,7 @@ export interface ProjektiToimeksiantoOminaisuudet {
      * @type {string}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'asiatunnus': string | null;
+    'muu-kunta'?: string | null;
     /**
      * 
      * @type {string}
@@ -2889,13 +4105,25 @@ export interface ProjektiToimeksiantoOminaisuudet {
      * @type {string}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
-    'toteuttavan-organisaation-yhteyshenkilo': string | null;
+    'muu-maakunta'?: string | null;
+    /**
+     * 
+     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'toteuttavan-organisaation-yhteyshenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     /**
      * 
      * @type {object}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
     'tehtava': object | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'muu-toteuttava-organisaatio'?: string | null;
     /**
      * 
      * @type {Set<ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner>}
@@ -2910,6 +4138,12 @@ export interface ProjektiToimeksiantoOminaisuudet {
     'muu-tehtava'?: string;
     /**
      * 
+     * @type {string}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'asiatunnus-vaylavirasto'?: string | null;
+    /**
+     * 
      * @type {Set<ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner>}
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
@@ -2920,6 +4154,12 @@ export interface ProjektiToimeksiantoOminaisuudet {
      * @memberof ProjektiToimeksiantoOminaisuudet
      */
     'alkaa': string;
+    /**
+     * 
+     * @type {object}
+     * @memberof ProjektiToimeksiantoOminaisuudet
+     */
+    'koordinaattijarjestelma'?: object | null;
 }
 
 export const ProjektiToimeksiantoOminaisuudetVaylamuotoEnum = {

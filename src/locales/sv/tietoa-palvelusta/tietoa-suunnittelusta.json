@@ -49,9 +49,13 @@
       "teksti": "Trafikledsverkets kungörelser",
       "href": "https://www.vayla.fi/sv/arkiv/kungorelser"
     },
-    "linkki2": {
+    "linkki2_ely": {
       "teksti": "De regionala närings-, trafik- och miljöcentralernas kungörelser",
       "href": "https://www.ely-keskus.fi/sv/kuulutukset"
+    },
+    "linkki2": {
+      "teksti": "De regionala livskraftscentralernas kungörelser",
+      "href": "https://www.elinvoimakeskus.fi/sv/kuulutukset"
     }
   },
   "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {

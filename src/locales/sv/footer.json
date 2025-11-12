@@ -5,9 +5,13 @@
       "teksti": "Trafikledsverket.fi",
       "linkki": "https://trafikledsverket.fi"
     },
-    "ely": {
+    "linkki-ely": {
       "teksti": "Ely-keskus.fi/sv",
-      "linkki": "https://ely-keskus.fi/sv"
+      "href": "https://www.ely-keskus.fi/sv"
+    },
+    "linkki-evk": {
+      "teksti": "Elinvoimakeskus.fi/sv",
+      "href": "https://www.elinvoimakeskus.fi/sv"
     },
     "tietoa_palvelusta": "Information om tjänsten",
     "saavutettavuus": "Tillgänglighet",
