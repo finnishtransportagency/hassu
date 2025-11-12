@@ -49,7 +49,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
   isUseitaOsapuolia(): boolean {
     return this.kutsuAdapter.isUseitaOsapuolia();
   }
-  
+
   isElyTilaaja(): boolean {
     return this.kutsuAdapter.isElyTilaaja();
   }
@@ -225,7 +225,7 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     if (this.osoite) {
       const x = toPdfPoints(21);
       const lahettaja = this.getLahettaja();
-      this.doc.fontSize(11);
+      this.doc.fontSize(10);
       if (this.isVaylaTilaaja()) {
         this.doc.text(lahettaja.nimi, x, toPdfPoints(20), { width: toPdfPoints(72), baseline: "top" });
         this.doc.text(lahettaja.katuosoite, undefined, undefined, { width: toPdfPoints(72) });
