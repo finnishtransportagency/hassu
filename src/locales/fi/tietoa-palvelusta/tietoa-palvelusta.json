@@ -13,8 +13,12 @@
   "yksittaisen-suunnitelman-sivu": {
     "otsikko": "Yksittäisen suunnitelman sivu",
     "kappale1": "Hankkeiden sivuilla kerrotaan perustiedot suunnitteluhankkeesta, sen etenemisestä ja nykyisestä tilasta. Hankkeen suunnittelun vuorovaikutus tehdään sivun kautta. Yksittäisen suunnitelman sivulta on myös linkitys Väyläviraston hankesivuille, jos suunnitelmasta on tehty hankesivu.",
-    "linkki1": {
+    "linkki1_ely": {
       "teksti": "Kaikki Väyläviraston ja ELY-keskuksen väylähankkeiden sivut",
+      "href": "https:/vayla.fi/suunnittelu-rakentaminen"
+    },
+    "linkki1": {
+      "teksti": "Kaikki Väyläviraston ja Elinvoimakeskuksen väylähankkeiden sivut",
       "href": "https:/vayla.fi/suunnittelu-rakentaminen"
     }
   },
@@ -41,9 +45,13 @@
       "teksti": "Tietosuoja Väylävirastossa",
       "href": "https://www.vayla.fi/tietoa-meista/yhteystiedot/tietosuoja"
     },
-    "linkki2": {
+    "linkki2_ely": {
       "teksti": "Tietosuoja Elinkeino-, liikenne- ja ympäristökeskuksessa",
       "href": "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
+    },
+    "linkki2": {
+      "teksti": "Tietosuoja Elinvoimakeskuksessa",
+      "href": "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely"
     }
   }
 }

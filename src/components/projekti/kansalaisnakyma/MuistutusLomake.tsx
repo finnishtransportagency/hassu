@@ -105,10 +105,14 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
   const getTietosuojaUrl = useCallback(() => {
     if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
-    } else {
+    } else if (projekti.velho.suunnittelustaVastaavaViranomainen?.endsWith("ELY")) {
       return lang == "sv"
         ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
         : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
+    } else {
+      return lang == "sv"
+        ? "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+        : "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
@@ -175,7 +179,11 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
     if (!viranomainen) {
       return "<Viranomaistieto puuttuu>";
     }
-    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylavirasto") : t("common:ely-keskus");
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      ? t("common:vaylavirasto")
+      : viranomainen && viranomainen.endsWith("ELY")
+      ? t("common:ely-keskus")
+      : t("common:elinvoimakeskus");
   }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
 
   return (
@@ -422,7 +430,11 @@ export function KiitosDialogi({ open, onClose, projekti, nahtavillaolo, isMobile
     if (!viranomainen) {
       return "<Viranomaistieto puuttuu>";
     }
-    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      ? t("common:vaylaviraston")
+      : viranomainen && viranomainen.endsWith("ELY")
+      ? t("common:ely-keskuksen")
+      : t("common:elinvoimakeskuksen");
   }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
   const paattyyPvm = dayjs(nahtavillaolo.muistutusoikeusPaattyyPaiva).endOf("date");
   return (
@@ -476,7 +488,11 @@ function EpaonnistuiDialogi({ open, onClose, projekti, isMobile }: Readonly<Dial
     if (!viranomainen) {
       return "<Viranomaistieto puuttuu>";
     }
-    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO ? t("common:vaylaviraston") : t("common:ely-keskuksen");
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      ? t("common:vaylaviraston")
+      : viranomainen && viranomainen.endsWith("ELY")
+      ? t("common:ely-keskuksen")
+      : t("common:elinvoimakeskuksen");
   }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
   return (
     <HassuDialog

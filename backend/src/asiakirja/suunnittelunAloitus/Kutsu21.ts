@@ -7,6 +7,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { adaptSuunnitteluSopimusToSuunnitteluSopimusJulkaisu } from "../../projekti/adapter/common/adaptSuunnitteluSopimusToJulkaisu";
 import { findUserByKayttajatunnus } from "../../projekti/projektiUtil";
 import { EmailOptions } from "../../email/model/emailOptions";
+import { isEvkAktivoitu } from "hassu-common/util/isEvkAktivoitu";
 
 export class Kutsu21 {
   private readonly adapter: SuunnitteluVaiheKutsuAdapter;
@@ -67,6 +68,7 @@ export class Kutsu21 {
 
   createEmail(): EmailOptions {
     const usePlural = this.isUseitaOsapuolia();
+    const isEvkAktiivinen = isEvkAktivoitu();
     const bodyArray = [this.adapter.title, ""];
     if (this.adapter.selosteVuorovaikutuskierrokselle) {
       bodyArray.push(this.adapter.selosteVuorovaikutuskierrokselle, "");
@@ -76,7 +78,7 @@ export class Kutsu21 {
       "",
       this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale2"),
       "",
-      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + "ilmoitus_kappale3"),
+      this.adapter.text(ASIAKIRJA_KUTSU_PREFIX + `ilmoitus_kappale3${isEvkAktiivinen ? "" : "_ely"}`),
       "",
       this.adapter.hankkeenKuvaus(),
       "",

@@ -2,6 +2,7 @@ import ExternalLinkkiLista from "@components/kansalainen/tietoaPalvelusta/Extern
 import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta/TietoaPalvelustaPageLayout";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ExternalStyledLink } from "@components/StyledLink";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React from "react";
@@ -80,8 +81,8 @@ export default function TietoaPalvelustaSivu() {
                 teksti: t("kuulutussivut.linkki1.teksti"),
               },
               {
-                href: t("kuulutussivut.linkki2.href"),
-                teksti: t("kuulutussivut.linkki2.teksti"),
+                href: t(`kuulutussivut.linkki2${isEvkAktivoitu() ? "" : "_ely"}.href`),
+                teksti: t(`kuulutussivut.linkki2${isEvkAktivoitu() ? "" : "_ely"}.teksti`),
               },
             ]}
           />

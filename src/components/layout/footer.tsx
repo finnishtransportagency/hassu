@@ -103,18 +103,25 @@ export const Footer = () => {
                 <div className="my-auto text-center">
                   <Image src="/assets/vayla_alla_fi_sv_rgb.png" alt="" width="140.4" height="117" />
                 </div>
-                {isEvkAktiivinen ? <div className="my-auto text-center">
-                  <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170.61" height="91" />
-                </div> : <div className="my-auto text-center">
-                  <Image src="/assets/ely_alla_fi_sv_rgb.png" alt="" width="170.61" height="91" />
-                </div>}
+                {isEvkAktiivinen ? (
+                  <div className="my-auto text-center">
+                    <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170.61" height="91" />
+                  </div>
+                ) : (
+                  <div className="my-auto text-center">
+                    <Image src="/assets/ely_alla_fi_sv_rgb.png" alt="" width="170.61" height="91" />
+                  </div>
+                )}
               </KuvaContainer>
             </div>
             <p>{t("hankesuunnitelmista")}</p>
           </ContentSpacer>
           <ul>
             <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
-            <FooterLinkkiEl href={t("linkki.ely.linkki")} teksti={t("linkki.ely.teksti")} />
+            <FooterLinkkiEl
+              href={t(`linkki.linkki-${isEvkAktivoitu() ? "evk" : "ely"}.href`)}
+              teksti={t(`linkki.linkki-${isEvkAktivoitu() ? "evk" : "ely"}.teksti`)}
+            />
           </ul>
           <div>
             <span>&copy; {t("common:vaylavirasto")}</span>

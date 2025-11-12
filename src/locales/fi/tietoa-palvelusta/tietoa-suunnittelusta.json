@@ -49,9 +49,13 @@
       "teksti": "Väyläviraston kuulutussivut",
       "href": "https://www.vayla.fi/tietoa-meista/ajankohtaista/kuulutukset"
     },
-    "linkki2": {
+    "linkki2_ely": {
       "teksti": "Alueellisten elinkeino-, liikenne- ja ympäristökeskusten kuulutussivut",
       "href": "https://www.ely-keskus.fi/kuulutukset"
+    },
+    "linkki2": {
+      "teksti": "Alueellisten elinvoimakeskusten kuulutussivut",
+      "href": "https://www.elinvoimakeskus.fi/kuulutukset"
     }
   },
   "lisatietoa-ratojen-ja-maanteiden-suunnittelusta": {

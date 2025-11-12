@@ -2,6 +2,7 @@ import ExternalLinkkiLista from "@components/kansalainen/tietoaPalvelusta/Extern
 import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta/TietoaPalvelustaPageLayout";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import StyledLink from "@components/StyledLink";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React from "react";
@@ -35,7 +36,10 @@ export default function TietoaPalvelustaSivu() {
           <p>{t("yksittaisen-suunnitelman-sivu.kappale1")}</p>
           <ExternalLinkkiLista
             linkkiTiedot={[
-              { href: t("yksittaisen-suunnitelman-sivu.linkki1.href"), teksti: t("yksittaisen-suunnitelman-sivu.linkki1.teksti") },
+              {
+                href: t(`yksittaisen-suunnitelman-sivu.linkki1${isEvkAktivoitu() ? "" : "_ely"}.href`),
+                teksti: t(`yksittaisen-suunnitelman-sivu.linkki1${isEvkAktivoitu() ? "" : "_ely"}.teksti`),
+              },
             ]}
           />
         </ContentSpacer>
@@ -65,8 +69,8 @@ export default function TietoaPalvelustaSivu() {
                 teksti: t("lisatietoja-henkilotietojen-kasittelysta.linkki1.teksti"),
               },
               {
-                href: t("lisatietoja-henkilotietojen-kasittelysta.linkki2.href"),
-                teksti: t("lisatietoja-henkilotietojen-kasittelysta.linkki2.teksti"),
+                href: t(`lisatietoja-henkilotietojen-kasittelysta.linkki2${isEvkAktivoitu() ? "" : "_ely"}.href`),
+                teksti: t(`lisatietoja-henkilotietojen-kasittelysta.linkki2${isEvkAktivoitu() ? "" : "_ely"}.teksti`),
               },
             ]}
           />

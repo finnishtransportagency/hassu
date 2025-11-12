@@ -8,6 +8,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTheme } from "@mui/material/styles";
 import { focusStyleSecondary } from "@components/layout/HassuMuiThemeProvider";
 import { H2 } from "@components/Headings";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 const Hakuohje = () => {
   const theme = useTheme();
@@ -47,7 +48,7 @@ const Hakuohje = () => {
           <H2 sx={{ fontWeight: "normal", fontSize: "1rem", lineHeight: 1.1, color: "white", marginBottom: 0 }}>{t(`hakuohje-otsikko`)}</H2>
         </AccordionSummary>
         <AccordionDetails>
-          <p>{t(`hakuohje1`)}</p>
+          <p>{t(`hakuohje1${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
           <p>{t(`hakuohje2`)}</p>
           <p>{t(`hakuohje3`)}</p>
           <p>{t(`hakuohje4`)}</p>

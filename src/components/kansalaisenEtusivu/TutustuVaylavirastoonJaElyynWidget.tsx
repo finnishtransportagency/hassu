@@ -5,6 +5,7 @@ import SectionContent from "@components/layout/SectionContent";
 import useTranslation from "next-translate/useTranslation";
 import { styled, experimental_sx as sx } from "@mui/material";
 import ButtonLink, { ButtonLinkProps } from "@components/button/ButtonLink";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 const TutustuSection = styled(Section)(() => {
   return sx({
@@ -25,9 +26,9 @@ function TutustuVaylavirastoonJaElyynWidget() {
       <div role="navigation" className={styles["side-nav"]}>
         <SectionContent className={styles["side-nav-content"]} style={{ textAlign: "center", backgroundColor: "white" }}>
           <h3 className="vayla-subtitle" style={{ color: "rgb(0, 100, 175)" }}>
-            {t("widgetit.tutustu-vaylaan-elyyn")}
+            {t(`widgetit.tutustu-vaylaan-${isEvkAktivoitu() ? "evk" : "ely"}`)}
           </h3>
-          <p className="mt-4 mb-8">{t("widgetit.tietoa-vaylasta-elysta")}</p>
+          <p className="mt-4 mb-8">{t(`widgetit.tietoa-vaylasta-${isEvkAktivoitu() ? "evk" : "ely"}`)}</p>
           <ResponsiveButtonLink
             external
             primary
@@ -40,11 +41,19 @@ function TutustuVaylavirastoonJaElyynWidget() {
           <ResponsiveButtonLink
             external
             primary
-            href={lang == "fi" ? "https://ely-keskus.fi" : "https://www.ely-keskus.fi/sv/etusivu"}
+            href={
+              isEvkAktivoitu()
+                ? lang == "fi"
+                  ? "https://elinvoimakeskus.fi"
+                  : "https://www.elinvoimakeskus.fi/sv/etusivu"
+                : lang == "fi"
+                ? "https://ely-keskus.fi"
+                : "https://www.ely-keskus.fi/sv/etusivu"
+            }
             style={{ marginLeft: "auto", marginRight: "auto" }}
             target="_blank"
           >
-            {t("widgetit.ely-keskus")}
+            {t(`widgetit.${isEvkAktivoitu() ? "elinvoimakeskus" : "ely-keskus"}`)}
           </ResponsiveButtonLink>
         </SectionContent>
       </div>

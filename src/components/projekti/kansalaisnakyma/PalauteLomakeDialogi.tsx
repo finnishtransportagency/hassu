@@ -72,10 +72,14 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
   const getTietosuojaUrl = useCallback(() => {
     if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
       return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
-    } else {
+    } else if (projekti.velho.suunnittelustaVastaavaViranomainen?.endsWith("ELY")) {
       return lang == "sv"
         ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
         : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
+    } else {
+      return lang == "sv"
+        ? "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
+        : "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 

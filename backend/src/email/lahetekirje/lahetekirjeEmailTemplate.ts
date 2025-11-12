@@ -3,9 +3,11 @@ import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
 import { Kieli } from "hassu-common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { EmailOptions } from "../model/emailOptions";
+import { isEvkAktivoitu } from "hassu-common/util/isEvkAktivoitu";
 
 const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
   const usePlural = adapter.isUseitaOsapuolia();
+  const isEvkAktiivinen = isEvkAktivoitu();
 
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
@@ -14,7 +16,7 @@ const lahetekirje11 = (adapter: AloituskuulutusKutsuAdapter) => {
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale1", usePlural),
     adapter.vahainenMenettely ? adapter.onKyseVahaisestaMenettelystaParagraph() : null,
     adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale2"),
-    adapter.text("asiakirja.aloituskuulutus_lahete_email.kappale3"),
+    adapter.text(`asiakirja.aloituskuulutus_lahete_email.kappale3${isEvkAktiivinen ? "" : "_ely"}`),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),
@@ -50,6 +52,7 @@ export function createAloituskuulutusLahetekirjeEmail(adapter: AloituskuulutusKu
 }
 
 const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
+  const isEvkAktiivinen = isEvkAktivoitu();
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
@@ -57,7 +60,7 @@ const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => 
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"),
     adapter.vahainenMenettely ? adapter.onKyseVahaisestaMenettelystaParagraph() : null,
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale2"),
-    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3"),
+    adapter.text(`asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3${isEvkAktiivinen ? "" : "_ely"}`),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),

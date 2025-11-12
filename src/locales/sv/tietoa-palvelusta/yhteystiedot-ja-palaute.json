@@ -5,9 +5,13 @@
     "teksti": "Trafikledsverkets kontaktuppgifter",
     "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter"
   },
-  "linkki2": {
+  "linkki2_ely": {
     "teksti": "Närings-, trafik- och miljöcentralens kontaktuppgifter",
     "href": "https://www.ely-keskus.fi/sv/asiointi-ja-yhteystiedot"
+  },
+  "linkki2": {
+    "teksti": "Livskraftscentralens kontaktuppgifter",
+    "href": "https://www.elinvoimakeskus.fi/sv/asiointi-ja-yhteystiedot"
   },
   "palvelun-yhteystiedot": {
     "otsikko": "Tjänstens kontaktuppgifter",
