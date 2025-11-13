@@ -1,8 +1,8 @@
 import * as Yup from "yup";
-import { ELY, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
+import { ELY, Elinvoimakeskus, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
 import { addAgencyNumberTests, puhelinNumeroSchema } from "hassu-common/schema/puhelinNumero";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 
 export const kayttoOikeudetSchema = Yup.array().of(
   Yup.object()
@@ -24,6 +24,12 @@ export const kayttoOikeudetSchema = Yup.array().of(
         .when("organisaatio", {
           is: organisaatioIsEly,
           then: (schema) => schema.required("ELY-keskus on pakollinen"),
+        }),
+      evkOrganisaatio: Yup.mixed()
+        .oneOf([...Object.values(Elinvoimakeskus), undefined, null])
+        .when("organisaatio", {
+          is: organisaatioIsEvk,
+          then: (schema) => schema.required("Elinvoimakeskus on pakollinen"),
         }),
     })
     .test("uniikki-kayttajatunnus", "Käyttäjä voi olla vain yhteen kertaan käyttöoikeuslistalla", function (current) {
