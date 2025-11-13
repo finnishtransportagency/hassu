@@ -55,14 +55,17 @@ const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (proje
   oid: projekti.oid,
   versio: projekti.versio,
   kayttoOikeudet:
-    projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, organisaatio }) => ({
-      kayttajatunnus,
-      puhelinnumero: puhelinnumero || "",
-      tyyppi,
-      yleinenYhteystieto: !!yleinenYhteystieto,
-      elyOrganisaatio: elyOrganisaatio || null,
-      organisaatio: organisaatio || "",
-    })) || [],
+    projekti.kayttoOikeudet?.map(
+      ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, evkOrganisaatio, organisaatio }) => ({
+        kayttajatunnus,
+        puhelinnumero: puhelinnumero || "",
+        tyyppi,
+        yleinenYhteystieto: !!yleinenYhteystieto,
+        elyOrganisaatio: elyOrganisaatio || null,
+        evkOrganisaatio: evkOrganisaatio || null,
+        organisaatio: organisaatio || "",
+      })
+    ) || [],
 });
 
 const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
@@ -104,10 +107,11 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
             oid: formData.oid,
             versio: formData.versio,
             kayttoOikeudet: formData.kayttoOikeudet.map(
-              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
                 kayttajatunnus,
                 puhelinnumero,
                 elyOrganisaatio,
+                evkOrganisaatio,
                 tyyppi,
                 yleinenYhteystieto,
               })
