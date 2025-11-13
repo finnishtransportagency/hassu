@@ -11,23 +11,25 @@ import {
   MaakuntaVastaanottajaInput,
 } from "@services/api";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import uniqBy from "lodash/uniqBy";
 
-function findOutEdellisenVaiheenIlmoituksenVastaanottajat(
-  projekti: Projekti | null | undefined
-): IlmoituksenVastaanottajat | null | undefined {
+function findPreviousPhaseRecipients(projekti?: Projekti | null): IlmoituksenVastaanottajat | null | undefined {
   switch (projekti?.status) {
     case Status.SUUNNITTELU: {
-      if (projekti.vuorovaikutusKierrosJulkaisut?.length) {
-        const maxKierrosId = Math.max(...projekti.vuorovaikutusKierrosJulkaisut.map((julkaisu) => julkaisu.id));
-        const maxIdJulkaisu = projekti.vuorovaikutusKierrosJulkaisut.find((julkaisu) => julkaisu.id == maxKierrosId);
-        if (projekti.vuorovaikutusKierros && projekti.vuorovaikutusKierros.vuorovaikutusNumero > maxKierrosId) {
-          return maxIdJulkaisu?.ilmoituksenVastaanottajat;
-        }
+      const julkaisut = projekti.vuorovaikutusKierrosJulkaisut ?? [];
+      if (!julkaisut.length) return projekti.aloitusKuulutus?.ilmoituksenVastaanottajat;
+
+      const maxJulkaisu = julkaisut.reduce((a, b) => (a.id > b.id ? a : b));
+      const currentKierros = projekti.vuorovaikutusKierros;
+
+      if (currentKierros && currentKierros.vuorovaikutusNumero > maxJulkaisu.id) {
+        return maxJulkaisu.ilmoituksenVastaanottajat;
       }
       return projekti.aloitusKuulutus?.ilmoituksenVastaanottajat;
     }
+
     case Status.NAHTAVILLAOLO:
       return projekti.vuorovaikutusKierros?.ilmoituksenVastaanottajat ?? projekti.aloitusKuulutus?.ilmoituksenVastaanottajat;
     case Status.HYVAKSYTTY:
@@ -38,9 +40,81 @@ function findOutEdellisenVaiheenIlmoituksenVastaanottajat(
       return projekti.hyvaksymisPaatosVaihe?.ilmoituksenVastaanottajat;
     case Status.JATKOPAATOS_2:
       return projekti.jatkoPaatos1Vaihe?.ilmoituksenVastaanottajat;
+    default:
+      return null;
+  }
+}
+
+// Build municipality recipients
+function buildKuntaRecipients(
+  projekti?: Projekti | null,
+  existing?: IlmoituksenVastaanottajat | null
+): KuntaVastaanottajaInput[] {
+  const kunnatMap = new Map(existing?.kunnat?.map((k) => [k.id, k.sahkoposti]));
+  return (
+    projekti?.velho?.kunnat?.map((id) => ({
+      id,
+      sahkoposti: kunnatMap?.get(id) ?? "",
+    })) ?? []
+  );
+}
+
+// Build region recipients (for jatkopäätös)
+function buildMaakuntaRecipients(
+  projekti?: Projekti | null,
+  existing?: IlmoituksenVastaanottajat | null
+): MaakuntaVastaanottajaInput[] {
+  const maakunnatMap = new Map(existing?.maakunnat?.map((m) => [m.id, m.sahkoposti]));
+  return (
+    projekti?.velho?.maakunnat?.map((id) => ({
+      id,
+      sahkoposti: maakunnatMap?.get(id) ?? "",
+    })) ?? []
+  );
+}
+
+// Build authority recipients
+function buildViranomaisetRecipients(
+  projekti?: Projekti | null,
+  current?: IlmoituksenVastaanottajat | null,
+  previous?: IlmoituksenVastaanottajat | null,
+  kirjaamot?: KirjaamoOsoite[]
+): ViranomaisVastaanottajaInput[] {
+  // Case 1: Form already has data
+  if (current?.viranomaiset) {
+    return current.viranomaiset.map((v) => ({ nimi: v.nimi, sahkoposti: v.sahkoposti }));
   }
 
-  return null;
+  // Case 2: Use previous phase data
+  if (previous?.viranomaiset) {
+    return previous.viranomaiset.map((v) => ({ nimi: v.nimi, sahkoposti: v.sahkoposti }));
+  }
+
+  // Case 3: Initialize from scratch
+  const vayla = kirjaamot?.find((o) => o.nimi === "VAYLAVIRASTO");
+  const vastuu = projekti?.velho?.suunnittelustaVastaavaViranomainen;
+
+  // If Väylä is NOT the responsible authority, add ELYs / kunnat
+  if (vastuu !== "VAYLAVIRASTO") {
+    const isEvk = isEvkAktivoitu()
+    const viranomaiset =
+      projekti?.velho?.kunnat?.map((kuntaId) => {
+        const ely = isEvk ? kuntametadata.viranomainenForKuntaId(kuntaId) : kuntametadata.elyViranomainenForKuntaId(kuntaId);
+        const osoite = kirjaamot?.find((o) => o.nimi === ely);
+        return osoite
+          ? { nimi: osoite.nimi, sahkoposti: osoite.sahkoposti }
+          : { nimi: kuntametadata.nameForKuntaId(kuntaId, Kieli.SUOMI) as IlmoitettavaViranomainen, sahkoposti: "" };
+      }) ?? [];
+
+    return uniqBy(viranomaiset, (v) => v.nimi);
+  }
+
+  // Väylä is responsible → just return Väylä address
+  return [
+    vayla
+      ? { nimi: vayla.nimi, sahkoposti: vayla.sahkoposti }
+      : { nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "" },
+  ];
 }
 
 export default function defaultVastaanottajat(
@@ -49,67 +123,20 @@ export default function defaultVastaanottajat(
   kirjaamoOsoitteet: KirjaamoOsoite[] | undefined,
   paatosTyyppi?: PaatosTyyppi | null
 ): IlmoituksenVastaanottajatInput {
-  let kunnat: KuntaVastaanottajaInput[];
-  let viranomaiset: ViranomaisVastaanottajaInput[];
-  let maakunnat: MaakuntaVastaanottajaInput[];
-  const edellisenVaiheenilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined =
-    findOutEdellisenVaiheenIlmoituksenVastaanottajat(projekti);
-  const kunnatMap = new Map<number, string>();
-  ilmoituksenVastaanottajat?.kunnat?.forEach((kunta) => kunnatMap.set(kunta.id, kunta.sahkoposti));
-  kunnat =
-    projekti?.velho?.kunnat?.map((kuntaId) => ({
-      id: kuntaId,
-      sahkoposti: kunnatMap.get(kuntaId) ?? "",
-    })) || [];
-  if (paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2) {
-    const maakunnatMap = new Map<number, string>();
-    ilmoituksenVastaanottajat?.maakunnat?.forEach((maakunta) => maakunnatMap.set(maakunta.id, maakunta.sahkoposti));
-    maakunnat =
-      projekti?.velho?.maakunnat?.map((id) => ({
-        id,
-        sahkoposti: maakunnatMap.get(id) ?? "",
-      })) || [];
-  } else {
-    maakunnat = [];
-  }
-  if (ilmoituksenVastaanottajat?.viranomaiset) {
-    // tapaus, jossa lomake on jo kerran tallennettu
-    viranomaiset = ilmoituksenVastaanottajat?.viranomaiset.map((viranomainen) => ({
-      nimi: viranomainen.nimi,
-      sahkoposti: viranomainen.sahkoposti,
-    }));
-  } else if (edellisenVaiheenilmoituksenVastaanottajat?.viranomaiset) {
-    //tapaus, jossa edellisessä vaiheessa on syötetty viranomaiset; ne halutaan nykyisen vaiheen default-arvoksi
-    viranomaiset = edellisenVaiheenilmoituksenVastaanottajat?.viranomaiset.map((viranomainen) => ({
-      nimi: viranomainen.nimi,
-      sahkoposti: viranomainen.sahkoposti,
-    }));
-  } else {
-    // tapaus, jossa lomake alustetaan ensimmäistä kertaa
-    const vaylavirastoKirjaamo = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == "VAYLAVIRASTO");
-    if (projekti?.velho?.suunnittelustaVastaavaViranomainen !== "VAYLAVIRASTO") {
-      viranomaiset =
-        projekti?.velho?.kunnat?.map((kuntaId) => {
-          const ely: IlmoitettavaViranomainen = kuntametadata.viranomainenForKuntaId(kuntaId);
-          const kirjaamoOsoite = kirjaamoOsoitteet?.find((osoite) => osoite.nimi == ely);
-          if (kirjaamoOsoite) {
-            return { nimi: kirjaamoOsoite.nimi, sahkoposti: kirjaamoOsoite.sahkoposti };
-          } else {
-            return { nimi: kuntametadata.nameForKuntaId(kuntaId, Kieli.SUOMI), sahkoposti: "" } as ViranomaisVastaanottajaInput;
-          }
-        }) || [];
-      viranomaiset = uniqBy(viranomaiset, (v) => v.nimi);
-    } else {
-      viranomaiset = [
-        vaylavirastoKirjaamo
-          ? { nimi: vaylavirastoKirjaamo.nimi, sahkoposti: vaylavirastoKirjaamo.sahkoposti }
-          : ({ nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "" } as ViranomaisVastaanottajaInput),
-      ];
-    }
-  }
-  return {
-    kunnat,
-    viranomaiset,
-    maakunnat,
-  };
+  const previous = findPreviousPhaseRecipients(projekti);
+
+  const kunnat = buildKuntaRecipients(projekti, ilmoituksenVastaanottajat ?? previous);
+  const maakunnat =
+    paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2
+      ? buildMaakuntaRecipients(projekti, ilmoituksenVastaanottajat)
+      : [];
+
+  const viranomaiset = buildViranomaisetRecipients(
+    projekti,
+    ilmoituksenVastaanottajat,
+    previous,
+    kirjaamoOsoitteet
+  );
+
+  return { kunnat, viranomaiset, maakunnat };
 }
