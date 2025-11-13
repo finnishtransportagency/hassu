@@ -32,9 +32,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const ely = getSingleParamValue(req, "ely");
     const lely = getSingleParamValue(req, "lely");
     const maakunta = getSingleParamValue(req, "maakunta");
+    const elinvoimakeskus = getSingleParamValue(req, "elinvoimakeskus");
 
     try {
-      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as KaannettavaKieli, ely, lely, maakunta);
+      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as KaannettavaKieli, ely, lely, elinvoimakeskus, maakunta);
       res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
       res.send(xml);
     } catch (e) {
