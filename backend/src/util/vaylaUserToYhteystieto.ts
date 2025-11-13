@@ -12,6 +12,7 @@ export function vaylaUserToYhteystieto(
     sahkoposti: vaylaUser.email,
     organisaatio: vaylaUser.organisaatio,
     elyOrganisaatio: vaylaUser.elyOrganisaatio,
+    evkOrganisaatio: vaylaUser.evkOrganisaatio,
     kunta:
       (vaylaUser.kayttajatunnus &&
         (suunnitteluSopimus as SuunnitteluSopimus)?.yhteysHenkilo &&

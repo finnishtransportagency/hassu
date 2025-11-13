@@ -334,6 +334,8 @@ Lisätietoja suunnitelmasta antaa
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
       projektiPaallikko?.elyOrganisaatio
         ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
+        : projektiPaallikko?.evkOrganisaatio
+        ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 
 
@@ -643,6 +645,8 @@ Lisätietoja suunnitelmasta antaa
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
       projektiPaallikko?.elyOrganisaatio
         ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
+        : projektiPaallikko?.evkOrganisaatio
+        ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 
 

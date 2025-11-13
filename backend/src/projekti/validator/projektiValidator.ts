@@ -17,6 +17,7 @@ import { validateHyvaksymisPaatosJatkoPaatos } from "./validateHyvaksymisPaatosJ
 import { validateKayttoOikeusElyOrganisaatio } from "./validateKayttoOikeusElyOrganisaatio";
 import { validateAloituskuulutus } from "./validateAloituskuulutus";
 import { validateAsianhallinnanAktivointikytkin } from "./validateAsianhallintaAktivointikytkin";
+import { validateKayttoOikeusEvkOrganisaatio } from "./validateKayttoOikeusEvkOrganisaatio";
 
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
@@ -36,4 +37,5 @@ export async function validateTallennaProjekti(projekti: DBProjekti, input: Tall
   validateHyvaksymisPaatosJatkoPaatos(projekti, apiProjekti, input);
   validateAsianhallinnanAktivointikytkin(apiProjekti, input);
   await validateKayttoOikeusElyOrganisaatio(projekti, input);
+  await validateKayttoOikeusEvkOrganisaatio(projekti, input);
 }

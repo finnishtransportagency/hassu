@@ -440,6 +440,7 @@ input ProjektiKayttajaInput {
   puhelinnumero: String!
   yleinenYhteystieto: Boolean
   elyOrganisaatio: ELY
+  evkOrganisaatio: Elinvoimakeskus
 }
 
 input ListaaKayttajatInput {
