@@ -192,6 +192,7 @@ describe("jaaProjekti", () => {
       expect(targetProjektiToCreate.kayttoOikeudet).to.eql([
         {
           elyOrganisaatio: undefined,
+          evkOrganisaatio: undefined,
           email: "pekka.projari@vayla.fi",
           etunimi: "Pekka",
           kayttajatunnus: "A123",
@@ -203,6 +204,7 @@ describe("jaaProjekti", () => {
         },
         {
           elyOrganisaatio: undefined,
+          evkOrganisaatio: undefined,
           email: "Matti.Meikalainen@vayla.fi",
           etunimi: "Matti",
           kayttajatunnus: "A000111",
