@@ -7,15 +7,16 @@ import useTranslation from "next-translate/useTranslation";
 
 interface EVKinfoProps {
   onClose: () => void;
+  open: boolean;
 }
 
-export const EVKinfo = ({ onClose }: EVKinfoProps) => {
+export const EVKinfo = ({ onClose, open }: EVKinfoProps) => {
   const { t } = useTranslation("etusivu");
 
   return (
-    <Notification closable onClose={onClose} type={NotificationType.INFO} style={{ marginBottom: 20, marginTop: 20 }}>
+    <Notification closable open={open} onClose={onClose} type={NotificationType.INFO} style={{ marginBottom: 20, marginTop: 20 }}>
       <div>
-        <H3 variant="h4">{t("etusivu:evk-tiedote-otsikko")}</H3>
+        <H3 variant="h4">{t(`etusivu:evk-tiedote-otsikko${isEvkAktivoitu() ? "" : "_2025"}`)}</H3>
         <DottedList className="list-disc block pl-5">
           <li>{t(`etusivu:evk-tiedote${isEvkAktivoitu() ? "" : "_2025"}`)}</li>
           <li>
