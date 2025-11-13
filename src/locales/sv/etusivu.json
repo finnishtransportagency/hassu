@@ -1,5 +1,6 @@
 {
-  "kappale1": "På webbplatsen Planering av statens trafikleder finns utredningsplaner, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Närings-, trafik- och miljöcentralen (NTM-centralen), information om hur dessa framskrider och om interaktionstillfällen som gäller dessa. I tjänsten finns planer med publiceringsdatum 1.3.2022 eller senare.",
+  "kappale1_ely": "På webbplatsen Planering av statens trafikleder finns utredningsplaner, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Närings-, trafik- och miljöcentralen (NTM-centralen), information om hur dessa framskrider och om interaktionstillfällen som gäller dessa. I tjänsten finns planer med publiceringsdatum 1.3.2022 eller senare.",
+  "kappale1": "På webbplatsen Planering av statens trafikleder finns utredningsplaner, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Livskraftscentralen, information om hur dessa framskrider och om interaktionstillfällen som gäller dessa. I tjänsten finns planer med publiceringsdatum 1.3.2022 eller senare.",
   "suunnitelmien-haku": "Sökning av planer",
   "suunnitelmat": "Planer",
   "vapaasanahaku": "Fritextsökning",
@@ -18,7 +19,8 @@
     "YLEINEN": "Utredningsplan"
   },
   "hakuohje-otsikko": "Anvisning: så här fungerar sökning av planer",
-  "hakuohje1": "Du kan söka allmänna planer, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Närings-, trafik- och miljöcentralen (NTM-centralen) samt anmälningar och kungörelser om dessa med hjälp av fritextsökning, område och trafikledsform eller med en kombination av alla ovan nämnda.",
+  "hakuohje1_ely": "Du kan söka allmänna planer, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Närings-, trafik- och miljöcentralen (NTM-centralen) samt anmälningar och kungörelser om dessa med hjälp av fritextsökning, område och trafikledsform eller med en kombination av alla ovan nämnda.",
+  "hakuohje1": "Du kan söka allmänna planer, vägplaner och järnvägsplaner som utarbetats av Trafikledsverket och Livskraftscentralen samt anmälningar och kungörelser om dessa med hjälp av fritextsökning, område och trafikledsform eller med en kombination av alla ovan nämnda.",
   "hakuohje2": "Sökningen fungerar så att sökkriterierna inte utesluter varandra. Ett undantag är sökvillkoret som gäller region. Om du har valt en region (landskap eller kommun), visar sökningen endast projekten i den valda regionen.",
   "hakuohje3": "Du kan också söka planer med hjälp av fritextsökning. Skriv till exempel in namnet på en ort eller det projekt som du söker i sökfältet.",
   "hakuohje4": "Om du vill ha en lista över alla projekt, lämna valen tomma och klicka på ”Sök”.",
