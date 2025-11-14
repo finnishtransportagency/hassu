@@ -16,4 +16,5 @@ export type IlmoitusKuulutus = {
   date: string;
   elyt?: string[];
   lelyt?: string[];
+  elinvoimakeskukset?: string[];
 };

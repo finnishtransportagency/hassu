@@ -211,22 +211,6 @@ class KuntaMetadata {
   elinvoimakeskusIdFromKey(key: string) {
     return Object.keys(alueData.elinvoimakeskukset).find((elinvoimakeskusKey) => alueData.elinvoimakeskukset[elinvoimakeskusKey].lyhenne == key);
   }
-
-  liikennevastuuElyIdFromKuntaId(kuntaId: number): string {
-    const liikennevastuuEly = alueData.kunnat[kuntaId].liikennevastuuEly;
-    if (liikennevastuuEly) {
-      return liikennevastuuEly;
-    }
-    throw new IllegalArgumentError("Liikenne-ely ei löydy kuntaId:lle " + kuntaId);
-  }
-
-  elinvoimakeskusIdFromKuntaId(kuntaId: number): string {
-    const elinvoimakeskus = alueData.kunnat[kuntaId].elinvoimakeskus;
-    if (elinvoimakeskus) {
-      return elinvoimakeskus;
-    }
-    throw new IllegalArgumentError("Elinvoimakeskusta ei löydy kuntaId:lle " + kuntaId);
-  }
 }
 
 export const kuntametadata = new KuntaMetadata();
