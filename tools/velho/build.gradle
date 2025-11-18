@@ -3,8 +3,8 @@ import vayla.DownloadMetaDataTask
 plugins {
   id 'java'
   id 'groovy'
-  id "org.openapi.generator" version "6.2.1"
-  id "de.undercouch.download" version "4.1.2"
+  id "org.openapi.generator" version "7.15.0"
+  id "de.undercouch.download" version "5.6.0"
 }
 repositories {
   mavenCentral()
@@ -22,19 +22,16 @@ task downloadMetaData(type: DownloadMetaDataTask) {
 
 defaultTasks 'generateApis'
 
-def apiNames = ['projektirekisteri', 'aineistopalvelu', 'hakupalvelu']
+def apiVersions = [['projektirekisteri', "v2"], ['aineistopalvelu', "v1"], ['hakupalvelu', "v2"]]
 def authorizationHeader = "Bearer ${System.env.VELHO_ACCESS_TOKEN}"
 
 task generateApis
 
 task downloadSwaggers {
   doLast {
-    for (apiName in apiNames) {
-      def apiVersion
-      if (apiName == "projektirekisteri")
-        apiVersion = "v2"
-      else
-        apiVersion = "v1"
+    for (apiVersion in apiVersions) {
+      def name = api[0]
+      def version = api[1]
       download {
         src "${System.env.VELHO_API_URL}/${apiName}/doc/${apiVersion}/swagger.json".toString()
         dest "${buildDir}/${apiName}.json".toString()
@@ -63,35 +60,31 @@ task downloadElyList(type: Download) {
   overwrite false
 }
 
-// This is a workaround for duplicate enum values in hakupalvelu. Remove this code after Velho has been fixed.
-task fixSwagger(type: Copy) {
-  from("${buildDir}") {
-    include "*.json"
-    filter { line -> line.replaceAll('"tieosuushaku","kohdeluokkahaku","kohdeluokkahaku","tieosuushaku"', '"tieosuushaku","kohdeluokkahaku"') }
-    // OLD HakulausekeAsetuksetGeometriatEnum for current version in prod
-    filter { line -> line.replaceAll('"geometria-wgs84","geometria","keskilinjageometria-wgs84","geometrycollection","keskilinjageometria","geometrycollection","keskilinjageometria","geometria","keskilinjageometria-wgs84","geometria-wgs84"', '"geometria-wgs84","geometria","keskilinjageometria-wgs84","geometrycollection","keskilinjageometria"') }
-    // NEW HakulausekeAsetuksetGeometriatEnum for current version in stg
-    filter { line -> line.replaceAll('"keskilinjageometria-wgs84","keskilinjageometria","keskilinjageometria","keskilinjageometria-wgs84"', '"keskilinjageometria-wgs84","keskilinjageometria"') }
-  }
-  into "${buildDir}/fixed".toString()
-}
-
 tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
   outputs.upToDateWhen { false }
   outputs.cacheIf { false }
 }
 
-apiNames.each { name ->
-
+apiVersions.each { apiVersion ->
+  def name = apiVersion[0]
   def generateApiTask = tasks.register("generate${name.capitalize()}", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     generatorName = "typescript-axios"
-    inputSpec = "${buildDir}/fixed/${name}.json".toString()
+    inputSpec = "${buildDir}/${name}.json".toString()
     outputDir = "${buildDir}/../../../backend/src/velho/${name}"
     validateSpec = false
     skipOverwrite = false
     globalProperties = [
-      supportsES6: "true",
-      modelPropertyNaming: "original"
+        models          : "",      // generoi mallit
+        apis            : "",      // generoi API-luokat
+        supportingFiles : "",      // generoi supporting files, koska typescript-axios vaatii ne
+        modelDocs       : "false", // ei luo model-dokumentaatiota
+        apiDocs         : "false", // ei luo API-dokumentaatiota
+        modelTests      : "false", // ei luo model-testitiedostoja
+        apiTests        : "false"  // ei luo API-testitiedostoja
+    ]
+    configOptions = [
+      modelPropertyNaming: "original",
+      enumPropertyNaming: "original"
     ]
   }
 
@@ -100,8 +93,6 @@ apiNames.each { name ->
 
 
 generateApis.dependsOn downloadMetaData
-generateApis.dependsOn fixSwagger
-fixSwagger.dependsOn downloadSwaggers
 
 generateApis.dependsOn downloadKuntaList
 generateApis.dependsOn downloadMaakuntaList
