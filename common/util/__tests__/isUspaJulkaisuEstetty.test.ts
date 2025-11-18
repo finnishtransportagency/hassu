@@ -1,0 +1,185 @@
+/**
+ * @jest-environment jsdom
+ */
+
+import dayjs from "dayjs";
+import { today } from "../../../common/util/dateUtils";
+import { expect } from "chai";
+import { isUspaJulkaisuEstetty } from "../isUspaJulkaisuEstetty";
+import { Projekti, SuunnittelustaVastaavaViranomainen } from "../../graphql/apiModel";
+
+const ONLY_DATE_FORMAT = "YYYY-MM-DD";
+const DAY = "day";
+
+const luoDummyProjekti = (
+  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen,
+  uspaKaytossa: boolean
+): Projekti => {
+  return {
+    oid: "1.2.246.578.5.1.2978288874.2711575506",
+    versio: 8,
+    kayttoOikeudet: [],
+    tallennettu: true,
+    velho: {
+      nimi: "Projekti 1",
+      __typename: "Velho",
+      suunnittelustaVastaavaViranomainen,
+    },
+    asianhallinta: {
+      __typename: "Asianhallinta",
+      inaktiivinen: !uspaKaytossa,
+      aktivoitavissa: false,
+    },
+    lausuntoPyynnot: [],
+    __typename: "Projekti",
+  };
+};
+
+describe("isUspaJulkaisuEstetty - Väylävirasto, ei estoa", () => {
+  afterEach(() => {
+    delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
+  });
+
+  it("VÄYLÄVIRASTO -projekti, USPA - käytössä, pvm EVK aktivoinnin jälkeen => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, true);
+    const DATE_TO_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+
+  it("VÄYLÄVIRASTO -projekti, USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, true);
+    const DATE_TO_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_FUTURE = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_FUTURE);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+
+  it("VÄYLÄVIRASTO -projekti, USPA - ei käytössä, pvm EVK aktivoinnin jälkeen => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, false);
+    const DATE_TO_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_FUTURE = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_FUTURE);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+});
+
+describe("isUspaJulkaisuEstetty - EVK", () => {
+  afterEach(() => {
+    delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
+  });
+
+  it("USPA - ei käytössä, EVK aktivoitu menneisyydessä => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, false);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+
+  it("USPA - käytössä, EVK aktivoitu menneisyydessä => ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, true);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.true;
+  });
+
+  it("USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, false);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+
+  it("USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, true);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+});
+
+describe("isUspaJulkaisuEstetty - ELY", () => {
+  afterEach(() => {
+    delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
+  });
+  it("USPA - ei käytössä, pvm EVK aktivoinnin jälkeen => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, false);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+
+  it("USPA - käytössä, pvm EVK aktivoinnin jälkeen => ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, true);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.true;
+  });
+
+  it("USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, false);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+
+  it("USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+    const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, true);
+    const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
+    const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
+    const EVK_ACTIVATION_DATE_IN_THE_PAST = {
+      startDate,
+    };
+    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
+    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
+  });
+});
