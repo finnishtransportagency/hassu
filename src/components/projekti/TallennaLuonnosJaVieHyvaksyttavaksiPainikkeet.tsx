@@ -36,6 +36,14 @@ const tilasiirtymaTyyppiToStatusMap: Record<Exclude<TilasiirtymaTyyppi, Tilasiir
   NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
 };
 
+const tilasiirtymaToFormFieldMap: Record<Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>, string> = {
+  ALOITUSKUULUTUS: "aloitusKuulutus",
+  HYVAKSYMISPAATOSVAIHE: "paatos",
+  JATKOPAATOS_1: "paatos",
+  JATKOPAATOS_2: "paatos",
+  NAHTAVILLAOLO: "nahtavillaoloVaihe",
+};
+
 export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValues extends FieldValues>({
   projekti,
   preSubmitFunction,
@@ -53,7 +61,6 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   const api = useApi();
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange();
-
   const saveDraft: SubmitHandler<TFieldValues> = useCallback(
     (formData) =>
       withLoadingSpinner(
@@ -89,7 +96,8 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             if (lacksKunnat) {
               puutteet.push("kuntavastaanottajat puuttuvat");
             }
-            if (isUspaJulkaisuEstetty(projekti, formData.aloitusKuulutus.kuulutusPaiva)) {
+            const formDataField = tilasiirtymaToFormFieldMap[tilasiirtymaTyyppi];
+            if (isUspaJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
               puutteet.push("julkaisu Elinvoimakeskuksen asianhallintaan estetty");
             }
             if (
