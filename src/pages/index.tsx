@@ -106,7 +106,7 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
         <Grid item lg={9} md={12}>
           <H1>{t("projekti:ui-otsikot.valtion_liikennevaylien_suunnittelu")}</H1>
           <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
-          {isInfoOpen && <EVKinfo onClose={handleClose} />}
+          {isInfoOpen && <EVKinfo open={isInfoOpen} onClose={handleClose} />}
           <p>{t("etusivu:kappale1")}</p>
           <Hakuohje />
           <Hakulomake
