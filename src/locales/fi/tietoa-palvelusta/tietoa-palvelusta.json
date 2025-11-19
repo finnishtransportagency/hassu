@@ -1,6 +1,7 @@
 {
   "paaotsikko": "Tietoa palvelusta",
-  "ingressi": "Valtion liikenneväylien suunnittelu -palvelun sivusto on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava.",
+  "ingressi_ely": "Valtion liikenneväylien suunnittelu -palvelun sivusto on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava. Vuoden 2026 alusta ELY-keskusten vastuulla ollut teiden suunnittelu ja niihin liittyvien kuulutusten julkaisu siirtyy Elinvoimakeskuksille.",
+  "ingressi": "Valtion liikenneväylien suunnittelu -palvelun sivusto on kansalaisten, sidosryhmien ja viranomaisten välinen maanteiden ja rautateiden lakisääteisten suunnitelmien vuorovaikutuskanava. Vuoden 2026 alusta ELY-keskusten vastuulla ollut teiden suunnittelu ja niihin liittyvien kuulutusten julkaisu on siirtynyt Elinvoimakeskuksille.",
   "verkkopalvelun-sisalto": {
     "otsikko": "Verkkopalvelun sisältö",
     "kappale1": "Tämä on Väyläviraston ylläpitämä verkkopalvelu, ja Väylävirasto vastaa sivujen sisällöstä. Sivuilla on myös linkkejä muiden palveluntuottajien, organisaatioiden ja yhteisöjen sivuille."
@@ -29,14 +30,17 @@
   },
   "immateriaalioikeudet": {
     "otsikko": "Immateriaalioikeudet",
-    "kappale1": "Väylävirastolla ja Elinkeino-, liikenne- ja ympäristökeskuksella on oikeudet suunnitelma-aineistoihin. Suunnitelma-aineistot ovat avointa dataa.",
-    "kappale2": "Tekijänoikeuksista huolimatta julkaisun käyttötarkoituksen mukainen tulostaminen ja kopiointi on sallittu. Kopioituja tekstejä tai tekstinosia tai kuvia ei vähäisiä tekstisiteerauksia lukuun ottamatta kuitenkaan saa käyttää osana muita julkaisuja eikä myydä edelleen ilman Väyläviraston ja ELY:n erillistä lupaa. Väyläviraston ja ELY:n julkaisuja ei saa siirtää muiden yhteisöjen tai yritysten omille ulkoisille sivuille.",
+    "kappale1_ely": "Väylävirastolla ja Elinkeino-, liikenne- ja ympäristökeskuksella on oikeudet suunnitelma-aineistoihin. Suunnitelma-aineistot ovat avointa dataa.",
+    "kappale1": "Väylävirastolla ja Elinvoimakeskuksella on oikeudet suunnitelma-aineistoihin. Suunnitelma-aineistot ovat avointa dataa.",
+    "kappale2_ely": "Tekijänoikeuksista huolimatta julkaisun käyttötarkoituksen mukainen tulostaminen ja kopiointi on sallittu. Kopioituja tekstejä tai tekstinosia tai kuvia ei vähäisiä tekstisiteerauksia lukuun ottamatta kuitenkaan saa käyttää osana muita julkaisuja eikä myydä edelleen ilman Väyläviraston ja ELY:n erillistä lupaa. Väyläviraston ja ELY:n julkaisuja ei saa siirtää muiden yhteisöjen tai yritysten omille ulkoisille sivuille.",
+    "kappale2": "Tekijänoikeuksista huolimatta julkaisun käyttötarkoituksen mukainen tulostaminen ja kopiointi on sallittu. Kopioituja tekstejä tai tekstinosia tai kuvia ei vähäisiä tekstisiteerauksia lukuun ottamatta kuitenkaan saa käyttää osana muita julkaisuja eikä myydä edelleen ilman Väyläviraston ja Elinvoimakeskuksen erillistä lupaa. Väyläviraston ja Elinvoimakeskuksen julkaisuja ei saa siirtää muiden yhteisöjen tai yritysten omille ulkoisille sivuille.",
     "kappale3": "Tekijänoikeus ei suojaa muun muassa viranomaisen päätöksiä ja lausumia (tekijänoikeuslaki 9 §). Tämä ei kuitenkaan koske niihin sisältyviä itsenäisiä teoksia."
   },
   "nain-kasittelemme-henkilotietojasi": {
     "otsikko": "Näin käsittelemme henkilötietojasi",
     "kappale1": "Teiden ja ratojen suunnittelussa ja rakentamisessa käsitellään henkilötietoja. Tästä esimerkkinä ovat suunnitelma-alueeseen liittyvien kiinteistön omistajatiedot sekä lainmukaiseen vuorovaikutusmenettelyyn liittyvät henkilötiedot. Lisäksi henkilötietoja käsitellään suunnitelmia koskevien palautteiden ja muistutusten käsittelemiseen liittyvissä asioissa.",
-    "kappale2": "Verkkopalvelun tarkoituksena on kansalaisten ja muiden sidosryhmien informointi ja viestintä Väyläviraston ja ELY:jen lakisääteisestä suunnittelusta. Verkkopalvelu on kaikille avoin eikä sivujen selaaminen edellytä rekisteröintiä.",
+    "kappale2_ely": "Verkkopalvelun tarkoituksena on kansalaisten ja muiden sidosryhmien informointi ja viestintä Väyläviraston ja ELY:jen lakisääteisestä suunnittelusta. Verkkopalvelu on kaikille avoin eikä sivujen selaaminen edellytä rekisteröintiä.",
+    "kappale2": "Verkkopalvelun tarkoituksena on kansalaisten ja muiden sidosryhmien informointi ja viestintä Väyläviraston ja Elinvoimakeskusten lakisääteisestä suunnittelusta. Verkkopalvelu on kaikille avoin eikä sivujen selaaminen edellytä rekisteröintiä.",
     "kappale3": "Verkkopalvelun tietoliikenneyhteyksistä ja käytöstä kerätään teknisiä lokitietoja, joita tarvitaan palvelun tuottamiseen ja tietoturvallisuudesta huolehtimiseen. Lokitietoihin sisältyy tietoja, jotka on mahdollista yhdistää henkilöön, kuten IP-osoite ja aikaleima. Näitä lokitietoja käytetään vain palvelun mahdollistamiseksi tietoliikenneverkossa sekä virhetilanteiden ja tietoturvapoikkeamien selvittämiseksi. Lokitietoja säilytetään enintään vuoden ajan sivupyynnön tekemisestä."
   },
   "lisatietoja-henkilotietojen-kasittelysta": {

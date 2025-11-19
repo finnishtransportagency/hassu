@@ -27,7 +27,7 @@ export default function TietoaPalvelustaSivu() {
       <ContentSpacer as={"section"} gap={8}>
         <h1 id="mainPageContent">{t("paaotsikko")}</h1>
         <ContentSpacer gap={4}>
-          <p>{t("kappale1")}</p>
+          <p>{t(`kappale1${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
           <ExternalLinkkiLista
             linkkiTiedot={[
               { href: t("linkki1.href"), teksti: t("linkki1.teksti") },

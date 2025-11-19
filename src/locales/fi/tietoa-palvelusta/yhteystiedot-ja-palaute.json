@@ -1,6 +1,7 @@
 {
   "paaotsikko": "Yhteystiedot ja palaute",
-  "kappale1": "Tältä sivulta löydät linkin sekä Väyläviraston että Elinkeino-, liikenne- ja ympäristökeskuksen yleisiin yhteystietoihin ja voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta.",
+  "kappale1_ely": "Tältä sivulta löydät linkin sekä Väyläviraston että Elinkeino-, liikenne- ja ympäristökeskuksen yleisiin yhteystietoihin ja voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta.",
+  "kappale1": "Tältä sivulta löydät linkin sekä Väyläviraston että Elinvoimakeskuksen yleisiin yhteystietoihin ja voit myös jättää palautetta Valtion liikenneväylien suunnittelu -palvelusta.",
   "linkki1": {
     "teksti": "Väyläviraston yhteystiedot",
     "href": "https://www.vayla.fi/tietoa-meista/yhteystiedot"

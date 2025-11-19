@@ -1,6 +1,7 @@
 {
   "paaotsikko": "Information om tjänsten",
-  "ingressi": "Webbplatsen för tjänsten Planering av statens trafikleder är en kanal för lagstadgade planer för landsvägar och järnvägar där medborgare, intressentgrupper och myndigheter kan interagera.",
+  "ingressi_ely": "Webbplatsen för tjänsten Planering av statens trafikleder är en kanal för lagstadgade planer för landsvägar och järnvägar där medborgare, intressentgrupper och myndigheter kan interagera. Från början av 2026 övergår den vägplanering som NTM-centralerna har ansvarat för och publiceringen av tillhörande kungörelser till Livskraftscentralerna.",
+  "ingressi": "Webbplatsen för tjänsten Planering av statens trafikleder är en kanal för lagstadgade planer för landsvägar och järnvägar där medborgare, intressentgrupper och myndigheter kan interagera. Från början av 2026 har övergått den vägplanering som NTM-centralerna har ansvarat för och publiceringen av tillhörande kungörelser till Livskraftscentralerna.",
   "verkkopalvelun-sisalto": {
     "otsikko": "Webbtjänstens innehåll",
     "kappale1": "Detta är en webbtjänst som upprätthålls av Trafikledsverket och Trafikledsverket ansvarar för innehållet på webbplatsen. Webbplatsen innehåller även länkar till andra tjänsteleverantörers, organisationers och samfunds webbplatser."
@@ -29,14 +30,17 @@
   },
   "immateriaalioikeudet": {
     "otsikko": "Immateriella rättigheter",
-    "kappale1": "Trafikledsverket och Närings-, trafik- och miljöcentralen har rättigheterna till planeringsmaterialet. Materialet som rör planerna är öppna data.",
-    "kappale2": "Trots upphovsrättigheterna är det tillåtet att skriva ut eller kopiera publikationen på ett ändamålsenligt sätt. Kopierade texter eller textdelar eller bilder får inte med undantag av korta textcitat användas som delar av andra publikationer eller säljas vidare utan Trafikledsverkets och NTM:s uttryckliga tillstånd. Trafikledsverkets och NTM:s publikationer får inte överföras till andra sammanslutningars eller företags egna externa webbplatser.",
+    "kappale1_ely": "Trafikledsverket och Närings-, trafik- och miljöcentralen har rättigheterna till planeringsmaterialet. Materialet som rör planerna är öppna data.",
+    "kappale1": "Trafikledsverket och Livskraftscentralen har rättigheterna till planeringsmaterialet. Materialet som rör planerna är öppna data.",
+    "kappale2_ely": "Trots upphovsrättigheterna är det tillåtet att skriva ut eller kopiera publikationen på ett ändamålsenligt sätt. Kopierade texter eller textdelar eller bilder får inte med undantag av korta textcitat användas som delar av andra publikationer eller säljas vidare utan Trafikledsverkets och NTM:s uttryckliga tillstånd. Trafikledsverkets och NTM:s publikationer får inte överföras till andra sammanslutningars eller företags egna externa webbplatser.",
+    "kappale2": "Trots upphovsrättigheterna är det tillåtet att skriva ut eller kopiera publikationen på ett ändamålsenligt sätt. Kopierade texter eller textdelar eller bilder får inte med undantag av korta textcitat användas som delar av andra publikationer eller säljas vidare utan Trafikledsverkets och Livskraftscentralens uttryckliga tillstånd. Trafikledsverkets och Livskraftscentralens publikationer får inte överföras till andra sammanslutningars eller företags egna externa webbplatser.",
     "kappale3": "Upphovsrätten skyddar inte bland annat beslut och yttranden av myndigheter (9 § i upphovsrättslagen). Detta gäller dock inte självständiga verk som ingår i dem."
   },
   "nain-kasittelemme-henkilotietojasi": {
     "otsikko": "Så här behandlar vi dina personuppgifter",
     "kappale1": "Vid planering och byggande av vägar och banor behandlas personuppgifter. Ett exempel på detta är ägaruppgifterna för de fastigheter som hör till planområdet samt personuppgifter relaterade till de lagenliga förfarandena för växelverkan. Dessutom behandlas personuppgifter som gäller behandlingen av respons och anmärkningar förknippade med planerna.",
-    "kappale2": "Syftet med webbtjänsten är att informera medborgarna och andra intressentgrupper om Trafikledsverkets och NTM:s lagstadgade planering. Webbtjänsten är öppen för alla och det krävs ingen registrering för att besöka sidorna.",
+    "kappale2_ely": "Syftet med webbtjänsten är att informera medborgarna och andra intressentgrupper om Trafikledsverkets och NTM:s lagstadgade planering. Webbtjänsten är öppen för alla och det krävs ingen registrering för att besöka sidorna.",
+    "kappale2": "Syftet med webbtjänsten är att informera medborgarna och andra intressentgrupper om Trafikledsverkets och Livskraftscentralens lagstadgade planering. Webbtjänsten är öppen för alla och det krävs ingen registrering för att besöka sidorna.",
     "kappale3": "Man samlar in tekniska logguppgifter om dataförbindelserna och användningen av webbtjänsten. Uppgifterna behövs för att producera tjänsten och för att säkerställa informationssäkerheten. Logguppgifterna innehåller information som kan kopplas till en enskild person, såsom IP-adress och tidsstämpel. Logguppgifterna används endast för att möjliggöra tjänsten i datakommunikationsnätet och för att reda ut fel och avvikelser i informationssäkerheten. Logguppgifterna förvaras i högst ett år efter att sidbegäran har gjorts."
   },
   "lisatietoja-henkilotietojen-kasittelysta": {

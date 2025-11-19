@@ -72,7 +72,7 @@ export default function TietoaPalvelustaSivu() {
         </ContentSpacer>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("kuulutussivut.otsikko")}</h2>
-          <p>{t("kuulutussivut.kappale1")}</p>
+          <p>{t(`kuulutussivut.kappale1${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
           <p>{t("kuulutussivut.kappale2")}</p>
           <ExternalLinkkiLista
             linkkiTiedot={[
