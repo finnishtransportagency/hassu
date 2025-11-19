@@ -1,9 +1,10 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 import vayla.DownloadMetaDataTask
 
 plugins {
   id 'java'
   id 'groovy'
-  id "org.openapi.generator" version "7.15.0"
+  id "org.openapi.generator" version "7.17.0"
   id "de.undercouch.download" version "5.6.0"
 }
 repositories {
@@ -22,17 +23,17 @@ task downloadMetaData(type: DownloadMetaDataTask) {
 
 defaultTasks 'generateApis'
 
-def apiVersions = [['projektirekisteri', "v2"], ['aineistopalvelu', "v1"], ['hakupalvelu', "v2"]]
+def apiDefinitions = [['projektirekisteri', "v2"], ['aineistopalvelu', "v1"], ['hakupalvelu', "v2"]]
 def authorizationHeader = "Bearer ${System.env.VELHO_ACCESS_TOKEN}"
 
 task generateApis
 
 task downloadSwaggers {
   doLast {
-    for (apiVersion in apiVersions) {
-      def name = api[0]
-      def version = api[1]
-      download {
+    for (apiDefinition in apiDefinitions) {
+      def apiName = apiDefinition[0]
+      def apiVersion = apiDefinition[1]
+      download.run {
         src "${System.env.VELHO_API_URL}/${apiName}/doc/${apiVersion}/swagger.json".toString()
         dest "${buildDir}/${apiName}.json".toString()
         headers = ["Authorization": authorizationHeader.toString()]
@@ -60,17 +61,17 @@ task downloadElyList(type: Download) {
   overwrite false
 }
 
-tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+tasks.withType(GenerateTask) {
   outputs.upToDateWhen { false }
   outputs.cacheIf { false }
 }
 
-apiVersions.each { apiVersion ->
-  def name = apiVersion[0]
-  def generateApiTask = tasks.register("generate${name.capitalize()}", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+apiDefinitions.each { apiDefinition ->
+  def apiName = apiDefinition[0]
+  def generateApiTask = tasks.register("generate${apiName.capitalize()}", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     generatorName = "typescript-axios"
-    inputSpec = "${buildDir}/${name}.json".toString()
-    outputDir = "${buildDir}/../../../backend/src/velho/${name}"
+    inputSpec = "${buildDir}/${apiName}.json".toString()
+    outputDir = "${buildDir}/../../../backend/src/velho/${apiName}"
     validateSpec = false
     skipOverwrite = false
     globalProperties = [
@@ -93,6 +94,7 @@ apiVersions.each { apiVersion ->
 
 
 generateApis.dependsOn downloadMetaData
+generateApis.dependsOn downloadSwaggers
 
 generateApis.dependsOn downloadKuntaList
 generateApis.dependsOn downloadMaakuntaList
