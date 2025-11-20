@@ -285,7 +285,7 @@ export abstract class AbstractPdf {
 
   protected sopimusLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      const bottomMargin = 100;
+      const bottomMargin = 50;
       const maxLogoHeight = 50;
       const verticalPadding = 20;
       const minSpaceNeeded = maxLogoHeight + verticalPadding * 2;
