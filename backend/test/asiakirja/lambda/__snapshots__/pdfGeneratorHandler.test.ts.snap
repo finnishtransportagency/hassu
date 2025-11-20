@@ -28,7 +28,8 @@ Teppo ProjektipäällikköProjektipäällikköUudenmaan ELY-keskus
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamo"
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamo
+"
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf rata ely osoitetiedoilla 1`] = `
@@ -72,7 +73,8 @@ Lisätietoja antaa
 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamo
+ELY/456
 
 
 "
@@ -119,7 +121,8 @@ puh. 029, test(at)vayla.fi
 
 
 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+VAYLA/123
 
 
 "
@@ -166,7 +169,8 @@ tel. 029, test(at)vayla.fi
 
 
 
-DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretagsdatasystemetFör kännedomTrafikledsverket registratorskontorVAYLA/123
+DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretagsdatasystemetFör kännedomTrafikledsverket registratorskontor
+VAYLA/123
 
 
 "
@@ -214,7 +218,8 @@ Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+VAYLA/123
 
 
 "
@@ -261,7 +266,8 @@ Uudenmaan ELY-keskus
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamo
+ELY/456
 
 
 "
@@ -295,7 +301,14 @@ Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo"
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+
+
+
+VAYLA/123
+
+
+"
 `;
 
 exports[`pdfGeneratorHandler generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla 1`] = `
@@ -339,7 +352,8 @@ Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+VAYLA/123
 
 
 "
@@ -386,7 +400,8 @@ Trafikledsverket
 Mer information om planen 
 Testi Teppo (), 
 tel. 029, test(at)vayla.fi 
-DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretagsdatasystemetFör kännedomTrafikledsverket registratorskontorVAYLA/123
+DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretagsdatasystemetFör kännedomTrafikledsverket registratorskontor
+VAYLA/123
 
 
 "
@@ -434,7 +449,8 @@ ProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+VAYLA/123
 
 
 "
@@ -467,6 +483,7 @@ Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkil
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
+
 "
 `;
 
@@ -506,7 +523,8 @@ Lisätietoja antaa
 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamoELY/456
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiUudenmaan ELY-keskuksen kirjaamo
+ELY/456
 
 
 "
@@ -548,7 +566,8 @@ puh. 029, test(at)vayla.fi
 
 
 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+VAYLA/123
 
 
 "
@@ -590,7 +609,8 @@ tel. 029, test(at)vayla.fi
 
 
 
-DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretagsdatasystemetFör kännedomTrafikledsverket registratorskontorVAYLA/123
+DistributionEnligt separat sändlistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretagsdatasystemetFör kännedomTrafikledsverket registratorskontor
+VAYLA/123
 
 
 "
@@ -633,7 +653,8 @@ Teppo ProjektipäällikköProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Testi Teppo (), 
 puh. 029, test(at)vayla.fi 
-JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamoVAYLA/123
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästäTiedoksiVäyläviraston kirjaamo
+VAYLA/123
 
 
 "
