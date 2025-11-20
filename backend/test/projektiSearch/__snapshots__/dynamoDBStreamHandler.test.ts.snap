@@ -110,6 +110,9 @@ Array [
     "2_aloitusKuulutus_SUOMI_2022-03-28T14:28",
     Object {
       "date": "2022-03-28T14:28:00+03:00",
+      "elinvoimakeskukset": Array [
+        "elinvoimakeskus/elinvoimakeskus06",
+      ],
       "elyt": Array [
         "ely/ely07",
       ],
@@ -120,8 +123,6 @@ Array [
         740,
       ],
       "lelyt": Array [
-        "ely/ely08",
-        "ely/ely08",
         "ely/ely08",
       ],
       "maakunnat": Array [
@@ -141,6 +142,9 @@ Array [
     "2_aloitusKuulutus_RUOTSI_2022-03-28T14:28",
     Object {
       "date": "2022-03-28T14:28:00+03:00",
+      "elinvoimakeskukset": Array [
+        "elinvoimakeskus/elinvoimakeskus06",
+      ],
       "elyt": Array [
         "ely/ely07",
       ],
@@ -151,8 +155,6 @@ Array [
         740,
       ],
       "lelyt": Array [
-        "ely/ely08",
-        "ely/ely08",
         "ely/ely08",
       ],
       "maakunnat": Array [
@@ -203,6 +205,9 @@ Array [
     "2_aloitusKuulutus_SUOMI_2022-03-28T14:28",
     Object {
       "date": "2022-03-28T14:28:00+03:00",
+      "elinvoimakeskukset": Array [
+        "elinvoimakeskus/elinvoimakeskus06",
+      ],
       "elyt": Array [
         "ely/ely07",
       ],
@@ -213,8 +218,6 @@ Array [
         740,
       ],
       "lelyt": Array [
-        "ely/ely08",
-        "ely/ely08",
         "ely/ely08",
       ],
       "maakunnat": Array [
@@ -234,6 +237,9 @@ Array [
     "2_aloitusKuulutus_RUOTSI_2022-03-28T14:28",
     Object {
       "date": "2022-03-28T14:28:00+03:00",
+      "elinvoimakeskukset": Array [
+        "elinvoimakeskus/elinvoimakeskus06",
+      ],
       "elyt": Array [
         "ely/ely07",
       ],
@@ -244,8 +250,6 @@ Array [
         740,
       ],
       "lelyt": Array [
-        "ely/ely08",
-        "ely/ely08",
         "ely/ely08",
       ],
       "maakunnat": Array [
