@@ -10,9 +10,9 @@ import {
 import { translate } from "../util/localization";
 import { linkSuunnitteluVaihe } from "hassu-common/links";
 import { parseDate } from "../util/dateUtil";
-import { kuntametadata } from "hassu-common/kuntametadata";
+import { Kunta, kuntametadata } from "hassu-common/kuntametadata";
 import { assertIsDefined } from "../util/assertions";
-import { sortedUniq } from "lodash";
+import { uniq } from "lodash";
 
 type LyhytOsoite = string | undefined | null;
 
@@ -124,25 +124,24 @@ class IlmoitustauluSyoteAdapter {
     velho: VelhoJulkinen,
     kieli: Kieli,
     kuulutusPaiva: string
-  ): Pick<IlmoitusKuulutus, "oid" | "kunnat" | "maakunnat" | "kieli" | "elyt" | "lelyt" | "date" | "vaylamuoto"> {
+  ): Pick<IlmoitusKuulutus, "oid" | "kunnat" | "maakunnat" | "kieli" | "elyt" | "lelyt" | "date" | "vaylamuoto" | "elinvoimakeskukset"> {
     assertIsDefined(velho.maakunnat);
     assertIsDefined(velho.kunnat);
     assertIsDefined(velho.vaylamuoto);
-    const maakunnat = velho.maakunnat;
-    let elyt = velho.kunnat
-      ?.map(kuntametadata.kuntaForKuntaId)
-      .map((kunta) => kunta?.ely)
-      .filter((m) => !!m) as string[];
-    if (elyt) {
-      elyt = sortedUniq(elyt);
-    }
-    const lelyt = velho.kunnat?.map(kuntametadata.liikennevastuuElyIdFromKuntaId).filter((m) => !!m);
+    const maakunnat = uniq(velho.maakunnat);
+    const kunnat = velho.kunnat.map(kuntametadata.kuntaForKuntaId).filter((kunta): kunta is Kunta => !!kunta);
+
+    const elyt = kunnat.map((kunta) => kunta.ely).filter((m): m is string => !!m);
+    const lelyt = kunnat.map((kunta) => kunta.liikennevastuuEly).filter((m) => !!m);
+    const elinvoimakeskukset = kunnat.map((kunta) => kunta.elinvoimakeskus).filter((m) => !!m);
+
     return {
       oid,
       kunnat: velho.kunnat,
       maakunnat,
-      elyt,
-      lelyt,
+      elyt: elyt ? uniq(elyt) : undefined,
+      lelyt: lelyt ? uniq(lelyt) : undefined,
+      elinvoimakeskukset: elinvoimakeskukset ? uniq(elinvoimakeskukset) : undefined,
       kieli,
       date: parseDate(kuulutusPaiva).format(),
       vaylamuoto: velho.vaylamuoto,
