@@ -575,10 +575,9 @@ export abstract class AbstractApi {
     } as ArkistoiProjektiMutationVariables);
   }
 
-  async getVelhoSuunnitelmasByName(nimi: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
+  async getVelhoSuunnitelmasByName(nimi: string): Promise<VelhoHakuTulos[]> {
     return await this.callYllapitoAPI(apiConfig.listaaVelhoProjektit, {
       nimi,
-      requireExactMatch,
     } as ListaaVelhoProjektitQueryVariables);
   }
 

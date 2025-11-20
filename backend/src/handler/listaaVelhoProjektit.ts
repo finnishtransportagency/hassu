@@ -13,7 +13,7 @@ export async function listaaVelhoProjektit(params: ListaaVelhoProjektitQueryVari
 }
 
 async function searchProjektisFromVelho(params: ListaaVelhoProjektitQueryVariables) {
-  return velho.searchProjects(params.nimi, !!params.requireExactMatch);
+  return velho.searchProjects(params.nimi);
 }
 
 async function searchCorrespondingProjektisFromDatabase(velhoHakuTulos: VelhoHakuTulos[]) {

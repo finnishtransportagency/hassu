@@ -8,7 +8,7 @@ type Query {
   lataaProjektiJulkinen(oid: String!, kieli: Kieli): ProjektiJulkinen
   projektinTila(oid: String!): ProjektinTila
 
-  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
+  listaaVelhoProjektit(nimi: String!): [VelhoHakuTulos!]
   listaaVelhoProjektiAineistot(oid: String!): [VelhoToimeksianto!]
   haeVelhoProjektiAineistoLinkki(oid: String!, dokumenttiOid: String!): String
   haeProjektiMuutoksetVelhosta(oid: String!): Velho
