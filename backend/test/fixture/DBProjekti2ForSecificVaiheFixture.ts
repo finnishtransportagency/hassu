@@ -605,6 +605,7 @@ export class DBProjektiForSpecificVaiheFixture {
       puhelinnumero: kayttaja.puhelinnumero ?? "",
       organisaatio: kayttaja.organisaatio ?? "",
       elyOrganisaatio: kayttaja.elyOrganisaatio ?? undefined,
+      evkOrganisaatio: kayttaja.evkOrganisaatio ?? undefined,
       muokattavissa: kayttaja.muokattavissa ?? undefined,
     };
   }

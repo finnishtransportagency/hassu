@@ -1,7 +1,7 @@
 import {
   AineistoTila,
   ELY,
-  EVK,
+  Elinvoimakeskus,
   IlmoitettavaViranomainen,
   Kieli,
   ProjektiTyyppi,
@@ -38,7 +38,7 @@ export type Yhteystieto = {
   organisaatio?: string;
   kunta?: number | null;
   elyOrganisaatio?: ELY;
-  evkOrganisaatio?: EVK;
+  evkOrganisaatio?: Elinvoimakeskus;
   puhelinnumero: string;
   sahkoposti: string;
   titteli?: string;

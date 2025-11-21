@@ -1,5 +1,6 @@
 import {
   ELY,
+  Elinvoimakeskus,
   KayttajaTyyppi,
   Kieli,
   ProjektiKayttaja,
@@ -9,7 +10,7 @@ import {
   Yhteystieto,
   YhteystietoInput,
 } from "@services/api";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import replace from "lodash/replace";
 import { Translate } from "next-translate";
@@ -27,11 +28,17 @@ export default function projektiKayttajaToYhteystieto(
     kunta: suunnitteluSopimus?.yhteysHenkilo === projektiKayttaja.kayttajatunnus ? suunnitteluSopimus?.kunta : null,
     organisaatio: projektiKayttaja.organisaatio,
     elyOrganisaatio: projektiKayttaja.elyOrganisaatio,
+    evkOrganisaatio: projektiKayttaja.evkOrganisaatio,
   };
 }
 
 export function muodostaOrganisaatioTeksti(
-  { organisaatio, kunta, elyOrganisaatio }: Pick<Yhteystieto, "organisaatio" | "kunta" | "elyOrganisaatio">,
+  {
+    organisaatio,
+    kunta,
+    elyOrganisaatio,
+    evkOrganisaatio,
+  }: Pick<Yhteystieto, "organisaatio" | "kunta" | "elyOrganisaatio" | "evkOrganisaatio">,
   t: Translate,
   lang: string
 ) {
@@ -41,12 +48,19 @@ export function muodostaOrganisaatioTeksti(
     organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, kieli);
   } else if (organisaatioIsEly(organisaatio) && elyOrganisaatio) {
     organisaatioTeksti = t(`common:viranomainen.${elyOrganisaatio}`);
+  } else if (organisaatioIsEvk(organisaatio) && evkOrganisaatio) {
+    organisaatioTeksti = t(`common:viranomainen.${evkOrganisaatio}`);
   }
+
   return organisaatioTeksti;
 }
 
 export function yhteystietoVirkamiehelleTekstiksi(
-  yhteystieto: (Yhteystieto | YhteystietoInput) & { kayttajatunnus?: string | null; elyOrganisaatio?: ELY | null | undefined },
+  yhteystieto: (Yhteystieto | YhteystietoInput) & {
+    kayttajatunnus?: string | null;
+    elyOrganisaatio?: ELY | null | undefined;
+    evkOrganisaatio?: Elinvoimakeskus | null | undefined;
+  },
   t: Translate
 ) {
   const { etunimi, sukunimi, kayttajatunnus, puhelinnumero, sahkoposti } = yhteystieto;

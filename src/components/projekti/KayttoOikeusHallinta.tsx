@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
+import { ELY, Elinvoimakeskus, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import Section from "@components/layout/Section2";
@@ -29,7 +29,7 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { formatNimi } from "../../util/userUtil";
 import useApi from "src/hooks/useApi";
 import useTranslation from "next-translate/useTranslation";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";
@@ -64,6 +64,7 @@ const getDefaultKayttaja = (): ProjektiKayttajaFormValue => ({
   kayttajatunnus: "",
   organisaatio: "",
   elyOrganisaatio: undefined,
+  evkOrganisaatio: undefined,
   yleinenYhteystieto: false,
 });
 
@@ -384,6 +385,8 @@ const UserFields = ({
                   setValue(`kayttoOikeudet.${index}.organisaatio`, newValue?.organisaatio ?? "");
                   if (!organisaatioIsEly(newValue?.organisaatio)) {
                     setValue(`kayttoOikeudet.${index}.elyOrganisaatio`, undefined);
+                  } else if (!organisaatioIsEvk(newValue?.organisaatio)) {
+                    setValue(`kayttoOikeudet.${index}.evkOrganisaatio`, undefined);
                   }
                   onChange(newValue?.uid || "");
                 }}
@@ -429,6 +432,38 @@ const UserFields = ({
                     {Object.values(ELY).map((ely) => (
                       <MenuItem value={ely} key={ely}>
                         {t(`ely_alue_genetiivi.${ely}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {fieldState.error?.message && <FormHelperText error>{fieldState.error.message}</FormHelperText>}
+                </FormControl>
+              )}
+            />
+          )}
+          {organisaatioIsEvk(kayttaja?.organisaatio) && (
+            <Controller
+              control={control}
+              name={`kayttoOikeudet.${index}.evkOrganisaatio`}
+              render={({ field: { value, onChange, ref, ...fieldProps }, fieldState }) => (
+                <FormControl fullWidth>
+                  <InputLabel>Elinvoimakeskus *</InputLabel>
+                  <Select
+                    // Value is always string in the Select component, but "" is undefined on the form
+                    value={value || ""}
+                    onChange={(event) => {
+                      const value = event.target.value || null;
+                      onChange(value);
+                    }}
+                    inputProps={fieldProps}
+                    inputRef={ref}
+                    label="Elinvoimakeskus *"
+                    error={!!fieldState.error}
+                    defaultValue={""}
+                  >
+                    <MenuItem value="">Valitse</MenuItem>
+                    {Object.values(Elinvoimakeskus).map((evk) => (
+                      <MenuItem value={evk} key={evk}>
+                        {t(`ely_alue_genetiivi.${evk}`)}
                       </MenuItem>
                     ))}
                   </Select>

@@ -224,6 +224,7 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
       elyOrganisaatio: undefined,
+      evkOrganisaatio: undefined,
       email: "email@email.com",
       etunimi: "Etunimi",
       organisaatio: undefined,
@@ -267,6 +268,7 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
       elyOrganisaatio: undefined,
+      evkOrganisaatio: undefined,
       email: "email@email.com",
       etunimi: "Etunimi",
       organisaatio: undefined,
