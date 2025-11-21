@@ -3,11 +3,9 @@ import { isEvkAktivoituAt } from "./isEvkAktivoitu";
 
 export const isUspaJulkaisuEstetty = (projekti: Projekti, when: string): boolean => {
   if (!isElyOrEvk(projekti)) {
-    //console.log('Ei ole ELY/EVK');
     return false;
   }
   if (!isUspaKaytossa(projekti)) {
-    //console.log('Ei ole USPA käytössä');
     return false;
   }
   return isEvkAktivoituAt(when);
