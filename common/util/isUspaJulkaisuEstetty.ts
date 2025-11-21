@@ -5,6 +5,9 @@ export const isUspaJulkaisuEstetty = (projekti: Projekti, when: string): boolean
   if (!isElyOrEvk(projekti)) {
     return false;
   }
+  if (isEly(projekti)) {
+    return isEvkAktivoituAt(when);
+  }
   if (!isUspaKaytossa(projekti)) {
     return false;
   }
@@ -12,9 +15,16 @@ export const isUspaJulkaisuEstetty = (projekti: Projekti, when: string): boolean
 };
 
 const isElyOrEvk = (projekti: Projekti): boolean => {
-  return (projekti.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("ELY") ||
-    projekti.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("EVK")) ?? false;
+  return (isEly(projekti) || isEvk(projekti));
 };
+
+const isEly = (projekti: Projekti): boolean => {
+  return projekti.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("ELY") ?? false;
+}
+
+const isEvk = (projekti: Projekti): boolean => {
+  return projekti.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("EVK") ?? false;
+}
 
 const isUspaKaytossa = (projekti: Projekti): boolean => {
   return !(projekti.asianhallinta.inaktiivinen);

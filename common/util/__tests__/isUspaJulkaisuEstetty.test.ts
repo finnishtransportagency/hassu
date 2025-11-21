@@ -82,7 +82,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
     delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
   });
 
-  it("USPA - ei käytössä, EVK aktivoitu menneisyydessä => EI ESTETTY", () => {
+  it("EVK -projekti, USPA - ei käytössä, EVK aktivoitu menneisyydessä => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, false);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
@@ -94,7 +94,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
     expect(isBlocked).to.be.false;
   });
 
-  it("USPA - käytössä, EVK aktivoitu menneisyydessä => ESTETTY", () => {
+  it("EVK -projekti, USPA - käytössä, EVK aktivoitu menneisyydessä => ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, true);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
@@ -106,7 +106,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
     expect(isBlocked).to.be.true;
   });
 
-  it("USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+  it("EVK -projekti, USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, false);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
@@ -118,7 +118,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
     expect(isBlocked).to.be.false;
   });
 
-  it("USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+  it("EVK -projekti, USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_EVK, true);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
@@ -135,7 +135,7 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
   afterEach(() => {
     delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
   });
-  it("USPA - ei käytössä, pvm EVK aktivoinnin jälkeen => EI ESTETTY", () => {
+  it("ELY -projekti, USPA - ei käytössä, pvm EVK aktivoinnin jälkeen => ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, false);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
@@ -144,10 +144,10 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
     const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
-    expect(isBlocked).to.be.false;
+    expect(isBlocked).to.be.true;
   });
 
-  it("USPA - käytössä, pvm EVK aktivoinnin jälkeen => ESTETTY", () => {
+  it("ELY -projekti, USPA - käytössä, pvm EVK aktivoinnin jälkeen => ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, true);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
@@ -159,7 +159,7 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
     expect(isBlocked).to.be.true;
   });
 
-  it("USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+  it("ELY -projekti, USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, false);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
@@ -171,7 +171,7 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
     expect(isBlocked).to.be.false;
   });
 
-  it("USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
+  it("ELY -projekti, USPA - käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, true);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).add(1, DAY).format(ONLY_DATE_FORMAT);
