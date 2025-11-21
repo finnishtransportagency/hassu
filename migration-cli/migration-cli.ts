@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env.test" });
 dotenv.config({ path: ".env.local" });
 /* eslint-enable */
-import { importProjekti, TargetStatuses } from "../backend/src/migraatio/migration";
+import { importProjekti, Row } from "../backend/src/migraatio/migration";
 import AWSXRay from "aws-xray-sdk-core";
 import readXlsxFile from "read-excel-file/node";
 import yargs from "yargs";
@@ -91,15 +91,6 @@ yargs
   .demandCommand(1)
   .help().argv;
 
-type Row = {
-  oid: string;
-  tila: TargetStatuses;
-  hyvaksymispaatosAsianumero?: string;
-  hyvaksymispaatosPaivamaara?: Date;
-  jatkopaatosAsianumero?: string;
-  jatkopaatosPaivamaara?: Date;
-};
-
 export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Status>> {
   const result: Record<string, Status> = {};
   sinon.stub(userService, "identifyUser").resolves();
@@ -117,31 +108,26 @@ export async function importProjektis(fileName: string, sheetNum: number, overwr
     process.exit(1);
   }
   for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    const oid = row.oid;
-    const targetStatus = row.tila;
-    if (oid && targetStatus) {
+    const rivi = rows[i];
+    const oid = rivi.oid;
+    const tila = rivi.tila;
+    if (oid && tila) {
       if (!overwrite) {
         const existing = await projektiDatabase.loadProjektiByOid(oid);
         if (existing) {
-          console.log(oid + " " + targetStatus + " on jo olemassa");
+          console.log(oid + " " + tila + " on jo olemassa");
           continue;
         }
       }
-      console.log(oid + " " + targetStatus + " luodaan");
+      console.log(oid + " " + tila + " luodaan");
       try {
         await importProjekti({
-          oid,
+          rivi,
           kayttaja,
-          targetStatus,
-          hyvaksymispaatosAsianumero: row.hyvaksymispaatosAsianumero,
-          hyvaksymispaatosPaivamaara: row.hyvaksymispaatosPaivamaara,
-          jatkopaatosAsianumero: row.jatkopaatosAsianumero,
-          jatkopaatosPaivamaara: row.jatkopaatosPaivamaara,
         });
-        result[oid] = targetStatus;
+        result[oid] = tila;
       } catch (e) {
-        console.log(oid + " " + targetStatus + " luonti epäonnistui", e);
+        console.log(oid + " " + tila + " luonti epäonnistui", e);
       }
     }
   }
