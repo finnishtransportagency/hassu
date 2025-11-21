@@ -19,6 +19,7 @@ import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
+import { isUspaJulkaisuEstetty } from "common/util/isUspaJulkaisuEstetty";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -33,6 +34,14 @@ const tilasiirtymaTyyppiToStatusMap: Record<Exclude<TilasiirtymaTyyppi, Tilasiir
   JATKOPAATOS_1: Status.JATKOPAATOS_1,
   JATKOPAATOS_2: Status.JATKOPAATOS_2,
   NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
+};
+
+const tilasiirtymaToFormFieldMap: Record<Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>, string> = {
+  ALOITUSKUULUTUS: "aloitusKuulutus",
+  HYVAKSYMISPAATOSVAIHE: "paatos",
+  JATKOPAATOS_1: "paatos",
+  JATKOPAATOS_2: "paatos",
+  NAHTAVILLAOLO: "nahtavillaoloVaihe",
 };
 
 export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValues extends FieldValues>({
@@ -52,7 +61,6 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   const api = useApi();
 
   const isProjektiReadyForTilaChange = useIsProjektiReadyForTilaChange();
-
   const saveDraft: SubmitHandler<TFieldValues> = useCallback(
     (formData) =>
       withLoadingSpinner(
@@ -87,6 +95,10 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             const lacksKunnat = !kuntavastaanottajat?.length || isKuntatietoMissing(projekti);
             if (lacksKunnat) {
               puutteet.push("kuntavastaanottajat puuttuvat");
+            }
+            const formDataField = tilasiirtymaToFormFieldMap[tilasiirtymaTyyppi];
+            if (isUspaJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
+              puutteet.push("julkaisu Elinvoimakeskuksen asianhallintaan estetty");
             }
             if (
               data?.suomifiViestitEnabled &&
