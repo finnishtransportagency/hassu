@@ -14,13 +14,20 @@ type OptionalNullableString = string | null | undefined;
 
 export class KayttoOikeudetManager {
   private users: DBVaylaUser[];
-  private readonly kayttajas: Kayttajas;
+  private readonly valtuusHallintaKayttajas: Kayttajas;
   private kunnanEdustaja: string | undefined;
 
-  constructor(users: DBVaylaUser[], kayttajas: Kayttajas, kunnanEdustaja?: string) {
-    this.users = users;
-    this.kayttajas = kayttajas;
+  constructor(users: DBVaylaUser[], valtuusHallintaKayttajas: Kayttajas, kunnanEdustaja?: string) {
+    this.valtuusHallintaKayttajas = valtuusHallintaKayttajas;
+    this.users = this.getUsersWithValtuusHallintaChanges(users, valtuusHallintaKayttajas);
     this.kunnanEdustaja = kunnanEdustaja;
+  }
+
+  private getUsersWithValtuusHallintaChanges(users: DBVaylaUser[], valtuusHallintaKayttajas: Kayttajas) {
+    return users.map<DBVaylaUser>((user) => {
+      const kayttaja = valtuusHallintaKayttajas.getKayttajaByUid(user.kayttajatunnus);
+      return (kayttaja && mergeKayttaja(user, kayttaja)) ?? user
+    });
   }
 
   applyChanges(changes: ProjektiKayttajaInput[] | undefined | null): DBVaylaUser[] | undefined {
@@ -157,7 +164,7 @@ export class KayttoOikeudetManager {
       if (projektiPaallikko) {
         const currentProjektiPaallikko = this.users.filter((aUser) => aUser.email == email).pop();
         if (currentProjektiPaallikko?.kayttajatunnus == projektiPaallikko.kayttajatunnus) {
-          log.warn("Projektipäällikkö oli jo olemassa käyytäjissä", { projektiPaallikko });
+          log.warn("Projektipäällikkö oli jo olemassa käyttäjissä", { projektiPaallikko });
           // Make sure the user really is projektipäällikkö
           currentProjektiPaallikko.tyyppi = KayttajaTyyppi.PROJEKTIPAALLIKKO;
           currentProjektiPaallikko.muokattavissa = false;
@@ -183,7 +190,7 @@ export class KayttoOikeudetManager {
   }
 
   private createNewVelhoHenkiloFromByEmail(email: OptionalNullableString): DBVaylaUser | undefined {
-    const account = email ? this.kayttajas.findByEmail(email) : undefined;
+    const account = email ? this.valtuusHallintaKayttajas.findByEmail(email) : undefined;
     return account
       ? mergeKayttaja({ tyyppi: isAorLTunnus(account.uid) ? KayttajaTyyppi.VARAHENKILO : null, muokattavissa: false }, account)
       : undefined;
@@ -259,13 +266,12 @@ export class KayttoOikeudetManager {
     user: Partial<DBVaylaUser>;
     searchMode: SearchMode;
   }): DBVaylaUser | undefined {
-    const kayttajas = this.kayttajas;
     let account: Kayttaja | undefined;
 
     if (searchMode === SearchMode.UID) {
-      account = kayttajas.getKayttajaByUid(user.kayttajatunnus);
+      account = this.valtuusHallintaKayttajas.getKayttajaByUid(user.kayttajatunnus);
     } else if (user.email) {
-      account = kayttajas.findByEmail(user.email);
+      account = this.valtuusHallintaKayttajas.findByEmail(user.email);
     }
     if (account) {
       return mergeKayttaja({ ...user }, account);
