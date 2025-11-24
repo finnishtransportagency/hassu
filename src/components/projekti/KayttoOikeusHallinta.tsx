@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
+import { ELY, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import Section from "@components/layout/Section2";
@@ -36,6 +36,7 @@ import { OhjelistaNotification } from "./common/OhjelistaNotification";
 import { H2, H3 } from "../Headings";
 import { queryMatchesWithFullname } from "common/henkiloSearch/queryMatchesWithFullname";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
+import { PotentiaalisestiPoistunutKayttaja } from "@pages/yllapito/projekti/[oid]/henkilot";
 
 export type ProjektiKayttajaFormValue = ProjektiKayttajaInput & { organisaatio?: string | null };
 
@@ -45,7 +46,6 @@ export type FormValues = {
   versio: number;
 };
 
-type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
 
 interface Props {
   disableFields?: boolean;
@@ -66,53 +66,6 @@ const getDefaultKayttaja = (): ProjektiKayttajaFormValue => ({
   elyOrganisaatio: undefined,
   yleinenYhteystieto: false,
 });
-
-function KayttoOikeusHallinta(props: Props) {
-  const [initialKayttajat, setInitialKayttajat] = useState<PotentiaalisestiPoistunutKayttaja[]>();
-  const api = useApi();
-
-  useEffect(() => {
-    let mounted = true;
-    async function loadKayttajat(kayttajat: string[]): Promise<PotentiaalisestiPoistunutKayttaja[]> {
-      if (kayttajat.length === 0) {
-        return [];
-      }
-      return await api.listUsers({
-        kayttajatunnus: kayttajat,
-      });
-    }
-    const getInitialKayttajat = async () => {
-      const kayttajat = await loadKayttajat(props.projektiKayttajat.map((kayttaja) => kayttaja.kayttajatunnus));
-      const poistuneetKayttajat = props.projektiKayttajat
-        .filter((pk) => !kayttajat.some((k) => k.uid === pk.kayttajatunnus))
-        .map<PotentiaalisestiPoistunutKayttaja>(({ etunimi, sukunimi, email, kayttajatunnus, puhelinnumero, organisaatio }) => ({
-          __typename: "Kayttaja",
-          etunimi,
-          sukunimi,
-          email,
-          organisaatio,
-          puhelinnumero,
-          uid: kayttajatunnus,
-          poistunut: true,
-        }));
-      const kaikkiKayttajat = kayttajat.concat(poistuneetKayttajat);
-
-      if (mounted) {
-        setInitialKayttajat(kaikkiKayttajat);
-      }
-    };
-    getInitialKayttajat();
-    return () => {
-      mounted = false;
-    };
-  }, [api, props, props.projektiKayttajat]);
-
-  if (!initialKayttajat) {
-    return <></>;
-  }
-
-  return <KayttoOikeusHallintaFormElements {...props} initialKayttajat={initialKayttajat} />;
-}
 
 function KayttoOikeusHallintaFormElements({
   disableFields,
@@ -565,4 +518,4 @@ function KayttajaPoistunutText(props: { muokattavissa: boolean; poistettavissa: 
   return <RedParagraph>{message}</RedParagraph>;
 }
 
-export default KayttoOikeusHallinta;
+export default KayttoOikeusHallintaFormElements;
