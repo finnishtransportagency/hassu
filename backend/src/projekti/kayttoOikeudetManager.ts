@@ -4,7 +4,7 @@ import { SearchMode } from "../personSearch/personSearchClient";
 import { log } from "../logger";
 import differenceWith from "lodash/differenceWith";
 import remove from "lodash/remove";
-import { mergeKayttaja } from "../personSearch/personAdapter";
+import { mergeKayttaja, mergeKayttajas } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
 import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
@@ -21,15 +21,8 @@ export class KayttoOikeudetManager {
 
   constructor(users: DBVaylaUser[], valtuusHallintaKayttajas: Kayttajas, kunnanEdustaja?: string) {
     this.valtuusHallintaKayttajas = valtuusHallintaKayttajas;
-    this.users = this.getUsersWithValtuusHallintaChanges(users, valtuusHallintaKayttajas);
+    this.users = mergeKayttajas(users, valtuusHallintaKayttajas);
     this.kunnanEdustaja = kunnanEdustaja;
-  }
-
-  private getUsersWithValtuusHallintaChanges(users: DBVaylaUser[], valtuusHallintaKayttajas: Kayttajas) {
-    return users.map<DBVaylaUser>((user) => {
-      const kayttaja = valtuusHallintaKayttajas.getKayttajaByUid(user.kayttajatunnus);
-      return (kayttaja && mergeKayttaja(user, kayttaja)) ?? user;
-    });
   }
 
   applyChanges(changes: ProjektiKayttajaInput[] | undefined | null): DBVaylaUser[] | undefined {
@@ -228,14 +221,28 @@ export class KayttoOikeudetManager {
     }
   }
 
-  resetHenkilot(resetAll: boolean, vastuuhenkilonEmail: string | null | undefined, varahenkilonEmail: string | null | undefined): void {
+  doesUserEmailMatch = (user: DBVaylaUser, email: string | null | undefined) =>
+    !!email && this.emailComparator.doEmailsMatch(user.email, email);
+
+  updateUsersFromVelho(
+    vastuuhenkilonEmail: string | null | undefined,
+    varahenkilonEmail: string | null | undefined,
+    resetAll: boolean
+  ): void {
     const oldKunnanedustaja = this.users.filter((dbvayluser) => dbvayluser.kayttajatunnus === this.kunnanEdustaja).pop();
     if (resetAll) {
       // Poista kaikki muut paitsi tuleva projektipäällikkö ja vastuuhenkilö
-      remove(this.users, (user) => user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
+      remove(
+        this.users,
+        (user) => !this.doesUserEmailMatch(user, vastuuhenkilonEmail) && !this.doesUserEmailMatch(user, varahenkilonEmail)
+      );
     } else {
       // Poista kaikki muut velhosta tulleet henkilot, paitsi tuleva pp ja lisähenkilö (ei aina varahenkilökelpoinen)
-      remove(this.users, (user) => !user.muokattavissa && user.email !== vastuuhenkilonEmail && user.email !== varahenkilonEmail);
+      remove(
+        this.users,
+        (user) =>
+          !user.muokattavissa && !this.doesUserEmailMatch(user, vastuuhenkilonEmail) && !this.doesUserEmailMatch(user, varahenkilonEmail)
+      );
     }
     // tarkista että kunnanedustaja on vielä olemassa tai lisää takaisin
     if (oldKunnanedustaja) {
@@ -244,6 +251,8 @@ export class KayttoOikeudetManager {
         this.addOldProjektipaallikkoOrVarahenkiloAsRegularUser(oldKunnanedustaja);
       }
     }
+    this.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
+    this.addVarahenkiloFromEmail(varahenkilonEmail);
   }
 
   private addOldProjektipaallikkoOrVarahenkiloAsRegularUser(user: DBVaylaUser): void {
