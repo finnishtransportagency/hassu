@@ -143,7 +143,7 @@ export class VelhoClient {
 
   private getAineistoDokumenttityyppi(
     aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">
-  ): string | null | undefined {    
+  ): string | null | undefined {
     // Use the new schema as the source for the data.
     if (typeof aineisto.ominaisuudet?.dokumenttityyppi === "string") {
       return aineisto.ominaisuudet.dokumenttityyppi;

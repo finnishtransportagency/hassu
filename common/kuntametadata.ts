@@ -13,6 +13,7 @@ export type Kunta = {
   nimi: RequiredLocalizedMap<string>;
   ely: string;
   liikennevastuuEly: string;
+  elinvoimakeskus: string;
   lakkautettu?: boolean;
 };
 
@@ -30,10 +31,18 @@ export type Ely = {
   sykeElyId: number;
 };
 
+export type Elinvoimakeskus = {
+  nro: string;
+  lyhenne: string;
+  sykeElinvoimakeskusId: number;
+  nimiSuomi: string;
+};
+
 export type AlueData = {
   kunnat: Record<string, Kunta>;
   maakunnat: Record<string, Maakunta>;
   elyt: Record<string, Ely>;
+  elinvoimakeskukset: Record<string, Elinvoimakeskus>;
 };
 
 class KuntaMetadata {
@@ -153,13 +162,26 @@ class KuntaMetadata {
     return maakuntaIds?.map((maakuntaId) => kuntametadata.nameForMaakuntaId(maakuntaId, normalizeKieli(kieli))) || [];
   }
 
-  public viranomainenForKuntaId(kuntaId: number): IlmoitettavaViranomainen {
+  public elyViranomainenForKuntaId(kuntaId: number): IlmoitettavaViranomainen {
     const kunta = alueData.kunnat[kuntaId];
     if (!kunta) {
       throw new Error("Kuntaa ei löydy:" + kuntaId);
     }
 
     const viranomainen = elyToIlmoitettavaViranomainen[kunta.ely];
+    if (viranomainen) {
+      return viranomainen;
+    }
+    return IlmoitettavaViranomainen.VAYLAVIRASTO;
+  }
+
+  public viranomainenForKuntaId(kuntaId: number): IlmoitettavaViranomainen {
+    const kunta = alueData.kunnat[kuntaId];
+    if (!kunta) {
+      throw new Error("Kuntaa ei löydy:" + kuntaId);
+    }
+
+    const viranomainen = evkToIlmoitettavaViranomainen[kunta.elinvoimakeskus];
     if (viranomainen) {
       return viranomainen;
     }
@@ -182,12 +204,12 @@ class KuntaMetadata {
     return Object.keys(alueData.elyt).find((elyKey) => alueData.elyt[elyKey].lyhenne == key);
   }
 
-  liikennevastuuElyIdFromKuntaId(kuntaId: number): string {
-    const liikennevastuuEly = alueData.kunnat[kuntaId].liikennevastuuEly;
-    if (liikennevastuuEly) {
-      return liikennevastuuEly;
-    }
-    throw new IllegalArgumentError("Liikenne-ely ei löydy kuntaId:lle " + kuntaId);
+  /**
+   * Käytetään ilmoitustaulusyötteen avaimen muuttamiseen id:ksi (esim. UUD -> "elinvoimakeskus/elinvoimakeskus01")
+   * @param key
+   */
+  elinvoimakeskusIdFromKey(key: string) {
+    return Object.keys(alueData.elinvoimakeskukset).find((elinvoimakeskusKey) => alueData.elinvoimakeskukset[elinvoimakeskusKey].lyhenne == key);
   }
 }
 
@@ -195,29 +217,32 @@ export const kuntametadata = new KuntaMetadata();
 
 const elyToIlmoitettavaViranomainen: Record<string, IlmoitettavaViranomainen> = {
   "ely/ely01": IlmoitettavaViranomainen.UUDENMAAN_ELY,
-  "ely/ely07": IlmoitettavaViranomainen.ETELA_SAVO_ELY,
-  "ely/ely11": IlmoitettavaViranomainen.ETELA_POHJANMAAN_ELY,
+  "ely/ely02": IlmoitettavaViranomainen.VARSINAIS_SUOMEN_ELY,
+  "ely/ely03": IlmoitettavaViranomainen.SATAKUNNAN_ELY,
   "ely/ely04": IlmoitettavaViranomainen.HAME_ELY,
+  "ely/ely05": IlmoitettavaViranomainen.PIRKANMAAN_ELY,
   "ely/ely06": IlmoitettavaViranomainen.KAAKKOIS_SUOMEN_ELY,
+  "ely/ely07": IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+  "ely/ely08": IlmoitettavaViranomainen.POHJOIS_SAVON_ELY,
+  "ely/ely09": IlmoitettavaViranomainen.POHJOIS_KARJALAN_ELY,
   "ely/ely10": IlmoitettavaViranomainen.KESKI_SUOMEN_ELY,
+  "ely/ely11": IlmoitettavaViranomainen.ETELA_POHJANMAAN_ELY,
+  "ely/ely12": IlmoitettavaViranomainen.POHJANMAAN_ELY,
+  "ely/ely13": IlmoitettavaViranomainen.POHJOIS_POHJANMAAN_ELY,
   "ely/ely14": IlmoitettavaViranomainen.KAINUUN_ELY,
   "ely/ely15": IlmoitettavaViranomainen.LAPIN_ELY,
-  "ely/ely05": IlmoitettavaViranomainen.PIRKANMAAN_ELY,
-  "ely/ely12": IlmoitettavaViranomainen.POHJANMAAN_ELY,
-  "ely/ely09": IlmoitettavaViranomainen.POHJOIS_KARJALAN_ELY,
-  "ely/ely13": IlmoitettavaViranomainen.POHJOIS_POHJANMAAN_ELY,
-  "ely/ely08": IlmoitettavaViranomainen.POHJOIS_SAVON_ELY,
-  "ely/ely03": IlmoitettavaViranomainen.SATAKUNNAN_ELY,
-  "ely/ely02": IlmoitettavaViranomainen.VARSINAIS_SUOMEN_ELY,
   "ely/ely16": IlmoitettavaViranomainen.AHVENANMAAN_MAAKUNTA,
-  "ely/ely17": IlmoitettavaViranomainen.UUDENMAAN_EVK,
-  "ely/ely18": IlmoitettavaViranomainen.LOUNAIS_SUOMEN_EVK,
-  "ely/ely19": IlmoitettavaViranomainen.KAAKKOIS_SUOMEN_EVK,
-  "ely/ely20": IlmoitettavaViranomainen.SISA_SUOMEN_EVK,
-  "ely/ely21": IlmoitettavaViranomainen.KESKI_SUOMEN_EVK,
-  "ely/ely22": IlmoitettavaViranomainen.ITA_SUOMEN_EVK,
-  "ely/ely23": IlmoitettavaViranomainen.ETELA_POHJANMAAN_EVK,
-  "ely/ely24": IlmoitettavaViranomainen.POHJANMAAN_EVK,
-  "ely/ely25": IlmoitettavaViranomainen.POHJOIS_SUOMEN_EVK,
-  "ely/ely26": IlmoitettavaViranomainen.LAPIN_EVK,
+};
+
+const evkToIlmoitettavaViranomainen: Record<string, IlmoitettavaViranomainen> = {
+  "elinvoimakeskus/elinvoimakeskus01": IlmoitettavaViranomainen.UUDENMAAN_EVK,
+  "elinvoimakeskus/elinvoimakeskus02": IlmoitettavaViranomainen.LOUNAIS_SUOMEN_EVK,
+  "elinvoimakeskus/elinvoimakeskus03": IlmoitettavaViranomainen.KAAKKOIS_SUOMEN_EVK,
+  "elinvoimakeskus/elinvoimakeskus04": IlmoitettavaViranomainen.SISA_SUOMEN_EVK,
+  "elinvoimakeskus/elinvoimakeskus05": IlmoitettavaViranomainen.KESKI_SUOMEN_EVK,
+  "elinvoimakeskus/elinvoimakeskus06": IlmoitettavaViranomainen.ITA_SUOMEN_EVK,
+  "elinvoimakeskus/elinvoimakeskus07": IlmoitettavaViranomainen.ETELA_POHJANMAAN_EVK,
+  "elinvoimakeskus/elinvoimakeskus08": IlmoitettavaViranomainen.POHJANMAAN_EVK,
+  "elinvoimakeskus/elinvoimakeskus09": IlmoitettavaViranomainen.POHJOIS_SUOMEN_EVK,
+  "elinvoimakeskus/elinvoimakeskus10": IlmoitettavaViranomainen.LAPIN_EVK,
 };

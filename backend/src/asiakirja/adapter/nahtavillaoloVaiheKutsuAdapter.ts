@@ -161,12 +161,12 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
 
     if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.htmlText("rata_kappale1");
+    } else if (this.suunnitteluSopimus) {
+      kappale1 = this.htmlText("tie_kappale1_suunnittelusopimus", usePlural);
     } else {
-      if (this.suunnitteluSopimus) {
-        kappale1 = this.htmlText("tie_kappale1_suunnittelusopimus", usePlural);
-      }
       kappale1 = this.htmlText("tie_kappale1");
     }
+
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],

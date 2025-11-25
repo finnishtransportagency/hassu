@@ -438,9 +438,7 @@ export async function haeVelhoSynkronoinninMuutoksetTallennukseen(
     await personSearch.getKayttajas(),
     oldProjekti.suunnitteluSopimus?.yhteysHenkilo ?? undefined
   );
-  kayttoOikeudetManager.resetHenkilot(reset, vastuuhenkilonEmail, varahenkilonEmail);
-  kayttoOikeudetManager.addProjektiPaallikkoFromEmail(vastuuhenkilonEmail);
-  kayttoOikeudetManager.addVarahenkiloFromEmail(varahenkilonEmail);
+  kayttoOikeudetManager.updateUsersFromVelho(vastuuhenkilonEmail, varahenkilonEmail, reset);
   const kayttoOikeudetNew = kayttoOikeudetManager.getKayttoOikeudet();
 
   const asiaId = (await isProjektiAsianhallintaIntegrationEnabled(oldProjekti)) ? await haeAsiaId(oid) : undefined;
