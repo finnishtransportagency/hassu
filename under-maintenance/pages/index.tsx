@@ -3,6 +3,7 @@ import { experimental_sx as sx, styled } from "@mui/material";
 import { ExternalStyledLink } from "../../src/components/StyledLink";
 import ContentSpacer from "../../src/components/layout/ContentSpacer";
 import InfoCardPageLayout from "../../src/components/layout/InfoCardPageLayout";
+import { isEvkAktivoitu } from "../../common/util/isEvkAktivoitu";
 
 export default function RakenteillaSivu() {
   useEffect(() => {
@@ -36,7 +37,11 @@ export default function RakenteillaSivu() {
         </ContentSpacer>
         <KuvaContainer className="justify-center">
           <Img src="vayla_alla_fi_sv_rgb.png" alt="Väylävirasto logo" sx={{ maxHeight: "117px" }} />
-          <Img src="ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
+          {isEvkAktivoitu() ? (
+            <Img src="evk_footer_fi_sv.png" alt="Elinvoimakeskus logo" sx={{ maxHeight: "91px" }} />
+          ) : (
+            <Img src="ely_alla_fi_sv_rgb.png" alt="ELY logo" sx={{ maxHeight: "91px" }} />
+          )}
         </KuvaContainer>
         <ExternalStyledLink href="https://vayla.fi" sx={{ fontWeight: 400, display: "inline-block" }}>
           Väylä.fi
