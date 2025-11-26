@@ -13,212 +13,49 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
+import type { Configuration } from './configuration';
+import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import type { RequestArgs } from './base';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface ProjektiProjekti
- */
 export interface ProjektiProjekti {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {ProjektiProjektiMitattugeometria}
-     * @memberof ProjektiProjekti
-     */
     'mitattugeometria'?: ProjektiProjektiMitattugeometria;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjekti
-     */
     'tarkka-geometria'?: object;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiSijainnitInner>}
-     * @memberof ProjektiProjekti
-     */
     'sijainnit': Array<ProjektiProjektiSijainnitInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'tarkka-geometria-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjekti
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'keskipiste-oid'?: string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjekti
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektiGeometrycollection}
-     * @memberof ProjektiProjekti
-     */
     'geometrycollection'?: ProjektiProjektiGeometrycollection | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudet}
-     * @memberof ProjektiProjekti
-     */
     'ominaisuudet': ProjektiProjektiLuontiOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'oid': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'projektijoukko': string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiProjekti
-     */
     'luoja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjekti
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjekti
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'vektorid'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiProjekti
-     */
     'muokkaaja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'mitattugeometria-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjekti
-     */
     'sijainti-tilannepaiva'?: object;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiPiirretytGeometriatInner>}
-     * @memberof ProjektiProjekti
-     */
     'piirretyt-geometriat'?: Array<ProjektiProjektiLuontiPiirretytGeometriatInner>;
-    /**
-     * 
-     * @type {Set<ProjektiProjektiProjektilinkitInner>}
-     * @memberof ProjektiProjekti
-     */
     'projektilinkit': Set<ProjektiProjektiProjektilinkitInner> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {ProjektiProjektiKeskipiste}
-     * @memberof ProjektiProjekti
-     */
     'keskipiste'?: ProjektiProjektiKeskipiste;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ProjektiProjekti
-     */
     'piirretyt-geometriat-oidit'?: Array<string>;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiRataosoitteetInner>}
-     * @memberof ProjektiProjekti
-     */
     'rataosoitteet'?: Array<ProjektiProjektiLuontiRataosoitteetInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjekti
-     */
     'lahdejarjestelman-id': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiGeometrycollection
- */
 export interface ProjektiProjektiGeometrycollection {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiGeometrycollection
-     */
     'type': ProjektiProjektiGeometrycollectionTypeEnum;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiMitattugeometriaGeometria>}
-     * @memberof ProjektiProjektiGeometrycollection
-     */
     'geometries': Array<ProjektiProjektiLuontiMitattugeometriaGeometria>;
 }
 
@@ -228,170 +65,35 @@ export const ProjektiProjektiGeometrycollectionTypeEnum = {
 
 export type ProjektiProjektiGeometrycollectionTypeEnum = typeof ProjektiProjektiGeometrycollectionTypeEnum[keyof typeof ProjektiProjektiGeometrycollectionTypeEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektiKeskipiste
- */
 export interface ProjektiProjektiKeskipiste {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiKeskipiste
-     */
     'geometria': ProjektiProjektiLuontiMitattugeometriaGeometria;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiKeskipiste
-     */
     'luotu': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiKeskipiste
-     */
     'oid': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiKeskipiste
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiKeskipiste
-     */
     'geometria-wgs84'?: ProjektiProjektiLuontiMitattugeometriaGeometria;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuonti
- */
 export interface ProjektiProjektiLuonti {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometria}
-     * @memberof ProjektiProjektiLuonti
-     */
     'mitattugeometria'?: ProjektiProjektiLuontiMitattugeometria;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiSijainnitInner>}
-     * @memberof ProjektiProjektiLuonti
-     */
     'sijainnit': Array<ProjektiProjektiLuontiSijainnitInner>;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuonti
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuonti
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuonti
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudet}
-     * @memberof ProjektiProjektiLuonti
-     */
     'ominaisuudet': ProjektiProjektiLuontiOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuonti
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuonti
-     */
     'projektijoukko': string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuonti
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuonti
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuonti
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuonti
-     */
     'sijainti-tilannepaiva'?: object;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiPiirretytGeometriatInner>}
-     * @memberof ProjektiProjektiLuonti
-     */
     'piirretyt-geometriat'?: Array<ProjektiProjektiLuontiPiirretytGeometriatInner>;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiRataosoitteetInner>}
-     * @memberof ProjektiProjektiLuonti
-     */
     'rataosoitteet'?: Array<ProjektiProjektiLuontiRataosoitteetInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuonti
-     */
     'lahdejarjestelman-id': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiMitattugeometria
- */
 export interface ProjektiProjektiLuontiMitattugeometria {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiLuontiMitattugeometria
-     */
     'geometria': ProjektiProjektiLuontiMitattugeometriaGeometria;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiMitattugeometriaGeometria
- */
 export interface ProjektiProjektiLuontiMitattugeometriaGeometria {
-    /**
-     * 
-     * @type {Array<object>}
-     * @memberof ProjektiProjektiLuontiMitattugeometriaGeometria
-     */
     'coordinates': Array<object>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiMitattugeometriaGeometria
-     */
     'type': ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum;
 }
 
@@ -406,3844 +108,1708 @@ export const ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum = {
 
 export type ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum = typeof ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum[keyof typeof ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudet
- */
 export interface ProjektiProjektiLuontiOminaisuudet {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kustannusjakoehdotus'?: ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'toteuttava-organisaatio'?: object | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'lunastuskustannukset'?: number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'valitukset'?: number | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'liikenteeseenluovutus'?: ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'varahenkilo': ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'ennakkoneuvottelu'?: object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'muu-liittyva-organisaatio'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetLainvoimaisuus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'lainvoimaisuus'?: ProjektiProjektiLuontiOminaisuudetLainvoimaisuus | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'asiatunnus-traficom'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'korkein-hallinto-oikeus'?: ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kuvaus': string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'hallinnollisen-kasittelyn-tila'?: object | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'vaylamuoto': Set<ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kunta': Set<object> | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'luokka'?: object | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kiireellinen-kasittely-pyydetty'?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'sisaltaa-maantien-lakkauttamisen'?: boolean | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'arvioitu-toteutusajankohta'?: object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'tila': object;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'toteutusilmoitus'?: ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetYmparisto}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'ymparisto'?: ProjektiProjektiLuontiOminaisuudetYmparisto;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'vesivaylanumerot': Set<string> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'vls-linkki'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'asiatunnus-ely'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetKustannusarvio}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kustannusarvio': ProjektiProjektiLuontiOminaisuudetKustannusarvio;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'maakunta': Set<object> | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'suunnittelun-toteutunut-kustannus': number | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetLainvoimaisuus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'nahtavilla-olo'?: ProjektiProjektiLuontiOminaisuudetLainvoimaisuus | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'paattyy': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'muu-kunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'ohjelma'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'tilaajaorganisaatio': object;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'muistutukset'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'muu-maakunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'muu-tilaajaorganisaatio'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'rauennut'?: object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'lisatiedot'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'hyvaksymispaatos'?: ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'sisaltaa-toisen-vaylamuodon-suunnittelua'?: boolean | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'tie-ratasuunnitelma-luotu'?: boolean;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kustannustietojen-kuvaus'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'muu-toteuttava-organisaatio'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'ten-t'?: string | null;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'yva-hanke'?: boolean | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'suunnittelupaatos'?: ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'hankekortti': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'asiatunnus-vaylavirasto'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'aloituskuulutus'?: object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'rahoituksen-lahde': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'alkaa': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'linkki': string | null;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'kohteet'?: Set<object> | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'koordinaattijarjestelma'?: object | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'hallinto-oikeus'?: ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'vaylatoimitus-kaynnistynyt'?: object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'paavaylaverkko'?: object | null;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'liittyva-organisaatio': Set<object> | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'vaihe': object;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'suunnittelusopimus'?: boolean;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys}
-     * @memberof ProjektiProjektiLuontiOminaisuudet
-     */
     'hyvaksymisesitys'?: ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys | null;
 }
 
 export const ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum = {
-    Vesi: 'vesi',
-    Tie: 'tie',
-    Rata: 'rata'
+    vesi: 'vesi',
+    tie: 'tie',
+    rata: 'rata'
 } as const;
 
 export type ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum = typeof ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys
- */
 export interface ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys
-     */
     'lahetetty': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymisesitys
-     */
     'saapunut': object | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos
- */
 export interface ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosJatkopaatos}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos
-     */
     'jatkopaatos': ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosJatkopaatos | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos
-     */
     'annettu': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosOsapaatos}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos
-     */
     'osapaatos': ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosOsapaatos | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos
-     */
     'palautettu-laatijalle': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos
-     */
     'jatkopaatoksen-asiatunnus'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosJatkopaatos
- */
 export interface ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosJatkopaatos {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosJatkopaatos
-     */
     'toinen-annettu': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosJatkopaatos
-     */
     'ensimmainen-annettu': object;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosOsapaatos
- */
 export interface ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosOsapaatos {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetHyvaksymispaatosOsapaatos
-     */
     'annettu': object;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus
- */
 export interface ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus {
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus
-     */
     'hyvaksymispaatos-kumottu': boolean;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus
-     */
     'paatos': ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus
-     */
     'valipaatos': ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos
- */
 export interface ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos
-     */
     'annettu': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeusPaatos
-     */
     'sisalto': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetKustannusarvio
- */
 export interface ProjektiProjektiLuontiOminaisuudetKustannusarvio {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvio
-     */
     'alkuperainen-maku-indeksi': string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvio
-     */
     'tilaajatehtavat'?: number | null;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiOminaisuudetKustannusarvioKustannusarviovaihtoehdotInner>}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvio
-     */
     'kustannusarviovaihtoehdot'?: Array<ProjektiProjektiLuontiOminaisuudetKustannusarvioKustannusarviovaihtoehdotInner>;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvio
-     */
     'tyomaatehtavat'?: number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvio
-     */
     'rakennusosat'?: number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvio
-     */
     'ajanhetken-mukainen-maku-indeksi'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetKustannusarvioKustannusarviovaihtoehdotInner
- */
 export interface ProjektiProjektiLuontiOminaisuudetKustannusarvioKustannusarviovaihtoehdotInner {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusarvioKustannusarviovaihtoehdotInner
-     */
     'kustannusarvio': number | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
- */
 export interface ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'vesihuoltoverkot': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'kunta': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'viestintaverkot': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'sahkoverkot': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'liikenteenohjausyhtio': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'muut': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetKustannusjakoehdotus
-     */
     'valtionosuus': number | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetLainvoimaisuus
- */
 export interface ProjektiProjektiLuontiOminaisuudetLainvoimaisuus {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetLainvoimaisuus
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetLainvoimaisuus
-     */
     'alkaen': object;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus
- */
 export interface ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus
-     */
     'kokonaan': object | null;
-    /**
-     * 
-     * @type {Array<object>}
-     * @memberof ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus
-     */
     'osittain': Array<object> | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner
- */
 export interface ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner
-     */
     'sahkoposti': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner
-     */
     'rooli': string;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos
- */
 export interface ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos
-     */
     'paivamaara': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos
-     */
     'linkki': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiOminaisuudetYmparisto
- */
 export interface ProjektiProjektiLuontiOminaisuudetYmparisto {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetYmparisto
-     */
     'kokonaispaastot-kayton-aikana': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiOminaisuudetYmparisto
-     */
     'kokonaispaastot-ennen-kayttoa': number | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiPiirretytGeometriatInner
- */
 export interface ProjektiProjektiLuontiPiirretytGeometriatInner {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiLuontiPiirretytGeometriatInner
-     */
     'geometria': ProjektiProjektiLuontiMitattugeometriaGeometria;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiLuontiPiirretytGeometriatInner
-     */
     'geometria-wgs84'?: ProjektiProjektiLuontiMitattugeometriaGeometria;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiPiirretytGeometriatInner
-     */
     'luotu'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiPiirretytGeometriatInner
-     */
     'oid'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiPiirretytGeometriatInner
-     */
     'muokattu'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiRataosoitteetInner
- */
 export interface ProjektiProjektiLuontiRataosoitteetInner {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'alku-km': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'loppu-m': number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'ratanumero': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'loppu-km': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'alku-m': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'geometria-oid'?: string;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'geometria-wgs84'?: ProjektiProjektiLuontiMitattugeometriaGeometria;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiLuontiRataosoitteetInner
-     */
     'geometria'?: ProjektiProjektiLuontiMitattugeometriaGeometria;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiSijainnitInner
- */
 export interface ProjektiProjektiLuontiSijainnitInner {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiSijainnitInnerAlkusijainti}
-     * @memberof ProjektiProjektiLuontiSijainnitInner
-     */
     'alkusijainti': ProjektiProjektiLuontiSijainnitInnerAlkusijainti;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiSijainnitInnerAlkusijainti}
-     * @memberof ProjektiProjektiLuontiSijainnitInner
-     */
     'loppusijainti': ProjektiProjektiLuontiSijainnitInnerAlkusijainti;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne}
-     * @memberof ProjektiProjektiLuontiSijainnitInner
-     */
     'sijaintitarkenne'?: ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiSijainnitInnerAlkusijainti
- */
 export interface ProjektiProjektiLuontiSijainnitInnerAlkusijainti {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerAlkusijainti
-     */
     'tie': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerAlkusijainti
-     */
     'osa': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerAlkusijainti
-     */
     'etaisyys': number;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
- */
 export interface ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'puoli'?: object;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'reuna-alueet'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'luiskat'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'ajoradat'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'ojan-pohjat'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'liikennesaarekkeet'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'erotusalueet'?: Set<object>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'keskialue'?: ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'pientareet'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'tasanteet'?: Set<object>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne
-     */
     'kaistat'?: Set<object>;
 }
 
 export const ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum = {
-    Keskialue: 'keskialue'
+    keskialue: 'keskialue'
 } as const;
 
 export type ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum = typeof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum[keyof typeof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektiMitattugeometria
- */
 export interface ProjektiProjektiMitattugeometria {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiMitattugeometria
-     */
     'geometria': ProjektiProjektiLuontiMitattugeometriaGeometria;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiMitattugeometria
-     */
     'geometria-wgs84'?: ProjektiProjektiLuontiMitattugeometriaGeometria;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiMuokkaus
- */
 export interface ProjektiProjektiMuokkaus {
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometria}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'mitattugeometria'?: ProjektiProjektiLuontiMitattugeometria;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'tarkka-geometria'?: object;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiSijainnitInner>}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'sijainnit': Array<ProjektiProjektiLuontiSijainnitInner>;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiOminaisuudet}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'ominaisuudet': ProjektiProjektiLuontiOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'oid': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'projektijoukko': string | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'mitattugeometria-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'sijainti-tilannepaiva'?: object;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiPiirretytGeometriatInner>}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'piirretyt-geometriat'?: Array<ProjektiProjektiLuontiPiirretytGeometriatInner>;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiRataosoitteetInner>}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'rataosoitteet'?: Array<ProjektiProjektiLuontiRataosoitteetInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiMuokkaus
-     */
     'lahdejarjestelman-id': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiProjektilinkitInner
- */
 export interface ProjektiProjektiProjektilinkitInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiProjektilinkitInner
-     */
     'kohde': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiProjektilinkitInner
-     */
     'lahde': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektiProjektilinkitInner
-     */
     'tyyppi': object;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiSijainnitInner
- */
 export interface ProjektiProjektiSijainnitInner {
-    /**
-     * 
-     * @type {ProjektiProjektiSijainnitInnerAlkusijainti}
-     * @memberof ProjektiProjektiSijainnitInner
-     */
     'alkusijainti': ProjektiProjektiSijainnitInnerAlkusijainti;
-    /**
-     * 
-     * @type {ProjektiProjektiSijainnitInnerAlkusijainti}
-     * @memberof ProjektiProjektiSijainnitInner
-     */
     'loppusijainti': ProjektiProjektiSijainnitInnerAlkusijainti;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektiSijainnitInner
-     */
     'sijainti-oid': string;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiMitattugeometriaGeometria}
-     * @memberof ProjektiProjektiSijainnitInner
-     */
     'keskilinjageometria'?: ProjektiProjektiLuontiMitattugeometriaGeometria;
-    /**
-     * 
-     * @type {ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne}
-     * @memberof ProjektiProjektiSijainnitInner
-     */
     'sijaintitarkenne'?: ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektiSijainnitInnerAlkusijainti
- */
 export interface ProjektiProjektiSijainnitInnerAlkusijainti {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiSijainnitInnerAlkusijainti
-     */
     'tie': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiSijainnitInnerAlkusijainti
-     */
     'osa': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiSijainnitInnerAlkusijainti
-     */
     'etaisyys': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektiSijainnitInnerAlkusijainti
-     */
     'enkoodattu'?: number;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukko
- */
 export interface ProjektiProjektijoukko {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukko
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukko
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukkoOminaisuudet}
-     * @memberof ProjektiProjektijoukko
-     */
     'ominaisuudet': ProjektiProjektijoukkoOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'oid': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukko
-     */
     'laskennallinen-keskipiste': object;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiProjektijoukko
-     */
     'luoja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukko
-     */
     'geometry': object;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukko
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukko
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukko
-     */
     'karttapiste': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiProjektijoukko
-     */
     'muokkaaja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukko
-     */
     'lahdejarjestelman-id': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukkoOminaisuudet
- */
 export interface ProjektiProjektijoukkoOminaisuudet {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'h-k-suhde': number | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'muu-liittyva-organisaatio'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'kuvaus': string | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'vaylamuoto': Set<ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'kunta': Set<object> | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'tila'?: object;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'kustannusarvio': number | null;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'maakunta': Set<object> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'maku-indeksi': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'paattyy'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'muu-kunta'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'tilaajaorganisaatio': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'muu-maakunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'muu-tilaajaorganisaatio'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'lyhenne': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'kustannustietojen-kuvaus'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'rahoituksen-lahde': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'alkaa'?: string;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'liittyva-organisaatio': Set<object> | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukkoOminaisuudet
-     */
     'vaihe'?: object;
 }
 
 export const ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum = {
-    Vesi: 'vesi',
-    Tie: 'tie',
-    Rata: 'rata'
+    vesi: 'vesi',
+    tie: 'tie',
+    rata: 'rata'
 } as const;
 
 export type ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum = typeof ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukonLisays
- */
 export interface ProjektiProjektijoukonLisays {
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudet}
-     * @memberof ProjektiProjektijoukonLisays
-     */
     'ominaisuudet': ProjektiProjektijoukotInnerOminaisuudet;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukonLisays
-     */
     'karttapiste': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukonLisays
-     */
     'geometry': object;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukonLisays
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukonLisays
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukonLisays
-     */
     'muutoksen-lahde-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukonPaivitys
- */
 export interface ProjektiProjektijoukonPaivitys {
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudet}
-     * @memberof ProjektiProjektijoukonPaivitys
-     */
     'ominaisuudet': ProjektiProjektijoukotInnerOminaisuudet;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukonPaivitys
-     */
     'karttapiste': object;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukonPaivitys
-     */
     'geometry': object;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukonPaivitys
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukonPaivitys
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukonPaivitys
-     */
     'muutoksen-lahde-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukotInner
- */
 export interface ProjektiProjektijoukotInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
-    'lahdejarjestelma': ProjektiProjektijoukotInnerLahdejarjestelmaEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
+    'lahdejarjestelma': ProjektiProjektijoukotInnerLahdejarjestelmaEnum | null;
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudet}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'ominaisuudet': ProjektiProjektijoukotInnerOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'oid': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'laskennallinen-keskipiste': object;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'luoja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'geometry': object;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'karttapiste': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'muokkaaja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInner
-     */
     'lahdejarjestelman-id': string | null;
 }
 
 export const ProjektiProjektijoukotInnerLahdejarjestelmaEnum = {
-    Lj21: 'lahdejarjestelma/lj21',
-    Lj05: 'lahdejarjestelma/lj05',
-    Lj13: 'lahdejarjestelma/lj13',
-    Lj14: 'lahdejarjestelma/lj14',
-    Lj03: 'lahdejarjestelma/lj03',
-    Lj10: 'lahdejarjestelma/lj10',
-    Lj04: 'lahdejarjestelma/lj04',
-    Lj08: 'lahdejarjestelma/lj08',
-    Lj11: 'lahdejarjestelma/lj11',
-    Lj06: 'lahdejarjestelma/lj06',
-    Lj02: 'lahdejarjestelma/lj02',
-    Lj09: 'lahdejarjestelma/lj09',
-    Lj07: 'lahdejarjestelma/lj07',
-    Lj15: 'lahdejarjestelma/lj15',
-    Lj18: 'lahdejarjestelma/lj18',
-    Lj17: 'lahdejarjestelma/lj17',
-    Lj20: 'lahdejarjestelma/lj20',
-    Lj16: 'lahdejarjestelma/lj16',
-    Lj01: 'lahdejarjestelma/lj01',
-    Lj19: 'lahdejarjestelma/lj19',
-    Lj12: 'lahdejarjestelma/lj12'
+    lahdejarjestelma_lj21: 'lahdejarjestelma/lj21',
+    lahdejarjestelma_lj05: 'lahdejarjestelma/lj05',
+    lahdejarjestelma_lj13: 'lahdejarjestelma/lj13',
+    lahdejarjestelma_lj14: 'lahdejarjestelma/lj14',
+    lahdejarjestelma_lj03: 'lahdejarjestelma/lj03',
+    lahdejarjestelma_lj10: 'lahdejarjestelma/lj10',
+    lahdejarjestelma_lj04: 'lahdejarjestelma/lj04',
+    lahdejarjestelma_lj08: 'lahdejarjestelma/lj08',
+    lahdejarjestelma_lj11: 'lahdejarjestelma/lj11',
+    lahdejarjestelma_lj06: 'lahdejarjestelma/lj06',
+    lahdejarjestelma_lj02: 'lahdejarjestelma/lj02',
+    lahdejarjestelma_lj09: 'lahdejarjestelma/lj09',
+    lahdejarjestelma_lj07: 'lahdejarjestelma/lj07',
+    lahdejarjestelma_lj15: 'lahdejarjestelma/lj15',
+    lahdejarjestelma_lj18: 'lahdejarjestelma/lj18',
+    lahdejarjestelma_lj17: 'lahdejarjestelma/lj17',
+    lahdejarjestelma_lj20: 'lahdejarjestelma/lj20',
+    lahdejarjestelma_lj16: 'lahdejarjestelma/lj16',
+    lahdejarjestelma_lj01: 'lahdejarjestelma/lj01',
+    lahdejarjestelma_lj19: 'lahdejarjestelma/lj19',
+    lahdejarjestelma_lj12: 'lahdejarjestelma/lj12'
 } as const;
 
 export type ProjektiProjektijoukotInnerLahdejarjestelmaEnum = typeof ProjektiProjektijoukotInnerLahdejarjestelmaEnum[keyof typeof ProjektiProjektijoukotInnerLahdejarjestelmaEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukotInnerLuoja
- */
 export interface ProjektiProjektijoukotInnerLuoja {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerLuoja
-     */
     'kayttajanimi': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof ProjektiProjektijoukotInnerLuoja
-     */
     'api'?: boolean | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerLuoja
-     */
     'client_id'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukotInnerOminaisuudet
- */
 export interface ProjektiProjektijoukotInnerOminaisuudet {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'h-k-suhde': number | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'muu-liittyva-organisaatio'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'kuvaus': string | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'vaylamuoto': Set<ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum>;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
-    'kunta': Set<ProjektiProjektijoukotInnerOminaisuudetKuntaEnum>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
+    'kunta': Set<ProjektiProjektijoukotInnerOminaisuudetKuntaEnum> | null;
     'tila'?: ProjektiProjektijoukotInnerOminaisuudetTilaEnum;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'kustannusarvio': number | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
-    'maakunta': Set<ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
+    'maakunta': Set<ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum> | null;
     'maku-indeksi': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'paattyy'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'muu-kunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'tilaajaorganisaatio': ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'muu-maakunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'muu-tilaajaorganisaatio'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'lyhenne': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
     'kustannustietojen-kuvaus'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
-    'rahoituksen-lahde': ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
+    'rahoituksen-lahde': ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum | null;
     'alkaa'?: string;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
-    'liittyva-organisaatio': Set<ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudet
-     */
+    'liittyva-organisaatio': Set<ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum> | null;
     'vaihe'?: ProjektiProjektijoukotInnerOminaisuudetVaiheEnum;
 }
 
 export const ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = {
-    Vesi: 'vesi',
-    Tie: 'tie',
-    Rata: 'rata'
+    vesi: 'vesi',
+    tie: 'tie',
+    rata: 'rata'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = typeof ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetKuntaEnum = {
-    Kunta563: 'kunta/kunta563',
-    Kunta273: 'kunta/kunta273',
-    Kunta529: 'kunta/kunta529',
-    Kunta531: 'kunta/kunta531',
-    Kunta640: 'kunta/kunta640',
-    Kunta019: 'kunta/kunta019',
-    Kunta181: 'kunta/kunta181',
-    Kunta892: 'kunta/kunta892',
-    Kunta741: 'kunta/kunta741',
-    Kunta909: 'kunta/kunta909',
-    Kunta918: 'kunta/kunta918',
-    Kunta606: 'kunta/kunta606',
-    Kunta781: 'kunta/kunta781',
-    Kunta430: 'kunta/kunta430',
-    Kunta289: 'kunta/kunta289',
-    Kunta230: 'kunta/kunta230',
-    Kunta292: 'kunta/kunta292',
-    Kunta564: 'kunta/kunta564',
-    Kunta172: 'kunta/kunta172',
-    Kunta533: 'kunta/kunta533',
-    Kunta182: 'kunta/kunta182',
-    Kunta442: 'kunta/kunta442',
-    Kunta838: 'kunta/kunta838',
-    Kunta419: 'kunta/kunta419',
-    Kunta559: 'kunta/kunta559',
-    Kunta073: 'kunta/kunta073',
-    Kunta092: 'kunta/kunta092',
-    Kunta601: 'kunta/kunta601',
-    Kunta895: 'kunta/kunta895',
-    Kunta891: 'kunta/kunta891',
-    Kunta082: 'kunta/kunta082',
-    Kunta108: 'kunta/kunta108',
-    Kunta975: 'kunta/kunta975',
-    Kunta214: 'kunta/kunta214',
-    Kunta885: 'kunta/kunta885',
-    Kunta505: 'kunta/kunta505',
-    Kunta989: 'kunta/kunta989',
-    Kunta086: 'kunta/kunta086',
-    Kunta538: 'kunta/kunta538',
-    Kunta020: 'kunta/kunta020',
-    Kunta153: 'kunta/kunta153',
-    Kunta415: 'kunta/kunta415',
-    Kunta280: 'kunta/kunta280',
-    Kunta102: 'kunta/kunta102',
-    Kunta179: 'kunta/kunta179',
-    Kunta250: 'kunta/kunta250',
-    Kunta018: 'kunta/kunta018',
-    Kunta633: 'kunta/kunta633',
-    Kunta429: 'kunta/kunta429',
-    Kunta205: 'kunta/kunta205',
-    Kunta567: 'kunta/kunta567',
-    Kunta508: 'kunta/kunta508',
-    Kunta536: 'kunta/kunta536',
-    Kunta582: 'kunta/kunta582',
-    Kunta271: 'kunta/kunta271',
-    Kunta489: 'kunta/kunta489',
-    Kunta577: 'kunta/kunta577',
-    Kunta981: 'kunta/kunta981',
-    Kunta783: 'kunta/kunta783',
-    Kunta475: 'kunta/kunta475',
-    Kunta832: 'kunta/kunta832',
-    Kunta277: 'kunta/kunta277',
-    Kunta680: 'kunta/kunta680',
-    Kunta535: 'kunta/kunta535',
-    Kunta977: 'kunta/kunta977',
-    Kunta784: 'kunta/kunta784',
-    Kunta256: 'kunta/kunta256',
-    Kunta416: 'kunta/kunta416',
-    Kunta940: 'kunta/kunta940',
-    Kunta420: 'kunta/kunta420',
-    Kunta407: 'kunta/kunta407',
-    Kunta418: 'kunta/kunta418',
-    Kunta174: 'kunta/kunta174',
-    Kunta065: 'kunta/kunta065',
-    Kunta231: 'kunta/kunta231',
-    Kunta401: 'kunta/kunta401',
-    Kunta580: 'kunta/kunta580',
-    Kunta583: 'kunta/kunta583',
-    Kunta210: 'kunta/kunta210',
-    Kunta163: 'kunta/kunta163',
-    Kunta075: 'kunta/kunta075',
-    Kunta562: 'kunta/kunta562',
-    Kunta928: 'kunta/kunta928',
-    Kunta099: 'kunta/kunta099',
-    Kunta084: 'kunta/kunta084',
-    Kunta912: 'kunta/kunta912',
-    Kunta422: 'kunta/kunta422',
-    Kunta165: 'kunta/kunta165',
-    Kunta399: 'kunta/kunta399',
-    Kunta743: 'kunta/kunta743',
-    Kunta708: 'kunta/kunta708',
-    Kunta747: 'kunta/kunta747',
-    Kunta275: 'kunta/kunta275',
-    Kunta219: 'kunta/kunta219',
-    Kunta184: 'kunta/kunta184',
-    Kunta006: 'kunta/kunta006',
-    Kunta478: 'kunta/kunta478',
-    Kunta920: 'kunta/kunta920',
-    Kunta919: 'kunta/kunta919',
-    Kunta737: 'kunta/kunta737',
-    Kunta614: 'kunta/kunta614',
-    Kunta106: 'kunta/kunta106',
-    Kunta213: 'kunta/kunta213',
-    Kunta587: 'kunta/kunta587',
-    Kunta730: 'kunta/kunta730',
-    Kunta148: 'kunta/kunta148',
-    Kunta245: 'kunta/kunta245',
-    Kunta484: 'kunta/kunta484',
-    Kunta501: 'kunta/kunta501',
-    Kunta545: 'kunta/kunta545',
-    Kunta490: 'kunta/kunta490',
-    Kunta164: 'kunta/kunta164',
-    Kunta052: 'kunta/kunta052',
-    Kunta588: 'kunta/kunta588',
-    Kunta689: 'kunta/kunta689',
-    Kunta085: 'kunta/kunta085',
-    Kunta504: 'kunta/kunta504',
-    Kunta178: 'kunta/kunta178',
-    Kunta906: 'kunta/kunta906',
-    Kunta604: 'kunta/kunta604',
-    Kunta240: 'kunta/kunta240',
-    Kunta683: 'kunta/kunta683',
-    Kunta739: 'kunta/kunta739',
-    Kunta286: 'kunta/kunta286',
-    Kunta761: 'kunta/kunta761',
-    Kunta103: 'kunta/kunta103',
-    Kunta220: 'kunta/kunta220',
-    Kunta863: 'kunta/kunta863',
-    Kunta772: 'kunta/kunta772',
-    Kunta937: 'kunta/kunta937',
-    Kunta235: 'kunta/kunta235',
-    Kunta295: 'kunta/kunta295',
-    Kunta320: 'kunta/kunta320',
-    Kunta438: 'kunta/kunta438',
-    Kunta623: 'kunta/kunta623',
-    Kunta239: 'kunta/kunta239',
-    Kunta534: 'kunta/kunta534',
-    Kunta841: 'kunta/kunta841',
-    Kunta431: 'kunta/kunta431',
-    Kunta493: 'kunta/kunta493',
-    Kunta630: 'kunta/kunta630',
-    Kunta281: 'kunta/kunta281',
-    Kunta169: 'kunta/kunta169',
-    Kunta146: 'kunta/kunta146',
-    Kunta992: 'kunta/kunta992',
-    Kunta406: 'kunta/kunta406',
-    Kunta276: 'kunta/kunta276',
-    Kunta249: 'kunta/kunta249',
-    Kunta244: 'kunta/kunta244',
-    Kunta304: 'kunta/kunta304',
-    Kunta933: 'kunta/kunta933',
-    Kunta831: 'kunta/kunta831',
-    Kunta300: 'kunta/kunta300',
-    Kunta561: 'kunta/kunta561',
-    Kunta913: 'kunta/kunta913',
-    Kunta433: 'kunta/kunta433',
-    Kunta010: 'kunta/kunta010',
-    Kunta704: 'kunta/kunta704',
-    Kunta776: 'kunta/kunta776',
-    Kunta071: 'kunta/kunta071',
-    Kunta774: 'kunta/kunta774',
-    Kunta499: 'kunta/kunta499',
-    Kunta212: 'kunta/kunta212',
-    Kunta932: 'kunta/kunta932',
-    Kunta247: 'kunta/kunta247',
-    Kunta322: 'kunta/kunta322',
-    Kunta495: 'kunta/kunta495',
-    Kunta173: 'kunta/kunta173',
-    Kunta980: 'kunta/kunta980',
-    Kunta848: 'kunta/kunta848',
-    Kunta263: 'kunta/kunta263',
-    Kunta208: 'kunta/kunta208',
-    Kunta578: 'kunta/kunta578',
-    Kunta043: 'kunta/kunta043',
-    Kunta837: 'kunta/kunta837',
-    Kunta705: 'kunta/kunta705',
-    Kunta227: 'kunta/kunta227',
-    Kunta684: 'kunta/kunta684',
-    Kunta143: 'kunta/kunta143',
-    Kunta682: 'kunta/kunta682',
-    Kunta759: 'kunta/kunta759',
-    Kunta233: 'kunta/kunta233',
-    Kunta009: 'kunta/kunta009',
-    Kunta261: 'kunta/kunta261',
-    Kunta931: 'kunta/kunta931',
-    Kunta186: 'kunta/kunta186',
-    Kunta091: 'kunta/kunta091',
-    Kunta308: 'kunta/kunta308',
-    Kunta309: 'kunta/kunta309',
-    Kunta707: 'kunta/kunta707',
-    Kunta284: 'kunta/kunta284',
-    Kunta167: 'kunta/kunta167',
-    Kunta853: 'kunta/kunta853',
-    Kunta923: 'kunta/kunta923',
-    Kunta425: 'kunta/kunta425',
-    Kunta971: 'kunta/kunta971',
-    Kunta218: 'kunta/kunta218',
-    Kunta988: 'kunta/kunta988',
-    Kunta097: 'kunta/kunta097',
-    Kunta491: 'kunta/kunta491',
-    Kunta678: 'kunta/kunta678',
-    Kunta072: 'kunta/kunta072',
-    Kunta710: 'kunta/kunta710',
-    Kunta500: 'kunta/kunta500',
-    Kunta204: 'kunta/kunta204',
-    Kunta687: 'kunta/kunta687',
-    Kunta076: 'kunta/kunta076',
-    Kunta924: 'kunta/kunta924',
-    Kunta410: 'kunta/kunta410',
-    Kunta856: 'kunta/kunta856',
-    Kunta775: 'kunta/kunta775',
-    Kunta916: 'kunta/kunta916',
-    Kunta259: 'kunta/kunta259',
-    Kunta176: 'kunta/kunta176',
-    Kunta595: 'kunta/kunta595',
-    Kunta170: 'kunta/kunta170',
-    Kunta405: 'kunta/kunta405',
-    Kunta835: 'kunta/kunta835',
-    Kunta098: 'kunta/kunta098',
-    Kunta480: 'kunta/kunta480',
-    Kunta202: 'kunta/kunta202',
-    Kunta305: 'kunta/kunta305',
-    Kunta183: 'kunta/kunta183',
-    Kunta696: 'kunta/kunta696',
-    Kunta051: 'kunta/kunta051',
-    Kunta479: 'kunta/kunta479',
-    Kunta859: 'kunta/kunta859',
-    Kunta434: 'kunta/kunta434',
-    Kunta618: 'kunta/kunta618',
-    Kunta017: 'kunta/kunta017',
-    Kunta319: 'kunta/kunta319',
-    Kunta607: 'kunta/kunta607',
-    Kunta046: 'kunta/kunta046',
-    Kunta400: 'kunta/kunta400',
-    Kunta069: 'kunta/kunta069',
-    Kunta266: 'kunta/kunta266',
-    Kunta594: 'kunta/kunta594',
-    Kunta778: 'kunta/kunta778',
-    Kunta935: 'kunta/kunta935',
-    Kunta532: 'kunta/kunta532',
-    Kunta834: 'kunta/kunta834',
-    Kunta223: 'kunta/kunta223',
-    Kunta576: 'kunta/kunta576',
-    Kunta609: 'kunta/kunta609',
-    Kunta921: 'kunta/kunta921',
-    Kunta492: 'kunta/kunta492',
-    Kunta047: 'kunta/kunta047',
-    Kunta074: 'kunta/kunta074',
-    Kunta398: 'kunta/kunta398',
-    Kunta315: 'kunta/kunta315',
-    Kunta140: 'kunta/kunta140',
-    Kunta635: 'kunta/kunta635',
-    Kunta691: 'kunta/kunta691',
-    Kunta592: 'kunta/kunta592',
-    Kunta248: 'kunta/kunta248',
-    Kunta283: 'kunta/kunta283',
-    Kunta736: 'kunta/kunta736',
-    Kunta403: 'kunta/kunta403',
-    Kunta254: 'kunta/kunta254',
-    Kunta581: 'kunta/kunta581',
-    Kunta602: 'kunta/kunta602',
-    Kunta766: 'kunta/kunta766',
-    Kunta109: 'kunta/kunta109',
-    Kunta846: 'kunta/kunta846',
-    Kunta044: 'kunta/kunta044',
-    Kunta851: 'kunta/kunta851',
-    Kunta279: 'kunta/kunta279',
-    Kunta729: 'kunta/kunta729',
-    Kunta291: 'kunta/kunta291',
-    Kunta241: 'kunta/kunta241',
-    Kunta681: 'kunta/kunta681',
-    Kunta762: 'kunta/kunta762',
-    Kunta749: 'kunta/kunta749',
-    Kunta414: 'kunta/kunta414',
-    Kunta855: 'kunta/kunta855',
-    Kunta260: 'kunta/kunta260',
-    Kunta014: 'kunta/kunta014',
-    Kunta262: 'kunta/kunta262',
-    Kunta845: 'kunta/kunta845',
-    Kunta917: 'kunta/kunta917',
-    Kunta152: 'kunta/kunta152',
-    Kunta603: 'kunta/kunta603',
-    Kunta483: 'kunta/kunta483',
-    Kunta050: 'kunta/kunta050',
-    Kunta402: 'kunta/kunta402',
-    Kunta908: 'kunta/kunta908',
-    Kunta435: 'kunta/kunta435',
-    Kunta849: 'kunta/kunta849',
-    Kunta317: 'kunta/kunta317',
-    Kunta620: 'kunta/kunta620',
-    Kunta742: 'kunta/kunta742',
-    Kunta171: 'kunta/kunta171',
-    Kunta979: 'kunta/kunta979',
-    Kunta498: 'kunta/kunta498',
-    Kunta224: 'kunta/kunta224',
-    Kunta790: 'kunta/kunta790',
-    Kunta537: 'kunta/kunta537',
-    Kunta946: 'kunta/kunta946',
-    Kunta257: 'kunta/kunta257',
-    Kunta111: 'kunta/kunta111',
-    Kunta226: 'kunta/kunta226',
-    Kunta142: 'kunta/kunta142',
-    Kunta941: 'kunta/kunta941',
-    Kunta318: 'kunta/kunta318',
-    Kunta408: 'kunta/kunta408',
-    Kunta973: 'kunta/kunta973',
-    Kunta927: 'kunta/kunta927',
-    Kunta413: 'kunta/kunta413',
-    Kunta740: 'kunta/kunta740',
-    Kunta624: 'kunta/kunta624',
-    Kunta306: 'kunta/kunta306',
-    Kunta748: 'kunta/kunta748',
-    Kunta417: 'kunta/kunta417',
-    Kunta864: 'kunta/kunta864',
-    Kunta243: 'kunta/kunta243',
-    Kunta236: 'kunta/kunta236',
-    Kunta445: 'kunta/kunta445',
-    Kunta943: 'kunta/kunta943',
-    Kunta285: 'kunta/kunta285',
-    Kunta945: 'kunta/kunta945',
-    Kunta626: 'kunta/kunta626',
-    Kunta854: 'kunta/kunta854',
-    Kunta777: 'kunta/kunta777',
-    Kunta697: 'kunta/kunta697',
-    Kunta785: 'kunta/kunta785',
-    Kunta255: 'kunta/kunta255',
-    Kunta619: 'kunta/kunta619',
-    Kunta312: 'kunta/kunta312',
-    Kunta049: 'kunta/kunta049',
-    Kunta424: 'kunta/kunta424',
-    Kunta252: 'kunta/kunta252',
-    Kunta608: 'kunta/kunta608',
-    Kunta893: 'kunta/kunta893',
-    Kunta636: 'kunta/kunta636',
-    Kunta694: 'kunta/kunta694',
-    Kunta857: 'kunta/kunta857',
-    Kunta439: 'kunta/kunta439',
-    Kunta738: 'kunta/kunta738',
-    Kunta922: 'kunta/kunta922',
-    Kunta005: 'kunta/kunta005',
-    Kunta101: 'kunta/kunta101',
-    Kunta925: 'kunta/kunta925',
-    Kunta035: 'kunta/kunta035',
-    Kunta944: 'kunta/kunta944',
-    Kunta485: 'kunta/kunta485',
-    Kunta942: 'kunta/kunta942',
-    Kunta972: 'kunta/kunta972',
-    Kunta507: 'kunta/kunta507',
-    Kunta625: 'kunta/kunta625',
-    Kunta890: 'kunta/kunta890',
-    Kunta702: 'kunta/kunta702',
-    Kunta858: 'kunta/kunta858',
-    Kunta833: 'kunta/kunta833',
-    Kunta436: 'kunta/kunta436',
-    Kunta936: 'kunta/kunta936',
-    Kunta150: 'kunta/kunta150',
-    Kunta251: 'kunta/kunta251',
-    Kunta079: 'kunta/kunta079',
-    Kunta911: 'kunta/kunta911',
-    Kunta095: 'kunta/kunta095',
-    Kunta770: 'kunta/kunta770',
-    Kunta288: 'kunta/kunta288',
-    Kunta887: 'kunta/kunta887',
-    Kunta443: 'kunta/kunta443',
-    Kunta611: 'kunta/kunta611',
-    Kunta771: 'kunta/kunta771',
-    Kunta585: 'kunta/kunta585',
-    Kunta177: 'kunta/kunta177',
-    Kunta544: 'kunta/kunta544',
-    Kunta060: 'kunta/kunta060',
-    Kunta598: 'kunta/kunta598',
-    Kunta631: 'kunta/kunta631',
-    Kunta287: 'kunta/kunta287',
-    Kunta440: 'kunta/kunta440',
-    Kunta734: 'kunta/kunta734',
-    Kunta310: 'kunta/kunta310',
-    Kunta754: 'kunta/kunta754',
-    Kunta481: 'kunta/kunta481',
-    Kunta421: 'kunta/kunta421',
-    Kunta584: 'kunta/kunta584',
-    Kunta476: 'kunta/kunta476',
-    Kunta791: 'kunta/kunta791',
-    Kunta061: 'kunta/kunta061',
-    Kunta616: 'kunta/kunta616',
-    Kunta175: 'kunta/kunta175',
-    Kunta015: 'kunta/kunta015',
-    Kunta441: 'kunta/kunta441',
-    Kunta700: 'kunta/kunta700',
-    Kunta732: 'kunta/kunta732',
-    Kunta303: 'kunta/kunta303',
-    Kunta145: 'kunta/kunta145',
-    Kunta889: 'kunta/kunta889',
-    Kunta746: 'kunta/kunta746',
-    Kunta844: 'kunta/kunta844',
-    Kunta543: 'kunta/kunta543',
-    Kunta506: 'kunta/kunta506',
-    Kunta040: 'kunta/kunta040',
-    Kunta905: 'kunta/kunta905',
-    Kunta444: 'kunta/kunta444',
-    Kunta560: 'kunta/kunta560',
-    Kunta755: 'kunta/kunta755',
-    Kunta632: 'kunta/kunta632',
-    Kunta915: 'kunta/kunta915',
-    Kunta701: 'kunta/kunta701',
-    Kunta045: 'kunta/kunta045',
-    Kunta573: 'kunta/kunta573',
-    Kunta692: 'kunta/kunta692',
-    Kunta081: 'kunta/kunta081',
-    Kunta593: 'kunta/kunta593',
-    Kunta265: 'kunta/kunta265',
-    Kunta926: 'kunta/kunta926',
-    Kunta139: 'kunta/kunta139',
-    Kunta272: 'kunta/kunta272',
-    Kunta297: 'kunta/kunta297',
-    Kunta765: 'kunta/kunta765',
-    Kunta540: 'kunta/kunta540',
-    Kunta482: 'kunta/kunta482',
-    Kunta850: 'kunta/kunta850',
-    Kunta426: 'kunta/kunta426',
-    Kunta503: 'kunta/kunta503',
-    Kunta004: 'kunta/kunta004',
-    Kunta216: 'kunta/kunta216',
-    Kunta638: 'kunta/kunta638',
-    Kunta217: 'kunta/kunta217',
-    Kunta615: 'kunta/kunta615',
-    Kunta078: 'kunta/kunta078',
-    Kunta886: 'kunta/kunta886',
-    Kunta686: 'kunta/kunta686',
-    Kunta077: 'kunta/kunta077',
-    Kunta541: 'kunta/kunta541',
-    Kunta293: 'kunta/kunta293',
-    Kunta753: 'kunta/kunta753',
-    Kunta090: 'kunta/kunta090',
-    Kunta105: 'kunta/kunta105',
-    Kunta586: 'kunta/kunta586',
-    Kunta316: 'kunta/kunta316',
-    Kunta617: 'kunta/kunta617',
-    Kunta062: 'kunta/kunta062',
-    Kunta016: 'kunta/kunta016',
-    Kunta149: 'kunta/kunta149',
-    Kunta083: 'kunta/kunta083',
-    Kunta751: 'kunta/kunta751',
-    Kunta290: 'kunta/kunta290',
-    Kunta934: 'kunta/kunta934',
-    Kunta301: 'kunta/kunta301',
-    Kunta698: 'kunta/kunta698',
-    Kunta976: 'kunta/kunta976',
-    Kunta246: 'kunta/kunta246',
-    Kunta211: 'kunta/kunta211',
-    Kunta758: 'kunta/kunta758',
-    Kunta978: 'kunta/kunta978',
-    Kunta599: 'kunta/kunta599',
-    Kunta180: 'kunta/kunta180',
-    Kunta494: 'kunta/kunta494',
-    Kunta232: 'kunta/kunta232',
-    Kunta423: 'kunta/kunta423',
-    Kunta151: 'kunta/kunta151',
-    Kunta768: 'kunta/kunta768',
-    Kunta728: 'kunta/kunta728'
+    kunta_kunta563: 'kunta/kunta563',
+    kunta_kunta273: 'kunta/kunta273',
+    kunta_kunta529: 'kunta/kunta529',
+    kunta_kunta531: 'kunta/kunta531',
+    kunta_kunta640: 'kunta/kunta640',
+    kunta_kunta019: 'kunta/kunta019',
+    kunta_kunta181: 'kunta/kunta181',
+    kunta_kunta892: 'kunta/kunta892',
+    kunta_kunta741: 'kunta/kunta741',
+    kunta_kunta909: 'kunta/kunta909',
+    kunta_kunta918: 'kunta/kunta918',
+    kunta_kunta606: 'kunta/kunta606',
+    kunta_kunta781: 'kunta/kunta781',
+    kunta_kunta430: 'kunta/kunta430',
+    kunta_kunta289: 'kunta/kunta289',
+    kunta_kunta230: 'kunta/kunta230',
+    kunta_kunta292: 'kunta/kunta292',
+    kunta_kunta564: 'kunta/kunta564',
+    kunta_kunta172: 'kunta/kunta172',
+    kunta_kunta533: 'kunta/kunta533',
+    kunta_kunta182: 'kunta/kunta182',
+    kunta_kunta442: 'kunta/kunta442',
+    kunta_kunta838: 'kunta/kunta838',
+    kunta_kunta419: 'kunta/kunta419',
+    kunta_kunta559: 'kunta/kunta559',
+    kunta_kunta073: 'kunta/kunta073',
+    kunta_kunta092: 'kunta/kunta092',
+    kunta_kunta601: 'kunta/kunta601',
+    kunta_kunta895: 'kunta/kunta895',
+    kunta_kunta891: 'kunta/kunta891',
+    kunta_kunta082: 'kunta/kunta082',
+    kunta_kunta108: 'kunta/kunta108',
+    kunta_kunta975: 'kunta/kunta975',
+    kunta_kunta214: 'kunta/kunta214',
+    kunta_kunta885: 'kunta/kunta885',
+    kunta_kunta505: 'kunta/kunta505',
+    kunta_kunta989: 'kunta/kunta989',
+    kunta_kunta086: 'kunta/kunta086',
+    kunta_kunta538: 'kunta/kunta538',
+    kunta_kunta020: 'kunta/kunta020',
+    kunta_kunta153: 'kunta/kunta153',
+    kunta_kunta415: 'kunta/kunta415',
+    kunta_kunta280: 'kunta/kunta280',
+    kunta_kunta102: 'kunta/kunta102',
+    kunta_kunta179: 'kunta/kunta179',
+    kunta_kunta250: 'kunta/kunta250',
+    kunta_kunta018: 'kunta/kunta018',
+    kunta_kunta633: 'kunta/kunta633',
+    kunta_kunta429: 'kunta/kunta429',
+    kunta_kunta205: 'kunta/kunta205',
+    kunta_kunta567: 'kunta/kunta567',
+    kunta_kunta508: 'kunta/kunta508',
+    kunta_kunta536: 'kunta/kunta536',
+    kunta_kunta582: 'kunta/kunta582',
+    kunta_kunta271: 'kunta/kunta271',
+    kunta_kunta489: 'kunta/kunta489',
+    kunta_kunta577: 'kunta/kunta577',
+    kunta_kunta981: 'kunta/kunta981',
+    kunta_kunta783: 'kunta/kunta783',
+    kunta_kunta475: 'kunta/kunta475',
+    kunta_kunta832: 'kunta/kunta832',
+    kunta_kunta277: 'kunta/kunta277',
+    kunta_kunta680: 'kunta/kunta680',
+    kunta_kunta535: 'kunta/kunta535',
+    kunta_kunta977: 'kunta/kunta977',
+    kunta_kunta784: 'kunta/kunta784',
+    kunta_kunta256: 'kunta/kunta256',
+    kunta_kunta416: 'kunta/kunta416',
+    kunta_kunta940: 'kunta/kunta940',
+    kunta_kunta420: 'kunta/kunta420',
+    kunta_kunta407: 'kunta/kunta407',
+    kunta_kunta418: 'kunta/kunta418',
+    kunta_kunta174: 'kunta/kunta174',
+    kunta_kunta065: 'kunta/kunta065',
+    kunta_kunta231: 'kunta/kunta231',
+    kunta_kunta401: 'kunta/kunta401',
+    kunta_kunta580: 'kunta/kunta580',
+    kunta_kunta583: 'kunta/kunta583',
+    kunta_kunta210: 'kunta/kunta210',
+    kunta_kunta163: 'kunta/kunta163',
+    kunta_kunta075: 'kunta/kunta075',
+    kunta_kunta562: 'kunta/kunta562',
+    kunta_kunta928: 'kunta/kunta928',
+    kunta_kunta099: 'kunta/kunta099',
+    kunta_kunta084: 'kunta/kunta084',
+    kunta_kunta912: 'kunta/kunta912',
+    kunta_kunta422: 'kunta/kunta422',
+    kunta_kunta165: 'kunta/kunta165',
+    kunta_kunta399: 'kunta/kunta399',
+    kunta_kunta743: 'kunta/kunta743',
+    kunta_kunta708: 'kunta/kunta708',
+    kunta_kunta747: 'kunta/kunta747',
+    kunta_kunta275: 'kunta/kunta275',
+    kunta_kunta219: 'kunta/kunta219',
+    kunta_kunta184: 'kunta/kunta184',
+    kunta_kunta006: 'kunta/kunta006',
+    kunta_kunta478: 'kunta/kunta478',
+    kunta_kunta920: 'kunta/kunta920',
+    kunta_kunta919: 'kunta/kunta919',
+    kunta_kunta737: 'kunta/kunta737',
+    kunta_kunta614: 'kunta/kunta614',
+    kunta_kunta106: 'kunta/kunta106',
+    kunta_kunta213: 'kunta/kunta213',
+    kunta_kunta587: 'kunta/kunta587',
+    kunta_kunta730: 'kunta/kunta730',
+    kunta_kunta148: 'kunta/kunta148',
+    kunta_kunta245: 'kunta/kunta245',
+    kunta_kunta484: 'kunta/kunta484',
+    kunta_kunta501: 'kunta/kunta501',
+    kunta_kunta545: 'kunta/kunta545',
+    kunta_kunta490: 'kunta/kunta490',
+    kunta_kunta164: 'kunta/kunta164',
+    kunta_kunta052: 'kunta/kunta052',
+    kunta_kunta588: 'kunta/kunta588',
+    kunta_kunta689: 'kunta/kunta689',
+    kunta_kunta085: 'kunta/kunta085',
+    kunta_kunta504: 'kunta/kunta504',
+    kunta_kunta178: 'kunta/kunta178',
+    kunta_kunta906: 'kunta/kunta906',
+    kunta_kunta604: 'kunta/kunta604',
+    kunta_kunta240: 'kunta/kunta240',
+    kunta_kunta683: 'kunta/kunta683',
+    kunta_kunta739: 'kunta/kunta739',
+    kunta_kunta286: 'kunta/kunta286',
+    kunta_kunta761: 'kunta/kunta761',
+    kunta_kunta103: 'kunta/kunta103',
+    kunta_kunta220: 'kunta/kunta220',
+    kunta_kunta863: 'kunta/kunta863',
+    kunta_kunta772: 'kunta/kunta772',
+    kunta_kunta937: 'kunta/kunta937',
+    kunta_kunta235: 'kunta/kunta235',
+    kunta_kunta295: 'kunta/kunta295',
+    kunta_kunta320: 'kunta/kunta320',
+    kunta_kunta438: 'kunta/kunta438',
+    kunta_kunta623: 'kunta/kunta623',
+    kunta_kunta239: 'kunta/kunta239',
+    kunta_kunta534: 'kunta/kunta534',
+    kunta_kunta841: 'kunta/kunta841',
+    kunta_kunta431: 'kunta/kunta431',
+    kunta_kunta493: 'kunta/kunta493',
+    kunta_kunta630: 'kunta/kunta630',
+    kunta_kunta281: 'kunta/kunta281',
+    kunta_kunta169: 'kunta/kunta169',
+    kunta_kunta146: 'kunta/kunta146',
+    kunta_kunta992: 'kunta/kunta992',
+    kunta_kunta406: 'kunta/kunta406',
+    kunta_kunta276: 'kunta/kunta276',
+    kunta_kunta249: 'kunta/kunta249',
+    kunta_kunta244: 'kunta/kunta244',
+    kunta_kunta304: 'kunta/kunta304',
+    kunta_kunta933: 'kunta/kunta933',
+    kunta_kunta831: 'kunta/kunta831',
+    kunta_kunta300: 'kunta/kunta300',
+    kunta_kunta561: 'kunta/kunta561',
+    kunta_kunta913: 'kunta/kunta913',
+    kunta_kunta433: 'kunta/kunta433',
+    kunta_kunta010: 'kunta/kunta010',
+    kunta_kunta704: 'kunta/kunta704',
+    kunta_kunta776: 'kunta/kunta776',
+    kunta_kunta071: 'kunta/kunta071',
+    kunta_kunta774: 'kunta/kunta774',
+    kunta_kunta499: 'kunta/kunta499',
+    kunta_kunta212: 'kunta/kunta212',
+    kunta_kunta932: 'kunta/kunta932',
+    kunta_kunta247: 'kunta/kunta247',
+    kunta_kunta322: 'kunta/kunta322',
+    kunta_kunta495: 'kunta/kunta495',
+    kunta_kunta173: 'kunta/kunta173',
+    kunta_kunta980: 'kunta/kunta980',
+    kunta_kunta848: 'kunta/kunta848',
+    kunta_kunta263: 'kunta/kunta263',
+    kunta_kunta208: 'kunta/kunta208',
+    kunta_kunta578: 'kunta/kunta578',
+    kunta_kunta043: 'kunta/kunta043',
+    kunta_kunta837: 'kunta/kunta837',
+    kunta_kunta705: 'kunta/kunta705',
+    kunta_kunta227: 'kunta/kunta227',
+    kunta_kunta684: 'kunta/kunta684',
+    kunta_kunta143: 'kunta/kunta143',
+    kunta_kunta682: 'kunta/kunta682',
+    kunta_kunta759: 'kunta/kunta759',
+    kunta_kunta233: 'kunta/kunta233',
+    kunta_kunta009: 'kunta/kunta009',
+    kunta_kunta261: 'kunta/kunta261',
+    kunta_kunta931: 'kunta/kunta931',
+    kunta_kunta186: 'kunta/kunta186',
+    kunta_kunta091: 'kunta/kunta091',
+    kunta_kunta308: 'kunta/kunta308',
+    kunta_kunta309: 'kunta/kunta309',
+    kunta_kunta707: 'kunta/kunta707',
+    kunta_kunta284: 'kunta/kunta284',
+    kunta_kunta167: 'kunta/kunta167',
+    kunta_kunta853: 'kunta/kunta853',
+    kunta_kunta923: 'kunta/kunta923',
+    kunta_kunta425: 'kunta/kunta425',
+    kunta_kunta971: 'kunta/kunta971',
+    kunta_kunta218: 'kunta/kunta218',
+    kunta_kunta988: 'kunta/kunta988',
+    kunta_kunta097: 'kunta/kunta097',
+    kunta_kunta491: 'kunta/kunta491',
+    kunta_kunta678: 'kunta/kunta678',
+    kunta_kunta072: 'kunta/kunta072',
+    kunta_kunta710: 'kunta/kunta710',
+    kunta_kunta500: 'kunta/kunta500',
+    kunta_kunta204: 'kunta/kunta204',
+    kunta_kunta687: 'kunta/kunta687',
+    kunta_kunta076: 'kunta/kunta076',
+    kunta_kunta924: 'kunta/kunta924',
+    kunta_kunta410: 'kunta/kunta410',
+    kunta_kunta856: 'kunta/kunta856',
+    kunta_kunta775: 'kunta/kunta775',
+    kunta_kunta916: 'kunta/kunta916',
+    kunta_kunta259: 'kunta/kunta259',
+    kunta_kunta176: 'kunta/kunta176',
+    kunta_kunta595: 'kunta/kunta595',
+    kunta_kunta170: 'kunta/kunta170',
+    kunta_kunta405: 'kunta/kunta405',
+    kunta_kunta835: 'kunta/kunta835',
+    kunta_kunta098: 'kunta/kunta098',
+    kunta_kunta480: 'kunta/kunta480',
+    kunta_kunta202: 'kunta/kunta202',
+    kunta_kunta305: 'kunta/kunta305',
+    kunta_kunta183: 'kunta/kunta183',
+    kunta_kunta696: 'kunta/kunta696',
+    kunta_kunta051: 'kunta/kunta051',
+    kunta_kunta479: 'kunta/kunta479',
+    kunta_kunta859: 'kunta/kunta859',
+    kunta_kunta434: 'kunta/kunta434',
+    kunta_kunta618: 'kunta/kunta618',
+    kunta_kunta017: 'kunta/kunta017',
+    kunta_kunta319: 'kunta/kunta319',
+    kunta_kunta607: 'kunta/kunta607',
+    kunta_kunta046: 'kunta/kunta046',
+    kunta_kunta400: 'kunta/kunta400',
+    kunta_kunta069: 'kunta/kunta069',
+    kunta_kunta266: 'kunta/kunta266',
+    kunta_kunta594: 'kunta/kunta594',
+    kunta_kunta778: 'kunta/kunta778',
+    kunta_kunta935: 'kunta/kunta935',
+    kunta_kunta532: 'kunta/kunta532',
+    kunta_kunta834: 'kunta/kunta834',
+    kunta_kunta223: 'kunta/kunta223',
+    kunta_kunta576: 'kunta/kunta576',
+    kunta_kunta609: 'kunta/kunta609',
+    kunta_kunta921: 'kunta/kunta921',
+    kunta_kunta492: 'kunta/kunta492',
+    kunta_kunta047: 'kunta/kunta047',
+    kunta_kunta074: 'kunta/kunta074',
+    kunta_kunta398: 'kunta/kunta398',
+    kunta_kunta315: 'kunta/kunta315',
+    kunta_kunta140: 'kunta/kunta140',
+    kunta_kunta635: 'kunta/kunta635',
+    kunta_kunta691: 'kunta/kunta691',
+    kunta_kunta592: 'kunta/kunta592',
+    kunta_kunta248: 'kunta/kunta248',
+    kunta_kunta283: 'kunta/kunta283',
+    kunta_kunta736: 'kunta/kunta736',
+    kunta_kunta403: 'kunta/kunta403',
+    kunta_kunta254: 'kunta/kunta254',
+    kunta_kunta581: 'kunta/kunta581',
+    kunta_kunta602: 'kunta/kunta602',
+    kunta_kunta766: 'kunta/kunta766',
+    kunta_kunta109: 'kunta/kunta109',
+    kunta_kunta846: 'kunta/kunta846',
+    kunta_kunta044: 'kunta/kunta044',
+    kunta_kunta851: 'kunta/kunta851',
+    kunta_kunta279: 'kunta/kunta279',
+    kunta_kunta729: 'kunta/kunta729',
+    kunta_kunta291: 'kunta/kunta291',
+    kunta_kunta241: 'kunta/kunta241',
+    kunta_kunta681: 'kunta/kunta681',
+    kunta_kunta762: 'kunta/kunta762',
+    kunta_kunta749: 'kunta/kunta749',
+    kunta_kunta414: 'kunta/kunta414',
+    kunta_kunta855: 'kunta/kunta855',
+    kunta_kunta260: 'kunta/kunta260',
+    kunta_kunta014: 'kunta/kunta014',
+    kunta_kunta262: 'kunta/kunta262',
+    kunta_kunta845: 'kunta/kunta845',
+    kunta_kunta917: 'kunta/kunta917',
+    kunta_kunta152: 'kunta/kunta152',
+    kunta_kunta603: 'kunta/kunta603',
+    kunta_kunta483: 'kunta/kunta483',
+    kunta_kunta050: 'kunta/kunta050',
+    kunta_kunta402: 'kunta/kunta402',
+    kunta_kunta908: 'kunta/kunta908',
+    kunta_kunta435: 'kunta/kunta435',
+    kunta_kunta849: 'kunta/kunta849',
+    kunta_kunta317: 'kunta/kunta317',
+    kunta_kunta620: 'kunta/kunta620',
+    kunta_kunta742: 'kunta/kunta742',
+    kunta_kunta171: 'kunta/kunta171',
+    kunta_kunta979: 'kunta/kunta979',
+    kunta_kunta498: 'kunta/kunta498',
+    kunta_kunta224: 'kunta/kunta224',
+    kunta_kunta790: 'kunta/kunta790',
+    kunta_kunta537: 'kunta/kunta537',
+    kunta_kunta946: 'kunta/kunta946',
+    kunta_kunta257: 'kunta/kunta257',
+    kunta_kunta111: 'kunta/kunta111',
+    kunta_kunta226: 'kunta/kunta226',
+    kunta_kunta142: 'kunta/kunta142',
+    kunta_kunta941: 'kunta/kunta941',
+    kunta_kunta318: 'kunta/kunta318',
+    kunta_kunta408: 'kunta/kunta408',
+    kunta_kunta973: 'kunta/kunta973',
+    kunta_kunta927: 'kunta/kunta927',
+    kunta_kunta413: 'kunta/kunta413',
+    kunta_kunta740: 'kunta/kunta740',
+    kunta_kunta624: 'kunta/kunta624',
+    kunta_kunta306: 'kunta/kunta306',
+    kunta_kunta748: 'kunta/kunta748',
+    kunta_kunta417: 'kunta/kunta417',
+    kunta_kunta864: 'kunta/kunta864',
+    kunta_kunta243: 'kunta/kunta243',
+    kunta_kunta236: 'kunta/kunta236',
+    kunta_kunta445: 'kunta/kunta445',
+    kunta_kunta943: 'kunta/kunta943',
+    kunta_kunta285: 'kunta/kunta285',
+    kunta_kunta945: 'kunta/kunta945',
+    kunta_kunta626: 'kunta/kunta626',
+    kunta_kunta854: 'kunta/kunta854',
+    kunta_kunta777: 'kunta/kunta777',
+    kunta_kunta697: 'kunta/kunta697',
+    kunta_kunta785: 'kunta/kunta785',
+    kunta_kunta255: 'kunta/kunta255',
+    kunta_kunta619: 'kunta/kunta619',
+    kunta_kunta312: 'kunta/kunta312',
+    kunta_kunta049: 'kunta/kunta049',
+    kunta_kunta424: 'kunta/kunta424',
+    kunta_kunta252: 'kunta/kunta252',
+    kunta_kunta608: 'kunta/kunta608',
+    kunta_kunta893: 'kunta/kunta893',
+    kunta_kunta636: 'kunta/kunta636',
+    kunta_kunta694: 'kunta/kunta694',
+    kunta_kunta857: 'kunta/kunta857',
+    kunta_kunta439: 'kunta/kunta439',
+    kunta_kunta738: 'kunta/kunta738',
+    kunta_kunta922: 'kunta/kunta922',
+    kunta_kunta005: 'kunta/kunta005',
+    kunta_kunta101: 'kunta/kunta101',
+    kunta_kunta925: 'kunta/kunta925',
+    kunta_kunta035: 'kunta/kunta035',
+    kunta_kunta944: 'kunta/kunta944',
+    kunta_kunta485: 'kunta/kunta485',
+    kunta_kunta942: 'kunta/kunta942',
+    kunta_kunta972: 'kunta/kunta972',
+    kunta_kunta507: 'kunta/kunta507',
+    kunta_kunta625: 'kunta/kunta625',
+    kunta_kunta890: 'kunta/kunta890',
+    kunta_kunta702: 'kunta/kunta702',
+    kunta_kunta858: 'kunta/kunta858',
+    kunta_kunta833: 'kunta/kunta833',
+    kunta_kunta436: 'kunta/kunta436',
+    kunta_kunta936: 'kunta/kunta936',
+    kunta_kunta150: 'kunta/kunta150',
+    kunta_kunta251: 'kunta/kunta251',
+    kunta_kunta079: 'kunta/kunta079',
+    kunta_kunta911: 'kunta/kunta911',
+    kunta_kunta095: 'kunta/kunta095',
+    kunta_kunta770: 'kunta/kunta770',
+    kunta_kunta288: 'kunta/kunta288',
+    kunta_kunta887: 'kunta/kunta887',
+    kunta_kunta443: 'kunta/kunta443',
+    kunta_kunta611: 'kunta/kunta611',
+    kunta_kunta771: 'kunta/kunta771',
+    kunta_kunta585: 'kunta/kunta585',
+    kunta_kunta177: 'kunta/kunta177',
+    kunta_kunta544: 'kunta/kunta544',
+    kunta_kunta060: 'kunta/kunta060',
+    kunta_kunta598: 'kunta/kunta598',
+    kunta_kunta631: 'kunta/kunta631',
+    kunta_kunta287: 'kunta/kunta287',
+    kunta_kunta440: 'kunta/kunta440',
+    kunta_kunta734: 'kunta/kunta734',
+    kunta_kunta310: 'kunta/kunta310',
+    kunta_kunta754: 'kunta/kunta754',
+    kunta_kunta481: 'kunta/kunta481',
+    kunta_kunta421: 'kunta/kunta421',
+    kunta_kunta584: 'kunta/kunta584',
+    kunta_kunta476: 'kunta/kunta476',
+    kunta_kunta791: 'kunta/kunta791',
+    kunta_kunta061: 'kunta/kunta061',
+    kunta_kunta616: 'kunta/kunta616',
+    kunta_kunta175: 'kunta/kunta175',
+    kunta_kunta015: 'kunta/kunta015',
+    kunta_kunta441: 'kunta/kunta441',
+    kunta_kunta700: 'kunta/kunta700',
+    kunta_kunta732: 'kunta/kunta732',
+    kunta_kunta303: 'kunta/kunta303',
+    kunta_kunta145: 'kunta/kunta145',
+    kunta_kunta889: 'kunta/kunta889',
+    kunta_kunta746: 'kunta/kunta746',
+    kunta_kunta844: 'kunta/kunta844',
+    kunta_kunta543: 'kunta/kunta543',
+    kunta_kunta506: 'kunta/kunta506',
+    kunta_kunta040: 'kunta/kunta040',
+    kunta_kunta905: 'kunta/kunta905',
+    kunta_kunta444: 'kunta/kunta444',
+    kunta_kunta560: 'kunta/kunta560',
+    kunta_kunta755: 'kunta/kunta755',
+    kunta_kunta632: 'kunta/kunta632',
+    kunta_kunta915: 'kunta/kunta915',
+    kunta_kunta701: 'kunta/kunta701',
+    kunta_kunta045: 'kunta/kunta045',
+    kunta_kunta573: 'kunta/kunta573',
+    kunta_kunta692: 'kunta/kunta692',
+    kunta_kunta081: 'kunta/kunta081',
+    kunta_kunta593: 'kunta/kunta593',
+    kunta_kunta265: 'kunta/kunta265',
+    kunta_kunta926: 'kunta/kunta926',
+    kunta_kunta139: 'kunta/kunta139',
+    kunta_kunta272: 'kunta/kunta272',
+    kunta_kunta297: 'kunta/kunta297',
+    kunta_kunta765: 'kunta/kunta765',
+    kunta_kunta540: 'kunta/kunta540',
+    kunta_kunta482: 'kunta/kunta482',
+    kunta_kunta850: 'kunta/kunta850',
+    kunta_kunta426: 'kunta/kunta426',
+    kunta_kunta503: 'kunta/kunta503',
+    kunta_kunta004: 'kunta/kunta004',
+    kunta_kunta216: 'kunta/kunta216',
+    kunta_kunta638: 'kunta/kunta638',
+    kunta_kunta217: 'kunta/kunta217',
+    kunta_kunta615: 'kunta/kunta615',
+    kunta_kunta078: 'kunta/kunta078',
+    kunta_kunta886: 'kunta/kunta886',
+    kunta_kunta686: 'kunta/kunta686',
+    kunta_kunta077: 'kunta/kunta077',
+    kunta_kunta541: 'kunta/kunta541',
+    kunta_kunta293: 'kunta/kunta293',
+    kunta_kunta753: 'kunta/kunta753',
+    kunta_kunta090: 'kunta/kunta090',
+    kunta_kunta105: 'kunta/kunta105',
+    kunta_kunta586: 'kunta/kunta586',
+    kunta_kunta316: 'kunta/kunta316',
+    kunta_kunta617: 'kunta/kunta617',
+    kunta_kunta062: 'kunta/kunta062',
+    kunta_kunta016: 'kunta/kunta016',
+    kunta_kunta149: 'kunta/kunta149',
+    kunta_kunta083: 'kunta/kunta083',
+    kunta_kunta751: 'kunta/kunta751',
+    kunta_kunta290: 'kunta/kunta290',
+    kunta_kunta934: 'kunta/kunta934',
+    kunta_kunta301: 'kunta/kunta301',
+    kunta_kunta698: 'kunta/kunta698',
+    kunta_kunta976: 'kunta/kunta976',
+    kunta_kunta246: 'kunta/kunta246',
+    kunta_kunta211: 'kunta/kunta211',
+    kunta_kunta758: 'kunta/kunta758',
+    kunta_kunta978: 'kunta/kunta978',
+    kunta_kunta599: 'kunta/kunta599',
+    kunta_kunta180: 'kunta/kunta180',
+    kunta_kunta494: 'kunta/kunta494',
+    kunta_kunta232: 'kunta/kunta232',
+    kunta_kunta423: 'kunta/kunta423',
+    kunta_kunta151: 'kunta/kunta151',
+    kunta_kunta768: 'kunta/kunta768',
+    kunta_kunta728: 'kunta/kunta728'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetKuntaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetKuntaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetKuntaEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetTilaEnum = {
-    Tila16: 'tila/tila16',
-    Tila18: 'tila/tila18',
-    Tila15: 'tila/tila15',
-    Tila17: 'tila/tila17',
-    Tila14: 'tila/tila14'
+    tila_tila16: 'tila/tila16',
+    tila_tila18: 'tila/tila18',
+    tila_tila15: 'tila/tila15',
+    tila_tila17: 'tila/tila17',
+    tila_tila14: 'tila/tila14'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetTilaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetTilaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetTilaEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum = {
-    Maakunta15: 'maakunta/maakunta15',
-    Maakunta21: 'maakunta/maakunta21',
-    Maakunta12: 'maakunta/maakunta12',
-    Maakunta08: 'maakunta/maakunta08',
-    Maakunta18: 'maakunta/maakunta18',
-    Maakunta16: 'maakunta/maakunta16',
-    Maakunta19: 'maakunta/maakunta19',
-    Maakunta13: 'maakunta/maakunta13',
-    Maakunta09: 'maakunta/maakunta09',
-    Maakunta20: 'maakunta/maakunta20',
-    Maakunta17: 'maakunta/maakunta17',
-    Maakunta10: 'maakunta/maakunta10',
-    Maakunta05: 'maakunta/maakunta05',
-    Maakunta06: 'maakunta/maakunta06',
-    Maakunta07: 'maakunta/maakunta07',
-    Maakunta14: 'maakunta/maakunta14',
-    Maakunta02: 'maakunta/maakunta02',
-    Maakunta04: 'maakunta/maakunta04',
-    Maakunta11: 'maakunta/maakunta11',
-    Maakunta01: 'maakunta/maakunta01'
+    maakunta_maakunta15: 'maakunta/maakunta15',
+    maakunta_maakunta21: 'maakunta/maakunta21',
+    maakunta_maakunta12: 'maakunta/maakunta12',
+    maakunta_maakunta08: 'maakunta/maakunta08',
+    maakunta_maakunta18: 'maakunta/maakunta18',
+    maakunta_maakunta16: 'maakunta/maakunta16',
+    maakunta_maakunta19: 'maakunta/maakunta19',
+    maakunta_maakunta13: 'maakunta/maakunta13',
+    maakunta_maakunta09: 'maakunta/maakunta09',
+    maakunta_maakunta20: 'maakunta/maakunta20',
+    maakunta_maakunta17: 'maakunta/maakunta17',
+    maakunta_maakunta10: 'maakunta/maakunta10',
+    maakunta_maakunta05: 'maakunta/maakunta05',
+    maakunta_maakunta06: 'maakunta/maakunta06',
+    maakunta_maakunta07: 'maakunta/maakunta07',
+    maakunta_maakunta14: 'maakunta/maakunta14',
+    maakunta_maakunta02: 'maakunta/maakunta02',
+    maakunta_maakunta04: 'maakunta/maakunta04',
+    maakunta_maakunta11: 'maakunta/maakunta11',
+    maakunta_maakunta01: 'maakunta/maakunta01'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum = {
-    Org08: 'organisaatio/org08',
-    Org02: 'organisaatio/org02',
-    Org12: 'organisaatio/org12',
-    Org13: 'organisaatio/org13',
-    Org18: 'organisaatio/org18',
-    Org15: 'organisaatio/org15',
-    Org20: 'organisaatio/org20',
-    Org11: 'organisaatio/org11',
-    Org16: 'organisaatio/org16',
-    Org10: 'organisaatio/org10',
-    Org19: 'organisaatio/org19',
-    Org06: 'organisaatio/org06',
-    Org17: 'organisaatio/org17',
-    Org14: 'organisaatio/org14',
-    Org01: 'organisaatio/org01',
-    Org07: 'organisaatio/org07',
-    Org04: 'organisaatio/org04',
-    Org09: 'organisaatio/org09',
-    Org05: 'organisaatio/org05',
-    Org21: 'organisaatio/org21',
-    Org03: 'organisaatio/org03'
+    organisaatio_org08: 'organisaatio/org08',
+    organisaatio_org02: 'organisaatio/org02',
+    organisaatio_org12: 'organisaatio/org12',
+    organisaatio_org13: 'organisaatio/org13',
+    organisaatio_org18: 'organisaatio/org18',
+    organisaatio_org15: 'organisaatio/org15',
+    organisaatio_org20: 'organisaatio/org20',
+    organisaatio_org11: 'organisaatio/org11',
+    organisaatio_org16: 'organisaatio/org16',
+    organisaatio_org10: 'organisaatio/org10',
+    organisaatio_org19: 'organisaatio/org19',
+    organisaatio_org06: 'organisaatio/org06',
+    organisaatio_org17: 'organisaatio/org17',
+    organisaatio_org14: 'organisaatio/org14',
+    organisaatio_org01: 'organisaatio/org01',
+    organisaatio_org07: 'organisaatio/org07',
+    organisaatio_org04: 'organisaatio/org04',
+    organisaatio_org09: 'organisaatio/org09',
+    organisaatio_org05: 'organisaatio/org05',
+    organisaatio_org21: 'organisaatio/org21',
+    organisaatio_org03: 'organisaatio/org03'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum = typeof ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum = {
-    Rahlah02: 'rahoituslahde/rahlah02',
-    Rahlah01: 'rahoituslahde/rahlah01'
+    rahoituslahde_rahlah02: 'rahoituslahde/rahlah02',
+    rahoituslahde_rahlah01: 'rahoituslahde/rahlah01'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum = typeof ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum = {
-    Org08: 'organisaatio/org08',
-    Org02: 'organisaatio/org02',
-    Org12: 'organisaatio/org12',
-    Org13: 'organisaatio/org13',
-    Org18: 'organisaatio/org18',
-    Org15: 'organisaatio/org15',
-    Org20: 'organisaatio/org20',
-    Org11: 'organisaatio/org11',
-    Org16: 'organisaatio/org16',
-    Org10: 'organisaatio/org10',
-    Org19: 'organisaatio/org19',
-    Org06: 'organisaatio/org06',
-    Org17: 'organisaatio/org17',
-    Org14: 'organisaatio/org14',
-    Org01: 'organisaatio/org01',
-    Org07: 'organisaatio/org07',
-    Org04: 'organisaatio/org04',
-    Org09: 'organisaatio/org09',
-    Org05: 'organisaatio/org05',
-    Org21: 'organisaatio/org21',
-    Org03: 'organisaatio/org03'
+    organisaatio_org08: 'organisaatio/org08',
+    organisaatio_org02: 'organisaatio/org02',
+    organisaatio_org12: 'organisaatio/org12',
+    organisaatio_org13: 'organisaatio/org13',
+    organisaatio_org18: 'organisaatio/org18',
+    organisaatio_org15: 'organisaatio/org15',
+    organisaatio_org20: 'organisaatio/org20',
+    organisaatio_org11: 'organisaatio/org11',
+    organisaatio_org16: 'organisaatio/org16',
+    organisaatio_org10: 'organisaatio/org10',
+    organisaatio_org19: 'organisaatio/org19',
+    organisaatio_org06: 'organisaatio/org06',
+    organisaatio_org17: 'organisaatio/org17',
+    organisaatio_org14: 'organisaatio/org14',
+    organisaatio_org01: 'organisaatio/org01',
+    organisaatio_org07: 'organisaatio/org07',
+    organisaatio_org04: 'organisaatio/org04',
+    organisaatio_org09: 'organisaatio/org09',
+    organisaatio_org05: 'organisaatio/org05',
+    organisaatio_org21: 'organisaatio/org21',
+    organisaatio_org03: 'organisaatio/org03'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum = typeof ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetVaiheEnum = {
-    Pjvaihe03: 'projektijoukon-vaihe/pjvaihe03',
-    Pjvaihe02: 'projektijoukon-vaihe/pjvaihe02',
-    Pjvaihe01: 'projektijoukon-vaihe/pjvaihe01'
+    projektijoukon_vaihe_pjvaihe03: 'projektijoukon-vaihe/pjvaihe03',
+    projektijoukon_vaihe_pjvaihe02: 'projektijoukon-vaihe/pjvaihe02',
+    projektijoukon_vaihe_pjvaihe01: 'projektijoukon-vaihe/pjvaihe01'
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetVaiheEnum = typeof ProjektiProjektijoukotInnerOminaisuudetVaiheEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetVaiheEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukotInnerOminaisuudetVarahenkilo
- */
 export interface ProjektiProjektijoukotInnerOminaisuudetVarahenkilo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudetVarahenkilo
-     */
     'sahkoposti': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudetVarahenkilo
-     */
     'nimi': string;
 }
-/**
- * 
- * @export
- * @interface ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo
- */
 export interface ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo
-     */
     'sahkoposti': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo
-     */
     'nimi': string;
 }
-/**
- * 
- * @export
- * @interface ProjektiToimeksiannonLisays
- */
 export interface ProjektiToimeksiannonLisays {
-    /**
-     * 
-     * @type {ProjektiToimeksiannotInnerOminaisuudet}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'ominaisuudet': ProjektiToimeksiannotInnerOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'projekti': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'karttapiste': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'geometry': object | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannonLisays
-     */
     'muutoksen-lahde-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiToimeksiannonPaivitys
- */
 export interface ProjektiToimeksiannonPaivitys {
-    /**
-     * 
-     * @type {ProjektiToimeksiannotInnerOminaisuudet}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'ominaisuudet': ProjektiToimeksiannotInnerOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'projekti': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'karttapiste': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'geometry': object | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannonPaivitys
-     */
     'muutoksen-lahde-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiToimeksiannotInner
- */
 export interface ProjektiToimeksiannotInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'projekti': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
-    'lahdejarjestelma': ProjektiToimeksiannotInnerLahdejarjestelmaEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
+    'lahdejarjestelma': ProjektiToimeksiannotInnerLahdejarjestelmaEnum | null;
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiToimeksiannotInnerOminaisuudet}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'ominaisuudet': ProjektiToimeksiannotInnerOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'oid': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'laskennallinen-keskipiste': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'luoja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'geometry': object | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'karttapiste': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'muokkaaja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInner
-     */
     'lahdejarjestelman-id': string | null;
 }
 
 export const ProjektiToimeksiannotInnerLahdejarjestelmaEnum = {
-    Lj21: 'lahdejarjestelma/lj21',
-    Lj05: 'lahdejarjestelma/lj05',
-    Lj13: 'lahdejarjestelma/lj13',
-    Lj14: 'lahdejarjestelma/lj14',
-    Lj03: 'lahdejarjestelma/lj03',
-    Lj10: 'lahdejarjestelma/lj10',
-    Lj04: 'lahdejarjestelma/lj04',
-    Lj08: 'lahdejarjestelma/lj08',
-    Lj11: 'lahdejarjestelma/lj11',
-    Lj06: 'lahdejarjestelma/lj06',
-    Lj02: 'lahdejarjestelma/lj02',
-    Lj09: 'lahdejarjestelma/lj09',
-    Lj07: 'lahdejarjestelma/lj07',
-    Lj15: 'lahdejarjestelma/lj15',
-    Lj18: 'lahdejarjestelma/lj18',
-    Lj17: 'lahdejarjestelma/lj17',
-    Lj20: 'lahdejarjestelma/lj20',
-    Lj16: 'lahdejarjestelma/lj16',
-    Lj01: 'lahdejarjestelma/lj01',
-    Lj19: 'lahdejarjestelma/lj19',
-    Lj12: 'lahdejarjestelma/lj12'
+    lahdejarjestelma_lj21: 'lahdejarjestelma/lj21',
+    lahdejarjestelma_lj05: 'lahdejarjestelma/lj05',
+    lahdejarjestelma_lj13: 'lahdejarjestelma/lj13',
+    lahdejarjestelma_lj14: 'lahdejarjestelma/lj14',
+    lahdejarjestelma_lj03: 'lahdejarjestelma/lj03',
+    lahdejarjestelma_lj10: 'lahdejarjestelma/lj10',
+    lahdejarjestelma_lj04: 'lahdejarjestelma/lj04',
+    lahdejarjestelma_lj08: 'lahdejarjestelma/lj08',
+    lahdejarjestelma_lj11: 'lahdejarjestelma/lj11',
+    lahdejarjestelma_lj06: 'lahdejarjestelma/lj06',
+    lahdejarjestelma_lj02: 'lahdejarjestelma/lj02',
+    lahdejarjestelma_lj09: 'lahdejarjestelma/lj09',
+    lahdejarjestelma_lj07: 'lahdejarjestelma/lj07',
+    lahdejarjestelma_lj15: 'lahdejarjestelma/lj15',
+    lahdejarjestelma_lj18: 'lahdejarjestelma/lj18',
+    lahdejarjestelma_lj17: 'lahdejarjestelma/lj17',
+    lahdejarjestelma_lj20: 'lahdejarjestelma/lj20',
+    lahdejarjestelma_lj16: 'lahdejarjestelma/lj16',
+    lahdejarjestelma_lj01: 'lahdejarjestelma/lj01',
+    lahdejarjestelma_lj19: 'lahdejarjestelma/lj19',
+    lahdejarjestelma_lj12: 'lahdejarjestelma/lj12'
 } as const;
 
 export type ProjektiToimeksiannotInnerLahdejarjestelmaEnum = typeof ProjektiToimeksiannotInnerLahdejarjestelmaEnum[keyof typeof ProjektiToimeksiannotInnerLahdejarjestelmaEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiToimeksiannotInnerOminaisuudet
- */
 export interface ProjektiToimeksiannotInnerOminaisuudet {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
-    'toteuttava-organisaatio'?: ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
+    'toteuttava-organisaatio'?: ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum | null;
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'asiatunnus-traficom'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'kuvaus': string | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'vaylamuoto': Set<ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum>;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
-    'kunta': Set<ProjektiToimeksiannotInnerOminaisuudetKuntaEnum>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
+    'kunta': Set<ProjektiToimeksiannotInnerOminaisuudetKuntaEnum> | null;
     'tila': ProjektiToimeksiannotInnerOminaisuudetTilaEnum;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'vesivaylanumerot': Set<string> | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'asiatunnus-ely'?: string | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
-    'maakunta': Set<ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
+    'maakunta': Set<ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum> | null;
     'paattyy': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'muu-kunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'muu-maakunta'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'toteuttavan-organisaation-yhteyshenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
-    'tehtava': ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
+    'tehtava': ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum | null;
     'muu-toteuttava-organisaatio'?: string | null;
-    /**
-     * 
-     * @type {Set<ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'tieosoitteet': Set<ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'muu-tehtava'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'asiatunnus-vaylavirasto'?: string | null;
-    /**
-     * 
-     * @type {Set<ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner>}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'rataosoitteet': Set<ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
     'alkaa': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudet
-     */
-    'koordinaattijarjestelma'?: ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum;
+    'koordinaattijarjestelma'?: ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum | null;
 }
 
 export const ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum = {
-    Org08: 'organisaatio/org08',
-    Org02: 'organisaatio/org02',
-    Org12: 'organisaatio/org12',
-    Org13: 'organisaatio/org13',
-    Org18: 'organisaatio/org18',
-    Org15: 'organisaatio/org15',
-    Org20: 'organisaatio/org20',
-    Org11: 'organisaatio/org11',
-    Org16: 'organisaatio/org16',
-    Org10: 'organisaatio/org10',
-    Org19: 'organisaatio/org19',
-    Org06: 'organisaatio/org06',
-    Org17: 'organisaatio/org17',
-    Org14: 'organisaatio/org14',
-    Org01: 'organisaatio/org01',
-    Org07: 'organisaatio/org07',
-    Org04: 'organisaatio/org04',
-    Org09: 'organisaatio/org09',
-    Org05: 'organisaatio/org05',
-    Org21: 'organisaatio/org21',
-    Org03: 'organisaatio/org03'
+    organisaatio_org08: 'organisaatio/org08',
+    organisaatio_org02: 'organisaatio/org02',
+    organisaatio_org12: 'organisaatio/org12',
+    organisaatio_org13: 'organisaatio/org13',
+    organisaatio_org18: 'organisaatio/org18',
+    organisaatio_org15: 'organisaatio/org15',
+    organisaatio_org20: 'organisaatio/org20',
+    organisaatio_org11: 'organisaatio/org11',
+    organisaatio_org16: 'organisaatio/org16',
+    organisaatio_org10: 'organisaatio/org10',
+    organisaatio_org19: 'organisaatio/org19',
+    organisaatio_org06: 'organisaatio/org06',
+    organisaatio_org17: 'organisaatio/org17',
+    organisaatio_org14: 'organisaatio/org14',
+    organisaatio_org01: 'organisaatio/org01',
+    organisaatio_org07: 'organisaatio/org07',
+    organisaatio_org04: 'organisaatio/org04',
+    organisaatio_org09: 'organisaatio/org09',
+    organisaatio_org05: 'organisaatio/org05',
+    organisaatio_org21: 'organisaatio/org21',
+    organisaatio_org03: 'organisaatio/org03'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum = typeof ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = {
-    Vesi: 'vesi',
-    Tie: 'tie',
-    Rata: 'rata'
+    vesi: 'vesi',
+    tie: 'tie',
+    rata: 'rata'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = typeof ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetKuntaEnum = {
-    Kunta563: 'kunta/kunta563',
-    Kunta273: 'kunta/kunta273',
-    Kunta529: 'kunta/kunta529',
-    Kunta531: 'kunta/kunta531',
-    Kunta640: 'kunta/kunta640',
-    Kunta019: 'kunta/kunta019',
-    Kunta181: 'kunta/kunta181',
-    Kunta892: 'kunta/kunta892',
-    Kunta741: 'kunta/kunta741',
-    Kunta909: 'kunta/kunta909',
-    Kunta918: 'kunta/kunta918',
-    Kunta606: 'kunta/kunta606',
-    Kunta781: 'kunta/kunta781',
-    Kunta430: 'kunta/kunta430',
-    Kunta289: 'kunta/kunta289',
-    Kunta230: 'kunta/kunta230',
-    Kunta292: 'kunta/kunta292',
-    Kunta564: 'kunta/kunta564',
-    Kunta172: 'kunta/kunta172',
-    Kunta533: 'kunta/kunta533',
-    Kunta182: 'kunta/kunta182',
-    Kunta442: 'kunta/kunta442',
-    Kunta838: 'kunta/kunta838',
-    Kunta419: 'kunta/kunta419',
-    Kunta559: 'kunta/kunta559',
-    Kunta073: 'kunta/kunta073',
-    Kunta092: 'kunta/kunta092',
-    Kunta601: 'kunta/kunta601',
-    Kunta895: 'kunta/kunta895',
-    Kunta891: 'kunta/kunta891',
-    Kunta082: 'kunta/kunta082',
-    Kunta108: 'kunta/kunta108',
-    Kunta975: 'kunta/kunta975',
-    Kunta214: 'kunta/kunta214',
-    Kunta885: 'kunta/kunta885',
-    Kunta505: 'kunta/kunta505',
-    Kunta989: 'kunta/kunta989',
-    Kunta086: 'kunta/kunta086',
-    Kunta538: 'kunta/kunta538',
-    Kunta020: 'kunta/kunta020',
-    Kunta153: 'kunta/kunta153',
-    Kunta415: 'kunta/kunta415',
-    Kunta280: 'kunta/kunta280',
-    Kunta102: 'kunta/kunta102',
-    Kunta179: 'kunta/kunta179',
-    Kunta250: 'kunta/kunta250',
-    Kunta018: 'kunta/kunta018',
-    Kunta633: 'kunta/kunta633',
-    Kunta429: 'kunta/kunta429',
-    Kunta205: 'kunta/kunta205',
-    Kunta567: 'kunta/kunta567',
-    Kunta508: 'kunta/kunta508',
-    Kunta536: 'kunta/kunta536',
-    Kunta582: 'kunta/kunta582',
-    Kunta271: 'kunta/kunta271',
-    Kunta489: 'kunta/kunta489',
-    Kunta577: 'kunta/kunta577',
-    Kunta981: 'kunta/kunta981',
-    Kunta783: 'kunta/kunta783',
-    Kunta475: 'kunta/kunta475',
-    Kunta832: 'kunta/kunta832',
-    Kunta277: 'kunta/kunta277',
-    Kunta680: 'kunta/kunta680',
-    Kunta535: 'kunta/kunta535',
-    Kunta977: 'kunta/kunta977',
-    Kunta784: 'kunta/kunta784',
-    Kunta256: 'kunta/kunta256',
-    Kunta416: 'kunta/kunta416',
-    Kunta940: 'kunta/kunta940',
-    Kunta420: 'kunta/kunta420',
-    Kunta407: 'kunta/kunta407',
-    Kunta418: 'kunta/kunta418',
-    Kunta174: 'kunta/kunta174',
-    Kunta065: 'kunta/kunta065',
-    Kunta231: 'kunta/kunta231',
-    Kunta401: 'kunta/kunta401',
-    Kunta580: 'kunta/kunta580',
-    Kunta583: 'kunta/kunta583',
-    Kunta210: 'kunta/kunta210',
-    Kunta163: 'kunta/kunta163',
-    Kunta075: 'kunta/kunta075',
-    Kunta562: 'kunta/kunta562',
-    Kunta928: 'kunta/kunta928',
-    Kunta099: 'kunta/kunta099',
-    Kunta084: 'kunta/kunta084',
-    Kunta912: 'kunta/kunta912',
-    Kunta422: 'kunta/kunta422',
-    Kunta165: 'kunta/kunta165',
-    Kunta399: 'kunta/kunta399',
-    Kunta743: 'kunta/kunta743',
-    Kunta708: 'kunta/kunta708',
-    Kunta747: 'kunta/kunta747',
-    Kunta275: 'kunta/kunta275',
-    Kunta219: 'kunta/kunta219',
-    Kunta184: 'kunta/kunta184',
-    Kunta006: 'kunta/kunta006',
-    Kunta478: 'kunta/kunta478',
-    Kunta920: 'kunta/kunta920',
-    Kunta919: 'kunta/kunta919',
-    Kunta737: 'kunta/kunta737',
-    Kunta614: 'kunta/kunta614',
-    Kunta106: 'kunta/kunta106',
-    Kunta213: 'kunta/kunta213',
-    Kunta587: 'kunta/kunta587',
-    Kunta730: 'kunta/kunta730',
-    Kunta148: 'kunta/kunta148',
-    Kunta245: 'kunta/kunta245',
-    Kunta484: 'kunta/kunta484',
-    Kunta501: 'kunta/kunta501',
-    Kunta545: 'kunta/kunta545',
-    Kunta490: 'kunta/kunta490',
-    Kunta164: 'kunta/kunta164',
-    Kunta052: 'kunta/kunta052',
-    Kunta588: 'kunta/kunta588',
-    Kunta689: 'kunta/kunta689',
-    Kunta085: 'kunta/kunta085',
-    Kunta504: 'kunta/kunta504',
-    Kunta178: 'kunta/kunta178',
-    Kunta906: 'kunta/kunta906',
-    Kunta604: 'kunta/kunta604',
-    Kunta240: 'kunta/kunta240',
-    Kunta683: 'kunta/kunta683',
-    Kunta739: 'kunta/kunta739',
-    Kunta286: 'kunta/kunta286',
-    Kunta761: 'kunta/kunta761',
-    Kunta103: 'kunta/kunta103',
-    Kunta220: 'kunta/kunta220',
-    Kunta863: 'kunta/kunta863',
-    Kunta772: 'kunta/kunta772',
-    Kunta937: 'kunta/kunta937',
-    Kunta235: 'kunta/kunta235',
-    Kunta295: 'kunta/kunta295',
-    Kunta320: 'kunta/kunta320',
-    Kunta438: 'kunta/kunta438',
-    Kunta623: 'kunta/kunta623',
-    Kunta239: 'kunta/kunta239',
-    Kunta534: 'kunta/kunta534',
-    Kunta841: 'kunta/kunta841',
-    Kunta431: 'kunta/kunta431',
-    Kunta493: 'kunta/kunta493',
-    Kunta630: 'kunta/kunta630',
-    Kunta281: 'kunta/kunta281',
-    Kunta169: 'kunta/kunta169',
-    Kunta146: 'kunta/kunta146',
-    Kunta992: 'kunta/kunta992',
-    Kunta406: 'kunta/kunta406',
-    Kunta276: 'kunta/kunta276',
-    Kunta249: 'kunta/kunta249',
-    Kunta244: 'kunta/kunta244',
-    Kunta304: 'kunta/kunta304',
-    Kunta933: 'kunta/kunta933',
-    Kunta831: 'kunta/kunta831',
-    Kunta300: 'kunta/kunta300',
-    Kunta561: 'kunta/kunta561',
-    Kunta913: 'kunta/kunta913',
-    Kunta433: 'kunta/kunta433',
-    Kunta010: 'kunta/kunta010',
-    Kunta704: 'kunta/kunta704',
-    Kunta776: 'kunta/kunta776',
-    Kunta071: 'kunta/kunta071',
-    Kunta774: 'kunta/kunta774',
-    Kunta499: 'kunta/kunta499',
-    Kunta212: 'kunta/kunta212',
-    Kunta932: 'kunta/kunta932',
-    Kunta247: 'kunta/kunta247',
-    Kunta322: 'kunta/kunta322',
-    Kunta495: 'kunta/kunta495',
-    Kunta173: 'kunta/kunta173',
-    Kunta980: 'kunta/kunta980',
-    Kunta848: 'kunta/kunta848',
-    Kunta263: 'kunta/kunta263',
-    Kunta208: 'kunta/kunta208',
-    Kunta578: 'kunta/kunta578',
-    Kunta043: 'kunta/kunta043',
-    Kunta837: 'kunta/kunta837',
-    Kunta705: 'kunta/kunta705',
-    Kunta227: 'kunta/kunta227',
-    Kunta684: 'kunta/kunta684',
-    Kunta143: 'kunta/kunta143',
-    Kunta682: 'kunta/kunta682',
-    Kunta759: 'kunta/kunta759',
-    Kunta233: 'kunta/kunta233',
-    Kunta009: 'kunta/kunta009',
-    Kunta261: 'kunta/kunta261',
-    Kunta931: 'kunta/kunta931',
-    Kunta186: 'kunta/kunta186',
-    Kunta091: 'kunta/kunta091',
-    Kunta308: 'kunta/kunta308',
-    Kunta309: 'kunta/kunta309',
-    Kunta707: 'kunta/kunta707',
-    Kunta284: 'kunta/kunta284',
-    Kunta167: 'kunta/kunta167',
-    Kunta853: 'kunta/kunta853',
-    Kunta923: 'kunta/kunta923',
-    Kunta425: 'kunta/kunta425',
-    Kunta971: 'kunta/kunta971',
-    Kunta218: 'kunta/kunta218',
-    Kunta988: 'kunta/kunta988',
-    Kunta097: 'kunta/kunta097',
-    Kunta491: 'kunta/kunta491',
-    Kunta678: 'kunta/kunta678',
-    Kunta072: 'kunta/kunta072',
-    Kunta710: 'kunta/kunta710',
-    Kunta500: 'kunta/kunta500',
-    Kunta204: 'kunta/kunta204',
-    Kunta687: 'kunta/kunta687',
-    Kunta076: 'kunta/kunta076',
-    Kunta924: 'kunta/kunta924',
-    Kunta410: 'kunta/kunta410',
-    Kunta856: 'kunta/kunta856',
-    Kunta775: 'kunta/kunta775',
-    Kunta916: 'kunta/kunta916',
-    Kunta259: 'kunta/kunta259',
-    Kunta176: 'kunta/kunta176',
-    Kunta595: 'kunta/kunta595',
-    Kunta170: 'kunta/kunta170',
-    Kunta405: 'kunta/kunta405',
-    Kunta835: 'kunta/kunta835',
-    Kunta098: 'kunta/kunta098',
-    Kunta480: 'kunta/kunta480',
-    Kunta202: 'kunta/kunta202',
-    Kunta305: 'kunta/kunta305',
-    Kunta183: 'kunta/kunta183',
-    Kunta696: 'kunta/kunta696',
-    Kunta051: 'kunta/kunta051',
-    Kunta479: 'kunta/kunta479',
-    Kunta859: 'kunta/kunta859',
-    Kunta434: 'kunta/kunta434',
-    Kunta618: 'kunta/kunta618',
-    Kunta017: 'kunta/kunta017',
-    Kunta319: 'kunta/kunta319',
-    Kunta607: 'kunta/kunta607',
-    Kunta046: 'kunta/kunta046',
-    Kunta400: 'kunta/kunta400',
-    Kunta069: 'kunta/kunta069',
-    Kunta266: 'kunta/kunta266',
-    Kunta594: 'kunta/kunta594',
-    Kunta778: 'kunta/kunta778',
-    Kunta935: 'kunta/kunta935',
-    Kunta532: 'kunta/kunta532',
-    Kunta834: 'kunta/kunta834',
-    Kunta223: 'kunta/kunta223',
-    Kunta576: 'kunta/kunta576',
-    Kunta609: 'kunta/kunta609',
-    Kunta921: 'kunta/kunta921',
-    Kunta492: 'kunta/kunta492',
-    Kunta047: 'kunta/kunta047',
-    Kunta074: 'kunta/kunta074',
-    Kunta398: 'kunta/kunta398',
-    Kunta315: 'kunta/kunta315',
-    Kunta140: 'kunta/kunta140',
-    Kunta635: 'kunta/kunta635',
-    Kunta691: 'kunta/kunta691',
-    Kunta592: 'kunta/kunta592',
-    Kunta248: 'kunta/kunta248',
-    Kunta283: 'kunta/kunta283',
-    Kunta736: 'kunta/kunta736',
-    Kunta403: 'kunta/kunta403',
-    Kunta254: 'kunta/kunta254',
-    Kunta581: 'kunta/kunta581',
-    Kunta602: 'kunta/kunta602',
-    Kunta766: 'kunta/kunta766',
-    Kunta109: 'kunta/kunta109',
-    Kunta846: 'kunta/kunta846',
-    Kunta044: 'kunta/kunta044',
-    Kunta851: 'kunta/kunta851',
-    Kunta279: 'kunta/kunta279',
-    Kunta729: 'kunta/kunta729',
-    Kunta291: 'kunta/kunta291',
-    Kunta241: 'kunta/kunta241',
-    Kunta681: 'kunta/kunta681',
-    Kunta762: 'kunta/kunta762',
-    Kunta749: 'kunta/kunta749',
-    Kunta414: 'kunta/kunta414',
-    Kunta855: 'kunta/kunta855',
-    Kunta260: 'kunta/kunta260',
-    Kunta014: 'kunta/kunta014',
-    Kunta262: 'kunta/kunta262',
-    Kunta845: 'kunta/kunta845',
-    Kunta917: 'kunta/kunta917',
-    Kunta152: 'kunta/kunta152',
-    Kunta603: 'kunta/kunta603',
-    Kunta483: 'kunta/kunta483',
-    Kunta050: 'kunta/kunta050',
-    Kunta402: 'kunta/kunta402',
-    Kunta908: 'kunta/kunta908',
-    Kunta435: 'kunta/kunta435',
-    Kunta849: 'kunta/kunta849',
-    Kunta317: 'kunta/kunta317',
-    Kunta620: 'kunta/kunta620',
-    Kunta742: 'kunta/kunta742',
-    Kunta171: 'kunta/kunta171',
-    Kunta979: 'kunta/kunta979',
-    Kunta498: 'kunta/kunta498',
-    Kunta224: 'kunta/kunta224',
-    Kunta790: 'kunta/kunta790',
-    Kunta537: 'kunta/kunta537',
-    Kunta946: 'kunta/kunta946',
-    Kunta257: 'kunta/kunta257',
-    Kunta111: 'kunta/kunta111',
-    Kunta226: 'kunta/kunta226',
-    Kunta142: 'kunta/kunta142',
-    Kunta941: 'kunta/kunta941',
-    Kunta318: 'kunta/kunta318',
-    Kunta408: 'kunta/kunta408',
-    Kunta973: 'kunta/kunta973',
-    Kunta927: 'kunta/kunta927',
-    Kunta413: 'kunta/kunta413',
-    Kunta740: 'kunta/kunta740',
-    Kunta624: 'kunta/kunta624',
-    Kunta306: 'kunta/kunta306',
-    Kunta748: 'kunta/kunta748',
-    Kunta417: 'kunta/kunta417',
-    Kunta864: 'kunta/kunta864',
-    Kunta243: 'kunta/kunta243',
-    Kunta236: 'kunta/kunta236',
-    Kunta445: 'kunta/kunta445',
-    Kunta943: 'kunta/kunta943',
-    Kunta285: 'kunta/kunta285',
-    Kunta945: 'kunta/kunta945',
-    Kunta626: 'kunta/kunta626',
-    Kunta854: 'kunta/kunta854',
-    Kunta777: 'kunta/kunta777',
-    Kunta697: 'kunta/kunta697',
-    Kunta785: 'kunta/kunta785',
-    Kunta255: 'kunta/kunta255',
-    Kunta619: 'kunta/kunta619',
-    Kunta312: 'kunta/kunta312',
-    Kunta049: 'kunta/kunta049',
-    Kunta424: 'kunta/kunta424',
-    Kunta252: 'kunta/kunta252',
-    Kunta608: 'kunta/kunta608',
-    Kunta893: 'kunta/kunta893',
-    Kunta636: 'kunta/kunta636',
-    Kunta694: 'kunta/kunta694',
-    Kunta857: 'kunta/kunta857',
-    Kunta439: 'kunta/kunta439',
-    Kunta738: 'kunta/kunta738',
-    Kunta922: 'kunta/kunta922',
-    Kunta005: 'kunta/kunta005',
-    Kunta101: 'kunta/kunta101',
-    Kunta925: 'kunta/kunta925',
-    Kunta035: 'kunta/kunta035',
-    Kunta944: 'kunta/kunta944',
-    Kunta485: 'kunta/kunta485',
-    Kunta942: 'kunta/kunta942',
-    Kunta972: 'kunta/kunta972',
-    Kunta507: 'kunta/kunta507',
-    Kunta625: 'kunta/kunta625',
-    Kunta890: 'kunta/kunta890',
-    Kunta702: 'kunta/kunta702',
-    Kunta858: 'kunta/kunta858',
-    Kunta833: 'kunta/kunta833',
-    Kunta436: 'kunta/kunta436',
-    Kunta936: 'kunta/kunta936',
-    Kunta150: 'kunta/kunta150',
-    Kunta251: 'kunta/kunta251',
-    Kunta079: 'kunta/kunta079',
-    Kunta911: 'kunta/kunta911',
-    Kunta095: 'kunta/kunta095',
-    Kunta770: 'kunta/kunta770',
-    Kunta288: 'kunta/kunta288',
-    Kunta887: 'kunta/kunta887',
-    Kunta443: 'kunta/kunta443',
-    Kunta611: 'kunta/kunta611',
-    Kunta771: 'kunta/kunta771',
-    Kunta585: 'kunta/kunta585',
-    Kunta177: 'kunta/kunta177',
-    Kunta544: 'kunta/kunta544',
-    Kunta060: 'kunta/kunta060',
-    Kunta598: 'kunta/kunta598',
-    Kunta631: 'kunta/kunta631',
-    Kunta287: 'kunta/kunta287',
-    Kunta440: 'kunta/kunta440',
-    Kunta734: 'kunta/kunta734',
-    Kunta310: 'kunta/kunta310',
-    Kunta754: 'kunta/kunta754',
-    Kunta481: 'kunta/kunta481',
-    Kunta421: 'kunta/kunta421',
-    Kunta584: 'kunta/kunta584',
-    Kunta476: 'kunta/kunta476',
-    Kunta791: 'kunta/kunta791',
-    Kunta061: 'kunta/kunta061',
-    Kunta616: 'kunta/kunta616',
-    Kunta175: 'kunta/kunta175',
-    Kunta015: 'kunta/kunta015',
-    Kunta441: 'kunta/kunta441',
-    Kunta700: 'kunta/kunta700',
-    Kunta732: 'kunta/kunta732',
-    Kunta303: 'kunta/kunta303',
-    Kunta145: 'kunta/kunta145',
-    Kunta889: 'kunta/kunta889',
-    Kunta746: 'kunta/kunta746',
-    Kunta844: 'kunta/kunta844',
-    Kunta543: 'kunta/kunta543',
-    Kunta506: 'kunta/kunta506',
-    Kunta040: 'kunta/kunta040',
-    Kunta905: 'kunta/kunta905',
-    Kunta444: 'kunta/kunta444',
-    Kunta560: 'kunta/kunta560',
-    Kunta755: 'kunta/kunta755',
-    Kunta632: 'kunta/kunta632',
-    Kunta915: 'kunta/kunta915',
-    Kunta701: 'kunta/kunta701',
-    Kunta045: 'kunta/kunta045',
-    Kunta573: 'kunta/kunta573',
-    Kunta692: 'kunta/kunta692',
-    Kunta081: 'kunta/kunta081',
-    Kunta593: 'kunta/kunta593',
-    Kunta265: 'kunta/kunta265',
-    Kunta926: 'kunta/kunta926',
-    Kunta139: 'kunta/kunta139',
-    Kunta272: 'kunta/kunta272',
-    Kunta297: 'kunta/kunta297',
-    Kunta765: 'kunta/kunta765',
-    Kunta540: 'kunta/kunta540',
-    Kunta482: 'kunta/kunta482',
-    Kunta850: 'kunta/kunta850',
-    Kunta426: 'kunta/kunta426',
-    Kunta503: 'kunta/kunta503',
-    Kunta004: 'kunta/kunta004',
-    Kunta216: 'kunta/kunta216',
-    Kunta638: 'kunta/kunta638',
-    Kunta217: 'kunta/kunta217',
-    Kunta615: 'kunta/kunta615',
-    Kunta078: 'kunta/kunta078',
-    Kunta886: 'kunta/kunta886',
-    Kunta686: 'kunta/kunta686',
-    Kunta077: 'kunta/kunta077',
-    Kunta541: 'kunta/kunta541',
-    Kunta293: 'kunta/kunta293',
-    Kunta753: 'kunta/kunta753',
-    Kunta090: 'kunta/kunta090',
-    Kunta105: 'kunta/kunta105',
-    Kunta586: 'kunta/kunta586',
-    Kunta316: 'kunta/kunta316',
-    Kunta617: 'kunta/kunta617',
-    Kunta062: 'kunta/kunta062',
-    Kunta016: 'kunta/kunta016',
-    Kunta149: 'kunta/kunta149',
-    Kunta083: 'kunta/kunta083',
-    Kunta751: 'kunta/kunta751',
-    Kunta290: 'kunta/kunta290',
-    Kunta934: 'kunta/kunta934',
-    Kunta301: 'kunta/kunta301',
-    Kunta698: 'kunta/kunta698',
-    Kunta976: 'kunta/kunta976',
-    Kunta246: 'kunta/kunta246',
-    Kunta211: 'kunta/kunta211',
-    Kunta758: 'kunta/kunta758',
-    Kunta978: 'kunta/kunta978',
-    Kunta599: 'kunta/kunta599',
-    Kunta180: 'kunta/kunta180',
-    Kunta494: 'kunta/kunta494',
-    Kunta232: 'kunta/kunta232',
-    Kunta423: 'kunta/kunta423',
-    Kunta151: 'kunta/kunta151',
-    Kunta768: 'kunta/kunta768',
-    Kunta728: 'kunta/kunta728'
+    kunta_kunta563: 'kunta/kunta563',
+    kunta_kunta273: 'kunta/kunta273',
+    kunta_kunta529: 'kunta/kunta529',
+    kunta_kunta531: 'kunta/kunta531',
+    kunta_kunta640: 'kunta/kunta640',
+    kunta_kunta019: 'kunta/kunta019',
+    kunta_kunta181: 'kunta/kunta181',
+    kunta_kunta892: 'kunta/kunta892',
+    kunta_kunta741: 'kunta/kunta741',
+    kunta_kunta909: 'kunta/kunta909',
+    kunta_kunta918: 'kunta/kunta918',
+    kunta_kunta606: 'kunta/kunta606',
+    kunta_kunta781: 'kunta/kunta781',
+    kunta_kunta430: 'kunta/kunta430',
+    kunta_kunta289: 'kunta/kunta289',
+    kunta_kunta230: 'kunta/kunta230',
+    kunta_kunta292: 'kunta/kunta292',
+    kunta_kunta564: 'kunta/kunta564',
+    kunta_kunta172: 'kunta/kunta172',
+    kunta_kunta533: 'kunta/kunta533',
+    kunta_kunta182: 'kunta/kunta182',
+    kunta_kunta442: 'kunta/kunta442',
+    kunta_kunta838: 'kunta/kunta838',
+    kunta_kunta419: 'kunta/kunta419',
+    kunta_kunta559: 'kunta/kunta559',
+    kunta_kunta073: 'kunta/kunta073',
+    kunta_kunta092: 'kunta/kunta092',
+    kunta_kunta601: 'kunta/kunta601',
+    kunta_kunta895: 'kunta/kunta895',
+    kunta_kunta891: 'kunta/kunta891',
+    kunta_kunta082: 'kunta/kunta082',
+    kunta_kunta108: 'kunta/kunta108',
+    kunta_kunta975: 'kunta/kunta975',
+    kunta_kunta214: 'kunta/kunta214',
+    kunta_kunta885: 'kunta/kunta885',
+    kunta_kunta505: 'kunta/kunta505',
+    kunta_kunta989: 'kunta/kunta989',
+    kunta_kunta086: 'kunta/kunta086',
+    kunta_kunta538: 'kunta/kunta538',
+    kunta_kunta020: 'kunta/kunta020',
+    kunta_kunta153: 'kunta/kunta153',
+    kunta_kunta415: 'kunta/kunta415',
+    kunta_kunta280: 'kunta/kunta280',
+    kunta_kunta102: 'kunta/kunta102',
+    kunta_kunta179: 'kunta/kunta179',
+    kunta_kunta250: 'kunta/kunta250',
+    kunta_kunta018: 'kunta/kunta018',
+    kunta_kunta633: 'kunta/kunta633',
+    kunta_kunta429: 'kunta/kunta429',
+    kunta_kunta205: 'kunta/kunta205',
+    kunta_kunta567: 'kunta/kunta567',
+    kunta_kunta508: 'kunta/kunta508',
+    kunta_kunta536: 'kunta/kunta536',
+    kunta_kunta582: 'kunta/kunta582',
+    kunta_kunta271: 'kunta/kunta271',
+    kunta_kunta489: 'kunta/kunta489',
+    kunta_kunta577: 'kunta/kunta577',
+    kunta_kunta981: 'kunta/kunta981',
+    kunta_kunta783: 'kunta/kunta783',
+    kunta_kunta475: 'kunta/kunta475',
+    kunta_kunta832: 'kunta/kunta832',
+    kunta_kunta277: 'kunta/kunta277',
+    kunta_kunta680: 'kunta/kunta680',
+    kunta_kunta535: 'kunta/kunta535',
+    kunta_kunta977: 'kunta/kunta977',
+    kunta_kunta784: 'kunta/kunta784',
+    kunta_kunta256: 'kunta/kunta256',
+    kunta_kunta416: 'kunta/kunta416',
+    kunta_kunta940: 'kunta/kunta940',
+    kunta_kunta420: 'kunta/kunta420',
+    kunta_kunta407: 'kunta/kunta407',
+    kunta_kunta418: 'kunta/kunta418',
+    kunta_kunta174: 'kunta/kunta174',
+    kunta_kunta065: 'kunta/kunta065',
+    kunta_kunta231: 'kunta/kunta231',
+    kunta_kunta401: 'kunta/kunta401',
+    kunta_kunta580: 'kunta/kunta580',
+    kunta_kunta583: 'kunta/kunta583',
+    kunta_kunta210: 'kunta/kunta210',
+    kunta_kunta163: 'kunta/kunta163',
+    kunta_kunta075: 'kunta/kunta075',
+    kunta_kunta562: 'kunta/kunta562',
+    kunta_kunta928: 'kunta/kunta928',
+    kunta_kunta099: 'kunta/kunta099',
+    kunta_kunta084: 'kunta/kunta084',
+    kunta_kunta912: 'kunta/kunta912',
+    kunta_kunta422: 'kunta/kunta422',
+    kunta_kunta165: 'kunta/kunta165',
+    kunta_kunta399: 'kunta/kunta399',
+    kunta_kunta743: 'kunta/kunta743',
+    kunta_kunta708: 'kunta/kunta708',
+    kunta_kunta747: 'kunta/kunta747',
+    kunta_kunta275: 'kunta/kunta275',
+    kunta_kunta219: 'kunta/kunta219',
+    kunta_kunta184: 'kunta/kunta184',
+    kunta_kunta006: 'kunta/kunta006',
+    kunta_kunta478: 'kunta/kunta478',
+    kunta_kunta920: 'kunta/kunta920',
+    kunta_kunta919: 'kunta/kunta919',
+    kunta_kunta737: 'kunta/kunta737',
+    kunta_kunta614: 'kunta/kunta614',
+    kunta_kunta106: 'kunta/kunta106',
+    kunta_kunta213: 'kunta/kunta213',
+    kunta_kunta587: 'kunta/kunta587',
+    kunta_kunta730: 'kunta/kunta730',
+    kunta_kunta148: 'kunta/kunta148',
+    kunta_kunta245: 'kunta/kunta245',
+    kunta_kunta484: 'kunta/kunta484',
+    kunta_kunta501: 'kunta/kunta501',
+    kunta_kunta545: 'kunta/kunta545',
+    kunta_kunta490: 'kunta/kunta490',
+    kunta_kunta164: 'kunta/kunta164',
+    kunta_kunta052: 'kunta/kunta052',
+    kunta_kunta588: 'kunta/kunta588',
+    kunta_kunta689: 'kunta/kunta689',
+    kunta_kunta085: 'kunta/kunta085',
+    kunta_kunta504: 'kunta/kunta504',
+    kunta_kunta178: 'kunta/kunta178',
+    kunta_kunta906: 'kunta/kunta906',
+    kunta_kunta604: 'kunta/kunta604',
+    kunta_kunta240: 'kunta/kunta240',
+    kunta_kunta683: 'kunta/kunta683',
+    kunta_kunta739: 'kunta/kunta739',
+    kunta_kunta286: 'kunta/kunta286',
+    kunta_kunta761: 'kunta/kunta761',
+    kunta_kunta103: 'kunta/kunta103',
+    kunta_kunta220: 'kunta/kunta220',
+    kunta_kunta863: 'kunta/kunta863',
+    kunta_kunta772: 'kunta/kunta772',
+    kunta_kunta937: 'kunta/kunta937',
+    kunta_kunta235: 'kunta/kunta235',
+    kunta_kunta295: 'kunta/kunta295',
+    kunta_kunta320: 'kunta/kunta320',
+    kunta_kunta438: 'kunta/kunta438',
+    kunta_kunta623: 'kunta/kunta623',
+    kunta_kunta239: 'kunta/kunta239',
+    kunta_kunta534: 'kunta/kunta534',
+    kunta_kunta841: 'kunta/kunta841',
+    kunta_kunta431: 'kunta/kunta431',
+    kunta_kunta493: 'kunta/kunta493',
+    kunta_kunta630: 'kunta/kunta630',
+    kunta_kunta281: 'kunta/kunta281',
+    kunta_kunta169: 'kunta/kunta169',
+    kunta_kunta146: 'kunta/kunta146',
+    kunta_kunta992: 'kunta/kunta992',
+    kunta_kunta406: 'kunta/kunta406',
+    kunta_kunta276: 'kunta/kunta276',
+    kunta_kunta249: 'kunta/kunta249',
+    kunta_kunta244: 'kunta/kunta244',
+    kunta_kunta304: 'kunta/kunta304',
+    kunta_kunta933: 'kunta/kunta933',
+    kunta_kunta831: 'kunta/kunta831',
+    kunta_kunta300: 'kunta/kunta300',
+    kunta_kunta561: 'kunta/kunta561',
+    kunta_kunta913: 'kunta/kunta913',
+    kunta_kunta433: 'kunta/kunta433',
+    kunta_kunta010: 'kunta/kunta010',
+    kunta_kunta704: 'kunta/kunta704',
+    kunta_kunta776: 'kunta/kunta776',
+    kunta_kunta071: 'kunta/kunta071',
+    kunta_kunta774: 'kunta/kunta774',
+    kunta_kunta499: 'kunta/kunta499',
+    kunta_kunta212: 'kunta/kunta212',
+    kunta_kunta932: 'kunta/kunta932',
+    kunta_kunta247: 'kunta/kunta247',
+    kunta_kunta322: 'kunta/kunta322',
+    kunta_kunta495: 'kunta/kunta495',
+    kunta_kunta173: 'kunta/kunta173',
+    kunta_kunta980: 'kunta/kunta980',
+    kunta_kunta848: 'kunta/kunta848',
+    kunta_kunta263: 'kunta/kunta263',
+    kunta_kunta208: 'kunta/kunta208',
+    kunta_kunta578: 'kunta/kunta578',
+    kunta_kunta043: 'kunta/kunta043',
+    kunta_kunta837: 'kunta/kunta837',
+    kunta_kunta705: 'kunta/kunta705',
+    kunta_kunta227: 'kunta/kunta227',
+    kunta_kunta684: 'kunta/kunta684',
+    kunta_kunta143: 'kunta/kunta143',
+    kunta_kunta682: 'kunta/kunta682',
+    kunta_kunta759: 'kunta/kunta759',
+    kunta_kunta233: 'kunta/kunta233',
+    kunta_kunta009: 'kunta/kunta009',
+    kunta_kunta261: 'kunta/kunta261',
+    kunta_kunta931: 'kunta/kunta931',
+    kunta_kunta186: 'kunta/kunta186',
+    kunta_kunta091: 'kunta/kunta091',
+    kunta_kunta308: 'kunta/kunta308',
+    kunta_kunta309: 'kunta/kunta309',
+    kunta_kunta707: 'kunta/kunta707',
+    kunta_kunta284: 'kunta/kunta284',
+    kunta_kunta167: 'kunta/kunta167',
+    kunta_kunta853: 'kunta/kunta853',
+    kunta_kunta923: 'kunta/kunta923',
+    kunta_kunta425: 'kunta/kunta425',
+    kunta_kunta971: 'kunta/kunta971',
+    kunta_kunta218: 'kunta/kunta218',
+    kunta_kunta988: 'kunta/kunta988',
+    kunta_kunta097: 'kunta/kunta097',
+    kunta_kunta491: 'kunta/kunta491',
+    kunta_kunta678: 'kunta/kunta678',
+    kunta_kunta072: 'kunta/kunta072',
+    kunta_kunta710: 'kunta/kunta710',
+    kunta_kunta500: 'kunta/kunta500',
+    kunta_kunta204: 'kunta/kunta204',
+    kunta_kunta687: 'kunta/kunta687',
+    kunta_kunta076: 'kunta/kunta076',
+    kunta_kunta924: 'kunta/kunta924',
+    kunta_kunta410: 'kunta/kunta410',
+    kunta_kunta856: 'kunta/kunta856',
+    kunta_kunta775: 'kunta/kunta775',
+    kunta_kunta916: 'kunta/kunta916',
+    kunta_kunta259: 'kunta/kunta259',
+    kunta_kunta176: 'kunta/kunta176',
+    kunta_kunta595: 'kunta/kunta595',
+    kunta_kunta170: 'kunta/kunta170',
+    kunta_kunta405: 'kunta/kunta405',
+    kunta_kunta835: 'kunta/kunta835',
+    kunta_kunta098: 'kunta/kunta098',
+    kunta_kunta480: 'kunta/kunta480',
+    kunta_kunta202: 'kunta/kunta202',
+    kunta_kunta305: 'kunta/kunta305',
+    kunta_kunta183: 'kunta/kunta183',
+    kunta_kunta696: 'kunta/kunta696',
+    kunta_kunta051: 'kunta/kunta051',
+    kunta_kunta479: 'kunta/kunta479',
+    kunta_kunta859: 'kunta/kunta859',
+    kunta_kunta434: 'kunta/kunta434',
+    kunta_kunta618: 'kunta/kunta618',
+    kunta_kunta017: 'kunta/kunta017',
+    kunta_kunta319: 'kunta/kunta319',
+    kunta_kunta607: 'kunta/kunta607',
+    kunta_kunta046: 'kunta/kunta046',
+    kunta_kunta400: 'kunta/kunta400',
+    kunta_kunta069: 'kunta/kunta069',
+    kunta_kunta266: 'kunta/kunta266',
+    kunta_kunta594: 'kunta/kunta594',
+    kunta_kunta778: 'kunta/kunta778',
+    kunta_kunta935: 'kunta/kunta935',
+    kunta_kunta532: 'kunta/kunta532',
+    kunta_kunta834: 'kunta/kunta834',
+    kunta_kunta223: 'kunta/kunta223',
+    kunta_kunta576: 'kunta/kunta576',
+    kunta_kunta609: 'kunta/kunta609',
+    kunta_kunta921: 'kunta/kunta921',
+    kunta_kunta492: 'kunta/kunta492',
+    kunta_kunta047: 'kunta/kunta047',
+    kunta_kunta074: 'kunta/kunta074',
+    kunta_kunta398: 'kunta/kunta398',
+    kunta_kunta315: 'kunta/kunta315',
+    kunta_kunta140: 'kunta/kunta140',
+    kunta_kunta635: 'kunta/kunta635',
+    kunta_kunta691: 'kunta/kunta691',
+    kunta_kunta592: 'kunta/kunta592',
+    kunta_kunta248: 'kunta/kunta248',
+    kunta_kunta283: 'kunta/kunta283',
+    kunta_kunta736: 'kunta/kunta736',
+    kunta_kunta403: 'kunta/kunta403',
+    kunta_kunta254: 'kunta/kunta254',
+    kunta_kunta581: 'kunta/kunta581',
+    kunta_kunta602: 'kunta/kunta602',
+    kunta_kunta766: 'kunta/kunta766',
+    kunta_kunta109: 'kunta/kunta109',
+    kunta_kunta846: 'kunta/kunta846',
+    kunta_kunta044: 'kunta/kunta044',
+    kunta_kunta851: 'kunta/kunta851',
+    kunta_kunta279: 'kunta/kunta279',
+    kunta_kunta729: 'kunta/kunta729',
+    kunta_kunta291: 'kunta/kunta291',
+    kunta_kunta241: 'kunta/kunta241',
+    kunta_kunta681: 'kunta/kunta681',
+    kunta_kunta762: 'kunta/kunta762',
+    kunta_kunta749: 'kunta/kunta749',
+    kunta_kunta414: 'kunta/kunta414',
+    kunta_kunta855: 'kunta/kunta855',
+    kunta_kunta260: 'kunta/kunta260',
+    kunta_kunta014: 'kunta/kunta014',
+    kunta_kunta262: 'kunta/kunta262',
+    kunta_kunta845: 'kunta/kunta845',
+    kunta_kunta917: 'kunta/kunta917',
+    kunta_kunta152: 'kunta/kunta152',
+    kunta_kunta603: 'kunta/kunta603',
+    kunta_kunta483: 'kunta/kunta483',
+    kunta_kunta050: 'kunta/kunta050',
+    kunta_kunta402: 'kunta/kunta402',
+    kunta_kunta908: 'kunta/kunta908',
+    kunta_kunta435: 'kunta/kunta435',
+    kunta_kunta849: 'kunta/kunta849',
+    kunta_kunta317: 'kunta/kunta317',
+    kunta_kunta620: 'kunta/kunta620',
+    kunta_kunta742: 'kunta/kunta742',
+    kunta_kunta171: 'kunta/kunta171',
+    kunta_kunta979: 'kunta/kunta979',
+    kunta_kunta498: 'kunta/kunta498',
+    kunta_kunta224: 'kunta/kunta224',
+    kunta_kunta790: 'kunta/kunta790',
+    kunta_kunta537: 'kunta/kunta537',
+    kunta_kunta946: 'kunta/kunta946',
+    kunta_kunta257: 'kunta/kunta257',
+    kunta_kunta111: 'kunta/kunta111',
+    kunta_kunta226: 'kunta/kunta226',
+    kunta_kunta142: 'kunta/kunta142',
+    kunta_kunta941: 'kunta/kunta941',
+    kunta_kunta318: 'kunta/kunta318',
+    kunta_kunta408: 'kunta/kunta408',
+    kunta_kunta973: 'kunta/kunta973',
+    kunta_kunta927: 'kunta/kunta927',
+    kunta_kunta413: 'kunta/kunta413',
+    kunta_kunta740: 'kunta/kunta740',
+    kunta_kunta624: 'kunta/kunta624',
+    kunta_kunta306: 'kunta/kunta306',
+    kunta_kunta748: 'kunta/kunta748',
+    kunta_kunta417: 'kunta/kunta417',
+    kunta_kunta864: 'kunta/kunta864',
+    kunta_kunta243: 'kunta/kunta243',
+    kunta_kunta236: 'kunta/kunta236',
+    kunta_kunta445: 'kunta/kunta445',
+    kunta_kunta943: 'kunta/kunta943',
+    kunta_kunta285: 'kunta/kunta285',
+    kunta_kunta945: 'kunta/kunta945',
+    kunta_kunta626: 'kunta/kunta626',
+    kunta_kunta854: 'kunta/kunta854',
+    kunta_kunta777: 'kunta/kunta777',
+    kunta_kunta697: 'kunta/kunta697',
+    kunta_kunta785: 'kunta/kunta785',
+    kunta_kunta255: 'kunta/kunta255',
+    kunta_kunta619: 'kunta/kunta619',
+    kunta_kunta312: 'kunta/kunta312',
+    kunta_kunta049: 'kunta/kunta049',
+    kunta_kunta424: 'kunta/kunta424',
+    kunta_kunta252: 'kunta/kunta252',
+    kunta_kunta608: 'kunta/kunta608',
+    kunta_kunta893: 'kunta/kunta893',
+    kunta_kunta636: 'kunta/kunta636',
+    kunta_kunta694: 'kunta/kunta694',
+    kunta_kunta857: 'kunta/kunta857',
+    kunta_kunta439: 'kunta/kunta439',
+    kunta_kunta738: 'kunta/kunta738',
+    kunta_kunta922: 'kunta/kunta922',
+    kunta_kunta005: 'kunta/kunta005',
+    kunta_kunta101: 'kunta/kunta101',
+    kunta_kunta925: 'kunta/kunta925',
+    kunta_kunta035: 'kunta/kunta035',
+    kunta_kunta944: 'kunta/kunta944',
+    kunta_kunta485: 'kunta/kunta485',
+    kunta_kunta942: 'kunta/kunta942',
+    kunta_kunta972: 'kunta/kunta972',
+    kunta_kunta507: 'kunta/kunta507',
+    kunta_kunta625: 'kunta/kunta625',
+    kunta_kunta890: 'kunta/kunta890',
+    kunta_kunta702: 'kunta/kunta702',
+    kunta_kunta858: 'kunta/kunta858',
+    kunta_kunta833: 'kunta/kunta833',
+    kunta_kunta436: 'kunta/kunta436',
+    kunta_kunta936: 'kunta/kunta936',
+    kunta_kunta150: 'kunta/kunta150',
+    kunta_kunta251: 'kunta/kunta251',
+    kunta_kunta079: 'kunta/kunta079',
+    kunta_kunta911: 'kunta/kunta911',
+    kunta_kunta095: 'kunta/kunta095',
+    kunta_kunta770: 'kunta/kunta770',
+    kunta_kunta288: 'kunta/kunta288',
+    kunta_kunta887: 'kunta/kunta887',
+    kunta_kunta443: 'kunta/kunta443',
+    kunta_kunta611: 'kunta/kunta611',
+    kunta_kunta771: 'kunta/kunta771',
+    kunta_kunta585: 'kunta/kunta585',
+    kunta_kunta177: 'kunta/kunta177',
+    kunta_kunta544: 'kunta/kunta544',
+    kunta_kunta060: 'kunta/kunta060',
+    kunta_kunta598: 'kunta/kunta598',
+    kunta_kunta631: 'kunta/kunta631',
+    kunta_kunta287: 'kunta/kunta287',
+    kunta_kunta440: 'kunta/kunta440',
+    kunta_kunta734: 'kunta/kunta734',
+    kunta_kunta310: 'kunta/kunta310',
+    kunta_kunta754: 'kunta/kunta754',
+    kunta_kunta481: 'kunta/kunta481',
+    kunta_kunta421: 'kunta/kunta421',
+    kunta_kunta584: 'kunta/kunta584',
+    kunta_kunta476: 'kunta/kunta476',
+    kunta_kunta791: 'kunta/kunta791',
+    kunta_kunta061: 'kunta/kunta061',
+    kunta_kunta616: 'kunta/kunta616',
+    kunta_kunta175: 'kunta/kunta175',
+    kunta_kunta015: 'kunta/kunta015',
+    kunta_kunta441: 'kunta/kunta441',
+    kunta_kunta700: 'kunta/kunta700',
+    kunta_kunta732: 'kunta/kunta732',
+    kunta_kunta303: 'kunta/kunta303',
+    kunta_kunta145: 'kunta/kunta145',
+    kunta_kunta889: 'kunta/kunta889',
+    kunta_kunta746: 'kunta/kunta746',
+    kunta_kunta844: 'kunta/kunta844',
+    kunta_kunta543: 'kunta/kunta543',
+    kunta_kunta506: 'kunta/kunta506',
+    kunta_kunta040: 'kunta/kunta040',
+    kunta_kunta905: 'kunta/kunta905',
+    kunta_kunta444: 'kunta/kunta444',
+    kunta_kunta560: 'kunta/kunta560',
+    kunta_kunta755: 'kunta/kunta755',
+    kunta_kunta632: 'kunta/kunta632',
+    kunta_kunta915: 'kunta/kunta915',
+    kunta_kunta701: 'kunta/kunta701',
+    kunta_kunta045: 'kunta/kunta045',
+    kunta_kunta573: 'kunta/kunta573',
+    kunta_kunta692: 'kunta/kunta692',
+    kunta_kunta081: 'kunta/kunta081',
+    kunta_kunta593: 'kunta/kunta593',
+    kunta_kunta265: 'kunta/kunta265',
+    kunta_kunta926: 'kunta/kunta926',
+    kunta_kunta139: 'kunta/kunta139',
+    kunta_kunta272: 'kunta/kunta272',
+    kunta_kunta297: 'kunta/kunta297',
+    kunta_kunta765: 'kunta/kunta765',
+    kunta_kunta540: 'kunta/kunta540',
+    kunta_kunta482: 'kunta/kunta482',
+    kunta_kunta850: 'kunta/kunta850',
+    kunta_kunta426: 'kunta/kunta426',
+    kunta_kunta503: 'kunta/kunta503',
+    kunta_kunta004: 'kunta/kunta004',
+    kunta_kunta216: 'kunta/kunta216',
+    kunta_kunta638: 'kunta/kunta638',
+    kunta_kunta217: 'kunta/kunta217',
+    kunta_kunta615: 'kunta/kunta615',
+    kunta_kunta078: 'kunta/kunta078',
+    kunta_kunta886: 'kunta/kunta886',
+    kunta_kunta686: 'kunta/kunta686',
+    kunta_kunta077: 'kunta/kunta077',
+    kunta_kunta541: 'kunta/kunta541',
+    kunta_kunta293: 'kunta/kunta293',
+    kunta_kunta753: 'kunta/kunta753',
+    kunta_kunta090: 'kunta/kunta090',
+    kunta_kunta105: 'kunta/kunta105',
+    kunta_kunta586: 'kunta/kunta586',
+    kunta_kunta316: 'kunta/kunta316',
+    kunta_kunta617: 'kunta/kunta617',
+    kunta_kunta062: 'kunta/kunta062',
+    kunta_kunta016: 'kunta/kunta016',
+    kunta_kunta149: 'kunta/kunta149',
+    kunta_kunta083: 'kunta/kunta083',
+    kunta_kunta751: 'kunta/kunta751',
+    kunta_kunta290: 'kunta/kunta290',
+    kunta_kunta934: 'kunta/kunta934',
+    kunta_kunta301: 'kunta/kunta301',
+    kunta_kunta698: 'kunta/kunta698',
+    kunta_kunta976: 'kunta/kunta976',
+    kunta_kunta246: 'kunta/kunta246',
+    kunta_kunta211: 'kunta/kunta211',
+    kunta_kunta758: 'kunta/kunta758',
+    kunta_kunta978: 'kunta/kunta978',
+    kunta_kunta599: 'kunta/kunta599',
+    kunta_kunta180: 'kunta/kunta180',
+    kunta_kunta494: 'kunta/kunta494',
+    kunta_kunta232: 'kunta/kunta232',
+    kunta_kunta423: 'kunta/kunta423',
+    kunta_kunta151: 'kunta/kunta151',
+    kunta_kunta768: 'kunta/kunta768',
+    kunta_kunta728: 'kunta/kunta728'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetKuntaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetKuntaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetKuntaEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetTilaEnum = {
-    Tila16: 'tila/tila16',
-    Tila18: 'tila/tila18',
-    Tila15: 'tila/tila15',
-    Tila17: 'tila/tila17',
-    Tila14: 'tila/tila14'
+    tila_tila16: 'tila/tila16',
+    tila_tila18: 'tila/tila18',
+    tila_tila15: 'tila/tila15',
+    tila_tila17: 'tila/tila17',
+    tila_tila14: 'tila/tila14'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetTilaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetTilaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetTilaEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum = {
-    Maakunta15: 'maakunta/maakunta15',
-    Maakunta21: 'maakunta/maakunta21',
-    Maakunta12: 'maakunta/maakunta12',
-    Maakunta08: 'maakunta/maakunta08',
-    Maakunta18: 'maakunta/maakunta18',
-    Maakunta16: 'maakunta/maakunta16',
-    Maakunta19: 'maakunta/maakunta19',
-    Maakunta13: 'maakunta/maakunta13',
-    Maakunta09: 'maakunta/maakunta09',
-    Maakunta20: 'maakunta/maakunta20',
-    Maakunta17: 'maakunta/maakunta17',
-    Maakunta10: 'maakunta/maakunta10',
-    Maakunta05: 'maakunta/maakunta05',
-    Maakunta06: 'maakunta/maakunta06',
-    Maakunta07: 'maakunta/maakunta07',
-    Maakunta14: 'maakunta/maakunta14',
-    Maakunta02: 'maakunta/maakunta02',
-    Maakunta04: 'maakunta/maakunta04',
-    Maakunta11: 'maakunta/maakunta11',
-    Maakunta01: 'maakunta/maakunta01'
+    maakunta_maakunta15: 'maakunta/maakunta15',
+    maakunta_maakunta21: 'maakunta/maakunta21',
+    maakunta_maakunta12: 'maakunta/maakunta12',
+    maakunta_maakunta08: 'maakunta/maakunta08',
+    maakunta_maakunta18: 'maakunta/maakunta18',
+    maakunta_maakunta16: 'maakunta/maakunta16',
+    maakunta_maakunta19: 'maakunta/maakunta19',
+    maakunta_maakunta13: 'maakunta/maakunta13',
+    maakunta_maakunta09: 'maakunta/maakunta09',
+    maakunta_maakunta20: 'maakunta/maakunta20',
+    maakunta_maakunta17: 'maakunta/maakunta17',
+    maakunta_maakunta10: 'maakunta/maakunta10',
+    maakunta_maakunta05: 'maakunta/maakunta05',
+    maakunta_maakunta06: 'maakunta/maakunta06',
+    maakunta_maakunta07: 'maakunta/maakunta07',
+    maakunta_maakunta14: 'maakunta/maakunta14',
+    maakunta_maakunta02: 'maakunta/maakunta02',
+    maakunta_maakunta04: 'maakunta/maakunta04',
+    maakunta_maakunta11: 'maakunta/maakunta11',
+    maakunta_maakunta01: 'maakunta/maakunta01'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = {
-    Tateh03: 'toimeksiantotehtava/tateh03',
-    Tateh07: 'toimeksiantotehtava/tateh07',
-    Tateh08: 'toimeksiantotehtava/tateh08',
-    Tateh09: 'toimeksiantotehtava/tateh09',
-    Tateh10: 'toimeksiantotehtava/tateh10',
-    Tateh05: 'toimeksiantotehtava/tateh05',
-    Tateh11: 'toimeksiantotehtava/tateh11',
-    Tateh02: 'toimeksiantotehtava/tateh02',
-    Tateh04: 'toimeksiantotehtava/tateh04',
-    Tateh06: 'toimeksiantotehtava/tateh06',
-    Tateh01: 'toimeksiantotehtava/tateh01'
+    toimeksiantotehtava_tateh03: 'toimeksiantotehtava/tateh03',
+    toimeksiantotehtava_tateh07: 'toimeksiantotehtava/tateh07',
+    toimeksiantotehtava_tateh08: 'toimeksiantotehtava/tateh08',
+    toimeksiantotehtava_tateh09: 'toimeksiantotehtava/tateh09',
+    toimeksiantotehtava_tateh10: 'toimeksiantotehtava/tateh10',
+    toimeksiantotehtava_tateh05: 'toimeksiantotehtava/tateh05',
+    toimeksiantotehtava_tateh11: 'toimeksiantotehtava/tateh11',
+    toimeksiantotehtava_tateh02: 'toimeksiantotehtava/tateh02',
+    toimeksiantotehtava_tateh04: 'toimeksiantotehtava/tateh04',
+    toimeksiantotehtava_tateh06: 'toimeksiantotehtava/tateh06',
+    toimeksiantotehtava_tateh01: 'toimeksiantotehtava/tateh01'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum = {
-    Kj15: 'koordinaattijarjestelma-epsg/kj15',
-    Kj14: 'koordinaattijarjestelma-epsg/kj14',
-    Kj12: 'koordinaattijarjestelma-epsg/kj12',
-    Kj08: 'koordinaattijarjestelma-epsg/kj08',
-    Kj19: 'koordinaattijarjestelma-epsg/kj19',
-    Kj11: 'koordinaattijarjestelma-epsg/kj11',
-    Kj13: 'koordinaattijarjestelma-epsg/kj13',
-    Kj10: 'koordinaattijarjestelma-epsg/kj10',
-    Kj17: 'koordinaattijarjestelma-epsg/kj17',
-    Kj21: 'koordinaattijarjestelma-epsg/kj21',
-    Kj16: 'koordinaattijarjestelma-epsg/kj16',
-    Kj04: 'koordinaattijarjestelma-epsg/kj04',
-    Kj02: 'koordinaattijarjestelma-epsg/kj02',
-    Kj05: 'koordinaattijarjestelma-epsg/kj05',
-    Kj09: 'koordinaattijarjestelma-epsg/kj09',
-    Kj18: 'koordinaattijarjestelma-epsg/kj18',
-    Kj06: 'koordinaattijarjestelma-epsg/kj06',
-    Kj01: 'koordinaattijarjestelma-epsg/kj01',
-    Kj07: 'koordinaattijarjestelma-epsg/kj07',
-    Kj03: 'koordinaattijarjestelma-epsg/kj03',
-    Kj20: 'koordinaattijarjestelma-epsg/kj20'
+    koordinaattijarjestelma_epsg_kj15: 'koordinaattijarjestelma-epsg/kj15',
+    koordinaattijarjestelma_epsg_kj14: 'koordinaattijarjestelma-epsg/kj14',
+    koordinaattijarjestelma_epsg_kj12: 'koordinaattijarjestelma-epsg/kj12',
+    koordinaattijarjestelma_epsg_kj08: 'koordinaattijarjestelma-epsg/kj08',
+    koordinaattijarjestelma_epsg_kj19: 'koordinaattijarjestelma-epsg/kj19',
+    koordinaattijarjestelma_epsg_kj11: 'koordinaattijarjestelma-epsg/kj11',
+    koordinaattijarjestelma_epsg_kj13: 'koordinaattijarjestelma-epsg/kj13',
+    koordinaattijarjestelma_epsg_kj10: 'koordinaattijarjestelma-epsg/kj10',
+    koordinaattijarjestelma_epsg_kj17: 'koordinaattijarjestelma-epsg/kj17',
+    koordinaattijarjestelma_epsg_kj21: 'koordinaattijarjestelma-epsg/kj21',
+    koordinaattijarjestelma_epsg_kj16: 'koordinaattijarjestelma-epsg/kj16',
+    koordinaattijarjestelma_epsg_kj04: 'koordinaattijarjestelma-epsg/kj04',
+    koordinaattijarjestelma_epsg_kj02: 'koordinaattijarjestelma-epsg/kj02',
+    koordinaattijarjestelma_epsg_kj05: 'koordinaattijarjestelma-epsg/kj05',
+    koordinaattijarjestelma_epsg_kj09: 'koordinaattijarjestelma-epsg/kj09',
+    koordinaattijarjestelma_epsg_kj18: 'koordinaattijarjestelma-epsg/kj18',
+    koordinaattijarjestelma_epsg_kj06: 'koordinaattijarjestelma-epsg/kj06',
+    koordinaattijarjestelma_epsg_kj01: 'koordinaattijarjestelma-epsg/kj01',
+    koordinaattijarjestelma_epsg_kj07: 'koordinaattijarjestelma-epsg/kj07',
+    koordinaattijarjestelma_epsg_kj03: 'koordinaattijarjestelma-epsg/kj03',
+    koordinaattijarjestelma_epsg_kj20: 'koordinaattijarjestelma-epsg/kj20'
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum];
 
-/**
- * 
- * @export
- * @interface ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner
- */
 export interface ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner
-     */
     'alku-km': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner
-     */
     'loppu-m': number | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner
-     */
     'ratanumero': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner
-     */
     'loppu-km': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner
-     */
     'alku-m': number;
 }
-/**
- * 
- * @export
- * @interface ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
- */
 export interface ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
-     */
     'ajorata': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
-     */
     'aosa': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
-     */
     'let': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
-     */
     'losa': number | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
-     */
     'aet': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner
-     */
     'tienumero': number;
 }
-/**
- * 
- * @export
- * @interface ProjektiToimeksianto
- */
 export interface ProjektiToimeksianto {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'projekti': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksianto
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksianto
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ProjektiToimeksiantoOminaisuudet}
-     * @memberof ProjektiToimeksianto
-     */
     'ominaisuudet': ProjektiToimeksiantoOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'oid': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksianto
-     */
     'laskennallinen-keskipiste': object | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiToimeksianto
-     */
     'luoja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksianto
-     */
     'geometry': object | null;
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektiToimeksianto
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksianto
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksianto
-     */
     'karttapiste': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerLuoja}
-     * @memberof ProjektiToimeksianto
-     */
     'muokkaaja': ProjektiProjektijoukotInnerLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksianto
-     */
     'lahdejarjestelman-id': string | null;
 }
-/**
- * 
- * @export
- * @interface ProjektiToimeksiantoOminaisuudet
- */
 export interface ProjektiToimeksiantoOminaisuudet {
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'toteuttava-organisaatio'?: object | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'asiatunnus-traficom'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'kuvaus': string | null;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'vaylamuoto': Set<ProjektiToimeksiantoOminaisuudetVaylamuotoEnum>;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'kunta': Set<object> | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'tila': object;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'vesivaylanumerot': Set<string> | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'asiatunnus-ely'?: string | null;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'maakunta': Set<object> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'paattyy': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'muu-kunta'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'muu-maakunta'?: string | null;
-    /**
-     * 
-     * @type {ProjektiProjektijoukotInnerOminaisuudetVarahenkilo}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'toteuttavan-organisaation-yhteyshenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'tehtava': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'muu-toteuttava-organisaatio'?: string | null;
-    /**
-     * 
-     * @type {Set<ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'tieosoitteet': Set<ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'muu-tehtava'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'asiatunnus-vaylavirasto'?: string | null;
-    /**
-     * 
-     * @type {Set<ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner>}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'rataosoitteet': Set<ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner> | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'alkaa': string;
-    /**
-     * 
-     * @type {object}
-     * @memberof ProjektiToimeksiantoOminaisuudet
-     */
     'koordinaattijarjestelma'?: object | null;
 }
 
 export const ProjektiToimeksiantoOminaisuudetVaylamuotoEnum = {
-    Vesi: 'vesi',
-    Tie: 'tie',
-    Rata: 'rata'
+    vesi: 'vesi',
+    tie: 'tie',
+    rata: 'rata'
 } as const;
 
 export type ProjektiToimeksiantoOminaisuudetVaylamuotoEnum = typeof ProjektiToimeksiantoOminaisuudetVaylamuotoEnum[keyof typeof ProjektiToimeksiantoOminaisuudetVaylamuotoEnum];
 
-/**
- * 
- * @export
- * @interface ProjektirekisteriApiV2HakuPost200Response
- */
 export interface ProjektirekisteriApiV2HakuPost200Response {
-    /**
-     * 
-     * @type {number}
-     * @memberof ProjektirekisteriApiV2HakuPost200Response
-     */
     'sivu': number;
-    /**
-     * 
-     * @type {Array<object>}
-     * @memberof ProjektirekisteriApiV2HakuPost200Response
-     */
     'tulokset': Array<object>;
 }
-/**
- * 
- * @export
- * @interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner
- */
-export interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner
-     */
+export interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest {
+    'tyyppi': string;
+}
+export interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner {
     'kohde': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner
-     */
     'lahde': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner
-     */
     'tyyppi': string;
 }
-/**
- * 
- * @export
- * @interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest
- */
-export interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest
-     */
-    'tyyppi': string;
-}
-/**
- * 
- * @export
- * @interface ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response
- */
 export interface ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response
-     */
     'vektorlinkki': string;
 }
 
 /**
  * HakuApi - axios parameter creator
- * @export
  */
 export const HakuApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4254,7 +1820,7 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2HakuPost: async (projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2HakuPost: async (projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku' is not null or undefined
             assertParamExists('projektirekisteriApiV2HakuPost', 'projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku', projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku)
             const localVarPath = `/projektirekisteri/api/v2/haku`;
@@ -4288,7 +1854,6 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * HakuApi - functional programming interface
- * @export
  */
 export const HakuApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = HakuApiAxiosParamCreator(configuration)
@@ -4300,16 +1865,17 @@ export const HakuApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2HakuPost200Response>> {
+        async projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2HakuPost200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HakuApi.projektirekisteriApiV2HakuPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * HakuApi - factory interface
- * @export
  */
 export const HakuApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = HakuApiFp(configuration)
@@ -4321,7 +1887,7 @@ export const HakuApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options?: any): AxiosPromise<ProjektirekisteriApiV2HakuPost200Response> {
+        projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options?: RawAxiosRequestConfig): AxiosPromise<ProjektirekisteriApiV2HakuPost200Response> {
             return localVarFp.projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku, options).then((request) => request(axios, basePath));
         },
     };
@@ -4329,9 +1895,6 @@ export const HakuApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * HakuApi - object-oriented interface
- * @export
- * @class HakuApi
- * @extends {BaseAPI}
  */
 export class HakuApi extends BaseAPI {
     /**
@@ -4340,17 +1903,16 @@ export class HakuApi extends BaseAPI {
      * @param {object} projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof HakuApi
      */
-    public projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku: object, options?: RawAxiosRequestConfig) {
         return HakuApiFp(this.configuration).projektirekisteriApiV2HakuPost(projektirekisteriKomponentitPalvelutHakuTallennaProjektirekisterihakuHaku, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * KohdeApi - axios parameter creator
- * @export
  */
 export const KohdeApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4361,7 +1923,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2KohdeOidGet: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2KohdeOidGet: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('projektirekisteriApiV2KohdeOidGet', 'oid', oid)
             const localVarPath = `/projektirekisteri/api/v2/kohde/{oid}`
@@ -4397,7 +1959,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2KohteetPost: async (body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2KohteetPost: async (body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('projektirekisteriApiV2KohteetPost', 'body', body)
             const localVarPath = `/projektirekisteri/api/v2/kohteet`;
@@ -4414,7 +1976,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
 
             if (tilannepaiva !== undefined) {
                 localVarQueryParameter['tilannepaiva'] = (tilannepaiva as any instanceof Date) ?
-                    (tilannepaiva as any).toISOString().substr(0,10) :
+                    (tilannepaiva as any).toISOString().substring(0,10) :
                     tilannepaiva;
             }
 
@@ -4446,7 +2008,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet: async (nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet: async (nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'nimiavaruus' is not null or undefined
             assertParamExists('projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet', 'nimiavaruus', nimiavaruus)
             // verify required parameter 'kohdeluokka' is not null or undefined
@@ -4493,7 +2055,6 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * KohdeApi - functional programming interface
- * @export
  */
 export const KohdeApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = KohdeApiAxiosParamCreator(configuration)
@@ -4505,9 +2066,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2KohdeOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async projektirekisteriApiV2KohdeOidGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2KohdeOidGet(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.projektirekisteriApiV2KohdeOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4518,9 +2081,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2KohteetPost(body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async projektirekisteriApiV2KohteetPost(body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2KohteetPost(body, tilannepaiva, rikasta, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.projektirekisteriApiV2KohteetPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -4532,16 +2097,17 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * KohdeApi - factory interface
- * @export
  */
 export const KohdeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = KohdeApiFp(configuration)
@@ -4553,7 +2119,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2KohdeOidGet(oid: string, options?: any): AxiosPromise<object> {
+        projektirekisteriApiV2KohdeOidGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.projektirekisteriApiV2KohdeOidGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -4565,7 +2131,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2KohteetPost(body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options?: any): AxiosPromise<void> {
+        projektirekisteriApiV2KohteetPost(body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.projektirekisteriApiV2KohteetPost(body, tilannepaiva, rikasta, options).then((request) => request(axios, basePath));
         },
         /**
@@ -4578,7 +2144,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: any): AxiosPromise<object> {
+        projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options).then((request) => request(axios, basePath));
         },
     };
@@ -4586,9 +2152,6 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * KohdeApi - object-oriented interface
- * @export
- * @class KohdeApi
- * @extends {BaseAPI}
  */
 export class KohdeApi extends BaseAPI {
     /**
@@ -4597,9 +2160,8 @@ export class KohdeApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public projektirekisteriApiV2KohdeOidGet(oid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2KohdeOidGet(oid: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).projektirekisteriApiV2KohdeOidGet(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -4611,9 +2173,8 @@ export class KohdeApi extends BaseAPI {
      * @param {Set<string>} [rikasta] Lisää halutessasi avaimet \&#39;sijainnit\&#39; tai \&#39;geometriat\&#39;. Voit myös antaa kummankin samaan aikaan. Voi myös olla tyhjä.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public projektirekisteriApiV2KohteetPost(body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2KohteetPost(body: Array<string>, tilannepaiva?: string, rikasta?: Set<string>, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).projektirekisteriApiV2KohteetPost(body, tilannepaiva, rikasta, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -4626,17 +2187,16 @@ export class KohdeApi extends BaseAPI {
      * @param {string} [loppumuokkausaika] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * MassatransformaatioApi - axios parameter creator
- * @export
  */
 export const MassatransformaatioApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4647,7 +2207,7 @@ export const MassatransformaatioApiAxiosParamCreator = function (configuration?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet: async (kohdeluokka: any, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet: async (kohdeluokka: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'kohdeluokka' is not null or undefined
             assertParamExists('projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet', 'kohdeluokka', kohdeluokka)
             const localVarPath = `/projektirekisteri/api/v2/massatransformaatio/kaynnista/{kohdeluokka}`
@@ -4679,7 +2239,6 @@ export const MassatransformaatioApiAxiosParamCreator = function (configuration?:
 
 /**
  * MassatransformaatioApi - functional programming interface
- * @export
  */
 export const MassatransformaatioApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = MassatransformaatioApiAxiosParamCreator(configuration)
@@ -4691,16 +2250,17 @@ export const MassatransformaatioApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['MassatransformaatioApi.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * MassatransformaatioApi - factory interface
- * @export
  */
 export const MassatransformaatioApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = MassatransformaatioApiFp(configuration)
@@ -4712,7 +2272,7 @@ export const MassatransformaatioApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: any): AxiosPromise<object> {
+        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options).then((request) => request(axios, basePath));
         },
     };
@@ -4720,9 +2280,6 @@ export const MassatransformaatioApiFactory = function (configuration?: Configura
 
 /**
  * MassatransformaatioApi - object-oriented interface
- * @export
- * @class MassatransformaatioApi
- * @extends {BaseAPI}
  */
 export class MassatransformaatioApi extends BaseAPI {
     /**
@@ -4731,17 +2288,16 @@ export class MassatransformaatioApi extends BaseAPI {
      * @param {any} kohdeluokka 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof MassatransformaatioApi
      */
-    public projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: RawAxiosRequestConfig) {
         return MassatransformaatioApiFp(this.configuration).projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * ProjektiApi - axios parameter creator
- * @export
  */
 export const ProjektiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -4751,7 +2307,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/projektirekisteri/api/v2/projekti`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -4783,7 +2339,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiPost: async (projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiPost: async (projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiProjektiluonti' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiPost', 'projektiProjektiluonti', projektiProjektiluonti)
             const localVarPath = `/projektirekisteri/api/v2/projekti`;
@@ -4823,7 +2379,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidDelete: async (projektiOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidDelete: async (projektiOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidDelete', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}`
@@ -4858,7 +2414,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidGet: async (projektiOid: string, eiGeometrioita?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidGet: async (projektiOid: string, eiGeometrioita?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}`
@@ -4896,7 +2452,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitGet: async (projektiOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitGet: async (projektiOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/linkit`
@@ -4928,11 +2484,11 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @summary Poistaa projektilta linkin annettuun kohdeprojektiin ja kohdeprojektilta lähdeprojektiin.
          * @param {string} projektiOid 
          * @param {string} kohdeOid 
-         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete: async (projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete: async (projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete', 'projektiOid', projektiOid)
             // verify required parameter 'kohdeOid' is not null or undefined
@@ -4972,11 +2528,11 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @summary Linkittää projektin annettuun kohdeprojektiin ja kohdeprojektin lähdeprojektiin samalla linkkityypillä.
          * @param {string} projektiOid 
          * @param {string} kohdeOid 
-         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost: async (projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost: async (projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost', 'projektiOid', projektiOid)
             // verify required parameter 'kohdeOid' is not null or undefined
@@ -5015,11 +2571,11 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * 
          * @summary Asettaa projektille ja linkitetyille projekteille annetut linkit
          * @param {string} projektiOid 
-         * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>} body 
+         * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitPut: async (projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitPut: async (projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitPut', 'projektiOid', projektiOid)
             // verify required parameter 'body' is not null or undefined
@@ -5060,7 +2616,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidPut: async (projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidPut: async (projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidPut', 'projektiOid', projektiOid)
             // verify required parameter 'projektiProjektimuokkaus' is not null or undefined
@@ -5103,7 +2659,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet: async (projektiOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet: async (projektiOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/toimeksiannot`
@@ -5137,7 +2693,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidVektoridDelete: async (projektiOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidVektoridDelete: async (projektiOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidVektoridDelete', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/vektorid`
@@ -5171,7 +2727,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet: async (projektiOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet: async (projektiOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/vektorlinkki`
@@ -5203,7 +2759,6 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * ProjektiApi - functional programming interface
- * @export
  */
 export const ProjektiApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ProjektiApiAxiosParamCreator(configuration)
@@ -5214,9 +2769,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async projektirekisteriApiV2ProjektiGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5226,9 +2783,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiPost(projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiPost(projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiPost(projektiProjektiluonti, eiGeometrioita, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5237,9 +2796,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5249,9 +2810,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid: string, eiGeometrioita?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid: string, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid, eiGeometrioita, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5260,47 +2823,55 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Poistaa projektilta linkin annettuun kohdeprojektiin ja kohdeprojektilta lähdeprojektiin.
          * @param {string} projektiOid 
          * @param {string} kohdeOid 
-         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid, kohdeOid, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Linkittää projektin annettuun kohdeprojektiin ja kohdeprojektin lähdeprojektiin samalla linkkityypillä.
          * @param {string} projektiOid 
          * @param {string} kohdeOid 
-         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid, kohdeOid, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
          * @summary Asettaa projektille ja linkitetyille projekteille annetut linkit
          * @param {string} projektiOid 
-         * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>} body 
+         * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid, body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidLinkitPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5311,9 +2882,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid, projektiProjektimuokkaus, eiGeometrioita, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5322,9 +2895,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<ProjektiToimeksiannotInner>>> {
+        async projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<ProjektiToimeksiannotInner>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5333,9 +2908,11 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
+        async projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjekti>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidVektoridDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5344,16 +2921,17 @@ export const ProjektiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
+        async projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiApi.projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * ProjektiApi - factory interface
- * @export
  */
 export const ProjektiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ProjektiApiFp(configuration)
@@ -5364,7 +2942,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiGet(options?: any): AxiosPromise<void> {
+        projektirekisteriApiV2ProjektiGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.projektirekisteriApiV2ProjektiGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -5375,7 +2953,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiPost(projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiPost(projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiPost(projektiProjektiluonti, eiGeometrioita, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5385,7 +2963,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid: string, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5396,7 +2974,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid: string, eiGeometrioita?: boolean, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid: string, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid, eiGeometrioita, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5406,7 +2984,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid: string, options?: any): AxiosPromise<void> {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5414,11 +2992,11 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @summary Poistaa projektilta linkin annettuun kohdeprojektiin ja kohdeprojektilta lähdeprojektiin.
          * @param {string} projektiOid 
          * @param {string} kohdeOid 
-         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid, kohdeOid, body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5426,22 +3004,22 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @summary Linkittää projektin annettuun kohdeprojektiin ja kohdeprojektin lähdeprojektiin samalla linkkityypillä.
          * @param {string} projektiOid 
          * @param {string} kohdeOid 
-         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+         * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid, kohdeOid, body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Asettaa projektille ja linkitetyille projekteille annetut linkit
          * @param {string} projektiOid 
-         * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>} body 
+         * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid, body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5453,7 +3031,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid, projektiProjektimuokkaus, eiGeometrioita, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5463,7 +3041,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid: string, options?: any): AxiosPromise<Set<ProjektiToimeksiannotInner>> {
+        projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid: string, options?: RawAxiosRequestConfig): AxiosPromise<Set<ProjektiToimeksiannotInner>> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5473,7 +3051,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid: string, options?: any): AxiosPromise<ProjektiProjekti> {
+        projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjekti> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -5483,7 +3061,7 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid: string, options?: any): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
+        projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
             return localVarFp.projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid, options).then((request) => request(axios, basePath));
         },
     };
@@ -5491,9 +3069,6 @@ export const ProjektiApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * ProjektiApi - object-oriented interface
- * @export
- * @class ProjektiApi
- * @extends {BaseAPI}
  */
 export class ProjektiApi extends BaseAPI {
     /**
@@ -5501,9 +3076,8 @@ export class ProjektiApi extends BaseAPI {
      * @summary Palauttaa kaikki projektit.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiGet(options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiGet(options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiGet(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5514,9 +3088,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {boolean} [eiGeometrioita] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiPost(projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiPost(projektiProjektiluonti: ProjektiProjektiLuonti, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiPost(projektiProjektiluonti, eiGeometrioita, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5526,9 +3099,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {string} projektiOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid: string, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidDelete(projektiOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5539,9 +3111,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {boolean} [eiGeometrioita] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid: string, eiGeometrioita?: boolean, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid: string, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidGet(projektiOid, eiGeometrioita, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5551,9 +3122,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {string} projektiOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid: string, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidLinkitGet(projektiOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5562,12 +3132,11 @@ export class ProjektiApi extends BaseAPI {
      * @summary Poistaa projektilta linkin annettuun kohdeprojektiin ja kohdeprojektilta lähdeprojektiin.
      * @param {string} projektiOid 
      * @param {string} kohdeOid 
-     * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+     * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete(projektiOid, kohdeOid, body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5576,12 +3145,11 @@ export class ProjektiApi extends BaseAPI {
      * @summary Linkittää projektin annettuun kohdeprojektiin ja kohdeprojektin lähdeprojektiin samalla linkkityypillä.
      * @param {string} projektiOid 
      * @param {string} kohdeOid 
-     * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest} body 
+     * @param {ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDeleteRequest, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid: string, kohdeOid: string, body: ProjektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPostRequest, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost(projektiOid, kohdeOid, body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5589,12 +3157,11 @@ export class ProjektiApi extends BaseAPI {
      * 
      * @summary Asettaa projektille ja linkitetyille projekteille annetut linkit
      * @param {string} projektiOid 
-     * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>} body 
+     * @param {Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitGetRequestInner>, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid: string, body: Array<ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner>, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidLinkitPut(projektiOid, body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5606,9 +3173,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {boolean} [eiGeometrioita] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid: string, projektiProjektimuokkaus: ProjektiProjektiMuokkaus, eiGeometrioita?: boolean, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidPut(projektiOid, projektiProjektimuokkaus, eiGeometrioita, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5618,9 +3184,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {string} projektiOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid: string, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet(projektiOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5630,9 +3195,8 @@ export class ProjektiApi extends BaseAPI {
      * @param {string} projektiOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid: string, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidVektoridDelete(projektiOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -5642,17 +3206,16 @@ export class ProjektiApi extends BaseAPI {
      * @param {string} projektiOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektiApi
      */
-    public projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid: string, options?: RawAxiosRequestConfig) {
         return ProjektiApiFp(this.configuration).projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet(projektiOid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * ProjektijoukkoApi - axios parameter creator
- * @export
  */
 export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -5662,7 +3225,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -5693,7 +3256,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoPost: async (projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoPost: async (projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiProjektijoukonLisays' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoPost', 'projektiProjektijoukonLisays', projektiProjektijoukonLisays)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko`;
@@ -5729,7 +3292,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete: async (projektijoukkoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete: async (projektijoukkoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}`
@@ -5763,7 +3326,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet: async (projektijoukkoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet: async (projektijoukkoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}`
@@ -5797,7 +3360,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet: async (projektijoukkoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet: async (projektijoukkoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}/projektit`
@@ -5832,7 +3395,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut: async (projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut: async (projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut', 'projektijoukkoOid', projektijoukkoOid)
             // verify required parameter 'projektiProjektijoukonPaivitys' is not null or undefined
@@ -5871,7 +3434,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet: async (projektijoukkoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet: async (projektijoukkoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}/vektorlinkki`
@@ -5903,7 +3466,6 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
 
 /**
  * ProjektijoukkoApi - functional programming interface
- * @export
  */
 export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ProjektijoukkoApiAxiosParamCreator(configuration)
@@ -5914,9 +3476,11 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<ProjektiProjektijoukotInner>>> {
+        async projektirekisteriApiV2ProjektijoukkoGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Set<ProjektiProjektijoukotInner>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5925,9 +3489,11 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjektijoukko>> {
+        async projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjektijoukko>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5936,9 +3502,11 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5947,9 +3515,11 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjektijoukko>> {
+        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjektijoukko>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5958,9 +3528,11 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5970,9 +3542,11 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjektijoukko>> {
+        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiProjektijoukko>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid, projektiProjektijoukonPaivitys, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -5981,16 +3555,17 @@ export const ProjektijoukkoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
+        async projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektijoukkoApi.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * ProjektijoukkoApi - factory interface
- * @export
  */
 export const ProjektijoukkoApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ProjektijoukkoApiFp(configuration)
@@ -6001,7 +3576,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoGet(options?: any): AxiosPromise<Set<ProjektiProjektijoukotInner>> {
+        projektirekisteriApiV2ProjektijoukkoGet(options?: RawAxiosRequestConfig): AxiosPromise<Set<ProjektiProjektijoukotInner>> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -6011,7 +3586,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options?: any): AxiosPromise<ProjektiProjektijoukko> {
+        projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjektijoukko> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6021,7 +3596,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid: string, options?: any): AxiosPromise<void> {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6031,7 +3606,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid: string, options?: any): AxiosPromise<ProjektiProjektijoukko> {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjektijoukko> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6041,7 +3616,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid: string, options?: any): AxiosPromise<void> {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6052,7 +3627,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options?: any): AxiosPromise<ProjektiProjektijoukko> {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiProjektijoukko> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid, projektiProjektijoukonPaivitys, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6062,7 +3637,7 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: any): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
+        projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
             return localVarFp.projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid, options).then((request) => request(axios, basePath));
         },
     };
@@ -6070,9 +3645,6 @@ export const ProjektijoukkoApiFactory = function (configuration?: Configuration,
 
 /**
  * ProjektijoukkoApi - object-oriented interface
- * @export
- * @class ProjektijoukkoApi
- * @extends {BaseAPI}
  */
 export class ProjektijoukkoApi extends BaseAPI {
     /**
@@ -6080,9 +3652,8 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @summary Palauttaa kaikki projektijoukot.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoGet(options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoGet(options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoGet(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6092,9 +3663,8 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @param {ProjektiProjektijoukonLisays} projektiProjektijoukonLisays 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays: ProjektiProjektijoukonLisays, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoPost(projektiProjektijoukonLisays, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6104,9 +3674,8 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @param {string} projektijoukkoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid: string, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete(projektijoukkoOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6116,9 +3685,8 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @param {string} projektijoukkoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet(projektijoukkoOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6128,9 +3696,8 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @param {string} projektijoukkoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet(projektijoukkoOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6141,9 +3708,8 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @param {ProjektiProjektijoukonPaivitys} projektiProjektijoukonPaivitys 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid: string, projektiProjektijoukonPaivitys: ProjektiProjektijoukonPaivitys, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut(projektijoukkoOid, projektiProjektijoukonPaivitys, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6153,17 +3719,16 @@ export class ProjektijoukkoApi extends BaseAPI {
      * @param {string} projektijoukkoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ProjektijoukkoApi
      */
-    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * ToimeksiantoApi - axios parameter creator
- * @export
  */
 export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -6174,7 +3739,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoPost: async (projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ToimeksiantoPost: async (projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'projektiToimeksiannonLisays' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoPost', 'projektiToimeksiannonLisays', projektiToimeksiannonLisays)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto`;
@@ -6210,7 +3775,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete: async (toimeksiantoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete: async (toimeksiantoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}`
@@ -6244,7 +3809,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet: async (toimeksiantoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet: async (toimeksiantoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}`
@@ -6279,7 +3844,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut: async (toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut: async (toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut', 'toimeksiantoOid', toimeksiantoOid)
             // verify required parameter 'projektiToimeksiannonPaivitys' is not null or undefined
@@ -6318,7 +3883,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet: async (toimeksiantoOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet: async (toimeksiantoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}/vektorlinkki`
@@ -6350,7 +3915,6 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
 
 /**
  * ToimeksiantoApi - functional programming interface
- * @export
  */
 export const ToimeksiantoApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ToimeksiantoApiAxiosParamCreator(configuration)
@@ -6362,9 +3926,11 @@ export const ToimeksiantoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiToimeksianto>> {
+        async projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiToimeksianto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ToimeksiantoApi.projektirekisteriApiV2ToimeksiantoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -6373,9 +3939,11 @@ export const ToimeksiantoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ToimeksiantoApi.projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -6384,9 +3952,11 @@ export const ToimeksiantoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiToimeksianto>> {
+        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiToimeksianto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ToimeksiantoApi.projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -6396,9 +3966,11 @@ export const ToimeksiantoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiToimeksianto>> {
+        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektiToimeksianto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid, projektiToimeksiannonPaivitys, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ToimeksiantoApi.projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -6407,16 +3979,17 @@ export const ToimeksiantoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
+        async projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ToimeksiantoApi.projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * ToimeksiantoApi - factory interface
- * @export
  */
 export const ToimeksiantoApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ToimeksiantoApiFp(configuration)
@@ -6428,7 +4001,7 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options?: any): AxiosPromise<ProjektiToimeksianto> {
+        projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiToimeksianto> {
             return localVarFp.projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6438,7 +4011,7 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid: string, options?: any): AxiosPromise<void> {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6448,7 +4021,7 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid: string, options?: any): AxiosPromise<ProjektiToimeksianto> {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiToimeksianto> {
             return localVarFp.projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6459,7 +4032,7 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: any): AxiosPromise<ProjektiToimeksianto> {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: RawAxiosRequestConfig): AxiosPromise<ProjektiToimeksianto> {
             return localVarFp.projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid, projektiToimeksiannonPaivitys, options).then((request) => request(axios, basePath));
         },
         /**
@@ -6469,7 +4042,7 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: any): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
+        projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response> {
             return localVarFp.projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid, options).then((request) => request(axios, basePath));
         },
     };
@@ -6477,9 +4050,6 @@ export const ToimeksiantoApiFactory = function (configuration?: Configuration, b
 
 /**
  * ToimeksiantoApi - object-oriented interface
- * @export
- * @class ToimeksiantoApi
- * @extends {BaseAPI}
  */
 export class ToimeksiantoApi extends BaseAPI {
     /**
@@ -6488,9 +4058,8 @@ export class ToimeksiantoApi extends BaseAPI {
      * @param {ProjektiToimeksiannonLisays} projektiToimeksiannonLisays 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ToimeksiantoApi
      */
-    public projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays: ProjektiToimeksiannonLisays, options?: RawAxiosRequestConfig) {
         return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoPost(projektiToimeksiannonLisays, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6500,9 +4069,8 @@ export class ToimeksiantoApi extends BaseAPI {
      * @param {string} toimeksiantoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ToimeksiantoApi
      */
-    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid: string, options?: RawAxiosRequestConfig) {
         return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete(toimeksiantoOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6512,9 +4080,8 @@ export class ToimeksiantoApi extends BaseAPI {
      * @param {string} toimeksiantoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ToimeksiantoApi
      */
-    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig) {
         return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet(toimeksiantoOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6525,9 +4092,8 @@ export class ToimeksiantoApi extends BaseAPI {
      * @param {ProjektiToimeksiannonPaivitys} projektiToimeksiannonPaivitys 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ToimeksiantoApi
      */
-    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid: string, projektiToimeksiannonPaivitys: ProjektiToimeksiannonPaivitys, options?: RawAxiosRequestConfig) {
         return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut(toimeksiantoOid, projektiToimeksiannonPaivitys, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -6537,11 +4103,11 @@ export class ToimeksiantoApi extends BaseAPI {
      * @param {string} toimeksiantoOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ToimeksiantoApi
      */
-    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: AxiosRequestConfig) {
+    public projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig) {
         return ToimeksiantoApiFp(this.configuration).projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet(toimeksiantoOid, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 

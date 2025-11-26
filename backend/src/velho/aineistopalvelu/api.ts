@@ -13,1561 +13,837 @@
  */
 
 
-import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
+import type { Configuration } from './configuration';
+import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
+import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import type { RequestArgs } from './base';
 // @ts-ignore
-import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from './base';
+import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-/**
- * 
- * @export
- * @interface AineistoAineisto
- */
 export interface AineistoAineisto {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineisto
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {AineistoAineistoVektor}
-     * @memberof AineistoAineisto
-     */
     'vektor'?: AineistoAineistoVektor;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineisto
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {AineistoAineistoOminaisuudet}
-     * @memberof AineistoAineisto
-     */
     'ominaisuudet': AineistoAineistoOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'oid': string;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoAineisto
-     */
     'luoja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoAineisto
-     */
-    'linkit': Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoAineisto
-     */
+    'linkit': Array<string | null>;
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineisto
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoAineisto
-     */
     'muokkaaja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {Array<AineistoAineistoVersiotInner>}
-     * @memberof AineistoAineisto
-     */
     'versiot'?: Array<AineistoAineistoVersiotInner>;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'luontikohdeluokan-oid'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineisto
-     */
     'lahdejarjestelman-id': string | null;
-    /**
-     * 
-     * @type {AineistoAineistoTuoreinVersio}
-     * @memberof AineistoAineisto
-     */
     'tuorein-versio'?: AineistoAineistoTuoreinVersio | null;
 }
-/**
- * 
- * @export
- * @interface AineistoAineistoLuoja
- */
 export interface AineistoAineistoLuoja {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoLuoja
-     */
     'kayttajanimi': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AineistoAineistoLuoja
-     */
     'api'?: boolean | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoLuoja
-     */
     'client_id'?: string | null;
 }
-/**
- * 
- * @export
- * @interface AineistoAineistoOminaisuudet
- */
 export interface AineistoAineistoOminaisuudet {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'polku'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'kuvaus'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'rakennusosa'?: object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'tila': object;
-    /**
-     * 
-     * @type {Set<object>}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'tekniikka-alat'?: Set<object>;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'dokumenttityyppi': object;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'sisaltaa-henkilotietoja': boolean | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'laji': object | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoAineistoOminaisuudet
-     */
     'ryhma': object;
 }
-/**
- * 
- * @export
- * @interface AineistoAineistoTuoreinVersio
- */
 export interface AineistoAineistoTuoreinVersio {
-    /**
-     * 
-     * @type {AineistoAineistoVersiotInnerLuoja}
-     * @memberof AineistoAineistoTuoreinVersio
-     */
     'luoja': AineistoAineistoVersiotInnerLuoja;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoTuoreinVersio
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoTuoreinVersio
-     */
     'versio': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoTuoreinVersio
-     */
     'tyyppi': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoAineistoTuoreinVersio
-     */
     'koko': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoTuoreinVersio
-     */
     'muokattu': string;
 }
-/**
- * 
- * @export
- * @interface AineistoAineistoVektor
- */
 export interface AineistoAineistoVektor {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVektor
-     */
     'version-id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVektor
-     */
     'vektor-malli-id': string;
 }
-/**
- * 
- * @export
- * @interface AineistoAineistoVersiotInner
- */
 export interface AineistoAineistoVersiotInner {
-    /**
-     * 
-     * @type {AineistoAineistoVersiotInnerLuoja}
-     * @memberof AineistoAineistoVersiotInner
-     */
     'luoja': AineistoAineistoVersiotInnerLuoja;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVersiotInner
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVersiotInner
-     */
     'versio': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVersiotInner
-     */
     'tyyppi': string;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoAineistoVersiotInner
-     */
     'koko': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVersiotInner
-     */
     'muokattu': string;
 }
-/**
- * 
- * @export
- * @interface AineistoAineistoVersiotInnerLuoja
- */
 export interface AineistoAineistoVersiotInnerLuoja {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoAineistoVersiotInnerLuoja
-     */
     'kayttajanimi': string | null;
 }
-/**
- * 
- * @export
- * @interface AineistoLisaystiedot
- */
 export interface AineistoLisaystiedot {
-    /**
-     * 
-     * @type {AineistoLisaystiedotOminaisuudet}
-     * @memberof AineistoLisaystiedot
-     */
     'ominaisuudet': AineistoLisaystiedotOminaisuudet;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoLisaystiedot
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoLisaystiedot
-     */
-    'linkit': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedot
-     */
+    'linkit': Array<string | null>;
     'luontikohdeluokan-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface AineistoLisaystiedot1
- */
 export interface AineistoLisaystiedot1 {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedot1
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {AineistoLisaystiedotOminaisuudet}
-     * @memberof AineistoLisaystiedot1
-     */
     'ominaisuudet': AineistoLisaystiedotOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedot1
-     */
     'oid': string;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoLisaystiedot1
-     */
     'luoja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoLisaystiedot1
-     */
-    'linkit': Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoLisaystiedot1
-     */
+    'linkit': Array<string | null>;
     'schemaversio': number;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoLisaystiedot1
-     */
     'muokkaaja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedot1
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedot1
-     */
     'luontikohdeluokan-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface AineistoLisaystiedotOminaisuudet
- */
 export interface AineistoLisaystiedotOminaisuudet {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
     'polku'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
     'kuvaus'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
-    'rakennusosa'?: AineistoLisaystiedotOminaisuudetRakennusosaEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
+    'rakennusosa'?: AineistoLisaystiedotOminaisuudetRakennusosaEnum | null;
     'tila': AineistoLisaystiedotOminaisuudetTilaEnum;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
     'tekniikka-alat'?: Set<AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum>;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
     'dokumenttityyppi': AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
     'nimi': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
     'sisaltaa-henkilotietoja': boolean | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
-    'laji': AineistoLisaystiedotOminaisuudetLajiEnum;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoLisaystiedotOminaisuudet
-     */
+    'laji': AineistoLisaystiedotOminaisuudetLajiEnum | null;
     'ryhma': AineistoLisaystiedotOminaisuudetRyhmaEnum;
 }
 
 export const AineistoLisaystiedotOminaisuudetRakennusosaEnum = {
-    Ro285: 'rakennusosa/ro285',
-    Ro391: 'rakennusosa/ro391',
-    Ro105: 'rakennusosa/ro105',
-    Ro466: 'rakennusosa/ro466',
-    Ro366: 'rakennusosa/ro366',
-    Ro450: 'rakennusosa/ro450',
-    Ro344: 'rakennusosa/ro344',
-    Ro430: 'rakennusosa/ro430',
-    Ro03: 'rakennusosa/ro03',
-    Ro107: 'rakennusosa/ro107',
-    Ro145: 'rakennusosa/ro145',
-    Ro447: 'rakennusosa/ro447',
-    Ro150: 'rakennusosa/ro150',
-    Ro87: 'rakennusosa/ro87',
-    Ro28: 'rakennusosa/ro28',
-    Ro206: 'rakennusosa/ro206',
-    Ro19: 'rakennusosa/ro19',
-    Ro23: 'rakennusosa/ro23',
-    Ro234: 'rakennusosa/ro234',
-    Ro343: 'rakennusosa/ro343',
-    Ro236: 'rakennusosa/ro236',
-    Ro146: 'rakennusosa/ro146',
-    Ro441: 'rakennusosa/ro441',
-    Ro384: 'rakennusosa/ro384',
-    Ro98: 'rakennusosa/ro98',
-    Ro415: 'rakennusosa/ro415',
-    Ro167: 'rakennusosa/ro167',
-    Ro250: 'rakennusosa/ro250',
-    Ro238: 'rakennusosa/ro238',
-    Ro231: 'rakennusosa/ro231',
-    Ro232: 'rakennusosa/ro232',
-    Ro305: 'rakennusosa/ro305',
-    Ro117: 'rakennusosa/ro117',
-    Ro252: 'rakennusosa/ro252',
-    Ro47: 'rakennusosa/ro47',
-    Ro114: 'rakennusosa/ro114',
-    Ro288: 'rakennusosa/ro288',
-    Ro456: 'rakennusosa/ro456',
-    Ro86: 'rakennusosa/ro86',
-    Ro203: 'rakennusosa/ro203',
-    Ro154: 'rakennusosa/ro154',
-    Ro255: 'rakennusosa/ro255',
-    Ro218: 'rakennusosa/ro218',
-    Ro367: 'rakennusosa/ro367',
-    Ro438: 'rakennusosa/ro438',
-    Ro301: 'rakennusosa/ro301',
-    Ro66: 'rakennusosa/ro66',
-    Ro223: 'rakennusosa/ro223',
-    Ro73: 'rakennusosa/ro73',
-    Ro274: 'rakennusosa/ro274',
-    Ro303: 'rakennusosa/ro303',
-    Ro284: 'rakennusosa/ro284',
-    Ro402: 'rakennusosa/ro402',
-    Ro217: 'rakennusosa/ro217',
-    Ro410: 'rakennusosa/ro410',
-    Ro315: 'rakennusosa/ro315',
-    Ro97: 'rakennusosa/ro97',
-    Ro186: 'rakennusosa/ro186',
-    Ro411: 'rakennusosa/ro411',
-    Ro94: 'rakennusosa/ro94',
-    Ro195: 'rakennusosa/ro195',
-    Ro408: 'rakennusosa/ro408',
-    Ro196: 'rakennusosa/ro196',
-    Ro372: 'rakennusosa/ro372',
-    Ro326: 'rakennusosa/ro326',
-    Ro63: 'rakennusosa/ro63',
-    Ro172: 'rakennusosa/ro172',
-    Ro44: 'rakennusosa/ro44',
-    Ro16: 'rakennusosa/ro16',
-    Ro01: 'rakennusosa/ro01',
-    Ro379: 'rakennusosa/ro379',
-    Ro256: 'rakennusosa/ro256',
-    Ro388: 'rakennusosa/ro388',
-    Ro335: 'rakennusosa/ro335',
-    Ro464: 'rakennusosa/ro464',
-    Ro398: 'rakennusosa/ro398',
-    Ro454: 'rakennusosa/ro454',
-    Ro262: 'rakennusosa/ro262',
-    Ro226: 'rakennusosa/ro226',
-    Ro423: 'rakennusosa/ro423',
-    Ro267: 'rakennusosa/ro267',
-    Ro184: 'rakennusosa/ro184',
-    Ro439: 'rakennusosa/ro439',
-    Ro281: 'rakennusosa/ro281',
-    Ro368: 'rakennusosa/ro368',
-    Ro90: 'rakennusosa/ro90',
-    Ro45: 'rakennusosa/ro45',
-    Ro235: 'rakennusosa/ro235',
-    Ro182: 'rakennusosa/ro182',
-    Ro324: 'rakennusosa/ro324',
-    Ro453: 'rakennusosa/ro453',
-    Ro139: 'rakennusosa/ro139',
-    Ro424: 'rakennusosa/ro424',
-    Ro296: 'rakennusosa/ro296',
-    Ro89: 'rakennusosa/ro89',
-    Ro177: 'rakennusosa/ro177',
-    Ro213: 'rakennusosa/ro213',
-    Ro392: 'rakennusosa/ro392',
-    Ro270: 'rakennusosa/ro270',
-    Ro330: 'rakennusosa/ro330',
-    Ro163: 'rakennusosa/ro163',
-    Ro04: 'rakennusosa/ro04',
-    Ro443: 'rakennusosa/ro443',
-    Ro80: 'rakennusosa/ro80',
-    Ro128: 'rakennusosa/ro128',
-    Ro377: 'rakennusosa/ro377',
-    Ro164: 'rakennusosa/ro164',
-    Ro143: 'rakennusosa/ro143',
-    Ro205: 'rakennusosa/ro205',
-    Ro414: 'rakennusosa/ro414',
-    Ro451: 'rakennusosa/ro451',
-    Ro109: 'rakennusosa/ro109',
-    Ro70: 'rakennusosa/ro70',
-    Ro161: 'rakennusosa/ro161',
-    Ro459: 'rakennusosa/ro459',
-    Ro436: 'rakennusosa/ro436',
-    Ro401: 'rakennusosa/ro401',
-    Ro62: 'rakennusosa/ro62',
-    Ro396: 'rakennusosa/ro396',
-    Ro248: 'rakennusosa/ro248',
-    Ro266: 'rakennusosa/ro266',
-    Ro207: 'rakennusosa/ro207',
-    Ro243: 'rakennusosa/ro243',
-    Ro201: 'rakennusosa/ro201',
-    Ro445: 'rakennusosa/ro445',
-    Ro397: 'rakennusosa/ro397',
-    Ro370: 'rakennusosa/ro370',
-    Ro22: 'rakennusosa/ro22',
-    Ro32: 'rakennusosa/ro32',
-    Ro299: 'rakennusosa/ro299',
-    Ro425: 'rakennusosa/ro425',
-    Ro263: 'rakennusosa/ro263',
-    Ro130: 'rakennusosa/ro130',
-    Ro279: 'rakennusosa/ro279',
-    Ro187: 'rakennusosa/ro187',
-    Ro258: 'rakennusosa/ro258',
-    Ro126: 'rakennusosa/ro126',
-    Ro140: 'rakennusosa/ro140',
-    Ro119: 'rakennusosa/ro119',
-    Ro240: 'rakennusosa/ro240',
-    Ro48: 'rakennusosa/ro48',
-    Ro348: 'rakennusosa/ro348',
-    Ro209: 'rakennusosa/ro209',
-    Ro452: 'rakennusosa/ro452',
-    Ro337: 'rakennusosa/ro337',
-    Ro59: 'rakennusosa/ro59',
-    Ro273: 'rakennusosa/ro273',
-    Ro91: 'rakennusosa/ro91',
-    Ro95: 'rakennusosa/ro95',
-    Ro27: 'rakennusosa/ro27',
-    Ro292: 'rakennusosa/ro292',
-    Ro297: 'rakennusosa/ro297',
-    Ro239: 'rakennusosa/ro239',
-    Ro320: 'rakennusosa/ro320',
-    Ro347: 'rakennusosa/ro347',
-    Ro57: 'rakennusosa/ro57',
-    Ro178: 'rakennusosa/ro178',
-    Ro319: 'rakennusosa/ro319',
-    Ro332: 'rakennusosa/ro332',
-    Ro419: 'rakennusosa/ro419',
-    Ro375: 'rakennusosa/ro375',
-    Ro434: 'rakennusosa/ro434',
-    Ro168: 'rakennusosa/ro168',
-    Ro334: 'rakennusosa/ro334',
-    Ro104: 'rakennusosa/ro104',
-    Ro64: 'rakennusosa/ro64',
-    Ro137: 'rakennusosa/ro137',
-    Ro429: 'rakennusosa/ro429',
-    Ro49: 'rakennusosa/ro49',
-    Ro254: 'rakennusosa/ro254',
-    Ro369: 'rakennusosa/ro369',
-    Ro81: 'rakennusosa/ro81',
-    Ro82: 'rakennusosa/ro82',
-    Ro444: 'rakennusosa/ro444',
-    Ro08: 'rakennusosa/ro08',
-    Ro125: 'rakennusosa/ro125',
-    Ro176: 'rakennusosa/ro176',
-    Ro220: 'rakennusosa/ro220',
-    Ro153: 'rakennusosa/ro153',
-    Ro75: 'rakennusosa/ro75',
-    Ro457: 'rakennusosa/ro457',
-    Ro147: 'rakennusosa/ro147',
-    Ro122: 'rakennusosa/ro122',
-    Ro152: 'rakennusosa/ro152',
-    Ro245: 'rakennusosa/ro245',
-    Ro173: 'rakennusosa/ro173',
-    Ro275: 'rakennusosa/ro275',
-    Ro387: 'rakennusosa/ro387',
-    Ro462: 'rakennusosa/ro462',
-    Ro241: 'rakennusosa/ro241',
-    Ro357: 'rakennusosa/ro357',
-    Ro264: 'rakennusosa/ro264',
-    Ro237: 'rakennusosa/ro237',
-    Ro356: 'rakennusosa/ro356',
-    Ro112: 'rakennusosa/ro112',
-    Ro403: 'rakennusosa/ro403',
-    Ro25: 'rakennusosa/ro25',
-    Ro405: 'rakennusosa/ro405',
-    Ro431: 'rakennusosa/ro431',
-    Ro136: 'rakennusosa/ro136',
-    Ro158: 'rakennusosa/ro158',
-    Ro135: 'rakennusosa/ro135',
-    Ro449: 'rakennusosa/ro449',
-    Ro302: 'rakennusosa/ro302',
-    Ro69: 'rakennusosa/ro69',
-    Ro433: 'rakennusosa/ro433',
-    Ro458: 'rakennusosa/ro458',
-    Ro479: 'rakennusosa/ro479',
-    Ro342: 'rakennusosa/ro342',
-    Ro395: 'rakennusosa/ro395',
-    Ro317: 'rakennusosa/ro317',
-    Ro259: 'rakennusosa/ro259',
-    Ro472: 'rakennusosa/ro472',
-    Ro21: 'rakennusosa/ro21',
-    Ro349: 'rakennusosa/ro349',
-    Ro229: 'rakennusosa/ro229',
-    Ro362: 'rakennusosa/ro362',
-    Ro253: 'rakennusosa/ro253',
-    Ro306: 'rakennusosa/ro306',
-    Ro378: 'rakennusosa/ro378',
-    Ro05: 'rakennusosa/ro05',
-    Ro448: 'rakennusosa/ro448',
-    Ro33: 'rakennusosa/ro33',
-    Ro54: 'rakennusosa/ro54',
-    Ro353: 'rakennusosa/ro353',
-    Ro210: 'rakennusosa/ro210',
-    Ro272: 'rakennusosa/ro272',
-    Ro194: 'rakennusosa/ro194',
-    Ro131: 'rakennusosa/ro131',
-    Ro93: 'rakennusosa/ro93',
-    Ro123: 'rakennusosa/ro123',
-    Ro208: 'rakennusosa/ro208',
-    Ro463: 'rakennusosa/ro463',
-    Ro426: 'rakennusosa/ro426',
-    Ro413: 'rakennusosa/ro413',
-    Ro287: 'rakennusosa/ro287',
-    Ro300: 'rakennusosa/ro300',
-    Ro312: 'rakennusosa/ro312',
-    Ro170: 'rakennusosa/ro170',
-    Ro339: 'rakennusosa/ro339',
-    Ro198: 'rakennusosa/ro198',
-    Ro336: 'rakennusosa/ro336',
-    Ro211: 'rakennusosa/ro211',
-    Ro36: 'rakennusosa/ro36',
-    Ro84: 'rakennusosa/ro84',
-    Ro199: 'rakennusosa/ro199',
-    Ro371: 'rakennusosa/ro371',
-    Ro92: 'rakennusosa/ro92',
-    Ro179: 'rakennusosa/ro179',
-    Ro106: 'rakennusosa/ro106',
-    Ro103: 'rakennusosa/ro103',
-    Ro331: 'rakennusosa/ro331',
-    Ro156: 'rakennusosa/ro156',
-    Ro313: 'rakennusosa/ro313',
-    Ro298: 'rakennusosa/ro298',
-    Ro111: 'rakennusosa/ro111',
-    Ro204: 'rakennusosa/ro204',
-    Ro286: 'rakennusosa/ro286',
-    Ro293: 'rakennusosa/ro293',
-    Ro271: 'rakennusosa/ro271',
-    Ro53: 'rakennusosa/ro53',
-    Ro108: 'rakennusosa/ro108',
-    Ro359: 'rakennusosa/ro359',
-    Ro61: 'rakennusosa/ro61',
-    Ro469: 'rakennusosa/ro469',
-    Ro157: 'rakennusosa/ro157',
-    Ro02: 'rakennusosa/ro02',
-    Ro102: 'rakennusosa/ro102',
-    Ro188: 'rakennusosa/ro188',
-    Ro280: 'rakennusosa/ro280',
-    Ro185: 'rakennusosa/ro185',
-    Ro467: 'rakennusosa/ro467',
-    Ro17: 'rakennusosa/ro17',
-    Ro29: 'rakennusosa/ro29',
-    Ro58: 'rakennusosa/ro58',
-    Ro278: 'rakennusosa/ro278',
-    Ro432: 'rakennusosa/ro432',
-    Ro26: 'rakennusosa/ro26',
-    Ro309: 'rakennusosa/ro309',
-    Ro455: 'rakennusosa/ro455',
-    Ro323: 'rakennusosa/ro323',
-    Ro43: 'rakennusosa/ro43',
-    Ro227: 'rakennusosa/ro227',
-    Ro132: 'rakennusosa/ro132',
-    Ro228: 'rakennusosa/ro228',
-    Ro242: 'rakennusosa/ro242',
-    Ro189: 'rakennusosa/ro189',
-    Ro465: 'rakennusosa/ro465',
-    Ro215: 'rakennusosa/ro215',
-    Ro202: 'rakennusosa/ro202',
-    Ro07: 'rakennusosa/ro07',
-    Ro338: 'rakennusosa/ro338',
-    Ro212: 'rakennusosa/ro212',
-    Ro134: 'rakennusosa/ro134',
-    Ro67: 'rakennusosa/ro67',
-    Ro269: 'rakennusosa/ro269',
-    Ro355: 'rakennusosa/ro355',
-    Ro222: 'rakennusosa/ro222',
-    Ro141: 'rakennusosa/ro141',
-    Ro475: 'rakennusosa/ro475',
-    Ro39: 'rakennusosa/ro39',
-    Ro474: 'rakennusosa/ro474',
-    Ro282: 'rakennusosa/ro282',
-    Ro77: 'rakennusosa/ro77',
-    Ro72: 'rakennusosa/ro72',
-    Ro46: 'rakennusosa/ro46',
-    Ro321: 'rakennusosa/ro321',
-    Ro200: 'rakennusosa/ro200',
-    Ro116: 'rakennusosa/ro116',
-    Ro471: 'rakennusosa/ro471',
-    Ro390: 'rakennusosa/ro390',
-    Ro470: 'rakennusosa/ro470',
-    Ro440: 'rakennusosa/ro440',
-    Ro249: 'rakennusosa/ro249',
-    Ro190: 'rakennusosa/ro190',
-    Ro180: 'rakennusosa/ro180',
-    Ro476: 'rakennusosa/ro476',
-    Ro50: 'rakennusosa/ro50',
-    Ro230: 'rakennusosa/ro230',
-    Ro160: 'rakennusosa/ro160',
-    Ro247: 'rakennusosa/ro247',
-    Ro30: 'rakennusosa/ro30',
-    Ro295: 'rakennusosa/ro295',
-    Ro352: 'rakennusosa/ro352',
-    Ro389: 'rakennusosa/ro389',
-    Ro121: 'rakennusosa/ro121',
-    Ro308: 'rakennusosa/ro308',
-    Ro115: 'rakennusosa/ro115',
-    Ro404: 'rakennusosa/ro404',
-    Ro364: 'rakennusosa/ro364',
-    Ro38: 'rakennusosa/ro38',
-    Ro283: 'rakennusosa/ro283',
-    Ro183: 'rakennusosa/ro183',
-    Ro399: 'rakennusosa/ro399',
-    Ro221: 'rakennusosa/ro221',
-    Ro418: 'rakennusosa/ro418',
-    Ro83: 'rakennusosa/ro83',
-    Ro360: 'rakennusosa/ro360',
-    Ro149: 'rakennusosa/ro149',
-    Ro386: 'rakennusosa/ro386',
-    Ro120: 'rakennusosa/ro120',
-    Ro24: 'rakennusosa/ro24',
-    Ro35: 'rakennusosa/ro35',
-    Ro113: 'rakennusosa/ro113',
-    Ro268: 'rakennusosa/ro268',
-    Ro78: 'rakennusosa/ro78',
-    Ro155: 'rakennusosa/ro155',
-    Ro468: 'rakennusosa/ro468',
-    Ro382: 'rakennusosa/ro382',
-    Ro291: 'rakennusosa/ro291',
-    Ro325: 'rakennusosa/ro325',
-    Ro192: 'rakennusosa/ro192',
-    Ro76: 'rakennusosa/ro76',
-    Ro351: 'rakennusosa/ro351',
-    Ro473: 'rakennusosa/ro473',
-    Ro307: 'rakennusosa/ro307',
-    Ro376: 'rakennusosa/ro376',
-    Ro174: 'rakennusosa/ro174',
-    Ro71: 'rakennusosa/ro71',
-    Ro99: 'rakennusosa/ro99',
-    Ro380: 'rakennusosa/ro380',
-    Ro374: 'rakennusosa/ro374',
-    Ro327: 'rakennusosa/ro327',
-    Ro31: 'rakennusosa/ro31',
-    Ro100: 'rakennusosa/ro100',
-    Ro13: 'rakennusosa/ro13',
-    Ro400: 'rakennusosa/ro400',
-    Ro37: 'rakennusosa/ro37',
-    Ro361: 'rakennusosa/ro361',
-    Ro144: 'rakennusosa/ro144',
-    Ro417: 'rakennusosa/ro417',
-    Ro289: 'rakennusosa/ro289',
-    Ro214: 'rakennusosa/ro214',
-    Ro314: 'rakennusosa/ro314',
-    Ro383: 'rakennusosa/ro383',
-    Ro437: 'rakennusosa/ro437',
-    Ro09: 'rakennusosa/ro09',
-    Ro225: 'rakennusosa/ro225',
-    Ro55: 'rakennusosa/ro55',
-    Ro311: 'rakennusosa/ro311',
-    Ro409: 'rakennusosa/ro409',
-    Ro224: 'rakennusosa/ro224',
-    Ro304: 'rakennusosa/ro304',
-    Ro244: 'rakennusosa/ro244',
-    Ro276: 'rakennusosa/ro276',
-    Ro151: 'rakennusosa/ro151',
-    Ro420: 'rakennusosa/ro420',
-    Ro20: 'rakennusosa/ro20',
-    Ro74: 'rakennusosa/ro74',
-    Ro412: 'rakennusosa/ro412',
-    Ro260: 'rakennusosa/ro260',
-    Ro363: 'rakennusosa/ro363',
-    Ro181: 'rakennusosa/ro181',
-    Ro358: 'rakennusosa/ro358',
-    Ro12: 'rakennusosa/ro12',
-    Ro265: 'rakennusosa/ro265',
-    Ro00: 'rakennusosa/ro00',
-    Ro138: 'rakennusosa/ro138',
-    Ro393: 'rakennusosa/ro393',
-    Ro148: 'rakennusosa/ro148',
-    Ro385: 'rakennusosa/ro385',
-    Ro381: 'rakennusosa/ro381',
-    Ro316: 'rakennusosa/ro316',
-    Ro142: 'rakennusosa/ro142',
-    Ro277: 'rakennusosa/ro277',
-    Ro407: 'rakennusosa/ro407',
-    Ro96: 'rakennusosa/ro96',
-    Ro133: 'rakennusosa/ro133',
-    Ro246: 'rakennusosa/ro246',
-    Ro406: 'rakennusosa/ro406',
-    Ro110: 'rakennusosa/ro110',
-    Ro34: 'rakennusosa/ro34',
-    Ro175: 'rakennusosa/ro175',
-    Ro159: 'rakennusosa/ro159',
-    Ro42: 'rakennusosa/ro42',
-    Ro06: 'rakennusosa/ro06',
-    Ro261: 'rakennusosa/ro261',
-    Ro166: 'rakennusosa/ro166',
-    Ro446: 'rakennusosa/ro446',
-    Ro118: 'rakennusosa/ro118',
-    Ro10: 'rakennusosa/ro10',
-    Ro193: 'rakennusosa/ro193',
-    Ro171: 'rakennusosa/ro171',
-    Ro65: 'rakennusosa/ro65',
-    Ro428: 'rakennusosa/ro428',
-    Ro328: 'rakennusosa/ro328',
-    Ro165: 'rakennusosa/ro165',
-    Ro394: 'rakennusosa/ro394',
-    Ro333: 'rakennusosa/ro333',
-    Ro127: 'rakennusosa/ro127',
-    Ro68: 'rakennusosa/ro68',
-    Ro257: 'rakennusosa/ro257',
-    Ro322: 'rakennusosa/ro322',
-    Ro219: 'rakennusosa/ro219',
-    Ro416: 'rakennusosa/ro416',
-    Ro341: 'rakennusosa/ro341',
-    Ro169: 'rakennusosa/ro169',
-    Ro52: 'rakennusosa/ro52',
-    Ro88: 'rakennusosa/ro88',
-    Ro60: 'rakennusosa/ro60',
-    Ro290: 'rakennusosa/ro290',
-    Ro365: 'rakennusosa/ro365',
-    Ro422: 'rakennusosa/ro422',
-    Ro340: 'rakennusosa/ro340',
-    Ro427: 'rakennusosa/ro427',
-    Ro11: 'rakennusosa/ro11',
-    Ro233: 'rakennusosa/ro233',
-    Ro310: 'rakennusosa/ro310',
-    Ro373: 'rakennusosa/ro373',
-    Ro294: 'rakennusosa/ro294',
-    Ro40: 'rakennusosa/ro40',
-    Ro318: 'rakennusosa/ro318',
-    Ro14: 'rakennusosa/ro14',
-    Ro15: 'rakennusosa/ro15',
-    Ro191: 'rakennusosa/ro191',
-    Ro354: 'rakennusosa/ro354',
-    Ro435: 'rakennusosa/ro435',
-    Ro41: 'rakennusosa/ro41',
-    Ro129: 'rakennusosa/ro129',
-    Ro477: 'rakennusosa/ro477',
-    Ro251: 'rakennusosa/ro251',
-    Ro345: 'rakennusosa/ro345',
-    Ro350: 'rakennusosa/ro350',
-    Ro124: 'rakennusosa/ro124',
-    Ro101: 'rakennusosa/ro101',
-    Ro216: 'rakennusosa/ro216',
-    Ro162: 'rakennusosa/ro162',
-    Ro56: 'rakennusosa/ro56',
-    Ro85: 'rakennusosa/ro85',
-    Ro329: 'rakennusosa/ro329',
-    Ro346: 'rakennusosa/ro346',
-    Ro442: 'rakennusosa/ro442',
-    Ro18: 'rakennusosa/ro18',
-    Ro51: 'rakennusosa/ro51',
-    Ro421: 'rakennusosa/ro421',
-    Ro197: 'rakennusosa/ro197',
-    Ro79: 'rakennusosa/ro79'
+    rakennusosa_ro285: 'rakennusosa/ro285',
+    rakennusosa_ro391: 'rakennusosa/ro391',
+    rakennusosa_ro105: 'rakennusosa/ro105',
+    rakennusosa_ro466: 'rakennusosa/ro466',
+    rakennusosa_ro366: 'rakennusosa/ro366',
+    rakennusosa_ro450: 'rakennusosa/ro450',
+    rakennusosa_ro344: 'rakennusosa/ro344',
+    rakennusosa_ro430: 'rakennusosa/ro430',
+    rakennusosa_ro03: 'rakennusosa/ro03',
+    rakennusosa_ro107: 'rakennusosa/ro107',
+    rakennusosa_ro145: 'rakennusosa/ro145',
+    rakennusosa_ro447: 'rakennusosa/ro447',
+    rakennusosa_ro150: 'rakennusosa/ro150',
+    rakennusosa_ro87: 'rakennusosa/ro87',
+    rakennusosa_ro28: 'rakennusosa/ro28',
+    rakennusosa_ro206: 'rakennusosa/ro206',
+    rakennusosa_ro19: 'rakennusosa/ro19',
+    rakennusosa_ro23: 'rakennusosa/ro23',
+    rakennusosa_ro234: 'rakennusosa/ro234',
+    rakennusosa_ro343: 'rakennusosa/ro343',
+    rakennusosa_ro236: 'rakennusosa/ro236',
+    rakennusosa_ro146: 'rakennusosa/ro146',
+    rakennusosa_ro441: 'rakennusosa/ro441',
+    rakennusosa_ro384: 'rakennusosa/ro384',
+    rakennusosa_ro98: 'rakennusosa/ro98',
+    rakennusosa_ro415: 'rakennusosa/ro415',
+    rakennusosa_ro167: 'rakennusosa/ro167',
+    rakennusosa_ro250: 'rakennusosa/ro250',
+    rakennusosa_ro238: 'rakennusosa/ro238',
+    rakennusosa_ro231: 'rakennusosa/ro231',
+    rakennusosa_ro232: 'rakennusosa/ro232',
+    rakennusosa_ro305: 'rakennusosa/ro305',
+    rakennusosa_ro117: 'rakennusosa/ro117',
+    rakennusosa_ro252: 'rakennusosa/ro252',
+    rakennusosa_ro47: 'rakennusosa/ro47',
+    rakennusosa_ro114: 'rakennusosa/ro114',
+    rakennusosa_ro288: 'rakennusosa/ro288',
+    rakennusosa_ro456: 'rakennusosa/ro456',
+    rakennusosa_ro86: 'rakennusosa/ro86',
+    rakennusosa_ro203: 'rakennusosa/ro203',
+    rakennusosa_ro154: 'rakennusosa/ro154',
+    rakennusosa_ro255: 'rakennusosa/ro255',
+    rakennusosa_ro218: 'rakennusosa/ro218',
+    rakennusosa_ro367: 'rakennusosa/ro367',
+    rakennusosa_ro438: 'rakennusosa/ro438',
+    rakennusosa_ro301: 'rakennusosa/ro301',
+    rakennusosa_ro66: 'rakennusosa/ro66',
+    rakennusosa_ro223: 'rakennusosa/ro223',
+    rakennusosa_ro73: 'rakennusosa/ro73',
+    rakennusosa_ro274: 'rakennusosa/ro274',
+    rakennusosa_ro303: 'rakennusosa/ro303',
+    rakennusosa_ro284: 'rakennusosa/ro284',
+    rakennusosa_ro402: 'rakennusosa/ro402',
+    rakennusosa_ro217: 'rakennusosa/ro217',
+    rakennusosa_ro410: 'rakennusosa/ro410',
+    rakennusosa_ro315: 'rakennusosa/ro315',
+    rakennusosa_ro97: 'rakennusosa/ro97',
+    rakennusosa_ro186: 'rakennusosa/ro186',
+    rakennusosa_ro411: 'rakennusosa/ro411',
+    rakennusosa_ro94: 'rakennusosa/ro94',
+    rakennusosa_ro195: 'rakennusosa/ro195',
+    rakennusosa_ro408: 'rakennusosa/ro408',
+    rakennusosa_ro196: 'rakennusosa/ro196',
+    rakennusosa_ro372: 'rakennusosa/ro372',
+    rakennusosa_ro326: 'rakennusosa/ro326',
+    rakennusosa_ro63: 'rakennusosa/ro63',
+    rakennusosa_ro172: 'rakennusosa/ro172',
+    rakennusosa_ro44: 'rakennusosa/ro44',
+    rakennusosa_ro16: 'rakennusosa/ro16',
+    rakennusosa_ro01: 'rakennusosa/ro01',
+    rakennusosa_ro379: 'rakennusosa/ro379',
+    rakennusosa_ro256: 'rakennusosa/ro256',
+    rakennusosa_ro388: 'rakennusosa/ro388',
+    rakennusosa_ro335: 'rakennusosa/ro335',
+    rakennusosa_ro464: 'rakennusosa/ro464',
+    rakennusosa_ro398: 'rakennusosa/ro398',
+    rakennusosa_ro454: 'rakennusosa/ro454',
+    rakennusosa_ro262: 'rakennusosa/ro262',
+    rakennusosa_ro226: 'rakennusosa/ro226',
+    rakennusosa_ro423: 'rakennusosa/ro423',
+    rakennusosa_ro267: 'rakennusosa/ro267',
+    rakennusosa_ro184: 'rakennusosa/ro184',
+    rakennusosa_ro439: 'rakennusosa/ro439',
+    rakennusosa_ro281: 'rakennusosa/ro281',
+    rakennusosa_ro368: 'rakennusosa/ro368',
+    rakennusosa_ro90: 'rakennusosa/ro90',
+    rakennusosa_ro45: 'rakennusosa/ro45',
+    rakennusosa_ro235: 'rakennusosa/ro235',
+    rakennusosa_ro182: 'rakennusosa/ro182',
+    rakennusosa_ro324: 'rakennusosa/ro324',
+    rakennusosa_ro453: 'rakennusosa/ro453',
+    rakennusosa_ro139: 'rakennusosa/ro139',
+    rakennusosa_ro424: 'rakennusosa/ro424',
+    rakennusosa_ro296: 'rakennusosa/ro296',
+    rakennusosa_ro89: 'rakennusosa/ro89',
+    rakennusosa_ro177: 'rakennusosa/ro177',
+    rakennusosa_ro213: 'rakennusosa/ro213',
+    rakennusosa_ro392: 'rakennusosa/ro392',
+    rakennusosa_ro270: 'rakennusosa/ro270',
+    rakennusosa_ro330: 'rakennusosa/ro330',
+    rakennusosa_ro163: 'rakennusosa/ro163',
+    rakennusosa_ro04: 'rakennusosa/ro04',
+    rakennusosa_ro443: 'rakennusosa/ro443',
+    rakennusosa_ro80: 'rakennusosa/ro80',
+    rakennusosa_ro128: 'rakennusosa/ro128',
+    rakennusosa_ro377: 'rakennusosa/ro377',
+    rakennusosa_ro164: 'rakennusosa/ro164',
+    rakennusosa_ro143: 'rakennusosa/ro143',
+    rakennusosa_ro205: 'rakennusosa/ro205',
+    rakennusosa_ro414: 'rakennusosa/ro414',
+    rakennusosa_ro451: 'rakennusosa/ro451',
+    rakennusosa_ro109: 'rakennusosa/ro109',
+    rakennusosa_ro70: 'rakennusosa/ro70',
+    rakennusosa_ro161: 'rakennusosa/ro161',
+    rakennusosa_ro459: 'rakennusosa/ro459',
+    rakennusosa_ro436: 'rakennusosa/ro436',
+    rakennusosa_ro401: 'rakennusosa/ro401',
+    rakennusosa_ro62: 'rakennusosa/ro62',
+    rakennusosa_ro396: 'rakennusosa/ro396',
+    rakennusosa_ro248: 'rakennusosa/ro248',
+    rakennusosa_ro266: 'rakennusosa/ro266',
+    rakennusosa_ro207: 'rakennusosa/ro207',
+    rakennusosa_ro243: 'rakennusosa/ro243',
+    rakennusosa_ro201: 'rakennusosa/ro201',
+    rakennusosa_ro445: 'rakennusosa/ro445',
+    rakennusosa_ro397: 'rakennusosa/ro397',
+    rakennusosa_ro370: 'rakennusosa/ro370',
+    rakennusosa_ro22: 'rakennusosa/ro22',
+    rakennusosa_ro32: 'rakennusosa/ro32',
+    rakennusosa_ro299: 'rakennusosa/ro299',
+    rakennusosa_ro425: 'rakennusosa/ro425',
+    rakennusosa_ro263: 'rakennusosa/ro263',
+    rakennusosa_ro130: 'rakennusosa/ro130',
+    rakennusosa_ro279: 'rakennusosa/ro279',
+    rakennusosa_ro187: 'rakennusosa/ro187',
+    rakennusosa_ro258: 'rakennusosa/ro258',
+    rakennusosa_ro126: 'rakennusosa/ro126',
+    rakennusosa_ro140: 'rakennusosa/ro140',
+    rakennusosa_ro119: 'rakennusosa/ro119',
+    rakennusosa_ro240: 'rakennusosa/ro240',
+    rakennusosa_ro48: 'rakennusosa/ro48',
+    rakennusosa_ro348: 'rakennusosa/ro348',
+    rakennusosa_ro209: 'rakennusosa/ro209',
+    rakennusosa_ro452: 'rakennusosa/ro452',
+    rakennusosa_ro337: 'rakennusosa/ro337',
+    rakennusosa_ro59: 'rakennusosa/ro59',
+    rakennusosa_ro273: 'rakennusosa/ro273',
+    rakennusosa_ro91: 'rakennusosa/ro91',
+    rakennusosa_ro95: 'rakennusosa/ro95',
+    rakennusosa_ro27: 'rakennusosa/ro27',
+    rakennusosa_ro292: 'rakennusosa/ro292',
+    rakennusosa_ro297: 'rakennusosa/ro297',
+    rakennusosa_ro239: 'rakennusosa/ro239',
+    rakennusosa_ro320: 'rakennusosa/ro320',
+    rakennusosa_ro347: 'rakennusosa/ro347',
+    rakennusosa_ro57: 'rakennusosa/ro57',
+    rakennusosa_ro178: 'rakennusosa/ro178',
+    rakennusosa_ro319: 'rakennusosa/ro319',
+    rakennusosa_ro332: 'rakennusosa/ro332',
+    rakennusosa_ro419: 'rakennusosa/ro419',
+    rakennusosa_ro375: 'rakennusosa/ro375',
+    rakennusosa_ro434: 'rakennusosa/ro434',
+    rakennusosa_ro168: 'rakennusosa/ro168',
+    rakennusosa_ro334: 'rakennusosa/ro334',
+    rakennusosa_ro104: 'rakennusosa/ro104',
+    rakennusosa_ro64: 'rakennusosa/ro64',
+    rakennusosa_ro137: 'rakennusosa/ro137',
+    rakennusosa_ro429: 'rakennusosa/ro429',
+    rakennusosa_ro49: 'rakennusosa/ro49',
+    rakennusosa_ro254: 'rakennusosa/ro254',
+    rakennusosa_ro369: 'rakennusosa/ro369',
+    rakennusosa_ro81: 'rakennusosa/ro81',
+    rakennusosa_ro82: 'rakennusosa/ro82',
+    rakennusosa_ro444: 'rakennusosa/ro444',
+    rakennusosa_ro08: 'rakennusosa/ro08',
+    rakennusosa_ro125: 'rakennusosa/ro125',
+    rakennusosa_ro176: 'rakennusosa/ro176',
+    rakennusosa_ro220: 'rakennusosa/ro220',
+    rakennusosa_ro153: 'rakennusosa/ro153',
+    rakennusosa_ro75: 'rakennusosa/ro75',
+    rakennusosa_ro457: 'rakennusosa/ro457',
+    rakennusosa_ro147: 'rakennusosa/ro147',
+    rakennusosa_ro122: 'rakennusosa/ro122',
+    rakennusosa_ro152: 'rakennusosa/ro152',
+    rakennusosa_ro245: 'rakennusosa/ro245',
+    rakennusosa_ro173: 'rakennusosa/ro173',
+    rakennusosa_ro275: 'rakennusosa/ro275',
+    rakennusosa_ro387: 'rakennusosa/ro387',
+    rakennusosa_ro462: 'rakennusosa/ro462',
+    rakennusosa_ro241: 'rakennusosa/ro241',
+    rakennusosa_ro357: 'rakennusosa/ro357',
+    rakennusosa_ro264: 'rakennusosa/ro264',
+    rakennusosa_ro237: 'rakennusosa/ro237',
+    rakennusosa_ro356: 'rakennusosa/ro356',
+    rakennusosa_ro112: 'rakennusosa/ro112',
+    rakennusosa_ro403: 'rakennusosa/ro403',
+    rakennusosa_ro25: 'rakennusosa/ro25',
+    rakennusosa_ro405: 'rakennusosa/ro405',
+    rakennusosa_ro431: 'rakennusosa/ro431',
+    rakennusosa_ro136: 'rakennusosa/ro136',
+    rakennusosa_ro158: 'rakennusosa/ro158',
+    rakennusosa_ro135: 'rakennusosa/ro135',
+    rakennusosa_ro449: 'rakennusosa/ro449',
+    rakennusosa_ro302: 'rakennusosa/ro302',
+    rakennusosa_ro69: 'rakennusosa/ro69',
+    rakennusosa_ro433: 'rakennusosa/ro433',
+    rakennusosa_ro458: 'rakennusosa/ro458',
+    rakennusosa_ro479: 'rakennusosa/ro479',
+    rakennusosa_ro342: 'rakennusosa/ro342',
+    rakennusosa_ro395: 'rakennusosa/ro395',
+    rakennusosa_ro317: 'rakennusosa/ro317',
+    rakennusosa_ro259: 'rakennusosa/ro259',
+    rakennusosa_ro472: 'rakennusosa/ro472',
+    rakennusosa_ro21: 'rakennusosa/ro21',
+    rakennusosa_ro349: 'rakennusosa/ro349',
+    rakennusosa_ro229: 'rakennusosa/ro229',
+    rakennusosa_ro362: 'rakennusosa/ro362',
+    rakennusosa_ro253: 'rakennusosa/ro253',
+    rakennusosa_ro306: 'rakennusosa/ro306',
+    rakennusosa_ro378: 'rakennusosa/ro378',
+    rakennusosa_ro05: 'rakennusosa/ro05',
+    rakennusosa_ro448: 'rakennusosa/ro448',
+    rakennusosa_ro33: 'rakennusosa/ro33',
+    rakennusosa_ro54: 'rakennusosa/ro54',
+    rakennusosa_ro353: 'rakennusosa/ro353',
+    rakennusosa_ro210: 'rakennusosa/ro210',
+    rakennusosa_ro272: 'rakennusosa/ro272',
+    rakennusosa_ro194: 'rakennusosa/ro194',
+    rakennusosa_ro131: 'rakennusosa/ro131',
+    rakennusosa_ro93: 'rakennusosa/ro93',
+    rakennusosa_ro123: 'rakennusosa/ro123',
+    rakennusosa_ro208: 'rakennusosa/ro208',
+    rakennusosa_ro463: 'rakennusosa/ro463',
+    rakennusosa_ro426: 'rakennusosa/ro426',
+    rakennusosa_ro413: 'rakennusosa/ro413',
+    rakennusosa_ro287: 'rakennusosa/ro287',
+    rakennusosa_ro300: 'rakennusosa/ro300',
+    rakennusosa_ro312: 'rakennusosa/ro312',
+    rakennusosa_ro170: 'rakennusosa/ro170',
+    rakennusosa_ro339: 'rakennusosa/ro339',
+    rakennusosa_ro198: 'rakennusosa/ro198',
+    rakennusosa_ro336: 'rakennusosa/ro336',
+    rakennusosa_ro211: 'rakennusosa/ro211',
+    rakennusosa_ro36: 'rakennusosa/ro36',
+    rakennusosa_ro84: 'rakennusosa/ro84',
+    rakennusosa_ro199: 'rakennusosa/ro199',
+    rakennusosa_ro371: 'rakennusosa/ro371',
+    rakennusosa_ro92: 'rakennusosa/ro92',
+    rakennusosa_ro179: 'rakennusosa/ro179',
+    rakennusosa_ro106: 'rakennusosa/ro106',
+    rakennusosa_ro103: 'rakennusosa/ro103',
+    rakennusosa_ro331: 'rakennusosa/ro331',
+    rakennusosa_ro156: 'rakennusosa/ro156',
+    rakennusosa_ro313: 'rakennusosa/ro313',
+    rakennusosa_ro298: 'rakennusosa/ro298',
+    rakennusosa_ro111: 'rakennusosa/ro111',
+    rakennusosa_ro204: 'rakennusosa/ro204',
+    rakennusosa_ro286: 'rakennusosa/ro286',
+    rakennusosa_ro293: 'rakennusosa/ro293',
+    rakennusosa_ro271: 'rakennusosa/ro271',
+    rakennusosa_ro53: 'rakennusosa/ro53',
+    rakennusosa_ro108: 'rakennusosa/ro108',
+    rakennusosa_ro359: 'rakennusosa/ro359',
+    rakennusosa_ro61: 'rakennusosa/ro61',
+    rakennusosa_ro469: 'rakennusosa/ro469',
+    rakennusosa_ro157: 'rakennusosa/ro157',
+    rakennusosa_ro02: 'rakennusosa/ro02',
+    rakennusosa_ro102: 'rakennusosa/ro102',
+    rakennusosa_ro188: 'rakennusosa/ro188',
+    rakennusosa_ro280: 'rakennusosa/ro280',
+    rakennusosa_ro185: 'rakennusosa/ro185',
+    rakennusosa_ro467: 'rakennusosa/ro467',
+    rakennusosa_ro17: 'rakennusosa/ro17',
+    rakennusosa_ro29: 'rakennusosa/ro29',
+    rakennusosa_ro58: 'rakennusosa/ro58',
+    rakennusosa_ro278: 'rakennusosa/ro278',
+    rakennusosa_ro432: 'rakennusosa/ro432',
+    rakennusosa_ro26: 'rakennusosa/ro26',
+    rakennusosa_ro309: 'rakennusosa/ro309',
+    rakennusosa_ro455: 'rakennusosa/ro455',
+    rakennusosa_ro323: 'rakennusosa/ro323',
+    rakennusosa_ro43: 'rakennusosa/ro43',
+    rakennusosa_ro227: 'rakennusosa/ro227',
+    rakennusosa_ro132: 'rakennusosa/ro132',
+    rakennusosa_ro228: 'rakennusosa/ro228',
+    rakennusosa_ro242: 'rakennusosa/ro242',
+    rakennusosa_ro189: 'rakennusosa/ro189',
+    rakennusosa_ro465: 'rakennusosa/ro465',
+    rakennusosa_ro215: 'rakennusosa/ro215',
+    rakennusosa_ro202: 'rakennusosa/ro202',
+    rakennusosa_ro07: 'rakennusosa/ro07',
+    rakennusosa_ro338: 'rakennusosa/ro338',
+    rakennusosa_ro212: 'rakennusosa/ro212',
+    rakennusosa_ro134: 'rakennusosa/ro134',
+    rakennusosa_ro67: 'rakennusosa/ro67',
+    rakennusosa_ro269: 'rakennusosa/ro269',
+    rakennusosa_ro355: 'rakennusosa/ro355',
+    rakennusosa_ro222: 'rakennusosa/ro222',
+    rakennusosa_ro141: 'rakennusosa/ro141',
+    rakennusosa_ro475: 'rakennusosa/ro475',
+    rakennusosa_ro39: 'rakennusosa/ro39',
+    rakennusosa_ro474: 'rakennusosa/ro474',
+    rakennusosa_ro282: 'rakennusosa/ro282',
+    rakennusosa_ro77: 'rakennusosa/ro77',
+    rakennusosa_ro72: 'rakennusosa/ro72',
+    rakennusosa_ro46: 'rakennusosa/ro46',
+    rakennusosa_ro321: 'rakennusosa/ro321',
+    rakennusosa_ro200: 'rakennusosa/ro200',
+    rakennusosa_ro116: 'rakennusosa/ro116',
+    rakennusosa_ro471: 'rakennusosa/ro471',
+    rakennusosa_ro390: 'rakennusosa/ro390',
+    rakennusosa_ro470: 'rakennusosa/ro470',
+    rakennusosa_ro440: 'rakennusosa/ro440',
+    rakennusosa_ro249: 'rakennusosa/ro249',
+    rakennusosa_ro190: 'rakennusosa/ro190',
+    rakennusosa_ro180: 'rakennusosa/ro180',
+    rakennusosa_ro476: 'rakennusosa/ro476',
+    rakennusosa_ro50: 'rakennusosa/ro50',
+    rakennusosa_ro230: 'rakennusosa/ro230',
+    rakennusosa_ro160: 'rakennusosa/ro160',
+    rakennusosa_ro247: 'rakennusosa/ro247',
+    rakennusosa_ro30: 'rakennusosa/ro30',
+    rakennusosa_ro295: 'rakennusosa/ro295',
+    rakennusosa_ro352: 'rakennusosa/ro352',
+    rakennusosa_ro389: 'rakennusosa/ro389',
+    rakennusosa_ro121: 'rakennusosa/ro121',
+    rakennusosa_ro308: 'rakennusosa/ro308',
+    rakennusosa_ro115: 'rakennusosa/ro115',
+    rakennusosa_ro404: 'rakennusosa/ro404',
+    rakennusosa_ro364: 'rakennusosa/ro364',
+    rakennusosa_ro38: 'rakennusosa/ro38',
+    rakennusosa_ro283: 'rakennusosa/ro283',
+    rakennusosa_ro183: 'rakennusosa/ro183',
+    rakennusosa_ro399: 'rakennusosa/ro399',
+    rakennusosa_ro221: 'rakennusosa/ro221',
+    rakennusosa_ro418: 'rakennusosa/ro418',
+    rakennusosa_ro83: 'rakennusosa/ro83',
+    rakennusosa_ro360: 'rakennusosa/ro360',
+    rakennusosa_ro149: 'rakennusosa/ro149',
+    rakennusosa_ro386: 'rakennusosa/ro386',
+    rakennusosa_ro120: 'rakennusosa/ro120',
+    rakennusosa_ro24: 'rakennusosa/ro24',
+    rakennusosa_ro35: 'rakennusosa/ro35',
+    rakennusosa_ro113: 'rakennusosa/ro113',
+    rakennusosa_ro268: 'rakennusosa/ro268',
+    rakennusosa_ro78: 'rakennusosa/ro78',
+    rakennusosa_ro155: 'rakennusosa/ro155',
+    rakennusosa_ro468: 'rakennusosa/ro468',
+    rakennusosa_ro382: 'rakennusosa/ro382',
+    rakennusosa_ro291: 'rakennusosa/ro291',
+    rakennusosa_ro325: 'rakennusosa/ro325',
+    rakennusosa_ro192: 'rakennusosa/ro192',
+    rakennusosa_ro76: 'rakennusosa/ro76',
+    rakennusosa_ro351: 'rakennusosa/ro351',
+    rakennusosa_ro473: 'rakennusosa/ro473',
+    rakennusosa_ro307: 'rakennusosa/ro307',
+    rakennusosa_ro376: 'rakennusosa/ro376',
+    rakennusosa_ro174: 'rakennusosa/ro174',
+    rakennusosa_ro71: 'rakennusosa/ro71',
+    rakennusosa_ro99: 'rakennusosa/ro99',
+    rakennusosa_ro380: 'rakennusosa/ro380',
+    rakennusosa_ro374: 'rakennusosa/ro374',
+    rakennusosa_ro327: 'rakennusosa/ro327',
+    rakennusosa_ro31: 'rakennusosa/ro31',
+    rakennusosa_ro100: 'rakennusosa/ro100',
+    rakennusosa_ro13: 'rakennusosa/ro13',
+    rakennusosa_ro400: 'rakennusosa/ro400',
+    rakennusosa_ro37: 'rakennusosa/ro37',
+    rakennusosa_ro361: 'rakennusosa/ro361',
+    rakennusosa_ro144: 'rakennusosa/ro144',
+    rakennusosa_ro417: 'rakennusosa/ro417',
+    rakennusosa_ro289: 'rakennusosa/ro289',
+    rakennusosa_ro214: 'rakennusosa/ro214',
+    rakennusosa_ro314: 'rakennusosa/ro314',
+    rakennusosa_ro383: 'rakennusosa/ro383',
+    rakennusosa_ro437: 'rakennusosa/ro437',
+    rakennusosa_ro09: 'rakennusosa/ro09',
+    rakennusosa_ro225: 'rakennusosa/ro225',
+    rakennusosa_ro55: 'rakennusosa/ro55',
+    rakennusosa_ro311: 'rakennusosa/ro311',
+    rakennusosa_ro409: 'rakennusosa/ro409',
+    rakennusosa_ro224: 'rakennusosa/ro224',
+    rakennusosa_ro304: 'rakennusosa/ro304',
+    rakennusosa_ro244: 'rakennusosa/ro244',
+    rakennusosa_ro276: 'rakennusosa/ro276',
+    rakennusosa_ro151: 'rakennusosa/ro151',
+    rakennusosa_ro420: 'rakennusosa/ro420',
+    rakennusosa_ro20: 'rakennusosa/ro20',
+    rakennusosa_ro74: 'rakennusosa/ro74',
+    rakennusosa_ro412: 'rakennusosa/ro412',
+    rakennusosa_ro260: 'rakennusosa/ro260',
+    rakennusosa_ro363: 'rakennusosa/ro363',
+    rakennusosa_ro181: 'rakennusosa/ro181',
+    rakennusosa_ro358: 'rakennusosa/ro358',
+    rakennusosa_ro12: 'rakennusosa/ro12',
+    rakennusosa_ro265: 'rakennusosa/ro265',
+    rakennusosa_ro00: 'rakennusosa/ro00',
+    rakennusosa_ro138: 'rakennusosa/ro138',
+    rakennusosa_ro393: 'rakennusosa/ro393',
+    rakennusosa_ro148: 'rakennusosa/ro148',
+    rakennusosa_ro385: 'rakennusosa/ro385',
+    rakennusosa_ro381: 'rakennusosa/ro381',
+    rakennusosa_ro316: 'rakennusosa/ro316',
+    rakennusosa_ro142: 'rakennusosa/ro142',
+    rakennusosa_ro277: 'rakennusosa/ro277',
+    rakennusosa_ro407: 'rakennusosa/ro407',
+    rakennusosa_ro96: 'rakennusosa/ro96',
+    rakennusosa_ro133: 'rakennusosa/ro133',
+    rakennusosa_ro246: 'rakennusosa/ro246',
+    rakennusosa_ro406: 'rakennusosa/ro406',
+    rakennusosa_ro110: 'rakennusosa/ro110',
+    rakennusosa_ro34: 'rakennusosa/ro34',
+    rakennusosa_ro175: 'rakennusosa/ro175',
+    rakennusosa_ro159: 'rakennusosa/ro159',
+    rakennusosa_ro42: 'rakennusosa/ro42',
+    rakennusosa_ro06: 'rakennusosa/ro06',
+    rakennusosa_ro261: 'rakennusosa/ro261',
+    rakennusosa_ro166: 'rakennusosa/ro166',
+    rakennusosa_ro446: 'rakennusosa/ro446',
+    rakennusosa_ro118: 'rakennusosa/ro118',
+    rakennusosa_ro10: 'rakennusosa/ro10',
+    rakennusosa_ro193: 'rakennusosa/ro193',
+    rakennusosa_ro171: 'rakennusosa/ro171',
+    rakennusosa_ro65: 'rakennusosa/ro65',
+    rakennusosa_ro428: 'rakennusosa/ro428',
+    rakennusosa_ro328: 'rakennusosa/ro328',
+    rakennusosa_ro165: 'rakennusosa/ro165',
+    rakennusosa_ro394: 'rakennusosa/ro394',
+    rakennusosa_ro333: 'rakennusosa/ro333',
+    rakennusosa_ro127: 'rakennusosa/ro127',
+    rakennusosa_ro68: 'rakennusosa/ro68',
+    rakennusosa_ro257: 'rakennusosa/ro257',
+    rakennusosa_ro322: 'rakennusosa/ro322',
+    rakennusosa_ro219: 'rakennusosa/ro219',
+    rakennusosa_ro416: 'rakennusosa/ro416',
+    rakennusosa_ro341: 'rakennusosa/ro341',
+    rakennusosa_ro169: 'rakennusosa/ro169',
+    rakennusosa_ro52: 'rakennusosa/ro52',
+    rakennusosa_ro88: 'rakennusosa/ro88',
+    rakennusosa_ro60: 'rakennusosa/ro60',
+    rakennusosa_ro290: 'rakennusosa/ro290',
+    rakennusosa_ro365: 'rakennusosa/ro365',
+    rakennusosa_ro422: 'rakennusosa/ro422',
+    rakennusosa_ro340: 'rakennusosa/ro340',
+    rakennusosa_ro427: 'rakennusosa/ro427',
+    rakennusosa_ro11: 'rakennusosa/ro11',
+    rakennusosa_ro233: 'rakennusosa/ro233',
+    rakennusosa_ro310: 'rakennusosa/ro310',
+    rakennusosa_ro373: 'rakennusosa/ro373',
+    rakennusosa_ro294: 'rakennusosa/ro294',
+    rakennusosa_ro40: 'rakennusosa/ro40',
+    rakennusosa_ro318: 'rakennusosa/ro318',
+    rakennusosa_ro14: 'rakennusosa/ro14',
+    rakennusosa_ro15: 'rakennusosa/ro15',
+    rakennusosa_ro191: 'rakennusosa/ro191',
+    rakennusosa_ro354: 'rakennusosa/ro354',
+    rakennusosa_ro435: 'rakennusosa/ro435',
+    rakennusosa_ro41: 'rakennusosa/ro41',
+    rakennusosa_ro129: 'rakennusosa/ro129',
+    rakennusosa_ro477: 'rakennusosa/ro477',
+    rakennusosa_ro251: 'rakennusosa/ro251',
+    rakennusosa_ro345: 'rakennusosa/ro345',
+    rakennusosa_ro350: 'rakennusosa/ro350',
+    rakennusosa_ro124: 'rakennusosa/ro124',
+    rakennusosa_ro101: 'rakennusosa/ro101',
+    rakennusosa_ro216: 'rakennusosa/ro216',
+    rakennusosa_ro162: 'rakennusosa/ro162',
+    rakennusosa_ro56: 'rakennusosa/ro56',
+    rakennusosa_ro85: 'rakennusosa/ro85',
+    rakennusosa_ro329: 'rakennusosa/ro329',
+    rakennusosa_ro346: 'rakennusosa/ro346',
+    rakennusosa_ro442: 'rakennusosa/ro442',
+    rakennusosa_ro18: 'rakennusosa/ro18',
+    rakennusosa_ro51: 'rakennusosa/ro51',
+    rakennusosa_ro421: 'rakennusosa/ro421',
+    rakennusosa_ro197: 'rakennusosa/ro197',
+    rakennusosa_ro79: 'rakennusosa/ro79'
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetRakennusosaEnum = typeof AineistoLisaystiedotOminaisuudetRakennusosaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRakennusosaEnum];
 export const AineistoLisaystiedotOminaisuudetTilaEnum = {
-    Tila02: 'aineistotila/tila02',
-    Tila03: 'aineistotila/tila03',
-    Tila01: 'aineistotila/tila01'
+    aineistotila_tila02: 'aineistotila/tila02',
+    aineistotila_tila03: 'aineistotila/tila03',
+    aineistotila_tila01: 'aineistotila/tila01'
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetTilaEnum = typeof AineistoLisaystiedotOminaisuudetTilaEnum[keyof typeof AineistoLisaystiedotOminaisuudetTilaEnum];
 export const AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum = {
-    Ta15: 'tekniikka-ala/ta15',
-    Ta10: 'tekniikka-ala/ta10',
-    Ta09: 'tekniikka-ala/ta09',
-    Ta02: 'tekniikka-ala/ta02',
-    Ta04: 'tekniikka-ala/ta04',
-    Ta16: 'tekniikka-ala/ta16',
-    Ta05: 'tekniikka-ala/ta05',
-    Ta03: 'tekniikka-ala/ta03',
-    Ta07: 'tekniikka-ala/ta07',
-    Ta12: 'tekniikka-ala/ta12',
-    Ta08: 'tekniikka-ala/ta08',
-    Ta13: 'tekniikka-ala/ta13',
-    Ta14: 'tekniikka-ala/ta14',
-    Ta11: 'tekniikka-ala/ta11',
-    Ta06: 'tekniikka-ala/ta06',
-    Ta00: 'tekniikka-ala/ta00',
-    Ta01: 'tekniikka-ala/ta01'
+    tekniikka_ala_ta15: 'tekniikka-ala/ta15',
+    tekniikka_ala_ta10: 'tekniikka-ala/ta10',
+    tekniikka_ala_ta09: 'tekniikka-ala/ta09',
+    tekniikka_ala_ta02: 'tekniikka-ala/ta02',
+    tekniikka_ala_ta04: 'tekniikka-ala/ta04',
+    tekniikka_ala_ta16: 'tekniikka-ala/ta16',
+    tekniikka_ala_ta05: 'tekniikka-ala/ta05',
+    tekniikka_ala_ta03: 'tekniikka-ala/ta03',
+    tekniikka_ala_ta07: 'tekniikka-ala/ta07',
+    tekniikka_ala_ta12: 'tekniikka-ala/ta12',
+    tekniikka_ala_ta08: 'tekniikka-ala/ta08',
+    tekniikka_ala_ta13: 'tekniikka-ala/ta13',
+    tekniikka_ala_ta14: 'tekniikka-ala/ta14',
+    tekniikka_ala_ta11: 'tekniikka-ala/ta11',
+    tekniikka_ala_ta06: 'tekniikka-ala/ta06',
+    tekniikka_ala_ta00: 'tekniikka-ala/ta00',
+    tekniikka_ala_ta01: 'tekniikka-ala/ta01'
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum = typeof AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum[keyof typeof AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum];
 export const AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum = {
-    Dt05: 'dokumenttityyppi/dt05',
-    Dt100: 'dokumenttityyppi/dt100',
-    Dt25: 'dokumenttityyppi/dt25',
-    Dt49: 'dokumenttityyppi/dt49',
-    Dt105: 'dokumenttityyppi/dt105',
-    Dt115: 'dokumenttityyppi/dt115',
-    Dt63: 'dokumenttityyppi/dt63',
-    Dt13: 'dokumenttityyppi/dt13',
-    Dt57: 'dokumenttityyppi/dt57',
-    Dt74: 'dokumenttityyppi/dt74',
-    Dt53: 'dokumenttityyppi/dt53',
-    Dt107: 'dokumenttityyppi/dt107',
-    Dt09: 'dokumenttityyppi/dt09',
-    Dt42: 'dokumenttityyppi/dt42',
-    Dt97: 'dokumenttityyppi/dt97',
-    Dt26: 'dokumenttityyppi/dt26',
-    Dt109: 'dokumenttityyppi/dt109',
-    Dt116: 'dokumenttityyppi/dt116',
-    Dt24: 'dokumenttityyppi/dt24',
-    Dt88: 'dokumenttityyppi/dt88',
-    Dt111: 'dokumenttityyppi/dt111',
-    Dt75: 'dokumenttityyppi/dt75',
-    Dt11: 'dokumenttityyppi/dt11',
-    Dt59: 'dokumenttityyppi/dt59',
-    Dt30: 'dokumenttityyppi/dt30',
-    Dt62: 'dokumenttityyppi/dt62',
-    Dt79: 'dokumenttityyppi/dt79',
-    Dt103: 'dokumenttityyppi/dt103',
-    Dt69: 'dokumenttityyppi/dt69',
-    Dt90: 'dokumenttityyppi/dt90',
-    Dt18: 'dokumenttityyppi/dt18',
-    Dt101: 'dokumenttityyppi/dt101',
-    Dt20: 'dokumenttityyppi/dt20',
-    Dt16: 'dokumenttityyppi/dt16',
-    Dt36: 'dokumenttityyppi/dt36',
-    Dt117: 'dokumenttityyppi/dt117',
-    Dt43: 'dokumenttityyppi/dt43',
-    Dt99: 'dokumenttityyppi/dt99',
-    Dt02: 'dokumenttityyppi/dt02',
-    Dt98: 'dokumenttityyppi/dt98',
-    Dt113: 'dokumenttityyppi/dt113',
-    Dt64: 'dokumenttityyppi/dt64',
-    Dt68: 'dokumenttityyppi/dt68',
-    Dt71: 'dokumenttityyppi/dt71',
-    Dt112: 'dokumenttityyppi/dt112',
-    Dt104: 'dokumenttityyppi/dt104',
-    Dt44: 'dokumenttityyppi/dt44',
-    Dt93: 'dokumenttityyppi/dt93',
-    Dt108: 'dokumenttityyppi/dt108',
-    Dt21: 'dokumenttityyppi/dt21',
-    Dt17: 'dokumenttityyppi/dt17',
-    Dt77: 'dokumenttityyppi/dt77',
-    Dt110: 'dokumenttityyppi/dt110',
-    Dt01: 'dokumenttityyppi/dt01',
-    Dt73: 'dokumenttityyppi/dt73',
-    Dt61: 'dokumenttityyppi/dt61',
-    Dt35: 'dokumenttityyppi/dt35',
-    Dt56: 'dokumenttityyppi/dt56',
-    Dt31: 'dokumenttityyppi/dt31',
-    Dt32: 'dokumenttityyppi/dt32',
-    Dt102: 'dokumenttityyppi/dt102',
-    Dt96: 'dokumenttityyppi/dt96',
-    Dt07: 'dokumenttityyppi/dt07',
-    Dt22: 'dokumenttityyppi/dt22',
-    Dt106: 'dokumenttityyppi/dt106',
-    Dt114: 'dokumenttityyppi/dt114',
-    Dt15: 'dokumenttityyppi/dt15',
-    Dt47: 'dokumenttityyppi/dt47',
-    Dt87: 'dokumenttityyppi/dt87'
+    dokumenttityyppi_dt05: 'dokumenttityyppi/dt05',
+    dokumenttityyppi_dt100: 'dokumenttityyppi/dt100',
+    dokumenttityyppi_dt25: 'dokumenttityyppi/dt25',
+    dokumenttityyppi_dt49: 'dokumenttityyppi/dt49',
+    dokumenttityyppi_dt105: 'dokumenttityyppi/dt105',
+    dokumenttityyppi_dt115: 'dokumenttityyppi/dt115',
+    dokumenttityyppi_dt63: 'dokumenttityyppi/dt63',
+    dokumenttityyppi_dt13: 'dokumenttityyppi/dt13',
+    dokumenttityyppi_dt57: 'dokumenttityyppi/dt57',
+    dokumenttityyppi_dt74: 'dokumenttityyppi/dt74',
+    dokumenttityyppi_dt53: 'dokumenttityyppi/dt53',
+    dokumenttityyppi_dt107: 'dokumenttityyppi/dt107',
+    dokumenttityyppi_dt09: 'dokumenttityyppi/dt09',
+    dokumenttityyppi_dt42: 'dokumenttityyppi/dt42',
+    dokumenttityyppi_dt97: 'dokumenttityyppi/dt97',
+    dokumenttityyppi_dt26: 'dokumenttityyppi/dt26',
+    dokumenttityyppi_dt109: 'dokumenttityyppi/dt109',
+    dokumenttityyppi_dt116: 'dokumenttityyppi/dt116',
+    dokumenttityyppi_dt24: 'dokumenttityyppi/dt24',
+    dokumenttityyppi_dt88: 'dokumenttityyppi/dt88',
+    dokumenttityyppi_dt111: 'dokumenttityyppi/dt111',
+    dokumenttityyppi_dt75: 'dokumenttityyppi/dt75',
+    dokumenttityyppi_dt11: 'dokumenttityyppi/dt11',
+    dokumenttityyppi_dt59: 'dokumenttityyppi/dt59',
+    dokumenttityyppi_dt30: 'dokumenttityyppi/dt30',
+    dokumenttityyppi_dt62: 'dokumenttityyppi/dt62',
+    dokumenttityyppi_dt79: 'dokumenttityyppi/dt79',
+    dokumenttityyppi_dt103: 'dokumenttityyppi/dt103',
+    dokumenttityyppi_dt69: 'dokumenttityyppi/dt69',
+    dokumenttityyppi_dt90: 'dokumenttityyppi/dt90',
+    dokumenttityyppi_dt18: 'dokumenttityyppi/dt18',
+    dokumenttityyppi_dt101: 'dokumenttityyppi/dt101',
+    dokumenttityyppi_dt20: 'dokumenttityyppi/dt20',
+    dokumenttityyppi_dt16: 'dokumenttityyppi/dt16',
+    dokumenttityyppi_dt36: 'dokumenttityyppi/dt36',
+    dokumenttityyppi_dt117: 'dokumenttityyppi/dt117',
+    dokumenttityyppi_dt43: 'dokumenttityyppi/dt43',
+    dokumenttityyppi_dt99: 'dokumenttityyppi/dt99',
+    dokumenttityyppi_dt02: 'dokumenttityyppi/dt02',
+    dokumenttityyppi_dt98: 'dokumenttityyppi/dt98',
+    dokumenttityyppi_dt113: 'dokumenttityyppi/dt113',
+    dokumenttityyppi_dt64: 'dokumenttityyppi/dt64',
+    dokumenttityyppi_dt68: 'dokumenttityyppi/dt68',
+    dokumenttityyppi_dt71: 'dokumenttityyppi/dt71',
+    dokumenttityyppi_dt112: 'dokumenttityyppi/dt112',
+    dokumenttityyppi_dt104: 'dokumenttityyppi/dt104',
+    dokumenttityyppi_dt44: 'dokumenttityyppi/dt44',
+    dokumenttityyppi_dt93: 'dokumenttityyppi/dt93',
+    dokumenttityyppi_dt108: 'dokumenttityyppi/dt108',
+    dokumenttityyppi_dt21: 'dokumenttityyppi/dt21',
+    dokumenttityyppi_dt17: 'dokumenttityyppi/dt17',
+    dokumenttityyppi_dt77: 'dokumenttityyppi/dt77',
+    dokumenttityyppi_dt110: 'dokumenttityyppi/dt110',
+    dokumenttityyppi_dt01: 'dokumenttityyppi/dt01',
+    dokumenttityyppi_dt73: 'dokumenttityyppi/dt73',
+    dokumenttityyppi_dt61: 'dokumenttityyppi/dt61',
+    dokumenttityyppi_dt35: 'dokumenttityyppi/dt35',
+    dokumenttityyppi_dt56: 'dokumenttityyppi/dt56',
+    dokumenttityyppi_dt31: 'dokumenttityyppi/dt31',
+    dokumenttityyppi_dt32: 'dokumenttityyppi/dt32',
+    dokumenttityyppi_dt102: 'dokumenttityyppi/dt102',
+    dokumenttityyppi_dt96: 'dokumenttityyppi/dt96',
+    dokumenttityyppi_dt07: 'dokumenttityyppi/dt07',
+    dokumenttityyppi_dt22: 'dokumenttityyppi/dt22',
+    dokumenttityyppi_dt106: 'dokumenttityyppi/dt106',
+    dokumenttityyppi_dt114: 'dokumenttityyppi/dt114',
+    dokumenttityyppi_dt15: 'dokumenttityyppi/dt15',
+    dokumenttityyppi_dt47: 'dokumenttityyppi/dt47',
+    dokumenttityyppi_dt87: 'dokumenttityyppi/dt87'
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum = typeof AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum[keyof typeof AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum];
 export const AineistoLisaystiedotOminaisuudetLajiEnum = {
-    Al05: 'aineistolaji/al05',
-    Al12: 'aineistolaji/al12',
-    Al07: 'aineistolaji/al07',
-    Al03: 'aineistolaji/al03',
-    Al14: 'aineistolaji/al14',
-    Al21: 'aineistolaji/al21',
-    Al00: 'aineistolaji/al00',
-    Al06: 'aineistolaji/al06',
-    Al26: 'aineistolaji/al26',
-    Al23: 'aineistolaji/al23',
-    Al41: 'aineistolaji/al41',
-    Al35: 'aineistolaji/al35',
-    Al32: 'aineistolaji/al32',
-    Al20: 'aineistolaji/al20',
-    Al36: 'aineistolaji/al36',
-    Al31: 'aineistolaji/al31',
-    Al15: 'aineistolaji/al15',
-    Al13: 'aineistolaji/al13',
-    Al18: 'aineistolaji/al18',
-    Al40: 'aineistolaji/al40',
-    Al17: 'aineistolaji/al17',
-    Al33: 'aineistolaji/al33',
-    Al38: 'aineistolaji/al38',
-    Al16: 'aineistolaji/al16',
-    Al37: 'aineistolaji/al37',
-    Al19: 'aineistolaji/al19',
-    Al24: 'aineistolaji/al24',
-    Al30: 'aineistolaji/al30',
-    Al01: 'aineistolaji/al01',
-    Al22: 'aineistolaji/al22',
-    Al34: 'aineistolaji/al34',
-    Al39: 'aineistolaji/al39',
-    Al08: 'aineistolaji/al08',
-    Al09: 'aineistolaji/al09',
-    Al25: 'aineistolaji/al25'
+    aineistolaji_al05: 'aineistolaji/al05',
+    aineistolaji_al12: 'aineistolaji/al12',
+    aineistolaji_al07: 'aineistolaji/al07',
+    aineistolaji_al03: 'aineistolaji/al03',
+    aineistolaji_al14: 'aineistolaji/al14',
+    aineistolaji_al21: 'aineistolaji/al21',
+    aineistolaji_al00: 'aineistolaji/al00',
+    aineistolaji_al06: 'aineistolaji/al06',
+    aineistolaji_al26: 'aineistolaji/al26',
+    aineistolaji_al23: 'aineistolaji/al23',
+    aineistolaji_al41: 'aineistolaji/al41',
+    aineistolaji_al35: 'aineistolaji/al35',
+    aineistolaji_al32: 'aineistolaji/al32',
+    aineistolaji_al20: 'aineistolaji/al20',
+    aineistolaji_al36: 'aineistolaji/al36',
+    aineistolaji_al31: 'aineistolaji/al31',
+    aineistolaji_al15: 'aineistolaji/al15',
+    aineistolaji_al13: 'aineistolaji/al13',
+    aineistolaji_al18: 'aineistolaji/al18',
+    aineistolaji_al40: 'aineistolaji/al40',
+    aineistolaji_al17: 'aineistolaji/al17',
+    aineistolaji_al33: 'aineistolaji/al33',
+    aineistolaji_al38: 'aineistolaji/al38',
+    aineistolaji_al16: 'aineistolaji/al16',
+    aineistolaji_al37: 'aineistolaji/al37',
+    aineistolaji_al19: 'aineistolaji/al19',
+    aineistolaji_al24: 'aineistolaji/al24',
+    aineistolaji_al30: 'aineistolaji/al30',
+    aineistolaji_al01: 'aineistolaji/al01',
+    aineistolaji_al22: 'aineistolaji/al22',
+    aineistolaji_al34: 'aineistolaji/al34',
+    aineistolaji_al39: 'aineistolaji/al39',
+    aineistolaji_al08: 'aineistolaji/al08',
+    aineistolaji_al09: 'aineistolaji/al09',
+    aineistolaji_al25: 'aineistolaji/al25'
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetLajiEnum = typeof AineistoLisaystiedotOminaisuudetLajiEnum[keyof typeof AineistoLisaystiedotOminaisuudetLajiEnum];
 export const AineistoLisaystiedotOminaisuudetRyhmaEnum = {
-    Ar06: 'aineistoryhma/ar06',
-    Ar07: 'aineistoryhma/ar07',
-    Ar10: 'aineistoryhma/ar10',
-    Ar03: 'aineistoryhma/ar03',
-    Ar02: 'aineistoryhma/ar02',
-    Ar00: 'aineistoryhma/ar00',
-    Ar04: 'aineistoryhma/ar04',
-    Ar09: 'aineistoryhma/ar09',
-    Ar05: 'aineistoryhma/ar05',
-    Ar08: 'aineistoryhma/ar08'
+    aineistoryhma_ar06: 'aineistoryhma/ar06',
+    aineistoryhma_ar07: 'aineistoryhma/ar07',
+    aineistoryhma_ar10: 'aineistoryhma/ar10',
+    aineistoryhma_ar03: 'aineistoryhma/ar03',
+    aineistoryhma_ar02: 'aineistoryhma/ar02',
+    aineistoryhma_ar00: 'aineistoryhma/ar00',
+    aineistoryhma_ar04: 'aineistoryhma/ar04',
+    aineistoryhma_ar09: 'aineistoryhma/ar09',
+    aineistoryhma_ar05: 'aineistoryhma/ar05',
+    aineistoryhma_ar08: 'aineistoryhma/ar08'
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetRyhmaEnum = typeof AineistoLisaystiedotOminaisuudetRyhmaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRyhmaEnum];
 
-/**
- * 
- * @export
- * @interface AineistoOperaatioOperaatiot
- */
-export interface AineistoOperaatioOperaatiot {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoOperaatioOperaatiot
-     */
-    'tila': AineistoOperaatioOperaatiotTilaEnum;
-    /**
-     * 
-     * @type {{ [key: string]: object; }}
-     * @memberof AineistoOperaatioOperaatiot
-     */
+export interface AineistoOperaatioOperaatio {
+    'tila': AineistoOperaatioOperaatioTilaEnum;
     'tilan-tiedot'?: { [key: string]: object; };
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoOperaatioOperaatiot
-     */
     'aloitettu'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoOperaatioOperaatiot
-     */
     'paattynyt'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoOperaatioOperaatiot
-     */
     'selite'?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoOperaatioOperaatiot
-     */
     'aineistot'?: Array<string>;
 }
 
-export const AineistoOperaatioOperaatiotTilaEnum = {
-    PakkausKaynnissa: 'pakkaus-kaynnissa',
-    PurkuKaynnissa: 'purku-kaynnissa',
-    Virhe: 'virhe',
-    PurkuValmis: 'purku-valmis',
-    Valmis: 'valmis',
-    Kaynnissa: 'kaynnissa',
-    PakkausValmis: 'pakkaus-valmis'
+export const AineistoOperaatioOperaatioTilaEnum = {
+    pakkaus_kaynnissa: 'pakkaus-kaynnissa',
+    purku_kaynnissa: 'purku-kaynnissa',
+    virhe: 'virhe',
+    purku_valmis: 'purku-valmis',
+    valmis: 'valmis',
+    kaynnissa: 'kaynnissa',
+    pakkaus_valmis: 'pakkaus-valmis'
 } as const;
 
-export type AineistoOperaatioOperaatiotTilaEnum = typeof AineistoOperaatioOperaatiotTilaEnum[keyof typeof AineistoOperaatioOperaatiotTilaEnum];
+export type AineistoOperaatioOperaatioTilaEnum = typeof AineistoOperaatioOperaatioTilaEnum[keyof typeof AineistoOperaatioOperaatioTilaEnum];
 
-/**
- * 
- * @export
- * @interface AineistoPaivitystiedot
- */
 export interface AineistoPaivitystiedot {
-    /**
-     * 
-     * @type {AineistoLisaystiedotOminaisuudet}
-     * @memberof AineistoPaivitystiedot
-     */
     'ominaisuudet': AineistoLisaystiedotOminaisuudet;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoPaivitystiedot
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoPaivitystiedot
-     */
-    'linkit': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoPaivitystiedot
-     */
+    'linkit': Array<string | null>;
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {AineistoAineistoVektor}
-     * @memberof AineistoPaivitystiedot
-     */
     'vektor'?: AineistoAineistoVektor;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoPaivitystiedot
-     */
     'luontikohdeluokan-oid'?: string | null;
 }
-/**
- * 
- * @export
- * @interface AineistoViittaus
- */
 export interface AineistoViittaus {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'muokattu': string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoViittaus
-     */
     'lahdejarjestelma': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'muutoksen-lahde-oid'?: string | null;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoViittaus
-     */
     'paattyen': object | null;
-    /**
-     * 
-     * @type {ViittausLisaystiedotOminaisuudet}
-     * @memberof AineistoViittaus
-     */
     'ominaisuudet': ViittausLisaystiedotOminaisuudet;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'muutoksen-lahde-id'?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'oid': string;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoViittaus
-     */
     'luoja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistoViittaus
-     */
     'linkit': Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistoViittaus
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistoViittaus
-     */
     'alkaen': object | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'edellinen-oid'?: string | null;
-    /**
-     * 
-     * @type {AineistoAineistoLuoja}
-     * @memberof AineistoViittaus
-     */
     'muokkaaja': AineistoAineistoLuoja | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'luotu': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'luontikohdeluokan-oid'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistoViittaus
-     */
     'lahdejarjestelman-id': string | null;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1AineistoMassamuokkausPostRequest
- */
 export interface AineistopalveluApiV1AineistoMassamuokkausPostRequest {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistopalveluApiV1AineistoMassamuokkausPostRequest
-     */
     'oidit': Array<string>;
-    /**
-     * 
-     * @type {AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot}
-     * @memberof AineistopalveluApiV1AineistoMassamuokkausPostRequest
-     */
     'paivitystiedot': AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot
- */
 export interface AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot {
-    /**
-     * 
-     * @type {object}
-     * @memberof AineistopalveluApiV1AineistoMassamuokkausPostRequestPaivitystiedot
-     */
     'ominaisuudet': object;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1AineistoMassapoistoPost200Response
- */
 export interface AineistopalveluApiV1AineistoMassapoistoPost200Response {
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200Response
-     */
     'poistetut-oidit': Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200Response
-     */
     'epaonnistuneet-oidit': Array<string>;
-    /**
-     * 
-     * @type {AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200Response
-     */
     'tilastot': AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
- */
 export interface AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot {
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
-     */
     'onnistuneet-lkm': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
-     */
     'epaonnistuneet-lkm': number;
-    /**
-     * 
-     * @type {number}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot
-     */
     'yhteensa': number;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1AineistoMassapoistoPostRequest
- */
 export interface AineistopalveluApiV1AineistoMassapoistoPostRequest {
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof AineistopalveluApiV1AineistoMassapoistoPostRequest
-     */
     'oidit': Set<string>;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1LatauspakettiPost200Response
- */
 export interface AineistopalveluApiV1LatauspakettiPost200Response {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistopalveluApiV1LatauspakettiPost200Response
-     */
     'paketti-oid': string;
 }
-/**
- * 
- * @export
- * @interface AineistopalveluApiV1MassakloonausAineistoPostRequest
- */
 export interface AineistopalveluApiV1MassakloonausAineistoPostRequest {
-    /**
-     * 
-     * @type {string}
-     * @memberof AineistopalveluApiV1MassakloonausAineistoPostRequest
-     */
     'kohdetoimeksiannon-oid': string;
-    /**
-     * 
-     * @type {Set<string>}
-     * @memberof AineistopalveluApiV1MassakloonausAineistoPostRequest
-     */
     'lahdeaineistojen-oidit': Set<string>;
 }
-/**
- * 
- * @export
- * @interface ViittausLisaystiedot
- */
 export interface ViittausLisaystiedot {
-    /**
-     * 
-     * @type {ViittausLisaystiedotOminaisuudet}
-     * @memberof ViittausLisaystiedot
-     */
     'ominaisuudet': ViittausLisaystiedotOminaisuudet;
-    /**
-     * 
-     * @type {number}
-     * @memberof ViittausLisaystiedot
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ViittausLisaystiedot
-     */
     'linkit': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedot
-     */
     'luontikohdeluokan-oid'?: string;
 }
-/**
- * 
- * @export
- * @interface ViittausLisaystiedotOminaisuudet
- */
 export interface ViittausLisaystiedotOminaisuudet {
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedotOminaisuudet
-     */
     'sisalto': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedotOminaisuudet
-     */
     'sijainti-muu'?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausLisaystiedotOminaisuudet
-     */
     'sijainti-url'?: string;
 }
-/**
- * 
- * @export
- * @interface ViittausPaivitystiedot
- */
 export interface ViittausPaivitystiedot {
-    /**
-     * 
-     * @type {ViittausLisaystiedotOminaisuudet}
-     * @memberof ViittausPaivitystiedot
-     */
     'ominaisuudet': ViittausLisaystiedotOminaisuudet;
-    /**
-     * 
-     * @type {number}
-     * @memberof ViittausPaivitystiedot
-     */
     'schemaversio': number;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof ViittausPaivitystiedot
-     */
     'linkit': Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof ViittausPaivitystiedot
-     */
     'luontikohdeluokan-oid'?: string;
 }
 
 /**
  * AineistoApi - axios parameter creator
- * @export
  */
 export const AineistoApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -1577,7 +853,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/aineistopalvelu/api/v1/aineisto`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1608,7 +884,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoMassamuokkausPost: async (body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoMassamuokkausPost: async (body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoMassamuokkausPost', 'body', body)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/massamuokkaus`;
@@ -1644,7 +920,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoMassapoistoPost: async (body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoMassapoistoPost: async (body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoMassapoistoPost', 'body', body)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/massapoisto`;
@@ -1680,7 +956,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDelete: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidDelete: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDelete', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}`
@@ -1715,7 +991,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidGet: async (oid: string, haePoistetut?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidGet: async (oid: string, haePoistetut?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}`
@@ -1754,7 +1030,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidPut: async (oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidPut: async (oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidPut', 'oid', oid)
             // verify required parameter 'aineistoPaivitystiedot' is not null or undefined
@@ -1793,7 +1069,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoPost: async (aineistoLisaystiedot: AineistoLisaystiedot, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoPost: async (aineistoLisaystiedot: AineistoLisaystiedot, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'aineistoLisaystiedot' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoPost', 'aineistoLisaystiedot', aineistoLisaystiedot)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto`;
@@ -1829,7 +1105,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1MassakloonausAineistoPost: async (body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1MassakloonausAineistoPost: async (body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('aineistopalveluApiV1MassakloonausAineistoPost', 'body', body)
             const localVarPath = `/aineistopalvelu/api/v1/massakloonaus/aineisto`;
@@ -1863,7 +1139,6 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * AineistoApi - functional programming interface
- * @export
  */
 export const AineistoApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AineistoApiAxiosParamCreator(configuration)
@@ -1874,9 +1149,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+        async aineistopalveluApiV1AineistoGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1885,9 +1162,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoMassamuokkausPost(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoMassamuokkausPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1896,9 +1175,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistopalveluApiV1AineistoMassapoistoPost200Response>> {
+        async aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistopalveluApiV1AineistoMassapoistoPost200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoMassapoistoPost(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoMassapoistoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1907,9 +1188,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidDelete(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1AineistoOidDelete(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDelete(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1919,9 +1202,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
+        async aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidGet(oid, haePoistetut, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1931,9 +1216,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidPut(oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
+        async aineistopalveluApiV1AineistoOidPut(oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidPut(oid, aineistoPaivitystiedot, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoOidPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1942,9 +1229,11 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoLisaystiedot1>> {
+        async aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoLisaystiedot1>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -1953,16 +1242,17 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AineistoAineisto>>> {
+        async aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AineistoAineisto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1MassakloonausAineistoPost(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1MassakloonausAineistoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * AineistoApi - factory interface
- * @export
  */
 export const AineistoApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AineistoApiFp(configuration)
@@ -1973,7 +1263,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoGet(options?: any): AxiosPromise<Array<string>> {
+        aineistopalveluApiV1AineistoGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<string>> {
             return localVarFp.aineistopalveluApiV1AineistoGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -1983,7 +1273,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1AineistoMassamuokkausPost(body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1993,7 +1283,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: any): AxiosPromise<AineistopalveluApiV1AineistoMassapoistoPost200Response> {
+        aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<AineistopalveluApiV1AineistoMassapoistoPost200Response> {
             return localVarFp.aineistopalveluApiV1AineistoMassapoistoPost(body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2003,7 +1293,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDelete(oid: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1AineistoOidDelete(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1AineistoOidDelete(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2014,7 +1304,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: any): AxiosPromise<AineistoAineisto> {
+        aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<AineistoAineisto> {
             return localVarFp.aineistopalveluApiV1AineistoOidGet(oid, haePoistetut, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2025,7 +1315,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidPut(oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options?: any): AxiosPromise<AineistoAineisto> {
+        aineistopalveluApiV1AineistoOidPut(oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options?: RawAxiosRequestConfig): AxiosPromise<AineistoAineisto> {
             return localVarFp.aineistopalveluApiV1AineistoOidPut(oid, aineistoPaivitystiedot, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2035,7 +1325,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: any): AxiosPromise<AineistoLisaystiedot1> {
+        aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig): AxiosPromise<AineistoLisaystiedot1> {
             return localVarFp.aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2045,7 +1335,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: any): AxiosPromise<Array<AineistoAineisto>> {
+        aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<Array<AineistoAineisto>> {
             return localVarFp.aineistopalveluApiV1MassakloonausAineistoPost(body, options).then((request) => request(axios, basePath));
         },
     };
@@ -2053,9 +1343,6 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * AineistoApi - object-oriented interface
- * @export
- * @class AineistoApi
- * @extends {BaseAPI}
  */
 export class AineistoApi extends BaseAPI {
     /**
@@ -2063,9 +1350,8 @@ export class AineistoApi extends BaseAPI {
      * @summary Listaa kaikki aineistot
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoGet(options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoGet(options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoGet(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2075,9 +1361,8 @@ export class AineistoApi extends BaseAPI {
      * @param {AineistopalveluApiV1AineistoMassamuokkausPostRequest} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoMassamuokkausPost(body: AineistopalveluApiV1AineistoMassamuokkausPostRequest, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoMassamuokkausPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2087,9 +1372,8 @@ export class AineistoApi extends BaseAPI {
      * @param {AineistopalveluApiV1AineistoMassapoistoPostRequest} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoMassapoistoPost(body: AineistopalveluApiV1AineistoMassapoistoPostRequest, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoMassapoistoPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2099,9 +1383,8 @@ export class AineistoApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoOidDelete(oid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidDelete(oid: string, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoOidDelete(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2112,9 +1395,8 @@ export class AineistoApi extends BaseAPI {
      * @param {boolean} [haePoistetut] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidGet(oid: string, haePoistetut?: boolean, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoOidGet(oid, haePoistetut, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2125,9 +1407,8 @@ export class AineistoApi extends BaseAPI {
      * @param {AineistoPaivitystiedot} aineistoPaivitystiedot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoOidPut(oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidPut(oid: string, aineistoPaivitystiedot: AineistoPaivitystiedot, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoOidPut(oid, aineistoPaivitystiedot, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2137,9 +1418,8 @@ export class AineistoApi extends BaseAPI {
      * @param {AineistoLisaystiedot} aineistoLisaystiedot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2149,17 +1429,16 @@ export class AineistoApi extends BaseAPI {
      * @param {AineistopalveluApiV1MassakloonausAineistoPostRequest} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AineistoApi
      */
-    public aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig) {
         return AineistoApiFp(this.configuration).aineistopalveluApiV1MassakloonausAineistoPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * DokumenttiApi - axios parameter creator
- * @export
  */
 export const DokumenttiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2171,7 +1450,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet: async (oid: string, tiedosto: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet: async (oid: string, tiedosto: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet', 'oid', oid)
             // verify required parameter 'tiedosto' is not null or undefined
@@ -2209,7 +1488,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet: async (oid: string, tiedosto: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet: async (oid: string, tiedosto: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet', 'oid', oid)
             // verify required parameter 'tiedosto' is not null or undefined
@@ -2248,7 +1527,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDokumenttiGet: async (oid: string, versio?: string, liite?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidDokumenttiGet: async (oid: string, versio?: string, liite?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDokumenttiGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentti`
@@ -2291,7 +1570,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete: async (oid: string, kohdeOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete: async (oid: string, kohdeOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete', 'oid', oid)
             // verify required parameter 'kohdeOid' is not null or undefined
@@ -2329,7 +1608,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidLinkitKohdeOidPost: async (oid: string, kohdeOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1AineistoOidLinkitKohdeOidPost: async (oid: string, kohdeOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidLinkitKohdeOidPost', 'oid', oid)
             // verify required parameter 'kohdeOid' is not null or undefined
@@ -2364,7 +1643,6 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
 
 /**
  * DokumenttiApi - functional programming interface
- * @export
  */
 export const DokumenttiApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DokumenttiApiAxiosParamCreator(configuration)
@@ -2377,9 +1655,11 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid: string, tiedosto: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid, tiedosto, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2389,9 +1669,11 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid, tiedosto, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2402,9 +1684,11 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidDokumenttiGet(oid: string, versio?: string, liite?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1AineistoOidDokumenttiGet(oid: string, versio?: string, liite?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumenttiGet(oid, versio, liite, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumenttiGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2414,9 +1698,11 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
+        async aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid, kohdeOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2426,16 +1712,17 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
+        async aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoAineisto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid, kohdeOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidLinkitKohdeOidPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * DokumenttiApi - factory interface
- * @export
  */
 export const DokumenttiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = DokumenttiApiFp(configuration)
@@ -2448,7 +1735,7 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid: string, tiedosto: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid, tiedosto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2459,7 +1746,7 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid, tiedosto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2471,7 +1758,7 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidDokumenttiGet(oid: string, versio?: string, liite?: boolean, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1AineistoOidDokumenttiGet(oid: string, versio?: string, liite?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1AineistoOidDokumenttiGet(oid, versio, liite, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2482,7 +1769,7 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: any): AxiosPromise<AineistoAineisto> {
+        aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistoAineisto> {
             return localVarFp.aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid, kohdeOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2493,7 +1780,7 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: any): AxiosPromise<AineistoAineisto> {
+        aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistoAineisto> {
             return localVarFp.aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid, kohdeOid, options).then((request) => request(axios, basePath));
         },
     };
@@ -2501,9 +1788,6 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
 
 /**
  * DokumenttiApi - object-oriented interface
- * @export
- * @class DokumenttiApi
- * @extends {BaseAPI}
  */
 export class DokumenttiApi extends BaseAPI {
     /**
@@ -2513,9 +1797,8 @@ export class DokumenttiApi extends BaseAPI {
      * @param {string} tiedosto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DokumenttiApi
      */
-    public aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid: string, tiedosto: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig) {
         return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet(oid, tiedosto, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2526,9 +1809,8 @@ export class DokumenttiApi extends BaseAPI {
      * @param {string} tiedosto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DokumenttiApi
      */
-    public aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig) {
         return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid, tiedosto, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2540,9 +1822,8 @@ export class DokumenttiApi extends BaseAPI {
      * @param {boolean} [liite] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DokumenttiApi
      */
-    public aineistopalveluApiV1AineistoOidDokumenttiGet(oid: string, versio?: string, liite?: boolean, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidDokumenttiGet(oid: string, versio?: string, liite?: boolean, options?: RawAxiosRequestConfig) {
         return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumenttiGet(oid, versio, liite, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2553,9 +1834,8 @@ export class DokumenttiApi extends BaseAPI {
      * @param {string} kohdeOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DokumenttiApi
      */
-    public aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig) {
         return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete(oid, kohdeOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2566,17 +1846,16 @@ export class DokumenttiApi extends BaseAPI {
      * @param {string} kohdeOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof DokumenttiApi
      */
-    public aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig) {
         return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid, kohdeOid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * KohdeApi - axios parameter creator
- * @export
  */
 export const KohdeApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -2587,7 +1866,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidGet: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1KohdeOidGet: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}`
@@ -2622,7 +1901,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet: async (oid: string, tiedosto: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet: async (oid: string, tiedosto: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet', 'oid', oid)
             // verify required parameter 'tiedosto' is not null or undefined
@@ -2659,7 +1938,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kaynnissa-olevat-operaatiot`
@@ -2693,7 +1972,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohteetPost: async (body: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1KohteetPost: async (body: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohteetPost', 'body', body)
             const localVarPath = `/aineistopalvelu/api/v1/kohteet`;
@@ -2732,7 +2011,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet: async (nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet: async (nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'nimiavaruus' is not null or undefined
             assertParamExists('aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet', 'nimiavaruus', nimiavaruus)
             // verify required parameter 'kohdeluokka' is not null or undefined
@@ -2784,7 +2063,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet: async (nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet: async (nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'nimiavaruus' is not null or undefined
             assertParamExists('aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet', 'nimiavaruus', nimiavaruus)
             // verify required parameter 'kohdeluokka' is not null or undefined
@@ -2831,7 +2110,6 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * KohdeApi - functional programming interface
- * @export
  */
 export const KohdeApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = KohdeApiAxiosParamCreator(configuration)
@@ -2843,9 +2121,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohdeOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1KohdeOidGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidGet(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2855,9 +2135,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid, tiedosto, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2866,9 +2148,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: AineistoOperaatioOperaatiot; }>> {
+        async aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: AineistoOperaatioOperaatio; }>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2877,9 +2161,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohteetPost(body: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
+        async aineistopalveluApiV1KohteetPost(body: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohteetPost(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohteetPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2891,9 +2177,11 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -2905,16 +2193,17 @@ export const KohdeApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * KohdeApi - factory interface
- * @export
  */
 export const KohdeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = KohdeApiFp(configuration)
@@ -2926,7 +2215,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidGet(oid: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1KohdeOidGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1KohdeOidGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2937,7 +2226,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid, tiedosto, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2947,7 +2236,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: any): AxiosPromise<{ [key: string]: AineistoOperaatioOperaatiot; }> {
+        aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: AineistoOperaatioOperaatio; }> {
             return localVarFp.aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2957,7 +2246,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohteetPost(body: Array<string>, options?: any): AxiosPromise<Array<object>> {
+        aineistopalveluApiV1KohteetPost(body: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<Array<object>> {
             return localVarFp.aineistopalveluApiV1KohteetPost(body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2970,7 +2259,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: any): AxiosPromise<object> {
+        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2983,7 +2272,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: any): AxiosPromise<object> {
+        aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
             return localVarFp.aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options).then((request) => request(axios, basePath));
         },
     };
@@ -2991,9 +2280,6 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * KohdeApi - object-oriented interface
- * @export
- * @class KohdeApi
- * @extends {BaseAPI}
  */
 export class KohdeApi extends BaseAPI {
     /**
@@ -3002,9 +2288,8 @@ export class KohdeApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public aineistopalveluApiV1KohdeOidGet(oid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1KohdeOidGet(oid: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidGet(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3015,9 +2300,8 @@ export class KohdeApi extends BaseAPI {
      * @param {string} tiedosto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid: string, tiedosto: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet(oid, tiedosto, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3027,9 +2311,8 @@ export class KohdeApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3039,9 +2322,8 @@ export class KohdeApi extends BaseAPI {
      * @param {Array<string>} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public aineistopalveluApiV1KohteetPost(body: Array<string>, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1KohteetPost(body: Array<string>, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1KohteetPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3054,9 +2336,8 @@ export class KohdeApi extends BaseAPI {
      * @param {string} [loppumuokkausaika] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3069,17 +2350,16 @@ export class KohdeApi extends BaseAPI {
      * @param {string} [loppumuokkausaika] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof KohdeApi
      */
-    public aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus: string, kohdeluokka: string, alkumuokkausaika?: string, loppumuokkausaika?: string, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet(nimiavaruus, kohdeluokka, alkumuokkausaika, loppumuokkausaika, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * LatauspakettiApi - axios parameter creator
- * @export
  */
 export const LatauspakettiApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3090,7 +2370,7 @@ export const LatauspakettiApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1LatauspakettiOidGet: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1LatauspakettiOidGet: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1LatauspakettiOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/latauspaketti/{oid}`
@@ -3124,7 +2404,7 @@ export const LatauspakettiApiAxiosParamCreator = function (configuration?: Confi
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1LatauspakettiPost: async (body: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1LatauspakettiPost: async (body: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             assertParamExists('aineistopalveluApiV1LatauspakettiPost', 'body', body)
             const localVarPath = `/aineistopalvelu/api/v1/latauspaketti`;
@@ -3158,7 +2438,6 @@ export const LatauspakettiApiAxiosParamCreator = function (configuration?: Confi
 
 /**
  * LatauspakettiApi - functional programming interface
- * @export
  */
 export const LatauspakettiApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = LatauspakettiApiAxiosParamCreator(configuration)
@@ -3170,9 +2449,11 @@ export const LatauspakettiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1LatauspakettiOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1LatauspakettiOidGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1LatauspakettiOidGet(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LatauspakettiApi.aineistopalveluApiV1LatauspakettiOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3181,16 +2462,17 @@ export const LatauspakettiApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistopalveluApiV1LatauspakettiPost200Response>> {
+        async aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistopalveluApiV1LatauspakettiPost200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1LatauspakettiPost(body, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['LatauspakettiApi.aineistopalveluApiV1LatauspakettiPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * LatauspakettiApi - factory interface
- * @export
  */
 export const LatauspakettiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = LatauspakettiApiFp(configuration)
@@ -3202,7 +2484,7 @@ export const LatauspakettiApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1LatauspakettiOidGet(oid: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1LatauspakettiOidGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1LatauspakettiOidGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3212,7 +2494,7 @@ export const LatauspakettiApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: any): AxiosPromise<AineistopalveluApiV1LatauspakettiPost200Response> {
+        aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: RawAxiosRequestConfig): AxiosPromise<AineistopalveluApiV1LatauspakettiPost200Response> {
             return localVarFp.aineistopalveluApiV1LatauspakettiPost(body, options).then((request) => request(axios, basePath));
         },
     };
@@ -3220,9 +2502,6 @@ export const LatauspakettiApiFactory = function (configuration?: Configuration, 
 
 /**
  * LatauspakettiApi - object-oriented interface
- * @export
- * @class LatauspakettiApi
- * @extends {BaseAPI}
  */
 export class LatauspakettiApi extends BaseAPI {
     /**
@@ -3231,9 +2510,8 @@ export class LatauspakettiApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof LatauspakettiApi
      */
-    public aineistopalveluApiV1LatauspakettiOidGet(oid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1LatauspakettiOidGet(oid: string, options?: RawAxiosRequestConfig) {
         return LatauspakettiApiFp(this.configuration).aineistopalveluApiV1LatauspakettiOidGet(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3243,17 +2521,16 @@ export class LatauspakettiApi extends BaseAPI {
      * @param {Array<string>} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof LatauspakettiApi
      */
-    public aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1LatauspakettiPost(body: Array<string>, options?: RawAxiosRequestConfig) {
         return LatauspakettiApiFp(this.configuration).aineistopalveluApiV1LatauspakettiPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * TarkistusApi - axios parameter creator
- * @export
  */
 export const TarkistusApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3263,7 +2540,7 @@ export const TarkistusApiAxiosParamCreator = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1HallintaTarkistusAineistoGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1HallintaTarkistusAineistoGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/aineistopalvelu/api/v1/hallinta/tarkistus/aineisto`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3292,7 +2569,6 @@ export const TarkistusApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * TarkistusApi - functional programming interface
- * @export
  */
 export const TarkistusApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = TarkistusApiAxiosParamCreator(configuration)
@@ -3303,16 +2579,17 @@ export const TarkistusApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1HallintaTarkistusAineistoGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['TarkistusApi.aineistopalveluApiV1HallintaTarkistusAineistoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * TarkistusApi - factory interface
- * @export
  */
 export const TarkistusApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = TarkistusApiFp(configuration)
@@ -3323,7 +2600,7 @@ export const TarkistusApiFactory = function (configuration?: Configuration, base
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1HallintaTarkistusAineistoGet(options).then((request) => request(axios, basePath));
         },
     };
@@ -3331,9 +2608,6 @@ export const TarkistusApiFactory = function (configuration?: Configuration, base
 
 /**
  * TarkistusApi - object-oriented interface
- * @export
- * @class TarkistusApi
- * @extends {BaseAPI}
  */
 export class TarkistusApi extends BaseAPI {
     /**
@@ -3341,17 +2615,16 @@ export class TarkistusApi extends BaseAPI {
      * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TarkistusApi
      */
-    public aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: RawAxiosRequestConfig) {
         return TarkistusApiFp(this.configuration).aineistopalveluApiV1HallintaTarkistusAineistoGet(options).then((request) => request(this.axios, this.basePath));
     }
 }
 
 
+
 /**
  * ViittausApi - axios parameter creator
- * @export
  */
 export const ViittausApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
@@ -3361,7 +2634,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/aineistopalvelu/api/v1/viittaus`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3392,7 +2665,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidDelete: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausOidDelete: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidDelete', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}`
@@ -3426,7 +2699,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidGet: async (oid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausOidGet: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}`
@@ -3461,7 +2734,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete: async (oid: string, kohdeOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete: async (oid: string, kohdeOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete', 'oid', oid)
             // verify required parameter 'kohdeOid' is not null or undefined
@@ -3499,7 +2772,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidLinkitKohdeOidPost: async (oid: string, kohdeOid: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausOidLinkitKohdeOidPost: async (oid: string, kohdeOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidLinkitKohdeOidPost', 'oid', oid)
             // verify required parameter 'kohdeOid' is not null or undefined
@@ -3537,7 +2810,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidPut: async (oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausOidPut: async (oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidPut', 'oid', oid)
             // verify required parameter 'viittausPaivitystiedot' is not null or undefined
@@ -3576,7 +2849,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausPost: async (viittausLisaystiedot: ViittausLisaystiedot, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        aineistopalveluApiV1ViittausPost: async (viittausLisaystiedot: ViittausLisaystiedot, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'viittausLisaystiedot' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausPost', 'viittausLisaystiedot', viittausLisaystiedot)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus`;
@@ -3610,7 +2883,6 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * ViittausApi - functional programming interface
- * @export
  */
 export const ViittausApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = ViittausApiAxiosParamCreator(configuration)
@@ -3621,9 +2893,11 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+        async aineistopalveluApiV1ViittausGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3632,9 +2906,11 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausOidDelete(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async aineistopalveluApiV1ViittausOidDelete(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausOidDelete(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3643,9 +2919,11 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausOidGet(oid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
+        async aineistopalveluApiV1ViittausOidGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausOidGet(oid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausOidGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3655,9 +2933,11 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
+        async aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid, kohdeOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3667,9 +2947,11 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
+        async aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid, kohdeOid, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausOidLinkitKohdeOidPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3679,9 +2961,11 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausOidPut(oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
+        async aineistopalveluApiV1ViittausOidPut(oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausOidPut(oid, viittausPaivitystiedot, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausOidPut']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
@@ -3690,16 +2974,17 @@ export const ViittausApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1ViittausPost(viittausLisaystiedot: ViittausLisaystiedot, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
+        async aineistopalveluApiV1ViittausPost(viittausLisaystiedot: ViittausLisaystiedot, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoViittaus>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ViittausPost(viittausLisaystiedot, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ViittausApi.aineistopalveluApiV1ViittausPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
  * ViittausApi - factory interface
- * @export
  */
 export const ViittausApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = ViittausApiFp(configuration)
@@ -3710,7 +2995,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausGet(options?: any): AxiosPromise<Array<string>> {
+        aineistopalveluApiV1ViittausGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<string>> {
             return localVarFp.aineistopalveluApiV1ViittausGet(options).then((request) => request(axios, basePath));
         },
         /**
@@ -3720,7 +3005,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidDelete(oid: string, options?: any): AxiosPromise<void> {
+        aineistopalveluApiV1ViittausOidDelete(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1ViittausOidDelete(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3730,7 +3015,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidGet(oid: string, options?: any): AxiosPromise<AineistoViittaus> {
+        aineistopalveluApiV1ViittausOidGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistoViittaus> {
             return localVarFp.aineistopalveluApiV1ViittausOidGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3741,7 +3026,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: any): AxiosPromise<AineistoViittaus> {
+        aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistoViittaus> {
             return localVarFp.aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid, kohdeOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3752,7 +3037,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: any): AxiosPromise<AineistoViittaus> {
+        aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistoViittaus> {
             return localVarFp.aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid, kohdeOid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3763,7 +3048,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausOidPut(oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options?: any): AxiosPromise<AineistoViittaus> {
+        aineistopalveluApiV1ViittausOidPut(oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options?: RawAxiosRequestConfig): AxiosPromise<AineistoViittaus> {
             return localVarFp.aineistopalveluApiV1ViittausOidPut(oid, viittausPaivitystiedot, options).then((request) => request(axios, basePath));
         },
         /**
@@ -3773,7 +3058,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1ViittausPost(viittausLisaystiedot: ViittausLisaystiedot, options?: any): AxiosPromise<AineistoViittaus> {
+        aineistopalveluApiV1ViittausPost(viittausLisaystiedot: ViittausLisaystiedot, options?: RawAxiosRequestConfig): AxiosPromise<AineistoViittaus> {
             return localVarFp.aineistopalveluApiV1ViittausPost(viittausLisaystiedot, options).then((request) => request(axios, basePath));
         },
     };
@@ -3781,9 +3066,6 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * ViittausApi - object-oriented interface
- * @export
- * @class ViittausApi
- * @extends {BaseAPI}
  */
 export class ViittausApi extends BaseAPI {
     /**
@@ -3791,9 +3073,8 @@ export class ViittausApi extends BaseAPI {
      * @summary Listaa kaikki viittaukset
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausGet(options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausGet(options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausGet(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3803,9 +3084,8 @@ export class ViittausApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausOidDelete(oid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausOidDelete(oid: string, options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausOidDelete(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3815,9 +3095,8 @@ export class ViittausApi extends BaseAPI {
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausOidGet(oid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausOidGet(oid: string, options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausOidGet(oid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3828,9 +3107,8 @@ export class ViittausApi extends BaseAPI {
      * @param {string} kohdeOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete(oid, kohdeOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3841,9 +3119,8 @@ export class ViittausApi extends BaseAPI {
      * @param {string} kohdeOid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausOidLinkitKohdeOidPost(oid, kohdeOid, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3854,9 +3131,8 @@ export class ViittausApi extends BaseAPI {
      * @param {ViittausPaivitystiedot} viittausPaivitystiedot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausOidPut(oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausOidPut(oid: string, viittausPaivitystiedot: ViittausPaivitystiedot, options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausOidPut(oid, viittausPaivitystiedot, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -3866,11 +3142,11 @@ export class ViittausApi extends BaseAPI {
      * @param {ViittausLisaystiedot} viittausLisaystiedot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof ViittausApi
      */
-    public aineistopalveluApiV1ViittausPost(viittausLisaystiedot: ViittausLisaystiedot, options?: AxiosRequestConfig) {
+    public aineistopalveluApiV1ViittausPost(viittausLisaystiedot: ViittausLisaystiedot, options?: RawAxiosRequestConfig) {
         return ViittausApiFp(this.configuration).aineistopalveluApiV1ViittausPost(viittausLisaystiedot, options).then((request) => request(this.axios, this.basePath));
     }
 }
+
 
 

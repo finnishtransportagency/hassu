@@ -1,5 +1,4 @@
 /* tslint:disable */
-/* eslint-disable */
 /**
  * Projektirekisteri API v2
  * Projektirekisteri API v2  Palvelu vastaa seuraavista kohdeluokista:  - Projekti (tekninen nimi: projekti/projekti, oid-prefix: 1.2.246.578.5.1)  - Projektijoukko (tekninen nimi: projekti/projektijoukko, oid-prefix: 1.2.246.578.5.3)  - Toimeksianto (tekninen nimi: projekti/toimeksianto, oid-prefix: 1.2.246.578.5.2)
@@ -12,13 +11,26 @@
  * Do not edit the class manually.
  */
 
+interface AWSv4Configuration {
+  options?: {
+    region?: string
+    service?: string
+  }
+  credentials?: {
+    accessKeyId?: string
+    secretAccessKey?: string,
+    sessionToken?: string
+  }
+}
 
 export interface ConfigurationParameters {
     apiKey?: string | Promise<string> | ((name: string) => string) | ((name: string) => Promise<string>);
     username?: string;
     password?: string;
     accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string) | ((name?: string, scopes?: string[]) => Promise<string>);
+    awsv4?: AWSv4Configuration;
     basePath?: string;
+    serverIndex?: number;
     baseOptions?: any;
     formDataCtor?: new () => any;
 }
@@ -27,42 +39,43 @@ export class Configuration {
     /**
      * parameter for apiKey security
      * @param name security name
-     * @memberof Configuration
      */
     apiKey?: string | Promise<string> | ((name: string) => string) | ((name: string) => Promise<string>);
     /**
      * parameter for basic security
-     *
-     * @type {string}
-     * @memberof Configuration
      */
     username?: string;
     /**
      * parameter for basic security
-     *
-     * @type {string}
-     * @memberof Configuration
      */
     password?: string;
     /**
      * parameter for oauth2 security
      * @param name security name
      * @param scopes oauth2 scope
-     * @memberof Configuration
      */
     accessToken?: string | Promise<string> | ((name?: string, scopes?: string[]) => string) | ((name?: string, scopes?: string[]) => Promise<string>);
     /**
-     * override base path
-     *
-     * @type {string}
+     * parameter for aws4 signature security
+     * @param {Object} AWS4Signature - AWS4 Signature security
+     * @param {string} options.region - aws region
+     * @param {string} options.service - name of the service.
+     * @param {string} credentials.accessKeyId - aws access key id
+     * @param {string} credentials.secretAccessKey - aws access key
+     * @param {string} credentials.sessionToken - aws session token
      * @memberof Configuration
+     */
+    awsv4?: AWSv4Configuration;
+    /**
+     * override base path
      */
     basePath?: string;
     /**
+     * override server index
+     */
+    serverIndex?: number;
+    /**
      * base options for axios calls
-     *
-     * @type {any}
-     * @memberof Configuration
      */
     baseOptions?: any;
     /**
@@ -79,8 +92,15 @@ export class Configuration {
         this.username = param.username;
         this.password = param.password;
         this.accessToken = param.accessToken;
+        this.awsv4 = param.awsv4;
         this.basePath = param.basePath;
-        this.baseOptions = param.baseOptions;
+        this.serverIndex = param.serverIndex;
+        this.baseOptions = {
+            ...param.baseOptions,
+            headers: {
+                ...param.baseOptions?.headers,
+            },
+        };
         this.formDataCtor = param.formDataCtor;
     }
 
