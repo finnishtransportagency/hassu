@@ -15,9 +15,9 @@ export async function validateKayttoOikeusEvkOrganisaatio(projekti: DBProjekti, 
       const nonEvkUserWithEvkOrganisaatio = !organisaatioIsEvk(organisaatio) && !!kayttoOikeus.evkOrganisaatio;
       if (nonEvkUserWithEvkOrganisaatio) {
         throw new IllegalArgumentError(
-          `Evok-organisaatiotarkennus asetettu virheellisesti käyttäjälle '${kayttoOikeus.kayttajatunnus}'. ` +
+          `Elinvoimakeskus-organisaatiotarkennus asetettu virheellisesti käyttäjälle '${kayttoOikeus.kayttajatunnus}'. ` +
             `Kyseinen käyttäjä kuuluu organisaatioon '${organisaatio}'. ` +
-            `Evok-organisaatiotarkennuksen voi asettaa vain käyttäjälle, jonka organisaatiotietona on 'Elinvoimakeskus'.`
+            `Elinvoimakeskus-organisaatiotarkennuksen voi asettaa vain käyttäjälle, jonka organisaatiotietona on 'Elinvoimakeskus'.`
         );
       }
     });
