@@ -88,8 +88,7 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "tilaajaorganisaatio"],
           ],
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.kohdeluokkahaku,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]], // NOSONAR
+          jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as unknown as object]],
         },
         lauseke: [
           "ja",
@@ -184,13 +183,14 @@ export class VelhoClient {
       const hakulausekeKysely: HakuPalvelu.HakulausekeKysely = {
         asetukset: {
           tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.kohdeluokkahaku,
+          jarjesta: [[["aineisto/aineisto", "ominaisuudet", "nimi"], "nouseva" as unknown as object]],
           "palautettavat-kentat": [
             ["aineisto/aineisto", "oid"],
             ["aineisto/aineisto", "tuorein-versio"],
             ["aineisto/aineisto", "ominaisuudet"],
           ],
         },
-        lauseke: ["yhtasuuri", ["aineisto/aineisto", "luontikohdeluokan-oid"], toimeksianto.oid],
+        lauseke: ["joukossa", ["aineisto/aineisto", "linkit"], [toimeksianto.oid]],
         kohdeluokat: ["aineisto/aineisto"],
       };
       const aineistotResponse = await hakuApi.hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely);
@@ -305,10 +305,6 @@ export class VelhoClient {
   private async createProjektiRekisteriApi() {
     return new ProjektiRekisteri.ProjektiApi(new ProjektiRekisteri.Configuration(await this.getVelhoApiConfiguration()));
   }
-
-  // private async createAineistoApi() {
-  //   return new AineistoPalvelu.AineistoApi(new AineistoPalvelu.Configuration(await this.getVelhoApiConfiguration()));
-  // }
 
   private async createDokumenttiApi() {
     const baseConfig = await this.getVelhoApiConfiguration();
