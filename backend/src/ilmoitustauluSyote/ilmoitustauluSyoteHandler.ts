@@ -10,12 +10,18 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { ProjektiDocumentHit } from "../projektiSearch/projektiSearchAdapter";
 
 class IlmoitustauluSyoteHandler {
-  async getFeed(kieli: KaannettavaKieli, ely: string | undefined, lely: string | undefined, maakunta: string | undefined): Promise<string> {
+  async getFeed(
+    kieli: KaannettavaKieli,
+    ely: string | undefined,
+    lely: string | undefined,
+    elinvoimakeskus: string | undefined,
+    maakunta: string | undefined
+  ): Promise<string> {
     const siteUrl = process.env.FRONTEND_DOMAIN_NAME ?? "";
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
 
-    const hits = await this.searchProjects(kieli, ely, lely, maakunta);
+    const hits = await this.searchProjects(kieli, ely, lely, elinvoimakeskus, maakunta);
 
     if (hits) {
       for (const item of hits) {
@@ -35,6 +41,7 @@ class IlmoitustauluSyoteHandler {
     kieli: KaannettavaKieli,
     ely: string | undefined,
     lely: string | undefined,
+    elinvoimakeskus: string | undefined,
     maakunta: string | undefined
   ): Promise<ProjektiDocumentHit[] | undefined> {
     const terms: unknown[] =
@@ -68,6 +75,17 @@ class IlmoitustauluSyoteHandler {
         });
       } else {
         throw new NotFoundError("Liikenne-ELY " + lely + " on tuntematon");
+      }
+    }
+
+    const elinvoimakeskusId = elinvoimakeskus ? kuntametadata.elinvoimakeskusIdFromKey(elinvoimakeskus) : undefined;
+    if (elinvoimakeskus) {
+      if (elinvoimakeskusId) {
+        terms.push({
+          term: { "elinvoimakeskukset.keyword": elinvoimakeskusId },
+        });
+      } else {
+        throw new NotFoundError("Elinvoimakeskus " + elinvoimakeskus + " on tuntematon");
       }
     }
 
@@ -106,7 +124,7 @@ class IlmoitustauluSyoteHandler {
       categories.push("Maakunta:" + maakunta);
     });
     item.vaylamuoto?.forEach((vaylamuoto) => {
-      const translatedVaylamuoto = translate("projekti.projekti-vayla-muoto." + vaylamuoto, Kieli.SUOMI);
+      const translatedVaylamuoto = translate("projekti-vayla-muoto." + vaylamuoto, Kieli.SUOMI);
       if (translatedVaylamuoto) {
         categories.push("Väylämuoto:" + translatedVaylamuoto);
       }

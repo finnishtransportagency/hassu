@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, useCallback, useMemo, useState } from "react";
+import React, { FunctionComponent, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
 import { useRouter } from "next/router";
@@ -18,7 +18,7 @@ import useApi from "src/hooks/useApi";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { TallennaProjektiInput } from "@services/api";
+import { Kayttaja, ProjektiKayttaja, TallennaProjektiInput } from "@services/api";
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
@@ -33,14 +33,71 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_NOT_CREATED,
 ]);
 
+export type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
+
 export default function PerustaProjekti(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: mutateProjekti } = useProjekti({ revalidateOnMount: true });
+
+  const [initialKayttajat, setInitialKayttajat] = useState<PotentiaalisestiPoistunutKayttaja[]>();
+  const [kayttoOikeudet, setKayttoOikeudet] = useState<ProjektiKayttaja[]>();
+  const api = useApi();
+
+  useEffect(() => {
+    async function loadKayttajat(kayttajat: string[]): Promise<PotentiaalisestiPoistunutKayttaja[]> {
+      if (kayttajat.length === 0) {
+        return [];
+      }
+      return await api.listUsers({
+        kayttajatunnus: kayttajat,
+      });
+    }
+    const getInitialKayttajat = async () => {
+      const kayttoOikeudet = projekti?.kayttoOikeudet;
+      if (!kayttoOikeudet) {
+        return;
+      }
+      const kayttajat = await loadKayttajat(kayttoOikeudet.map((kayttaja) => kayttaja.kayttajatunnus));
+      const poistuneetKayttajat = kayttoOikeudet
+        .filter((pk) => !kayttajat.some((k) => k.uid === pk.kayttajatunnus))
+        .map<PotentiaalisestiPoistunutKayttaja>(({ etunimi, sukunimi, email, kayttajatunnus, puhelinnumero, organisaatio }) => ({
+          __typename: "Kayttaja",
+          etunimi,
+          sukunimi,
+          email,
+          organisaatio,
+          puhelinnumero,
+          uid: kayttajatunnus,
+          poistunut: true,
+        }));
+      const kaikkiKayttajat = kayttajat.concat(poistuneetKayttajat);
+      setInitialKayttajat(kaikkiKayttajat);
+      setKayttoOikeudet(
+        kayttoOikeudet.map((kayttoOikeus) => {
+          const kayttaja = kaikkiKayttajat.find((kayttaja) => kayttaja.uid === kayttoOikeus.kayttajatunnus);
+          const etunimi = kayttaja?.etunimi ?? kayttoOikeus.etunimi;
+          const sukunimi = kayttaja?.sukunimi ?? kayttoOikeus.sukunimi;
+          const email = kayttaja?.email ?? kayttoOikeus.email;
+          const organisaatio = kayttaja?.organisaatio ?? kayttoOikeus.organisaatio;
+          return { ...kayttoOikeus, etunimi, sukunimi, email, organisaatio };
+        })
+      );
+    };
+    getInitialKayttajat();
+  }, [api, projekti?.kayttoOikeudet]);
 
   return (
     <div>
       <h1>Projektin perustaminen</h1>
       <h2>{projekti?.velho?.nimi || "-"}</h2>
-      {projekti && <PerustaProjektiForm projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={mutateProjekti} />}
+      {projekti && initialKayttajat && kayttoOikeudet && (
+        <PerustaProjektiForm
+          projekti={projekti}
+          initialKayttajat={initialKayttajat}
+          kayttoOikeudet={kayttoOikeudet}
+          projektiLoadError={projektiLoadError}
+          reloadProjekti={mutateProjekti}
+        />
+      )}
     </div>
   );
 }
@@ -49,13 +106,19 @@ interface PerustaProjektiFormProps {
   projekti: ProjektiLisatiedolla;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
   projektiLoadError: any;
+  initialKayttajat: PotentiaalisestiPoistunutKayttaja[];
+  kayttoOikeudet: ProjektiKayttaja[];
 }
 
-const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (projekti: ProjektiLisatiedolla) => ({
-  oid: projekti.oid,
-  versio: projekti.versio,
+const defaultFormValues: (kayttoOikeudet: ProjektiKayttaja[], oid: string, versio: number) => FormValues = (
+  kayttoOikeudet: ProjektiKayttaja[],
+  oid: string,
+  versio: number
+) => ({
+  oid: oid,
+  versio: versio,
   kayttoOikeudet:
-    projekti.kayttoOikeudet?.map(
+    kayttoOikeudet?.map(
       ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, evkOrganisaatio, organisaatio }) => ({
         kayttajatunnus,
         puhelinnumero: puhelinnumero || "",
@@ -68,10 +131,16 @@ const defaultFormValues: (projekti: ProjektiLisatiedolla) => FormValues = (proje
     ) || [],
 });
 
-const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ projekti, projektiLoadError, reloadProjekti }) => {
+const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({
+  projekti,
+  initialKayttajat,
+  kayttoOikeudet,
+  projektiLoadError,
+  reloadProjekti,
+}) => {
   const router = useRouter();
 
-  const defaultValues = useMemo(() => defaultFormValues(projekti), [projekti]);
+  const defaultValues = useMemo(() => defaultFormValues(kayttoOikeudet, projekti.oid, projekti.versio), [kayttoOikeudet, projekti.oid, projekti.versio]);
 
   const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
@@ -164,12 +233,13 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({ proj
           <ProjektinPerusosio projekti={projekti} />
           <KayttoOikeusHallinta
             disableFields={disableFormEdit}
-            projektiKayttajat={projekti.kayttoOikeudet || []}
+            projektiKayttajat={kayttoOikeudet}
             projekti={projekti}
             includeTitle={true}
             ohjeetOpen={kayttooikeusOhjeetOpen}
             ohjeetOnClose={kayttooikeusOhjeetOnClose}
             ohjeetOnOpen={kayttooikeusOhjeetOnOpen}
+            initialKayttajat={initialKayttajat}
           />
 
           <Section noDivider>

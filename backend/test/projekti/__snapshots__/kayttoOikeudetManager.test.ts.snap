@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`KayttoOikeudetManager should manager projekti users successfully 1`] = `
+exports[`KayttoOikeudetManager manages users correcly should handle adds and edits 1`] = `
 Array [
   Object {
     "email": "a1@vayla.fi",
@@ -42,7 +42,7 @@ Array [
 ]
 `;
 
-exports[`KayttoOikeudetManager should manager projekti users successfully 2`] = `
+exports[`KayttoOikeudetManager manages users correcly should handle adds and edits 2`] = `
 Array [
   Object {
     "elyOrganisaatio": undefined,

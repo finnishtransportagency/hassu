@@ -54,6 +54,8 @@ process.env.CLOUDFRONT_DISTRIBUTION_ID = "unit-test-distribution-id";
 process.env.FRONTEND_PUBLIC_KEY_ID = "test_public_key_id";
 
 process.env.HASSU_XRAY_ENABLED = process.env.HASSU_XRAY_ENABLED ?? "false";
+process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify({"startDate":"2025-01-01"});
+
 
 // Koodi säästetty jos halutaan tarvittaessa testeissä kytkeä X-Ray päälle
 if (process.env.HASSU_XRAY_ENABLED !== "false") {

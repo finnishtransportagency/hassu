@@ -285,46 +285,51 @@ export abstract class AbstractPdf {
 
   protected sopimusLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
-      const currentY = this.doc.y;
-      const bottomMargin = 100;
+      const bottomMargin = 50;
       const maxLogoHeight = 50;
+      const verticalPadding = 20;
+      const minSpaceNeeded = maxLogoHeight + verticalPadding * 2;
+
+      this.doc.moveDown(1);
+
+      if (this.doc.y + minSpaceNeeded > this.doc.page.height - bottomMargin) {
+        this.doc.addPage();
+      }
+
+      const logoY = this.doc.y;
 
       if (this.osapuoltenLogot && this.osapuoltenLogot.length > 0) {
-        const baseY = this.doc.page.height - bottomMargin;
         const logoCount = Math.min(this.osapuoltenLogot.length, 3);
         const logot = this.osapuoltenLogot.slice(0, logoCount);
 
-        const maxLogoAreaWidth = this.doc.page.width / 3;
+        const sideMargin = 50;
+        const availableWidth = this.doc.page.width - 2 * sideMargin;
         const logoMargin = 20;
-        const logoAreaWidth = maxLogoAreaWidth - logoMargin;
-        const totalAreaWidth = logoCount * maxLogoAreaWidth;
-        let xPosition = this.doc.page.width / 2 - totalAreaWidth / 2;
+        const singleLogoWidth = (availableWidth - (logoCount - 1) * logoMargin) / logoCount;
+
+        let xPosition = sideMargin;
 
         for (const logo of logot) {
-          const logoAreaCenterX = xPosition + logoAreaWidth / 2;
-
-          const center = "center" as const;
           const logoOptions = {
-            fit: [logoAreaWidth, maxLogoHeight] as [number, number],
-            align: center,
-            valign: center,
+            fit: [singleLogoWidth, maxLogoHeight] as [number, number],
+            align: "center" as const,
+            valign: "center" as const,
           };
 
-          this.doc.image(logo, logoAreaCenterX - logoAreaWidth / 2, baseY - maxLogoHeight, logoOptions);
-
-          xPosition += maxLogoAreaWidth;
+          this.doc.image(logo, xPosition, logoY, logoOptions);
+          xPosition += singleLogoWidth + logoMargin;
         }
       } else if (this.sopimusLogo) {
-        const baseY = this.doc.page.height - bottomMargin;
-        const x = this.doc.page.width / 2 - maxLogoHeight;
-        this.doc.image(this.sopimusLogo, x, baseY - maxLogoHeight, {
-          fit: [maxLogoHeight * 2, maxLogoHeight],
+        const maxLogoWidth = 100;
+        const x = (this.doc.page.width - maxLogoWidth) / 2;
+        this.doc.image(this.sopimusLogo, x, logoY, {
+          fit: [maxLogoWidth, maxLogoHeight],
           align: "center",
           valign: "center",
         });
       }
 
-      this.doc.y = currentY;
+      this.doc.y = logoY + maxLogoHeight + verticalPadding;
     });
   }
 
