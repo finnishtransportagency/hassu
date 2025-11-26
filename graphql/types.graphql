@@ -47,7 +47,7 @@ enum ELY {
   VARSINAIS_SUOMEN_ELY
 }
 
-enum EVK {
+enum Elinvoimakeskus {
   UUDENMAAN_EVK
   LOUNAIS_SUOMEN_EVK
   KAAKKOIS_SUOMEN_EVK
@@ -961,7 +961,7 @@ type Yhteystieto {
   sukunimi: String!
   organisaatio: String
   elyOrganisaatio: ELY
-  evkOrganisaatio: EVK
+  evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   puhelinnumero: String!
   sahkoposti: String!
@@ -1238,7 +1238,7 @@ type ProjektiKayttaja {
   email: String!
   organisaatio: String
   elyOrganisaatio: ELY
-  evkOrganisaatio: EVK
+  evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -1251,7 +1251,7 @@ type ProjektiKayttajaJulkinen {
   email: String!
   organisaatio: String
   elyOrganisaatio: ELY
-  evkOrganisaatio: EVK
+  evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   etunimi: String!
   sukunimi: String!

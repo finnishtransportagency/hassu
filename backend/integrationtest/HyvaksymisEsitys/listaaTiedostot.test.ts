@@ -41,6 +41,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     muokattavissa: false,
     yleinenYhteystieto: true,
     elyOrganisaatio: API.ELY.LAPIN_ELY,
+    evkOrganisaatio: undefined,
   };
   const projektiInDB = {
     ...TEST_PROJEKTI,
@@ -275,6 +276,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         organisaatio: "Väylävirasto",
         projektiPaallikko: true,
         elyOrganisaatio: "LAPIN_ELY",
+        evkOrganisaatio: undefined,
       },
     });
   });
@@ -311,6 +313,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         organisaatio: "Väylävirasto",
         projektiPaallikko: true,
         elyOrganisaatio: "LAPIN_ELY",
+        evkOrganisaatio: undefined,
       },
     });
   });

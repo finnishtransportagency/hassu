@@ -7,7 +7,7 @@ import remove from "lodash/remove";
 import { mergeKayttaja, mergeKayttajas } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 import { EmailComparator } from "../personSearch/emailComparator";
 
@@ -81,6 +81,10 @@ export class KayttoOikeudetManager {
       // Käyttäjälle ei voi asettaa elyOrganisaatiota
       delete inputUser.elyOrganisaatio;
     }
+    if (!organisaatioIsEvk(currentUser.organisaatio)) {
+      // Käyttäjälle ei voi asettaa evkOrganisaatiota
+      delete inputUser.evkOrganisaatio;
+    }
     // Update rest of fields
     const user: DBVaylaUser = merge({}, currentUser, inputUser);
     return user;
@@ -89,10 +93,13 @@ export class KayttoOikeudetManager {
   private mergeProjektiPaallikkoUser(currentUser: DBVaylaUser, inputUser: ProjektiKayttajaInput) {
     const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
       organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
+    const evkOrganisaatio: DBVaylaUser["evkOrganisaatio"] =
+      organisaatioIsEvk(currentUser.organisaatio) && inputUser.evkOrganisaatio ? inputUser.evkOrganisaatio : undefined;
     // Update only puhelinnumero if projektipaallikko
     const user: DBVaylaUser = {
       ...currentUser,
       elyOrganisaatio,
+      evkOrganisaatio,
       yleinenYhteystieto: true,
       puhelinnumero: inputUser.puhelinnumero,
     };
@@ -103,9 +110,12 @@ export class KayttoOikeudetManager {
     // Update only puhelinnumero and yleinenYhteystieto if varahenkilö from Projektivelho
     const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
       organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
+    const evkOrganisaatio: DBVaylaUser["evkOrganisaatio"] =
+      organisaatioIsEvk(currentUser.organisaatio) && inputUser.evkOrganisaatio ? inputUser.evkOrganisaatio : undefined;
     const user: DBVaylaUser = {
       ...currentUser,
       elyOrganisaatio,
+      evkOrganisaatio,
       yleinenYhteystieto: !!inputUser.yleinenYhteystieto,
       puhelinnumero: inputUser.puhelinnumero,
     };
@@ -123,6 +133,7 @@ export class KayttoOikeudetManager {
           isAorLTunnus(newUser.kayttajatunnus) && newUser.tyyppi === KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
         yleinenYhteystieto: newUser.yleinenYhteystieto ?? undefined,
         elyOrganisaatio: newUser.elyOrganisaatio ?? undefined,
+        evkOrganisaatio: newUser.evkOrganisaatio ?? undefined,
       };
       try {
         const userWithAllInfo = this.fillInUserInfoFromUserManagement({

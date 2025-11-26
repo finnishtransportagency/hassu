@@ -141,14 +141,17 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti, initialKayttaja
       oid: projekti.oid,
       versio: projekti.versio,
       kayttoOikeudet:
-        kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, organisaatio }) => ({
-          kayttajatunnus,
-          puhelinnumero: puhelinnumero || "",
-          tyyppi,
-          yleinenYhteystieto: !!yleinenYhteystieto,
-          elyOrganisaatio: elyOrganisaatio || null,
-          organisaatio: organisaatio || "",
-        })) || [],
+        kayttoOikeudet?.map(
+          ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, evkOrganisaatio, organisaatio }) => ({
+            kayttajatunnus,
+            puhelinnumero: puhelinnumero || "",
+            tyyppi,
+            yleinenYhteystieto: !!yleinenYhteystieto,
+            elyOrganisaatio: elyOrganisaatio || null,
+            evkOrganisaatio: evkOrganisaatio || null,
+            organisaatio: organisaatio || "",
+          })
+        ) || [],
     }),
     [kayttoOikeudet, projekti.oid, projekti.versio]
   );
@@ -187,10 +190,11 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti, initialKayttaja
             oid: formData.oid,
             versio: formData.versio,
             kayttoOikeudet: formData.kayttoOikeudet.map(
-              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
                 kayttajatunnus,
                 puhelinnumero,
                 elyOrganisaatio,
+                evkOrganisaatio,
                 tyyppi,
                 yleinenYhteystieto,
               })

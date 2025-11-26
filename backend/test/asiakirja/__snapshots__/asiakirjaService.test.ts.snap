@@ -1967,6 +1967,7 @@ Object {
     Object {
       "elyOrganisaatio": undefined,
       "etunimi": "Kunta",
+      "evkOrganisaatio": undefined,
       "kunta": 536,
       "organisaatio": "Nokia",
       "puhelinnumero": "029123123",
@@ -1976,6 +1977,7 @@ Object {
     Object {
       "elyOrganisaatio": "PIRKANMAAN_ELY",
       "etunimi": "Eemil",
+      "evkOrganisaatio": undefined,
       "kunta": undefined,
       "organisaatio": "ELY",
       "puhelinnumero": "123456789",

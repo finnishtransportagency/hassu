@@ -1,6 +1,6 @@
 import { KayttajaTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti } from "../database/model";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 import { translate } from "./localization";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 
@@ -17,6 +17,8 @@ export function getProjektipaallikkoAndOrganisaatio(projekti: DBProjekti, kieli:
   const organisaatio =
     organisaatioIsEly(projektiPaallikko?.organisaatio) && projektiPaallikko?.elyOrganisaatio
       ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, kieli)
+      : organisaatioIsEvk(projektiPaallikko?.organisaatio) && projektiPaallikko?.evkOrganisaatio
+      ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, kieli)
       : translate("viranomainen.VAYLAVIRASTO", kieli);
   return {
     nimi: formatNimi(projektiPaallikko),

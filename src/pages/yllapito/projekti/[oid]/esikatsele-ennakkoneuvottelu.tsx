@@ -46,6 +46,8 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
     ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
+    : projektipaallikonYhteystiedot?.evkOrganisaatio
+    ? t(`viranomainen.${projektipaallikonYhteystiedot.evkOrganisaatio}`)
     : projektipaallikonYhteystiedot?.organisaatio;
 
   const muistutusMaara = useMemo(() => Object.values(muistutukset).flat().length ?? 0, [muistutukset]);
