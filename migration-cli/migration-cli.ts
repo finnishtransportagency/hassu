@@ -7,13 +7,13 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env.test" });
 dotenv.config({ path: ".env.local" });
 /* eslint-enable */
-import { importProjekti, Row } from "../backend/src/migraatio/migration";
+import { importProjekti, Row, Tila } from "../backend/src/migraatio/migration";
 import AWSXRay from "aws-xray-sdk-core";
 import readXlsxFile from "read-excel-file/node";
 import yargs from "yargs";
 import * as sinon from "sinon";
 import { userService } from "../backend/src/user";
-import { NykyinenKayttaja, Status } from "../common/graphql/apiModel";
+import { NykyinenKayttaja } from "../common/graphql/apiModel";
 import dayjs from "dayjs";
 import tz from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -50,11 +50,11 @@ const schema = {
     type: Date,
   },
   ["1. Jatkopäätös asianumero"]: {
-    prop: "jatkopaatosAsianumero",
+    prop: "jatkopaatos1Asianumero",
     type: String,
   },
   ["1. Jatkopäätös päivämäärä"]: {
-    prop: "jatkopaatosPaivamaara",
+    prop: "jatkopaatos1Paivamaara",
     type: Date,
   },
 };
@@ -91,8 +91,8 @@ yargs
   .demandCommand(1)
   .help().argv;
 
-export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Status>> {
-  const result: Record<string, Status> = {};
+export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Tila>> {
+  const result: Record<string, Tila> = {};
   sinon.stub(userService, "identifyUser").resolves();
   const kayttaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
