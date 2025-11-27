@@ -16,7 +16,7 @@ type ErrorNotification = string | JSX.Element | ReactNode | null;
 type ErrorNotificationFunction = (projekti?: Projekti | null) => ErrorNotification;
 
 const LinkToProjektiVelho: FC<{ oid: string | null | undefined }> = ({ oid }) =>
-  !!oid && <ExternalStyledLink href={getVelhoUrl(oid)}>Projektin sivu Projektivelhossa</ExternalStyledLink>;
+  !!oid ? <ExternalStyledLink href={getVelhoUrl(oid)}>Projektin sivu Projektivelhossa</ExternalStyledLink> : null;
 
 const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificationFunction>([
   [
