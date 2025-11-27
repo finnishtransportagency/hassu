@@ -6,6 +6,7 @@ import ExtLink from "@components/ExtLink";
 import useTranslation from "next-translate/useTranslation";
 import { Translate } from "next-translate";
 import { H3 } from "../Headings";
+import { getVelhoUrl } from "src/util/velhoUtils";
 
 interface Props {
   projekti?: Projekti | null;
@@ -36,10 +37,9 @@ export default function LinkitetytProjektit({ projekti }: Props): ReactElement {
 }
 
 function getExtLinks(linkitetytProjektit: LinkitettyVelhoProjekti[], t: Translate) {
-  const velhoBaseURL = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
   return linkitetytProjektit.map((projekti) => (
     <p key={projekti.oid}>
-      <ExtLink href={velhoBaseURL + projekti.oid}>
+      <ExtLink href={getVelhoUrl(projekti.oid)}>
         {projekti.nimi} ({t(`projekti-tyyppi.${projekti.tyyppi}`)})
       </ExtLink>
     </p>

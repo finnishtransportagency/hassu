@@ -1,13 +1,11 @@
-import React, { ReactElement, ReactNode, useMemo } from "react";
+import React, { FC, ReactElement, ReactNode, useMemo } from "react";
 import { Projekti, ProjektiPaallikkoVirheTyyppi } from "../../../common/graphql/apiModel";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import { ProjektiSchema, ProjektiTestType } from "src/schemas/projekti";
 import { ValidationError } from "yup";
 import HassuLink from "@components/HassuLink";
-import ExtLink from "@components/ExtLink";
 import { ExternalStyledLink } from "@components/StyledLink";
-
-const velhobaseurl = process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-";
+import { getVelhoUrl } from "src/util/velhoUtils";
 
 interface Props {
   validationSchema: ProjektiSchema;
@@ -16,6 +14,9 @@ interface Props {
 
 type ErrorNotification = string | JSX.Element | ReactNode | null;
 type ErrorNotificationFunction = (projekti?: Projekti | null) => ErrorNotification;
+
+const LinkToProjektiVelho: FC<{ oid: string | null | undefined }> = ({ oid }) =>
+  !!oid && <ExternalStyledLink href={getVelhoUrl(oid)}>Projektin sivu Projektivelhossa</ExternalStyledLink>;
 
 const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificationFunction>([
   [
@@ -29,8 +30,7 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
       let message = (
         <p>
           Projektilta puuttuu projektipäällikkö- / vastuuhenkilötieto Projektivelhosta. Lisää vastuuhenkilötieto Projektivelhossa ja yritä
-          projektin perustamista uudelleen.{" "}
-          <ExternalStyledLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExternalStyledLink>
+          projektin perustamista uudelleen. <LinkToProjektiVelho oid={projekti?.oid} />
         </p>
       );
       if (virhetieto?.tyyppi === ProjektiPaallikkoVirheTyyppi.EI_LOYDY) {
@@ -40,7 +40,7 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
               virhetieto.sahkoposti || ""
             }' ei löydy käyttäjähallinnasta tai kyseinen käyttäjä ei täytä projektipäällikön edellytyksiä. `}
             {"Korjaa vastuuhenkilötieto Projektivelhossa ja yritä projektin perustamista uudelleen. "}
-            <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+            <LinkToProjektiVelho oid={projekti?.oid} />
           </p>
         );
       }
@@ -53,7 +53,7 @@ const projektiErrorToNotificationMap = new Map<ProjektiTestType, ErrorNotificati
       return (
         <p>
           {`Projektilta puuttuu asiatunnus Projektivelhosta. Lisää asiatunnus Projektivelhossa ja yritä projektin perustamista uudelleen. Jos projekti on jo luotu, päivitä tiedot "Päivitä tiedot"-painikkeella. `}
-          <ExtLink href={velhobaseurl + projekti?.oid}>Projektin sivu Projektivelhossa</ExtLink>
+          <LinkToProjektiVelho oid={projekti?.oid} />
         </p>
       );
     },

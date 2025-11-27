@@ -5,5 +5,5 @@ export const isKuntatietoMissing = (projekti: Projekti) => {
 };
 
 export const getVelhoUrl = (oid: Projekti["oid"]) => {
-  return process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + oid;
+  return process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektivelho/projektit/oid-" + oid + "/toimeksiannot";
 };
