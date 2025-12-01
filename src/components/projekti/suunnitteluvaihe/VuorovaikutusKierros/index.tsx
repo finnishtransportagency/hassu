@@ -62,6 +62,7 @@ import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelma
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
+import { isUspaJulkaisuEstetty } from "common/util/isUspaJulkaisuEstetty";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -290,6 +291,9 @@ function VuorovaikutusKierrosKutsu({
       if (kunnatPuuttuu) {
         puutteet.push("kuntavastaanottajat puuttuvat");
       }
+      if (julkaisupaiva && isUspaJulkaisuEstetty(projekti, julkaisupaiva)) {
+        puutteet.push("julkaisu Elinvoimakeskuksen asianhallintaan estetty");
+      }
       if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
         puutteet.push("asianhallinta on vaarassa tilassa");
       }
@@ -308,7 +312,7 @@ function VuorovaikutusKierrosKutsu({
     } catch (e) {
       log.error(e);
     }
-  }, [kuntavastaanottajat, projekti, aineistotReady, showErrorMessage]);
+  }, [kuntavastaanottajat, projekti, aineistotReady, showErrorMessage, julkaisupaiva]);
 
   const handleClickCloseHyvaksy = useCallback(() => {
     setOpenHyvaksy(false);
