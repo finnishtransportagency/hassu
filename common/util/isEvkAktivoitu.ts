@@ -16,7 +16,7 @@ export const isEvkAktivoitu = (): boolean => {
         return isEvkActiveAt(TODAY, evkAktivointiPvm);
       } catch (error) {
         // unable to parse envParam, return the 'default' values below
-        console.log('unable to parse envParam');
+        console.log("unable to parse envParam");
       }
     }
   }
