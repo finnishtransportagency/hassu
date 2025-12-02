@@ -135,9 +135,16 @@ export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaa
     return this.kutsuAdapter.text("asiakirja.hyvaksymispaatoksesta_ilmoittaminen.muistutuksen_tehneille");
   }
 
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
+  }
+
   private paragraphs(): PDFStructureElement[] {
     return [
       this.paragraphFromKey("otsikko"),
+      this.uudelleenKuulutusParagraph(),
       this.paragraphFromKey("muistuttajille_kappale3"),
       this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("kappale5"),
