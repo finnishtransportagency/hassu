@@ -3,9 +3,9 @@
  */
 
 import dayjs from "dayjs";
-import { today } from "../../../common/util/dateUtils";
+import { today } from "../dateUtils";
 import { expect } from "chai";
-import { isUspaJulkaisuEstetty } from "../isUspaJulkaisuEstetty";
+import { isEvkJulkaisuEstetty } from "../isEvkJulkaisuEstetty";
 import { Projekti, SuunnittelustaVastaavaViranomainen } from "../../graphql/apiModel";
 
 const ONLY_DATE_FORMAT = "YYYY-MM-DD";
@@ -35,7 +35,7 @@ const luoDummyProjekti = (
   };
 };
 
-describe("isUspaJulkaisuEstetty - Väylävirasto, ei estoa", () => {
+describe("isEvkJulkaisuEstetty - Väylävirasto, ei estoa", () => {
   afterEach(() => {
     delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
   });
@@ -48,7 +48,7 @@ describe("isUspaJulkaisuEstetty - Väylävirasto, ei estoa", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_CHECKED);
     expect(isBlocked).to.be.false;
   });
 
@@ -60,7 +60,7 @@ describe("isUspaJulkaisuEstetty - Väylävirasto, ei estoa", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_FUTURE);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_CHECKED);
     expect(isBlocked).to.be.false;
   });
 
@@ -72,12 +72,12 @@ describe("isUspaJulkaisuEstetty - Väylävirasto, ei estoa", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_FUTURE);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_CHECKED);
     expect(isBlocked).to.be.false;
   });
 });
 
-describe("isUspaJulkaisuEstetty - EVK", () => {
+describe("isEvkJulkaisuEstetty - EVK", () => {
   afterEach(() => {
     delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
   });
@@ -90,7 +90,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
     expect(isBlocked).to.be.false;
   });
 
@@ -102,7 +102,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
     expect(isBlocked).to.be.true;
   });
 
@@ -114,7 +114,7 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
     expect(isBlocked).to.be.false;
   });
 
@@ -126,16 +126,16 @@ describe("isUspaJulkaisuEstetty - EVK", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
     expect(isBlocked).to.be.false;
   });
 });
 
-describe("isUspaJulkaisuEstetty - ELY", () => {
+describe("isEvkJulkaisuEstetty - ELY", () => {
   afterEach(() => {
     delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
   });
-  it("ELY -projekti, USPA - ei käytössä, pvm EVK aktivoinnin jälkeen => ESTETTY", () => {
+  it("ELY -projekti, USPA - ei käytössä, pvm EVK aktivoinnin jälkeen => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, false);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
@@ -143,11 +143,11 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
-    expect(isBlocked).to.be.true;
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
   });
 
-  it("ELY -projekti, USPA - käytössä, pvm EVK aktivoinnin jälkeen => ESTETTY", () => {
+  it("ELY -projekti, USPA - käytössä, pvm EVK aktivoinnin jälkeen => EI ESTETTY", () => {
     const projekti: Projekti = luoDummyProjekti(SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY, true);
     const DATE_TO_BE_CHECKED = today().format(ONLY_DATE_FORMAT);
     const startDate = dayjs(DATE_TO_BE_CHECKED).subtract(1, DAY).format(ONLY_DATE_FORMAT);
@@ -155,8 +155,8 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
-    expect(isBlocked).to.be.true;
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    expect(isBlocked).to.be.false;
   });
 
   it("ELY -projekti, USPA - ei käytössä, pvm ennen EVK aktivointia => EI ESTETTY", () => {
@@ -167,7 +167,7 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
     expect(isBlocked).to.be.false;
   });
 
@@ -179,7 +179,7 @@ describe("isUspaJulkaisuEstetty - ELY", () => {
       startDate,
     };
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE_IN_THE_PAST);
-    const isBlocked = isUspaJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
+    const isBlocked = isEvkJulkaisuEstetty(projekti, DATE_TO_BE_CHECKED);
     expect(isBlocked).to.be.false;
   });
 });

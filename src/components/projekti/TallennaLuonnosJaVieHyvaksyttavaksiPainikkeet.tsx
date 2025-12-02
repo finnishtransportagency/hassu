@@ -19,7 +19,8 @@ import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
-import { isUspaJulkaisuEstetty } from "common/util/isUspaJulkaisuEstetty";
+import { isEvkJulkaisuEstetty } from "hassu-common/util/isEvkJulkaisuEstetty";
+import { isElyJulkaisuEstetty } from "common/util/isElyJulkaisuEstetty";
 
 type Props<TFieldValues extends FieldValues> = {
   projekti: ProjektiLisatiedolla;
@@ -97,8 +98,11 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
               puutteet.push("kuntavastaanottajat puuttuvat");
             }
             const formDataField = tilasiirtymaToFormFieldMap[tilasiirtymaTyyppi];
-            if (isUspaJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
-              puutteet.push("julkaisu Elinvoimakeskuksen asianhallintaan estetty");
+            if (isElyJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
+              puutteet.push("ELY-keskuksien julkaisut on estetty");
+            }
+            if (isEvkJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
+              puutteet.push("integraatio Elinvoimakeskuksen asianhallintaan ei käytettävissä");
             }
             if (
               data?.suomifiViestitEnabled &&
