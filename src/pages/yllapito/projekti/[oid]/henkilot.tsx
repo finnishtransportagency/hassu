@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useContext, useEffect, useMemo } from "react";
+import React, { ReactElement, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import KayttoOikeusHallinta from "@components/projekti/KayttoOikeusHallinta";
@@ -21,7 +21,7 @@ import PaivitaVelhoTiedotButton from "@components/projekti/PaivitaVelhoTiedotBut
 import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
-import { TallennaProjektiInput } from "@services/api";
+import { Kayttaja, ProjektiKayttaja, TallennaProjektiInput } from "@services/api";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -42,12 +42,61 @@ const loadedProjektiValidationSchema = getProjektiValidationSchema([
   ProjektiTestType.PROJEKTI_IS_CREATED,
 ]);
 
+export type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
+
 export default function HenkilotPage(): ReactElement {
   const { data: projekti, error: projektiLoadError, mutate: reloadProjekti } = useProjekti({ revalidateOnMount: true });
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  if (!projekti) {
+  const [initialKayttajat, setInitialKayttajat] = useState<PotentiaalisestiPoistunutKayttaja[]>();
+  const [kayttoOikeudet, setKayttoOikeudet] = useState<ProjektiKayttaja[]>();
+  const api = useApi();
+
+  useEffect(() => {
+    async function loadKayttajat(kayttajat: string[]): Promise<PotentiaalisestiPoistunutKayttaja[]> {
+      if (kayttajat.length === 0) {
+        return [];
+      }
+      return await api.listUsers({
+        kayttajatunnus: kayttajat,
+      });
+    }
+    const getInitialKayttajat = async () => {
+      const kayttoOikeudet = projekti?.kayttoOikeudet;
+      if (!kayttoOikeudet) {
+        return;
+      }
+      const kayttajat = await loadKayttajat(kayttoOikeudet.map((kayttaja) => kayttaja.kayttajatunnus));
+      const poistuneetKayttajat = kayttoOikeudet
+        .filter((pk) => !kayttajat.some((k) => k.uid === pk.kayttajatunnus))
+        .map<PotentiaalisestiPoistunutKayttaja>(({ etunimi, sukunimi, email, kayttajatunnus, puhelinnumero, organisaatio }) => ({
+          __typename: "Kayttaja",
+          etunimi,
+          sukunimi,
+          email,
+          organisaatio,
+          puhelinnumero,
+          uid: kayttajatunnus,
+          poistunut: true,
+        }));
+      const kaikkiKayttajat = kayttajat.concat(poistuneetKayttajat);
+      setInitialKayttajat(kaikkiKayttajat);
+      setKayttoOikeudet(
+        kayttoOikeudet.map((kayttoOikeus) => {
+          const kayttaja = kaikkiKayttajat.find((kayttaja) => kayttaja.uid === kayttoOikeus.kayttajatunnus);
+          const etunimi = kayttaja?.etunimi ?? kayttoOikeus.etunimi;
+          const sukunimi = kayttaja?.sukunimi ?? kayttoOikeus.sukunimi;
+          const email = kayttaja?.email ?? kayttoOikeus.email;
+          const organisaatio = kayttaja?.organisaatio ?? kayttoOikeus.organisaatio;
+          return { ...kayttoOikeus, etunimi, sukunimi, email, organisaatio };
+        })
+      );
+    };
+    getInitialKayttajat();
+  }, [api, projekti?.kayttoOikeudet]);
+
+  if (!projekti || !initialKayttajat || !kayttoOikeudet) {
     return <></>;
   }
 
@@ -60,7 +109,13 @@ export default function HenkilotPage(): ReactElement {
       {epaaktiivinen && projekti.kayttoOikeudet ? (
         <HenkilotLukutila kayttoOikeudet={projekti.kayttoOikeudet} />
       ) : (
-        <Henkilot projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
+        <Henkilot
+          projekti={projekti}
+          kayttoOikeudet={kayttoOikeudet}
+          initialKayttajat={initialKayttajat}
+          projektiLoadError={projektiLoadError}
+          reloadProjekti={reloadProjekti}
+        />
       )}
     </ProjektiPageLayout>
   );
@@ -70,9 +125,11 @@ interface HenkilotFormProps {
   projekti: ProjektiLisatiedolla;
   projektiLoadError: any;
   reloadProjekti: KeyedMutator<ProjektiLisatiedolla | null>;
+  initialKayttajat: PotentiaalisestiPoistunutKayttaja[];
+  kayttoOikeudet: ProjektiKayttaja[];
 }
 
-function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormProps): ReactElement {
+function Henkilot({ projekti, projektiLoadError, reloadProjekti, initialKayttajat, kayttoOikeudet }: HenkilotFormProps): ReactElement {
   const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
 
   const isLoadingProjekti = !projekti && !projektiLoadError;
@@ -84,16 +141,19 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
       oid: projekti.oid,
       versio: projekti.versio,
       kayttoOikeudet:
-        projekti.kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, organisaatio }) => ({
-          kayttajatunnus,
-          puhelinnumero: puhelinnumero || "",
-          tyyppi,
-          yleinenYhteystieto: !!yleinenYhteystieto,
-          elyOrganisaatio: elyOrganisaatio || null,
-          organisaatio: organisaatio || "",
-        })) || [],
+        kayttoOikeudet?.map(
+          ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, evkOrganisaatio, organisaatio }) => ({
+            kayttajatunnus,
+            puhelinnumero: puhelinnumero || "",
+            tyyppi,
+            yleinenYhteystieto: !!yleinenYhteystieto,
+            elyOrganisaatio: elyOrganisaatio || null,
+            evkOrganisaatio: evkOrganisaatio || null,
+            organisaatio: organisaatio || "",
+          })
+        ) || [],
     }),
-    [projekti]
+    [kayttoOikeudet, projekti.oid, projekti.versio]
   );
 
   const formOptions: UseFormProps<FormValues> = {
@@ -130,10 +190,11 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             oid: formData.oid,
             versio: formData.versio,
             kayttoOikeudet: formData.kayttoOikeudet.map(
-              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
                 kayttajatunnus,
                 puhelinnumero,
                 elyOrganisaatio,
+                evkOrganisaatio,
                 tyyppi,
                 yleinenYhteystieto,
               })
@@ -160,6 +221,7 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti }: HenkilotFormP
             <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />
           )}
           <KayttoOikeusHallinta
+            initialKayttajat={initialKayttajat}
             disableFields={disableFormEdit}
             projektiKayttajat={projekti.kayttoOikeudet || []}
             suunnitteluSopimusYhteysHenkilo={projekti.suunnitteluSopimus?.yhteysHenkilo}

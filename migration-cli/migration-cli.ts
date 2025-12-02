@@ -7,13 +7,13 @@ const dotenv = require("dotenv");
 dotenv.config({ path: ".env.test" });
 dotenv.config({ path: ".env.local" });
 /* eslint-enable */
-import { importProjekti, TargetStatuses } from "../backend/src/migraatio/migration";
+import { importProjekti, Row, Tila } from "../backend/src/migraatio/migration";
 import AWSXRay from "aws-xray-sdk-core";
 import readXlsxFile from "read-excel-file/node";
 import yargs from "yargs";
 import * as sinon from "sinon";
 import { userService } from "../backend/src/user";
-import { NykyinenKayttaja, Status } from "../common/graphql/apiModel";
+import { NykyinenKayttaja } from "../common/graphql/apiModel";
 import dayjs from "dayjs";
 import tz from "dayjs/plugin/timezone";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -50,11 +50,11 @@ const schema = {
     type: Date,
   },
   ["1. Jatkopäätös asianumero"]: {
-    prop: "jatkopaatosAsianumero",
+    prop: "jatkopaatos1Asianumero",
     type: String,
   },
   ["1. Jatkopäätös päivämäärä"]: {
-    prop: "jatkopaatosPaivamaara",
+    prop: "jatkopaatos1Paivamaara",
     type: Date,
   },
 };
@@ -91,17 +91,8 @@ yargs
   .demandCommand(1)
   .help().argv;
 
-type Row = {
-  oid: string;
-  tila: TargetStatuses;
-  hyvaksymispaatosAsianumero?: string;
-  hyvaksymispaatosPaivamaara?: Date;
-  jatkopaatosAsianumero?: string;
-  jatkopaatosPaivamaara?: Date;
-};
-
-export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Status>> {
-  const result: Record<string, Status> = {};
+export async function importProjektis(fileName: string, sheetNum: number, overwrite?: boolean): Promise<Record<string, Tila>> {
+  const result: Record<string, Tila> = {};
   sinon.stub(userService, "identifyUser").resolves();
   const kayttaja: NykyinenKayttaja = {
     __typename: "NykyinenKayttaja",
@@ -117,31 +108,26 @@ export async function importProjektis(fileName: string, sheetNum: number, overwr
     process.exit(1);
   }
   for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    const oid = row.oid;
-    const targetStatus = row.tila;
-    if (oid && targetStatus) {
+    const rivi = rows[i];
+    const oid = rivi.oid;
+    const tila = rivi.tila;
+    if (oid && tila) {
       if (!overwrite) {
         const existing = await projektiDatabase.loadProjektiByOid(oid);
         if (existing) {
-          console.log(oid + " " + targetStatus + " on jo olemassa");
+          console.log(oid + " " + tila + " on jo olemassa");
           continue;
         }
       }
-      console.log(oid + " " + targetStatus + " luodaan");
+      console.log(oid + " " + tila + " luodaan");
       try {
         await importProjekti({
-          oid,
+          rivi,
           kayttaja,
-          targetStatus,
-          hyvaksymispaatosAsianumero: row.hyvaksymispaatosAsianumero,
-          hyvaksymispaatosPaivamaara: row.hyvaksymispaatosPaivamaara,
-          jatkopaatosAsianumero: row.jatkopaatosAsianumero,
-          jatkopaatosPaivamaara: row.jatkopaatosPaivamaara,
         });
-        result[oid] = targetStatus;
+        result[oid] = tila;
       } catch (e) {
-        console.log(oid + " " + targetStatus + " luonti epäonnistui", e);
+        console.log(oid + " " + tila + " luonti epäonnistui", e);
       }
     }
   }

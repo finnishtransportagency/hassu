@@ -1,9 +1,16 @@
 import { DBVaylaUser } from "../database/model";
 import { Kayttaja } from "hassu-common/graphql/apiModel";
 import merge from "lodash/merge";
-import { Person } from "./kayttajas";
+import { Kayttajas, Person } from "./kayttajas";
 import pickBy from "lodash/pickBy";
 import { log } from "../logger";
+
+export function mergeKayttajas(users: DBVaylaUser[], valtuusHallintaKayttajas: Kayttajas) {
+  return users.map<DBVaylaUser>((user) => {
+    const kayttaja = valtuusHallintaKayttajas.getKayttajaByUid(user.kayttajatunnus);
+    return (kayttaja && mergeKayttaja(user, kayttaja)) ?? user;
+  });
+}
 
 export function mergeKayttaja(user: Partial<DBVaylaUser>, account: Kayttaja): DBVaylaUser | undefined {
   const { organisaatio, email, etunimi, sukunimi } = account;

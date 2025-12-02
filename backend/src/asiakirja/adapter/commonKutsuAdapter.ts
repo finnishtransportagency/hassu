@@ -8,7 +8,14 @@ import {
   Velho,
   Yhteystieto,
 } from "../../database/model";
-import { ELY, EVK, KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import {
+  ELY,
+  Elinvoimakeskus,
+  KayttajaTyyppi,
+  Kieli,
+  ProjektiTyyppi,
+  SuunnittelustaVastaavaViranomainen,
+} from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -656,7 +663,7 @@ export class CommonKutsuAdapter {
   private getLocalizedOrganization(
     organisaatio: string | undefined,
     elyOrganisaatio: ELY | undefined,
-    evkOrganisaatio: EVK | undefined,
+    evkOrganisaatio: Elinvoimakeskus | undefined,
     kunta: number | null | undefined
   ) {
     let organisaatioTeksti = organisaatio ?? "";

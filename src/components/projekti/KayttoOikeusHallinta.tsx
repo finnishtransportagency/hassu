@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, FieldArrayWithId, useFieldArray, UseFieldArrayRemove, useFormContext } from "react-hook-form";
-import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
+import { ELY, Elinvoimakeskus, KayttajaTyyppi, ProjektiKayttaja, ProjektiKayttajaInput } from "@services/api";
 import Button from "@components/button/Button";
 import { maxPhoneLength } from "hassu-common/schema/puhelinNumero";
 import Section from "@components/layout/Section2";
@@ -29,13 +29,14 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { formatNimi } from "../../util/userUtil";
 import useApi from "src/hooks/useApi";
 import useTranslation from "next-translate/useTranslation";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { OhjelistaNotification } from "./common/OhjelistaNotification";
 import { H2, H3 } from "../Headings";
 import { queryMatchesWithFullname } from "common/henkiloSearch/queryMatchesWithFullname";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
+import { PotentiaalisestiPoistunutKayttaja } from "@pages/yllapito/projekti/[oid]/henkilot";
 
 export type ProjektiKayttajaFormValue = ProjektiKayttajaInput & { organisaatio?: string | null };
 
@@ -44,8 +45,6 @@ export type FormValues = {
   kayttoOikeudet: ProjektiKayttajaFormValue[];
   versio: number;
 };
-
-type PotentiaalisestiPoistunutKayttaja = Kayttaja & { poistunut?: boolean };
 
 interface Props {
   disableFields?: boolean;
@@ -64,55 +63,9 @@ const getDefaultKayttaja = (): ProjektiKayttajaFormValue => ({
   kayttajatunnus: "",
   organisaatio: "",
   elyOrganisaatio: undefined,
+  evkOrganisaatio: undefined,
   yleinenYhteystieto: false,
 });
-
-function KayttoOikeusHallinta(props: Props) {
-  const [initialKayttajat, setInitialKayttajat] = useState<PotentiaalisestiPoistunutKayttaja[]>();
-  const api = useApi();
-
-  useEffect(() => {
-    let mounted = true;
-    async function loadKayttajat(kayttajat: string[]): Promise<PotentiaalisestiPoistunutKayttaja[]> {
-      if (kayttajat.length === 0) {
-        return [];
-      }
-      return await api.listUsers({
-        kayttajatunnus: kayttajat,
-      });
-    }
-    const getInitialKayttajat = async () => {
-      const kayttajat = await loadKayttajat(props.projektiKayttajat.map((kayttaja) => kayttaja.kayttajatunnus));
-      const poistuneetKayttajat = props.projektiKayttajat
-        .filter((pk) => !kayttajat.some((k) => k.uid === pk.kayttajatunnus))
-        .map<PotentiaalisestiPoistunutKayttaja>(({ etunimi, sukunimi, email, kayttajatunnus, puhelinnumero, organisaatio }) => ({
-          __typename: "Kayttaja",
-          etunimi,
-          sukunimi,
-          email,
-          organisaatio,
-          puhelinnumero,
-          uid: kayttajatunnus,
-          poistunut: true,
-        }));
-      const kaikkiKayttajat = kayttajat.concat(poistuneetKayttajat);
-
-      if (mounted) {
-        setInitialKayttajat(kaikkiKayttajat);
-      }
-    };
-    getInitialKayttajat();
-    return () => {
-      mounted = false;
-    };
-  }, [api, props, props.projektiKayttajat]);
-
-  if (!initialKayttajat) {
-    return <></>;
-  }
-
-  return <KayttoOikeusHallintaFormElements {...props} initialKayttajat={initialKayttajat} />;
-}
 
 function KayttoOikeusHallintaFormElements({
   disableFields,
@@ -384,6 +337,8 @@ const UserFields = ({
                   setValue(`kayttoOikeudet.${index}.organisaatio`, newValue?.organisaatio ?? "");
                   if (!organisaatioIsEly(newValue?.organisaatio)) {
                     setValue(`kayttoOikeudet.${index}.elyOrganisaatio`, undefined);
+                  } else if (!organisaatioIsEvk(newValue?.organisaatio)) {
+                    setValue(`kayttoOikeudet.${index}.evkOrganisaatio`, undefined);
                   }
                   onChange(newValue?.uid || "");
                 }}
@@ -429,6 +384,38 @@ const UserFields = ({
                     {Object.values(ELY).map((ely) => (
                       <MenuItem value={ely} key={ely}>
                         {t(`ely_alue_genetiivi.${ely}`)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {fieldState.error?.message && <FormHelperText error>{fieldState.error.message}</FormHelperText>}
+                </FormControl>
+              )}
+            />
+          )}
+          {organisaatioIsEvk(kayttaja?.organisaatio) && (
+            <Controller
+              control={control}
+              name={`kayttoOikeudet.${index}.evkOrganisaatio`}
+              render={({ field: { value, onChange, ref, ...fieldProps }, fieldState }) => (
+                <FormControl fullWidth>
+                  <InputLabel>Elinvoimakeskus *</InputLabel>
+                  <Select
+                    // Value is always string in the Select component, but "" is undefined on the form
+                    value={value || ""}
+                    onChange={(event) => {
+                      const value = event.target.value || null;
+                      onChange(value);
+                    }}
+                    inputProps={fieldProps}
+                    inputRef={ref}
+                    label="Elinvoimakeskus *"
+                    error={!!fieldState.error}
+                    defaultValue={""}
+                  >
+                    <MenuItem value="">Valitse</MenuItem>
+                    {Object.values(Elinvoimakeskus).map((evk) => (
+                      <MenuItem value={evk} key={evk}>
+                        {t(`ely_alue_genetiivi.${evk}`)}
                       </MenuItem>
                     ))}
                   </Select>
@@ -565,4 +552,4 @@ function KayttajaPoistunutText(props: { muokattavissa: boolean; poistettavissa: 
   return <RedParagraph>{message}</RedParagraph>;
 }
 
-export default KayttoOikeusHallinta;
+export default KayttoOikeusHallintaFormElements;
