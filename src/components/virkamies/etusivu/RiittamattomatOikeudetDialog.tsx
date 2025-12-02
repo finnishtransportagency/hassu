@@ -7,6 +7,7 @@ import { ProjektiHakutulosDokumentti } from "@services/api";
 import { isDateTimeInThePast } from "backend/src/util/dateUtil";
 import { LinkProps } from "next/link";
 import React, { FunctionComponent, useCallback, useMemo } from "react";
+import { getVelhoUrl } from "src/util/velhoUtils";
 
 export const RiittamattomatOikeudetDialog: FunctionComponent<
   Omit<HassuDialogProps, "open"> & { projekti: ProjektiHakutulosDokumentti | null }
@@ -16,11 +17,10 @@ export const RiittamattomatOikeudetDialog: FunctionComponent<
   }, [props]);
 
   const velhoURL: string | undefined = useMemo(() => {
-    const baseUrl = process.env.NEXT_PUBLIC_VELHO_BASE_URL;
-    if (!baseUrl || !projekti) {
+    if (!projekti) {
       return undefined;
     }
-    return process.env.NEXT_PUBLIC_VELHO_BASE_URL + "/projektit/oid-" + projekti.oid;
+    return getVelhoUrl(projekti.oid);
   }, [projekti]);
 
   const julkinenURL: LinkProps["href"] | undefined = useMemo(() => {
