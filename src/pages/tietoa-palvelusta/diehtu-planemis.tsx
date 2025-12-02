@@ -1,6 +1,7 @@
 import ExternalLinkkiLista from "@components/kansalainen/tietoaPalvelusta/ExternalLinkkiLista";
 import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta/TietoaPalvelustaPageLayout";
 import ContentSpacer from "@components/layout/ContentSpacer";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import React from "react";
 
 export default function DiehtuPlanemisSivu() {
@@ -103,9 +104,9 @@ export default function DiehtuPlanemisSivu() {
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">Gulahussiiddut</h2>
           <p>
-            Stáhta johtalusfávlliid plánen –bálvalusa lassin dieđut almmustahtton gulahusain ja bovdehusain vuorrováikkuhussii leat
-            Fávledoaimmahaga, Ealáhus-, johtalus- ja birasguovddáža ja plánenguovllu gielddaid neahttasiidduin. Lassin dieđut gulahusain ja
-            bovdehusain vuorrováikkuhussii almmustahttojuvvojit maiddái ovtta dahje máŋgga plánenguovllus almmustuvvan bláđis.
+            {isEvkAktivoitu()
+              ? "Stáhta johtalusfávlliid plánen –bálvalusa lassin dieđut almmustahtton gulahusain ja bovdehusain vuorrováikkuhussii leat Fávledoaimmahaga, Eallinfápmoguovddáža ja plánenguovllu gielddaid neahttasiidduin. Lassin dieđut gulahusain ja bovdehusain vuorrováikkuhussii almmustahttojuvvojit maiddái ovtta dahje máŋgga plánenguovllus almmustuvvan bláđis."
+              : "Stáhta johtalusfávlliid plánen –bálvalusa lassin dieđut almmustahtton gulahusain ja bovdehusain vuorrováikkuhussii leat Fávledoaimmahaga, Ealáhus-, johtalus- ja birasguovddáža ja plánenguovllu gielddaid neahttasiidduin. Lassin dieđut gulahusain ja bovdehusain vuorrováikkuhussii almmustahttojuvvojit maiddái ovtta dahje máŋgga plánenguovllus almmustuvvan bláđis."}
           </p>
           <p>Liŋkkat plánas vástidan gulahussiidduide</p>
           <ExternalLinkkiLista
@@ -114,10 +115,15 @@ export default function DiehtuPlanemisSivu() {
                 href: "https://www.vayla.fi/tietoa-meista/ajankohtaista/kuulutukset",
                 teksti: "Fávledoaimmahaga gulahussiiddut",
               },
-              {
-                href: "https://www.ely-keskus.fi/kuulutukset",
-                teksti: "Guvllolaš ealáhus-, johtalus- ja birasguovddáža gulahussiiddut (olgguldas liŋka)",
-              },
+              isEvkAktivoitu()
+                ? {
+                    href: "https://www.elinvoimakeskus.fi/kuulutukset",
+                    teksti: "Guvllolaš Eallinfápmoguovddáža gulahussiiddut (olgguldas liŋka)",
+                  }
+                : {
+                    href: "https://www.ely-keskus.fi/kuulutukset",
+                    teksti: "Guvllolaš ealáhus-, johtalus- ja birasguovddáža gulahussiiddut (olgguldas liŋka)",
+                  },
             ]}
           />
         </ContentSpacer>

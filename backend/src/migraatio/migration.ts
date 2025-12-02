@@ -13,19 +13,37 @@ import {
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
 
-export type TargetStatuses = (typeof Status)["SUUNNITTELU" | "NAHTAVILLAOLO" | "HYVAKSYMISMENETTELYSSA" | "EPAAKTIIVINEN_1"];
+export const migraatioTilat = ["SUUNNITTELU", "NAHTAVILLAOLO", "HYVAKSYMISPAATOS", "JATKOPAATOS1", "JATKOPAATOS2"] as const;
+
+export type Tila = (typeof migraatioTilat)[number];
+
+export const projektiStatusAfterMigration: Record<Tila, Status> = {
+  SUUNNITTELU: Status.SUUNNITTELU,
+  NAHTAVILLAOLO: Status.NAHTAVILLAOLO,
+  HYVAKSYMISPAATOS: Status.HYVAKSYMISMENETTELYSSA,
+  JATKOPAATOS1: Status.EPAAKTIIVINEN_1,
+  JATKOPAATOS2: Status.EPAAKTIIVINEN_2,
+};
+
 export type ImportProjektiParams = {
-  oid: string;
   kayttaja: NykyinenKayttaja;
-  targetStatus: TargetStatuses;
+  rivi: Row;
+};
+
+export type Row = {
+  oid: string;
+  tila: Tila;
   hyvaksymispaatosAsianumero?: string;
   hyvaksymispaatosPaivamaara?: Date;
-  jatkopaatosAsianumero?: string;
-  jatkopaatosPaivamaara?: Date;
+  jatkopaatos1Asianumero?: string;
+  jatkopaatos1Paivamaara?: Date;
 };
 
 export async function importProjekti(params: ImportProjektiParams): Promise<void> {
-  const { oid, kayttaja, targetStatus } = params;
+  const {
+    kayttaja,
+    rivi: { oid, tila },
+  } = params;
   const { projekti } = await createProjektiFromVelho(oid, kayttaja);
   if (!projekti.velho) {
     throw new Error("Projektille ei saatu ladattua tietoja Projektivelhosta: " + oid);
@@ -43,7 +61,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   await projektiDatabase.createProjekti(projekti);
   log.info("Created projekti to Hassu");
 
-  const targetStatusRank = statusOrder(targetStatus);
+  const targetStatusRank = statusOrder(projektiStatusAfterMigration[tila]);
   if (targetStatusRank >= statusOrder(Status.SUUNNITTELU)) {
     const aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu = {
       kielitiedot,
@@ -84,7 +102,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   };
 
   if (targetStatusRank >= statusOrder(Status.EPAAKTIIVINEN_1)) {
-    const { hyvaksymispaatosAsianumero, hyvaksymispaatosPaivamaara } = params;
+    const { hyvaksymispaatosAsianumero, hyvaksymispaatosPaivamaara } = params.rivi;
     if (!hyvaksymispaatosAsianumero || !hyvaksymispaatosPaivamaara) {
       log.error("Hyväksymispäätös puuttuu!", { oid });
     }
@@ -110,8 +128,8 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   }
 
   if (targetStatusRank >= statusOrder(Status.EPAAKTIIVINEN_2)) {
-    const { jatkopaatosAsianumero, jatkopaatosPaivamaara } = params;
-    if (!jatkopaatosAsianumero || !jatkopaatosPaivamaara) {
+    const { jatkopaatos1Asianumero, jatkopaatos1Paivamaara } = params.rivi;
+    if (!jatkopaatos1Asianumero || !jatkopaatos1Paivamaara) {
       log.error("Jatkopäätös puuttuu!", { oid });
     }
     const jatkoPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
@@ -125,8 +143,8 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     };
     await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, jatkoPaatosVaiheJulkaisu);
     kasittelynTila.ensimmainenJatkopaatos = {
-      asianumero: jatkopaatosAsianumero,
-      paatoksenPvm: dayjs(jatkopaatosPaivamaara).format("YYYY-MM-DD"),
+      asianumero: jatkopaatos1Asianumero,
+      paatoksenPvm: dayjs(jatkopaatos1Paivamaara).format("YYYY-MM-DD"),
       aktiivinen: true,
     };
     await projektiDatabase.saveProjektiWithoutLocking({
