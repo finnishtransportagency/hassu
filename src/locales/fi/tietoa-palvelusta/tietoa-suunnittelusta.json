@@ -43,7 +43,8 @@
   },
   "kuulutussivut": {
     "otsikko": "Kuulutussivut",
-    "kappale1": "Valtion liikenneväylien suunnittelu -palvelun lisäksi tiedot julkaistuista kuulutuksista sekä kutsuista vuorovaikutukseen löytyvät Väyläviraston, Elinkeino-, liikenne- ja ympäristökeskuksen sekä suunnittelualueen kuntien verkkosivuilta. Lisäksi tiedot kuulutuksista sekä kutsuista vuorovaikutukseen julkaistaan myös yhdessä tai useammassa suunnittelualueella ilmestyvässä lehdessä.",
+    "kappale1_ely": "Valtion liikenneväylien suunnittelu -palvelun lisäksi tiedot julkaistuista kuulutuksista sekä kutsuista vuorovaikutukseen löytyvät Väyläviraston, Elinkeino-, liikenne- ja ympäristökeskuksen sekä suunnittelualueen kuntien verkkosivuilta. Lisäksi tiedot kuulutuksista sekä kutsuista vuorovaikutukseen julkaistaan myös yhdessä tai useammassa suunnittelualueella ilmestyvässä lehdessä.",
+    "kappale1": "Valtion liikenneväylien suunnittelu -palvelun lisäksi tiedot julkaistuista kuulutuksista sekä kutsuista vuorovaikutukseen löytyvät Väyläviraston, Elinvoimakeskuksen sekä suunnittelualueen kuntien verkkosivuilta. Lisäksi tiedot kuulutuksista sekä kutsuista vuorovaikutukseen julkaistaan myös yhdessä tai useammassa suunnittelualueella ilmestyvässä lehdessä.",
     "kappale2": "Linkit suunnittelusta vastaavien kuulutussivuille",
     "linkki1": {
       "teksti": "Väyläviraston kuulutussivut",

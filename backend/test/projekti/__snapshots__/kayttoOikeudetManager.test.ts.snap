@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`KayttoOikeudetManager should manager projekti users successfully 1`] = `
+exports[`KayttoOikeudetManager manages users correcly should handle adds and edits 1`] = `
 Array [
   Object {
     "email": "a1@vayla.fi",
@@ -42,12 +42,13 @@ Array [
 ]
 `;
 
-exports[`KayttoOikeudetManager should manager projekti users successfully 2`] = `
+exports[`KayttoOikeudetManager manages users correcly should handle adds and edits 2`] = `
 Array [
   Object {
     "elyOrganisaatio": undefined,
     "email": "a1@vayla.fi",
     "etunimi": "EtunimiA1",
+    "evkOrganisaatio": undefined,
     "kayttajatunnus": "A1",
     "muokattavissa": false,
     "organisaatio": "Väylävirasto",
@@ -60,6 +61,7 @@ Array [
     "elyOrganisaatio": undefined,
     "email": "a2@organisaatio.fi",
     "etunimi": "EtunimiA2",
+    "evkOrganisaatio": undefined,
     "kayttajatunnus": "A2",
     "muokattavissa": false,
     "organisaatio": "ELY",
@@ -91,6 +93,7 @@ Array [
     "elyOrganisaatio": undefined,
     "email": "a4@organisaatio.fi",
     "etunimi": "EtunimiA4",
+    "evkOrganisaatio": undefined,
     "kayttajatunnus": "A4",
     "muokattavissa": true,
     "organisaatio": "ELY",

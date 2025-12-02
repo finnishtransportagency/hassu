@@ -71,17 +71,11 @@ export class VelhoClient {
   }
 
   @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuKohdeluokatPost")
-  public async searchProjects(term: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
+  public async searchProjects(term: string): Promise<VelhoHakuTulos[]> {
     try {
       const hakuApi = await this.createHakuApi();
-      let searchClause;
-      if (requireExactMatch) {
-        searchClause = ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "nimi"], term];
-      } else {
-        // TODO: add kunta field into target field as well
-        searchClause = ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term];
-      }
-      const response = await hakuApi.hakupalveluApiV1HakuKohdeluokatPost({
+
+      const response = await hakuApi.hakupalveluApiV2HakuKohdeluokatPost({
         asetukset: {
           "palautettavat-kentat": [
             ["projekti/projekti", "oid"],
@@ -93,26 +87,21 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "asiatunnus-traficom"],
             ["projekti/projekti", "ominaisuudet", "tilaajaorganisaatio"],
           ],
-          tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.Kohdeluokkahaku,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as any]], // NOSONAR
+          tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.kohdeluokkahaku,
+          jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as unknown as object]],
         },
         lauseke: [
           "ja",
           ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"]],
           ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
-          searchClause,
+          ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term],
         ],
         kohdeluokat: ["projekti/projekti"],
       });
-      const data = response.data;
+      const data = response.data as { osumat: ProjektiSearchResult[]; osumia: number };
       const resultCount = data?.osumia || 0;
-      if (requireExactMatch) {
-        log.info(resultCount + " Velho search results for exact term: " + term);
-      } else {
-        log.info(resultCount + " Velho search results for term: " + term);
-      }
-      return adaptSearchResults(data.osumat as ProjektiSearchResult[], await personSearch.getKayttajas());
+      log.info(resultCount + " Velho search results for term: " + term);
+      return adaptSearchResults(data.osumat, await personSearch.getKayttajas());
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
     }
@@ -137,40 +126,16 @@ export class VelhoClient {
     }
   }
 
-  private aineistoHasMetatiedot<T extends Record<string, unknown>>(aineisto: T): aineisto is T & { metatiedot: Record<string, unknown> } {
-    return "metatiedot" in aineisto && typeof aineisto.metatiedot === "object" && aineisto.metatiedot != null;
-  }
-
   private getAineistoDokumenttityyppi(
     aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">
   ): string | null | undefined {
-    // Use the new schema as the source for the data.
-    if (typeof aineisto.ominaisuudet?.dokumenttityyppi === "string") {
-      return aineisto.ominaisuudet.dokumenttityyppi;
-    }
-
-    // Use the legacy metatiedot schema as a fallback source for the data.
-    if (this.aineistoHasMetatiedot(aineisto) && typeof aineisto.metatiedot.dokumenttityyppi === "string") {
-      return aineisto.metatiedot.dokumenttityyppi;
-    }
-
-    // No description found
-    return null;
+    const dokumenttityyppi = aineisto.ominaisuudet?.dokumenttityyppi;
+    return typeof dokumenttityyppi === "string" ? dokumenttityyppi : null;
   }
 
   private getAineistoKuvaus(aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">): string | null | undefined {
-    // Use the new schema as the source for the data.
-    if (typeof aineisto.ominaisuudet?.kuvaus === "string") {
-      return aineisto.ominaisuudet.kuvaus;
-    }
-
-    // Use the legacy metatiedot schema as a fallback source for the data.
-    if (this.aineistoHasMetatiedot(aineisto) && typeof aineisto.metatiedot.kuvaus === "string") {
-      return aineisto.metatiedot.kuvaus;
-    }
-
-    // No kuvaus found
-    return null;
+    const kuvaus = aineisto.ominaisuudet?.kuvaus;
+    return typeof kuvaus === "string" ? kuvaus : null;
   }
 
   public async loadProjektiAineistot(oid: string): Promise<VelhoToimeksianto[]> {
@@ -209,14 +174,30 @@ export class VelhoClient {
     }
   }
 
-  @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV1HakuAineistotLinkitOidGet")
+  @recordVelhoLatencyDecorator(VelhoApiName.hakuApi, "hakupalveluApiV2HakuKohdeluokatPost")
   private async haeToimeksiannonAineistot(
     hakuApi: HakuPalvelu.HakuApi,
     toimeksianto: ProjektiToimeksiannotInner
-  ): Promise<AineistoPalvelu.AineistoAineisto[]> {
+  ): Promise<Pick<AineistoPalvelu.AineistoAineisto, "oid" | "tuorein-versio" | "ominaisuudet">[]> {
     try {
-      const aineistotResponse = await hakuApi.hakupalveluApiV1HakuAineistotLinkitOidGet(toimeksianto.oid);
-      return aineistotResponse.data as AineistoPalvelu.AineistoAineisto[];
+      const hakulausekeKysely: HakuPalvelu.HakulausekeKysely = {
+        asetukset: {
+          tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.kohdeluokkahaku,
+          jarjesta: [[["aineisto/aineisto", "ominaisuudet", "nimi"], "nouseva" as unknown as object]],
+          "palautettavat-kentat": [
+            ["aineisto/aineisto", "oid"],
+            ["aineisto/aineisto", "tuorein-versio"],
+            ["aineisto/aineisto", "ominaisuudet"],
+          ],
+        },
+        lauseke: ["joukossa", ["aineisto/aineisto", "linkit"], [toimeksianto.oid]],
+        kohdeluokat: ["aineisto/aineisto"],
+      };
+      const aineistotResponse = await hakuApi.hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely);
+      const data = aineistotResponse.data as {
+        osumat: Pick<AineistoPalvelu.AineistoAineisto, "oid" | "tuorein-versio" | "ominaisuudet">[];
+      };
+      return data.osumat;
     } catch (e) {
       throw this.checkVelhoError(e as Error);
     }
@@ -324,10 +305,6 @@ export class VelhoClient {
   private async createProjektiRekisteriApi() {
     return new ProjektiRekisteri.ProjektiApi(new ProjektiRekisteri.Configuration(await this.getVelhoApiConfiguration()));
   }
-
-  // private async createAineistoApi() {
-  //   return new AineistoPalvelu.AineistoApi(new AineistoPalvelu.Configuration(await this.getVelhoApiConfiguration()));
-  // }
 
   private async createDokumenttiApi() {
     const baseConfig = await this.getVelhoApiConfiguration();
