@@ -15,6 +15,8 @@ import { tilaSiirtymaTyyppiToVaiheMap } from "src/util/tilaSiirtymaTyyppiToVaihe
 import { isAsianhallintaVaarassaTilassa } from "src/util/asianhallintaVaarassaTilassa";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
 import capitalize from "lodash/capitalize";
+import { isEvkJulkaisuEstetty } from "hassu-common/util/isEvkJulkaisuEstetty";
+import { isElyJulkaisuEstetty } from "common/util/isElyJulkaisuEstetty";
 
 type Props = {
   projekti: ProjektiLisatiedolla;
@@ -54,6 +56,12 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
     }
     if (asianhallintaVaaraTila) {
       puutteet.push("asianhallinta on väärässä tilassa");
+    }
+    if (julkaisu.kuulutusPaiva && isElyJulkaisuEstetty(projekti, julkaisu.kuulutusPaiva)) {
+      puutteet.push("ELY-keskuksien julkaisut on estetty");
+    }
+    if (julkaisu.kuulutusPaiva && isEvkJulkaisuEstetty(projekti, julkaisu.kuulutusPaiva)) {
+      puutteet.push("integraatio Elinvoimakeskuksen asianhallintaan ei käytettävissä");
     }
 
     const isValid = await yup

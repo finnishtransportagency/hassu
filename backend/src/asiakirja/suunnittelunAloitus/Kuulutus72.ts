@@ -134,6 +134,11 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       : "https://www.elinvoimakeskus.fi/kuulutukset";
   }
 
+  protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {
+    if (this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle) {
+      return this.localizedParagraphFromMap(this.hyvaksymisPaatosVaihe.uudelleenKuulutus?.selosteKuulutukselle);
+    }
+  }
   protected addContent(): void {
     const elements: PDFKit.PDFStructureElementChild[] = [
       this.headerElement(this.header),
@@ -151,6 +156,7 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private paragraphs(): PDFStructureElement[] {
     return [
       this.headerElement(this.kutsuAdapter.title, false),
+      this.uudelleenKuulutusParagraph(),
       this.pluralParagraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.lausunnonantajille_kappale1"),
       this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale2"),
       this.paragraphFromKey("asiakirja.jatkopaatoksesta_ilmoittaminen.kappale3"),
@@ -158,6 +164,6 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),
-    ];
+    ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 }
