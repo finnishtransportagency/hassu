@@ -24,7 +24,7 @@ describe("defaultVastaanottajat", () => {
     { nimi: IlmoitettavaViranomainen.LOUNAIS_SUOMEN_EVK, sahkoposti: "lounais-suomi@lounais-suomi.ely.fi", __typename: "KirjaamoOsoite" },
   ];
 
-  describe("finds recipients for new project (no existing data) when ELY is responsible", () => {
+  describe("finds ELY recipients for new project (no existing data) when Väylävirasto is responsible", () => {
     beforeEach(() => {
       jest.spyOn(isEvkUtil, "isEvkAktivoitu").mockReturnValue(false);
     });
@@ -35,7 +35,7 @@ describe("defaultVastaanottajat", () => {
       const projekti: Partial<Projekti> = {
         velho: {
           kunnat: [helsinkiKuntaId],
-          suunnittelustaVastaavaViranomainen: viranomainen,
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           __typename: "Velho",
         },
       };
@@ -57,11 +57,10 @@ describe("defaultVastaanottajat", () => {
       const poriKuntaId = 609;
       const kunnat = [helsinkiKuntaId, tampereKuntaId, poriKuntaId];
 
-      const viranomainen = SuunnittelustaVastaavaViranomainen.LAPIN_ELY;
       const projekti: Partial<Projekti> = {
         velho: {
           kunnat,
-          suunnittelustaVastaavaViranomainen: viranomainen,
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           __typename: "Velho",
         },
       };
@@ -90,11 +89,10 @@ describe("defaultVastaanottajat", () => {
       const poriKuntaId = 609;
       const kunnat = [helsinkiKuntaId, vantaaKuntaId, poriKuntaId];
 
-      const viranomainen = SuunnittelustaVastaavaViranomainen.LAPIN_ELY;
       const projekti: Partial<Projekti> = {
         velho: {
           kunnat,
-          suunnittelustaVastaavaViranomainen: viranomainen,
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           __typename: "Velho",
         },
       };
@@ -114,7 +112,7 @@ describe("defaultVastaanottajat", () => {
     });
   });
 
-  describe("finds recipients for new project (no existing data) when EVK is responsible", () => {
+  describe("finds Elinvoimakeskus recipients for new project (no existing data) when Väylävirasto is responsible", () => {
     beforeEach(() => {
       jest.spyOn(isEvkUtil, "isEvkAktivoitu").mockReturnValue(true);
     });
@@ -125,7 +123,7 @@ describe("defaultVastaanottajat", () => {
       const projekti: Partial<Projekti> = {
         velho: {
           kunnat: [helsinkiKuntaId],
-          suunnittelustaVastaavaViranomainen: viranomainen,
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           __typename: "Velho",
         },
       };
@@ -147,11 +145,10 @@ describe("defaultVastaanottajat", () => {
       const poriKuntaId = 609;
       const kunnat = [helsinkiKuntaId, tampereKuntaId, poriKuntaId];
 
-      const eiKunnanViranomainen = SuunnittelustaVastaavaViranomainen.LAPIN_EVK;
       const projekti: Partial<Projekti> = {
         velho: {
           kunnat,
-          suunnittelustaVastaavaViranomainen: eiKunnanViranomainen,
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           __typename: "Velho",
         },
       };
@@ -180,11 +177,10 @@ describe("defaultVastaanottajat", () => {
       const poriKuntaId = 609;
       const kunnat = [helsinkiKuntaId, vantaaKuntaId, poriKuntaId];
 
-      const eiKunnanViranomainen = SuunnittelustaVastaavaViranomainen.LAPIN_EVK;
       const projekti: Partial<Projekti> = {
         velho: {
           kunnat,
-          suunnittelustaVastaavaViranomainen: eiKunnanViranomainen,
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
           __typename: "Velho",
         },
       };
@@ -204,12 +200,18 @@ describe("defaultVastaanottajat", () => {
     });
   });
 
-  describe("finds recipients for new project (no existing data) when VAYLAVIRASTO is responsible", () => {
-    it("should return Väylä as only authority when EVK is not active", () => {
+  describe("finds recipients for new project (no existing data) when ELY / EVK is responsible", () => {
+    it("should return Vaylavirasto as only authority when EVK is not active", () => {
+      const poriKuntaId = 609;
+
       jest.spyOn(isEvkUtil, "isEvkAktivoitu").mockReturnValue(false);
 
       const projekti: Partial<Projekti> = {
-        velho: { suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, __typename: "Velho" },
+        velho: {
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VARSINAIS_SUOMEN_ELY,
+          __typename: "Velho",
+          kunnat: [poriKuntaId],
+        },
       };
 
       const result = defaultVastaanottajat(projekti as Projekti, null, kirjaamot, null);
@@ -217,11 +219,17 @@ describe("defaultVastaanottajat", () => {
       expect(result.viranomaiset).toEqual([{ nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "vayla@kirjaamo.fi" }]);
     });
 
-    it("should return Väylä as only authority when EVK is active", () => {
+    it("should return Vaylavirasto as only authority when EVK is active", () => {
+      const poriKuntaId = 609;
+
       jest.spyOn(isEvkUtil, "isEvkAktivoitu").mockReturnValue(true);
 
       const projekti: Partial<Projekti> = {
-        velho: { suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO, __typename: "Velho" },
+        velho: {
+          suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.LOUNAIS_SUOMEN_EVK,
+          __typename: "Velho",
+          kunnat: [poriKuntaId],
+        },
       };
 
       const result = defaultVastaanottajat(projekti as Projekti, null, kirjaamot, null);
@@ -261,7 +269,10 @@ describe("defaultVastaanottajat", () => {
     const result = defaultVastaanottajat(projekti as Projekti, null, kirjaamot, null);
     // Expect to only have Satakunnan ELY from previous phase
     expect(result.viranomaiset).toEqual([{ nimi: viranomainen, sahkoposti: viranomainenEmail }]);
-    expect(result.kunnat).toEqual([{ id: hameenlinnaId, sahkoposti: oldHameenlinnaEmail }, { id: helsinkiKuntaId, sahkoposti: oldHelsinkiEmail }]);
+    expect(result.kunnat).toEqual([
+      { id: hameenlinnaId, sahkoposti: oldHameenlinnaEmail },
+      { id: helsinkiKuntaId, sahkoposti: oldHelsinkiEmail },
+    ]);
   });
 
   it("should not include maakunnat for hyväksymispäätös", () => {
