@@ -247,20 +247,24 @@ function FooterKansalaisContent() {
             ))}
           </SocialMediaLinkList>
         </ContentSpacer>
-        <ContentSpacer gap={4}>
-          <p>{t("sosiaalinen_media.ely.otsikko")}</p>
-          <SocialMediaLinkList>
-            {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
-              <SocialMediaLink
-                key={title}
-                title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
-                  lang == "fi" ? titleIllatiivi : title
-                }`}
-                {...socialMedia}
-              />
-            ))}
-          </SocialMediaLinkList>
-        </ContentSpacer>
+        {isEvkAktivoitu() ? (
+          <>{/* Lisää Elinvoimakeskusten Somet */}</>
+        ) : (
+          <ContentSpacer gap={4}>
+            <p>{t("sosiaalinen_media.ely.otsikko")}</p>
+            <SocialMediaLinkList>
+              {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+                <SocialMediaLink
+                  key={title}
+                  title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
+                    lang == "fi" ? titleIllatiivi : title
+                  }`}
+                  {...socialMedia}
+                />
+              ))}
+            </SocialMediaLinkList>
+          </ContentSpacer>
+        )}
       </ContentSpacer>
       <Linkkilista2>
         <li>

@@ -37,6 +37,7 @@ import { H2, H3 } from "../Headings";
 import { queryMatchesWithFullname } from "common/henkiloSearch/queryMatchesWithFullname";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 import { PotentiaalisestiPoistunutKayttaja } from "@pages/yllapito/projekti/[oid]/henkilot";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 export type ProjektiKayttajaFormValue = ProjektiKayttajaInput & { organisaatio?: string | null };
 
@@ -134,9 +135,10 @@ function KayttoOikeusHallintaFormElements({
         </li>
         {projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
           <li>
-            Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai ELY-keskuksen palveluksessa oleva (tunnus
-            muotoa L tai A). Projektipäälliköllä ja varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja
-            muokkausoikeudet. Jos et saa asetettua haluamaasi henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
+            Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai{" "}
+            {isEvkAktivoitu() ? "Elinvoimakeskuksen" : "ELY-keskuksen"} palveluksessa oleva (tunnus muotoa L tai A). Projektipäälliköllä ja
+            varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja muokkausoikeudet. Jos et saa asetettua haluamaasi
+            henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
           </li>
         ) : (
           <li>
