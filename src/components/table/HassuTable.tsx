@@ -208,7 +208,12 @@ export function BodyContent<T>(
 
   return (
     <TbodyWrapper ref={props?.parentRef} sx={props.tableSx}>
-      <Tbody sx={props?.bodySx} ref={dropRef}>
+      <Tbody
+        sx={props?.bodySx}
+        ref={(node) => {
+          if (node && dropRef) dropRef(node);
+        }}
+      >
         {rows.map((row) => (
           <BasicRow
             gridTemplateColumns={props.gridTemplateColumns}
@@ -434,7 +439,9 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
               gridTemplateColumns,
               opacity: isDragging ? 0 : 1,
             }}
-            ref={dropRef}
+            ref={(node) => {
+              if (node && dropRef) dropRef(node);
+            }}
           >
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>
