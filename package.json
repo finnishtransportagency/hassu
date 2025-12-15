@@ -60,7 +60,6 @@
     "country-code-lookup": "0.1.2",
     "cross-fetch": "^4.0.0",
     "dayjs": "~1.10.7",
-    "esbuild": "^0.12.29",
     "form-data": "^4.0.0",
     "graphql": "^16.9.0",
     "hassu-common": "file:common",
