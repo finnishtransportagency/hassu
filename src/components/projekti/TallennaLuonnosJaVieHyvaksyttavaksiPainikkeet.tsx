@@ -19,7 +19,6 @@ import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
-import { isEvkJulkaisuEstetty } from "hassu-common/util/isEvkJulkaisuEstetty";
 import { isElyJulkaisuEstetty } from "common/util/isElyJulkaisuEstetty";
 
 type Props<TFieldValues extends FieldValues> = {
@@ -100,9 +99,6 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             const formDataField = tilasiirtymaToFormFieldMap[tilasiirtymaTyyppi];
             if (isElyJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
               puutteet.push("ELY-keskuksien julkaisut on estetty");
-            }
-            if (isEvkJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
-              puutteet.push("integraatio Elinvoimakeskuksen asianhallintaan ei käytettävissä");
             }
             if (
               data?.suomifiViestitEnabled &&
