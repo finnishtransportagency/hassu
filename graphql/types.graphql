@@ -1455,6 +1455,7 @@ type EnnakkoNeuvottelunAineistot {
   maanomistajaluettelo: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
+  linkitetynProjektinAineisto: [LadattavaTiedosto!]
   aineistopaketti: String
 }
 
