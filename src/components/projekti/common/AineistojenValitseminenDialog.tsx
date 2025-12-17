@@ -17,15 +17,21 @@ import { byteFileSizeToHumanString } from "common/util/byteFileSizeToHumanString
 type Props = {
   infoText?: string | undefined;
   onSubmit: (aineistot: VelhoAineisto[]) => void;
+  linkitetynProjektinAineisto?: boolean;
 } & Required<Pick<DialogProps, "onClose" | "open">>;
 
-export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...muiDialogProps }: Props) {
+export default function AineistojenValitseminenDialog({ onSubmit, infoText, linkitetynProjektinAineisto, ...muiDialogProps }: Props) {
   const { onClose, open } = muiDialogProps;
   const { data: projekti } = useProjekti();
   const [fetchedToimeksiannot, setFetchedToimeksiannot] = useState<VelhoToimeksianto[]>();
   const [selectedAineistot, setSelectedAineisto] = useState<Record<string, RowSelectionState>>({});
 
   const { withLoadingSpinner, isLoading } = useLoadingSpinner();
+
+  const linkitetytVelhoProjektit = useMemo(() => {
+    if (!linkitetynProjektinAineisto) return false;
+    return projekti?.velho.linkitetytProjektit?.map((t) => t.oid);
+  }, [linkitetynProjektinAineisto, projekti?.velho.linkitetytProjektit]);
 
   const flatAineistot = useMemo<VelhoAineisto[]>(
     () =>
@@ -38,9 +44,11 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
   const api = useApi();
 
   useEffect(() => {
-    if (projekti && open) {
-      const haeAineistotDialogiin = async () => {
-        try {
+    if (!open) return;
+
+    const haeAineistotDialogiin = async () => {
+      try {
+        if (projekti && !linkitetytVelhoProjektit) {
           const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(projekti.oid);
           setFetchedToimeksiannot(velhoToimeksiannot);
           const initialSelectedStates = velhoToimeksiannot.reduce<Record<string, RowSelectionState>>(
@@ -57,14 +65,36 @@ export default function AineistojenValitseminenDialog({ onSubmit, infoText, ...m
             {}
           );
           setSelectedAineisto(initialSelectedStates);
-        } catch {
-          // Maybe custom error?
-          setFetchedToimeksiannot([]);
+        } else if (projekti && linkitetytVelhoProjektit && linkitetytVelhoProjektit.length > 0) {
+          const linkitetynProjektinAineistot = [];
+          for (const linkitettyProjekti of linkitetytVelhoProjektit) {
+            const velhoToimeksiannot = await api.listaaVelhoProjektiAineistot(linkitettyProjekti);
+            linkitetynProjektinAineistot.push(...velhoToimeksiannot);
+          }
+          setFetchedToimeksiannot(linkitetynProjektinAineistot);
+
+          const initialSelectedStates = linkitetynProjektinAineistot.reduce<Record<string, RowSelectionState>>(
+            (stateToimeksiannoittain, toimeksianto) => {
+              stateToimeksiannoittain[toimeksianto.oid] = toimeksianto.aineistot.reduce<RowSelectionState>(
+                (toimeksiantoState, aineisto) => {
+                  toimeksiantoState[aineisto.oid] = false;
+                  return toimeksiantoState;
+                },
+                {}
+              );
+              return stateToimeksiannoittain;
+            },
+            {}
+          );
+          setSelectedAineisto(initialSelectedStates);
         }
-      };
-      withLoadingSpinner(haeAineistotDialogiin());
-    }
-  }, [projekti, open, api, withLoadingSpinner]);
+      } catch {
+        // Maybe custom error?
+        setFetchedToimeksiannot([]);
+      }
+    };
+    withLoadingSpinner(haeAineistotDialogiin());
+  }, [projekti, linkitetytVelhoProjektit, open, api]);
 
   const scrollElement = useRef<HTMLDivElement>(null);
 
