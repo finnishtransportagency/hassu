@@ -47,6 +47,7 @@ type ProjektinAineistot = {
   kuulutuksetJaKutsu: FileInfo[];
   muutAineistot: FileInfo[];
   maanomistajaluettelo: FileInfo[];
+  linkitetynProjektinAineisto: FileInfo[];
 };
 
 /**
@@ -137,6 +138,24 @@ export default function collectHyvaksymisEsitysAineistot(
       valmis: aineistoNewIsReady(aineisto, aineistoHandledAt),
     };
   });
+  const linkitetynProjektinAineisto = (hyvaksymisEsitys?.linkitetynProjektinAineisto ?? []).map<FileInfo>((aineisto) => {
+    const kategoriaFolder = getZipFolder(aineisto.kategoriaId, projekti.velho?.tyyppi) ?? "Kategorisoimattomat";
+    //lisätään päätasoon suluissa oleva suffix
+    //Selostusosa (A/100)
+    //Pääpiirustukset (B/200)
+    //Informatiivinen aineisto (C/300)
+    return {
+      s3Key: joinPath(path, "linkitetynProjektinAineisto", adaptFileName(aineisto.nimi)),
+      zipFolder: kategoriaFolder
+        .replace("Selostusosa", "Selostusosa (A\u29F8100)")
+        .replace("Pääpiirustukset", "Pääpiirustukset (B\u29F8200)")
+        .replace("Informatiivinen aineisto", "Informatiivinen aineisto (C\u29F8300)"),
+      nimi: aineisto.nimi,
+      tuotu: aineisto.lisatty,
+      kategoriaId: aineisto.kategoriaId,
+      valmis: aineistoNewIsReady(aineisto, aineistoHandledAt),
+    };
+  });
   const kuntaMuistutukset = (hyvaksymisEsitys?.muistutukset ?? []).map((tiedosto) => {
     const kunta = kuntametadata.kuntaForKuntaId(tiedosto.kunta);
     assertIsDefined(kunta, `Kuntaa id:llä ${tiedosto.kunta} ei löytynyt kuntametadatasta`);
@@ -184,6 +203,7 @@ export default function collectHyvaksymisEsitysAineistot(
     kuulutuksetJaKutsu,
     muutAineistot,
     suunnitelma,
+    linkitetynProjektinAineisto,
     kuntaMuistutukset,
     maanomistajaluettelo,
     lausunnot,
