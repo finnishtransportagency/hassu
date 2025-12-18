@@ -140,16 +140,13 @@ export default function collectHyvaksymisEsitysAineistot(
   });
   const linkitetynProjektinAineisto = (hyvaksymisEsitys?.linkitetynProjektinAineisto ?? []).map<FileInfo>((aineisto) => {
     const kategoriaFolder = getZipFolder(aineisto.kategoriaId, projekti.velho?.tyyppi) ?? "Kategorisoimattomat";
-    //lisätään päätasoon suluissa oleva suffix
-    //Selostusosa (A/100)
-    //Pääpiirustukset (B/200)
-    //Informatiivinen aineisto (C/300)
+    const liittyvanSuunnitelmanKategoriaKansiot = kategoriaFolder
+      .replace("Selostusosa", "Selostusosa (A\u29F8100)")
+      .replace("Pääpiirustukset", "Pääpiirustukset (B\u29F8200)")
+      .replace("Informatiivinen aineisto", "Informatiivinen aineisto (C\u29F8300)");
     return {
       s3Key: joinPath(path, "linkitetynProjektinAineisto", adaptFileName(aineisto.nimi)),
-      zipFolder: kategoriaFolder
-        .replace("Selostusosa", "Selostusosa (A\u29F8100)")
-        .replace("Pääpiirustukset", "Pääpiirustukset (B\u29F8200)")
-        .replace("Informatiivinen aineisto", "Informatiivinen aineisto (C\u29F8300)"),
+      zipFolder: `Liittyvä suunnitelma/${liittyvanSuunnitelmanKategoriaKansiot})`,
       nimi: aineisto.nimi,
       tuotu: aineisto.lisatty,
       kategoriaId: aineisto.kategoriaId,
