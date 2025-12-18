@@ -138,7 +138,7 @@ function KayttoOikeusHallintaFormElements({
         {projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
           <li>
             Projektipäällikön varahenkilöksi voidaan asettaa henkilö, joka on Väyläviraston tai{" "}
-            {isEvkActive ? "Elinvoimakeskuksen" : "ELY-keskuksen"} palveluksessa oleva (tunnus muotoa L tai A). Projektipäälliköllä ja
+            {isEvkActive ? "elinvoimakeskuksen" : "ELY-keskuksen"} palveluksessa oleva (tunnus muotoa L tai A). Projektipäälliköllä ja
             varahenkilöllä / -henkilöillä on muita henkilöitä laajemmat katselu- ja muokkausoikeudet. Jos et saa asetettua haluamaasi
             henkilöä varahenkilöksi, ota yhteys pääkäyttäjään.
           </li>
