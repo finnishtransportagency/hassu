@@ -14,7 +14,7 @@
     "constructs": "^10.4.2",
     "inquirer": "^8.2.6",
     "node-fetch": "^2.7.0",
-    "semantic-release": "^22.0.6"
+    "semantic-release": "^23.1.1"
   },
   "overrides": {
     "next": "12.3.4",
