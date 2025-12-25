@@ -12,6 +12,7 @@ export interface IEnnakkoNeuvottelu {
   kuulutuksetJaKutsu?: Array<LadattuTiedostoNew> | null;
   muuAineistoVelhosta?: Array<AineistoNew> | null;
   muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
+  linkitetynProjektinAineisto?: Array<AineistoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;
 }
@@ -50,6 +51,7 @@ const muistutuksetKey: keyof IHyvaksymisEsitys = "muistutukset";
 const muuAineistoKoneeltaKey: keyof IHyvaksymisEsitys = "muuAineistoKoneelta";
 const muuAineistoVelhostaKey: keyof IHyvaksymisEsitys = "muuAineistoVelhosta";
 const suunnitelmaKey: keyof IHyvaksymisEsitys = "suunnitelma";
+const linkitetynProjektinAineistoKey: keyof IHyvaksymisEsitys = "linkitetynProjektinAineisto";
 
 export const HYVAKSYMISESITYS_TIEDOSTO_KEYS = [
   hyvaksymisEsitysKey,
@@ -60,6 +62,7 @@ export const HYVAKSYMISESITYS_TIEDOSTO_KEYS = [
   muuAineistoKoneeltaKey,
   muuAineistoVelhostaKey,
   suunnitelmaKey,
+  linkitetynProjektinAineistoKey,
 ] as const;
 
 type HyvaksymisesitysTiedostoKeyTuple = typeof HYVAKSYMISESITYS_TIEDOSTO_KEYS;

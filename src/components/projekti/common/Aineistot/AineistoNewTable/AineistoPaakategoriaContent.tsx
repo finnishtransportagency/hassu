@@ -2,6 +2,8 @@ import { AineistoKategoria, AineistoKategoriat } from "common/aineistoKategoriat
 import { useFormContext } from "react-hook-form";
 import { AineistoAlakategoriaAccordion, AineistoTable } from ".";
 import { EnnakkoneuvotteluForm, HyvaksymisEsitysForm } from "@components/HyvaksymisEsitys/hyvaksymisEsitysFormUtil";
+import { AineistoLinkitettyProjektiTable } from "./AineistoLinkitettyProjektiTable";
+import { AineistoLinkitettyProjektiAlakategoria } from "./AineistoLinkitettyProjektiAlakategoria";
 
 const kategoriaInfoText: Record<string, string> = {
   osa_a: "Selostusosan alle tuodaan A- tai T100 -kansioiden aineistot.",
@@ -16,33 +18,55 @@ interface SuunnitelmaAineistoPaakategoriaContentProps {
   paakategoria: AineistoKategoria;
   expandedAineistoState: [React.Key[], React.Dispatch<React.Key[]>];
   ennakkoneuvottelu?: boolean;
+  linkitetynProjektinAineisto?: boolean;
 }
 
 export function SuunnitelmaAineistoPaakategoriaContent(props: Readonly<SuunnitelmaAineistoPaakategoriaContentProps>) {
   const { watch } = useFormContext<HyvaksymisEsitysForm & EnnakkoneuvotteluForm>();
 
   const paaKategoriaAineisto = watch(
-    `${props.ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.suunnitelma.${props.paakategoria.id}`
+    `${props.ennakkoneuvottelu ? "ennakkoNeuvottelu" : "muokattavaHyvaksymisEsitys"}.${
+      props.linkitetynProjektinAineisto ? "linkitetynProjektinAineisto" : "suunnitelma"
+    }.${props.paakategoria.id}`
   );
+
+  const linkitettyAineisto = props.linkitetynProjektinAineisto;
 
   return (
     <>
       <p>{kategoriaInfoText[props.paakategoria.id]}</p>
-      {!!paaKategoriaAineisto?.length && (
-        <AineistoTable
-          aineistoKategoriat={props.aineistoKategoriat}
-          kategoriaId={props.paakategoria.id}
-          ennakkoneuvottelu={props.ennakkoneuvottelu}
-        />
-      )}
-      {props.paakategoria.alaKategoriat && (
-        <AineistoAlakategoriaAccordion
-          aineistoKategoriat={props.aineistoKategoriat}
-          alakategoriat={props.paakategoria.alaKategoriat}
-          expandedAineistoState={props.expandedAineistoState}
-          ennakkoneuvottelu={props.ennakkoneuvottelu}
-        />
-      )}
+      {linkitettyAineisto
+        ? !!paaKategoriaAineisto?.length && (
+            <AineistoLinkitettyProjektiTable
+              aineistoKategoriat={props.aineistoKategoriat}
+              kategoriaId={props.paakategoria.id}
+              ennakkoneuvottelu={props.ennakkoneuvottelu}
+            />
+          )
+        : !!paaKategoriaAineisto?.length && (
+            <AineistoTable
+              aineistoKategoriat={props.aineistoKategoriat}
+              kategoriaId={props.paakategoria.id}
+              ennakkoneuvottelu={props.ennakkoneuvottelu}
+            />
+          )}
+      {linkitettyAineisto
+        ? props.paakategoria.alaKategoriat && (
+            <AineistoLinkitettyProjektiAlakategoria
+              aineistoKategoriat={props.aineistoKategoriat}
+              alakategoriat={props.paakategoria.alaKategoriat}
+              expandedAineistoState={props.expandedAineistoState}
+              ennakkoneuvottelu={props.ennakkoneuvottelu}
+            />
+          )
+        : props.paakategoria.alaKategoriat && (
+            <AineistoAlakategoriaAccordion
+              aineistoKategoriat={props.aineistoKategoriat}
+              alakategoriat={props.paakategoria.alaKategoriat}
+              expandedAineistoState={props.expandedAineistoState}
+              ennakkoneuvottelu={props.ennakkoneuvottelu}
+            />
+          )}
     </>
   );
 }

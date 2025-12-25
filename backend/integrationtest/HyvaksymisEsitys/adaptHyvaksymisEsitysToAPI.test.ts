@@ -218,6 +218,7 @@ describe("adaptHyvaksymisEsitysToApi", () => {
           tiedosto: "yllapito/tiedostot/projekti/1/muokattava_hyvaksymisesitys/lausunnot/lausunnot_aoa_.png",
         },
       ],
+      linkitetynProjektinAineisto: undefined,
       kuulutuksetJaKutsu: [
         {
           __typename: "LadattuTiedostoNew",

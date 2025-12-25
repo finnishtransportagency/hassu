@@ -33,6 +33,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     poisValitutMaanomistajaluettelot,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
+    linkitetynProjektinAineisto,
     maanomistajaluettelo,
     vastaanottajat,
     hyvaksymisEsitys,
@@ -48,6 +49,7 @@ export function adaptEnnakkoNeuvotteluToSave(
     muuAineistoVelhosta: adaptAineistotToSave(dbEnnakkoNeuvottelu?.muuAineistoVelhosta, muuAineistoVelhosta),
     muuAineistoKoneelta: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.muuAineistoKoneelta, muuAineistoKoneelta),
     maanomistajaluettelo: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.maanomistajaluettelo, maanomistajaluettelo),
+    linkitetynProjektinAineisto: adaptAineistotToSave(dbEnnakkoNeuvottelu?.linkitetynProjektinAineisto, linkitetynProjektinAineisto),
     vastaanottajat: adaptVastaanottajatToSave(vastaanottajat),
     muokkaaja: nykyinenKayttaja.uid,
     hyvaksymisEsitys: adaptLadatutTiedostotToSave(dbEnnakkoNeuvottelu?.hyvaksymisEsitys, hyvaksymisEsitys),
@@ -100,6 +102,11 @@ export async function adaptEnnakkoNeuvotteluToAPI(
     muuAineistoKoneelta: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvottelu.muuAineistoKoneelta,
       path: joinPath(path, "muuAineistoKoneelta"),
+    }),
+    linkitetynProjektinAineisto: adaptAineistotToAPI({
+      aineistot: ennakkoNeuvottelu.linkitetynProjektinAineisto,
+      aineistotHandledAt,
+      path: joinPath(path, "linkitetynProjektinAineisto"),
     }),
     maanomistajaluettelo: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvottelu.maanomistajaluettelo,
@@ -157,6 +164,11 @@ export async function adaptEnnakkoNeuvotteluJulkaisuToAPI(
     muuAineistoKoneelta: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvotteluJulkaisu.muuAineistoKoneelta,
       path: joinPath(path, "muuAineistoKoneelta"),
+    }),
+    linkitetynProjektinAineisto: adaptAineistotToAPI({
+      aineistot: ennakkoNeuvotteluJulkaisu.linkitetynProjektinAineisto,
+      aineistotHandledAt,
+      path: joinPath(path, "linkitetynProjektinAineisto"),
     }),
     maanomistajaluettelo: adaptLadatutTiedostotToApi({
       tiedostot: ennakkoNeuvotteluJulkaisu.maanomistajaluettelo,

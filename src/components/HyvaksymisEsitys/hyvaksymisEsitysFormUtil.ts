@@ -1,4 +1,5 @@
 import { FormAineistoNew } from "@components/projekti/common/Aineistot/util";
+
 import {
   AineistoInputNew,
   AineistoNew,
@@ -19,18 +20,20 @@ export type FormMuistutukset = { [s: string]: KunnallinenLadattuTiedostoInput[] 
 export type HyvaksymisEsitysForm = {
   oid: string;
   versio: number;
-  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma"> & {
+  muokattavaHyvaksymisEsitys: Omit<HyvaksymisEsitysInput, "muistutukset" | "suunnitelma" | "linkitetynProjektinAineisto"> & {
     muistutukset: FormMuistutukset;
     suunnitelma: { [key: string]: FormAineistoNew[] };
+    linkitetynProjektinAineisto: { [key: string]: FormAineistoNew[] };
   };
 };
 
 export type EnnakkoneuvotteluForm = {
   oid: string;
   versio: number;
-  ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma"> & {
+  ennakkoNeuvottelu: Omit<EnnakkoNeuvotteluInput, "muistutukset" | "suunnitelma" | "linkitetynProjektinAineisto"> & {
     muistutukset: FormMuistutukset;
     suunnitelma: { [key: string]: FormAineistoNew[] };
+    linkitetynProjektinAineisto: { [key: string]: FormAineistoNew[] };
   };
 };
 
@@ -49,6 +52,7 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
     kuulutuksetJaKutsu,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
+    linkitetynProjektinAineisto,
     maanomistajaluettelo,
     vastaanottajat,
   } = muokattavaHyvaksymisEsitys ?? {};
@@ -80,6 +84,7 @@ export function getDefaultValuesForForm(hyvaksymisEsityksenTiedot: HyvaksymisEsi
       kuulutuksetJaKutsu: adaptLadatutTiedostotNewToInput(kuulutuksetJaKutsu),
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
+      linkitetynProjektinAineisto: adaptLinkitetynProjektinAineistot(linkitetynProjektinAineisto, perustiedot.projektiTyyppi),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
       vastaanottajat: vastaanottajat?.length
         ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti }))
@@ -110,6 +115,28 @@ export function adaptSuunnitelmaAineistot(
   }, kategoriat);
 }
 
+export function adaptLinkitetynProjektinAineistot(
+  linkitetynProjektinAineisto: AineistoNew[] | null | undefined,
+  projektiTyyppi: ProjektiTyyppi | null | undefined
+): { [key: string]: FormAineistoNew[] } {
+  const kategoriaIdt = getAineistoKategoriat({ projektiTyyppi, showKategorisoimattomat: true, hideDeprecated: true }).listKategoriaIds();
+
+  const kategoriat = kategoriaIdt.reduce<{ [key: string]: FormAineistoNew[] }>((acc, kategoriaId) => {
+    acc[kategoriaId] = [];
+    return acc;
+  }, {});
+
+  if (!linkitetynProjektinAineisto?.length) {
+    return kategoriat;
+  }
+
+  return linkitetynProjektinAineisto.reduce((kategorisoidutAineistot, aineisto) => {
+    const kategoriaId = aineisto.kategoriaId && kategoriaIdt.includes(aineisto.kategoriaId) ? aineisto.kategoriaId : kategorisoimattomatId;
+    kategorisoidutAineistot[kategoriaId].push(adaptAineistoNewToInput(aineisto));
+    return kategorisoidutAineistot;
+  }, kategoriat);
+}
+
 export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
   formData: HyvaksymisEsitysForm
 ): TallennaHyvaksymisEsitysInput {
@@ -120,6 +147,9 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
   const muuAineistoVelhosta = formData.muokattavaHyvaksymisEsitys.muuAineistoVelhosta?.map<AineistoInputNew>(
     ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
   );
+  const linkitetynProjektinAineisto = Object.values(formData.muokattavaHyvaksymisEsitys.linkitetynProjektinAineisto)
+    .flat()
+    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
   return {
     ...formData,
     muokattavaHyvaksymisEsitys: {
@@ -127,6 +157,7 @@ export function transformHyvaksymisEsitysFormToTallennaHyvaksymisEsitysInput(
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,
+      linkitetynProjektinAineisto,
     },
   };
 }
@@ -139,6 +170,9 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
   const muuAineistoVelhosta = formData.ennakkoNeuvottelu.muuAineistoVelhosta?.map<AineistoInputNew>(
     ({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId })
   );
+  const linkitetynProjektinAineisto = Object.values(formData.ennakkoNeuvottelu.linkitetynProjektinAineisto)
+    .flat()
+    .map<AineistoInputNew>(({ dokumenttiOid, nimi, uuid, kategoriaId }) => ({ dokumenttiOid, nimi, uuid, kategoriaId }));
 
   return {
     ...formData,
@@ -148,6 +182,7 @@ export function transformToInput(formData: EnnakkoneuvotteluForm, laheta: boolea
       suunnitelma,
       muistutukset,
       muuAineistoVelhosta,
+      linkitetynProjektinAineisto,
     },
   };
 }

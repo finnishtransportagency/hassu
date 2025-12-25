@@ -89,12 +89,21 @@ export async function zipHyvEsAineistot(oid: string, ennakkoneuvottelu = false) 
     aineisto = projekti.muokattavaHyvaksymisEsitys;
   }
   const status: Status = await GetProjektiStatus.getProjektiStatus(projekti);
-  const { hyvaksymisEsitys, kuulutuksetJaKutsu, muutAineistot, suunnitelma, kuntaMuistutukset, maanomistajaluettelo, lausunnot } =
-    collectHyvaksymisEsitysAineistot(projekti, aineisto, status, projekti.aineistoHandledAt);
+  const {
+    hyvaksymisEsitys,
+    kuulutuksetJaKutsu,
+    muutAineistot,
+    linkitetynProjektinAineisto,
+    suunnitelma,
+    kuntaMuistutukset,
+    maanomistajaluettelo,
+    lausunnot,
+  } = collectHyvaksymisEsitysAineistot(projekti, aineisto, status, projekti.aineistoHandledAt);
   const filesToZip: ZipSourceFile[] = [
     ...hyvaksymisEsitys,
     ...kuulutuksetJaKutsu,
     ...muutAineistot,
+    ...linkitetynProjektinAineisto,
     ...suunnitelma,
     ...kuntaMuistutukset,
     ...maanomistajaluettelo,

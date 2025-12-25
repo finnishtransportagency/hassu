@@ -71,6 +71,12 @@ export function adaptHyvaksymisEsitysToAPI(
       tiedostot: hyvaksymisEsitys.muuAineistoKoneelta,
       path: joinPath(path, "muuAineistoKoneelta"),
     }),
+    linkitetynProjektinAineisto: adaptAineistotToAPI({
+      aineistot: hyvaksymisEsitys.linkitetynProjektinAineisto,
+      aineistotHandledAt,
+      path: joinPath(path, "linkitetynProjektinAineisto"),
+    }),
+
     maanomistajaluettelo: adaptLadatutTiedostotToApi({
       tiedostot: hyvaksymisEsitys.maanomistajaluettelo,
       path: joinPath(path, "maanomistajaluettelo"),

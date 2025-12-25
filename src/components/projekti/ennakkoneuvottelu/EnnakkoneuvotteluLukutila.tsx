@@ -201,6 +201,25 @@ export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ proje
                   <div>Ei aineistoja</div>
                 ),
               },
+              {
+                id: "3",
+                title: (
+                  <H3 sx={{ margin: 0 }}>
+                    Liittyvän suunnitelman aineisto ({ennakkoNeuvotteluJulkaisu?.linkitetynProjektinAineisto?.length ?? 0})
+                  </H3>
+                ),
+                content: ennakkoNeuvotteluJulkaisu?.linkitetynProjektinAineisto?.length ? (
+                  <ul style={{ listStyle: "none" }}>
+                    {ennakkoNeuvotteluJulkaisu.linkitetynProjektinAineisto?.map((tiedosto, index) => (
+                      <li key={index}>
+                        <TiedostoComponent tiedosto={tiedosto} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div>Ei aineistoja</div>
+                ),
+              },
             ]}
           />
         </SectionContent>

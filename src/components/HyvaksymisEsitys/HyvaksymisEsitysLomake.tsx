@@ -32,6 +32,7 @@ import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { KatsoTarkemmatASHAOhjeetLink } from "@components/projekti/common/KatsoTarkemmatASHAOhjeetLink";
 import useCurrentUser from "src/hooks/useCurrentUser";
 import AsianhallintaStatusNotification from "./LomakeComponents/AsianhallintaStatusNotification";
+import LinkitetynProjektinAineisto from "./LomakeComponents/LinkitetynProjektinAineisto";
 
 type Props = {
   hyvaksymisEsityksenTiedot: HyvaksymisEsityksenTiedot;
@@ -175,6 +176,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 </p>
                 <MuuAineistoVelhosta aineisto={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoVelhosta} />
                 <MuuAineistoKoneelta tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muuAineistoKoneelta} />
+                <LinkitetynProjektinAineisto aineistoKategoriat={aineistoKategoriat} />
               </Section>
               <Section>
                 <Vastaanottajat />
