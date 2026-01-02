@@ -1,7 +1,7 @@
 import Button from "@components/button/Button";
 import { H5, H6 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
-import { allowedFileTypes } from "common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille } from "common/fileValidationSettings";
 import { kuntametadata } from "common/kuntametadata";
 import { ReactElement, useCallback, useRef } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -80,7 +80,7 @@ function KunnanMuistutukset({
       <input
         type="file"
         multiple
-        accept={allowedFileTypes.join(", ")}
+        accept={allowedFileTypesVirkamiehille.join(", ")}
         style={{ display: "none" }}
         id={`kunnan-${kunta}-muistutukset-input`}
         onChange={handleUploadedFiles}
