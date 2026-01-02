@@ -202,7 +202,7 @@ export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ proje
                 ),
               },
               {
-                id: "3",
+                id: "4",
                 title: (
                   <H3 sx={{ marginBottom: 2 }}>
                     Liittyvän suunnitelman aineisto ({ennakkoNeuvotteluJulkaisu?.linkitetynProjektinAineisto?.length ?? 0})
