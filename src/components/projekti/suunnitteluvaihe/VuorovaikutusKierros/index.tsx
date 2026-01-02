@@ -211,7 +211,7 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, true), [api]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -296,9 +296,7 @@ function VuorovaikutusKierrosKutsu({
         puutteet.push("ELY-keskuksien julkaisut on estetty");
       }
       if (julkaisupaiva && isEvkJulkaisuEstetty(projekti, julkaisupaiva)) {
-        puutteet.push(
-          "integraatio Elinvoimakeskuksen asianhallintaan ei käytettävissä"
-        );
+        puutteet.push("integraatio Elinvoimakeskuksen asianhallintaan ei käytettävissä");
       }
       if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
         puutteet.push("asianhallinta on vaarassa tilassa");

@@ -30,7 +30,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
           const files: FileList | null = event.target.files;
           if (files?.length) {
             const uploadedFiles: string[] = await Promise.all(
-              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedosto(api, files[key]))
+              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedosto(api, files[key], true))
             );
             const tiedostoInputs: LadattuTiedostoInput[] = uploadedFiles.map((filename, index) => ({
               nimi: files[index].name,
