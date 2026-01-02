@@ -72,8 +72,6 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
 
   const tiedostotEiLadattavissa = props.esikatselu === EsikatseluMode.ESIKATSELU;
 
-  console.log("linkitetty ", linkitetynProjektinAineisto);
-
   return (
     <>
       <H1>Hyväksymisesitys{props.esikatselu && " (esikatselu)"}</H1>
