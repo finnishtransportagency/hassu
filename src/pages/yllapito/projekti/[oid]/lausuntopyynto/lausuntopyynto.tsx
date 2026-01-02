@@ -161,7 +161,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                   id="mallipohja-41R"
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/caf740ad-86e6-4a22-b575-c86ce6ffd1c2/41R%20Lausuntopyynt%c3%b6%20ELYlle%20xx%20xxS.docx?a=true"
                 >
-                  {isEvkActive ? "Mallipohja Elinvoimakeskukselle 41R" : "Mallipohja ELY:lle 41R"}
+                  {isEvkActive ? "Mallipohja elinvoimakeskukselle 41R" : "Mallipohja ELY:lle 41R"}
                 </DownloadButtonLink>
                 <DownloadButtonLink
                   id="mallipohja-42R"
