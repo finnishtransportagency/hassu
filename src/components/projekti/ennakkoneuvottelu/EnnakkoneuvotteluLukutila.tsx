@@ -16,6 +16,7 @@ import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ExtLink from "@components/ExtLink";
+import e from "express";
 
 export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>) {
   const { oid, ennakkoNeuvotteluJulkaisu } = projekti;
@@ -204,18 +205,24 @@ export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ proje
               {
                 id: "3",
                 title: (
-                  <H3 sx={{ margin: 0 }}>
+                  <H3 sx={{ marginBottom: 2 }}>
                     Liittyvän suunnitelman aineisto ({ennakkoNeuvotteluJulkaisu?.linkitetynProjektinAineisto?.length ?? 0})
                   </H3>
                 ),
                 content: ennakkoNeuvotteluJulkaisu?.linkitetynProjektinAineisto?.length ? (
-                  <ul style={{ listStyle: "none" }}>
-                    {ennakkoNeuvotteluJulkaisu.linkitetynProjektinAineisto?.map((tiedosto, index) => (
-                      <li key={index}>
-                        <TiedostoComponent tiedosto={tiedosto} />
-                      </li>
-                    ))}
-                  </ul>
+                  <>
+                    <AccordionToggleButton
+                      expandedAineisto={expandedAineisto}
+                      setExpandedAineisto={setExpandedAineisto}
+                      aineistoKategoriaIds={kategoriaIdt}
+                    />
+                    <NestedAineistoAccordion
+                      kategoriat={kategoriat}
+                      aineisto={ennakkoNeuvotteluJulkaisu?.linkitetynProjektinAineisto}
+                      paakategoria
+                      expandedState={[expandedAineisto, setExpandedAineisto]}
+                    />
+                  </>
                 ) : (
                   <div>Ei aineistoja</div>
                 ),
