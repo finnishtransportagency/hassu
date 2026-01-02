@@ -146,7 +146,7 @@ export default function collectHyvaksymisEsitysAineistot(
       .replace("Informatiivinen aineisto", "Informatiivinen aineisto (C\u29F8300)");
     return {
       s3Key: joinPath(path, "linkitetynProjektinAineisto", adaptFileName(aineisto.nimi)),
-      zipFolder: `Liittyvä suunnitelma/${liittyvanSuunnitelmanKategoriaKansiot})`,
+      zipFolder: `Liittyvä suunnitelma/${liittyvanSuunnitelmanKategoriaKansiot}`,
       nimi: aineisto.nimi,
       tuotu: aineisto.lisatty,
       kategoriaId: aineisto.kategoriaId,
