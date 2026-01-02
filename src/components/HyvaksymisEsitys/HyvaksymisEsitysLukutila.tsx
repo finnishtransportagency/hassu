@@ -341,16 +341,24 @@ export default function HyvaksymisEsitysLukutila({
               {
                 id: "4",
                 title: (
-                  <H3 sx={{ margin: 0 }}>Liittyvän suunnitelman aineisto ({hyvaksymisEsitys?.linkitetynProjektinAineisto?.length ?? 0})</H3>
+                  <H3 sx={{ marginBottom: 2 }}>
+                    Liittyvän suunnitelman aineisto ({hyvaksymisEsitys?.linkitetynProjektinAineisto?.length ?? 0})
+                  </H3>
                 ),
                 content: hyvaksymisEsitys?.linkitetynProjektinAineisto?.length ? (
-                  <ul style={{ listStyle: "none" }}>
-                    {hyvaksymisEsitys.linkitetynProjektinAineisto?.map((tiedosto, index) => (
-                      <li key={index}>
-                        <TiedostoComponent tiedosto={tiedosto} />
-                      </li>
-                    ))}
-                  </ul>
+                  <>
+                    <AccordionToggleButton
+                      expandedAineisto={expandedAineisto}
+                      setExpandedAineisto={setExpandedAineisto}
+                      aineistoKategoriaIds={kategoriaIdt}
+                    />
+                    <NestedAineistoAccordion
+                      kategoriat={kategoriat}
+                      aineisto={hyvaksymisEsitys?.linkitetynProjektinAineisto}
+                      paakategoria
+                      expandedState={[expandedAineisto, setExpandedAineisto]}
+                    />
+                  </>
                 ) : (
                   <div>Ei aineistoja</div>
                 ),
