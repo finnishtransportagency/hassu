@@ -16,7 +16,6 @@ import { NestedAineistoAccordion } from "@components/NestedAineistoAccordion";
 import { AccordionToggleButton } from "@components/projekti/common/Aineistot/AccordionToggleButton";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ExtLink from "@components/ExtLink";
-import e from "express";
 
 export default function EnnakkoneuvotteluLukutila({ projekti }: Readonly<{ projekti: ProjektiLisatiedolla }>) {
   const { oid, ennakkoNeuvotteluJulkaisu } = projekti;
