@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useRef } from "react";
-import { allowedFileTypes } from "hassu-common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattuTiedostoNew } from "@services/api";
@@ -52,7 +52,7 @@ export default function Lausunnot({
       <input
         type="file"
         multiple
-        accept={allowedFileTypes.join(", ")}
+        accept={allowedFileTypesVirkamiehille.join(", ")}
         style={{ display: "none" }}
         id="lausunnot-input"
         onChange={handleUploadedFiles}

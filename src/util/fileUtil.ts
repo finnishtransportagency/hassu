@@ -11,9 +11,13 @@ export function splitFilePath(path?: string) {
   return { path, fileName, fileExt, fileNameWithExt };
 }
 
-export async function lataaTiedosto(api: API, tiedosto: File): Promise<string> {
+export async function lataaTiedosto(api: API, tiedosto: File, isYllapito: Boolean): Promise<string> {
   const contentType = (tiedosto as Blob).type ?? "application/octet-stream";
-  const response = await api.valmisteleTiedostonLataus(tiedosto.name, contentType);
+  const response =
+    isYllapito === true
+      ? await api.valmisteleTiedostonLataus(tiedosto.name, contentType)
+      : await api.valmisteleTiedostonLatausJulkinen(tiedosto.name, contentType);
+
   const url = response.latausLinkki;
   const fields = JSON.parse(response.latausKentat);
 

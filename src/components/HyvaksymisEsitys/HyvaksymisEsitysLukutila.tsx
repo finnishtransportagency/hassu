@@ -338,6 +338,31 @@ export default function HyvaksymisEsitysLukutila({
                   <div>Ei aineistoja</div>
                 ),
               },
+              {
+                id: "4",
+                title: (
+                  <H3 sx={{ marginBottom: 2 }}>
+                    Liittyvän suunnitelman aineisto ({hyvaksymisEsitys?.linkitetynProjektinAineisto?.length ?? 0})
+                  </H3>
+                ),
+                content: hyvaksymisEsitys?.linkitetynProjektinAineisto?.length ? (
+                  <>
+                    <AccordionToggleButton
+                      expandedAineisto={expandedAineisto}
+                      setExpandedAineisto={setExpandedAineisto}
+                      aineistoKategoriaIds={kategoriaIdt}
+                    />
+                    <NestedAineistoAccordion
+                      kategoriat={kategoriat}
+                      aineisto={hyvaksymisEsitys?.linkitetynProjektinAineisto}
+                      paakategoria
+                      expandedState={[expandedAineisto, setExpandedAineisto]}
+                    />
+                  </>
+                ) : (
+                  <div>Ei aineistoja</div>
+                ),
+              },
             ]}
           />
         </SectionContent>

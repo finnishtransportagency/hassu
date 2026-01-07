@@ -1,5 +1,5 @@
 import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
-import { allowedFileTypes } from "hassu-common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille } from "hassu-common/fileValidationSettings";
 import Button from "@components/button/Button";
 import useHandleUploadedFiles from "src/hooks/useHandleUploadedFiles";
 import { LadattavaTiedosto, LadattuTiedostoNew } from "@services/api";
@@ -164,7 +164,7 @@ export default function Maanomistajaluettelo({
       <input
         type="file"
         multiple
-        accept={allowedFileTypes.join(", ")}
+        accept={allowedFileTypesVirkamiehille.join(", ")}
         style={{ display: "none" }}
         id="maanomistajaluettelo-input"
         onChange={handleUploadedFiles}

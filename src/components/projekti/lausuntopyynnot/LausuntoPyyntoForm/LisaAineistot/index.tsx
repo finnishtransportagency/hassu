@@ -9,7 +9,7 @@ import { LausuntoPyynnotFormValues } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
-import { allowedFileTypes } from "hassu-common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille } from "hassu-common/fileValidationSettings";
 import useSnackbars from "../../../../../hooks/useSnackbars";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
@@ -41,8 +41,8 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
             const uploadedFileNamesPromises: Promise<string>[] = [];
 
             Array.from(Array(files.length).keys()).forEach((key: number) => {
-              if (allowedFileTypes.find((type) => type === files[key].type)) {
-                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key]));
+              if (allowedFileTypesVirkamiehille.find((type) => type === files[key].type)) {
+                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key], true));
                 allowedTypeFiles.push(files[key]);
               } else {
                 nonAllowedTypeFiles.push(files[key]);
@@ -88,7 +88,7 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
       <input
         type="file"
         multiple
-        accept={allowedFileTypes.join(", ")}
+        accept={allowedFileTypesVirkamiehille.join(", ")}
         style={{ display: "none" }}
         id={`lisa-aineistot-${index}-input`}
         onChange={handleUploadedFiles}
