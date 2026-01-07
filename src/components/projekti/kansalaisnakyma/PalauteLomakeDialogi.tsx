@@ -20,7 +20,7 @@ import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { allowedFileTypes } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille } from "common/fileValidationSettings";
 import { joinStringArray } from "common/util/joinStringArray";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
@@ -83,7 +83,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
     }
   }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, false), [api]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
   const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
@@ -279,7 +279,7 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                   type="file"
                   ref={inputRef}
                   multiple
-                  accept={allowedFileTypes.join(", ")}
+                  accept={allowedFileTypesKansalaisille.join(", ")}
                   onChange={(e) => {
                     const files = e.target.files;
                     if (files?.length) {

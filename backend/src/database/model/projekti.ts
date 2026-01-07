@@ -240,6 +240,7 @@ export type DBEnnakkoNeuvottelu = {
   kuulutuksetJaKutsu?: Array<LadattuTiedostoNew> | null;
   muuAineistoVelhosta?: Array<AineistoNew> | null;
   muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
+  linkitetynProjektinAineisto?: Array<AineistoNew> | null;
   maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;

@@ -477,6 +477,7 @@ type HyvaksymisEsitys {
   kuulutuksetJaKutsu: [LadattuTiedostoNew!]
   muuAineistoVelhosta: [AineistoNew!]
   muuAineistoKoneelta: [LadattuTiedostoNew!]
+  linkitetynProjektinAineisto: [AineistoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tila: HyvaksymisTila
@@ -538,6 +539,7 @@ type EnnakkoNeuvottelu {
   kuulutuksetJaKutsu: [LadattuTiedostoNew!]
   muuAineistoVelhosta: [AineistoNew!]
   muuAineistoKoneelta: [LadattuTiedostoNew!]
+  linkitetynProjektinAineisto: [AineistoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
@@ -555,6 +557,7 @@ type EnnakkoNeuvotteluJulkaisu {
   kuulutuksetJaKutsu: [LadattuTiedostoNew!]
   muuAineistoVelhosta: [AineistoNew!]
   muuAineistoKoneelta: [LadattuTiedostoNew!]
+  linkitetynProjektinAineisto: [AineistoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
@@ -1435,6 +1438,7 @@ type HyvaksymisEsityksenAineistot {
   maanomistajaluettelo: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
+  linkitetynProjektinAineisto: [LadattavaTiedosto!]
   aineistopaketti: String
 }
 
@@ -1451,6 +1455,7 @@ type EnnakkoNeuvottelunAineistot {
   maanomistajaluettelo: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
+  linkitetynProjektinAineisto: [LadattavaTiedosto!]
   aineistopaketti: String
 }
 

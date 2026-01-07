@@ -1,4 +1,4 @@
-import { allowedFileTypes } from "common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille } from "common/fileValidationSettings";
 import { lataaTiedosto } from "../util/fileUtil";
 import { KunnallinenLadattuTiedostoInput, LadattuTiedostoInputNew } from "@services/api";
 import { uuid } from "common/util/uuid";
@@ -40,8 +40,8 @@ export default function useHandleUploadedFiles<F extends FieldValues>(
             const uploadedFileNamesPromises: Promise<string>[] = [];
 
             Array.from(Array(files.length).keys()).forEach((key: number) => {
-              if (allowedFileTypes.find((type) => type === files[key].type)) {
-                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key]));
+              if (allowedFileTypesVirkamiehille.find((type) => type === files[key].type)) {
+                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key], true));
                 allowedTypeFiles.push(files[key]);
               } else {
                 nonAllowedTypeFiles.push(files[key]);

@@ -210,7 +210,7 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, true), [api]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 

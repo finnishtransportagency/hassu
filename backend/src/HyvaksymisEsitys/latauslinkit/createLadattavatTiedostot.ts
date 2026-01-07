@@ -11,7 +11,14 @@ export default async function createLadattavatTiedostot(
 ): Promise<
   Pick<
     API.HyvaksymisEsityksenAineistot,
-    "hyvaksymisEsitys" | "suunnitelma" | "kuntaMuistutukset" | "lausunnot" | "kuulutuksetJaKutsu" | "muutAineistot" | "maanomistajaluettelo"
+    | "hyvaksymisEsitys"
+    | "suunnitelma"
+    | "kuntaMuistutukset"
+    | "lausunnot"
+    | "kuulutuksetJaKutsu"
+    | "muutAineistot"
+    | "linkitetynProjektinAineisto"
+    | "maanomistajaluettelo"
   >
 > {
   const {
@@ -21,6 +28,7 @@ export default async function createLadattavatTiedostot(
     lausunnot,
     kuulutuksetJaKutsu,
     muutAineistot,
+    linkitetynProjektinAineisto,
     maanomistajaluettelo,
   } = collectHyvaksymisEsitysAineistot(projekti, hyvaksymisEsitys, status, projekti.aineistoHandledAt);
 
@@ -59,6 +67,7 @@ export default async function createLadattavatTiedostot(
     lausunnot: await Promise.all(lausunnot.map(adaptFileInfoToLadattavaTiedosto)),
     kuulutuksetJaKutsu: await Promise.all(filteredKuulutuksetJaKutsu.map(adaptFileInfoToLadattavaTiedosto)),
     muutAineistot: await Promise.all(muutAineistot.map(adaptFileInfoToLadattavaTiedosto)),
+    linkitetynProjektinAineisto: await Promise.all(linkitetynProjektinAineisto.map(adaptFileInfoToLadattavaTiedosto)),
     maanomistajaluettelo: await Promise.all(filteredMaanomistajaluettelot.map(adaptFileInfoToLadattavaTiedosto)),
   };
 }

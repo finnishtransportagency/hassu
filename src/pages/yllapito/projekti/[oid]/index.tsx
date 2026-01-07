@@ -292,7 +292,7 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
 
   const api = useApi();
 
-  const talletaLogo = useCallback(async (tiedosto: File) => await lataaTiedosto(api, tiedosto), [api]);
+  const talletaLogo = useCallback(async (tiedosto: File) => await lataaTiedosto(api, tiedosto, true), [api]);
   const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
 
   const onSubmit = useCallback(
