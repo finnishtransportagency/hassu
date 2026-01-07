@@ -34,6 +34,7 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKat
 
   const suunnitelma = watch("muokattavaHyvaksymisEsitys.suunnitelma");
   const muuAineistoVelhosta = watch("muokattavaHyvaksymisEsitys.muuAineistoVelhosta");
+  const linkitetynProjektinAineisto = watch("muokattavaHyvaksymisEsitys.linkitetynProjektinAineisto");
 
   const { mutate: reloadProjekti } = useHyvaksymisEsitys();
 
@@ -113,7 +114,13 @@ export default function MuokkausLomakePainikkeet({ hyvaksymisesitys, aineistoKat
         </Button>
         <Button
           type="button"
-          disabled={lomakkeenAineistotEiKunnossa(suunnitelma, hyvaksymisesitys, muuAineistoVelhosta, aineistoKategoriat)}
+          disabled={lomakkeenAineistotEiKunnossa(
+            suunnitelma,
+            hyvaksymisesitys,
+            muuAineistoVelhosta,
+            linkitetynProjektinAineisto,
+            aineistoKategoriat
+          )}
           id="save_and_send_for_acceptance"
           primary
           onClick={handleSubmit(lahetaHyvaksyttavaksi)}
@@ -129,6 +136,7 @@ function lomakkeenAineistotEiKunnossa(
   suunnitelma: { [key: string]: FormAineistoNew[] },
   hyvaksymisesitys: HyvaksymisEsityksenTiedot,
   muuAineistoVelhosta: AineistoInputNew[] | null | undefined,
+  linkitetynProjektinAineisto: { [key: string]: FormAineistoNew[] },
   aineistoKategoriat: AineistoKategoriat
 ): boolean {
   const lomakkeenSuunnitelmaAineistoFlat = Object.values(suunnitelma).flat();
@@ -146,11 +154,29 @@ function lomakkeenAineistotEiKunnossa(
       !aineistoKategoriat.listKategoriaIds().includes(aineisto.kategoriaId)
   );
   const velhoAineistojaTuomatta = !!hyvaksymisesitys.hyvaksymisEsitys?.muuAineistoVelhosta?.some((aineisto) => !aineisto.tuotu);
+
+  const lomakkeenlinkitetynProjektinAineistoFlat = Object.values(linkitetynProjektinAineisto).flat();
+  const uusilinkitetynProjektinAineisto = lomakkeenlinkitetynProjektinAineistoFlat?.some(
+    (aineisto) => !hyvaksymisesitys.hyvaksymisEsitys?.linkitetynProjektinAineisto?.some((a) => a.uuid === aineisto.uuid)
+  );
+  const linkitetynProjektinAineistojaTuomatta = !!hyvaksymisesitys.hyvaksymisEsitys?.linkitetynProjektinAineisto?.some(
+    (aineisto) => !aineisto.tuotu
+  );
+  const linkitetynProjektinAineistoKategorisoimatta = lomakkeenlinkitetynProjektinAineistoFlat?.some(
+    (aineisto) =>
+      !aineisto.kategoriaId ||
+      aineisto.kategoriaId === kategorisoimattomatId ||
+      !aineistoKategoriat.listKategoriaIds().includes(aineisto.kategoriaId)
+  );
+
   return (
     uusiSuunnitelmaAineisto ||
     uusiMuuAineistoVelhosta ||
     suunnitelmaAineistojaTuomatta ||
     velhoAineistojaTuomatta ||
-    suunnitelmaAineistoKategorisoimatta
+    suunnitelmaAineistoKategorisoimatta ||
+    uusilinkitetynProjektinAineisto ||
+    linkitetynProjektinAineistojaTuomatta ||
+    linkitetynProjektinAineistoKategorisoimatta
   );
 }

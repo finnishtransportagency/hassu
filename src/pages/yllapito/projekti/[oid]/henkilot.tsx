@@ -22,6 +22,7 @@ import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import { Kayttaja, ProjektiKayttaja, TallennaProjektiInput } from "@services/api";
+import { organisaatioIsEly, organisaatioIsEvk } from "common/util/organisaatioIsEly";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -147,8 +148,8 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti, initialKayttaja
             puhelinnumero: puhelinnumero || "",
             tyyppi,
             yleinenYhteystieto: !!yleinenYhteystieto,
-            elyOrganisaatio: elyOrganisaatio || null,
-            evkOrganisaatio: evkOrganisaatio || null,
+            elyOrganisaatio: elyOrganisaatio && organisaatioIsEly(organisaatio) ? elyOrganisaatio : null,
+            evkOrganisaatio: evkOrganisaatio && organisaatioIsEvk(organisaatio) ? evkOrganisaatio : null,
             organisaatio: organisaatio || "",
           })
         ) || [],
