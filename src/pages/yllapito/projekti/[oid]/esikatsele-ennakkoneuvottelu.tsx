@@ -64,6 +64,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
     kuulutuksetJaKutsu,
     muuAineistoKoneelta,
     muuAineistoVelhosta,
+    linkitetynProjektinAineisto,
     poistumisPaiva,
     hyvaksymisEsitys,
   } = ennakkoNeuvotteluInput.ennakkoNeuvottelu;
@@ -289,7 +290,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
           ]}
         />
       </Section>
-      <Section noDivider>
+      <Section>
         <HassuAccordion
           items={[
             {
@@ -308,6 +309,21 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
               ),
             },
           ]}
+        />
+      </Section>
+      <Section noDivider>
+        <H2>{`Liittyvän suunnitelman aineisto (${linkitetynProjektinAineisto?.length ?? 0})`}</H2>
+        <SuunnittelmaLadattavatTiedostotAccordion
+          kategoriat={kategoriat}
+          aineistot={linkitetynProjektinAineisto?.map((a) => {
+            return {
+              ...a,
+              __typename: "LadattavaTiedosto",
+              linkki: projekti.ennakkoNeuvottelu?.linkitetynProjektinAineisto?.find((s) => s.uuid === a.uuid)?.tiedosto,
+              tuotu: projekti.ennakkoNeuvottelu?.linkitetynProjektinAineisto?.find((s) => s.uuid === a.uuid)?.lisatty,
+            };
+          })}
+          esikatselu={true}
         />
       </Section>
       <Section noDivider>
