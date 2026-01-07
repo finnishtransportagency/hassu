@@ -31,7 +31,7 @@ import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
-import { allowedFileTypes } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille } from "common/fileValidationSettings";
 import lookup from "country-code-lookup";
 import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
@@ -124,7 +124,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
         (async () => {
           try {
             const muistutusFinalValues: MuistutusInput = { ...formData, liitteet: [] };
-            const talletaTiedosto = async (tiedosto: File) => lataaTiedosto(api, tiedosto);
+            const talletaTiedosto = async (tiedosto: File) => lataaTiedosto(api, tiedosto, false);
 
             await Promise.all(
               liitteet.map(async (liite) => {
@@ -343,7 +343,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               type="file"
               ref={inputRef}
               multiple
-              accept={allowedFileTypes.join(", ")}
+              accept={allowedFileTypesKansalaisille.join(", ")}
               onChange={(e) => {
                 const files = e.target.files;
                 if (files?.length) {
