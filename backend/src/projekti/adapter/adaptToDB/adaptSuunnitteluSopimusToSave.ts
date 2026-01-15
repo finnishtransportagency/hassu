@@ -3,6 +3,19 @@ import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import { adaptLogoFilesToSave } from "./common";
 
+const hasSuunnitteluSopimusChanged = (
+  projekti: DBProjekti,
+  suunnitteluSopimusInput: API.SuunnitteluSopimusInput | null | undefined
+): boolean => {
+  if (projekti.suunnitteluSopimus && !suunnitteluSopimusInput) {
+    return true;
+  }
+  if (!projekti.suunnitteluSopimus && suunnitteluSopimusInput) {
+    return true;
+  }
+  return false;
+};
+
 export function adaptSuunnitteluSopimusToSave(
   projekti: DBProjekti,
   suunnitteluSopimusInput?: API.SuunnitteluSopimusInput | null,
@@ -28,11 +41,18 @@ export function adaptSuunnitteluSopimusToSave(
         return osapuoli;
       });
     }
+    if (hasSuunnitteluSopimusChanged(projekti, suunnitteluSopimusInput)) {
+      projektiAdaptationResult?.saveProjektiToVelho();
+    }
     return {
       ...rest,
       logo: adaptedLogo,
       osapuolet: adaptedOsapuolet,
     };
+  } else {
+    if (hasSuunnitteluSopimusChanged(projekti, suunnitteluSopimusInput)) {
+      projektiAdaptationResult?.saveProjektiToVelho();
+    }
   }
   return suunnitteluSopimusInput;
 }

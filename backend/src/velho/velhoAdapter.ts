@@ -1,5 +1,5 @@
 import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { DBProjekti, KasittelynTila, LinkitettyVelhoProjekti, Velho } from "../database/model";
+import { DBProjekti, KasittelynTila, LinkitettyVelhoProjekti, SuunnitteluSopimus, Velho } from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import {
@@ -562,6 +562,14 @@ export function applyAloitusKuulutusPaivaToVelho(
 
 export function applySuunnittelunTilaToVelho(projekti: ProjektiProjektiMuokkaus, suunnitelmanTila: string): ProjektiProjektiMuokkaus {
   projekti.ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(suunnitelmanTila);
+  return projekti;
+}
+
+export function applySuunnittelusopimusToVelho(
+  projekti: ProjektiProjektiMuokkaus,
+  dbSuunnitteluSopimus: SuunnitteluSopimus | null | undefined
+): ProjektiProjektiMuokkaus {
+  projekti.ominaisuudet["suunnittelusopimus"] = dbSuunnitteluSopimus ? true : false;
   return projekti;
 }
 

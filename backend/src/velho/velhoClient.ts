@@ -12,11 +12,12 @@ import {
   applyAloitusKuulutusPaivaToVelho,
   applyKasittelyntilaToVelho,
   applySuunnittelunTilaToVelho,
+  applySuunnittelusopimusToVelho,
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "hassu-common/error";
 import type { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
-import type { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
+import type { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila, SuunnitteluSopimus } from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
@@ -263,8 +264,24 @@ export class VelhoClient {
     await this.saveProjekti(oid, (projekti) => applySuunnittelunTilaToVelho(projekti, tila));
   }
 
-  public async saveKasittelynTila(oid: string, kasittelynTila: KasittelynTila): Promise<void> {
-    await this.saveProjekti(oid, (projekti) => applyKasittelyntilaToVelho(projekti, kasittelynTila));
+  public async saveKasittelynTila(
+    dbProjekti: DBProjekti,
+    dbKasittelynTila: KasittelynTila | null | undefined,
+    dbSuunnitteluSopimus: SuunnitteluSopimus | null | undefined
+  ): Promise<void> {
+    const velhoDataUpdaters: VelhoProjektiDataUpdater[] = [];
+    if (dbKasittelynTila) {
+      velhoDataUpdaters.push((projekti) => applyKasittelyntilaToVelho(projekti, dbKasittelynTila));
+    }
+    velhoDataUpdaters.push((projekti) => applySuunnittelusopimusToVelho(projekti, dbSuunnitteluSopimus));
+    if (velhoDataUpdaters.length > 0) {
+      await this.saveProjekti(
+        dbProjekti.oid,
+        this.composeVelhoProjektiDataUpdaters(
+          ...velhoDataUpdaters
+        )
+      );
+    }
   }
 
   @recordVelhoLatencyDecorator(
@@ -296,6 +313,10 @@ export class VelhoClient {
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
     }
+  }
+
+  public composeVelhoProjektiDataUpdaters(...updaters: VelhoProjektiDataUpdater[]): VelhoProjektiDataUpdater {
+    return (projekti) => updaters.reduce((acc, updater) => updater(acc), projekti);
   }
 
   private async createHakuApi() {

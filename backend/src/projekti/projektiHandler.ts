@@ -782,6 +782,7 @@ async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
 
 async function saveProjektiToVelho(projekti: DBProjekti) {
   const kasittelynTila = projekti.kasittelynTila;
+  const suunnitteluSopimus = projekti.suunnitteluSopimus;
   if (kasittelynTila) {
     const { hyvaksymispaatos: _inputHyvaksymispaatos, ...inputAdminOikeudetVaativatKentat } = kasittelynTila;
     if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
@@ -789,8 +790,8 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
     } else {
       requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
     }
-    await velhoClient.saveKasittelynTila(projekti.oid, kasittelynTila);
   }
+  await velhoClient.saveKasittelynTila(projekti, kasittelynTila, suunnitteluSopimus);
 }
 
 export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult): Promise<API.TallennaProjektiStatus | undefined> {
