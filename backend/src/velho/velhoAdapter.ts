@@ -1,5 +1,12 @@
 import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { DBProjekti, KasittelynTila, LinkitettyVelhoProjekti, SuunnitteluSopimus, Velho } from "../database/model";
+import {
+  DBProjekti,
+  KasittelynTila,
+  LinkitettyVelhoProjekti,
+  NahtavillaoloVaiheJulkaisu,
+  SuunnitteluSopimus,
+  Velho,
+} from "../database/model";
 import { adaptKayttaja } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import {
@@ -570,6 +577,22 @@ export function applySuunnittelusopimusToVelho(
   dbSuunnitteluSopimus: SuunnitteluSopimus | null | undefined
 ): ProjektiProjektiMuokkaus {
   projekti.ominaisuudet["suunnittelusopimus"] = dbSuunnitteluSopimus ? true : false;
+  return projekti;
+}
+
+export function applyNahtavillaoloajankohtaToVelho(
+  projekti: ProjektiProjektiMuokkaus,
+  nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
+): ProjektiProjektiMuokkaus {
+  if (!nahtavillaoloVaiheJulkaisu?.kuulutusPaiva) {
+    return projekti;
+  }
+  projekti.ominaisuudet["nahtavilla-olo"] = {
+    alkaen: toLocalDate(nahtavillaoloVaiheJulkaisu.kuulutusPaiva),
+    paattyen: nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva
+      ? toLocalDate(nahtavillaoloVaiheJulkaisu.kuulutusVaihePaattyyPaiva)
+      : null,
+  };
   return projekti;
 }
 

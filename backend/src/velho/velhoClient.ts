@@ -11,13 +11,22 @@ import {
   adaptSearchResults,
   applyAloitusKuulutusPaivaToVelho,
   applyKasittelyntilaToVelho,
+  applyNahtavillaoloajankohtaToVelho,
   applySuunnittelunTilaToVelho,
   applySuunnittelusopimusToVelho,
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "hassu-common/error";
 import type { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
-import type { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila, SuunnitteluSopimus } from "../database/model";
+import type {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  HyvaksymisPaatosVaihe,
+  HyvaksymisPaatosVaiheJulkaisu,
+  KasittelynTila,
+  NahtavillaoloVaiheJulkaisu,
+  SuunnitteluSopimus,
+} from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
@@ -275,13 +284,15 @@ export class VelhoClient {
     }
     velhoDataUpdaters.push((projekti) => applySuunnittelusopimusToVelho(projekti, dbSuunnitteluSopimus));
     if (velhoDataUpdaters.length > 0) {
-      await this.saveProjekti(
-        dbProjekti.oid,
-        this.composeVelhoProjektiDataUpdaters(
-          ...velhoDataUpdaters
-        )
-      );
+      await this.saveProjekti(dbProjekti.oid, this.composeVelhoProjektiDataUpdaters(...velhoDataUpdaters));
     }
+  }
+
+  public async saveJulkaisupvmToVelho(
+    dbProjekti: DBProjekti,
+    nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
+  ): Promise<void> {
+    await this.saveProjekti(dbProjekti.oid, (projekti) => applyNahtavillaoloajankohtaToVelho(projekti, nahtavillaoloVaiheJulkaisu));
   }
 
   @recordVelhoLatencyDecorator(
