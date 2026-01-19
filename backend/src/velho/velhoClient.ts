@@ -21,8 +21,6 @@ import type { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
 import type {
   AloitusKuulutusJulkaisu,
   DBProjekti,
-  HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   SuunnitteluSopimus,
