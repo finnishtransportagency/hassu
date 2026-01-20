@@ -158,7 +158,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     await super.approve(projekti, hyvaksyja);
     const nahtavillaoloJulkaisuWaitingForApproval = this.getKuulutusWaitingForApproval(projekti);
-    await velho.saveJulkaisupvmToVelho(projekti, nahtavillaoloJulkaisuWaitingForApproval);
+    await velho.saveJulkaisupvm(projekti.oid, nahtavillaoloJulkaisuWaitingForApproval);
     //Lausuntopyyntojen aineistoissa on aina viimeisimmän hyväksytyn nähtävilläolon aineistot.
     await eventSqsClient.zipLausuntoPyyntoAineisto(projekti.oid);
   }

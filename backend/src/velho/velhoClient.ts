@@ -272,25 +272,25 @@ export class VelhoClient {
   }
 
   public async saveKasittelynTila(
-    dbProjekti: DBProjekti,
-    dbKasittelynTila: KasittelynTila | null | undefined,
-    dbSuunnitteluSopimus: SuunnitteluSopimus | null | undefined
+    oid: string,
+    kasittelynTila: KasittelynTila | null | undefined,
+    suunnitteluSopimus: SuunnitteluSopimus | null | undefined
   ): Promise<void> {
     const velhoDataUpdaters: VelhoProjektiDataUpdater[] = [];
-    if (dbKasittelynTila) {
-      velhoDataUpdaters.push((projekti) => applyKasittelyntilaToVelho(projekti, dbKasittelynTila));
+    if (kasittelynTila) {
+      velhoDataUpdaters.push((projekti) => applyKasittelyntilaToVelho(projekti, kasittelynTila));
     }
-    velhoDataUpdaters.push((projekti) => applySuunnittelusopimusToVelho(projekti, dbSuunnitteluSopimus));
+    velhoDataUpdaters.push((projekti) => applySuunnittelusopimusToVelho(projekti, suunnitteluSopimus));
     if (velhoDataUpdaters.length > 0) {
-      await this.saveProjekti(dbProjekti.oid, this.composeVelhoProjektiDataUpdaters(...velhoDataUpdaters));
+      await this.saveProjekti(oid, this.composeVelhoProjektiDataUpdaters(...velhoDataUpdaters));
     }
   }
 
-  public async saveJulkaisupvmToVelho(
-    dbProjekti: DBProjekti,
+  public async saveJulkaisupvm(
+    oid: string,
     nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
   ): Promise<void> {
-    await this.saveProjekti(dbProjekti.oid, (projekti) => applyNahtavillaoloajankohtaToVelho(projekti, nahtavillaoloVaiheJulkaisu));
+    await this.saveProjekti(oid, (projekti) => applyNahtavillaoloajankohtaToVelho(projekti, nahtavillaoloVaiheJulkaisu));
   }
 
   @recordVelhoLatencyDecorator(

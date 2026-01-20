@@ -16,6 +16,7 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { parameters } from "../../../src/aws/parameters";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { mockSaveProjektiToVelho, VelhoStub } from "../../../integrationtest/api/testUtil/util";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
@@ -24,6 +25,7 @@ describe("nahtavillaoloTilaManager", () => {
 
   before(() => {
     mockClient(DynamoDBDocumentClient);
+    mockSaveProjektiToVelho(new VelhoStub());
   });
 
   beforeEach(() => {

@@ -791,7 +791,7 @@ async function saveProjektiToVelho(projekti: DBProjekti) {
       requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
     }
   }
-  await velhoClient.saveKasittelynTila(projekti, kasittelynTila, suunnitteluSopimus);
+  await velhoClient.saveKasittelynTila(projekti.oid, kasittelynTila, suunnitteluSopimus);
 }
 
 export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult): Promise<API.TallennaProjektiStatus | undefined> {
