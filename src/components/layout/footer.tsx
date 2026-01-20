@@ -10,7 +10,6 @@ import ContentSpacer from "./ContentSpacer";
 import { H2 } from "../Headings";
 import { useIsYllapito } from "../../hooks/useIsYllapito";
 import { focusStyleSecondary } from "./HassuMuiThemeProvider";
-import { isEvkAktivoitu } from "../../../common/util/isEvkAktivoitu";
 
 type SocialMediaLinkProps = {
   icon: FontAwesomeIconProps["icon"];
@@ -48,30 +47,30 @@ const vaylaSocialMedia: SocialMediaLinkProps[] = [
   },
 ];
 
-const elySocialMedia: SocialMediaLinkProps[] = [
+const evkSocialMedia: SocialMediaLinkProps[] = [
   {
     icon: { iconName: "facebook-square", prefix: "fab" },
     title: "Facebook",
     titleIllatiivi: "Facebookiin",
-    href: "https://www.facebook.com/ELYkeskus",
+    href: "https://www.facebook.com/Elinvoimakeskus",
   },
   {
     icon: { iconName: "twitter", prefix: "fab" },
     title: "Twitter",
     titleIllatiivi: "Twitteriin",
-    href: "https://www.twitter.com/ELYkeskus",
+    href: "https://x.com/Elinvoimakeskus",
   },
   {
     icon: { iconName: "linkedin", prefix: "fab" },
     title: "LinkedIn",
     titleIllatiivi: "LinkedIniin",
-    href: "https://www.linkedin.com/company/centre-for-economic-development-transport-and-the-environment/",
+    href: "https://www.linkedin.com/company/elinvoimakeskus",
   },
   {
     icon: { iconName: "youtube", prefix: "fab" },
     title: "Youtube",
     titleIllatiivi: "Youtubeen",
-    href: "https://www.youtube.com/channel/UChlaFxyANJa7Qs8-NlPx-wg",
+    href: "https://www.youtube.com/@Elinvoimakeskus",
   },
 ];
 
@@ -80,7 +79,6 @@ export const Footer = () => {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("lg"));
   const isYllapito = useIsYllapito();
-  const isEvkAktiivinen = isEvkAktivoitu();
 
   return (
     <StyledFooter>
@@ -103,25 +101,16 @@ export const Footer = () => {
                 <div className="my-auto text-center">
                   <Image src="/assets/vayla_alla_fi_sv_rgb.png" alt="" width="140.4" height="117" />
                 </div>
-                {isEvkAktiivinen ? (
-                  <div className="my-auto text-center">
-                    <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170.61" height="91" />
-                  </div>
-                ) : (
-                  <div className="my-auto text-center">
-                    <Image src="/assets/ely_alla_fi_sv_rgb.png" alt="" width="170.61" height="91" />
-                  </div>
-                )}
+                <div className="my-auto text-center">
+                  <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170.61" height="91" />
+                </div>
               </KuvaContainer>
             </div>
             <p>{t("hankesuunnitelmista")}</p>
           </ContentSpacer>
           <ul>
             <FooterLinkkiEl href={t("linkki.vayla.linkki")} teksti={t("linkki.vayla.teksti")} />
-            <FooterLinkkiEl
-              href={t(`linkki.linkki-${isEvkAktivoitu() ? "evk" : "ely"}.href`)}
-              teksti={t(`linkki.linkki-${isEvkAktivoitu() ? "evk" : "ely"}.teksti`)}
-            />
+            <FooterLinkkiEl href={t(`linkki.linkki-evk.href`)} teksti={t(`linkki.linkki-evk.teksti`)} />
           </ul>
           <div>
             <span>&copy; {t("common:vaylavirasto")}</span>
@@ -247,22 +236,20 @@ function FooterKansalaisContent() {
             ))}
           </SocialMediaLinkList>
         </ContentSpacer>
-        {!isEvkAktivoitu() && (
-          <ContentSpacer gap={4}>
-            <p>{t("sosiaalinen_media.ely.otsikko")}</p>
-            <SocialMediaLinkList>
-              {elySocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
-                <SocialMediaLink
-                  key={title}
-                  title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.ely.etuliite_genetiivi")} ${
-                    lang == "fi" ? titleIllatiivi : title
-                  }`}
-                  {...socialMedia}
-                />
-              ))}
-            </SocialMediaLinkList>
-          </ContentSpacer>
-        )}
+        <ContentSpacer gap={4}>
+          <p>{t("sosiaalinen_media.evk.otsikko")}</p>
+          <SocialMediaLinkList>
+            {evkSocialMedia.map(({ title, titleIllatiivi, ...socialMedia }) => (
+              <SocialMediaLink
+                key={title}
+                title={`${t("sosiaalinen_media.linkki_jonnekin")} ${t("sosiaalinen_media.evk.etuliite_genetiivi")} ${
+                  lang == "fi" ? titleIllatiivi : title
+                }`}
+                {...socialMedia}
+              />
+            ))}
+          </SocialMediaLinkList>
+        </ContentSpacer>
       </ContentSpacer>
       <Linkkilista2>
         <li>
