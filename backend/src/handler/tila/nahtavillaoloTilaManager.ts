@@ -34,7 +34,6 @@ import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
-import { ProjektiAdaptationResult } from "../../projekti/adapter/projektiAdaptationResult";
 import { velho } from "../../velho/velhoClient";
 
 async function createNahtavillaoloVaihePDF(
