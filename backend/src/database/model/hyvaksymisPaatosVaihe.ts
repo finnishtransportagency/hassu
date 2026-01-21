@@ -28,6 +28,7 @@ export type HyvaksymisPaatosVaihe = {
   viimeinenVoimassaolovuosi?: string | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   aineistoMuokkaus?: AineistoMuokkaus | null;
+  alkuperainenPaatos?: Array<Aineisto> | null;
 };
 
 export type HyvaksymisPaatosVaiheJulkaisu = {
@@ -56,6 +57,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   maanomistajaluettelo?: string | null;
   kopioituProjektista?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
+  alkuperainenPaatos?: Array<Aineisto> | null;
 };
 
 export type HyvaksymisPaatosVaihePDF = {
