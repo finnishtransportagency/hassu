@@ -41,7 +41,16 @@ const vaiheSpecificRoute: Record<
 type FormValues = HyvaksymisPaatosVaiheAineistotFormValues & NahtavilleAsetettavatAineistotFormValues;
 
 const mapFormValuesToTallennaProjektiInput = (
-  { oid, versio, hyvaksymisPaatos, poistetutAineistoNahtavilla, poistetutHyvaksymisPaatos, aineistoNahtavilla }: FormValues,
+  {
+    oid,
+    versio,
+    hyvaksymisPaatos,
+    poistetutHyvaksymisPaatos,
+    aineistoNahtavilla,
+    poistetutAineistoNahtavilla,
+    alkuperainenPaatos,
+    poistetutAlkuperainenPaatos,
+  }: FormValues,
   siirtymaTyyppi: SiirtymaTyyppi,
   muokkausTila: MuokkausTila | null | undefined
 ): TallennaProjektiInput => {
@@ -60,6 +69,7 @@ const mapFormValuesToTallennaProjektiInput = (
     input[vaiheAvain] = {
       aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
       hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
+      alkuperainenPaatos: handleAineistoArraysForSave(alkuperainenPaatos, poistetutAlkuperainenPaatos),
     };
   } else {
     input[vaiheAvain] = {

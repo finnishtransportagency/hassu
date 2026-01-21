@@ -20,6 +20,7 @@ import Section from "@components/layout/Section2";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { FormAineisto } from "src/util/FormAineisto";
+import AlkuperainenPaatos from "./AlkuperainenPaatos/index";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: FormAineisto[];
@@ -28,8 +29,10 @@ interface AineistoNahtavilla {
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
   poistetutAineistoNahtavilla: FormAineisto[];
-  poistetutHyvaksymisPaatos?: FormAineisto[];
   hyvaksymisPaatos?: FormAineisto[];
+  poistetutHyvaksymisPaatos?: FormAineisto[];
+  alkuperainenPaatos?: FormAineisto[];
+  poistetutAlkuperainenPaatos?: FormAineisto[];
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
@@ -82,6 +85,10 @@ function MuokkausnakymaForm({
       julkaisematonPaatos?.aineistoNahtavilla,
       false
     );
+    const { lisatty: alkuperainenPaatos, poistettu: poistetutAlkuperainenPaatos } = handleAineistoArrayForDefaultValues(
+      julkaisematonPaatos?.alkuperainenPaatos,
+      true
+    );
 
     const defaultFormValues: HyvaksymisPaatosVaiheAineistotFormValues = {
       oid: projekti.oid,
@@ -93,6 +100,8 @@ function MuokkausnakymaForm({
     if (julkaisematonPaatos?.muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS) {
       defaultFormValues.poistetutHyvaksymisPaatos = poistetutHyvaksymisPaatos;
       defaultFormValues.hyvaksymisPaatos = hyvaksymisPaatos;
+      defaultFormValues.poistetutAlkuperainenPaatos = poistetutAlkuperainenPaatos;
+      defaultFormValues.alkuperainenPaatos = alkuperainenPaatos;
     }
 
     return defaultFormValues;
@@ -138,6 +147,7 @@ function MuokkausnakymaForm({
               sectionSubtitle="Päätöksen liitteenä oleva aineisto"
               aineistoKategoriat={aineistoKategoriat}
             />
+            <AlkuperainenPaatos vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
