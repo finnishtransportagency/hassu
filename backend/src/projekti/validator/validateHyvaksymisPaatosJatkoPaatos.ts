@@ -19,14 +19,16 @@ export function validateHyvaksymisPaatosJatkoPaatos(projekti: DBProjekti, apiPro
   ];
 
   paatosKeyStatusArray.forEach(([key, status]) => {
-    const { aineistoNahtavilla, hyvaksymisPaatos, ...kuulutuksenTiedot } = input[key] ?? {};
+    const { aineistoNahtavilla, hyvaksymisPaatos, alkuperainenPaatos, ...kuulutuksenTiedot } = input[key] ?? {};
     const kuulutuksenTiedotContainInput = Object.values(kuulutuksenTiedot).some((value) => !!value);
     const aineistotPresent = !!aineistoNahtavilla?.length;
     const paatosAineistoPresent = !!hyvaksymisPaatos?.length;
+    const alkuperainenAineistoPresent = !!alkuperainenPaatos?.length;
+
     const hasAineistotLackingKategoria = !!aineistoNahtavilla?.some(
       (aineisto) => !aineisto.kategoriaId || aineisto.kategoriaId === kategorisoimattomatId
     );
-    const aineistoInputOk = aineistotPresent && paatosAineistoPresent && !hasAineistotLackingKategoria;
+    const aineistoInputOk = aineistotPresent && paatosAineistoPresent && !hasAineistotLackingKategoria && alkuperainenAineistoPresent;
     if (kuulutuksenTiedotContainInput && !isStatusGreaterOrEqualTo(apiProjekti.status, status) && !aineistoInputOk) {
       throw new IllegalArgumentError(key + " aineistoja ei ole vielä tallennettu tai niiden joukossa on kategorisoimattomia.");
     }
@@ -35,6 +37,8 @@ export function validateHyvaksymisPaatosJatkoPaatos(projekti: DBProjekti, apiPro
   validateAineistoInput(projekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos, input.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
   validateAineistoInput(projekti.jatkoPaatos1Vaihe?.aineistoNahtavilla, input.jatkoPaatos1Vaihe?.aineistoNahtavilla);
   validateAineistoInput(projekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos, input.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
+  validateAineistoInput(projekti.jatkoPaatos1Vaihe?.alkuperainenPaatos, input.jatkoPaatos1Vaihe?.alkuperainenPaatos);
   validateAineistoInput(projekti.jatkoPaatos2Vaihe?.aineistoNahtavilla, input.jatkoPaatos2Vaihe?.aineistoNahtavilla);
   validateAineistoInput(projekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos, input.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
+  validateAineistoInput(projekti.jatkoPaatos2Vaihe?.alkuperainenPaatos, input.jatkoPaatos2Vaihe?.alkuperainenPaatos);
 }
