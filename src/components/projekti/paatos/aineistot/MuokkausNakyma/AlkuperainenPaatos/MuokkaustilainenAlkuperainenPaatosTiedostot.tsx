@@ -16,7 +16,7 @@ export default function MuokkaustilainenAlkuperainenPaatosTiedostot() {
   return (
     <ContentSpacer gap={7}>
       <p>
-        Liitä alkuperäinen hyväksymispäätös ja liittyvät aineistot. Ne menevät näkyviin kansalaispuolelle, mutta eivät lähde sähköpostilla
+        Liitä alkuperäinen hyväksymispäätös ja muu liittyvä aineisto. Ne menevät näkyviin kansalaispuolelle, mutta eivät lähde sähköpostilla
         viranomaisille.
       </p>
       {!!alkuperainenPaatos?.length && <AlkuperainenPaatosTiedostot />}

@@ -91,7 +91,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) 
         )}
         {jatkopaatosvaiheessa && (
           <>
-            <H3>Alkuperäinen hyväksymispäätös ja liittyvät aineistot</H3>
+            <H3>Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto</H3>
             {julkaisu?.alkuperainenPaatos && (
               <Stack direction="column" rowGap={2}>
                 {julkaisu.alkuperainenPaatos.map((aineisto) => (

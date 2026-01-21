@@ -12,7 +12,7 @@ export interface TiedostoLomakeProps {
 export default function AlkuperainenPaatos({ vaihe }: TiedostoLomakeProps) {
   return (
     <>
-      <h4 className="vayla-small-title mt-10">Alkuperäinen hyväksymispäätös ja liittyvät aineistot</h4>
+      <h4 className="vayla-small-title mt-10">Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto</h4>
       {vaihe?.muokkausTila === MuokkausTila.AINEISTO_MUOKKAUS ? (
         <LukutilainenAlkuperainenPaatosTiedostot vaihe={vaihe} />
       ) : (
