@@ -7,13 +7,10 @@ const hasSuunnitteluSopimusChanged = (
   projekti: DBProjekti,
   suunnitteluSopimusInput: API.SuunnitteluSopimusInput | null | undefined
 ): boolean => {
-  if (projekti.suunnitteluSopimus && !suunnitteluSopimusInput) {
+  if (suunnitteluSopimusInput != null) {
     return true;
   }
-  if (!projekti.suunnitteluSopimus && suunnitteluSopimusInput) {
-    return true;
-  }
-  return false;
+  return projekti.suunnitteluSopimus !== suunnitteluSopimusInput;
 };
 
 export function adaptSuunnitteluSopimusToSave(
