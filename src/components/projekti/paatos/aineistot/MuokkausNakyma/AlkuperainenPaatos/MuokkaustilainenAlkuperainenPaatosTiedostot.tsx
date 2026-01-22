@@ -33,7 +33,7 @@ export default function MuokkaustilainenAlkuperainenPaatosTiedostot() {
           setValue("alkuperainenPaatos", newAlkuperainenPaatos);
         }}
       />
-      <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_paatos_button">
+      <Button type="button" onClick={() => setPaatosDialogOpen(true)} id="tuo_alkuperainen_paatos_button">
         Tuo aiempi päätös
       </Button>
     </ContentSpacer>
