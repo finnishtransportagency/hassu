@@ -69,6 +69,14 @@ const mapFormValuesToTallennaProjektiInput = (
     input[vaiheAvain] = {
       aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
       hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
+    };
+  } else if (
+    muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS &&
+    (vaiheAvain === "jatkoPaatos1Vaihe" || vaiheAvain === "jatkoPaatos2Vaihe")
+  ) {
+    input[vaiheAvain] = {
+      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+      hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
       alkuperainenPaatos: handleAineistoArraysForSave(alkuperainenPaatos, poistetutAlkuperainenPaatos),
     };
   } else {
