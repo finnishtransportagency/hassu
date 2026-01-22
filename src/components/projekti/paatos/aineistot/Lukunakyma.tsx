@@ -44,7 +44,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) 
     projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo &&
     julkaisu.aineistoMuokkaus;
 
-  const jatkopaatosvaiheessa = projekti.jatkoPaatos1Vaihe;
+  const hyvaksymisvaiheessa = paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS;
 
   return (
     <>
@@ -89,7 +89,7 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) 
             <AineistoNahtavillaAccordion kategoriat={kategoriat} julkaisu={julkaisu} paakategoria />
           </>
         )}
-        {jatkopaatosvaiheessa && (
+        {!hyvaksymisvaiheessa && (
           <>
             <H3>Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto</H3>
             {julkaisu?.alkuperainenPaatos && (

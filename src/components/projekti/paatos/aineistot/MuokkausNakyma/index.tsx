@@ -132,6 +132,8 @@ function MuokkausnakymaForm({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
+  const hyvaksymisvaiheessa = paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS;
+
   return (
     <FormProvider {...useFormReturn}>
       <form>
@@ -147,7 +149,7 @@ function MuokkausnakymaForm({
               sectionSubtitle="Päätöksen liitteenä oleva aineisto"
               aineistoKategoriat={aineistoKategoriat}
             />
-            <AlkuperainenPaatos vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />
+            {!hyvaksymisvaiheessa && <AlkuperainenPaatos vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />}
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
