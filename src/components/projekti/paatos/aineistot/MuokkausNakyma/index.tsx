@@ -152,7 +152,7 @@ function MuokkausnakymaForm({
               sectionSubtitle="Päätöksen liitteenä oleva aineisto"
               aineistoKategoriat={aineistoKategoriat}
             />
-            {!hyvaksymisvaiheessa && <AlkuperainenPaatos vaihe={julkaisematonPaatos} paatosTyyppi={paatosTyyppi} />}
+            {!hyvaksymisvaiheessa && <AlkuperainenPaatos />}
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
