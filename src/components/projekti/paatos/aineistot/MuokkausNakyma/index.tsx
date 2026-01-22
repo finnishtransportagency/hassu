@@ -85,10 +85,6 @@ function MuokkausnakymaForm({
       julkaisematonPaatos?.aineistoNahtavilla,
       false
     );
-    const { lisatty: alkuperainenPaatos, poistettu: poistetutAlkuperainenPaatos } = handleAineistoArrayForDefaultValues(
-      julkaisematonPaatos?.alkuperainenPaatos,
-      true
-    );
 
     const defaultFormValues: HyvaksymisPaatosVaiheAineistotFormValues = {
       oid: projekti.oid,
@@ -100,12 +96,19 @@ function MuokkausnakymaForm({
     if (julkaisematonPaatos?.muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS) {
       defaultFormValues.poistetutHyvaksymisPaatos = poistetutHyvaksymisPaatos;
       defaultFormValues.hyvaksymisPaatos = hyvaksymisPaatos;
+    }
+
+    if (paatosTyyppi !== PaatosTyyppi.HYVAKSYMISPAATOS) {
+      const { lisatty: alkuperainenPaatos, poistettu: poistetutAlkuperainenPaatos } = handleAineistoArrayForDefaultValues(
+        julkaisematonPaatos?.alkuperainenPaatos,
+        true
+      );
       defaultFormValues.poistetutAlkuperainenPaatos = poistetutAlkuperainenPaatos;
       defaultFormValues.alkuperainenPaatos = alkuperainenPaatos;
     }
 
     return defaultFormValues;
-  }, [julkaisematonPaatos, projekti.oid, projekti.versio, kategoriaIds]);
+  }, [julkaisematonPaatos, projekti.oid, projekti.versio, kategoriaIds, paatosTyyppi]);
 
   const validationMode = useValidationMode();
 
