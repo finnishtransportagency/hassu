@@ -17,6 +17,7 @@ import { expect } from "chai";
 import { eventSqsClient } from "../../../src/sqsEvents/eventSqsClient";
 import { emailClient } from "../../../src/email/email";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { mockSaveProjektiToVelho, VelhoStub } from "../../../integrationtest/api/testUtil/util";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
@@ -38,6 +39,7 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
+    mockSaveProjektiToVelho(new VelhoStub());
   });
 
   afterEach(() => {
