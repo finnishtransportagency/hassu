@@ -37,6 +37,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
   const {
     hyvaksymisPaatos,
     aineistoNahtavilla,
+    alkuperainenPaatos,
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     yhteystiedot,
@@ -78,9 +79,11 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
 
   let apiHyvaksymisPaatosAineisto: API.Aineisto[] | undefined = undefined;
   let apiAineistoNahtavilla: API.Aineisto[] | undefined = undefined;
+  let apiAlkuperainenPaatos: API.Aineisto[] | undefined = undefined;
   if (paatosVaiheAineisto.isAineistoVisible(julkaisu)) {
     apiHyvaksymisPaatosAineisto = adaptAineistotJulkinen(hyvaksymisPaatos, paths);
     apiAineistoNahtavilla = adaptAineistotJulkinen(aineistoNahtavilla, paths);
+    apiAlkuperainenPaatos = adaptAineistotJulkinen(alkuperainenPaatos, paths);
   }
 
   const julkaisuJulkinen: API.HyvaksymisPaatosVaiheJulkaisuJulkinen = {
@@ -90,6 +93,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
     hyvaksymisPaatoksenPvm: hyvaksymispaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymispaatos.asianumero,
     aineistoNahtavilla: apiAineistoNahtavilla,
+    alkuperainenPaatos: apiAlkuperainenPaatos,
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     yhteystiedot: adaptMandatoryYhteystiedotByAddingTypename(yhteystiedot),

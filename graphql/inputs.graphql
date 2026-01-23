@@ -346,6 +346,7 @@ input HyvaksymisPaatosVaiheInput {
   viimeinenVoimassaolovuosi: String
   hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
+  alkuperainenPaatos: [AineistoInput!]
 }
 
 input LinkkiInput {
