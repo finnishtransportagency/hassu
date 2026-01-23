@@ -61,29 +61,17 @@ const mapFormValuesToTallennaProjektiInput = (
     versio,
   };
 
-  if (vaiheAvain === "nahtavillaoloVaihe") {
-    input[vaiheAvain] = {
-      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
-    };
-  } else if (
-    muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS &&
-    (vaiheAvain === "jatkoPaatos1Vaihe" || vaiheAvain === "jatkoPaatos2Vaihe")
+  input[vaiheAvain] = {
+    aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
+  };
+  if (vaiheAvain === "jatkoPaatos1Vaihe" || vaiheAvain === "jatkoPaatos2Vaihe") {
+    input[vaiheAvain]!.alkuperainenPaatos = handleAineistoArraysForSave(alkuperainenPaatos, poistetutAlkuperainenPaatos);
+  }
+  if (
+    (vaiheAvain === "jatkoPaatos1Vaihe" || vaiheAvain === "jatkoPaatos2Vaihe" || vaiheAvain === "hyvaksymisPaatosVaihe") &&
+    muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS
   ) {
-    input[vaiheAvain] = {
-      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
-      hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
-      alkuperainenPaatos: handleAineistoArraysForSave(alkuperainenPaatos, poistetutAlkuperainenPaatos),
-    };
-  } else if (muokkausTila !== MuokkausTila.AINEISTO_MUOKKAUS) {
-    input[vaiheAvain] = {
-      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
-      hyvaksymisPaatos: handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos),
-    };
-  } else {
-    input[vaiheAvain] = {
-      aineistoNahtavilla: handleAineistoArraysForSave(Object.values(aineistoNahtavilla).flat(), poistetutAineistoNahtavilla),
-      alkuperainenPaatos: handleAineistoArraysForSave(alkuperainenPaatos, poistetutAlkuperainenPaatos),
-    };
+    input[vaiheAvain]!.hyvaksymisPaatos = handleAineistoArraysForSave(hyvaksymisPaatos, poistetutHyvaksymisPaatos);
   }
 
   return input;
