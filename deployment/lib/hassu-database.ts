@@ -1,5 +1,5 @@
 import * as ddb from "aws-cdk-lib/aws-dynamodb";
-import { ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
+import { PointInTimeRecoverySpecification, ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
 import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, BucketEncryption, HttpMethods } from "aws-cdk-lib/aws-s3";
@@ -25,6 +25,8 @@ export class HassuDatabaseStack extends Stack {
   public kiinteistonOmistajaTable!: ddb.Table;
   public projektiMuistuttajaTable!: ddb.Table;
   public tiedoteTable!: ddb.Table;
+  public schemaMetaTable!: ddb.Table;
+  public migrationRunTable!: ddb.Table;
   public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
@@ -55,6 +57,8 @@ export class HassuDatabaseStack extends Stack {
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     this.tiedoteTable = this.createTiedoteTable();
     this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
+    this.schemaMetaTable = this.createSchemaMetaTable();
+    this.migrationRunTable = this.createMigrationRunTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -75,7 +79,9 @@ export class HassuDatabaseStack extends Stack {
   }
 
   private createProjektiTables() {
-    const pointInTimeRecovery = Config.getEnvConfig().pointInTimeRecovery;
+    const pointInTimeRecoverySpecification: PointInTimeRecoverySpecification = {
+      pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery,
+    };
     const projektiTable = new ddb.Table(this, "ProjektiTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       tableName: Config.projektiTableName,
@@ -84,13 +90,19 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
-      pointInTimeRecovery,
+      pointInTimeRecoverySpecification,
     });
     HassuDatabaseStack.enableBackup(projektiTable);
     projektiTable.addGlobalSecondaryIndex({
       indexName: "UusiaPalautteitaIndex",
       sortKey: { name: "uusiaPalautteita", type: ddb.AttributeType.NUMBER },
       partitionKey: { name: "oid", type: ddb.AttributeType.STRING },
+      projectionType: ProjectionType.KEYS_ONLY,
+    });
+    projektiTable.addGlobalSecondaryIndex({
+      indexName: "SchemaVersionIndex",
+      partitionKey: { name: "schemaVersion", type: ddb.AttributeType.NUMBER },
+      sortKey: { name: "oid", type: ddb.AttributeType.STRING },
       projectionType: ProjectionType.KEYS_ONLY,
     });
 
@@ -105,7 +117,7 @@ export class HassuDatabaseStack extends Stack {
         name: "lyhytOsoite",
         type: ddb.AttributeType.STRING,
       },
-      pointInTimeRecovery,
+      pointInTimeRecoverySpecification,
     });
     HassuDatabaseStack.enableBackup(lyhytOsoiteTable);
 
@@ -113,6 +125,48 @@ export class HassuDatabaseStack extends Stack {
       lyhytOsoiteTable.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
     return { projektiTable, lyhytOsoiteTable };
+  }
+
+  public createSchemaMetaTable() {
+    const table = new ddb.Table(this, "SchemaMetaTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.schemaMetaTableName,
+      partitionKey: {
+        name: "tableName",
+        type: ddb.AttributeType.STRING,
+      },
+      pointInTimeRecoverySpecification: {
+        pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery,
+      },
+    });
+
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+
+    return table;
+  }
+
+  public createMigrationRunTable() {
+    const table = new ddb.Table(this, "MigrationRunTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.migrationRunTableName,
+      partitionKey: {
+        name: "migrationId",
+        type: ddb.AttributeType.STRING,
+      },
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
+    });
+
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+
+    return table;
   }
 
   private createFeedbackTable() {
@@ -127,7 +181,7 @@ export class HassuDatabaseStack extends Stack {
         name: "id",
         type: ddb.AttributeType.STRING,
       },
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
     });
     HassuDatabaseStack.enableBackup(table);
 
@@ -150,7 +204,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
       timeToLiveAttribute: "expires",
     });
     HassuDatabaseStack.enableBackup(table);
@@ -174,7 +228,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
       timeToLiveAttribute: "expires",
     });
     HassuDatabaseStack.enableBackup(table);
@@ -194,7 +248,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
       timeToLiveAttribute: "expires",
     });
     HassuDatabaseStack.enableBackup(table);
@@ -214,7 +268,7 @@ export class HassuDatabaseStack extends Stack {
         type: ddb.AttributeType.STRING,
       },
       stream: StreamViewType.NEW_IMAGE,
-      pointInTimeRecovery: Config.getEnvConfig().pointInTimeRecovery,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
       timeToLiveAttribute: "expires",
     });
     HassuDatabaseStack.enableBackup(table);
