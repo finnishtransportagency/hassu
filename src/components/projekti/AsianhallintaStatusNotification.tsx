@@ -44,7 +44,7 @@ const tilakohtainenVaroitus = (
       </>
     ),
     VAARA_TOS_LUOKKA:
-      "Suunnitelmalla on väärä tehtävä. Ota yhteyttä kirjaamoon. Tarvittaessa on avattava uusi asiatunnus tien hallinnollisen käsittelyn tehtävälle 06.01.01.",
+      "Suunnitelmalla on väärä tehtävä. Ota yhteyttä kirjaamoon. Tarvittaessa on avattava uusi asiatunnus tien hallinnollisen käsittelyn tehtävälle 16.01.00.",
   };
   return asianTila ? tilojenVaroitukset[asianTila] : ODOTTAMATON_VIRHE_VAROITUS;
 };
