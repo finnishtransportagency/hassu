@@ -5,7 +5,7 @@ import yargs from "yargs";
 import { TestProjektiDatabase } from "../src/database/testProjektiDatabase";
 import { migrateFromOldSchema } from "../src/database/projektiSchemaUpdate";
 import isEqual from "lodash/isEqual";
-var fs = require("node:fs");
+// var fs = require("node:fs");
 
 yargs
   .scriptName("npm run upgradeDatabase")
@@ -55,21 +55,21 @@ async function upgradeDatabase(dryRun: boolean, envName: string) {
       if (!isEqual(fixed, projekti)) {
         hasChanges = true;
 
-        const folderName = `${envName}`;
-        try {
-          if (!fs.existsSync(folderName, { recursive: true })) {
-            fs.mkdirSync(folderName, { recursive: true });
-          }
-          fs.writeFile(`${folderName}/${projekti.oid}.json`, JSON.stringify(fixed), (err: any) => {
-            if (err) {
-              console.error(err);
-            } else {
-              // done!
-            }
-          });
-        } catch (err) {
-          console.error(err);
-        }
+        // const folderName = `${envName}`;
+        // try {
+        //   if (!fs.existsSync(folderName, { recursive: true })) {
+        //     fs.mkdirSync(folderName, { recursive: true });
+        //   }
+        //   fs.writeFile(`${folderName}/${projekti.oid}.json`, JSON.stringify(fixed), (err: any) => {
+        //     if (err) {
+        //       console.error(err);
+        //     } else {
+        //       // done!
+        //     }
+        //   });
+        // } catch (err) {
+        //   console.error(err);
+        // }
       }
 
       if (hasChanges) {

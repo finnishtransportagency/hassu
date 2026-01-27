@@ -425,18 +425,22 @@ function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti, isUpgradeDatabase: b
       ["lahetekirje", "kuulutusPDF", "kuulutusIlmoitusPDF"].includes(key) &&
       typeof value == "object"
     ) {
+      const tila = value.tila ?? LadattuTiedostoTila.VALMIS;
       if (!value?.uuid) {
-        return { ...value, uuid: uuid.v4() };
+        return { ...value, uuid: uuid.v4(), tila };
       } else {
-        return value;
+        return { ...value, tila };
       }
     } else if (key == "vuorovaikutusSaamePDFt" && typeof value == "object" && value.POHJOISSAAME) {
-      if (!value.POHJOISSAAME.uuid) {
+      if (!value.POHJOISSAAME.uuid || !value.POHJOISSAAME.tila) {
+        const tila = value.POHJOISSAAME?.tila ?? LadattuTiedostoTila.VALMIS;
+        const uuidv4 = value.POHJOISSAAME?.uuid ?? uuid.v4();
         return {
           ...value,
           POHJOISSAAME: {
             ...value.POHJOISSAAME,
-            uuid: uuid.v4(),
+            tila,
+            uuid: uuidv4,
           },
         };
       } else {
