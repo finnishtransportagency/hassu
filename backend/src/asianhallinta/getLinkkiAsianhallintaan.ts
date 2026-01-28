@@ -19,6 +19,6 @@ export const getLinkkiAsianhallintaan: LinkkiAsianhallintaanFunc = async (projek
 
 export function constructLinkkiAsianhallintaan(vaylaAsianhallinta: boolean, baseUrl: string, asiaId: number): string | undefined {
   return vaylaAsianhallinta
-    ? `${baseUrl}/group/asianhallinta/asianhallinta/-/case/${asiaId}/view`
+    ? `${baseUrl}/group/asianhallinta2/asianhallinta#/${asiaId}/-/actions`
     : `${baseUrl}/Asia.aspx?AsiaId=${asiaId}`;
 }
