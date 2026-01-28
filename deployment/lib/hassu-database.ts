@@ -26,7 +26,6 @@ export class HassuDatabaseStack extends Stack {
   public projektiMuistuttajaTable!: ddb.Table;
   public tiedoteTable!: ddb.Table;
   public schemaMetaTable!: ddb.Table;
-  public migrationRunTable!: ddb.Table;
   public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
@@ -58,7 +57,6 @@ export class HassuDatabaseStack extends Stack {
     this.tiedoteTable = this.createTiedoteTable();
     this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
     this.schemaMetaTable = this.createSchemaMetaTable();
-    this.migrationRunTable = this.createMigrationRunTable();
     let oai;
     if (Config.isNotLocalStack()) {
       const oaiName = "CloudfrontOriginAccessIdentity" + Config.env;
@@ -148,27 +146,6 @@ export class HassuDatabaseStack extends Stack {
 
     return table;
   }
-
-  public createMigrationRunTable() {
-    const table = new ddb.Table(this, "MigrationRunTable", {
-      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-      tableName: Config.migrationRunTableName,
-      partitionKey: {
-        name: "migrationId",
-        type: ddb.AttributeType.STRING,
-      },
-      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
-    });
-
-    HassuDatabaseStack.enableBackup(table);
-
-    if (Config.isPermanentEnvironment()) {
-      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
-    }
-
-    return table;
-  }
-
   private createFeedbackTable() {
     const table = new ddb.Table(this, "FeedbackTable", {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,

@@ -104,8 +104,7 @@ export class Config extends BaseConfig {
   public static readonly projektiMuistuttajaTableName = `ProjektiMuistuttaja-${Config.env}`;
   public static readonly tiedoteTableName = `Tiedote-${Config.env}`;
   public static readonly schemaMetaTableName = `SchemaMeta-${Config.env}`;
-  public static readonly migrationRunTableName = `MigrationRun-${Config.env}`;
-  public static nahtavillaoloVaiheJulkaisuTableName = `NahtavillaoloVaiheJulkaisu-${Config.env}`;
+  public static readonly nahtavillaoloVaiheJulkaisuTableName = `NahtavillaoloVaiheJulkaisu-${Config.env}`;
   public readonly velhoEnv;
   public readonly basicAuthenticationUsername: string;
   public readonly basicAuthenticationPassword: string;

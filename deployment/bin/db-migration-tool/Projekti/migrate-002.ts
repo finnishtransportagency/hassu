@@ -1,47 +1,31 @@
-import { QueryCommand, QueryCommandOutput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
-import { ddb } from "../ddb";
-import { nowWithOffset } from "../nowWithOffset";
-import pLimit from "p-limit";
+import { PagedMigrationRunPlan } from "../types";
+import { TestProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
+import { cloneDeep } from "lodash";
+import { DBProjekti } from "../../../../backend/src/database/model/projekti";
+import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
 
-const limit = pLimit(10);
+const migrate002: PagedMigrationRunPlan = async (options) => {
+  const projektiDatabase = new TestProjektiDatabase(options.tableName, "not-used");
 
-export default async function migrate001(tableName: string, schemaVersion: number): Promise<void> {
-  const priorSchemaVersion = schemaVersion - 1;
-  let lastKey: QueryCommandOutput["LastEvaluatedKey"];
+  const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
+    JSON.stringify(options.startKey)
+  );
 
-  do {
-    const page = await ddb.send(
-      new QueryCommand({
-        TableName: tableName,
-        IndexName: "SchemaVersionIndex",
-        KeyConditionExpression: "schemaVersion = :priorSv",
-        ExpressionAttributeValues: { ":priorSv": priorSchemaVersion },
-        ProjectionExpression: "oid",
-        ExclusiveStartKey: lastKey,
-      })
-    );
+  const fixedProjektis = scanResult.projektis.map((projekti) =>
+    migrateFromOldSchema(cloneDeep({ ...projekti, schemaVersion: options.versionId }), true)
+  );
+  console.log(
+    `${options.dryRun ? "Would run" : "Running"} migrateFromOldSchema to the following projektis: ${JSON.stringify(
+      fixedProjektis.map((projekti) => projekti.oid)
+    )}`
+  );
+  if (!options.dryRun) {
+    for (const fixed of fixedProjektis) {
+      await projektiDatabase.saveProjekti(fixed);
+    }
+  }
 
-    await Promise.all(
-      (page.Items ?? []).map((item) =>
-        limit(() =>
-          ddb.send(
-            new UpdateCommand({
-              TableName: tableName,
-              Key: { oid: item.oid },
-              UpdateExpression: `
-                SET paivitetty = :now,
-                    schemaVersion = :sv
-              `,
-              ExpressionAttributeValues: {
-                ":now": nowWithOffset(),
-                ":sv": schemaVersion,
-              },
-            })
-          )
-        )
-      )
-    );
+  return { updateInput: [], lastEvaluatedKey: scanResult.startKey ? JSON.parse(scanResult.startKey) : undefined };
+};
 
-    lastKey = page.LastEvaluatedKey;
-  } while (lastKey);
-}
+export default migrate002;

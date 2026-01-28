@@ -8,7 +8,7 @@ import isEqual from "lodash/isEqual";
 // var fs = require("node:fs");
 
 yargs
-  .scriptName("npm run upgradeDatabase")
+  .scriptName("npm run upgradeDatabase-old")
   .command(
     "dryRun [env]",
     "Älä kirjoita tietokantaan, tulosta vain eroavaisuudet",

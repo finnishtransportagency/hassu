@@ -1,43 +1,86 @@
-import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, ScanCommandInput, ScanCommandOutput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "./ddb";
-import { nowWithOffset } from "./nowWithOffset";
 import { Config } from "../../lib/config";
+import pLimit from "p-limit";
+import { PagedMigrationRunPlanResponse, TableConfig } from "./types";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
 
-type Migration = {
-  id: number;
-  run: (tableName: string, versionId: number) => Promise<void>;
-};
+yargs(hideBin(process.argv))
+  .scriptName("npm run upgradeDatabase-v2")
+  .usage("$0 <command> <env>")
+  .command(
+    "dryRun <env>",
+    "Does not write to database, only reads and shows what is about to change",
+    (y) =>
+      y.positional("env", {
+        type: "string",
+        describe: "Ympäristön nimi (esim. pekka, dev, staging, prod)",
+        demandOption: true,
+      }),
+    async (argv) => {
+      try {
+        console.log(`🔄 Starting database migration dry run for env '${argv.env}'`);
+        await migrateAllTables(true, argv.env);
+        console.log("🎉 Dry run complete");
+      } catch (err) {
+        console.error("❌ Dry run failed", err);
+        process.exit(1);
+      }
+    }
+  )
+  .command(
+    "run <env>",
+    "Writes changes to database",
+    (y) =>
+      y.positional("env", {
+        type: "string",
+        describe: "Ympäristön nimi (esim. pekka, dev, staging, prod)",
+        demandOption: true,
+      }),
+    async (argv) => {
+      try {
+        console.log(`🔄 Starting database migration run for env '${argv.env}'`);
+        await migrateAllTables(false, argv.env);
+        console.log("🎉 Migration complete");
+      } catch (err) {
+        console.error("❌ Migration failed", err);
+        process.exit(1);
+      }
+    }
+  )
+  .demandCommand(1, "You need to specify a command: dryRun or run")
+  .help()
+  .parse();
 
-type TableConfig = {
-  name: string;
-  latest: number;
-  migrations: Migration[];
-};
+const limit = pLimit(10);
 
-const TABLES: TableConfig[] = [
-  {
-    name: Config.projektiTableName,
-    latest: 1,
-    migrations: [
-      {
-        id: 1,
-        run: (table, id) => import("./Projekti/migrate-001").then((m) => m.default(table, id)),
-      },
-    ],
-  },
-  // {
-  //   name: Config.kiinteistonomistajaTableName,
-  //   latest: 2,
-  //   migrations: [
-  //     { id: 1, run: (t) => import("./Kiinteistonomistaja/migrate-001").then(m => m.default(t)) },
-  //     { id: 2, run: (t) => import("./Kiinteistonomistaja/migrate-002").then(m => m.default(t)) }
-  //   ]
-  // }
-];
+async function migrateAllTables(dryRun: boolean, environment: string) {
+  const TABLES: TableConfig[] = [
+    {
+      name: `Projekti-${environment}`,
+      migrations: [
+        {
+          versionId: 1,
+          plan: (options) => import("./Projekti/migrate-001").then((m) => m.default(options)),
+        },
+        {
+          versionId: 2,
+          plan: (options) => import("./Projekti/migrate-002").then((m) => m.default(options)),
+        },
+      ],
+    },
+    // {
+    //   name: `Kiinteistonomistaja-${environment}`,
+    //   migrations: [
+    //     { versionId: 1, plan: (options) => import("./Kiinteistonomistaja/migrate-001").then(m => m.default(options)) },
+    //     { versionId: 2, plan: (options) => import("./Kiinteistonomistaja/migrate-002").then(m => m.default(options)) }
+    //   ]
+    // }
+  ];
+  await Promise.all(TABLES.map((table) => migrateTable(table, dryRun)));
+}
 
-/**
- * ========= SchemaMeta helpers =========
- */
 async function getSchemaVersion(tableName: string): Promise<number> {
   const res = await ddb.send(
     new GetCommand({
@@ -45,7 +88,7 @@ async function getSchemaVersion(tableName: string): Promise<number> {
       Key: { tableName },
     })
   );
-  return res.Item?.currentVersion ?? 1;
+  return res.Item?.currentVersion ?? 0;
 }
 
 async function setSchemaVersion(tableName: string, v: number): Promise<void> {
@@ -59,141 +102,122 @@ async function setSchemaVersion(tableName: string, v: number): Promise<void> {
   );
 }
 
-/**
- * ========= Lock helpers =========
- */
-async function acquireSchemaLock(tableName: string, lockSeconds = 600): Promise<boolean> {
+async function acquireTableLock(tableName: string, minutes = 10): Promise<boolean> {
   const now = Math.floor(Date.now() / 1000);
-  const lockExpire = now + lockSeconds;
+  const lockUntil = now + minutes * 60;
 
   try {
     await ddb.send(
       new UpdateCommand({
         TableName: Config.schemaMetaTableName,
         Key: { tableName },
-        UpdateExpression: "SET lockUntil = :lock",
-        ConditionExpression: "attribute_not_exists(lockUntil) OR lockUntil < :now",
+        UpdateExpression: "SET lockedUntil = :lock",
+        ConditionExpression: "attribute_not_exists(lockedUntil) OR lockedUntil < :now",
         ExpressionAttributeValues: {
-          ":lock": lockExpire,
+          ":lock": lockUntil,
           ":now": now,
         },
       })
     );
+    console.log(`🔒 ${tableName} locked until ${lockUntil}`);
     return true;
-  } catch {
-    // Lukitus oli voimassa
+  } catch (err) {
+    console.warn(`⚠️ Failed to acquire lock for ${tableName}`, err);
     return false;
   }
 }
 
-async function releaseSchemaLock(tableName: string) {
+async function releaseTableLock(tableName: string) {
   await ddb.send(
     new UpdateCommand({
       TableName: Config.schemaMetaTableName,
       Key: { tableName },
-      UpdateExpression: "REMOVE lockUntil",
+      UpdateExpression: "REMOVE lockedUntil",
     })
   );
 }
 
-/**
- * ========= MigrationRun helpers =========
- */
-async function acquireMigrationLease(table: string, version: number): Promise<boolean> {
-  const now = Math.floor(Date.now() / 1000);
-  const leaseUntil = now + 600;
+async function migrateTable(cfg: TableConfig, dryRun: boolean): Promise<void> {
+  console.log(`🚀 Checking migrations for ${cfg.name}`);
 
-  try {
-    await ddb.send(
-      new UpdateCommand({
-        TableName: Config.migrationRunTableName,
-        Key: { migrationId: `${table}-${version}` },
-        UpdateExpression: `
-        SET status = :running,
-            leaseUntil = :lease,
-            attempts = if_not_exists(attempts, :zero) + :one
-      `,
-        ConditionExpression: `
-        attribute_not_exists(status)
-        OR (status <> :done AND leaseUntil < :now)
-      `,
-        ExpressionAttributeValues: {
-          ":running": "running",
-          ":done": "done",
-          ":lease": leaseUntil,
-          ":now": now,
-          ":zero": 0,
-          ":one": 1,
-        },
-      })
-    );
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function markMigrationDone(table: string, version: number) {
-  await ddb.send(
-    new UpdateCommand({
-      TableName: Config.migrationRunTableName,
-      Key: { migrationId: `${table}-${version}` },
-      UpdateExpression: `
-      SET status = :done,
-          finishedAt = :now
-      REMOVE leaseUntil
-    `,
-      ExpressionAttributeValues: {
-        ":done": "done",
-        ":now": nowWithOffset(),
-      },
-    })
-  );
-}
-
-/**
- * ========= Orchestrator =========
- */
-async function migrateTable(cfg: TableConfig): Promise<void> {
-  const locked = await acquireSchemaLock(cfg.name);
-  if (!locked) {
-    console.log(`⏳ Skipping ${cfg.name}, another migration in progress`);
-    return;
+  let lockAcquired = false;
+  if (!dryRun) {
+    lockAcquired = await acquireTableLock(cfg.name);
+    if (!lockAcquired) {
+      console.log(`⏳ Skipping ${cfg.name}, another migration in progress`);
+      return;
+    }
+    console.log(`🔒 Lock acquired for ${cfg.name}`);
   }
 
   try {
-    const current = await getSchemaVersion(cfg.name);
+    let current = await getSchemaVersion(cfg.name);
+    console.log(`📌 Current schema version for ${cfg.name}: ${current}`);
+
+    let ranAnyMigration = false;
 
     for (const m of cfg.migrations) {
-      if (m.id > current) {
-        const migrationLocked = await acquireMigrationLease(cfg.name, m.id);
-        if (!migrationLocked) {
-          console.log(`⏳ Migration ${cfg.name}-${m.id} already executed, skipping`);
-          continue;
-        }
+      if (m.versionId > current) {
+        ranAnyMigration = true;
+        console.log(`${dryRun ? "🧪 Would run" : "🔄 Running"} migration ${cfg.name} v${current} → v${m.versionId}`);
+        try {
+          let startKey: ScanCommandInput["ExclusiveStartKey"] = undefined;
+          let updatedItemsTotal = 0;
 
-        console.log(`🔄 Running migration ${cfg.name}-${m.id}`);
-        await m.run(cfg.name, m.id);
-        await markMigrationDone(cfg.name, m.id);
+          do {
+            const page: PagedMigrationRunPlanResponse = await m.plan({
+              dryRun,
+              startKey,
+              tableName: cfg.name,
+              versionId: m.versionId,
+            });
+
+            const lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"] = page.lastEvaluatedKey;
+            const updateInput: UpdateCommandInput[] = page.updateInput;
+
+            if (!updateInput.length) {
+              console.log(`   💤 Page had 0 items - no updates needed`);
+              startKey = lastEvaluatedKey;
+              continue;
+            }
+            updatedItemsTotal += updateInput.length;
+
+            console.log(
+              `   ${dryRun ? "🧪 Would update" : "✏️ Updating"} ${updateInput.length} item(s): ${JSON.stringify(
+                updateInput.map((input) => input.Key)
+              )}`
+            );
+            if (!dryRun) {
+              await Promise.all(updateInput.map((item) => limit(() => ddb.send(new UpdateCommand(item)))));
+            }
+            startKey = lastEvaluatedKey;
+          } while (startKey);
+
+          current = m.versionId;
+          if (!dryRun) {
+            await setSchemaVersion(cfg.name, m.versionId);
+          }
+          if (updatedItemsTotal === 0) {
+            console.log(`💤 Migration ${cfg.name} v${m.versionId} had nothing to update`);
+          } else {
+            console.log(`✅ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} processed ${updatedItemsTotal} item(s)`);
+          }
+        } catch (err) {
+          console.error(`❌ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} FAILED`, err);
+          throw err;
+        }
       }
     }
 
-    await setSchemaVersion(cfg.name, cfg.latest);
-    console.log(`✅ ${cfg.name} schema at version ${cfg.latest}`);
+    if (!ranAnyMigration) {
+      console.log(`💤 ${cfg.name} is already at latest schema version (${current}) — no migrations needed`);
+    } else {
+      console.log(`🎯 ${cfg.name} ${dryRun ? "would end" : "now at"} version ${current}`);
+    }
   } finally {
-    await releaseSchemaLock(cfg.name);
+    if (!dryRun && lockAcquired) {
+      await releaseTableLock(cfg.name);
+      console.log(`🔓 Lock released for ${cfg.name}`);
+    }
   }
 }
-
-/**
- * ========= Entry =========
- */
-(async () => {
-  try {
-    await Promise.all(TABLES.map(migrateTable));
-    console.log("🎉 All tables migrated successfully");
-  } catch (err) {
-    console.error("❌ Migration failed", err);
-    process.exit(1);
-  }
-})();
