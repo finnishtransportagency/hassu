@@ -97,12 +97,6 @@ export class HassuDatabaseStack extends Stack {
       partitionKey: { name: "oid", type: ddb.AttributeType.STRING },
       projectionType: ProjectionType.KEYS_ONLY,
     });
-    projektiTable.addGlobalSecondaryIndex({
-      indexName: "SchemaVersionIndex",
-      partitionKey: { name: "schemaVersion", type: ddb.AttributeType.NUMBER },
-      sortKey: { name: "oid", type: ddb.AttributeType.STRING },
-      projectionType: ProjectionType.KEYS_ONLY,
-    });
 
     if (Config.isPermanentEnvironment()) {
       projektiTable.applyRemovalPolicy(RemovalPolicy.RETAIN);

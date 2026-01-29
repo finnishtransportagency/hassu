@@ -1,13 +1,13 @@
-import { GetCommand, ScanCommandInput, ScanCommandOutput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
+import { ScanCommandInput, ScanCommandOutput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "./ddb";
-import { Config } from "../../lib/config";
 import pLimit from "p-limit";
 import { PagedMigrationRunPlanResponse, TableConfig } from "./types";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { SchemaMetaTable } from "./SchemaMetaTable";
 
 yargs(hideBin(process.argv))
-  .scriptName("npm run upgradeDatabase-v2")
+  .scriptName("npm run upgradeDatabase")
   .usage("$0 <command> <env>")
   .command(
     "dryRun <env>",
@@ -64,10 +64,6 @@ async function migrateAllTables(dryRun: boolean, environment: string) {
           versionId: 1,
           plan: (options) => import("./Projekti/migrate-001").then((m) => m.default(options)),
         },
-        {
-          versionId: 2,
-          plan: (options) => import("./Projekti/migrate-002").then((m) => m.default(options)),
-        },
       ],
     },
     // {
@@ -78,71 +74,15 @@ async function migrateAllTables(dryRun: boolean, environment: string) {
     //   ]
     // }
   ];
-  await Promise.all(TABLES.map((table) => migrateTable(table, dryRun)));
+  await Promise.all(TABLES.map((table) => migrateTable(table, dryRun, environment)));
 }
-
-async function getSchemaVersion(tableName: string): Promise<number> {
-  const res = await ddb.send(
-    new GetCommand({
-      TableName: Config.schemaMetaTableName,
-      Key: { tableName },
-    })
-  );
-  return res.Item?.currentVersion ?? 0;
-}
-
-async function setSchemaVersion(tableName: string, v: number): Promise<void> {
-  await ddb.send(
-    new UpdateCommand({
-      TableName: Config.schemaMetaTableName,
-      Key: { tableName },
-      UpdateExpression: "SET currentVersion = :v REMOVE lockUntil",
-      ExpressionAttributeValues: { ":v": v },
-    })
-  );
-}
-
-async function acquireTableLock(tableName: string, minutes = 10): Promise<boolean> {
-  const now = Math.floor(Date.now() / 1000);
-  const lockUntil = now + minutes * 60;
-
-  try {
-    await ddb.send(
-      new UpdateCommand({
-        TableName: Config.schemaMetaTableName,
-        Key: { tableName },
-        UpdateExpression: "SET lockedUntil = :lock",
-        ConditionExpression: "attribute_not_exists(lockedUntil) OR lockedUntil < :now",
-        ExpressionAttributeValues: {
-          ":lock": lockUntil,
-          ":now": now,
-        },
-      })
-    );
-    console.log(`🔒 ${tableName} locked until ${lockUntil}`);
-    return true;
-  } catch (err) {
-    console.warn(`⚠️ Failed to acquire lock for ${tableName}`, err);
-    return false;
-  }
-}
-
-async function releaseTableLock(tableName: string) {
-  await ddb.send(
-    new UpdateCommand({
-      TableName: Config.schemaMetaTableName,
-      Key: { tableName },
-      UpdateExpression: "REMOVE lockedUntil",
-    })
-  );
-}
-
-async function migrateTable(cfg: TableConfig, dryRun: boolean): Promise<void> {
+async function migrateTable(cfg: TableConfig, dryRun: boolean, environment: string): Promise<void> {
   console.log(`🚀 Checking migrations for ${cfg.name}`);
+  const schemaMetaTable = new SchemaMetaTable(environment);
 
   let lockAcquired = false;
   if (!dryRun) {
-    lockAcquired = await acquireTableLock(cfg.name);
+    lockAcquired = await schemaMetaTable.acquireTableLock(cfg.name);
     if (!lockAcquired) {
       console.log(`⏳ Skipping ${cfg.name}, another migration in progress`);
       return;
@@ -151,7 +91,7 @@ async function migrateTable(cfg: TableConfig, dryRun: boolean): Promise<void> {
   }
 
   try {
-    let current = await getSchemaVersion(cfg.name);
+    let current = await schemaMetaTable.getSchemaVersion(cfg.name);
     console.log(`📌 Current schema version for ${cfg.name}: ${current}`);
 
     let ranAnyMigration = false;
@@ -170,6 +110,7 @@ async function migrateTable(cfg: TableConfig, dryRun: boolean): Promise<void> {
               startKey,
               tableName: cfg.name,
               versionId: m.versionId,
+              environment,
             });
 
             const lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"] = page.lastEvaluatedKey;
@@ -195,7 +136,7 @@ async function migrateTable(cfg: TableConfig, dryRun: boolean): Promise<void> {
 
           current = m.versionId;
           if (!dryRun) {
-            await setSchemaVersion(cfg.name, m.versionId);
+            await schemaMetaTable.setSchemaVersion(cfg.name, m.versionId);
           }
           if (updatedItemsTotal === 0) {
             console.log(`💤 Migration ${cfg.name} v${m.versionId} had nothing to update`);
@@ -216,7 +157,7 @@ async function migrateTable(cfg: TableConfig, dryRun: boolean): Promise<void> {
     }
   } finally {
     if (!dryRun && lockAcquired) {
-      await releaseTableLock(cfg.name);
+      await schemaMetaTable.releaseTableLock(cfg.name);
       console.log(`🔓 Lock released for ${cfg.name}`);
     }
   }

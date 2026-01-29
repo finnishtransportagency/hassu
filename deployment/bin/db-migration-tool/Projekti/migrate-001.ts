@@ -1,34 +1,38 @@
-import { ScanCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
-import { ddb } from "../ddb";
-import { nowWithOffset } from "../nowWithOffset";
 import { PagedMigrationRunPlan } from "../types";
+import { TestProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
+import { cloneDeep, isEqual } from "lodash";
+import { DBProjekti } from "../../../../backend/src/database/model/projekti";
+import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
 
 const migrate001: PagedMigrationRunPlan = async (options) => {
-  const page = await ddb.send(
-    new ScanCommand({
-      TableName: options.tableName,
-      ProjectionExpression: "oid, schemaVersion",
-      FilterExpression: "attribute_not_exists(schemaVersion) and oid = :oid",
-      ExpressionAttributeValues: {
-        ":oid": "1.2.246.578.5.1.2966866411.3685097465",
-      },
-      ExclusiveStartKey: options.startKey,
-    })
+  const projektiDatabase = new TestProjektiDatabase(options.tableName, "not-used");
+
+  const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
+    JSON.stringify(options.startKey)
   );
-  const updateInput: UpdateCommandInput[] = (page.Items ?? []).map((item) => ({
-    TableName: options.tableName,
-    Key: { oid: item.oid },
-    UpdateExpression: `
-                SET paivitetty = :now,
-                    schemaVersion = :sv
-              `,
-    ExpressionAttributeValues: {
-      ":now": nowWithOffset(),
-      ":sv": options.versionId,
-    },
-    ConditionExpression: "attribute_not_exists(schemaVersion)",
-  }));
-  return { lastEvaluatedKey: page.LastEvaluatedKey, updateInput };
+
+  // Gathers all projektis that have changes made by migrateFromOldSchema
+  const alteredProjektis: DBProjekti[] = scanResult.projektis
+    .map<{ original: DBProjekti; altered: DBProjekti }>((projekti) => ({
+      original: projekti,
+      altered: migrateFromOldSchema(cloneDeep(projekti), true),
+    }))
+    .filter(({ original, altered }) => !isEqual(original, altered))
+    .map(({ altered }) => altered);
+
+  for (const alteredProjekti of alteredProjektis) {
+    console.log(
+      `${options.dryRun ? "Would run" : "Running"} migrateFromOldSchema to the following projektis: ${JSON.stringify(
+        alteredProjektis.map((projekti) => projekti.oid)
+      )}`
+    );
+    if (!options.dryRun) {
+      await projektiDatabase.saveProjekti(alteredProjekti);
+    }
+  }
+
+  // Even though updateInput is empty array, it will still keep on to the next page as long as lastEvaluatedKey is defined
+  return { updateInput: [], lastEvaluatedKey: scanResult.startKey ? JSON.parse(scanResult.startKey) : undefined };
 };
 
 export default migrate001;

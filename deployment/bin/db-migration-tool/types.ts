@@ -17,6 +17,7 @@ export type PlanOptions = {
   versionId: number;
   startKey: ScanCommandInput["ExclusiveStartKey"];
   dryRun: boolean;
+  environment: string;
 };
 
 export type PagedMigrationRunPlanResponse = {

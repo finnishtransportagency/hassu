@@ -1,37 +1,41 @@
 import { QueryCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
-import { nowWithOffset } from "../nowWithOffset";
 import { PagedMigrationRunPlan } from "../types";
 
-const migrate002: PagedMigrationRunPlan = async (options) => {
-  const priorVersion = options.versionId - 1;
-
+/**
+ * Paged plan for a database migration
+ *
+ * Reads database and determines which updates are needed.
+ * You should not write update commands etc. that alters items in this file as migration tool should handle that logic.
+ * @param options Contains options including ExclusiveStartKey for running scan or query commands
+ * @returns UpdateCommandInputs for the migration tool to run (if not dryRun) and Scan or Query command's LastEvaluatedKey
+ */
+const migrateExample: PagedMigrationRunPlan = async (options) => {
   const page = await ddb.send(
+    // Alternatively you could use ScanCommand
+    // You could also add filter expression to select what items need to be updated
     new QueryCommand({
       TableName: options.tableName,
-      IndexName: "SchemaVersionIndex",
-      // KeyConditionExpression: "schemaVersion = :priorSv",
-      // ExpressionAttributeValues: { ":priorSv": priorVersion },
-      ProjectionExpression: "oid",
       ExclusiveStartKey: options.startKey,
     })
   );
 
-  const updateInput: UpdateCommandInput[] = (page.Items ?? []).map((item) => ({
+  const updateInput = (page.Items ?? []).map<UpdateCommandInput>((item) => ({
     TableName: options.tableName,
     Key: { oid: item.oid },
-    ConditionExpression: "schemaVersion = :expected",
     UpdateExpression: `
-                SET paivitetty = :now,
-                    schemaVersion = :newVersion
-              `,
+      SET #versio = if_not_exists(#versio, :zero) + :inc
+    `,
+    ExpressionAttributeNames: {
+      "#versio": "versio",
+    },
     ExpressionAttributeValues: {
-      ":expected": priorVersion,
-      ":newVersion": options.versionId,
-      ":now": nowWithOffset(),
+      ":zero": 0,
+      ":inc": 1,
     },
   }));
+
   return { updateInput, lastEvaluatedKey: page.LastEvaluatedKey };
 };
 
-export default migrate002;
+export default migrateExample;

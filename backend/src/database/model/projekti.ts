@@ -223,7 +223,6 @@ export type DBProjekti = {
   ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
   ennakkoNeuvotteluAineistoPaketti?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
-  schemaVersion: number;
 };
 
 export type ProjektinJakautuminen = {
