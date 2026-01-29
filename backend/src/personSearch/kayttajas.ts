@@ -15,7 +15,7 @@ export type Person = {
 
 export class Kayttajas {
   personMap: Record<string, Person>;
-  emailComparator = new EmailComparator()
+  emailComparator = new EmailComparator();
 
   constructor(personMap: Record<string, Person>) {
     this.personMap = personMap;

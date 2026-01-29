@@ -41,7 +41,7 @@ describe("IlmoitustauluSyote", () => {
       "Kunta:Savonlinna",
       "Maakunta:Uusimaa",
       "Maakunta:Pirkanmaa",
-      "Väylämuoto:Tie"
+      "Väylämuoto:Tie",
     ]);
   });
 
@@ -60,7 +60,7 @@ describe("IlmoitustauluSyote", () => {
       "Kunta:Savonlinna",
       "Maakunta:Uusimaa",
       "Maakunta:Pirkanmaa",
-      "Väylämuoto:Tie"
+      "Väylämuoto:Tie",
     ]);
   });
 
