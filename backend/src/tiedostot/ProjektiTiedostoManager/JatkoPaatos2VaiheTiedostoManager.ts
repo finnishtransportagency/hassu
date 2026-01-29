@@ -16,6 +16,7 @@ export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVa
     return [
       { aineisto: vaihe.aineistoNahtavilla, paths },
       { aineisto: vaihe.hyvaksymisPaatos, paths: paths.paatos },
+      { aineisto: vaihe.alkuperainenPaatos, paths: paths.paatos },
     ];
   }
 

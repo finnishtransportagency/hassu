@@ -33,7 +33,7 @@ import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_20_X;
-const insightsVersion = LambdaInsightsVersion.VERSION_1_0_143_0;
+const insightsVersion = LambdaInsightsVersion.VERSION_1_0_333_0;
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
 
@@ -93,7 +93,7 @@ export class HassuBackendStack extends Stack {
       LayerVersion.fromLayerVersionArn(
         this,
         "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:21"
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:24"
       ),
     ];
   }

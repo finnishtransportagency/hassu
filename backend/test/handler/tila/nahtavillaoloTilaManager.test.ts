@@ -16,11 +16,13 @@ import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { parameters } from "../../../src/aws/parameters";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { mockSaveProjektiToVelho, SaveProjektiToVelhoMocks, VelhoStub } from "../../../integrationtest/api/testUtil/util";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
+  let saveJulkaisupvmStub: SaveProjektiToVelhoMocks["saveJulkaisupvmStub"];
 
   before(() => {
     mockClient(DynamoDBDocumentClient);
@@ -69,7 +71,9 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(nahtavillaoloTilaManager, "sendApprovalMailsAndAttachments");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(false);
     sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
+    saveJulkaisupvmStub = mockSaveProjektiToVelho(new VelhoStub()).saveJulkaisupvmStub;
     await nahtavillaoloTilaManager.approve(projekti1, { __typename: "NykyinenKayttaja", etunimi: "", sukunimi: "" });
     expect(zipLausuntoPyyntoAineistoStub.callCount).to.eql(1);
+    expect(saveJulkaisupvmStub.callCount).to.eql(1);
   });
 });

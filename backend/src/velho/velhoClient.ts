@@ -11,12 +11,20 @@ import {
   adaptSearchResults,
   applyAloitusKuulutusPaivaToVelho,
   applyKasittelyntilaToVelho,
+  applyNahtavillaoloajankohtaToVelho,
   applySuunnittelunTilaToVelho,
+  applySuunnittelusopimusToVelho,
   ProjektiSearchResult,
 } from "./velhoAdapter";
 import { VelhoError } from "hassu-common/error";
 import type { AxiosError, AxiosRequestConfig, AxiosStatic } from "axios";
-import type { AloitusKuulutusJulkaisu, DBProjekti, KasittelynTila } from "../database/model";
+import type {
+  AloitusKuulutusJulkaisu,
+  DBProjekti,
+  KasittelynTila,
+  NahtavillaoloVaiheJulkaisu,
+  SuunnitteluSopimus,
+} from "../database/model";
 import { personSearch } from "../personSearch/personSearchClient";
 import dayjs from "dayjs";
 import { getAxios } from "../aws/monitoring";
@@ -263,8 +271,23 @@ export class VelhoClient {
     await this.saveProjekti(oid, (projekti) => applySuunnittelunTilaToVelho(projekti, tila));
   }
 
-  public async saveKasittelynTila(oid: string, kasittelynTila: KasittelynTila): Promise<void> {
-    await this.saveProjekti(oid, (projekti) => applyKasittelyntilaToVelho(projekti, kasittelynTila));
+  public async saveKasittelynTila(
+    oid: string,
+    kasittelynTila: KasittelynTila | null | undefined,
+    suunnitteluSopimus: SuunnitteluSopimus | null | undefined
+  ): Promise<void> {
+    const velhoDataUpdaters: VelhoProjektiDataUpdater[] = [];
+    if (kasittelynTila) {
+      velhoDataUpdaters.push((projekti) => applyKasittelyntilaToVelho(projekti, kasittelynTila));
+    }
+    velhoDataUpdaters.push((projekti) => applySuunnittelusopimusToVelho(projekti, suunnitteluSopimus));
+    if (velhoDataUpdaters.length > 0) {
+      await this.saveProjekti(oid, this.composeVelhoProjektiDataUpdaters(...velhoDataUpdaters));
+    }
+  }
+
+  public async saveJulkaisupvm(oid: string, nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined): Promise<void> {
+    await this.saveProjekti(oid, (projekti) => applyNahtavillaoloajankohtaToVelho(projekti, nahtavillaoloVaiheJulkaisu));
   }
 
   @recordVelhoLatencyDecorator(
@@ -296,6 +319,10 @@ export class VelhoClient {
     } catch (e: unknown) {
       throw this.checkVelhoError(e);
     }
+  }
+
+  public composeVelhoProjektiDataUpdaters(...updaters: VelhoProjektiDataUpdater[]): VelhoProjektiDataUpdater {
+    return (projekti) => updaters.reduce((acc, updater) => updater(acc), projekti);
   }
 
   private async createHakuApi() {

@@ -38,6 +38,7 @@ export function adaptHyvaksymisPaatosVaiheToAPI(
   }
   const {
     aineistoNahtavilla,
+    alkuperainenPaatos,
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
@@ -51,6 +52,7 @@ export function adaptHyvaksymisPaatosVaiheToAPI(
     __typename: "HyvaksymisPaatosVaihe",
     ...rest,
     aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
+    alkuperainenPaatos: adaptAineistotToAPI(alkuperainenPaatos, paths),
     hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
     hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     kuulutusYhteystiedot: adaptStandardiYhteystiedotByAddingTypename(kayttoOikeudet, kuulutusYhteystiedot),
@@ -82,6 +84,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   const {
     id,
     aineistoNahtavilla,
+    alkuperainenPaatos,
     hyvaksymisPaatos: hyvaksymisPaatosAineisto,
     ilmoituksenVastaanottajat,
     yhteystiedot,
@@ -137,6 +140,7 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     hyvaksymisPaatosVaihePDFt: adaptHyvaksymisPaatosVaihePDFPaths(hyvaksymisPaatosVaihePDFt, paths),
     hyvaksymisPaatosVaiheSaamePDFt: adaptKuulutusSaamePDFtToAPI(paths, hyvaksymisPaatosVaiheSaamePDFt, false),
     aineistoNahtavilla: adaptAineistotToAPI(aineistoNahtavilla, paths),
+    alkuperainenPaatos: adaptAineistotToAPI(alkuperainenPaatos, paths),
     hyvaksymisPaatos: adaptAineistotToAPI(hyvaksymisPaatosAineisto, paths),
     hyvaksymisPaatoksenPvm: hyvaksymisPaatos.paatoksenPvm,
     hyvaksymisPaatoksenAsianumero: hyvaksymisPaatos.asianumero,

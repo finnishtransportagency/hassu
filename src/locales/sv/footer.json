@@ -5,12 +5,8 @@
       "teksti": "Trafikledsverket.fi",
       "linkki": "https://trafikledsverket.fi"
     },
-    "linkki-ely": {
-      "teksti": "Ely-keskus.fi/sv",
-      "href": "https://www.ely-keskus.fi/sv"
-    },
     "linkki-evk": {
-      "teksti": "elinvoimakeskus.fi/sv",
+      "teksti": "Elinvoimakeskus.fi/sv",
       "href": "https://www.elinvoimakeskus.fi/sv"
     },
     "tietoa_palvelusta": "Information om tjänsten",
@@ -24,10 +20,10 @@
       "etuliite": "Trafikledsverket",
       "etuliite_genetiivi": "Trafikledsverkets"
     },
-    "ely": {
-      "otsikko": "NTM-centralens sociala medier",
-      "etuliite": "NTM",
-      "etuliite_genetiivi": "NTMs"
+    "evk": {
+      "otsikko": "Livskraftscentralens sociala medier",
+      "etuliite": "Livskraftscentralen",
+      "etuliite_genetiivi": "Livskraftscentralens"
     }
   }
 }

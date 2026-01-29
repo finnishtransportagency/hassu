@@ -101,6 +101,7 @@
     "oikopolut": "Oikopolut",
     "paatos": "Päätös",
     "paatosJaJatkopaatos": "Päätös ja jatkopäätös",
+    "alkuperainenPaatos": "Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
       "asianosaisen_oikeudet": "Asianosaisen oikeudet",
@@ -436,6 +437,7 @@
       "kuulutuksesta_ilmoittaminen_kappale2": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{linkki_paatos}}.",
       "kuulutuksesta_ilmoittaminen_kappale3": "{{viranomainenLyhyt}} pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.",
       "lausunnonantajille_kappale1": "{{kuuluttaja_pitka}} ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
+      "lausunnonantajille_kappale1_monikko": "{{kuuluttaja_pitka}} ilmoittavat maakunnan liitolle, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
       "lakiviite_muistuttajille_tie": "laki liikennejärjestelmästä ja maanteistä LjMTL 104 §",
       "lakiviite_muistuttajille_rata": "ratalaki 91 §"
     },

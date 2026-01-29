@@ -5,12 +5,8 @@
       "teksti": "Väylävirasto.fi",
       "linkki": "https://www.vayla.fi"
     },
-    "linkki-ely": {
-      "teksti": "Ely-keskus.fi",
-      "href": "https://www.ely-keskus.fi"
-    },
     "linkki-evk": {
-      "teksti": "elinvoimakeskus.fi",
+      "teksti": "Elinvoimakeskus.fi",
       "href": "https://www.elinvoimakeskus.fi"
     },
     "tietoa_palvelusta": "Tietoa palvelusta",
@@ -24,10 +20,10 @@
       "etuliite": "Väylävirasto",
       "etuliite_genetiivi": "Väyläviraston"
     },
-    "ely": {
-      "otsikko": "Ely-keskuksen sosiaalinen media",
-      "etuliite": "ELY",
-      "etuliite_genetiivi": "ELYn"
+    "evk": {
+      "otsikko": "Elinvoimakeskuksen sosiaalinen media",
+      "etuliite": "Elinvoimakeskus",
+      "etuliite_genetiivi": "Elinvoimakeskuksen"
     }
   }
 }
