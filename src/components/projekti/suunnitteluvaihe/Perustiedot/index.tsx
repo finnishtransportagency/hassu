@@ -372,8 +372,8 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
             <SectionContent>
               <H3>Kysymyksien esittäminen ja palautteiden antaminen</H3>
               <p>
-                Anna päivämäärä, johon mennessä kansalaisten <strong>toivotaan</strong> esittävän kysymykset ja palautteet.
-                Kansalaiset pystyvät antamaan palautetta järjestelmän kautta siihen asti, että suunnitelma asetetaan nähtäville. 
+                Anna päivämäärä, johon mennessä kansalaisten <strong>toivotaan</strong> esittävän kysymykset ja palautteet. Kansalaiset
+                pystyvät antamaan palautetta järjestelmän kautta siihen asti, että suunnitelma asetetaan nähtäville.
               </p>
               <HassuDatePickerWithController<SuunnittelunPerustiedotFormValues>
                 className="mt-8"

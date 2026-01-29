@@ -46,7 +46,7 @@ class TestHandler {
       throw new Error("targetStatus-parametri puuttuu");
     }
     if (!migraatioTilat.includes(targetStatus as Tila)) {
-      throw new Error("targetStatus-parametrin arvo ei löydy sallittujen arvojen joukosta")
+      throw new Error("targetStatus-parametrin arvo ei löydy sallittujen arvojen joukosta");
     }
   }
 }

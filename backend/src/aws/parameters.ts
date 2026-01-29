@@ -186,7 +186,7 @@ class Parameters {
 
   async getIsEvkActivated() {
     return this.getRequiredParameter("EvkActivationDate");
-  };
+  }
 
   getMmlApiKey() {
     return this.getRequiredParameter("MmlApiKey");

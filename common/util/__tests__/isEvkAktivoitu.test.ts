@@ -28,7 +28,7 @@ describe("isEvkAktivoitu", () => {
 
   it("current date is after EVK activation date", () => {
     const NOW = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(NOW).subtract(4, DAY).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(NOW).subtract(4, DAY).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -38,7 +38,7 @@ describe("isEvkAktivoitu", () => {
   });
 
   it("environment variable is undefined string", () => {
-    const EVK_ACTIVATION_DATE = '';
+    const EVK_ACTIVATION_DATE = "";
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.false;
@@ -46,7 +46,7 @@ describe("isEvkAktivoitu", () => {
 
   it("current date is the same day as EVK activation date, exp result true", () => {
     const NOW = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(NOW).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(NOW).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -57,7 +57,7 @@ describe("isEvkAktivoitu", () => {
 
   it("environment variable is double-escaped string and current date is after EVK activation date", () => {
     const NOW = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(NOW).subtract(4, DAY).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(NOW).subtract(4, DAY).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -70,7 +70,7 @@ describe("isEvkAktivoitu", () => {
 
   it("environment variable is double-escaped string and current date is after EVK activation date", () => {
     const NOW = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(NOW).subtract(4, DAY).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(NOW).subtract(4, DAY).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -83,7 +83,7 @@ describe("isEvkAktivoitu", () => {
 
   it("environment variable is double-escaped string and current date is the same day as EVK activation date, exp result true", () => {
     const NOW = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(NOW).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(NOW).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -93,7 +93,6 @@ describe("isEvkAktivoitu", () => {
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.true;
   });
-
 });
 
 describe("isEvkAktivoituAt", () => {
@@ -114,7 +113,7 @@ describe("isEvkAktivoituAt", () => {
 
   it("given date is after EVK activation date", () => {
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(DATE_TO_COMPARE).subtract(4, DAY).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(DATE_TO_COMPARE).subtract(4, DAY).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -124,7 +123,7 @@ describe("isEvkAktivoituAt", () => {
   });
 
   it("environment variable is undefined string", () => {
-    const EVK_ACTIVATION_DATE = '';
+    const EVK_ACTIVATION_DATE = "";
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
     process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
@@ -133,7 +132,7 @@ describe("isEvkAktivoituAt", () => {
 
   it("given date is the same day as EVK activation date, exp result true", () => {
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(DATE_TO_COMPARE).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(DATE_TO_COMPARE).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -144,7 +143,7 @@ describe("isEvkAktivoituAt", () => {
 
   it("environment variable is double-escaped string and given date is after EVK activation date", () => {
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(DATE_TO_COMPARE).subtract(4, DAY).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(DATE_TO_COMPARE).subtract(4, DAY).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -157,7 +156,7 @@ describe("isEvkAktivoituAt", () => {
 
   it("environment variable is double-escaped string and given date is after EVK activation date", () => {
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(DATE_TO_COMPARE).subtract(4, DAY).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(DATE_TO_COMPARE).subtract(4, DAY).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -170,7 +169,7 @@ describe("isEvkAktivoituAt", () => {
 
   it("environment variable is double-escaped string and given date is the same day as EVK activation date, exp result true", () => {
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
-    const startDate = dayjs(DATE_TO_COMPARE).format(ONLY_DATE_FORMAT);;
+    const startDate = dayjs(DATE_TO_COMPARE).format(ONLY_DATE_FORMAT);
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
@@ -180,5 +179,4 @@ describe("isEvkAktivoituAt", () => {
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.true;
   });
-
 });

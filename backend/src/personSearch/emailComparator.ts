@@ -1,10 +1,7 @@
-
-
 const ELY_EMAIL_DOMAIN = "ely-keskus.fi";
 const EVK_EMAIL_DOMAIN = "elinvoimakeskus.fi";
 
 export class EmailComparator {
-
   // Kohdellaan näitä domaineja samana -> email vertailu näiden osalta lokaalin osan perusteella
   private readonly EQUIVALENT_EMAIL_DOMAINS = new Set([ELY_EMAIL_DOMAIN, EVK_EMAIL_DOMAIN]);
 
@@ -20,8 +17,7 @@ export class EmailComparator {
       : a.local === b.local && a.domain === b.domain; // rest needs full match just like before
   }
 
-
   public doEmailsMatch(a: string, b: string): boolean {
-    return this.doEmailPartsMatch(this.splitEmailParts(a), this.splitEmailParts(b))
+    return this.doEmailPartsMatch(this.splitEmailParts(a), this.splitEmailParts(b));
   }
 }
