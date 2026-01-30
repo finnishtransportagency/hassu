@@ -1,27 +1,35 @@
-import { ScanCommandInput, ScanCommandOutput, UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
-import { ddb } from "./ddb";
-import pLimit from "p-limit";
-import { PagedMigrationRunPlanResponse, TableConfig } from "./types";
+import { DryRunMigrateAllTablesOptions, MigrateAllTablesOptions, TableConfig, TableVersionMap } from "./types";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
-import { SchemaMetaTable } from "./SchemaMetaTable";
+import { migrateTable } from "./migrateTable";
 
 yargs(hideBin(process.argv))
-  .scriptName("npm run upgradeDatabase")
+  .scriptName("npm run upgrade-database")
   .usage("$0 <command> <env>")
   .command(
-    "dryRun <env>",
-    "Does not write to database, only reads and shows what is about to change",
+    "dry-run <env>",
+    "Simulates database migrations without writing any changes",
     (y) =>
-      y.positional("env", {
-        type: "string",
-        describe: "Ympäristön nimi (esim. pekka, dev, staging, prod)",
-        demandOption: true,
-      }),
+      y
+        .positional("env", {
+          type: "string",
+          describe: "Name of the environment (e.g., pekka, dev, staging, prod)",
+          demandOption: true,
+        })
+        .option("schema-version", {
+          alias: "v",
+          type: "array",
+          describe: "Override current schema version per table (Table=Version)",
+        }),
     async (argv) => {
       try {
-        console.log(`🔄 Starting database migration dry run for env '${argv.env}'`);
-        await migrateAllTables(true, argv.env);
+        const options: DryRunMigrateAllTablesOptions = {
+          environment: argv.env,
+          dryRun: true,
+          forcedTableVersions: parseCurrentSchemaVersionArg(argv.schemaVersion),
+        };
+        console.log(`🔄 Starting database migration dry run with options='${JSON.stringify(options)}'`);
+        await migrateAllTables(options);
         console.log("🎉 Dry run complete");
       } catch (err) {
         console.error("❌ Dry run failed", err);
@@ -31,17 +39,20 @@ yargs(hideBin(process.argv))
   )
   .command(
     "run <env>",
-    "Writes changes to database",
+    "Executes pending database migrations and writes changes",
     (y) =>
       y.positional("env", {
         type: "string",
-        describe: "Ympäristön nimi (esim. pekka, dev, staging, prod)",
+        describe: "Name of the environment (e.g., dev, staging, prod)",
         demandOption: true,
       }),
     async (argv) => {
       try {
-        console.log(`🔄 Starting database migration run for env '${argv.env}'`);
-        await migrateAllTables(false, argv.env);
+        const options: MigrateAllTablesOptions = {
+          environment: argv.env,
+        };
+        console.log(`🔄 Starting database migration run with options=${JSON.stringify(options)}`);
+        await migrateAllTables(options);
         console.log("🎉 Migration complete");
       } catch (err) {
         console.error("❌ Migration failed", err);
@@ -49,16 +60,15 @@ yargs(hideBin(process.argv))
       }
     }
   )
-  .demandCommand(1, "You need to specify a command: dryRun or run")
+  .demandCommand(1, "You need to specify a command: dry-run or run")
+  .strict()
   .help()
   .parse();
 
-const limit = pLimit(10);
-
-async function migrateAllTables(dryRun: boolean, environment: string) {
+async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrateAllTablesOptions) {
   const TABLES: TableConfig[] = [
     {
-      name: `Projekti-${environment}`,
+      name: `Projekti-${options.environment}`,
       migrations: [
         {
           versionId: 1,
@@ -74,91 +84,84 @@ async function migrateAllTables(dryRun: boolean, environment: string) {
     //   ]
     // }
   ];
-  await Promise.all(TABLES.map((table) => migrateTable(table, dryRun, environment)));
+
+  validateMigrationOptions(options, TABLES);
+
+  for (const table of TABLES) {
+    await migrateTable(table, options);
+  }
 }
-async function migrateTable(cfg: TableConfig, dryRun: boolean, environment: string): Promise<void> {
-  console.log(`🚀 Checking migrations for ${cfg.name}`);
-  const schemaMetaTable = new SchemaMetaTable(environment);
 
-  let lockAcquired = false;
-  if (!dryRun) {
-    lockAcquired = await schemaMetaTable.acquireTableLock(cfg.name);
-    if (!lockAcquired) {
-      console.log(`⏳ Skipping ${cfg.name}, another migration in progress`);
-      return;
-    }
-    console.log(`🔒 Lock acquired for ${cfg.name}`);
+function validateMigrationOptions(
+  { forcedTableVersions, dryRun }: MigrateAllTablesOptions | DryRunMigrateAllTablesOptions,
+  TABLES: TableConfig[]
+): void {
+  // Currently this validation only applies to dry runs with --schemaVersion parameters
+  // In real runs we always read the actual schema version from the database.
+  if (!dryRun || !forcedTableVersions) {
+    return;
   }
 
-  try {
-    let current = await schemaMetaTable.getSchemaVersion(cfg.name);
-    console.log(`📌 Current schema version for ${cfg.name}: ${current}`);
+  const errors: string[] = [];
 
-    let ranAnyMigration = false;
+  for (const table of TABLES) {
+    const version = forcedTableVersions[table.name];
 
-    for (const m of cfg.migrations) {
-      if (m.versionId > current) {
-        ranAnyMigration = true;
-        console.log(`${dryRun ? "🧪 Would run" : "🔄 Running"} migration ${cfg.name} v${current} → v${m.versionId}`);
-        try {
-          let startKey: ScanCommandInput["ExclusiveStartKey"] = undefined;
-          let updatedItemsTotal = 0;
-
-          do {
-            const page: PagedMigrationRunPlanResponse = await m.plan({
-              dryRun,
-              startKey,
-              tableName: cfg.name,
-              versionId: m.versionId,
-              environment,
-            });
-
-            const lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"] = page.lastEvaluatedKey;
-            const updateInput: UpdateCommandInput[] = page.updateInput;
-
-            if (!updateInput.length) {
-              console.log(`   💤 Page had 0 items - no updates needed`);
-              startKey = lastEvaluatedKey;
-              continue;
-            }
-            updatedItemsTotal += updateInput.length;
-
-            console.log(
-              `   ${dryRun ? "🧪 Would update" : "✏️ Updating"} ${updateInput.length} item(s): ${JSON.stringify(
-                updateInput.map((input) => input.Key)
-              )}`
-            );
-            if (!dryRun) {
-              await Promise.all(updateInput.map((item) => limit(() => ddb.send(new UpdateCommand(item)))));
-            }
-            startKey = lastEvaluatedKey;
-          } while (startKey);
-
-          current = m.versionId;
-          if (!dryRun) {
-            await schemaMetaTable.setSchemaVersion(cfg.name, m.versionId);
-          }
-          if (updatedItemsTotal === 0) {
-            console.log(`💤 Migration ${cfg.name} v${m.versionId} had nothing to update`);
-          } else {
-            console.log(`✅ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} processed ${updatedItemsTotal} item(s)`);
-          }
-        } catch (err) {
-          console.error(`❌ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} FAILED`, err);
-          throw err;
-        }
-      }
+    // Ensure every known table has an explicitly provided version.
+    // This prevents accidentally assuming version 0 for missing tables.
+    if (version === undefined) {
+      errors.push(`Missing schema version for table '${table.name}'`);
+      continue;
     }
 
-    if (!ranAnyMigration) {
-      console.log(`💤 ${cfg.name} is already at latest schema version (${current}) — no migrations needed`);
-    } else {
-      console.log(`🎯 ${cfg.name} ${dryRun ? "would end" : "now at"} version ${current}`);
-    }
-  } finally {
-    if (!dryRun && lockAcquired) {
-      await schemaMetaTable.releaseTableLock(cfg.name);
-      console.log(`🔓 Lock released for ${cfg.name}`);
+    // Schema versions must be non-negative integers.
+    // Reject floats, strings, NaN, and negative values.
+    if (!Number.isInteger(version) || version < 0) {
+      errors.push(`Invalid schema version for table '${table.name}': ${version}`);
     }
   }
+
+  // Also verify the user did not provide versions for tables
+  // that do not exist in this migration configuration.
+  // This usually indicates a typo or outdated table name.
+  for (const providedTable of Object.keys(forcedTableVersions)) {
+    if (!TABLES.some((t) => t.name === providedTable)) {
+      errors.push(`Schema version provided for unknown table '${providedTable}'`);
+    }
+  }
+
+  // If any validation errors were collected, print them all at once
+  // and abort the dry run to avoid misleading results.
+  if (errors.length > 0) {
+    console.error("❌ Invalid dry run schema version configuration:\n");
+    errors.forEach((e) => console.error("  - " + e));
+    throw new Error("Dry run aborted due to invalid --schemaVersion parameters");
+  }
+}
+
+function parseCurrentSchemaVersionArg(arg?: (string | number)[]): TableVersionMap | undefined {
+  if (!arg) {
+    return undefined;
+  }
+
+  const result: TableVersionMap = {};
+
+  for (const entry of arg) {
+    const entrySplitted = String(entry).split("=");
+    const [table, versionStr] = entrySplitted;
+    if (entrySplitted.length !== 2 || !table || !versionStr) {
+      console.warn(`⚠️ Invalid currentSchemaVersion entry: "${entry}"`);
+      continue;
+    }
+
+    const version = parseInt(versionStr, 10);
+    if (isNaN(version)) {
+      console.warn(`⚠️ Invalid version number in entry: "${entry}"`);
+      continue;
+    }
+
+    result[table] = version;
+  }
+
+  return result;
 }

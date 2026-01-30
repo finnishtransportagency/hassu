@@ -4,11 +4,11 @@ import { cloneDeep, isEqual } from "lodash";
 import { DBProjekti } from "../../../../backend/src/database/model/projekti";
 import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
 
-const migrate001: PagedMigrationRunPlan = async (options) => {
-  const projektiDatabase = new TestProjektiDatabase(options.tableName, "not-used");
+const migrate001: PagedMigrationRunPlan = async ({ tableName, startKey, migrateOptions: { dryRun } }) => {
+  const projektiDatabase = new TestProjektiDatabase(tableName, "not-used");
 
   const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
-    JSON.stringify(options.startKey)
+    JSON.stringify(startKey)
   );
 
   // Gathers all projektis that have changes made by migrateFromOldSchema
@@ -22,11 +22,11 @@ const migrate001: PagedMigrationRunPlan = async (options) => {
 
   for (const alteredProjekti of alteredProjektis) {
     console.log(
-      `${options.dryRun ? "Would run" : "Running"} migrateFromOldSchema to the following projektis: ${JSON.stringify(
+      `${dryRun ? "Would run" : "Running"} migrateFromOldSchema to the following projektis: ${JSON.stringify(
         alteredProjektis.map((projekti) => projekti.oid)
       )}`
     );
-    if (!options.dryRun) {
+    if (!dryRun) {
       await projektiDatabase.saveProjekti(alteredProjekti);
     }
   }

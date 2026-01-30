@@ -16,11 +16,24 @@ export type PlanOptions = {
   tableName: string;
   versionId: number;
   startKey: ScanCommandInput["ExclusiveStartKey"];
-  dryRun: boolean;
-  environment: string;
+  migrateOptions: MigrateAllTablesOptions | DryRunMigrateAllTablesOptions;
 };
 
 export type PagedMigrationRunPlanResponse = {
   updateInput: UpdateCommandInput[];
   lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"];
 };
+
+export type MigrateAllTablesOptions = {
+  environment: string;
+  dryRun?: false;
+  forcedTableVersions?: undefined;
+};
+
+export type DryRunMigrateAllTablesOptions = {
+  environment: string;
+  dryRun: true;
+  forcedTableVersions: TableVersionMap | undefined;
+};
+
+export type TableVersionMap = Record<string, number>;
