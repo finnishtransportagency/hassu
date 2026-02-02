@@ -1,11 +1,11 @@
 import { PagedMigrationRunPlan } from "../types";
-import { TestProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 import { cloneDeep, isEqual } from "lodash";
 import { DBProjekti } from "../../../../backend/src/database/model/projekti";
 import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
+import { ProjektiDatabase } from "../../../../backend/src/database/projektiDatabase";
 
 const migrate001: PagedMigrationRunPlan = async ({ tableName, startKey, migrateOptions: { dryRun } }) => {
-  const projektiDatabase = new TestProjektiDatabase(tableName, "not-used");
+  const projektiDatabase = new ProjektiDatabase(tableName, "not-used");
 
   const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
     JSON.stringify(startKey)

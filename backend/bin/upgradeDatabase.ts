@@ -2,9 +2,9 @@
 import cloneDeep from "lodash/cloneDeep";
 import { DBProjekti } from "../src/database/model";
 import yargs from "yargs";
-import { TestProjektiDatabase } from "../src/database/testProjektiDatabase";
 import { migrateFromOldSchema } from "../src/database/projektiSchemaUpdate";
 import isEqual from "lodash/isEqual";
+import { ProjektiDatabase } from "../src/database/projektiDatabase";
 // var fs = require("node:fs");
 
 yargs
@@ -42,7 +42,7 @@ yargs
   .help().argv;
 
 async function upgradeDatabase(dryRun: boolean, envName: string) {
-  const projektiDatabase = new TestProjektiDatabase("Projekti-" + envName, "not-used");
+  const projektiDatabase = new ProjektiDatabase("Projekti-" + envName, "not-used");
   let startKey;
   do {
     const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(startKey);
@@ -50,7 +50,7 @@ async function upgradeDatabase(dryRun: boolean, envName: string) {
     let projektis = scanResult.projektis;
     for (const projekti of projektis) {
       let fixed: DBProjekti = migrateFromOldSchema(cloneDeep(projekti), true);
-      console.group("Projekti " + fixed.oid);
+      console.group("Projekti oid=" + fixed.oid + " original=" + projekti.versio + " fixed=" + fixed.versio);
       let hasChanges = false;
       if (!isEqual(fixed, projekti)) {
         hasChanges = true;
