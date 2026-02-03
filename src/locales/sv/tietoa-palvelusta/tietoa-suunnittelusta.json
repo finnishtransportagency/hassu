@@ -43,7 +43,8 @@
   },
   "kuulutussivut": {
     "otsikko": "Kungörelsesidor",
-    "kappale1": "Utöver tjänsten Planering av statens trafikleder finns information om publicerade kungörelser och inbjudan till diskussion på Trafikledsverkets, närings-, trafik- och miljöcentralens samt planeringsområdets kommuners webbplatser. Dessutom publiceras uppgifter om kungörelser och inbjudan till diskussion också i en eller flera tidningar som utkommer i planeringsområdet.",
+    "kappale1_ely": "Utöver tjänsten Planering av statens trafikleder finns information om publicerade kungörelser och inbjudan till diskussion på Trafikledsverkets, Närings-, trafik- och miljöcentralens samt planeringsområdets kommuners webbplatser. Dessutom publiceras uppgifter om kungörelser och inbjudan till diskussion också i en eller flera tidningar som utkommer i planeringsområdet.",
+    "kappale1": "Utöver tjänsten Planering av statens trafikleder finns information om publicerade kungörelser och inbjudan till diskussion på Trafikledsverkets, livskraftscentralens samt planeringsområdets kommuners webbplatser. Dessutom publiceras uppgifter om kungörelser och inbjudan till diskussion också i en eller flera tidningar som utkommer i planeringsområdet.",
     "kappale2": "Länkar till de planeringsansvarigas kungörelser",
     "linkki1": {
       "teksti": "Trafikledsverkets kungörelser",

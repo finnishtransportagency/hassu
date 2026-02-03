@@ -101,6 +101,7 @@
     "oikopolut": "Oikopolut",
     "paatos": "Päätös",
     "paatosJaJatkopaatos": "Päätös ja jatkopäätös",
+    "alkuperainenPaatos": "Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
       "asianosaisen_oikeudet": "Asianosaisen oikeudet",
@@ -191,7 +192,7 @@
     "12YS_nahtavillaolo": "Y414-1 Ilmoitus suunnitelman nähtävilläolo",
     "60YS": "Y431 Kuulutus hyväksymispäätöksen nähtävilläolo",
     "61YS_ely": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle",
-    "61YS": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja Elinvoimakeskukselle",
+    "61YS": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja elinvoimakeskukselle",
     "62YS": "Y431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille",
     "63YS": "Y431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille",
     "12YS_hyvaksymispaatos": "Y431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta",
@@ -262,14 +263,14 @@
       "kappale1_monikko": "{{kuuluttaja_pitka}} ilmoittavat, että ne julkaisevat kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} ja maastotöiden aloittamista. {{kuuluttaja}} saattavat asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
       "kappale2": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{aloituskuulutusUrl}}.",
       "kappale3_ely": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.",
-      "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee Elinvoimaveskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
+      "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee elinvoimakeskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
     },
     "nahtaavillaolovaihekuulutus_lahete_email": {
       "otsikko": "Ilmoitus {{viranomaisen}} kuulutuksesta",
       "kappale1": "{{kuuluttaja_pitka}} ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} nähtäville asettamista. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla vähintään 30 päivän ajan siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
       "kappale2": "Kuulutus julkaistaan {{kuulutusPaiva}} osoitteessa {{nahtavillaoloUrl}}.",
       "kappale3_ely": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee ELY-keskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta.",
-      "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee Elinvoimakeskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
+      "kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva ilmoitus kuulutuksesta verkkosivuillaan. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä. Ilmoituksen nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Ilmoitus menee elinvoimakeskuksen ja Väyläviraston kuulutussivulle automaattisesti Valtion liikenneväylien suunnittelu palvelun kautta."
     },
     "kutsu_vuorovaikutukseen": {
       "otsikko": "Kutsu vuorovaikutukseen",
@@ -293,7 +294,7 @@
       "ilmoitus_kappale1_monikko": "{{kuuluttaja}} ilmoittavat, että ne julkaisevat kutsun, joka koskee otsikossa mainitun {{suunnitelman}} vuorovaikutusta. ({{lakiviite_ilmoitus}})",
       "ilmoitus_kappale2": "Kutsu julkaistaan {{vuorovaikutusJulkaisuPvm}} {{tilaajaGenetiivi}} tietoverkossa osoitteessa {{kutsuUrl}} sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.",
       "ilmoitus_kappale3_ely": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee ELY-keskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
-      "ilmoitus_kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee Elinvoimakeskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
+      "ilmoitus_kappale3": "Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee elinvoimakeskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.",
       "lakiviite_ilmoitus_tie": "LjMTL 27§",
       "lakiviite_ilmoitus_rata": "ratalaki 22 § 1 mom",
       "liite_kutsu": "Liite: Kutsu vuorovaikutukseen"
@@ -436,6 +437,7 @@
       "kuulutuksesta_ilmoittaminen_kappale2": "Kuulutus on nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{linkki_paatos}}.",
       "kuulutuksesta_ilmoittaminen_kappale3": "{{viranomainenLyhyt}} pyytää suunnittelualueen kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.",
       "lausunnonantajille_kappale1": "{{kuuluttaja_pitka}} ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
+      "lausunnonantajille_kappale1_monikko": "{{kuuluttaja_pitka}} ilmoittavat maakunnan liitolle, että Liikenne- ja viestintävirasto on {{hyvaksymis_pvm}} hyväksynyt {{asianumero_traficom}} päätöksellään {{lain}} mukaisen {{suunnitelman}}: {{suunnitelman_nimi}} hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden {{viimeinen_voimassaolovuosi}} loppuun.",
       "lakiviite_muistuttajille_tie": "laki liikennejärjestelmästä ja maanteistä LjMTL 104 §",
       "lakiviite_muistuttajille_rata": "ratalaki 91 §"
     },

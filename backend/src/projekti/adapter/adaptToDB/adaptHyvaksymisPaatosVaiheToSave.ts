@@ -22,6 +22,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
   const {
     hyvaksymisPaatos: hyvaksymisPaatosInput,
     aineistoNahtavilla: aineistoNahtavillaInput,
+    alkuperainenPaatos: alkuperainenPaatosInput,
     kuulutusYhteystiedot,
     ilmoituksenVastaanottajat,
     kuulutusPaiva,
@@ -40,6 +41,12 @@ export function adaptHyvaksymisPaatosVaiheToSave(
 
   const hyvaksymisPaatos = adaptAineistotToSave(dbHyvaksymisPaatosVaihe?.hyvaksymisPaatos, hyvaksymisPaatosInput, projektiAdaptationResult);
 
+  const alkuperainenPaatos = adaptAineistotToSave(
+    dbHyvaksymisPaatosVaihe?.alkuperainenPaatos,
+    alkuperainenPaatosInput,
+    projektiAdaptationResult
+  );
+
   let id = dbHyvaksymisPaatosVaihe?.id;
   if (!id) {
     id = 1;
@@ -51,6 +58,7 @@ export function adaptHyvaksymisPaatosVaiheToSave(
     id,
     hyvaksymisPaatos,
     aineistoNahtavilla,
+    alkuperainenPaatos,
     kuulutusYhteystiedot: adaptStandardiYhteystiedotToSave(kuulutusYhteystiedot),
     ilmoituksenVastaanottajat: adaptIlmoituksenVastaanottajatToSave(ilmoituksenVastaanottajat),
     hallintoOikeus,

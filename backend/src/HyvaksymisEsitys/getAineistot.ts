@@ -17,6 +17,10 @@ export default function getHyvaksymisEsityksenAineistot(
     aineistot.push(...hyvaksymisEsitys.muuAineistoVelhosta.map((aineisto) => ({ ...aineisto, avain: "muuAineistoVelhosta" })));
   hyvaksymisEsitys.suunnitelma &&
     aineistot.push(...hyvaksymisEsitys.suunnitelma.map((aineisto) => ({ ...aineisto, avain: "suunnitelma" })));
+  hyvaksymisEsitys.linkitetynProjektinAineisto &&
+    aineistot.push(
+      ...hyvaksymisEsitys.linkitetynProjektinAineisto.map((aineisto) => ({ ...aineisto, avain: "linkitetynProjektinAineisto" }))
+    );
   return aineistot;
 }
 

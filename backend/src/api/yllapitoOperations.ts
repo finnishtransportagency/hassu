@@ -46,6 +46,7 @@ import {
   EsikatseleHyvaksyttavaHyvaksymisEsityksenTiedostotQueryVariables,
   TallennaEnnakkoNeuvotteluMutationVariables,
   JaaProjektiMutationVariables,
+  ValmisteleTiedostonLatausQueryVariables,
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { listaaVelhoProjektit } from "../handler/listaaVelhoProjektit";
@@ -97,6 +98,7 @@ import { tallennaEnnakkoNeuvottelu } from "../ennakkoneuvottelu/tallenna";
 import { aktivoiProjektiJatkopaatettavaksi } from "../projekti/aktivoiProjektiJatkopaatettavaksi";
 import { jaaProjekti } from "../jaaProjekti";
 import { tiedoteHandler } from "../handler/tiedote/tiedoteHandler";
+import { createUploadURLForFile } from "../handler/fileHandler";
 
 export async function executeYllapitoOperation(event: AppSyncResolverEvent<unknown>): Promise<unknown> {
   if (!apiConfig[event.info.fieldName as OperationName].isYllapitoOperation) {
@@ -146,6 +148,8 @@ export async function executeYllapitoOperation(event: AppSyncResolverEvent<unkno
       return await suljeHyvaksymisEsityksenMuokkaus((event.arguments as SuljeHyvaksymisEsityksenMuokkausMutationVariables).input);
     case apiConfig.esikatseleAsiakirjaPDF.name:
       return await lataaAsiakirja(event.arguments as EsikatseleAsiakirjaPDFQueryVariables);
+    case apiConfig.valmisteleTiedostonLataus.name:
+      return await createUploadURLForFile(event.arguments as ValmisteleTiedostonLatausQueryVariables);
     case apiConfig.laskePaattymisPaiva.name:
       return await calculateEndDate(event.arguments as LaskePaattymisPaivaQueryVariables);
     case apiConfig.siirraTila.name:

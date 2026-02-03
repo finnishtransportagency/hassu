@@ -36,6 +36,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
     maanomistajaluettelo,
     kuulutuksetJaKutsu,
     muutAineistot,
+    linkitetynProjektinAineisto,
     perustiedot,
   } = props;
 
@@ -58,6 +59,8 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
     ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
+    : projektipaallikonYhteystiedot?.evkOrganisaatio
+    ? t(`viranomainen.${projektipaallikonYhteystiedot.evkOrganisaatio}`)
     : projektipaallikonYhteystiedot?.organisaatio;
 
   const muistutusMaara = useMemo(() => Object.values(muistutukset).flat().length ?? 0, [muistutukset]);
@@ -238,12 +241,13 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           ]}
         />
       </Section>
-      <Section noDivider>
+
+      <Section>
         <HassuAccordion
           items={[
             {
               id: "3",
-              title: <H2 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H2>,
+              title: <H3 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H3>,
               content: muutAineistot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
@@ -257,6 +261,14 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
               ),
             },
           ]}
+        />
+      </Section>
+      <Section noDivider>
+        <H3>{`Liittyvän suunnitelman aineisto (${linkitetynProjektinAineisto?.length ?? 0})`}</H3>
+        <SuunnittelmaLadattavatTiedostotAccordion
+          kategoriat={kategoriat}
+          aineistot={linkitetynProjektinAineisto}
+          esikatselu={tiedostotEiLadattavissa}
         />
       </Section>
       {(aineistopaketti || tiedostotEiLadattavissa) && (

@@ -45,6 +45,7 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
     maanomistajaluettelo,
     kuulutuksetJaKutsu,
     muutAineistot,
+    linkitetynProjektinAineisto,
     perustiedot,
     hyvaksymisEsitys,
   } = props;
@@ -68,6 +69,8 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
 
   const projarinOrganisaatio = projektipaallikonYhteystiedot?.elyOrganisaatio
     ? t(`viranomainen.${projektipaallikonYhteystiedot.elyOrganisaatio}`)
+    : projektipaallikonYhteystiedot?.evkOrganisaatio
+    ? t(`viranomainen.${projektipaallikonYhteystiedot.evkOrganisaatio}`)
     : projektipaallikonYhteystiedot?.organisaatio;
 
   const muistutusMaara = useMemo(() => Object.values(muistutukset).flat().length ?? 0, [muistutukset]);
@@ -201,7 +204,7 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
           ]}
         />
       </Section>
-      <Section noDivider>
+      <Section>
         <HassuAccordion
           items={[
             {
@@ -221,6 +224,10 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
             },
           ]}
         />
+      </Section>
+      <Section noDivider>
+        <H3>{`Liittyvän suunnitelman aineisto (${linkitetynProjektinAineisto?.length ?? 0})`}</H3>
+        <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={linkitetynProjektinAineisto} esikatselu={false} />
       </Section>
       {aineistopaketti && (
         <Section noDivider>

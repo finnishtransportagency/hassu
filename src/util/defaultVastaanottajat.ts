@@ -46,10 +46,7 @@ function findPreviousPhaseRecipients(projekti?: Projekti | null): IlmoituksenVas
 }
 
 // Build municipality recipients
-function buildKuntaRecipients(
-  projekti?: Projekti | null,
-  existing?: IlmoituksenVastaanottajat | null
-): KuntaVastaanottajaInput[] {
+function buildKuntaRecipients(projekti?: Projekti | null, existing?: IlmoituksenVastaanottajat | null): KuntaVastaanottajaInput[] {
   const kunnatMap = new Map(existing?.kunnat?.map((k) => [k.id, k.sahkoposti]));
   return (
     projekti?.velho?.kunnat?.map((id) => ({
@@ -60,10 +57,7 @@ function buildKuntaRecipients(
 }
 
 // Build region recipients (for jatkopäätös)
-function buildMaakuntaRecipients(
-  projekti?: Projekti | null,
-  existing?: IlmoituksenVastaanottajat | null
-): MaakuntaVastaanottajaInput[] {
+function buildMaakuntaRecipients(projekti?: Projekti | null, existing?: IlmoituksenVastaanottajat | null): MaakuntaVastaanottajaInput[] {
   const maakunnatMap = new Map(existing?.maakunnat?.map((m) => [m.id, m.sahkoposti]));
   return (
     projekti?.velho?.maakunnat?.map((id) => ({
@@ -94,9 +88,9 @@ function buildViranomaisetRecipients(
   const vayla = kirjaamot?.find((o) => o.nimi === "VAYLAVIRASTO");
   const vastuu = projekti?.velho?.suunnittelustaVastaavaViranomainen;
 
-  // If Väylä is NOT the responsible authority, add ELYs / kunnat
-  if (vastuu !== "VAYLAVIRASTO") {
-    const isEvk = isEvkAktivoitu()
+  // If Väylä is the responsible authority, add ELYs / kunnat
+  if (vastuu === "VAYLAVIRASTO") {
+    const isEvk = isEvkAktivoitu();
     const viranomaiset =
       projekti?.velho?.kunnat?.map((kuntaId) => {
         const ely = isEvk ? kuntametadata.viranomainenForKuntaId(kuntaId) : kuntametadata.elyViranomainenForKuntaId(kuntaId);
@@ -109,12 +103,8 @@ function buildViranomaisetRecipients(
     return uniqBy(viranomaiset, (v) => v.nimi);
   }
 
-  // Väylä is responsible → just return Väylä address
-  return [
-    vayla
-      ? { nimi: vayla.nimi, sahkoposti: vayla.sahkoposti }
-      : { nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "" },
-  ];
+  // Väylä is not responsible → just return Väylä address
+  return [vayla ? { nimi: vayla.nimi, sahkoposti: vayla.sahkoposti } : { nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "" }];
 }
 
 export default function defaultVastaanottajat(
@@ -131,12 +121,7 @@ export default function defaultVastaanottajat(
       ? buildMaakuntaRecipients(projekti, ilmoituksenVastaanottajat)
       : [];
 
-  const viranomaiset = buildViranomaisetRecipients(
-    projekti,
-    ilmoituksenVastaanottajat,
-    previous,
-    kirjaamoOsoitteet
-  );
+  const viranomaiset = buildViranomaisetRecipients(projekti, ilmoituksenVastaanottajat, previous, kirjaamoOsoitteet);
 
   return { kunnat, viranomaiset, maakunnat };
 }

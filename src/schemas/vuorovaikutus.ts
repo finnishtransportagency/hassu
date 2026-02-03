@@ -4,7 +4,7 @@ import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "hassu-common/s
 import { lokalisoituTeksti, lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { kutsuSaamePDFInput } from "./kutsuSaamePDFInput";
-import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille, maxFileSize } from "common/fileValidationSettings";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
@@ -45,7 +45,7 @@ export const palauteSchema = Yup.object().shape({
     .of(
       Yup.object().shape({
         koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
-        tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypes, "tiedostotyyppi_ei_tuettu"),
+        tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypesKansalaisille, "tiedostotyyppi_ei_tuettu"),
       })
     ),
 });

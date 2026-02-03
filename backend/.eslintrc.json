@@ -7,7 +7,14 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "mocha-no-only"],
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
-  "ignorePatterns": ["**/bin/*", "**/node_modules/**", "**/test/setup.js"],
+  "ignorePatterns": [
+    "**/bin/*",
+    "**/node_modules/**",
+    "**/test/setup.js",
+    "velho/aineistopalvelu",
+    "velho/hakupalvelu",
+    "velho/projektirekisteri"
+  ],
   "rules": {
     "strict": "error",
     "@typescript-eslint/no-var-requires": "warn",

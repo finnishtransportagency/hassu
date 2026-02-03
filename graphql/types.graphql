@@ -47,7 +47,7 @@ enum ELY {
   VARSINAIS_SUOMEN_ELY
 }
 
-enum EVK {
+enum Elinvoimakeskus {
   UUDENMAAN_EVK
   LOUNAIS_SUOMEN_EVK
   KAAKKOIS_SUOMEN_EVK
@@ -418,6 +418,7 @@ type HyvaksymisPaatosVaihe {
   viimeinenVoimassaolovuosi: String
   uudelleenKuulutus: UudelleenKuulutus
   aineistoMuokkaus: AineistoMuokkaus
+  alkuperainenPaatos: [Aineisto!]
 }
 
 type NahtavillaoloVaiheJulkaisu {
@@ -477,6 +478,7 @@ type HyvaksymisEsitys {
   kuulutuksetJaKutsu: [LadattuTiedostoNew!]
   muuAineistoVelhosta: [AineistoNew!]
   muuAineistoKoneelta: [LadattuTiedostoNew!]
+  linkitetynProjektinAineisto: [AineistoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tila: HyvaksymisTila
@@ -538,6 +540,7 @@ type EnnakkoNeuvottelu {
   kuulutuksetJaKutsu: [LadattuTiedostoNew!]
   muuAineistoVelhosta: [AineistoNew!]
   muuAineistoKoneelta: [LadattuTiedostoNew!]
+  linkitetynProjektinAineisto: [AineistoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
@@ -555,6 +558,7 @@ type EnnakkoNeuvotteluJulkaisu {
   kuulutuksetJaKutsu: [LadattuTiedostoNew!]
   muuAineistoVelhosta: [AineistoNew!]
   muuAineistoKoneelta: [LadattuTiedostoNew!]
+  linkitetynProjektinAineisto: [AineistoNew!]
   maanomistajaluettelo: [LadattuTiedostoNew!]
   vastaanottajat: [SahkopostiVastaanottaja!]
   tuodutTiedostot: HyvaksymisEsityksenTuodutTiedostot!
@@ -589,6 +593,7 @@ type HyvaksymisPaatosVaiheJulkaisu {
   asianhallintaSynkronointiTila: AsianTila
   julkaisuOnKopio: Boolean
   suunnitelmaJaettu: ProjektinJakotieto
+  alkuperainenPaatos: [Aineisto!]
 }
 
 type NahtavillaoloVaiheJulkaisuJulkinen {
@@ -630,6 +635,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
   kuulutusTekstit: KuulutusTekstit
   julkaisuOnKopio: Boolean
   suunnitelmaJaettu: SuunnitelmaJaettuJulkinen
+  alkuperainenPaatos: [Aineisto!]
 }
 
 type NahtavillaoloPDF {
@@ -961,7 +967,7 @@ type Yhteystieto {
   sukunimi: String!
   organisaatio: String
   elyOrganisaatio: ELY
-  evkOrganisaatio: EVK
+  evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   puhelinnumero: String!
   sahkoposti: String!
@@ -1238,7 +1244,7 @@ type ProjektiKayttaja {
   email: String!
   organisaatio: String
   elyOrganisaatio: ELY
-  evkOrganisaatio: EVK
+  evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -1251,7 +1257,7 @@ type ProjektiKayttajaJulkinen {
   email: String!
   organisaatio: String
   elyOrganisaatio: ELY
-  evkOrganisaatio: EVK
+  evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   etunimi: String!
   sukunimi: String!
@@ -1435,6 +1441,7 @@ type HyvaksymisEsityksenAineistot {
   maanomistajaluettelo: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
+  linkitetynProjektinAineisto: [LadattavaTiedosto!]
   aineistopaketti: String
 }
 
@@ -1451,6 +1458,7 @@ type EnnakkoNeuvottelunAineistot {
   maanomistajaluettelo: [LadattavaTiedosto!]
   kuulutuksetJaKutsu: [LadattavaTiedosto!]
   muutAineistot: [LadattavaTiedosto!]
+  linkitetynProjektinAineisto: [LadattavaTiedosto!]
   aineistopaketti: String
 }
 

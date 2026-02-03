@@ -50,7 +50,7 @@ export async function createNahtavillaoloVaiheKutsuAdapterProps({
     kielitiedot: julkaisu.kielitiedot,
     kuulutusPaiva: julkaisu.kuulutusPaiva,
     kuulutusVaihePaattyyPaiva: julkaisu.kuulutusVaihePaattyyPaiva,
-    velho,
+    velho: julkaisu.velho,
     hankkeenKuvaus: julkaisu.hankkeenKuvaus,
     kirjaamoOsoitteet,
     uudelleenKuulutus: julkaisu.uudelleenKuulutus ?? undefined,

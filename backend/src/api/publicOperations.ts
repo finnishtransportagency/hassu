@@ -13,7 +13,7 @@ import {
 } from "hassu-common/graphql/apiModel";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { apiConfig, OperationName } from "hassu-common/abstractApi";
-import { createUploadURLForFile } from "../handler/fileHandler";
+import { createUploadURLForFileJulkinen } from "../handler/fileHandler";
 import { lisaAineistoHandler } from "../handler/lisaAineistoHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { loadProjektiJulkinen } from "../projekti/projektiHandlerJulkinen";
@@ -38,8 +38,8 @@ export async function executePublicOperation(event: AppSyncResolverEvent<unknown
       return await projektiSearchService.searchJulkinen((event.arguments as ListaaProjektitQueryVariables).hakuehto);
     case apiConfig.lataaProjektiJulkinen.name:
       return await loadProjektiJulkinen(event.arguments as LataaProjektiJulkinenQueryVariables);
-    case apiConfig.valmisteleTiedostonLataus.name:
-      return await createUploadURLForFile(event.arguments as ValmisteleTiedostonLatausQueryVariables);
+    case apiConfig.valmisteleTiedostonLatausJulkinen.name:
+      return await createUploadURLForFileJulkinen(event.arguments as ValmisteleTiedostonLatausQueryVariables);
     case apiConfig.lisaaPalaute.name:
       return await palauteHandlerJulkinen.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
     case apiConfig.lisaaMuistutus.name:

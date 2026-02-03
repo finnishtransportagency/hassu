@@ -20,6 +20,7 @@ import Section from "@components/layout/Section2";
 import { AineistotSaavutettavuusOhje } from "@components/projekti/common/AineistotSaavutettavuusOhje";
 import { getAineistoKategoriat } from "common/aineistoKategoriat";
 import { FormAineisto } from "src/util/FormAineisto";
+import AlkuperainenPaatos from "./AlkuperainenPaatos/index";
 
 interface AineistoNahtavilla {
   [kategoriaId: string]: FormAineisto[];
@@ -28,8 +29,10 @@ interface AineistoNahtavilla {
 type FormData = {
   aineistoNahtavilla: AineistoNahtavilla;
   poistetutAineistoNahtavilla: FormAineisto[];
-  poistetutHyvaksymisPaatos?: FormAineisto[];
   hyvaksymisPaatos?: FormAineisto[];
+  poistetutHyvaksymisPaatos?: FormAineisto[];
+  alkuperainenPaatos?: FormAineisto[];
+  poistetutAlkuperainenPaatos?: FormAineisto[];
 };
 
 export type HyvaksymisPaatosVaiheAineistotFormValues = Pick<TallennaProjektiInput, "oid" | "versio"> & FormData;
@@ -95,8 +98,17 @@ function MuokkausnakymaForm({
       defaultFormValues.hyvaksymisPaatos = hyvaksymisPaatos;
     }
 
+    if (paatosTyyppi !== PaatosTyyppi.HYVAKSYMISPAATOS) {
+      const { lisatty: alkuperainenPaatos, poistettu: poistetutAlkuperainenPaatos } = handleAineistoArrayForDefaultValues(
+        julkaisematonPaatos?.alkuperainenPaatos,
+        true
+      );
+      defaultFormValues.poistetutAlkuperainenPaatos = poistetutAlkuperainenPaatos;
+      defaultFormValues.alkuperainenPaatos = alkuperainenPaatos;
+    }
+
     return defaultFormValues;
-  }, [julkaisematonPaatos, projekti.oid, projekti.versio, kategoriaIds]);
+  }, [julkaisematonPaatos, projekti.oid, projekti.versio, kategoriaIds, paatosTyyppi]);
 
   const validationMode = useValidationMode();
 
@@ -123,6 +135,8 @@ function MuokkausnakymaForm({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
+  const hyvaksymisvaiheessa = paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS;
+
   return (
     <FormProvider {...useFormReturn}>
       <form>
@@ -138,6 +152,7 @@ function MuokkausnakymaForm({
               sectionSubtitle="Päätöksen liitteenä oleva aineisto"
               aineistoKategoriat={aineistoKategoriat}
             />
+            {!hyvaksymisvaiheessa && <AlkuperainenPaatos />}
           </Section>
           <AineistoSivunPainikkeet
             siirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}

@@ -296,6 +296,7 @@ input HyvaksymisEsitysInput {
   kuulutuksetJaKutsu: [LadattuTiedostoInputNew!]
   muuAineistoVelhosta: [AineistoInputNew!]
   muuAineistoKoneelta: [LadattuTiedostoInputNew!]
+  linkitetynProjektinAineisto: [AineistoInputNew!]
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [SahkopostiVastaanottajaInput!]
 }
@@ -310,6 +311,7 @@ input EnnakkoNeuvotteluInput {
   kuulutuksetJaKutsu: [LadattuTiedostoInputNew!]
   muuAineistoVelhosta: [AineistoInputNew!]
   muuAineistoKoneelta: [LadattuTiedostoInputNew!]
+  linkitetynProjektinAineisto: [AineistoInputNew!]
   maanomistajaluettelo: [LadattuTiedostoInputNew!]
   vastaanottajat: [SahkopostiVastaanottajaInput!]
   poisValitutKuulutuksetJaKutsu: [String!]
@@ -344,6 +346,7 @@ input HyvaksymisPaatosVaiheInput {
   viimeinenVoimassaolovuosi: String
   hyvaksymisPaatosVaiheSaamePDFt: KuulutusSaamePDFtInput
   uudelleenKuulutus: UudelleenKuulutusInput
+  alkuperainenPaatos: [AineistoInput!]
 }
 
 input LinkkiInput {
@@ -440,6 +443,7 @@ input ProjektiKayttajaInput {
   puhelinnumero: String!
   yleinenYhteystieto: Boolean
   elyOrganisaatio: ELY
+  evkOrganisaatio: Elinvoimakeskus
 }
 
 input ListaaKayttajatInput {

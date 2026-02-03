@@ -12,6 +12,7 @@ import { KuulutusJulkaisuTila } from "@services/api";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
 import { LAUSUNTOPYYNNOT_ROUTE, LAUSUNTOPYYNTOJEN_TAYDENNYKSET_ROUTE } from "src/util/routes";
+import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 export default function LausuntoPyynnotPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -67,6 +68,8 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
   const nahtavillaolovaiheJulkaisu = projekti.nahtavillaoloVaiheJulkaisu;
   const migroitu = nahtavillaolovaiheJulkaisu?.tila == KuulutusJulkaisuTila.MIGROITU;
 
+  const isEvkActive = isEvkAktivoitu();
+
   return (
     <ProjektiPageLayout title="Lausuntopyyntöjen aineistolinkit" showInfo={!epaaktiivinen}>
       {!migroitu ? (
@@ -94,8 +97,9 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
                     <li>Liitä tällä sivulla tekemäsi linkit lausuntopyyntöihin.</li>
                     <li>
                       Lausuntopyynnöt allekirjoitetaan ja lähetetään vastaanottajille tämän järjestelmän ulkopuolella. Väyläviraston
-                      hankkeissa lausuntopyynnöt allekirjoitetaan ja lähetetään asianhallinnan kautta. ELY-keskusten hankkeissa
-                      allekirjoitus tapahtuu asianhallintajärjestelmän kautta ja lausuntopyynnöt lähetetään vastaanottajille sähköpostitse.
+                      hankkeissa lausuntopyynnöt allekirjoitetaan ja lähetetään asianhallinnan kautta.{" "}
+                      {isEvkActive ? "Elinvoimakeskusten" : "ELY-keskusten"} hankkeissa allekirjoitus tapahtuu asianhallintajärjestelmän
+                      kautta ja lausuntopyynnöt lähetetään vastaanottajille sähköpostitse.
                     </li>
                     <li>
                       Nähtävilläoloajan päätyttyä kunnille toimitetaan lausuntopyynnön täydennys, jonka yhteydessä kuntiin toimitetaan myös
@@ -116,8 +120,9 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
                     <li>Liitä tekemäsi muistutusaineiston linkit lausuntopyyntöjen täydennyksiin.</li>
                     <li>
                       Lausuntopyyntöjen täydennykset allekirjoitetaan ja lähetetään vastaanottajille tämän järjestelmän ulkopuolella.
-                      Väyläviraston hankkeissa lausuntopyynnöt allekirjoitetaan ja lähetetään asianhallinnan kautta. ELY-keskusten
-                      hankkeissa allekirjoitus tapahtuu asianhallintajärjestelmän kautta ja lähettäminen vastaanottajille sähköpostitse.
+                      Väyläviraston hankkeissa lausuntopyynnöt allekirjoitetaan ja lähetetään asianhallinnan kautta.{" "}
+                      {isEvkActive ? "Elinvoimakeskusten" : "ELY-keskusten"} hankkeissa allekirjoitus tapahtuu asianhallintajärjestelmän
+                      kautta ja lähettäminen vastaanottajille sähköpostitse.
                     </li>
                   </OhjelistaNotification>
                 )}

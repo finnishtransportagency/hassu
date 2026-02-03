@@ -14,7 +14,7 @@ export default function TietoaPalvelustaSivu() {
     <TietoaPalvelustaPageLayout>
       <ContentSpacer as={"section"} gap={8}>
         <h1 id="mainPageContent">{t("paaotsikko")}</h1>
-        <p className="vayla-label">{t("ingressi")}</p>
+        <p className="vayla-label">{t(`ingressi${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("verkkopalvelun-sisalto.otsikko")}</h2>
           <p>{t("verkkopalvelun-sisalto.kappale1")}</p>
@@ -50,14 +50,14 @@ export default function TietoaPalvelustaSivu() {
         </ContentSpacer>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("immateriaalioikeudet.otsikko")}</h2>
-          <p>{t("immateriaalioikeudet.kappale1")}</p>
-          <p>{t("immateriaalioikeudet.kappale2")}</p>
+          <p>{t(`immateriaalioikeudet.kappale1${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
+          <p>{t(`immateriaalioikeudet.kappale2${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
           <p>{t("immateriaalioikeudet.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>
           <h2 className="vayla-title">{t("nain-kasittelemme-henkilotietojasi.otsikko")}</h2>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale1")}</p>
-          <p>{t("nain-kasittelemme-henkilotietojasi.kappale2")}</p>
+          <p>{t(`nain-kasittelemme-henkilotietojasi.kappale2${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
           <p>{t("nain-kasittelemme-henkilotietojasi.kappale3")}</p>
         </ContentSpacer>
         <ContentSpacer gap={4}>

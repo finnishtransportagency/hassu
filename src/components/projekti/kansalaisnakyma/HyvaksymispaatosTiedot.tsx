@@ -113,6 +113,12 @@ export default function HyvaksymispaatosTiedot({ kuulutus, paatosTyyppi }: Props
         )}
       </ContentSpacer>
       <KansalaisenAineistoNakyma projekti={projekti} kuulutus={kuulutus} uudelleenKuulutus={kuulutus.uudelleenKuulutus} paatos />
+      {kuulutus?.alkuperainenPaatos?.length && kuulutus?.kuulutusPaiva && (
+        <ContentSpacer>
+          <H3 variant="h4">{t("projekti:ui-otsikot.alkuperainenPaatos")}</H3>
+          <AineistoLinkkiLista aineistot={kuulutus?.alkuperainenPaatos} julkaisupaiva={kuulutus?.kuulutusPaiva} />
+        </ContentSpacer>
+      )}
       <ContentSpacer>
         <H3 variant="h4">{t("projekti:ui-otsikot.yhteystiedot")}</H3>
         <p>

@@ -110,15 +110,21 @@ export class FileService {
    * Prepare upload URL for a given file. The uploaded file can be persisted to a projekti with persistFileToProjekti function call.
    */
   // https://zaccharles.medium.com/s3-uploads-proxies-vs-presigned-urls-vs-presigned-posts-9661e2b37932
+
   async createUploadURLForFile(
     filename: string,
-    contentType: string
+    contentType: string,
+    isYllapito: boolean = true
   ): Promise<{
     fileNameWithPath: string;
     uploadURL: string;
     uploadFields: string;
   }> {
-    this.validateContentType(contentType);
+    if (isYllapito) {
+      this.validateContentType(contentType);
+    } else {
+      this.validateContentTypeJulkinen(contentType);
+    }
 
     const fileNameWithPath = `${uuid.v4()}/${adaptFileName(filename)}`;
     const s3 = getS3Client();
@@ -140,8 +146,14 @@ export class FileService {
    * @param contentType
    * @private
    */
+  private validateContentTypeJulkinen(contentType: string) {
+    if (!fileValidation.allowedFileTypesKansalaisille.some((allowedType) => contentType.startsWith(allowedType))) {
+      log.error("Tiedostotyyppi ei ole sallittu! (" + contentType + ")");
+      throw new IllegalArgumentError("Tiedostotyyppi ei ole sallittu!");
+    }
+  }
   private validateContentType(contentType: string) {
-    if (!fileValidation.allowedFileTypes.some((allowedType) => contentType.startsWith(allowedType))) {
+    if (!fileValidation.allowedFileTypesVirkamiehille.some((allowedType) => contentType.startsWith(allowedType))) {
       log.error("Tiedostotyyppi ei ole sallittu! (" + contentType + ")");
       throw new IllegalArgumentError("Tiedostotyyppi ei ole sallittu!");
     }

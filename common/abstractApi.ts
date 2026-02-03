@@ -241,10 +241,16 @@ export const apiConfig: ApiConfig = {
     graphql: queries.esikatseleAsiakirjaPDF,
     isYllapitoOperation: true,
   },
+  valmisteleTiedostonLatausJulkinen: {
+    name: "valmisteleTiedostonLatausJulkinen",
+    operationType: OperationType.Query,
+    graphql: queries.valmisteleTiedostonLatausJulkinen,
+  },
   valmisteleTiedostonLataus: {
     name: "valmisteleTiedostonLataus",
     operationType: OperationType.Query,
     graphql: queries.valmisteleTiedostonLataus,
+    isYllapitoOperation: true,
   },
   tuoKarttarajaus: {
     name: "tuoKarttarajaus",
@@ -575,10 +581,9 @@ export abstract class AbstractApi {
     } as ArkistoiProjektiMutationVariables);
   }
 
-  async getVelhoSuunnitelmasByName(nimi: string, requireExactMatch?: boolean): Promise<VelhoHakuTulos[]> {
+  async getVelhoSuunnitelmasByName(nimi: string): Promise<VelhoHakuTulos[]> {
     return await this.callYllapitoAPI(apiConfig.listaaVelhoProjektit, {
       nimi,
-      requireExactMatch,
     } as ListaaVelhoProjektitQueryVariables);
   }
 
@@ -600,7 +605,15 @@ export abstract class AbstractApi {
       tiedostoNimi,
       contentType,
     };
-    return await this.callAPI(apiConfig.valmisteleTiedostonLataus, variables);
+    return await this.callYllapitoAPI(apiConfig.valmisteleTiedostonLataus, variables);
+  }
+
+  async valmisteleTiedostonLatausJulkinen(tiedostoNimi: string, contentType: string): Promise<LatausTiedot> {
+    const variables: ValmisteleTiedostonLatausQueryVariables = {
+      tiedostoNimi,
+      contentType,
+    };
+    return await this.callAPI(apiConfig.valmisteleTiedostonLatausJulkinen, variables);
   }
 
   async tuoKarttarajaus(oid: string, geoJSON: string): Promise<string> {

@@ -34,6 +34,7 @@ import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
+import { velho } from "../../velho/velhoClient";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -154,7 +155,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
+    // super.approve muuttaa tilan, joten haetaan odottavan julkaisun tiedot talteen Velhoa varten
+    const nahtavillaoloJulkaisuWaitingForApproval = this.getKuulutusWaitingForApproval(projekti);
     await super.approve(projekti, hyvaksyja);
+    if (nahtavillaoloJulkaisuWaitingForApproval) {
+      await velho.saveJulkaisupvm(projekti.oid, nahtavillaoloJulkaisuWaitingForApproval);
+    }
     //Lausuntopyyntojen aineistoissa on aina viimeisimmän hyväksytyn nähtävilläolon aineistot.
     await eventSqsClient.zipLausuntoPyyntoAineisto(projekti.oid);
   }

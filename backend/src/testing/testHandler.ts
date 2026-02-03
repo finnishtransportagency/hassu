@@ -3,7 +3,7 @@ import { projektiResetTool } from "./projektiResetTool";
 import { dateMoverTool } from "./dateMoverTool";
 import Pick from "lodash/pick";
 import { asianhallintaVientiTool } from "./asianhallintaVientiTool";
-import { importProjekti, TargetStatuses } from "../migraatio/migration";
+import { importProjekti, Tila, migraatioTilat } from "../migraatio/migration";
 import { setLogContextOid } from "../logger";
 
 class TestHandler {
@@ -23,9 +23,7 @@ class TestHandler {
 
   private async migraatio(params: TestiKomentoInput) {
     const targetStatus = params.migraatioTargetStatus;
-    if (!targetStatus) {
-      throw new Error("targetStatus-parametri puuttuu");
-    }
+    this.validateMigrationStatus(targetStatus);
     const kayttaja: NykyinenKayttaja = {
       __typename: "NykyinenKayttaja",
       etunimi: "migraatio",
@@ -35,10 +33,21 @@ class TestHandler {
     };
 
     await importProjekti({
-      oid: params.oid,
+      rivi: {
+        oid: params.oid,
+        tila: targetStatus,
+      },
       kayttaja,
-      targetStatus: targetStatus as TargetStatuses,
     });
+  }
+
+  private validateMigrationStatus(targetStatus: string | null | undefined): asserts targetStatus is Tila {
+    if (!targetStatus) {
+      throw new Error("targetStatus-parametri puuttuu");
+    }
+    if (!migraatioTilat.includes(targetStatus as Tila)) {
+      throw new Error("targetStatus-parametrin arvo ei löydy sallittujen arvojen joukosta");
+    }
   }
 }
 

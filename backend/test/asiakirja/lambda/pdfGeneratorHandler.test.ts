@@ -97,6 +97,12 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
         kuulutusYhteystiedot: {},
         velho: {
           nimi: "Projekti 1",
+          asiatunnusELY: "ELY/456",
+          asiatunnusVayla: "VAYLA/123",
+          tyyppi: event.tyyppi,
+          kunnat: [91],
+          suunnittelustaVastaavaViranomainen: event.suunnittelustaVastaavaViranomainen,
+          vaylamuoto: ["tie", "rata"],
         },
         kuulutusVaihePaattyyPaiva: "2024-02-08",
         kuulutusPaiva: "2024-01-01",

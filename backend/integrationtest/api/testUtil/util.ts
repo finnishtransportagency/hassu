@@ -43,7 +43,7 @@ import { personSearchUpdaterClient } from "../../../src/personSearch/personSearc
 import * as personSearchUpdaterHandler from "../../../src/personSearch/lambda/personSearchUpdaterHandler";
 import { mockClient } from "aws-sdk-client-mock";
 import { CloudFront } from "@aws-sdk/client-cloudfront";
-import { AloitusKuulutusJulkaisu, KasittelynTila } from "../../../src/database/model";
+import { AloitusKuulutusJulkaisu, KasittelynTila, NahtavillaoloVaiheJulkaisu, SuunnitteluSopimus } from "../../../src/database/model";
 import MockDate from "mockdate";
 import orderBy from "lodash/orderBy";
 import { dateTimeToString, nyt, parseDate } from "../../../src/util/dateUtil";
@@ -247,8 +247,12 @@ export class ParametersStub {
 }
 
 export type SaveProjektiToVelhoMocks = {
-  saveKasittelynTilaStub: sinon.SinonStub<[oid: string, kasittelynTila: KasittelynTila], Promise<void>>;
+  saveKasittelynTilaStub: sinon.SinonStub<
+    [oid: string, kasittelynTila: KasittelynTila | null | undefined, suunnitteluSopimus: SuunnitteluSopimus | null | undefined],
+    Promise<void>
+  >;
   saveProjektiAloituskuulutusPaivaStub: sinon.SinonStub<[oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu], Promise<void>>;
+  saveJulkaisupvmStub: sinon.SinonStub<[oid: string, nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined], Promise<void>>;
 };
 
 export function mockSaveProjektiToVelho(velhoStub: VelhoStub): SaveProjektiToVelhoMocks {
@@ -256,6 +260,7 @@ export function mockSaveProjektiToVelho(velhoStub: VelhoStub): SaveProjektiToVel
   const saveProjektiAloituskuulutusPaivaStub =
     velhoStub.saveProjektiAloituskuulutusPaivaStub ?? sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
   const saveProjektiSuunnitelmanTilaStub = velhoStub.saveProjektiSuunnitelmanTilaStub ?? sinon.stub(velho, "saveProjektiSuunnitelmanTila");
+  const saveJulkaisupvmStub = velhoStub.saveJulkaisupvmStub ?? sinon.stub(velho, "saveJulkaisupvm");
   mocha.afterEach(() => {
     if (saveKasittelynTilaStub.getCalls().length > 0) {
       expect({
@@ -272,11 +277,17 @@ export function mockSaveProjektiToVelho(velhoStub: VelhoStub): SaveProjektiToVel
         "velho.saveProjektiSuunnitelmanTila": saveProjektiSuunnitelmanTilaStub.getCalls().map((call) => call.args),
       }).toMatchSnapshot();
     }
+    if (saveJulkaisupvmStub.getCalls().length > 0) {
+      expect({
+        "velho.saveJulkaisupvm": saveJulkaisupvmStub.getCalls().map((call) => call.args),
+      }).toMatchSnapshot();
+    }
+    saveJulkaisupvmStub.reset();
     saveProjektiAloituskuulutusPaivaStub.reset();
     saveKasittelynTilaStub.reset();
     saveProjektiSuunnitelmanTilaStub.reset();
   });
-  return { saveKasittelynTilaStub, saveProjektiAloituskuulutusPaivaStub };
+  return { saveKasittelynTilaStub, saveProjektiAloituskuulutusPaivaStub, saveJulkaisupvmStub };
 }
 
 export class SchedulerMock {
@@ -394,13 +405,20 @@ function setupMockDate() {
 }
 
 export class VelhoStub {
-  public saveKasittelynTilaStub!: sinon.SinonStub<[oid: string, kasittelynTila: KasittelynTila], Promise<void>>;
+  public saveKasittelynTilaStub!: sinon.SinonStub<
+    [oid: string, kasittelynTila: KasittelynTila | null | undefined, suunnitteluSopimus: SuunnitteluSopimus | null | undefined],
+    Promise<void>
+  >;
   public saveProjektiAloituskuulutusPaivaStub!: sinon.SinonStub<
     [oid: string, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu],
     Promise<void>
   >;
   public saveProjektiSuunnitelmanTilaStub!: sinon.SinonStub;
   public loadVelhoProjektiByOidStub!: sinon.SinonStub;
+  public saveJulkaisupvmStub!: sinon.SinonStub<
+    [oid: string, nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined],
+    Promise<void>
+  >;
   constructor() {
     mocha.before(() => {
       sinon.stub(velho, "authenticate");
@@ -414,6 +432,7 @@ export class VelhoStub {
       this.saveKasittelynTilaStub = sinon.stub(velho, "saveKasittelynTila");
       this.saveProjektiAloituskuulutusPaivaStub = sinon.stub(velho, "saveProjektiAloituskuulutusPaiva");
       this.saveProjektiSuunnitelmanTilaStub = sinon.stub(velho, "saveProjektiSuunnitelmanTila");
+      this.saveJulkaisupvmStub = sinon.stub(velho, "saveJulkaisupvm");
       sinon.stub(velho, "searchProjects");
     });
   }

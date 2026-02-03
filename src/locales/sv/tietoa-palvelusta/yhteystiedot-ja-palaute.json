@@ -1,6 +1,7 @@
 {
   "paaotsikko": "Kontaktinformation och respons",
-  "kappale1": "På den här sidan hittar du en länk till både Trafikledsverkets och Närings-, trafik- och miljöcentralens allmänna kontaktuppgifter. Du kan också lämna respons om tjänsten Planering av statens trafikleder.",
+  "kappale1_ely": "På den här sidan hittar du en länk till både Trafikledsverkets och Närings-, trafik- och miljöcentralens allmänna kontaktuppgifter. Du kan också lämna respons om tjänsten Planering av statens trafikleder.",
+  "kappale1": "På den här sidan hittar du en länk till både Trafikledsverkets och livskraftscentralens allmänna kontaktuppgifter. Du kan också lämna respons om tjänsten Planering av statens trafikleder.",
   "linkki1": {
     "teksti": "Trafikledsverkets kontaktuppgifter",
     "href": "https://www.vayla.fi/sv/trafikledsverket/kontaktuppgifter"

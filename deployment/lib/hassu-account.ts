@@ -71,7 +71,7 @@ export class HassuAccountStack extends Stack {
       },
       vpc,
       tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_143_0,
+      insightsVersion: LambdaInsightsVersion.VERSION_1_0_333_0,
       layers: [
         new LayerVersion(this, "BaseLayer-" + Config.env, {
           code: Code.fromAsset("./layers/lambda-base"),
@@ -81,7 +81,7 @@ export class HassuAccountStack extends Stack {
         LayerVersion.fromLayerVersionArn(
           this,
           "paramLayer",
-          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:21"
+          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:24"
         ),
       ],
       logRetention: RetentionDays.SEVEN_YEARS,

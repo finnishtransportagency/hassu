@@ -62,6 +62,7 @@ import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelma
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
+import { isElyJulkaisuEstetty } from "common/util/isElyJulkaisuEstetty";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 
@@ -209,7 +210,7 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, true), [api]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -290,6 +291,9 @@ function VuorovaikutusKierrosKutsu({
       if (kunnatPuuttuu) {
         puutteet.push("kuntavastaanottajat puuttuvat");
       }
+      if (julkaisupaiva && isElyJulkaisuEstetty(projekti, julkaisupaiva)) {
+        puutteet.push("ELY-keskuksien julkaisut on estetty");
+      }
       if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
         puutteet.push("asianhallinta on vaarassa tilassa");
       }
@@ -308,7 +312,7 @@ function VuorovaikutusKierrosKutsu({
     } catch (e) {
       log.error(e);
     }
-  }, [kuntavastaanottajat, projekti, aineistotReady, showErrorMessage]);
+  }, [kuntavastaanottajat, projekti, aineistotReady, showErrorMessage, julkaisupaiva]);
 
   const handleClickCloseHyvaksy = useCallback(() => {
     setOpenHyvaksy(false);

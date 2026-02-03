@@ -8,13 +8,14 @@ type Query {
   lataaProjektiJulkinen(oid: String!, kieli: Kieli): ProjektiJulkinen
   projektinTila(oid: String!): ProjektinTila
 
-  listaaVelhoProjektit(nimi: String!, requireExactMatch: Boolean): [VelhoHakuTulos!]
+  listaaVelhoProjektit(nimi: String!): [VelhoHakuTulos!]
   listaaVelhoProjektiAineistot(oid: String!): [VelhoToimeksianto!]
   haeVelhoProjektiAineistoLinkki(oid: String!, dokumenttiOid: String!): String
   haeProjektiMuutoksetVelhosta(oid: String!): Velho
 
   esikatseleAsiakirjaPDF(oid: String!, asiakirjaTyyppi: AsiakirjaTyyppi!, kieli: Kieli, muutokset: TallennaProjektiInput!): PDF
   valmisteleTiedostonLataus(tiedostoNimi: String!, contentType: String!): LatausTiedot
+  valmisteleTiedostonLatausJulkinen(tiedostoNimi: String!, contentType: String!): LatausTiedot
 
   laskePaattymisPaiva(alkupaiva: String!, tyyppi: LaskuriTyyppi!): String
   listKirjaamoOsoitteet: [KirjaamoOsoite!]

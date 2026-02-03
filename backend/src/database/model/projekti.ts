@@ -1,4 +1,4 @@
-import { ELY, EVK, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
+import { ELY, Elinvoimakeskus, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
 import {
   IlmoituksenVastaanottajat,
   Kielitiedot,
@@ -34,7 +34,7 @@ export type DBVaylaUser = {
   muokattavissa?: boolean;
   yleinenYhteystieto?: boolean;
   elyOrganisaatio?: ELY;
-  evkOrganisaatio?: EVK;
+  evkOrganisaatio?: Elinvoimakeskus;
 };
 
 export type AloitusKuulutus = {
@@ -67,7 +67,6 @@ export type AloitusKuulutusJulkaisu = {
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
-  elyKeskus?: string | null;
   yhteystiedot: Yhteystieto[];
   kuulutusYhteystiedot: StandardiYhteystiedot;
   velho: Velho;
@@ -241,6 +240,7 @@ export type DBEnnakkoNeuvottelu = {
   kuulutuksetJaKutsu?: Array<LadattuTiedostoNew> | null;
   muuAineistoVelhosta?: Array<AineistoNew> | null;
   muuAineistoKoneelta?: Array<LadattuTiedostoNew> | null;
+  linkitetynProjektinAineisto?: Array<AineistoNew> | null;
   maanomistajaluettelo?: Array<LadattuTiedostoNew> | null;
   vastaanottajat?: Array<SahkopostiVastaanottaja> | null;
   muokkaaja?: string | null;

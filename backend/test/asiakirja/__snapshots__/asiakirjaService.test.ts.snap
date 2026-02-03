@@ -90,7 +90,7 @@ Nokia ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun tiesu
 
 Kutsu julkaistaan 23.3.2022 Uudenmaan ELY-keskuksen tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee Elinvoimakeskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee elinvoimakeskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
 Hankkeen kuvaus suunnitteluvaiheessa
 
@@ -112,7 +112,7 @@ Nokia meddelar om publiceringen av en inbjudan som gäller interaktion angående
 
 Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/sv/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
-Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på Livskraftscentralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.
+Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på livskraftscentralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.
 
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 
@@ -295,7 +295,7 @@ Nokia ilmoittaa, että se julkaisee kutsun, joka koskee otsikossa mainitun ratas
 
 Kutsu julkaistaan 23.3.2022 Väyläviraston tietoverkossa osoitteessa https://localhost:3000/suunnitelma/1/suunnittelu sekä yhdessä tai useammassa alueella yleisesti ilmestyvässä sanomalehdessä.
 
-Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee Elinvoimakeskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
+Suunnittelualueen kuntia pyydetään julkaisemaan liitteenä oleva Kutsu vuorovaikutukseen. Kutsu tulee mahdollisuuksien mukaan julkaista edellä mainittuna kutsun julkaisupäivänä. Kutsun nähtävillä oloa ei tarvitse todentaa ilmoituksen lähettäjälle. Kutsu menee elinvoimakeskuksen ja Väyläviraston kuulutustaululle automaattisesti Valtion liikenneväylien suunnittelu -palvelun kautta.
 
 Hankkeen kuvaus suunnitteluvaiheessa
 
@@ -317,7 +317,7 @@ Nokia meddelar om publiceringen av en inbjudan som gäller interaktion angående
 
 Inbjudan publiceras 23.3.2022 på adressen https://localhost:3000/sv/suunnitelma/1/suunnittelu. Dessutom publiceras inbjudan i minst en tidning med allmän spridning på området.
 
-Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på Livskraftscentralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.
+Kommunerna i planeringsområdet ombeds publicera den bifogade Inbjudan till interaktion. I mån av möjlighet ska inbjudan publiceras på ovan nämna publiceringsdatum. Man behöver inte bekräfta för avsändaren att inbjudan är framlagd. Inbjudan kommer automatiskt upp på livskraftscentralens och Trafikledsverkets kungörelsesida via tjänsten Planering av statens trafikleder.
 
 Hankkeen kuvaus suunnitteluvaiheessa ruotsiksi
 
@@ -746,7 +746,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 12`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_Y431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja Elinvoimakeskukselle.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_Y431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja elinvoimakeskukselle.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1199,7 +1199,7 @@ LUONNOS",
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 27`] = `
 Object {
-  "fileName": "esikatselu_hyvaksymispaatos_Y431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja Elinvoimakeskukselle sv.pdf",
+  "fileName": "esikatselu_hyvaksymispaatos_Y431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja elinvoimakeskukselle sv.pdf",
   "textContent": "VAYLA/2/2022
 
 
@@ -1967,6 +1967,7 @@ Object {
     Object {
       "elyOrganisaatio": undefined,
       "etunimi": "Kunta",
+      "evkOrganisaatio": undefined,
       "kunta": 536,
       "organisaatio": "Nokia",
       "puhelinnumero": "029123123",
@@ -1976,6 +1977,7 @@ Object {
     Object {
       "elyOrganisaatio": "PIRKANMAAN_ELY",
       "etunimi": "Eemil",
+      "evkOrganisaatio": undefined,
       "kunta": undefined,
       "organisaatio": "ELY",
       "puhelinnumero": "123456789",
