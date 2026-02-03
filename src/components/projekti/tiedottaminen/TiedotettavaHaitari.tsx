@@ -130,9 +130,13 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
             const response = await getTiedotettavatCallback(oid, muutTiedotettavat, query || undefined, from, size);
             setHakutulosMaara(response.hakutulosMaara);
             if (appendTiedotettavat) {
-              setTiedotettavat((oldTiedotettavat) => [...(oldTiedotettavat ?? []), ...response.tiedotettavat]);
+              setTiedotettavat((oldTiedotettavat) =>
+                [...(oldTiedotettavat ?? []), ...response.tiedotettavat].sort((a, b) =>
+                  (a.nimi as string).localeCompare(b.nimi as string, "fi")
+                )
+              );
             } else {
-              setTiedotettavat(response.tiedotettavat);
+              setTiedotettavat(response.tiedotettavat.sort((a, b) => (a.nimi as string).localeCompare(b.nimi as string, "fi")));
             }
           } catch {}
         })()
