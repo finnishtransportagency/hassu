@@ -63,7 +63,11 @@ yargs(hideBin(process.argv))
   .demandCommand(1, "You need to specify a command: dry-run or run")
   .strict()
   .help()
-  .parse();
+  .parseAsync()
+  .catch((err) => {
+    console.error("❌ Unhandled CLI error", err);
+    process.exit(1);
+  });
 
 async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrateAllTablesOptions) {
   const TABLES: TableConfig[] = [
