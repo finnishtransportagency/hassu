@@ -15,14 +15,8 @@ export async function migrateTable(
   console.log(`🚀 Checking migrations for ${cfg.name}`);
   const schemaMetaTable = new SchemaMetaTable(migrateOptions.environment);
 
-  let lockAcquired = false;
   if (!dryRun) {
-    lockAcquired = await schemaMetaTable.acquireTableLock(cfg.name);
-    if (!lockAcquired) {
-      console.log(`⏳ Skipping ${cfg.name}, another migration in progress`);
-      return;
-    }
-    console.log(`🔒 Lock acquired for ${cfg.name}`);
+    await schemaMetaTable.acquireTableLock(cfg.name);
   }
 
   try {
@@ -102,7 +96,7 @@ export async function migrateTable(
       console.log(`🎯 ${cfg.name} ${dryRun ? "would end" : "now at"} version ${current}`);
     }
   } finally {
-    if (!dryRun && lockAcquired) {
+    if (!dryRun) {
       await schemaMetaTable.releaseTableLock(cfg.name);
       console.log(`🔓 Lock released for ${cfg.name}`);
     }
