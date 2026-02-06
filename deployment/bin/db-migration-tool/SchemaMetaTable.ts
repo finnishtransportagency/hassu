@@ -1,5 +1,6 @@
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "./ddb";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 
 export class SchemaMetaTable {
   private readonly tableName: string;
@@ -29,7 +30,7 @@ export class SchemaMetaTable {
     );
   }
 
-  async acquireTableLock(tableName: string, minutes = 10): Promise<boolean> {
+  async acquireTableLock(tableName: string, minutes = 10): Promise<void> {
     const now = Math.floor(Date.now() / 1000);
     const lockUntil = now + minutes * 60;
 
@@ -47,10 +48,11 @@ export class SchemaMetaTable {
         })
       );
       console.log(`🔒 ${tableName} locked until ${lockUntil}`);
-      return true;
     } catch (err) {
-      console.warn(`⚠️ Failed to acquire lock for ${tableName}`, err);
-      return false;
+      if (err instanceof ConditionalCheckFailedException) {
+        throw new Error(`Lock for table '${tableName}' is already held. Previous migration may have crashed or lock TTL is too long.`);
+      }
+      throw err;
     }
   }
 

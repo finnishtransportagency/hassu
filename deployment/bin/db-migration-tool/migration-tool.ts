@@ -2,6 +2,8 @@ import { DryRunMigrateAllTablesOptions, MigrateAllTablesOptions, TableConfig, Ta
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { migrateTable } from "./migrateTable";
+import { DescribeTableCommand } from "@aws-sdk/client-dynamodb";
+import { ddb } from "./ddb";
 
 yargs(hideBin(process.argv))
   .scriptName("npm run upgrade-database")
@@ -90,6 +92,7 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
   ];
 
   validateMigrationOptions(options, TABLES);
+  await assertMigrationPrerequisites(options, TABLES);
 
   for (const table of TABLES) {
     await migrateTable(table, options);
@@ -168,4 +171,31 @@ function parseCurrentSchemaVersionArg(arg?: (string | number)[]): TableVersionMa
   }
 
   return result;
+}
+
+async function assertMigrationPrerequisites(
+  options: MigrateAllTablesOptions | DryRunMigrateAllTablesOptions,
+  tables: TableConfig[]
+): Promise<void> {
+  const schemaMetaTableName = `SchemaMeta-${options.environment}`;
+
+  console.log("🔍 Verifying DynamoDB access...");
+
+  await assertTableReadable(schemaMetaTableName);
+
+  for (const table of tables) {
+    await assertTableReadable(table.name);
+  }
+
+  console.log("✅ DynamoDB access verified\n");
+}
+
+async function assertTableReadable(tableName: string): Promise<void> {
+  try {
+    await ddb.send(new DescribeTableCommand({ TableName: tableName }));
+    console.log(`🔎 Access OK for table ${tableName}`);
+  } catch (err) {
+    console.error(`❌ Cannot access table ${tableName}`);
+    throw err;
+  }
 }
