@@ -311,8 +311,14 @@ export class HassuPipelineStack extends Stack {
         })
       );
       const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, Config.projektiTableName);
+      const nahtavillaoloVaiheJulkaisuTable = Table.fromTableName(
+        this,
+        `NahtavillaoloVaiheJulkaisuTable-${name}`,
+        Config.nahtavillaoloVaiheJulkaisuTableName
+      );
       const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, Config.schemaMetaTableName);
       projektiTable.grantReadWriteData(buildProject);
+      nahtavillaoloVaiheJulkaisuTable.grantReadWriteData(buildProject);
       schemaMetaTable.grantReadWriteData(buildProject);
 
       if (isE2eTest) {

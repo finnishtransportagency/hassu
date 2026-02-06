@@ -237,8 +237,12 @@ export class HassuDatabaseStack extends Stack {
       billingMode: ddb.BillingMode.PAY_PER_REQUEST,
       tableName: Config.nahtavillaoloVaiheJulkaisuTableName,
       partitionKey: {
-        name: "oid",
+        name: "projektiOid",
         type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.NUMBER,
       },
       stream: StreamViewType.NEW_IMAGE,
       pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },

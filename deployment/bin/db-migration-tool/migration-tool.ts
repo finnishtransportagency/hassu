@@ -80,6 +80,10 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
           versionId: 1,
           plan: (options) => import("./Projekti/migrate-001").then((m) => m.default(options)),
         },
+        {
+          versionId: 2,
+          plan: (options) => import("./Projekti/migrate-002").then((m) => m.default(options)),
+        },
       ],
     },
     // {
