@@ -49,7 +49,7 @@ export class SchemaMetaTable {
       );
       console.log(`🔒 ${tableName} locked until ${lockUntil}`);
     } catch (err) {
-      if (!(err instanceof ConditionalCheckFailedException)) {
+      if (err instanceof ConditionalCheckFailedException) {
         throw new Error(`Lock for table '${tableName}' is already held. Previous migration may have crashed or lock TTL is too long.`);
       }
       throw err;
