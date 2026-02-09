@@ -18,6 +18,7 @@ import { SimultaneousUpdateError } from "hassu-common/error";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import {
   GetCommand,
+  QueryCommand,
   PutCommand,
   PutCommandOutput,
   ScanCommand,
@@ -97,13 +98,15 @@ type UpdateParams = {
 };
 
 export class ProjektiDatabase {
-  constructor(projektiTableName: string, feedbackTableName: string) {
+  constructor(projektiTableName: string, feedbackTableName: string, nahtavillaoloVaiheJulkaisuTableName: string) {
     this.projektiTableName = projektiTableName;
     this.feedbackTableName = feedbackTableName;
+    this.nahtavillaoloVaiheJulkaisuTableName = nahtavillaoloVaiheJulkaisuTableName;
   }
 
   projektiTableName: string;
   feedbackTableName: string;
+  nahtavillaoloVaiheJulkaisuTableName: string;
 
   aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
   vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(
@@ -154,7 +157,9 @@ export class ProjektiDatabase {
       if (!data.Item) {
         return;
       }
+
       const projekti = data.Item as DBProjekti;
+      projekti.nahtavillaoloVaiheJulkaisut = await this.queryAllNahtavillaoloVaiheJulkaisus(oid, stronglyConsistentRead);
       projekti.oid = oid;
       projekti.tallennettu = true;
 
@@ -167,6 +172,25 @@ export class ProjektiDatabase {
       log.error(e);
       throw e;
     }
+  }
+
+  private async queryAllNahtavillaoloVaiheJulkaisus(
+    oid: string,
+    stronglyConsistentRead: boolean
+  ): Promise<NahtavillaoloVaiheJulkaisu[] | undefined> {
+    const nahtavillaolojulkaisuQuery = new QueryCommand({
+      TableName: this.nahtavillaoloVaiheJulkaisuTableName,
+      KeyConditionExpression: "#pk = :pk",
+      ExpressionAttributeNames: {
+        "#pk": "projektiOid",
+      },
+      ExpressionAttributeValues: {
+        ":pk": oid,
+      },
+      ConsistentRead: stronglyConsistentRead,
+    });
+    const nahtavillaoloJulkaisuOutput = await getDynamoDBDocumentClient().send(nahtavillaolojulkaisuQuery);
+    return nahtavillaoloJulkaisuOutput.Items as NahtavillaoloVaiheJulkaisu[] | undefined;
   }
 
   /**
@@ -647,4 +671,8 @@ export class ProjektiDatabase {
   }
 }
 
-export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing", config.feedbackTableName ?? "missing");
+export const projektiDatabase = new ProjektiDatabase(
+  config.projektiTableName ?? "missing",
+  config.feedbackTableName ?? "missing",
+  config.nahtavillaoloVaiheJulkaisuTableName ?? "missing"
+);

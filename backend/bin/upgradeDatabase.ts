@@ -42,7 +42,7 @@ yargs
   .help().argv;
 
 async function upgradeDatabase(dryRun: boolean, envName: string) {
-  const projektiDatabase = new ProjektiDatabase("Projekti-" + envName, "not-used");
+  const projektiDatabase = new ProjektiDatabase("Projekti-" + envName, "not-used", "not-used");
   let startKey;
   do {
     const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(startKey);
