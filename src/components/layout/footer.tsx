@@ -102,7 +102,7 @@ export const Footer = () => {
                   <Image src="/assets/vayla_alla_fi_sv_rgb.png" alt="" width="140" height="117" />
                 </div>
                 <div className="my-auto text-center">
-                  <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170.61" height="91" />
+                  <Image src="/assets/evk_footer_fi_sv.png" alt="" width="170" height="91" />
                 </div>
               </KuvaContainer>
             </div>
