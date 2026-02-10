@@ -11,10 +11,7 @@ import { isElyJulkaisuEstetty } from "../isElyJulkaisuEstetty";
 const ONLY_DATE_FORMAT = "YYYY-MM-DD";
 const DAY = "day";
 
-const luoDummyProjekti = (
-  suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen,
-  uspaKaytossa: boolean
-): Projekti => {
+const luoDummyProjekti = (suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen, uspaKaytossa: boolean): Projekti => {
   return {
     oid: "1.2.246.578.5.1.2978288874.2711575506",
     versio: 8,

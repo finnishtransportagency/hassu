@@ -43,9 +43,7 @@ export default function MuuAineistoVelhosta({
   return (
     <SectionContent>
       <H5 variant="h4">Projektivelho</H5>
-      <p>
-        Voit halutessasi {ennakkoneuvottelu ? "tuoda" : "liittää hyväksymisesitykseen"} Projektivelhosta muuta lisäaineistoa.
-      </p>
+      <p>Voit halutessasi {ennakkoneuvottelu ? "tuoda" : "liittää hyväksymisesitykseen"} Projektivelhosta muuta lisäaineistoa.</p>
       {!!fields?.length && (
         <TiedostoInputNewTable
           id="muu_aineisto_velhosta_table"

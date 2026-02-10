@@ -286,10 +286,7 @@ export class VelhoClient {
     }
   }
 
-  public async saveJulkaisupvm(
-    oid: string,
-    nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined
-  ): Promise<void> {
+  public async saveJulkaisupvm(oid: string, nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu | undefined): Promise<void> {
     await this.saveProjekti(oid, (projekti) => applyNahtavillaoloajankohtaToVelho(projekti, nahtavillaoloVaiheJulkaisu));
   }
 

@@ -2,10 +2,13 @@
 import cloneDeep from "lodash/cloneDeep";
 import { DBProjekti } from "../src/database/model";
 import yargs from "yargs";
-import { TestProjektiDatabase } from "../src/database/testProjektiDatabase";
+import { migrateFromOldSchema } from "../src/database/projektiSchemaUpdate";
+import isEqual from "lodash/isEqual";
+import { ProjektiDatabase } from "../src/database/projektiDatabase";
+// var fs = require("node:fs");
 
 yargs
-  .scriptName("npm run upgradeDatabase")
+  .scriptName("npm run upgradeDatabase-old")
   .command(
     "dryRun [env]",
     "Älä kirjoita tietokantaan, tulosta vain eroavaisuudet",
@@ -39,42 +42,42 @@ yargs
   .help().argv;
 
 async function upgradeDatabase(dryRun: boolean, envName: string) {
-  const projektiDatabase = new TestProjektiDatabase("Projekti-" + envName, "not-used");
+  const projektiDatabase = new ProjektiDatabase("Projekti-" + envName, "not-used");
   let startKey;
   do {
     const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(startKey);
     startKey = scanResult.startKey;
     let projektis = scanResult.projektis;
     for (const projekti of projektis) {
-      let fixed: DBProjekti = cloneDeep(projekti);
-      console.group("Projekti " + fixed.oid);
+      let fixed: DBProjekti = migrateFromOldSchema(cloneDeep(projekti), true);
+      console.group("Projekti oid=" + fixed.oid + " original=" + projekti.versio + " fixed=" + fixed.versio);
       let hasChanges = false;
-      let vuorovaikutusKierros = fixed.vuorovaikutusKierros;
-      if (vuorovaikutusKierros) {
-        if (vuorovaikutusKierros.vuorovaikutusNumero === 0) {
-          console.log("Korjataan vuorovaikutusKierros.vuorovaikutusNumero:ksi 1");
-          vuorovaikutusKierros.vuorovaikutusNumero = 1;
-          hasChanges = true;
-        }
-        if (JSON.stringify(vuorovaikutusKierros).includes("/0_")) {
-          console.error("Varoitus: vuorovaikutuskierroksesta löytyi epäilyttävä tiedostopolku!", { vuorovaikutusKierros });
-        }
+      if (!isEqual(fixed, projekti)) {
+        hasChanges = true;
+
+        // const folderName = `${envName}`;
+        // try {
+        //   if (!fs.existsSync(folderName, { recursive: true })) {
+        //     fs.mkdirSync(folderName, { recursive: true });
+        //   }
+        //   fs.writeFile(`${folderName}/${projekti.oid}.json`, JSON.stringify(fixed), (err: any) => {
+        //     if (err) {
+        //       console.error(err);
+        //     } else {
+        //       // done!
+        //     }
+        //   });
+        // } catch (err) {
+        //   console.error(err);
+        // }
       }
-      fixed.vuorovaikutusKierrosJulkaisut?.map((julkaisu) => {
-        if (julkaisu.id === 0) {
-          console.log("Korjataan vuorovaikutusKierrosJulkaisut.julkaisu.id:ksi 1");
-          julkaisu.id = 1;
-          hasChanges = true;
-        }
-        if (JSON.stringify(julkaisu).includes("/0_")) {
-          console.error("Varoitus: vuorovaikutuskierrosjulkaisusta löytyi epäilyttävä tiedostopolku!", { julkaisu });
-        }
-      });
 
       if (hasChanges) {
         if (!dryRun) {
           console.log("Päivitetään tietokantaan");
           await projektiDatabase.saveProjekti(fixed);
+        } else {
+          console.log("Projekti on tarve päivittää");
         }
       } else {
         console.log("Projekti on kunnossa.");
