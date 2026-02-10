@@ -24,7 +24,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
 
   const api = useApi();
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, true), [api]);
 
   const preSubmitFunction = useCallback(
     async (formData: KuulutuksenTiedotFormValues) => {

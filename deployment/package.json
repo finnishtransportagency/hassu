@@ -4,7 +4,6 @@
   "private": true,
   "devDependencies": {
     "@semantic-release/exec": "^6.0.3",
-    "@sls-next/cdk-construct": "^3.7.0",
     "@types/inquirer": "^8.2.9",
     "@types/node-fetch": "^2.6.13",
     "aws-cdk": "^2.188.0",
@@ -14,7 +13,7 @@
     "constructs": "^10.4.2",
     "inquirer": "^8.2.6",
     "node-fetch": "^2.7.0",
-    "semantic-release": "^22.0.6"
+    "semantic-release": "^23.1.1"
   },
   "overrides": {
     "next": "12.3.4",

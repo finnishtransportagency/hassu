@@ -44,6 +44,8 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) 
     projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo &&
     julkaisu.aineistoMuokkaus;
 
+  const hyvaksymisvaiheessa = paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS;
+
   return (
     <>
       <AineistoMuokkausSection projekti={projekti} julkaisu={julkaisu} tyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]} gap={4}>
@@ -85,6 +87,27 @@ export default function Lukunakyma({ projekti, paatosTyyppi }: Readonly<Props>) 
             )}
             <H3 className="mt-8">Päätöksen liitteenä oleva aineisto</H3>
             <AineistoNahtavillaAccordion kategoriat={kategoriat} julkaisu={julkaisu} paakategoria />
+          </>
+        )}
+        {!hyvaksymisvaiheessa && (
+          <>
+            <H3>Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto</H3>
+            {julkaisu?.alkuperainenPaatos && (
+              <Stack direction="column" rowGap={2}>
+                {julkaisu.alkuperainenPaatos.map((aineisto) => (
+                  <span key={aineisto.dokumenttiOid}>
+                    <HassuAineistoNimiExtLink
+                      tiedostoPolku={aineisto.tiedosto}
+                      aineistoNimi={aineisto.nimi}
+                      aineistoTila={aineisto.tila}
+                      sx={{ mr: 3 }}
+                      target="_blank"
+                    />
+                    {aineisto.tuotu && formatDateTime(aineisto.tuotu)}
+                  </span>
+                ))}
+              </Stack>
+            )}
           </>
         )}
       </AineistoMuokkausSection>

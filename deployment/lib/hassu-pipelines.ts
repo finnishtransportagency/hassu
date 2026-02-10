@@ -17,6 +17,7 @@ import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { BuildEnvironmentVariable } from "aws-cdk-lib/aws-codebuild/lib/project";
 import { BlockPublicAccess, Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
 import { OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
 
 // These should correspond to CfnOutputs produced by this stack
 export type PipelineStackOutputs = {
@@ -309,6 +310,11 @@ export class HassuPipelineStack extends Stack {
           resources: ["arn:aws:iam::*:role/aws-service-role/*"],
         })
       );
+      const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, `Projekti-${pipelineConfig.env}`);
+      const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, `SchemaMeta-${pipelineConfig.env}`);
+      projektiTable.grantReadWriteData(buildProject);
+      schemaMetaTable.grantReadWriteData(buildProject);
+
       if (isE2eTest) {
         buildProject.addToRolePolicy(
           new PolicyStatement({
@@ -337,7 +343,7 @@ export class HassuPipelineStack extends Stack {
       source: gitHubSource,
       cache: codebuild.Cache.local(LocalCacheMode.CUSTOM, LocalCacheMode.SOURCE, LocalCacheMode.DOCKER_LAYER),
       environment: {
-        buildImage: LinuxBuildImage.STANDARD_5_0,
+        buildImage: LinuxBuildImage.STANDARD_7_0,
         privileged: true,
         computeType: ComputeType.MEDIUM,
       },

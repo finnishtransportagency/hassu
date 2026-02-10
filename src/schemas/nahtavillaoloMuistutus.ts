@@ -1,4 +1,4 @@
-import { allowedFileTypes, maxFileSize } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille, maxFileSize } from "common/fileValidationSettings";
 import * as Yup from "yup";
 import { phoneNumberRegex } from "hassu-common/schema/puhelinNumero";
 
@@ -14,7 +14,7 @@ export const muistutusSchema = Yup.object().shape({
   liitteet: Yup.array().of(
     Yup.object().shape({
       koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
-      tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypes, "tiedostotyyppi_ei_tuettu"),
+      tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypesKansalaisille, "tiedostotyyppi_ei_tuettu"),
     })
   ),
   puhelinnumero: Yup.string().notRequired().matches(new RegExp(phoneNumberRegex), "puh_vain_numerot").max(20, "puh_max_20").nullable(),

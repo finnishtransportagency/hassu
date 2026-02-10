@@ -62,7 +62,6 @@ import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelma
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import capitalize from "lodash/capitalize";
 import useIsProjektiReadyForTilaChange from "src/hooks/useProjektinTila";
-import { isEvkJulkaisuEstetty } from "hassu-common/util/isEvkJulkaisuEstetty";
 import { isElyJulkaisuEstetty } from "common/util/isElyJulkaisuEstetty";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
@@ -211,7 +210,7 @@ function VuorovaikutusKierrosKutsu({
 
   useLeaveConfirm(!isSubmitting && isDirty);
 
-  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto), [api]);
+  const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, true), [api]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -294,11 +293,6 @@ function VuorovaikutusKierrosKutsu({
       }
       if (julkaisupaiva && isElyJulkaisuEstetty(projekti, julkaisupaiva)) {
         puutteet.push("ELY-keskuksien julkaisut on estetty");
-      }
-      if (julkaisupaiva && isEvkJulkaisuEstetty(projekti, julkaisupaiva)) {
-        puutteet.push(
-          "integraatio Elinvoimakeskuksen asianhallintaan ei käytettävissä"
-        );
       }
       if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
         puutteet.push("asianhallinta on vaarassa tilassa");

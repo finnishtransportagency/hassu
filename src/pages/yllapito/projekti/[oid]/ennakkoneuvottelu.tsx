@@ -6,6 +6,7 @@ import {
   adaptAineistotNewToInput,
   adaptKunnallinenLadattuTiedostoToInput,
   adaptLadatutTiedostotNewToInput,
+  adaptLinkitetynProjektinAineistot,
   adaptSuunnitelmaAineistot,
   EnnakkoneuvotteluForm,
   FormMuistutukset,
@@ -51,11 +52,12 @@ import useValidationMode from "src/hooks/useValidationMode";
 import EnnakkoneuvotteluLukutila from "@components/projekti/ennakkoneuvottelu/EnnakkoneuvotteluLukutila";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
+import LinkitetynProjektinAineisto from "@components/HyvaksymisEsitys/LomakeComponents/LinkitetynProjektinAineisto";
 
 export function getDefaultValuesForForm(projekti: Projekti | null | undefined): EnnakkoneuvotteluForm {
   if (!projekti) {
     return {
-      ennakkoNeuvottelu: { muistutukset: {}, suunnitelma: {} },
+      ennakkoNeuvottelu: { muistutukset: {}, suunnitelma: {}, linkitetynProjektinAineisto: {} },
       oid: "",
       versio: 1,
     };
@@ -72,6 +74,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
     poisValitutMaanomistajaluettelot,
     muuAineistoVelhosta,
     muuAineistoKoneelta,
+    linkitetynProjektinAineisto,
     maanomistajaluettelo,
     vastaanottajat,
     hyvaksymisEsitys,
@@ -99,6 +102,7 @@ export function getDefaultValuesForForm(projekti: Projekti | null | undefined): 
       poisValitutMaanomistajaluettelot: poisValitutMaanomistajaluettelot,
       muuAineistoVelhosta: adaptAineistotNewToInput(muuAineistoVelhosta),
       muuAineistoKoneelta: adaptLadatutTiedostotNewToInput(muuAineistoKoneelta),
+      linkitetynProjektinAineisto: adaptLinkitetynProjektinAineistot(linkitetynProjektinAineisto, velho.tyyppi),
       maanomistajaluettelo: adaptLadatutTiedostotNewToInput(maanomistajaluettelo),
       vastaanottajat: vastaanottajat?.length ? vastaanottajat.map(({ sahkoposti }) => ({ sahkoposti })) : [{ sahkoposti: "" }],
     },
@@ -215,6 +219,7 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
                 <p>Voit halutessasi tuoda muuta täydentävää teknistä aineistoa Projektivelhosta tai omalta koneelta.</p>
                 <MuuAineistoVelhosta aineisto={projekti.ennakkoNeuvottelu?.muuAineistoVelhosta} ennakkoneuvottelu={true} />
                 <MuuAineistoKoneelta tiedostot={projekti.ennakkoNeuvottelu?.muuAineistoKoneelta} ennakkoneuvottelu={true} />
+                <LinkitetynProjektinAineisto aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
               </Section>
               <Section>
                 <Vastaanottajat ennakkoneuvottelu={true} />
