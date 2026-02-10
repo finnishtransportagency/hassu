@@ -498,7 +498,7 @@ export class HassuFrontendStack extends Stack {
       ),
       "/yllapito/graphql": dmzProxyBehaviorWithLambda,
       "/yllapito/kirjaudu": dmzProxyBehaviorWithLambda,
-      "/keycloak/*": dmzProxyBehavior,
+      "/keycloak/*": this.createKeycloakBehaviour(config.dmzProxyEndpoint, config.frontendDomainName),
       "/hassu/*": apiBehavior,
     };
     if (Config.env == "dev") {
@@ -587,6 +587,26 @@ export class HassuFrontendStack extends Stack {
       viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
     };
     return apiBehavior;
+  }
+
+  // Todellisuudessa dev, test ja training ympäristöjen Keycloak pyynnöt päätyvät dev ympäristön Cloudfrontin läpi,
+  // Tämä määritetty NEXT_PUBLIC_KEYCLOAK_DOMAIN muuttujassa
+  private createKeycloakBehaviour(dmzProxyEndpoint: string, frontendDomainName: string) {
+    const keycloakBehavior: BehaviorOptions = {
+      compress: true,
+      origin: new HttpOrigin(dmzProxyEndpoint, {
+        originSslProtocols: [OriginSslPolicy.TLS_V1_2],
+        customHeaders: {
+          "X-Forwarded-Host": frontendDomainName,
+          Forwarded: `proto=https; host=${frontendDomainName}:443`,
+        },
+      }),
+      cachePolicy: CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: OriginRequestPolicy.ALL_VIEWER,
+      allowedMethods: AllowedMethods.ALLOW_ALL,
+      viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    };
+    return keycloakBehavior;
   }
 
   private async createPublicBucketBehavior(
