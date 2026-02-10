@@ -10,7 +10,7 @@ import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
 /***
  * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternalia kutsutaan poikkeavilla parametreilla niin,
  * että siellä kutsuttava dynamodb.UpdateItem -komento päivittää myös kentät,
- * joita saveProjektiInternal ei normaalisti päivitä eg. kuten nahtavillaoloVaiheJulkaisut (ks. projektiDatabase -> skipAutomaticUpdateFields)
+ * joita saveProjektiInternal ei normaalisti päivitä eg. nahtavillaoloVaiheJulkaisut (ks. projektiDatabase -> skipAutomaticUpdateFields)
  */
 export class TestProjektiDatabase extends ProjektiDatabase {
   async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<number> {
