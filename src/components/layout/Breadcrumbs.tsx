@@ -112,10 +112,11 @@ const BreadcrumbComponent: FunctionComponent<{ routeLabels: RouteLabels; isYllap
           {entries.map(([pathname, { label, preventTranslation, disableRoute, queryParams }], index) => (
             <ListItem key={pathname}>
               {!isCurrentRoute(pathname, router) && !disableRoute ? (
-                <Link href={{ pathname, query: queryParams }}>
-                  <a className={classNames(index == entries.length - 1 && "font-bold")}>
-                    <span>{!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}</span>
-                  </a>
+                <Link
+                  href={{ pathname, query: queryParams }}
+                  className={classNames(index == entries.length - 1 && "font-bold")}
+                >
+                  <span>{!isYllapito && !preventTranslation ? t(`polut.${label}`) : label}</span>
                 </Link>
               ) : (
                 <span className={classNames(isCurrentRoute(pathname, router) && "font-bold")}>
