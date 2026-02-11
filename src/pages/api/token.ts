@@ -49,11 +49,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     body: formBody,
   });
   const json = await response.json();
-  if (json["access_token"] && json["refresh_token"]) {
+  if (json["access_token"] && json["refresh_token"] && json["id_token"]) {
     // set cookie as Secure AND SameSite=Strict
     const cookie = [
       `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
       `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-id-token=${json["id_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
     ];
     res.setHeader("Set-Cookie", cookie);
   }
