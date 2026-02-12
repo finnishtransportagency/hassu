@@ -48,13 +48,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     method: "POST",
     body: formBody,
   });
-  const json = await response.json();
-  if (json["access_token"] && json["refresh_token"] && json["id_token"]) {
+  const { access_token, refresh_token, id_token } = await response.json();
+  if (access_token && refresh_token && id_token) {
     // set cookie as Secure AND SameSite=Strict
     const cookie = [
-      `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
-      `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
-      `x-vls-id-token=${json["id_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-access-token=${access_token};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-refresh-token=${refresh_token};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-id-token=${id_token};path=/;Secure;SameSite=Strict;HttpOnly `,
     ];
     res.setHeader("Set-Cookie", cookie);
   }
