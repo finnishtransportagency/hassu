@@ -56,7 +56,7 @@ const aloituskuulutusFields: Partial<DBProjekti> = {
 class ProjektiResetTool {
   async resetAloituskuulutus(oid: string) {
     await requireProjekti(oid);
-    await testProjektiDatabase.saveProjekti({
+    await testProjektiDatabase.saveProjektiWithoutLocking({
       oid,
       ...aloituskuulutusFields,
       synkronoinnit: {},
@@ -66,7 +66,7 @@ class ProjektiResetTool {
 
   async resetSuunnittelu(oid: string) {
     await requireProjekti(oid);
-    await testProjektiDatabase.saveProjekti({
+    await testProjektiDatabase.saveProjektiWithoutLocking({
       oid,
       ...suunnitteluVaiheFields,
     });
@@ -75,7 +75,7 @@ class ProjektiResetTool {
 
   async resetVuorovaikutukset(oid: string) {
     await requireProjekti(oid);
-    await testProjektiDatabase.saveProjekti({
+    await testProjektiDatabase.saveProjektiWithoutLocking({
       oid,
       ...vuorovaikutusJulkaisuFields,
     });
@@ -83,7 +83,7 @@ class ProjektiResetTool {
 
   async resetNahtavillaolo(oid: string) {
     await requireProjekti(oid);
-    await testProjektiDatabase.saveProjekti({
+    await testProjektiDatabase.saveProjektiWithoutLocking({
       oid,
       ...nahtavillaoloVaiheFields,
     });
@@ -92,7 +92,7 @@ class ProjektiResetTool {
 
   async resetHyvaksymisvaihe(oid: string) {
     await requireProjekti(oid);
-    await testProjektiDatabase.saveProjekti({
+    await testProjektiDatabase.saveProjektiWithoutLocking({
       oid,
       kasittelynTila: null,
       ...hyvaksymisPaatosVaiheFields,
@@ -103,7 +103,7 @@ class ProjektiResetTool {
   async resetJatkopaatos1vaihe(oid: string) {
     const dbProjekti = await requireProjekti(oid);
     const kasittelyntila = dbProjekti?.kasittelynTila;
-    await testProjektiDatabase.saveProjekti({
+    await testProjektiDatabase.saveProjektiWithoutLocking({
       oid,
       kasittelynTila: kasittelyntila?.hyvaksymispaatos
         ? {

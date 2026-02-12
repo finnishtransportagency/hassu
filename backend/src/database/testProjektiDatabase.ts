@@ -1,14 +1,22 @@
 import { config } from "../config";
 import { ProjektiDatabase } from "./projektiDatabase";
-import { DBProjekti } from "./model";
+import { SaveDBProjektiInput } from "./model";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { Exact } from "./Exact";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
-  async saveProjekti(dbProjekti: Partial<DBProjekti>): Promise<number> {
+  feedbackTableName: string;
+
+  constructor(projektiTableName: string, feedbackTableName: string) {
+    super(projektiTableName);
+    this.feedbackTableName = feedbackTableName;
+  }
+
+  async saveProjekti<T extends SaveDBProjektiInput>(dbProjekti: Exact<T, SaveDBProjektiInput>): Promise<number> {
     return this.saveProjektiInternal(dbProjekti, true, true);
   }
 
@@ -56,8 +64,4 @@ export class TestProjektiDatabase extends ProjektiDatabase {
   }
 }
 
-export const testProjektiDatabase = new TestProjektiDatabase(
-  config.projektiTableName ?? "missing",
-  config.feedbackTableName ?? "missing",
-  config.nahtavillaoloVaiheJulkaisuTableName ?? "missing"
-);
+export const testProjektiDatabase = new TestProjektiDatabase(config.projektiTableName ?? "missing", config.feedbackTableName ?? "missing");

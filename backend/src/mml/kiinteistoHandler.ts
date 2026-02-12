@@ -23,7 +23,7 @@ import { config } from "../config";
 import { fileService } from "../files/fileService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { IllegalArgumentError } from "hassu-common/error/IllegalArgumentError";
-import { DBProjekti } from "../database/model";
+import { DBProjektiSlim } from "../database/model";
 import { getKiinteistonomistajaTableName } from "../util/environment";
 import { DBOmistaja, omistajaDatabase } from "../database/omistajaDatabase";
 import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistajaSearchService";
@@ -299,8 +299,8 @@ async function tallennaKarttarajaus(oid: string, geoJSON: string) {
   log.info("Karttarajaus tuotu projektille", { oid });
 }
 
-async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjekti> {
-  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+async function getProjektiAndCheckPermissions(oid: string): Promise<DBProjektiSlim> {
+  const projekti = await projektiDatabase.loadSlimProjektiByOid(oid);
   if (!projekti) {
     throw new IllegalArgumentError("Projektia ei löydy");
   }
