@@ -2,7 +2,7 @@ import { PagedMigrationRunPlan } from "../types";
 import { cloneDeep, isEqual } from "lodash";
 import { DBProjekti } from "../../../../backend/src/database/model/projekti";
 import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
-import { TestProjektiDatabase } from "../../../../backend/src/database/testprojektiDatabase";
+import { TestProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 
 const migrate001: PagedMigrationRunPlan = async ({ tableName, startKey, migrateOptions: { dryRun } }) => {
   /**
