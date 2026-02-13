@@ -2,10 +2,14 @@ import { PagedMigrationRunPlan } from "../types";
 import { cloneDeep, isEqual } from "lodash";
 import { DBProjekti } from "../../../../backend/src/database/model/projekti";
 import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
-import { ProjektiDatabase } from "../../../../backend/src/database/projektiDatabase";
+import { TestProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 
 const migrate001: PagedMigrationRunPlan = async ({ tableName, startKey, migrateOptions: { dryRun } }) => {
-  const projektiDatabase = new ProjektiDatabase(tableName, "not-used");
+  /**
+   * Huom! TestProjektiDatabase (eikä ProjektiDatabase), jotta päivitetään myös kentät,
+   * jotka normaalisti jäisi tallentamatta saveProjekti kutsulla (kuten nahtavillaoloVaiheJulkaisut) ks.
+   * */
+  const projektiDatabase = new TestProjektiDatabase(tableName, "not-used");
 
   const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
     JSON.stringify(startKey)
