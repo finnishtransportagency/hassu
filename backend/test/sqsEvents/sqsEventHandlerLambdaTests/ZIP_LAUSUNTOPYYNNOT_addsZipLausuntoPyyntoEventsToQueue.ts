@@ -20,6 +20,7 @@ export const zipLausuntoPyynnotAddsZipLausuntoPyyntoEventsToQueue = async () => 
       nimi: "Tiedosto%201.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "8df1ab27-c0af-48dd-8687-3f4c7c1794a3",
     },
   ];
   const lisaAineistot2: LadattuTiedosto[] = [
@@ -28,6 +29,7 @@ export const zipLausuntoPyynnotAddsZipLausuntoPyyntoEventsToQueue = async () => 
       nimi: "Tiedosto%202.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "aba8ee07-c96c-4e4a-a243-87760eac8b3c",
     },
   ];
   const lausuntoPyynnot: LausuntoPyynto[] = [

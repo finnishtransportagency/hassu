@@ -422,6 +422,7 @@ export class DBProjektiForSpecificVaiheFixture {
     }
     return [
       {
+        projektiOid: this.PROJEKTI_OID,
         aineistoNahtavilla: [],
         hankkeenKuvaus: {
           RUOTSI:

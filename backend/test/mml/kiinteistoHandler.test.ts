@@ -201,7 +201,7 @@ describe("kiinteistoHandler", () => {
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
     dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
-      Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+      Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
     });
     dbMock
       .on(QueryCommand, {
@@ -225,6 +225,7 @@ describe("kiinteistoHandler", () => {
           { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
         ],
       });
+
     await tallennaKiinteistonOmistajat({
       oid: "1",
       muutOmistajat: [
@@ -276,7 +277,7 @@ describe("kiinteistoHandler", () => {
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
     dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
-      Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+      Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
     });
     dbMock
       .on(QueryCommand, {
@@ -329,7 +330,7 @@ describe("kiinteistoHandler", () => {
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
     dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
-      Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+      Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
     });
     dbMock
       .on(QueryCommand, {
@@ -375,7 +376,7 @@ describe("kiinteistoHandler", () => {
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
     dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
-      Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
+      Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
     });
     dbMock
       .on(QueryCommand, {
@@ -415,12 +416,13 @@ describe("kiinteistoHandler", () => {
       })
     ).to.eventually.rejectedWith(IllegalArgumentError, "Tallennettava omistaja id:'33' ei ole muutOmistajat listalla");
   });
+
   it("tuoKarttarajausJaTallennaKiinteistotunnukset testiympäristö", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
     sinon.stub(parameters, "getKiinteistoSQSUrl").resolves("");
     dbMock
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+      .resolves({ Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
     const sqsMock = mockClient(SQSClient);
     await tuoKarttarajausJaTallennaKiinteistotunnukset({
       geoJSON: "",
@@ -443,7 +445,7 @@ describe("kiinteistoHandler", () => {
     sinon.stub(config, "isProd").resolves(true);
     dbMock
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1.2.3", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
+      .resolves({ Item: { oid: "1.2.3", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
     const sqsMock = mockClient(SQSClient);
     await tuoKarttarajausJaTallennaKiinteistotunnukset({
       geoJSON: "",

@@ -6,7 +6,7 @@ import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import { Exact } from "./Exact";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
 
 export class TestProjektiDatabase extends ProjektiDatabase {
   feedbackTableName: string;
@@ -16,7 +16,7 @@ export class TestProjektiDatabase extends ProjektiDatabase {
     this.feedbackTableName = feedbackTableName;
   }
 
-  async saveProjekti<T extends SaveDBProjektiInput>(dbProjekti: Exact<T, SaveDBProjektiInput>): Promise<number> {
+  async saveProjekti(dbProjekti: SaveDBProjektiInput): Promise<number> {
     return this.saveProjektiInternal(dbProjekti, true, true);
   }
 
@@ -52,6 +52,13 @@ export class TestProjektiDatabase extends ProjektiDatabase {
             );
           }
         }
+      } catch (e) {
+        log.error(e);
+      }
+
+      try {
+        const items = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+        await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(items);
       } catch (e) {
         log.error(e);
       }
