@@ -423,9 +423,5 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   }
 }
 
-const projektiDatabase = new HyvaksymisEsityksenDynamoKutsut(
-  config.projektiTableName ?? "missing",
-  config.feedbackTableName ?? "missing",
-  config.nahtavillaoloVaiheJulkaisuTableName ?? "missing"
-);
+const projektiDatabase = new HyvaksymisEsityksenDynamoKutsut(config.projektiTableName ?? "missing");
 export default projektiDatabase;

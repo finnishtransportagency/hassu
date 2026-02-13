@@ -7,7 +7,7 @@ import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaoloTilaManager";
 import MockDate from "mockdate";
-import { DBProjekti, LadattuTiedosto, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
+import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../../../src/database/KuulutusJulkaisuDatabase";
 import { parameters } from "../../../src/aws/parameters";

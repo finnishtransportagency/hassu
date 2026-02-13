@@ -25,7 +25,10 @@ describe("tiedostoDownloadLinkHandler", () => {
   // 2 lausuntoPyynto
   // 2 lausuntoPyynnonTaydennys
 
-  let projektiDatabaseStub: sinon.SinonStub<[oid: string, stronglyConsistentRead?: boolean | undefined], Promise<DBProjekti | undefined>>;
+  let projektiDatabaseStub: sinon.SinonStub<
+    [oid: string, stronglyConsistentRead?: boolean | undefined, setContextOid?: boolean | undefined],
+    Promise<DBProjekti | undefined>
+  >;
 
   beforeEach(() => {
     sinon.stub(fileService, "getYllapitoPathForProjektiFile").returns("");
@@ -497,6 +500,7 @@ const nahtavillaolo: NahtavillaoloVaihe = {
 };
 
 const nahtavillaoloJulkaisu1: NahtavillaoloVaiheJulkaisu = {
+  projektiOid: "1",
   id: 1,
   aineistoNahtavilla: [
     {
@@ -520,6 +524,7 @@ const nahtavillaoloJulkaisu1: NahtavillaoloVaiheJulkaisu = {
 };
 
 const nahtavillaoloJulkaisu2: NahtavillaoloVaiheJulkaisu = {
+  projektiOid: "1",
   id: 2,
   aineistoNahtavilla: [
     {

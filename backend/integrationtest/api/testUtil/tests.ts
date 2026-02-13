@@ -100,7 +100,7 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
       return input;
     }),
   });
-  await testProjektiDatabase.saveProjekti({ oid, kasittelynTila: null }); // Resetoi tila, koska Velhosta voi tulla muita arvoja luonnin yhteydessä
+  await testProjektiDatabase.saveProjektiWithoutLocking({ oid, kasittelynTila: null }); // Resetoi tila, koska Velhosta voi tulla muita arvoja luonnin yhteydessä
   const p: API.Projekti = await loadProjektiFromDatabase(oid, API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
 
   // Expect that projektipaallikko is found

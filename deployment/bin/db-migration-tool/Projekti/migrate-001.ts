@@ -5,7 +5,7 @@ import { migrateFromOldSchema } from "../../../../backend/src/database/projektiS
 import { ProjektiDatabase } from "../../../../backend/src/database/projektiDatabase";
 
 const migrate001: PagedMigrationRunPlan = async ({ tableName, startKey, migrateOptions: { dryRun } }) => {
-  const projektiDatabase = new ProjektiDatabase(tableName, "not-used", "not-used");
+  const projektiDatabase = new ProjektiDatabase(tableName);
 
   const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
     JSON.stringify(startKey)
