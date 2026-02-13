@@ -182,7 +182,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       julkaistuHyvaksymisEsitys: omit(projektiAfter.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva"),
     }).to.eql({
       ...projektiBefore,
-      versio: projektiBefore.versio + 1,
+      versio: projektiBefore.versio + 2,
       muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.HYVAKSYTTY, palautusSyy: null },
       julkaistuHyvaksymisEsitys: {
         asianhallintaEventId: "uuid123",
@@ -209,6 +209,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           vaylaAsianhallinta: false,
         },
       },
+      kasittelynTila: {
+        hyvaksymisesitysTraficomiinPaiva: "2000-01-01T02:00:00+02:00",
+        suunnitelmanTila: "suunnitelman-tila/sutil03"
+      }
     });
     expect(projektiAfter.paivitetty).to.exist;
     expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
