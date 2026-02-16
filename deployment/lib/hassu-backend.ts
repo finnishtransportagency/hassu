@@ -46,7 +46,7 @@ export type HassuBackendStackProps = {
   kiinteistonomistajaTable: Table;
   projektiMuistuttajaTable: Table;
   tiedoteTable: Table;
-  // nahtavillaoloVaiheJulkaisuTable: Table;
+  nahtavillaoloVaiheJulkaisuTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
