@@ -62,15 +62,14 @@ docker buildx create --use
 
 # Using placeholder values at build time 
 docker buildx build \
-  $PUSH_FLAG \
+  --load \
   --progress=plain \
   --platform linux/amd64 \
-  --secret id=code_artifact_token,env=CODE_ARTIFACT_TOKEN \
-  --build-arg CODE_ARTIFACT_DOMAIN=$CODE_ARTIFACT_DOMAIN \
-  --build-arg ACCOUNT_ID=$ACCOUNT_ID \
-  --build-arg AWS_REGION=$AWS_REGION \
-  --build-arg NPM_SCOPE=$NPM_SCOPE \
-  --build-arg NPM_REGISTRY=$NPM_REGISTRY \
+  --secret id=npmrc,src=<(cat <<EOF
+${NPM_SCOPE}:registry=https://${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/
+//${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/:_authToken=${CODE_ARTIFACT_TOKEN}
+EOF
+) \
   --build-arg NEXT_PUBLIC_VERSION=_NEXT_PUBLIC_VERSION_ \
   --build-arg NEXT_PUBLIC_ENVIRONMENT=_NEXT_PUBLIC_ENVIRONMENT_ \
   --build-arg NEXT_PUBLIC_VAYLA_EXTRANET_URL=_NEXT_PUBLIC_VAYLA_EXTRANET_URL_ \

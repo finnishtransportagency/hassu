@@ -28,7 +28,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
-      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "^@sls-next/cdk-construct", "inquirer"],
+      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "inquirer"],
       "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack", "@types/react", "@hassu/asianhallinta"],
       "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies",
@@ -43,15 +43,7 @@
     },
     {
       "matchPackagePatterns": ["*"],
-      "excludePackagePatterns": [
-        "^@aws-cdk",
-        "^aws-cdk",
-        "^@aws-sdk",
-        "^aws-sdk",
-        "^@sls-next/cdk-construct",
-        "inquirer",
-        "@hassu/asianhallinta"
-      ],
+      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "inquirer", "@hassu/asianhallinta"],
       "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack"],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
@@ -62,12 +54,6 @@
       "matchPackagePatterns": ["^@aws-cdk", "^aws-cdk"],
       "groupName": "AWS CDK",
       "groupSlug": "aws-cdk"
-    },
-    {
-      "description": "@sls-next/cdk-construct=3.7.0 => next=11",
-      "matchPackagePatterns": ["^@sls-next/cdk-construct"],
-      "allowedVersions": "3.7.0",
-      "groupName": "sls-next/cdk-construct"
     },
     {
       "matchPackageNames": ["next", "eslint-config-next"],

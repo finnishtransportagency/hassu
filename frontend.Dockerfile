@@ -15,34 +15,9 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
 
-# Define arguments
-ARG CODE_ARTIFACT_DOMAIN
-ARG ACCOUNT_ID
-ARG AWS_REGION
-ARG NPM_SCOPE
-ARG NPM_REGISTRY
-
-# Configure npm authentication
-# Using heredoc we avoid print
-RUN --mount=type=secret,id=code_artifact_token \
-    TOKEN=$(cat /run/secrets/code_artifact_token) && \
-    cat <<EOF > ~/.npmrc
-${NPM_SCOPE}:registry=https://${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/
-//${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/:_authToken=${TOKEN}
-EOF
-
-RUN npm ci --ignore-scripts
-
-# Root cause behind this was the standalone mode of Next.js throws:
-# Error: 'sharp' is required to be installed in standalone mode for the image optimization to function correctly
-# There is a lot of discussion around this issue, but following seems to tackle issue for now.
-# Newer Next.js versions might have this issue resolved based on discussions around the issue.
-# Traces for this solution:
-# https://github.com/lovell/sharp/issues/3877#issuecomment-2088102017 
-# https://sharp.pixelplumbing.com/install#cross-platform
-# also among issues the version 0.32.6 of sharp works most likely so hence the version.
-# Had issues when sharp was installed on host os level hence installation here inside the Dockerfile. 
-RUN npm install --cpu=x64 --os=linux --libc=musl sharp@0.32.6
+# Mount .npmrc config containing proper token to use private npm registry
+RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
+    npm ci --ignore-scripts
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -71,8 +46,6 @@ ARG NEXT_PUBLIC_EVK_ACTIVATION_DATE
 
 # use separate next.config.js file to keep things as isolated as possible
 RUN mv docker_next.config.js next.config.js
-
-RUN mv middleware.ts src/
 
 # Build the project
 RUN \

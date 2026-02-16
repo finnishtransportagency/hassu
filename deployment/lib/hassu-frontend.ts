@@ -342,21 +342,6 @@ export class HassuFrontendStack extends Stack {
       value: newDistribution.distributionId || "",
     });
 
-    if (env == "dev" || env == "prod") {
-      new CfnOutput(this, "nextStaticsCachePolicyId", {
-        value: env === "dev" ? "7f91a1cf-d9bd-4a8f-8317-cf1f9eec0fbe" : "08a7fd7f-be24-4f5d-a79b-fa6c8ecec537",
-        exportName: "nextStaticsCachePolicyId",
-      });
-      new CfnOutput(this, "nextImageCachePolicyId", {
-        value: env === "dev" ? "8baf3519-0793-4195-af4d-0d83a04e45db" : "9d9f0807-03d2-4921-a2ee-ca2d5e1f34ad",
-        exportName: "nextImageCachePolicyId",
-      });
-      new CfnOutput(this, "nextLambdaCachePolicyId", {
-        value: env === "dev" ? "c52cf4e4-7465-489f-8780-77b125b9b706" : "8e12fc51-b5d3-4ae7-8d81-17df74c93c10",
-        exportName: "nextLambdaCachePolicyId",
-      });
-    }
-
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 

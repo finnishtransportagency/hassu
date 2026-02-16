@@ -4,6 +4,7 @@ class BaseConfig {
   static projektiTableName = "Projekti-" + process.env.ENVIRONMENT;
   static lyhytOsoiteTableName = "Lyhytosoite-" + process.env.ENVIRONMENT;
   static internalBucketName = `hassu-${process.env.ENVIRONMENT}-internal`;
+  // Jos frontendPrefixiä pitää muuttaa, tulee vastaava muutos tehdä myös src/middleware.ts config objektiin
   static frontendPrefix = "/frontend";
 
   static isPermanentEnvironment() {
