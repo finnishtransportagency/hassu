@@ -56,8 +56,6 @@ export class HassuDatabaseStack extends Stack {
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     this.tiedoteTable = this.createTiedoteTable();
     this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
-    this.exportValue(this.nahtavillaoloVaiheJulkaisuTable.tableArn);
-    this.exportValue(this.nahtavillaoloVaiheJulkaisuTable.tableName);
     this.schemaMetaTable = this.createSchemaMetaTable();
     let oai;
     if (Config.isNotLocalStack()) {
