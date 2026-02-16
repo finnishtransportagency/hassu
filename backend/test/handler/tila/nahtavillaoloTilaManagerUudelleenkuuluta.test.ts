@@ -67,7 +67,7 @@ describe("nahtavillaoloTilaManager", () => {
   });
 
   it("should leave one published kuulutus when making uudelleenkuulutus", async function () {
-    const addZipEventStub = sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
+    sinon.stub(eventSqsClient, "zipLausuntoPyyntoAineisto");
     const originalKuulutusPaiva = projekti.nahtavillaoloVaihe?.kuulutusPaiva;
     projekti = { ...projekti, nahtavillaoloVaihe: { ...(projekti.nahtavillaoloVaihe as NahtavillaoloVaihe), aineistoNahtavilla: [] } };
     MockDate.set("2023-01-01");

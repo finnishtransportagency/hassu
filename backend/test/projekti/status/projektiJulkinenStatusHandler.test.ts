@@ -17,6 +17,7 @@ describe("applyProjektiJulkinenStatus", () => {
       euRahoitus: false,
       aloitusKuulutusJulkaisu: {
         __typename: "AloitusKuulutusJulkaisuJulkinen",
+        id: 1,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
         kuulutusPaiva: "2000-01-01",
         yhteystiedot: [],
@@ -42,6 +43,7 @@ describe("applyProjektiJulkinenStatus", () => {
       euRahoitus: false,
       aloitusKuulutusJulkaisu: {
         __typename: "AloitusKuulutusJulkaisuJulkinen",
+        id: 1,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
         kuulutusPaiva: "2000-01-01",
         yhteystiedot: [],
@@ -67,6 +69,7 @@ describe("applyProjektiJulkinenStatus", () => {
       euRahoitus: false,
       aloitusKuulutusJulkaisu: {
         __typename: "AloitusKuulutusJulkaisuJulkinen",
+        id: 1,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
         kuulutusPaiva: "2000-01-01",
         yhteystiedot: [],
@@ -76,6 +79,7 @@ describe("applyProjektiJulkinenStatus", () => {
       },
       nahtavillaoloVaihe: {
         __typename: "NahtavillaoloVaiheJulkaisuJulkinen",
+        id: 1,
         tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
         kuulutusPaiva: "2000-01-01",
         velho: {

@@ -101,6 +101,8 @@ describe("muistutusHandler", () => {
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
           liitteet: [],
           puhelinnumero: "0501234567",
+          etunimi: "Tessa",
+          sukunimi: "Testaaja",
         };
         MockDate.set("2024-04-09T03:00");
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
@@ -137,6 +139,8 @@ describe("muistutusHandler", () => {
           sahkoposti: "mika.muistuttaja@mikamuistutta.ja",
           muistutus: "Hei. Haluaisin vain muistuttaa, että pihatieni yli täytyy rakentaa silta tai muu ratkaisu",
           liitteet: [],
+          etunimi: "Tessa",
+          sukunimi: "Testaaja",
         };
 
         await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });

@@ -49,7 +49,7 @@ describe("kasittelyntilaValidator", () => {
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
-        kasittelynTila: { hyvaksymispaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+        kasittelynTila: { hyvaksymispaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
       })
     ).to.eventually.rejectedWith("Hyväksymispäätöstä voidaan muokata vasta nähtävilläolovaiheessa tai sitä myöhemmin");
   });
@@ -64,7 +64,7 @@ describe("kasittelyntilaValidator", () => {
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
-        kasittelynTila: { ensimmainenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+        kasittelynTila: { ensimmainenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
       })
     ).to.eventually.rejectedWith("Ensimmäistä jatkopäätöstä voi muokata vain hyväksymispäätöksen jälkeisen epäaktiivisuuden jälkeen");
   });
@@ -79,7 +79,7 @@ describe("kasittelyntilaValidator", () => {
       validateTallennaProjekti(projekti, {
         oid: projekti.oid,
         versio: projekti.versio,
-        kasittelynTila: { toinenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+        kasittelynTila: { toinenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
       })
     ).to.eventually.rejected;
   });
@@ -91,7 +91,7 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { ensimmainenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      kasittelynTila: { ensimmainenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
     };
     userFixture.loginAs(UserFixture.hassuAdmin);
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
@@ -107,7 +107,7 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { ensimmainenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      kasittelynTila: { ensimmainenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
     };
     userFixture.loginAs(UserFixture.hassuAdmin);
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejected;
@@ -121,7 +121,7 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { toinenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      kasittelynTila: { toinenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
     };
     userFixture.loginAs(UserFixture.hassuAdmin);
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejected;
@@ -135,7 +135,7 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { toinenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      kasittelynTila: { toinenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
     };
     userFixture.loginAs(UserFixture.hassuAdmin);
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejected;
@@ -148,7 +148,7 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { hyvaksymispaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      kasittelynTila: { hyvaksymispaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
     };
     userFixture.loginAs(UserFixture.hassuAdmin);
     await validateTallennaProjekti(projekti, input);
@@ -161,7 +161,7 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { hyvaksymispaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      kasittelynTila: { hyvaksymispaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
     };
     userFixture.loginAs(UserFixture.pekkaProjari);
     await validateTallennaProjekti(projekti, input);
@@ -193,13 +193,13 @@ describe("kasittelyntilaValidator", () => {
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kasittelynTila: { ensimmainenJatkopaatos: { paatoksenPvm: "2022-03-03", aktiivinen: true, asianumero: "asianumero-123" } },
+      kasittelynTila: { ensimmainenJatkopaatos: { paatoksenPvm: "2022-03-03", asianumero: "asianumero-123" } },
     };
     userFixture.loginAs(UserFixture.hassuATunnus1);
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Sinulla ei ole admin-oikeuksia (Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja)"
     );
-    input.kasittelynTila = { toinenJatkopaatos: { paatoksenPvm: "2022-03-03", aktiivinen: true, asianumero: "asianumero-123" } };
+    input.kasittelynTila = { toinenJatkopaatos: { paatoksenPvm: "2022-03-03", asianumero: "asianumero-123" } };
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Sinulla ei ole admin-oikeuksia (Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja)"
     );
@@ -213,9 +213,9 @@ describe("kasittelyntilaValidator", () => {
       oid: projekti.oid,
       versio: projekti.versio,
       kasittelynTila: {
-        hyvaksymispaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" },
-        ensimmainenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" },
-        toinenJatkopaatos: { aktiivinen: true, asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" },
+        hyvaksymispaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" },
+        ensimmainenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" },
+        toinenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" },
       },
     };
     userFixture.loginAs(UserFixture.hassuAdmin);

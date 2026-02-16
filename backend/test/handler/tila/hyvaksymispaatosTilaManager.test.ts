@@ -15,7 +15,6 @@ import { parameters } from "../../../src/aws/parameters";
 describe("hyvaksymisPaatosTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
-  let deleteFiles: SinonStub;
   let saveProjekti: SinonStub;
 
   afterEach(() => {
@@ -34,7 +33,7 @@ describe("hyvaksymisPaatosTilaManager", () => {
     delete projekti.jatkoPaatos2Vaihe;
     delete projekti.jatkoPaatos2VaiheJulkaisut;
     userFixture.loginAs(UserFixture.hassuAdmin);
-    deleteFiles = sinon.stub(fileService, "deleteProjektiFilesRecursively");
+    sinon.stub(fileService, "deleteProjektiFilesRecursively");
     saveProjekti = sinon.stub(projektiDatabase, "saveProjekti");
     sinon.stub(projektiDatabase, "updateJulkaisuToList");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
