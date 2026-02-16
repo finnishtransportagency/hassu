@@ -249,10 +249,9 @@ export class HassuDatabaseStack extends Stack {
       timeToLiveAttribute: "expires",
     });
     HassuDatabaseStack.enableBackup(table);
-    // if (Config.isPermanentEnvironment()) {
-    // table.applyRemovalPolicy(RemovalPolicy.RETAIN);
-    // }
-    table.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
     return table;
   }
 
