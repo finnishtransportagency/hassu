@@ -1,12 +1,20 @@
 import { config } from "../config";
 import { ProjektiDatabase } from "./projektiDatabase";
-import { SaveDBProjektiInput } from "./model";
+import {
+  DBPROJEKTI_OMITTED_FIELDS,
+  SaveDBProjektiInput,
+  SaveDBProjektiSlimInput,
+  SaveDBProjektiSlimWithoutLockingInput,
+  SaveDBProjektiWithoutLockingInput,
+} from "./model";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
+import { Exact } from "hassu-common/specialTypes";
+import omit from "lodash/omit";
 
 /***
  * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternalia kutsutaan poikkeavilla parametreilla niin,
@@ -21,8 +29,36 @@ export class TestProjektiDatabase extends ProjektiDatabase {
     this.feedbackTableName = feedbackTableName;
   }
 
+  /** Tallettaa erikseen myös julkaisut */
   async saveProjekti(dbProjekti: SaveDBProjektiInput): Promise<number> {
-    return this.saveProjektiInternal(dbProjekti, true, true);
+    const versionNumber = await this.saveProjektiSlim(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+    await this.updateOtherTables(dbProjekti);
+    return versionNumber;
+  }
+  async saveProjektiWithoutLocking(dbProjekti: SaveDBProjektiWithoutLockingInput): Promise<number> {
+    const versionNumber = await this.saveProjektiWithoutLockingSlim(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+    await this.updateOtherTables(dbProjekti);
+    return versionNumber;
+  }
+
+  /** Poistaa kaikki ja asettaa sitten inputissa tulleet taulut */
+  private async updateOtherTables(dbProjekti: SaveDBProjektiInput | SaveDBProjektiWithoutLockingInput) {
+    const julkaisutToDelete = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(dbProjekti.oid, true);
+    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(julkaisutToDelete);
+
+    await nahtavillaoloVaiheJulkaisuDatabase.putAll(dbProjekti.nahtavillaoloVaiheJulkaisut);
+  }
+
+  /*** forceUpdateInTests and no locking */
+  async saveProjektiSlim<T extends SaveDBProjektiSlimInput>(dbProjekti: Exact<T, SaveDBProjektiSlimInput>): Promise<number> {
+    return await this.saveProjektiInternal(dbProjekti, true, true);
+  }
+
+  /*** forceUpdateInTests and no locking */
+  async saveProjektiWithoutLockingSlim<T extends SaveDBProjektiSlimWithoutLockingInput>(
+    dbProjekti: Exact<T, SaveDBProjektiSlimWithoutLockingInput>
+  ): Promise<number> {
+    return await this.saveProjektiInternal(dbProjekti, true, true);
   }
 
   async deleteProjektiByOid(oid: string): Promise<void> {
