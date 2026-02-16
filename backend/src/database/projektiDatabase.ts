@@ -39,8 +39,8 @@ import { Status } from "hassu-common/graphql/apiModel";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
 import merge from "lodash/merge";
 import cloneDeep from "lodash/cloneDeep";
-import { Exact } from "./Exact";
 import omit from "lodash/omit";
+import { Exact } from "hassu-common/specialTypes";
 
 const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset", "nahtavillaoloVaiheJulkaisut"];
 const skipAutomaticUpdateFields = [
