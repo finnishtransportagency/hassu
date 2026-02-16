@@ -43,14 +43,7 @@
     },
     {
       "matchPackagePatterns": ["*"],
-      "excludePackagePatterns": [
-        "^@aws-cdk",
-        "^aws-cdk",
-        "^@aws-sdk",
-        "^aws-sdk",
-        "inquirer",
-        "@hassu/asianhallinta"
-      ],
+      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "inquirer", "@hassu/asianhallinta"],
       "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack"],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
