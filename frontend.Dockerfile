@@ -69,9 +69,6 @@ ARG NEXT_PUBLIC_KEYCLOAK_CLIENT_ID
 ARG NEXT_PUBLIC_KEYCLOAK_DOMAIN
 ARG NEXT_PUBLIC_EVK_ACTIVATION_DATE
 
-# use separate next.config.js file to keep things as isolated as possible
-RUN mv docker_next.config.js next.config.js
-
 RUN mv middleware.ts src/
 
 # Build the project
