@@ -1,7 +1,7 @@
-import { ScanCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
+import { PutCommandInput, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
 import { PagedMigrationRunPlan } from "../types";
-import { DBProjekti } from "../../../../backend/src/database/model";
+import { DBProjekti, NahtavillaoloVaiheJulkaisu } from "../../../../backend/src/database/model";
 
 const migrate003: PagedMigrationRunPlan = async (options) => {
   const page = await ddb.send(
@@ -19,18 +19,27 @@ const migrate003: PagedMigrationRunPlan = async (options) => {
 
   const projektis = (page.Items ?? []) as Pick<DBProjekti, "oid" | "nahtavillaoloVaiheJulkaisut">[];
 
-  const updateInput = projektis.map<UpdateCommandInput>((projekti) => ({
-    TableName: options.tableName,
-    Key: {
-      oid: { S: projekti.oid },
-    },
-    UpdateExpression: "REMOVE #attr",
-    ExpressionAttributeNames: {
-      "#attr": "nahtavillaoloVaiheJulkaisut",
-    },
-  }));
+  const julkaisu = projektis.flatMap(
+    (projekti) =>
+      projekti.nahtavillaoloVaiheJulkaisut
+        ?.filter((julkaisu) => !!julkaisu)
+        ?.map<NahtavillaoloVaiheJulkaisu>((value) => ({ ...value, projektiOid: projekti.oid })) ?? []
+  );
 
-  return { updateInput, lastEvaluatedKey: page.LastEvaluatedKey };
+  const putInput = julkaisu.map((julkaisu) => {
+    const input: PutCommandInput = {
+      TableName: `NahtavillaoloVaiheJulkaisu-${options.migrateOptions.environment}`,
+      ConditionExpression: "attribute_not_exists(#projektiOid) AND attribute_not_exists(#id)",
+      Item: julkaisu,
+      ExpressionAttributeNames: {
+        "#projektiOid": "projektiOid",
+        "#id": "id",
+      },
+    };
+    return input;
+  });
+
+  return { putInput, lastEvaluatedKey: page.LastEvaluatedKey };
 };
 
 export default migrate003;

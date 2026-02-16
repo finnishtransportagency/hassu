@@ -8,6 +8,11 @@ import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
 
+/***
+ * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternalia kutsutaan poikkeavilla parametreilla niin,
+ * että siellä kutsuttava dynamodb.UpdateItem -komento päivittää myös kentät,
+ * joita saveProjektiInternal ei normaalisti päivitä eg. nahtavillaoloVaiheJulkaisut (ks. projektiDatabase -> skipAutomaticUpdateFields)
+ */
 export class TestProjektiDatabase extends ProjektiDatabase {
   feedbackTableName: string;
 

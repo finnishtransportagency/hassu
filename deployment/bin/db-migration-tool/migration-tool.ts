@@ -77,17 +77,13 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
       name: `Projekti-${options.environment}`,
       migrations: [
         {
-          versionId: 1,
-          plan: (options) => import("./Projekti/migrate-001").then((m) => m.default(options)),
-        },
-        {
-          versionId: 2,
-          plan: (options) => import("./Projekti/migrate-002").then((m) => m.default(options)),
+          versionId: 3,
+          plan: (options) => import("./Projekti/migrate-003").then((m) => m.default(options)),
         },
         /* Cleanup for Projekti taulu. Can be done separately */
         // {
-        //   versionId: 3,
-        //   plan: (options) => import("./Projekti/migrate-003").then((m) => m.default(options)),
+        //   versionId: 4,
+        //   plan: (options) => import("./Projekti/migrate-004").then((m) => m.default(options)),
         // },
       ],
     },

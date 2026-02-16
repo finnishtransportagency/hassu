@@ -310,13 +310,13 @@ export class HassuPipelineStack extends Stack {
           resources: ["arn:aws:iam::*:role/aws-service-role/*"],
         })
       );
-      const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, Config.projektiTableName);
       const nahtavillaoloVaiheJulkaisuTable = Table.fromTableName(
         this,
         `NahtavillaoloVaiheJulkaisuTable-${name}`,
-        Config.nahtavillaoloVaiheJulkaisuTableName
+        `NahtavillaoloVaiheJulkaisu-${pipelineConfig.env}`
       );
-      const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, Config.schemaMetaTableName);
+      const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, `Projekti-${pipelineConfig.env}`);
+      const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, `SchemaMeta-${pipelineConfig.env}`);
       projektiTable.grantReadWriteData(buildProject);
       nahtavillaoloVaiheJulkaisuTable.grantReadWriteData(buildProject);
       schemaMetaTable.grantReadWriteData(buildProject);
