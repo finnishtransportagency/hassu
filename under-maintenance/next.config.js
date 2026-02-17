@@ -3,5 +3,4 @@ module.exports = {
     externalDir: true,
   },
   assetPrefix: "./",
-  output: "export",
 };

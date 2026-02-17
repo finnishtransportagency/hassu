@@ -1,4 +1,0 @@
-# Ignore Next.js config files (linting them with next/babel can break in some setups)
-next.config.js
-next.config.mjs
-next.config.ts
