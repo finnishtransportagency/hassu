@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
+import { DBProjekti, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../database/model";
 import { requireOmistaja, requirePermissionLuku } from "../../user/userService";
 import { IllegalArgumentError } from "hassu-common/error";
 import { omit } from "lodash";
@@ -36,6 +36,7 @@ import { asianhallintaService } from "../../asianhallinta/asianhallintaService";
 import { uuid } from "hassu-common/util/uuid";
 import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
+import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 
 export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput): Promise<string> {
   const nykyinenKayttaja = requirePermissionLuku();
@@ -120,7 +121,11 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
     vastaanottajat,
     asianhallintaEventId,
   };
-  await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({ oid, versio, julkaistuHyvaksymisEsitys });
+  const nextDbVersioNumber = await projektiDatabase.tallennaJulkaistuHyvaksymisEsitysJaAsetaTilaHyvaksytyksi({
+    oid,
+    versio,
+    julkaistuHyvaksymisEsitys,
+  });
 
   // Lähetä email hyväksymisesityksen laatijalle
   const emailOptions2 = createHyvaksymisesitysHyvaksyttyLaatijalleEmail(projektiInDB);
@@ -137,8 +142,26 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   } else {
     log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
   }
-
+  await tallennaSuunnitelmanTilaJaTraficomilleLahetysPvmKasittelynTilaSivulle(projektiInDB, nextDbVersioNumber, "suunnitelman-tila/sutil03");
   return oid;
+}
+
+async function tallennaSuunnitelmanTilaJaTraficomilleLahetysPvmKasittelynTilaSivulle(
+  projektiInDB: DBProjekti,
+  dbVersioNumber: number,
+  tila: keyof typeof suunnitelmanTilat
+): Promise<number> {
+  if (!projektiInDB.kasittelynTila) {
+    projektiInDB.kasittelynTila = {};
+  }
+  projektiInDB.kasittelynTila.suunnitelmanTila = tila;
+  projektiInDB.kasittelynTila.hyvaksymisesitysTraficomiinPaiva = nyt().format();
+  const nextDbVersionNumber = await projektiDatabase.saveProjekti({
+    oid: projektiInDB.oid,
+    versio: dbVersioNumber,
+    kasittelynTila: projektiInDB.kasittelynTila,
+  });
+  return nextDbVersionNumber;
 }
 
 async function validate(projektiInDB: HyvaksymisEsityksenTiedot): Promise<API.NykyinenKayttaja> {
