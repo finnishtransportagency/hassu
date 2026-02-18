@@ -179,11 +179,11 @@ export class ProjektiDatabase {
   }
 
   async saveProjekti(dbProjekti: SaveDBProjektiInput): Promise<number> {
-    return await this.saveProjektiSlim(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+    return await this.saveSlimProjekti(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
   }
 
   async saveProjektiWithoutLocking(dbProjekti: SaveDBProjektiWithoutLockingInput): Promise<number> {
-    return await this.saveProjektiWithoutLockingSlim(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+    return await this.saveSlimProjektiWithoutLocking(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
   }
 
   /**
@@ -191,11 +191,11 @@ export class ProjektiDatabase {
    * @param dbProjekti Tallennettava projekti
    * @return tallennetun projektin versio
    */
-  async saveProjektiSlim<T extends SaveDBProjektiSlimInput>(dbProjekti: Exact<T, SaveDBProjektiSlimInput>): Promise<number> {
+  async saveSlimProjekti<T extends SaveDBProjektiSlimInput>(dbProjekti: Exact<T, SaveDBProjektiSlimInput>): Promise<number> {
     return await this.saveProjektiInternal(dbProjekti);
   }
 
-  async saveProjektiWithoutLockingSlim<T extends SaveDBProjektiSlimWithoutLockingInput>(
+  async saveSlimProjektiWithoutLocking<T extends SaveDBProjektiSlimWithoutLockingInput>(
     dbProjekti: Exact<T, SaveDBProjektiSlimWithoutLockingInput>
   ): Promise<number> {
     return await this.saveProjektiInternal(dbProjekti, false, true);

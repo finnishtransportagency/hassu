@@ -31,12 +31,12 @@ export class TestProjektiDatabase extends ProjektiDatabase {
 
   /** Tallettaa erikseen myös julkaisut */
   async saveProjekti(dbProjekti: SaveDBProjektiInput): Promise<number> {
-    const versionNumber = await this.saveProjektiSlim(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+    const versionNumber = await this.saveSlimProjekti(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
     await this.updateOtherTables(dbProjekti);
     return versionNumber;
   }
   async saveProjektiWithoutLocking(dbProjekti: SaveDBProjektiWithoutLockingInput): Promise<number> {
-    const versionNumber = await this.saveProjektiWithoutLockingSlim(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+    const versionNumber = await this.saveSlimProjektiWithoutLocking(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
     await this.updateOtherTables(dbProjekti);
     return versionNumber;
   }
@@ -50,12 +50,12 @@ export class TestProjektiDatabase extends ProjektiDatabase {
   }
 
   /*** forceUpdateInTests and no locking */
-  async saveProjektiSlim<T extends SaveDBProjektiSlimInput>(dbProjekti: Exact<T, SaveDBProjektiSlimInput>): Promise<number> {
+  async saveSlimProjekti<T extends SaveDBProjektiSlimInput>(dbProjekti: Exact<T, SaveDBProjektiSlimInput>): Promise<number> {
     return await this.saveProjektiInternal(dbProjekti, true, true);
   }
 
   /*** forceUpdateInTests and no locking */
-  async saveProjektiWithoutLockingSlim<T extends SaveDBProjektiSlimWithoutLockingInput>(
+  async saveSlimProjektiWithoutLocking<T extends SaveDBProjektiSlimWithoutLockingInput>(
     dbProjekti: Exact<T, SaveDBProjektiSlimWithoutLockingInput>
   ): Promise<number> {
     return await this.saveProjektiInternal(dbProjekti, true, true);
