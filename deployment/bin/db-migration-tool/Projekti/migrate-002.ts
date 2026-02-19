@@ -1,6 +1,6 @@
 import { PagedMigrationRunPlan } from "../types";
 import { cloneDeep, isEqual } from "lodash";
-import { DBProjekti } from "../../../../backend/src/database/model/projekti";
+import { DBProjektiSlim } from "../../../../backend/src/database/model/projekti";
 import { migrateFromOldSchema } from "../../../../backend/src/database/projektiSchemaUpdate";
 import { TestProjektiDatabase } from "../../../../backend/src/database/testProjektiDatabase";
 
@@ -11,13 +11,11 @@ const migrate002: PagedMigrationRunPlan = async ({ tableName, startKey, migrateO
    * */
   const projektiDatabase = new TestProjektiDatabase(tableName, "not-used");
 
-  const scanResult: { startKey: string | undefined; projektis: DBProjekti[] } = await projektiDatabase.scanProjektit(
-    JSON.stringify(startKey)
-  );
+  const scanResult = await projektiDatabase.scanProjektit(JSON.stringify(startKey));
 
   // Gathers all projektis that have changes made by migrateFromOldSchema
-  const alteredProjektis: DBProjekti[] = scanResult.projektis
-    .map<{ original: DBProjekti; altered: DBProjekti }>((projekti) => ({
+  const alteredProjektis: DBProjektiSlim[] = scanResult.projektis
+    .map<{ original: DBProjektiSlim; altered: DBProjektiSlim }>((projekti) => ({
       original: projekti,
       altered: migrateFromOldSchema(cloneDeep(projekti), true),
     }))
@@ -31,7 +29,7 @@ const migrate002: PagedMigrationRunPlan = async ({ tableName, startKey, migrateO
       )}`
     );
     if (!dryRun) {
-      await projektiDatabase.saveProjekti(alteredProjekti);
+      await projektiDatabase.saveSlimProjekti(alteredProjekti);
     }
   }
 

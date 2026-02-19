@@ -11,7 +11,7 @@ import { deleteYllapitoFiles, getYllapitoFilesUnderPath, insertYllapitoFileToS3 
 import { UserFixture } from "../../test/fixture/userFixture";
 import { suljeHyvaksymisEsityksenMuokkaus } from "../../src/HyvaksymisEsitys/actions";
 import { expect } from "chai";
-import { DBVaylaUser } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 import omit from "lodash/omit";
 import { IllegalAccessError, IllegalArgumentError } from "hassu-common/error";
 
@@ -100,7 +100,7 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
     await insertProjektiToDB(projektiBefore);
     await suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.muokattavaHyvaksymisEsitys.vastaanottajat).to.eql([
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.vastaanottajat).to.eql([
       {
         sahkoposti: "vastaanottaja@sahkoposti.fi",
       },
@@ -134,19 +134,24 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
 
   it("korvaa muokkaustilaisen hyväksymisesityksen julkaisun kopiolla", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS2, lisatiedot: "Muokattava", tila: API.HyvaksymisTila.MUOKKAUS };
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS2,
+      lisatiedot: "Muokattava",
+      tila: API.HyvaksymisTila.MUOKKAUS,
+    } as unknown as MuokattavaHyvaksymisEsitys;
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       asianhallintaId: "uuid123",
       lisatiedot: "Julkaistu",
       hyvaksymisPaiva: "2022-01-01",
       hyvaksyja: "oid",
-    };
-    const projektiBefore = {
+    } as unknown as JulkaistuHyvaksymisEsitys;
+    const projektiBefore: Omit<DBProjekti, "kayttoOikeudet"> = {
       oid,
       versio: 2,
       muokattavaHyvaksymisEsitys,
       julkaistuHyvaksymisEsitys,
+      nahtavillaoloVaiheJulkaisut: undefined,
     };
     await insertProjektiToDB(projektiBefore);
     await suljeHyvaksymisEsityksenMuokkaus({ oid, versio: 2 });
@@ -161,7 +166,7 @@ describe("Hyväksymisesityksen suljeHyvaksymisEsityksenMuokkaus", () => {
         tila: API.HyvaksymisTila.HYVAKSYTTY,
       },
     });
-    expect(projektiAfter.paivitetty).to.exist;
+    expect(projektiAfter?.paivitetty).to.exist;
   });
 
   it("ei onnistu ulkopuoliselta", async () => {

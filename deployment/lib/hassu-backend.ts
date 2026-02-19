@@ -174,7 +174,12 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
     hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI", this.props.projektiTable.tableName);
+    hyvaksymisEsitysAineistoHandlerLambda.addEnvironment(
+      "TABLE_NAHTAVILLAOLOVAIHEJULKAISU",
+      this.props.nahtavillaoloVaiheJulkaisuTable.tableName
+    );
     this.props.projektiTable.grantReadWriteData(hyvaksymisEsitysAineistoHandlerLambda);
+    this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(hyvaksymisEsitysAineistoHandlerLambda);
 
     this.createAndProvideSchedulerExecutionRole(
       eventSQS,

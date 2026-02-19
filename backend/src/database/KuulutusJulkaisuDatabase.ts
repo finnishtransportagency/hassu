@@ -96,7 +96,8 @@ export class KuulutusJulkaisuDatabase<T extends GenericKuulutusJulkaisu> {
       ConsistentRead: stronglyConsistentRead,
     });
     const output = await getDynamoDBDocumentClient().send(command);
-    return output?.Items as T[] | undefined;
+    const items = output?.Items as T[] | undefined;
+    return items?.length ? items : undefined;
   }
 }
 
