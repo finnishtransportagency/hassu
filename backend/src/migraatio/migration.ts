@@ -12,6 +12,7 @@ import {
 } from "../database/model";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
 
 export const migraatioTilat = ["SUUNNITTELU", "NAHTAVILLAOLO", "HYVAKSYMISPAATOS", "JATKOPAATOS1", "JATKOPAATOS2"] as const;
 
@@ -86,6 +87,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
 
   if (targetStatusRank >= statusOrder(Status.HYVAKSYMISMENETTELYSSA)) {
     const nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu = {
+      projektiOid: projekti.oid,
       kielitiedot,
       id: 1,
       tila: KuulutusJulkaisuTila.MIGROITU,
@@ -94,7 +96,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await projektiDatabase.nahtavillaoloVaiheJulkaisut.insert(projekti.oid, nahtavillaoloVaiheJulkaisu);
+    await nahtavillaoloVaiheJulkaisuDatabase.put(nahtavillaoloVaiheJulkaisu);
   }
 
   const kasittelynTila: KasittelynTila = {

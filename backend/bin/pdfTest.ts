@@ -99,7 +99,7 @@ projektiDatabase
   .then((response) => {
     console.log("Tiedoston nimi: " + response.nimi);
     if (response.sisalto) {
-      fs.writeFileSync("testpdf.pdf", Buffer.from(response.sisalto, "base64"));
+      fs.writeFileSync("testpdf.pdf", new Uint8Array(Buffer.from(response.sisalto, "base64")));
     }
   })
   .catch((e) => console.error(e));

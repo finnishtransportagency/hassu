@@ -100,7 +100,7 @@ export async function testProjektiHenkilot(projekti: API.Projekti, oid: string, 
       return input;
     }),
   });
-  await testProjektiDatabase.saveProjekti({ oid, kasittelynTila: null }); // Resetoi tila, koska Velhosta voi tulla muita arvoja luonnin yhteydessä
+  await testProjektiDatabase.saveProjektiWithoutLocking({ oid, kasittelynTila: null }); // Resetoi tila, koska Velhosta voi tulla muita arvoja luonnin yhteydessä
   const p: API.Projekti = await loadProjektiFromDatabase(oid, API.Status.EI_JULKAISTU_PROJEKTIN_HENKILOT);
 
   // Expect that projektipaallikko is found
@@ -217,7 +217,7 @@ export async function testAloitusKuulutusEsikatselu(projekti: Projekti): Promise
   expect(pdf.sisalto).not.to.be.empty;
   expect(pdf.sisalto.length).to.be.greaterThan(30000);
   fs.mkdirSync(".report", { recursive: true });
-  fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+  fs.writeFileSync(".report/" + pdf.nimi, new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
 }
 
 export async function testNullifyProjektiField(projekti: Projekti): Promise<Projekti> {

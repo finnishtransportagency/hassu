@@ -58,6 +58,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     await testProjektiDatabase.saveProjekti({
       oid,
       aloitusKuulutusJulkaisut: initialProjekti.aloitusKuulutusJulkaisut,
+      versio: initialProjekti.versio,
     });
 
     // Aktivoi uudelleenkuulutus julkaistulle aloituskuulutukselle

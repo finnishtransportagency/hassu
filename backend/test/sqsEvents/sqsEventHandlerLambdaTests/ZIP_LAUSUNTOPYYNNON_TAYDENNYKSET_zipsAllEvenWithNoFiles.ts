@@ -13,6 +13,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsAllLPTevenWithNoFiles = async () 
       nimi: "Tiedosto%201.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "0a9b772c-7fb1-4127-803d-3f4186ffa999",
     },
   ];
   const lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [

@@ -20,6 +20,7 @@ export const zipLausuntoPyynnotDoesNotCreateZipEventsForRemovedLP = async () => 
       nimi: "Tiedosto%201.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "2a7607df-2709-43a1-af8a-c8cdd1891474",
     },
   ];
   const lisaAineistot2: LadattuTiedosto[] = [
@@ -28,6 +29,7 @@ export const zipLausuntoPyynnotDoesNotCreateZipEventsForRemovedLP = async () => 
       nimi: "Tiedosto%202.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "4b411c88-6c78-436b-95d8-cd42b9981496",
     },
   ];
   const lausuntoPyynnot: LausuntoPyynto[] = [

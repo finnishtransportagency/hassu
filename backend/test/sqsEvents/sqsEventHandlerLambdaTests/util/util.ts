@@ -55,7 +55,7 @@ export function stubBasics({
   loadProjektiByOidReturnValue: DBProjekti;
 }): {
   saveProjektiInternalStub: sinon.SinonStub<[dbProjekti: Partial<DBProjekti> & Pick<DBProjekti, "oid">], Promise<number>>;
-  persistFileStub: sinon.SinonStub<[param: PersistFileProperties], Promise<string>> | undefined;
+  persistFileStub: sinon.SinonStub<[param: PersistFileProperties], Promise<string | undefined>> | undefined;
   deleteFileStub: sinon.SinonStub<[DeleteFileProperties], Promise<void>>;
   addEventZipLausuntoPyynnonTaydennysAineistoStub: sinon.SinonStub<[oid: string], Promise<void>>;
   addEventZipLausuntoPyyntoAineistoStub: sinon.SinonStub<[oid: string], Promise<void>>;

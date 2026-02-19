@@ -26,7 +26,7 @@ export class HassuDatabaseStack extends Stack {
   public projektiMuistuttajaTable!: ddb.Table;
   public tiedoteTable!: ddb.Table;
   public schemaMetaTable!: ddb.Table;
-  // public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
+  public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -55,9 +55,7 @@ export class HassuDatabaseStack extends Stack {
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     this.tiedoteTable = this.createTiedoteTable();
-    // this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
-    // this.exportValue(this.nahtavillaoloVaiheJulkaisuTable.tableArn);
-    // this.exportValue(this.nahtavillaoloVaiheJulkaisuTable.tableName);
+    this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
     this.schemaMetaTable = this.createSchemaMetaTable();
     let oai;
     if (Config.isNotLocalStack()) {
@@ -232,25 +230,28 @@ export class HassuDatabaseStack extends Stack {
     return table;
   }
 
-  // private createNahtavillaoloVaiheJulkaisuTable(): ddb.Table {
-  //   const table = new ddb.Table(this, "NahtavillaoloVaiheJulkaisuTable", {
-  //     billingMode: ddb.BillingMode.PAY_PER_REQUEST,
-  //     tableName: Config.nahtavillaoloVaiheJulkaisuTableName,
-  //     partitionKey: {
-  //       name: "oid",
-  //       type: ddb.AttributeType.STRING,
-  //     },
-  //     stream: StreamViewType.NEW_IMAGE,
-  //     pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
-  //     timeToLiveAttribute: "expires",
-  //   });
-  //   HassuDatabaseStack.enableBackup(table);
-  //   // if (Config.isPermanentEnvironment()) {
-  //   // table.applyRemovalPolicy(RemovalPolicy.RETAIN);
-  //   // }
-  //   table.applyRemovalPolicy(RemovalPolicy.DESTROY);
-  //   return table;
-  // }
+  private createNahtavillaoloVaiheJulkaisuTable(): ddb.Table {
+    const table = new ddb.Table(this, "NahtavillaoloVaiheJulkaisuTable", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.nahtavillaoloVaiheJulkaisuTableName,
+      partitionKey: {
+        name: "projektiOid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.NUMBER,
+      },
+      stream: StreamViewType.NEW_IMAGE,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
+      timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
 
   private createProjektiArchiveTable() {
     const table = new ddb.Table(this, "ProjektiArchiveTable", {

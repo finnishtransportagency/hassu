@@ -13,6 +13,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTs = async () => {
       nimi: "tiedosto_odottaa_persistointia.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "7c6b6d7c-5007-4d07-b80f-7fa436357e7c",
     },
   ];
   const lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [

@@ -173,13 +173,14 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     const projektiBefore: DeepReadonly<DBProjekti> = {
       ...getProjektiBase(),
       muokattavaHyvaksymisEsitys,
+      nahtavillaoloVaiheJulkaisut: undefined,
     };
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
     expect({
       ...omit(projektiAfter, "paivitetty"),
-      julkaistuHyvaksymisEsitys: omit(projektiAfter.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva"),
+      julkaistuHyvaksymisEsitys: omit(projektiAfter?.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva"),
     }).to.eql({
       ...projektiBefore,
       versio: projektiBefore.versio + 1,
@@ -210,8 +211,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         },
       },
     });
-    expect(projektiAfter.paivitetty).to.exist;
-    expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
+    expect(projektiAfter?.paivitetty).to.exist;
+    expect(projektiAfter?.julkaistuHyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
 
     expect(ashaStub?.calledOnce).to.be.true;
     expect(ashaStub?.firstCall.args).to.eql(["Testi1", "uuid123"]);
@@ -281,7 +282,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+    expect(projektiAfter?.julkaistuHyvaksymisEsitys?.vastaanottajat).to.eql([
       {
         sahkoposti: "vastaanottaja@sahkoposti.fi",
         lahetysvirhe: true,
@@ -305,7 +306,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+    expect(projektiAfter?.julkaistuHyvaksymisEsitys?.vastaanottajat).to.eql([
       {
         sahkoposti: "vastaanottaja@sahkoposti.fi",
         lahetysvirhe: true,
@@ -329,7 +330,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+    expect(projektiAfter?.julkaistuHyvaksymisEsitys?.vastaanottajat).to.eql([
       {
         sahkoposti: "vastaanottaja@sahkoposti.fi",
         lahetysvirhe: true,
@@ -371,7 +372,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio: projektiBefore.versio });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.julkaistuHyvaksymisEsitys.vastaanottajat).to.eql([
+    expect(projektiAfter?.julkaistuHyvaksymisEsitys?.vastaanottajat).to.eql([
       {
         sahkoposti: "vastaanottaja1@sahkoposti.fi",
         lahetetty: "2000-01-01T02:00:00+02:00",
@@ -703,7 +704,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     await insertProjektiToDB(projektiBefore);
     await hyvaksyHyvaksymisEsitys({ oid, versio });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(omit(projektiAfter.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva")).to.eql({
+    expect(omit(projektiAfter?.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva")).to.eql({
       asianhallintaEventId: "uuid123",
       ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
       hyvaksyja: "theadminuid",
@@ -715,8 +716,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
         },
       ],
     });
-    expect(projektiAfter.paivitetty).to.exist;
-    expect(projektiAfter.julkaistuHyvaksymisEsitys.hyvaksymisPaiva).to.exist;
+    expect(projektiAfter?.paivitetty).to.exist;
+    expect(projektiAfter?.julkaistuHyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
   });
 
   it("tallentaa lähetetyn s.postin s3:een", async () => {

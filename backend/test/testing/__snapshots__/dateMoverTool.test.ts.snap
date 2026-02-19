@@ -951,6 +951,7 @@ Object {
           "nahtavillaoloPDFPath": "/nahtavillaolo/2/2.pdf",
         },
       },
+      "projektiOid": "3",
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "asiatunnusELY": "ELY/3/2022",

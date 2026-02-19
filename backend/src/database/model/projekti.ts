@@ -167,6 +167,16 @@ export type Hyvaksymispaatos = {
   aktiivinen?: boolean;
 };
 
+const tallennettu: keyof DBProjekti = "tallennettu";
+const nahtavillaoloVaiheJulkaisut: keyof DBProjekti = "nahtavillaoloVaiheJulkaisut";
+export const DBPROJEKTI_OMITTED_FIELDS = [tallennettu, nahtavillaoloVaiheJulkaisut] as const;
+export type DBProjektiOmittedField = (typeof DBPROJEKTI_OMITTED_FIELDS)[number];
+
+/** Data stored in a particular item in Projekti-<env> table */
+export type DBProjektiSlim = Omit<DBProjekti, DBProjektiOmittedField>;
+export type DBProjektiExtras = Pick<DBProjekti, DBProjektiOmittedField>;
+
+// Data combined by joining multiple tables
 export type DBProjekti = {
   oid: string;
   versio: number;
@@ -201,8 +211,6 @@ export type DBProjekti = {
   jatkoPaatos2VaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
   uusiaPalautteita?: number;
 
-  // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
-  tallennettu?: boolean;
   kayttoOikeudet: DBVaylaUser[];
   paivitetty?: string;
   // Secret salt to use when generating lisaaineisto links within this projekti
@@ -223,6 +231,9 @@ export type DBProjekti = {
   ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
   ennakkoNeuvotteluAineistoPaketti?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
+
+  // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
+  tallennettu?: boolean;
 };
 
 export type ProjektinJakautuminen = {
@@ -262,4 +273,7 @@ export type Asianhallinta = {
   asiaId?: number;
 };
 
-export type PartialDBProjekti = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;
+export type SaveDBProjektiInput = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;
+export type SaveDBProjektiWithoutLockingInput = Partial<DBProjekti> & Pick<DBProjekti, "oid">;
+export type SaveDBProjektiSlimInput = Partial<DBProjektiSlim> & Pick<DBProjektiSlim, "oid" | "versio">;
+export type SaveDBProjektiSlimWithoutLockingInput = Partial<DBProjektiSlim> & Pick<DBProjektiSlim, "oid">;

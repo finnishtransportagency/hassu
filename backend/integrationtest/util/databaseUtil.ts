@@ -5,9 +5,11 @@ import { DeleteItemCommand, DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import * as awsClient from "../../src/aws/client";
 import mocha from "mocha";
-import { DBProjekti } from "../../src/database/model";
+import { DBProjekti, DBPROJEKTI_OMITTED_FIELDS, NahtavillaoloVaiheJulkaisu } from "../../src/database/model";
 import { getDynamoDBDocumentClient } from "../../src/aws/client";
 import { config } from "../../src/config";
+import omit from "lodash/omit";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/KuulutusJulkaisuDatabase";
 
 const localDynamoDB = new DynamoDB({
   endpoint: "http://localhost:4566",
@@ -33,11 +35,19 @@ export function setupLocalDatabase(): void {
 }
 
 export async function insertProjektiToDB<A extends Pick<DBProjekti, "oid">>(projekti: A) {
+  const slimProjekti = omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS);
+
   const params = new PutCommand({
     TableName: config.projektiTableName,
-    Item: projekti,
+    Item: slimProjekti,
   });
   await getDynamoDBDocumentClient().send(params);
+
+  const julkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(projekti.oid, true);
+  await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(julkaisut);
+  if ("nahtavillaoloVaiheJulkaisut" in projekti) {
+    await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut as NahtavillaoloVaiheJulkaisu[]);
+  }
 }
 
 export async function removeProjektiFromDB(oid: string) {
@@ -50,17 +60,21 @@ export async function removeProjektiFromDB(oid: string) {
     },
   });
   await getDynamoDBDocumentClient().send(params);
+  const julkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+  await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(julkaisut);
 }
 
-export async function getProjektiFromDB(oid: string): Promise<any> {
+export async function getProjektiFromDB(oid: string): Promise<DBProjekti | undefined> {
   const params = new GetCommand({
     TableName: config.projektiTableName,
     Key: { oid },
     ConsistentRead: true,
   });
   const data = await getDynamoDBDocumentClient().send(params);
-  if (!data.Item) {
-    return;
+  const item = data.Item as DBProjekti | undefined;
+  if (!item) {
+    return undefined;
   }
-  return data.Item as any;
+  item.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+  return item;
 }
