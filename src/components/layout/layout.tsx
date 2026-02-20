@@ -28,11 +28,6 @@ export default function Layout({ children }: Props): ReactElement {
   // ehdollisia komponentteja (kuten && <NotificationBar/>) ei poisteta buildissa
   // tree-shakingin takia, koska varsinainen ympäristöarvo selviää vasta juuri ennen ajoa (entrypoint.sh).
   const env = getEnvironment(process.env.NEXT_PUBLIC_ENVIRONMENT ?? "");
-  console.log('Layout - env = ', env);
-  console.log('Layout - process.env.NEXT_PUBLIC_ENVIRONMENT = ', process.env.NEXT_PUBLIC_ENVIRONMENT);
-  console.log('Layout - process.env.NEXT_PUBLIC_VERSION = ', process.env.NEXT_PUBLIC_VERSION);
-  console.log('Layout - process.env.NEXT_PUBLIC_VELHO_BASE_URL = ', process.env.NEXT_PUBLIC_VELHO_BASE_URL);
-  console.log('Layout - process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = ', process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE);
 
   if (
     route.includes("lausuntopyyntoaineistot") ||
