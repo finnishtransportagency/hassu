@@ -5,6 +5,7 @@ import { ilmoitustauluSyoteHandler } from "../../../backend/src/ilmoitustauluSyo
 import { validateCredentials } from "../../util/basicAuthentication";
 import { NotFoundError } from "hassu-common/error";
 import { isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
+import { getServerEnv } from "src/util/env";
 
 function getSingleParamValue(req: NextApiRequest, paramName: string) {
   const values = req.query[paramName];
@@ -14,7 +15,7 @@ function getSingleParamValue(req: NextApiRequest, paramName: string) {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
   return await wrapXRayAsync("handler", async () => {
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "prod" && !(await validateCredentials(req.headers.authorization))) {
+    if (getServerEnv("ENVIRONMENT_2") !== "prod" && !(await validateCredentials(req.headers.authorization))) {
       res.status(401);
       res.setHeader("www-authenticate", "Basic");
 

@@ -13,6 +13,7 @@ import { setupLambdaMonitoring, wrapXRayAsync } from "../../backend/src/aws/moni
 import { createAuthorizationHeader, validateCredentials } from "../util/basicAuthentication";
 import { api } from "@services/api/permanentApi";
 import { getCredentials } from "../util/apiUtil";
+import { getServerEnv } from "src/util/env";
 
 type ProjektiTiedot = {
   nimi: Partial<Record<Kieli, string>>;
@@ -45,7 +46,7 @@ function createActiveKuulutusLink(projekti: ProjektiJulkinen, kieli = Kieli.SUOM
 export async function handleSuunnitelmaTiedotRequest(req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
   return await wrapXRayAsync("handler", async () => {
-    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "prod" && !(await validateCredentials(req.headers.authorization))) {
+    if (getServerEnv("ENVIRONMENT_2") !== "prod" && !(await validateCredentials(req.headers.authorization))) {
       res.status(401);
       res.setHeader("www-authenticate", "Basic");
 

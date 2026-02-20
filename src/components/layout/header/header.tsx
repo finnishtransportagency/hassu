@@ -29,6 +29,7 @@ import { Box } from "@mui/system";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 import { Kieli } from "../../../../common/graphql/apiModel";
 import { useIsYllapito } from "src/hooks/useIsYllapito";
+import { getPublicEnv } from "src/util/env";
 
 const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
@@ -172,7 +173,7 @@ export default function Header(): ReactElement {
 
   const isResizing = useIsResizing();
 
-  const logoutHref = process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL;
+  const logoutHref = getPublicEnv("VAYLA_EXTRANET_URL");
 
   useEffect(() => {
     const handleScrollProps: HandleScrollProps = {

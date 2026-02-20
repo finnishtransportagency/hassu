@@ -2,8 +2,13 @@ import { Html, Head, Main, NextScript } from "next/document";
 import { css, Global } from "@emotion/react";
 
 const StyledDocument = () => (
-  <Html>
-    <Head />
+    <Html>
+      <Head>
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          src="/assets/__env.js"
+        />
+      </Head>
     <body>
       <Main />
       <NextScript />
