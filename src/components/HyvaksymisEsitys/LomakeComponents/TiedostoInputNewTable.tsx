@@ -197,9 +197,7 @@ export const ActionsColumn = styled(({ index, remove, noOrdering, ...props }: Ac
           disabled={noOrdering ? true : false}
           type="button"
           icon="equals"
-          ref={(node) => {
-            if (node && dragRef) dragRef(node);
-          }}
+          ref={dragRef}
         />
       )}
     </div>

@@ -1,11 +1,5 @@
 {
   "extends": "next/core-web-vitals",
-  "overrides": [
-    {
-      "files": ["next.config.js", "next.config.mjs", "next.config.ts"],
-      "parser": "espree"
-    }
-  ],
   "rules": {
     "no-restricted-imports": [
       "warn",

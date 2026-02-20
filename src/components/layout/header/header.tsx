@@ -405,9 +405,11 @@ const Navigation: FunctionComponent<{ navigationRoutes: (NavigationRoute | Navig
 const SivustoLogo = styled(({ className, href }: { className?: string; href: string }) => {
   const { t } = useTranslation();
   return (
-    <Link href={href} className={classNames(className, "flex flex-col uppercase hassu-header-text hover:cursor-pointer")}>
-      <span className="font-bold">{t("commonFI:sivustonimi")}</span>
-      <span>{t("commonSV:sivustonimi")}</span>
+    <Link href={href}>
+      <a className={classNames(className, "flex flex-col uppercase hassu-header-text hover:cursor-pointer")}>
+        <span className="font-bold">{t("commonFI:sivustonimi")}</span>
+        <span>{t("commonSV:sivustonimi")}</span>
+      </a>
     </Link>
   );
 })(({ theme }) => ({

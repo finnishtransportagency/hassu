@@ -10,8 +10,8 @@ export type HassuLinkProps = {
 const HassuLink = ({ href, useNextLink = true, nextLinkOptions = {}, children, ...props }: HassuLinkProps) => {
   if (!!href && useNextLink) {
     return (
-      <Link href={href} {...nextLinkOptions} {...props}>
-        {children}
+      <Link href={href} {...nextLinkOptions}>
+        <a {...props}>{children}</a>
       </Link>
     );
   } else {
