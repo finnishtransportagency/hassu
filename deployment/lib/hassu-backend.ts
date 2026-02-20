@@ -47,6 +47,7 @@ export type HassuBackendStackProps = {
   projektiMuistuttajaTable: Table;
   tiedoteTable: Table;
   nahtavillaoloVaiheJulkaisuTable: Table;
+  projektiDataTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -178,6 +179,7 @@ export class HassuBackendStack extends Stack {
       "TABLE_NAHTAVILLAOLOVAIHEJULKAISU",
       this.props.nahtavillaoloVaiheJulkaisuTable.tableName
     );
+    hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI_DATA", this.props.projektiDataTable.tableName);
     this.props.projektiTable.grantReadWriteData(hyvaksymisEsitysAineistoHandlerLambda);
     this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(hyvaksymisEsitysAineistoHandlerLambda);
 
@@ -1035,11 +1037,13 @@ export class HassuBackendStack extends Stack {
 
   private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
+    const projektiDataTable = this.props.projektiTable;
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
     const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
+      projektiDataTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
       tiedoteTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
@@ -1050,11 +1054,13 @@ export class HassuBackendStack extends Stack {
       nahtavillaoloVaiheJulkaisuTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
+      projektiDataTable.grantReadData(backendFn);
       nahtavillaoloVaiheJulkaisuTable.grantReadData(backendFn);
       this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
     }
     backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
+    backendFn.addEnvironment("TABLE_PROJEKTI_DATA", projektiDataTable.tableName);
     backendFn.addEnvironment("TABLE_NAHTAVILLAOLOVAIHEJULKAISU", nahtavillaoloVaiheJulkaisuTable.tableName);
 
     const feedbackTable = this.props.feedbackTable;

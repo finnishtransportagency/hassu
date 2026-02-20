@@ -17,6 +17,7 @@ const config = {
   projektiMuistuttajaTableName: process.env.TABLE_PROJEKTI_MUISTUTTAJA!,
   tiedoteTableName: process.env.TABLE_TIEDOTE!,
   nahtavillaoloVaiheJulkaisuTableName: process.env.TABLE_NAHTAVILLAOLOVAIHEJULKAISU!,
+  projektiDataTableName: process.env.TABLE_PROJEKTI_DATA!,
   cognitoURL: process.env.COGNITO_URL,
   velhoAuthURL: process.env.VELHO_AUTH_URL,
   velhoApiURL: process.env.VELHO_API_URL,
