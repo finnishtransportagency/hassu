@@ -21,7 +21,7 @@ import {
   findJatkoPaatos2VaiheWaitingForApproval,
   findNahtavillaoloWaitingForApproval,
 } from "../../projekti/projektiUtil";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
 
 type UndefinedOrNullOr<T> = T | undefined | null;
 

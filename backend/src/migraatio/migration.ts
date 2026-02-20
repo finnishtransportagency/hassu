@@ -12,7 +12,7 @@ import {
 } from "../database/model";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 
 export const migraatioTilat = ["SUUNNITTELU", "NAHTAVILLAOLO", "HYVAKSYMISPAATOS", "JATKOPAATOS1", "JATKOPAATOS2"] as const;
 

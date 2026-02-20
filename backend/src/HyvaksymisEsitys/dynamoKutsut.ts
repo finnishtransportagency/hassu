@@ -15,7 +15,7 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import * as API from "hassu-common/graphql/apiModel";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { NotFoundError, SimultaneousUpdateError } from "hassu-common/error";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,

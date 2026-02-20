@@ -5,7 +5,7 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "./paths";
 import { ENNAKKONEUVOTTELU_JULKAISU_PATH, ENNAKKONEUVOTTELU_PATH } from "../ennakkoneuvottelu/tallenna";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 
 class AineistoDeleterService {
   async deleteAineistoIfEpaaktiivinen(ctx: ImportContext) {

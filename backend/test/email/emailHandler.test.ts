@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";

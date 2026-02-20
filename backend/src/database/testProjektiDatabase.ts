@@ -12,7 +12,7 @@ import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
 import { Exact } from "hassu-common/specialTypes";
 import omit from "lodash/omit";
 
