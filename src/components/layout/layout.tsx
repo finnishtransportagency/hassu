@@ -45,7 +45,7 @@ export default function Layout({ children }: Props): ReactElement {
   ) {
     return (
       <div className="min-h-screen relative flex flex-col">
-        {env === "dev" && <NotificationBar />}
+        {env !== "prod" && <NotificationBar />}
 
         <Container sx={{ marginBottom: "110px", marginTop: "50px" }}>
           <main>{children}</main>
@@ -57,7 +57,7 @@ export default function Layout({ children }: Props): ReactElement {
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      {env === "dev" && <NotificationBar />}
+      {env !== "prod" && <NotificationBar />}
       <Header />
       <div style={{ minWidth: "90%", margin: "10px auto 10px" }}>
         <TiedoteNotification />
