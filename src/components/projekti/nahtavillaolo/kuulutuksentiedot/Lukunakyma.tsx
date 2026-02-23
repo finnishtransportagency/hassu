@@ -22,6 +22,7 @@ import { isAjansiirtoSallittu } from "../../../../util/isAjansiirtoSallittu";
 import { ButtonFlatWithIcon } from "../../../button/ButtonFlat";
 import { ProjektiTestCommand } from "hassu-common/testUtil.dev";
 import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
+import { getPublicEnv } from "src/util/env";
 
 interface Props {
   nahtavillaoloVaiheJulkaisu?: NahtavillaoloVaiheJulkaisu | null;
@@ -53,7 +54,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
-  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
+  const ajansiirtoSallittu = isAjansiirtoSallittu(getPublicEnv("AJANSIIRTO_SALLITTU"));
 
   return (
     <>
