@@ -37,21 +37,7 @@ const lyhytOsoiteRedirects = [
   },
 ];
 
-function setupLocalDevelopmentMode(config, env) {
-  process.env.AWS_SDK_LOAD_CONFIG = "true";
-  env.AWS_REGION = "eu-west-1";
-  env["x-hassudev-uid"] = process.env.HASSUDEV_UID;
-  env["x-hassudev-roles"] = process.env.HASSUDEV_ROLES;
-
-  env.REACT_APP_API_URL = "http://localhost:3000/graphql";
-  env.APPSYNC_URL = process.env.REACT_APP_API_URL;
-  env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
-  env.NEXT_PUBLIC_VERSION = process.env.VERSION;
-  env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU = "true";
-  env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
-  env.NEXT_PUBLIC_KEYCLOAK_DOMAIN = process.env.KEYCLOAK_DOMAIN;
-  env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID = process.env.KEYCLOAK_CLIENT_ID;
-
+function setupLocalDevelopmentMode(config) {
   /**
    * @type {import("next").NextConfig}
    */
@@ -124,7 +110,7 @@ module.exports = (phase) => {
     output: "standalone",
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
-    config = setupLocalDevelopmentMode(config, env);
+    config = setupLocalDevelopmentMode(config);
   } else {
     // env variables starting with NEXT_PUBLIC_ are bundled -> placeholder values at build time
     // actual env variables are provided runtime
