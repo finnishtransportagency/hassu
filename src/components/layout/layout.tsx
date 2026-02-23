@@ -1,5 +1,4 @@
 import React, { ReactElement, ReactNode } from "react";
-import dynamic from "next/dynamic";
 import Breadcrumbs from "./Breadcrumbs";
 import Header from "./header/header";
 import { Footer } from "./footer";
@@ -7,14 +6,8 @@ import { Container } from "@mui/material";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { useRouter } from "next/router";
 import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
+import NotificationBar from "@components/notification/NotificationBar";
 import { getPublicEnv } from "src/util/env";
-
-// Renderöidään NotificationBar vain clientilla (ssr: false),
-// jotta vältytään ensimmäisen latauksen aikaiselta vilkkumiselta,
-// kun buildin aikaiset environment-arvot eivät vielä vastaa clientin arvoja
-const NotificationBar = dynamic(() => import("@components/notification/NotificationBar"), {
-  ssr: false,
-});
 
 interface Props {
   children?: ReactNode;
