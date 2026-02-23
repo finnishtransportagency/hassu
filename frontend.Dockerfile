@@ -24,7 +24,6 @@ ARG NPM_REGISTRY
 
 # Configure npm authentication
 # Using heredoc we avoid print
-ARG CACHE_BUST=1
 RUN --mount=type=secret,id=code_artifact_token \
     TOKEN=$(cat /run/secrets/code_artifact_token) && \
     cat <<EOF > ~/.npmrc
