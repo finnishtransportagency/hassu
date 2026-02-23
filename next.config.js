@@ -115,22 +115,6 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config);
   } else {
-    env.NEXT_PUBLIC_VERSION = process.env.CODEBUILD_SOURCE_VERSION ?? ""; // default version info, overriden in test&prod by semantic version
-    try {
-      let buffer = fs.readFileSync(__dirname + "/.version");
-      if (buffer) {
-        env.NEXT_PUBLIC_VERSION = buffer.toString("UTF-8") ?? "";
-      }
-    } catch (e) {
-      // Ignore
-    }
-    env.NEXT_PUBLIC_REACT_APP_API_KEY = process.env.REACT_APP_API_KEY ?? "";
-    env.NEXT_PUBLIC_REACT_APP_API_URL = "https://" + process.env.FRONTEND_API_DOMAIN_NAME + "/graphql";
-    env.FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
-    env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME = process.env.FRONTEND_DOMAIN_NAME;
-    env.SEARCH_DOMAIN = process.env.SEARCH_DOMAIN;
-
-    config.env = env;
     config.redirects = async () => {
       return lyhytOsoiteRedirects;
     };
