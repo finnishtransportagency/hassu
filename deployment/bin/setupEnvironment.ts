@@ -1,6 +1,7 @@
 /* tslint:disable:no-console */
 // This script examines stack outputs and parameter store parameters, and writes .env.local and .env.test files
 
+import { execSync } from "child_process";
 import { BaseConfig } from "../../common/BaseConfig";
 import * as fs from "fs";
 import path from "path";
@@ -75,6 +76,7 @@ async function main() {
       VELHO_PASSWORD: environmentVariables.VELHO_PASSWORD,
     };
     if (Config.isDeveloperEnvironment()) {
+      const VERSION = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
       env = {
         ...env,
         AWS_SDK_LOAD_CONFIG: "true",
@@ -83,12 +85,12 @@ async function main() {
         "x-hassudev-roles": process.env.HASSUDEV_ROLES ?? "Arvoa ei ole määritetty process.env objektissa",
         REACT_APP_API_URL: "http://localhost:3000/graphql",
         APPSYNC_URL: backendStackOutputs.AppSyncAPIURL,
-        VERSION: "local-dev",
+        VERSION,
         AJANSIIRTO_SALLITTU: "true",
       };
 
       writePublicEnvFile({
-        VERSION: "local-dev",
+        VERSION,
         ENVIRONMENT: process.env.ENVIRONMENT,
         VAYLA_EXTRANET_URL: environmentVariables.VAYLA_EXTRANET_URL,
         VELHO_BASE_URL: environmentVariables.VELHO_BASE_URL,
