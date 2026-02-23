@@ -24,6 +24,7 @@ ARG NPM_REGISTRY
 
 # Configure npm authentication
 # Using heredoc we avoid print
+ARG CACHE_BUST=1
 RUN --mount=type=secret,id=code_artifact_token \
     TOKEN=$(cat /run/secrets/code_artifact_token) && \
     cat <<EOF > ~/.npmrc
@@ -56,18 +57,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build arguments that NextJS expects
-ARG NEXT_PUBLIC_VERSION
-ARG NEXT_PUBLIC_ENVIRONMENT
-ARG NEXT_PUBLIC_VAYLA_EXTRANET_URL
-ARG NEXT_PUBLIC_VELHO_BASE_URL
-ARG NEXT_PUBLIC_AJANSIIRTO_SALLITTU
-ARG NEXT_PUBLIC_REACT_APP_API_URL
-ARG NEXT_PUBLIC_REACT_APP_API_KEY
-ARG NEXT_PUBLIC_FRONTEND_DOMAIN_NAME
-ARG NEXT_PUBLIC_KEYCLOAK_CLIENT_ID
-ARG NEXT_PUBLIC_KEYCLOAK_DOMAIN
-ARG NEXT_PUBLIC_EVK_ACTIVATION_DATE
 
 # use separate next.config.js file to keep things as isolated as possible
 RUN mv docker_next.config.js next.config.js
@@ -75,19 +64,7 @@ RUN mv docker_next.config.js next.config.js
 RUN mv middleware.ts src/
 
 # Build the project
-RUN \
-  NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION} \
-  NEXT_PUBLIC_ENVIRONMENT=${NEXT_PUBLIC_ENVIRONMENT} \
-  NEXT_PUBLIC_VAYLA_EXTRANET_URL=${NEXT_PUBLIC_VAYLA_EXTRANET_URL} \
-  NEXT_PUBLIC_VELHO_BASE_URL=${NEXT_PUBLIC_VELHO_BASE_URL} \
-  NEXT_PUBLIC_AJANSIIRTO_SALLITTU=${NEXT_PUBLIC_AJANSIIRTO_SALLITTU} \
-  NEXT_PUBLIC_REACT_APP_API_URL=${NEXT_PUBLIC_REACT_APP_API_URL} \
-  NEXT_PUBLIC_REACT_APP_API_KEY=${NEXT_PUBLIC_REACT_APP_API_KEY} \
-  NEXT_PUBLIC_FRONTEND_DOMAIN_NAME=${NEXT_PUBLIC_FRONTEND_DOMAIN_NAME} \
-  NEXT_PUBLIC_KEYCLOAK_CLIENT_ID=${NEXT_PUBLIC_KEYCLOAK_CLIENT_ID} \
-  NEXT_PUBLIC_KEYCLOAK_DOMAIN=${NEXT_PUBLIC_KEYCLOAK_DOMAIN} \
-  NEXT_PUBLIC_EVK_ACTIVATION_DATE=${NEXT_PUBLIC_EVK_ACTIVATION_DATE} \
-  npm run build
+RUN npm run build
 
 # Build the project
 #RUN npm run build
@@ -117,13 +94,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Next.js writes at least images to .next/cache -> need to ensure write permissions there
 # Ensure the files are owned by nextjs:nodejs
-# Grant write access to /app to be able to search and replace bundled env variables runtime
-# Write access dropped in entrypoint.sh once done replacing
 RUN mkdir -p /app/.next/cache && \
-    chown -R nextjs:nodejs /app && \
-    chmod -R u+w /app && \
     chown -R nextjs:nodejs /app/.next/cache && \
-    chmod -R u+w /app/.next/cache
+    chmod -R u+w /app/.next/cache && \
+    chown -R nextjs:nodejs /app/public/assets
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
