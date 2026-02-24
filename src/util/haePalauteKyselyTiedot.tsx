@@ -1,16 +1,6 @@
 import { today } from "hassu-common/util/dateUtils";
 import dayjs from "dayjs";
 
-function isValidPalautekyselyObject(obj: any): obj is { startDate: string; endDate: string; href: string } {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    typeof obj.startDate === "string" &&
-    typeof obj.endDate === "string" &&
-    typeof obj.href === "string"
-  );
-}
-
 export interface PalauteKyselyTiedot {
   href: string | undefined;
   startDate: string;
