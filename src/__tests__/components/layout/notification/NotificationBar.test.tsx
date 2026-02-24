@@ -1,5 +1,5 @@
-import { render, screen} from "@testing-library/react"
-import NotificationBar from "@components/notification/NotificationBar"
+import { render, screen } from "@testing-library/react";
+import NotificationBar from "@components/notification/NotificationBar";
 import { getPublicEnv } from "src/util/env";
 
 // Mockataan getPublicEnv

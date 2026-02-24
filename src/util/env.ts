@@ -6,7 +6,7 @@ import { PublicEnv } from "types/env";
  * Tämä funktio on tarkoitettu käytettäväksi client-side koodissa, kuten
  * React-komponenteissa, jotka renderöidään selaimessa. Next.js renderöi HTML:n
  * jo palvelimella (server-side rendering), ja komponentit hydratoidaan clientilla.
- * 
+ *
  * @param key Ympäristömuuttujan avain
  * @returns Arvo joko clientin runtime __ENV:stä tai serverin process.env:stä
  */

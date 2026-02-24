@@ -1,8 +1,6 @@
 module.exports = {
   collectCoverageFrom: ["<rootDir>/src/__tests__/**/*.{js,jsx,ts,tsx}", "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
-  modulePathIgnorePatterns: [
-    "<rootDir>/cdk.out/"
-  ],
+  modulePathIgnorePatterns: ["<rootDir>/cdk.out/"],
   moduleNameMapper: {
     /* Handle CSS imports (with CSS modules)
     https://jestjs.io/docs/webpack#mocking-css-modules */
