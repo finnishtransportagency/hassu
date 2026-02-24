@@ -326,6 +326,16 @@ export class HassuBackendStack extends Stack {
       })
     );
 
+    streamHandler.addEventSource(
+      new DynamoEventSource(this.props.nahtavillaoloVaiheJulkaisuTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        retryAttempts: 5,
+        maxBatchingWindow: Duration.seconds(1),
+      })
+    );
+
     const indexerQueue = this.createIndexerQueue();
     streamHandler.node.addDependency(indexerQueue);
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
