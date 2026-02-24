@@ -1,5 +1,8 @@
 module.exports = {
   collectCoverageFrom: ["<rootDir>/src/__tests__/**/*.{js,jsx,ts,tsx}", "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
+  modulePathIgnorePatterns: [
+    "<rootDir>/cdk.out/"
+  ],
   moduleNameMapper: {
     /* Handle CSS imports (with CSS modules)
     https://jestjs.io/docs/webpack#mocking-css-modules */
@@ -28,5 +31,5 @@ module.exports = {
     "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },
   transformIgnorePatterns: ["/node_modules/", "^.+\\.module\\.(css|sass|scss)$"],
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 };
