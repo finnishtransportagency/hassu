@@ -22,26 +22,6 @@ export interface PalauteKyselyAvoinna extends PalauteKyselyTiedot {
   isActive: boolean;
 }
 
-export const haePalauteKyselyTiedot = (): PalauteKyselyAvoinna => {
-  const envParam = process.env.NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT;
-  if (envParam) {
-    try {
-      const palauteKyselyTiedot = JSON.parse(envParam);
-      if (isValidPalautekyselyObject(palauteKyselyTiedot)) {
-        return createPalauteKyselyAvoinna(palauteKyselyTiedot);
-      }
-    } catch (error) {
-      // unable to parse envParam, return the 'default' values below
-    }
-  }
-  return {
-    isActive: false,
-    href: undefined,
-    startDate: "",
-    endDate: "",
-  };
-};
-
 export const haehardCodedPalauteKyselyTiedot = (): PalauteKyselyAvoinna => {
   const palauteKyselyTiedot = {
     startDate: "2025-04-01",

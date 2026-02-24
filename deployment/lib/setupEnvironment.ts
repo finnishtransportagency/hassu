@@ -183,7 +183,6 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
     VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,
     VELHO_BASE_URL: variables.VelhoBaseUrl,
-    PALAUTE_KYSELY_TIEDOT: variables.PalauteKyselyTiedot,
 
     EMAILS_ON: variables.EmailsOn,
     EMAILS_TO: variables.EmailsTo,
