@@ -10,7 +10,7 @@ export function expectPDF(prefix: string, pdf: PDF & { textContent: string }, as
   fs.mkdirSync(path, { recursive: true });
   const fileName = prefix + pdf.nimi;
   expect({ fileName, textContent: pdf.textContent }).toMatchSnapshot();
-  fs.writeFileSync(path + "/" + fileName, Buffer.from(pdf.sisalto, "base64"));
+  fs.writeFileSync(path + "/" + fileName, new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
 }
 
 export function mockKirjaamoOsoitteet(): void {

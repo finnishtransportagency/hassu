@@ -2,12 +2,18 @@ import { log, setLogContextOid } from "../logger";
 import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  DBPROJEKTI_OMITTED_FIELDS,
+  DBProjektiExtras,
+  DBProjektiSlim,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
-  PartialDBProjekti,
+  SaveDBProjektiInput,
+  SaveDBProjektiSlimInput,
+  SaveDBProjektiSlimWithoutLockingInput,
+  SaveDBProjektiWithoutLockingInput,
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
@@ -30,11 +36,15 @@ import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { Status } from "hassu-common/graphql/apiModel";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
+import merge from "lodash/merge";
+import cloneDeep from "lodash/cloneDeep";
+import omit from "lodash/omit";
+import { Exact } from "hassu-common/specialTypes";
 
-const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset"];
+const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset", "nahtavillaoloVaiheJulkaisut"];
 const skipAutomaticUpdateFields = [
   "aloitusKuulutusJulkaisut",
-  "nahtavillaoloVaiheJulkaisut",
   "hyvaksymisPaatosVaiheJulkaisut",
   "julkaistuHyvaksymisEsitys",
   "jatkoPaatos1VaiheJulkaisut",
@@ -52,7 +62,6 @@ type JulkaisutFieldName = keyof Pick<
   DBProjekti,
   | "aloitusKuulutusJulkaisut"
   | "vuorovaikutusKierrosJulkaisut"
-  | "nahtavillaoloVaiheJulkaisut"
   | "hyvaksymisPaatosVaiheJulkaisut"
   | "jatkoPaatos1VaiheJulkaisut"
   | "jatkoPaatos2VaiheJulkaisut"
@@ -97,24 +106,17 @@ type UpdateParams = {
 };
 
 export class ProjektiDatabase {
-  constructor(projektiTableName: string, feedbackTableName: string) {
+  constructor(projektiTableName: string) {
     this.projektiTableName = projektiTableName;
-    this.feedbackTableName = feedbackTableName;
   }
 
   projektiTableName: string;
-  feedbackTableName: string;
 
   aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
   vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(
     this,
     "vuorovaikutusKierrosJulkaisut",
     "VuorovaikutusKierrosJulkaisu"
-  );
-  nahtavillaoloVaiheJulkaisut = new JulkaisuFunctions<NahtavillaoloVaiheJulkaisu>(
-    this,
-    "nahtavillaoloVaiheJulkaisut",
-    "NahtavillaoloVaiheJulkaisu"
   );
   hyvaksymisPaatosVaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
     this,
@@ -138,6 +140,20 @@ export class ProjektiDatabase {
    * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
    */
   async loadProjektiByOid(oid: string, stronglyConsistentRead = true, setContextOid = true): Promise<DBProjekti | undefined> {
+    const slimProjekti = await this.loadSlimProjektiByOid(oid, stronglyConsistentRead, setContextOid);
+    if (!slimProjekti) {
+      return undefined;
+    }
+
+    return await fattenProjekti(slimProjekti, stronglyConsistentRead);
+  }
+
+  /**
+   * Load projekti from DynamoDB
+   * @param oid Projekti oid
+   * @param stronglyConsistentRead Use stringly consistent read operation to DynamoDB. Set "false" in public website to save database capacity.
+   */
+  async loadSlimProjektiByOid(oid: string, stronglyConsistentRead = true, setContextOid = true): Promise<DBProjektiSlim | undefined> {
     if (!oid) {
       return;
     }
@@ -151,14 +167,7 @@ export class ProjektiDatabase {
         ConsistentRead: stronglyConsistentRead,
       });
       const data = await getDynamoDBDocumentClient().send(params);
-      if (!data.Item) {
-        return;
-      }
-      const projekti = data.Item as DBProjekti;
-      projekti.oid = oid;
-      projekti.tallennettu = true;
-
-      return migrateFromOldSchema(projekti);
+      return data.Item as DBProjektiSlim | undefined;
     } catch (e) {
       if ((e as { code: string }).code === "ResourceNotFoundException") {
         log.warn("projektia ei löydy", { oid });
@@ -169,16 +178,26 @@ export class ProjektiDatabase {
     }
   }
 
+  async saveProjekti(dbProjekti: SaveDBProjektiInput): Promise<number> {
+    return await this.saveSlimProjekti(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+  }
+
+  async saveProjektiWithoutLocking(dbProjekti: SaveDBProjektiWithoutLockingInput): Promise<number> {
+    return await this.saveSlimProjektiWithoutLocking(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
+  }
+
   /**
    *
    * @param dbProjekti Tallennettava projekti
    * @return tallennetun projektin versio
    */
-  async saveProjekti(dbProjekti: PartialDBProjekti): Promise<number> {
+  async saveSlimProjekti<T extends SaveDBProjektiSlimInput>(dbProjekti: Exact<T, SaveDBProjektiSlimInput>): Promise<number> {
     return await this.saveProjektiInternal(dbProjekti);
   }
 
-  async saveProjektiWithoutLocking(dbProjekti: Partial<DBProjekti> & Pick<DBProjekti, "oid">): Promise<number> {
+  async saveSlimProjektiWithoutLocking<T extends SaveDBProjektiSlimWithoutLockingInput>(
+    dbProjekti: Exact<T, SaveDBProjektiSlimWithoutLockingInput>
+  ): Promise<number> {
     return await this.saveProjektiInternal(dbProjekti, false, true);
   }
 
@@ -189,7 +208,7 @@ export class ProjektiDatabase {
    * @param bypassLocking Ohita projektin lukitusmekanismi. Voidaan käyttää päivityksissä, jotka eivät liity käytt
    */
   protected async saveProjektiInternal(
-    dbProjekti: Partial<DBProjekti>,
+    dbProjekti: SaveDBProjektiWithoutLockingInput,
     forceUpdateInTests = false,
     bypassLocking = false
   ): Promise<number> {
@@ -283,6 +302,12 @@ export class ProjektiDatabase {
   }
 
   async createProjekti(projekti: DBProjekti): Promise<PutCommandOutput> {
+    const slimProjekti: DBProjektiSlim = omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS);
+    await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut);
+    return await this.createSlimProjekti(slimProjekti);
+  }
+
+  async createSlimProjekti<T extends DBProjektiSlim>(projekti: Exact<T, DBProjektiSlim>): Promise<PutCommandOutput> {
     const params = new PutCommand({
       TableName: this.projektiTableName,
       Item: projekti,
@@ -291,6 +316,12 @@ export class ProjektiDatabase {
   }
 
   async scanProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjekti[] }> {
+    const slimScanResult = await this.scanSlimProjektit(startKey);
+    const projektis = await Promise.all(slimScanResult.projektis.map((slim) => fattenProjekti(slim, false)));
+    return { startKey: slimScanResult.startKey, projektis };
+  }
+
+  async scanSlimProjektit(startKey?: string): Promise<{ startKey: string | undefined; projektis: DBProjektiSlim[] }> {
     try {
       const params = new ScanCommand({
         TableName: this.projektiTableName,
@@ -299,7 +330,7 @@ export class ProjektiDatabase {
       });
       const data: ScanCommandOutput = await getDynamoDBDocumentClient().send(params);
       return {
-        projektis: data.Items as DBProjekti[],
+        projektis: (data.Items ?? []) as DBProjektiSlim[],
         startKey: data.LastEvaluatedKey ? JSON.stringify(data.LastEvaluatedKey) : undefined,
       };
     } catch (e) {
@@ -647,4 +678,13 @@ export class ProjektiDatabase {
   }
 }
 
-export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing", config.feedbackTableName ?? "missing");
+export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing");
+
+async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
+  const extras: DBProjektiExtras = {
+    nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
+    tallennettu: true,
+  };
+  const dbProjektiExtended: DBProjekti = merge(slimProjekti, extras);
+  return migrateFromOldSchema(cloneDeep(dbProjektiExtended));
+}

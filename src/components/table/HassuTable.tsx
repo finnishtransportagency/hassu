@@ -208,12 +208,7 @@ export function BodyContent<T>(
 
   return (
     <TbodyWrapper ref={props?.parentRef} sx={props.tableSx}>
-      <Tbody
-        sx={props?.bodySx}
-        ref={(node) => {
-          if (node && dropRef) dropRef(node);
-        }}
-      >
+      <Tbody sx={props?.bodySx} ref={dropRef}>
         {rows.map((row) => (
           <BasicRow
             gridTemplateColumns={props.gridTemplateColumns}
@@ -419,7 +414,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
       <ConditionalWrapper
         condition={!!href}
         wrapper={(children) => (
-          <Link legacyBehavior href={href as string} passHref>
+          <Link href={href as string} passHref>
             {children}
           </Link>
         )}
@@ -439,9 +434,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
               gridTemplateColumns,
               opacity: isDragging ? 0 : 1,
             }}
-            ref={(node) => {
-              if (node && dropRef) dropRef(node);
-            }}
+            ref={dropRef}
           >
             {row.getVisibleCells().map((cell) => (
               <DataCell key={cell.id}>

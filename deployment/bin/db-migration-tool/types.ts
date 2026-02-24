@@ -1,4 +1,4 @@
-import { ScanCommandInput, UpdateCommandInput, ScanCommandOutput } from "@aws-sdk/lib-dynamodb";
+import { ScanCommandInput, UpdateCommandInput, ScanCommandOutput, PutCommandInput } from "@aws-sdk/lib-dynamodb";
 
 export type TableConfig = {
   name: string;
@@ -20,7 +20,8 @@ export type PlanOptions = {
 };
 
 export type PagedMigrationRunPlanResponse = {
-  updateInput: UpdateCommandInput[];
+  updateInput?: UpdateCommandInput[];
+  putInput?: PutCommandInput[];
   lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"];
 };
 

@@ -21,13 +21,7 @@ export const ActionsColumn = styled(({ index, remove, ...props }: ActionColumnPr
         }}
         icon="trash"
       />
-      <IconButton
-        type="button"
-        icon="equals"
-        ref={(node) => {
-          if (node && dragRef) dragRef(node);
-        }}
-      />
+      <IconButton type="button" icon="equals" ref={dragRef} />
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));

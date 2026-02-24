@@ -46,7 +46,7 @@ export type HassuBackendStackProps = {
   kiinteistonomistajaTable: Table;
   projektiMuistuttajaTable: Table;
   tiedoteTable: Table;
-  // nahtavillaoloVaiheJulkaisuTable: Table;
+  nahtavillaoloVaiheJulkaisuTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -174,7 +174,12 @@ export class HassuBackendStack extends Stack {
     this.attachDatabaseToLambda(sqsEventHandlerLambda, true);
 
     hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI", this.props.projektiTable.tableName);
+    hyvaksymisEsitysAineistoHandlerLambda.addEnvironment(
+      "TABLE_NAHTAVILLAOLOVAIHEJULKAISU",
+      this.props.nahtavillaoloVaiheJulkaisuTable.tableName
+    );
     this.props.projektiTable.grantReadWriteData(hyvaksymisEsitysAineistoHandlerLambda);
+    this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(hyvaksymisEsitysAineistoHandlerLambda);
 
     this.createAndProvideSchedulerExecutionRole(
       eventSQS,
@@ -1032,7 +1037,7 @@ export class HassuBackendStack extends Stack {
     const projektiTable = this.props.projektiTable;
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
-    // const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
+    const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
@@ -1042,14 +1047,15 @@ export class HassuBackendStack extends Stack {
       this.props.kiinteistonomistajaTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
       this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);
-      // nahtavillaoloVaiheJulkaisuTable.grantFullAccess(backendFn);
-      // backendFn.addEnvironment("TABLE_NAHTAVILLAOLOVAIHEJULKAISU", nahtavillaoloVaiheJulkaisuTable.tableName);
+      nahtavillaoloVaiheJulkaisuTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
+      nahtavillaoloVaiheJulkaisuTable.grantReadData(backendFn);
       this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
     }
     backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
+    backendFn.addEnvironment("TABLE_NAHTAVILLAOLOVAIHEJULKAISU", nahtavillaoloVaiheJulkaisuTable.tableName);
 
     const feedbackTable = this.props.feedbackTable;
     feedbackTable.grantFullAccess(backendFn);
