@@ -1037,7 +1037,7 @@ export class HassuBackendStack extends Stack {
 
   private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
-    const projektiDataTable = this.props.projektiTable;
+    const projektiDataTable = this.props.projektiDataTable;
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
     const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
