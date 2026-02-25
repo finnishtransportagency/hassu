@@ -206,16 +206,7 @@ const ActionsColumn = styled(({ index, remove, updateFieldArray, aineisto, appen
         }}
         icon="trash"
       />
-      {!isTouch && (
-        <IconButton
-          sx={{ touchAction: "none" }}
-          icon="equals"
-          type="button"
-          ref={(node) => {
-            if (node && dragRef) dragRef(node);
-          }}
-        />
-      )}
+      {!isTouch && <IconButton sx={{ touchAction: "none" }} icon="equals" type="button" ref={dragRef} />}
     </div>
   );
 })(sx({ display: "flex", justifyContent: "center", gap: 2 }));

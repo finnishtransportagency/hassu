@@ -169,9 +169,11 @@ const HeaderNavigationItem = styled(
       {collection ? (
         <NavDropdown label={label} icon={icon} mobile={mobile} collection={collection} href={href} />
       ) : (
-        <Link href={href} className={`first-level-link${mobile ? " mobile" : ""}`}>
-          {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
-          <span className="underline-if-current-route">{label}</span>
+        <Link href={href}>
+          <a className={`first-level-link${mobile ? " mobile" : ""}`}>
+            {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
+            <span className="underline-if-current-route">{label}</span>
+          </a>
         </Link>
       )}
     </li>
