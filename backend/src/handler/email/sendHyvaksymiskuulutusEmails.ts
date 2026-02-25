@@ -3,7 +3,13 @@ import { emailClient } from "../../email/email";
 import { log } from "../../logger";
 import { AsiakirjaTyyppi, Kayttaja, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, HyvaksymisPaatosVaihePDF, KuulutusSaamePDF } from "../../database/model";
+import {
+  DBProjekti,
+  PaatosVaiheJulkaisu,
+  HyvaksymisPaatosVaihePDF,
+  KuulutusSaamePDF,
+  JatkoPaatos1VaiheJulkaisu,
+} from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
 import { HyvaksymisPaatosEmailCreator } from "../../email/hyvaksymisPaatosEmailCreator";
@@ -21,6 +27,7 @@ import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplate
 import { getProjektipaallikkoAndOrganisaatio } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { fileService } from "../../files/fileService";
+import { projektiEntityDatabase } from "../../database/KuulutusJulkaisuDatabase";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {
@@ -33,7 +40,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
   protected async sendEmailToMaakuntaliitto(
     _emailCreator: HyvaksymisPaatosEmailCreator,
-    _julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    _julkaisu: PaatosVaiheJulkaisu,
     _projektinKielet: Kieli[],
     _projekti: DBProjekti
   ): Promise<void> {}
@@ -79,10 +86,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     return { attachment, size };
   }
 
-  protected async getPaatostiedostotAsAttachments(
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
-    projekti: DBProjekti
-  ): Promise<Mail.Attachment[]> {
+  protected async getPaatostiedostotAsAttachments(julkaisu: PaatosVaiheJulkaisu, projekti: DBProjekti): Promise<Mail.Attachment[]> {
     const attachmentsAndSizes = await Promise.all(
       (julkaisu.hyvaksymisPaatos ?? []).map(
         async (aineisto) =>
@@ -107,7 +111,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     return attachmentsAndSizes.map(({ attachment }) => attachment);
   }
 
-  protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+  protected getProjektiPaths(oid: string, julkaisu: PaatosVaiheJulkaisu) {
     return new ProjektiPaths(oid).hyvaksymisPaatosVaihe(julkaisu);
   }
 
@@ -115,13 +119,13 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
     return AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE_LAHETEKIRJE;
   }
 
-  protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
+  protected async updateProjektiJulkaisut(_projekti: DBProjekti, julkaisu: PaatosVaiheJulkaisu) {
+    await projektiEntityDatabase.put(julkaisu);
   }
 
   private async sendEmailToViranomaisille(
     emailCreator: HyvaksymisPaatosEmailCreator,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    julkaisu: PaatosVaiheJulkaisu,
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
@@ -177,7 +181,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
   protected async sendEmailToProjektipaallikko(
     emailCreator: HyvaksymisPaatosEmailCreator,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    julkaisu: PaatosVaiheJulkaisu,
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
@@ -224,7 +228,7 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 class JatkoPaatosHyvaksyntaEmailSender extends HyvaksymisPaatosHyvaksyntaEmailSender {
   protected async sendEmailToMaakuntaliitto(
     emailCreator: HyvaksymisPaatosEmailCreator,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    julkaisu: PaatosVaiheJulkaisu,
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
@@ -272,7 +276,7 @@ ${projektiPaallikko.organisaatio}`;
 
   protected async sendEmailToProjektipaallikko(
     emailCreator: HyvaksymisPaatosEmailCreator,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    julkaisu: PaatosVaiheJulkaisu,
     projektinKielet: Kieli[],
     projekti: DBProjekti
   ): Promise<void> {
@@ -308,7 +312,7 @@ ${projektiPaallikko.organisaatio}`;
     }
   }
 
-  protected async sendEmailToMuokkaaja(julkaisu: HyvaksymisPaatosVaiheJulkaisu, emailCreator: HyvaksymisPaatosEmailCreator) {
+  protected async sendEmailToMuokkaaja(julkaisu: PaatosVaiheJulkaisu, emailCreator: HyvaksymisPaatosEmailCreator) {
     assertIsDefined(julkaisu.muokkaaja, "Julkaisun muokkaaja puuttuu");
     const muokkaaja: Kayttaja | undefined = await this.getKayttaja(julkaisu.muokkaaja);
     assertIsDefined(muokkaaja, "Muokkaajan käyttäjätiedot puuttuu");
@@ -334,7 +338,7 @@ class JatkoPaatos1HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender
     return emailCreator.createJatkopaatosHyvaksyttyViranomaisille();
   }
 
-  protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+  protected getProjektiPaths(oid: string, julkaisu: JatkoPaatos1VaiheJulkaisu) {
     return new ProjektiPaths(oid).jatkoPaatos1Vaihe(julkaisu);
   }
 
@@ -342,8 +346,8 @@ class JatkoPaatos1HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender
     return AsiakirjaTyyppi.JATKOPAATOSKUULUTUS_LAHETEKIRJE;
   }
 
-  protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
-    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
+  protected async updateProjektiJulkaisut(_projekti: DBProjekti, julkaisu: JatkoPaatos1VaiheJulkaisu) {
+    await projektiEntityDatabase.put(julkaisu);
   }
 }
 
@@ -360,7 +364,7 @@ class JatkoPaatos2HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender
     return emailCreator.createJatkopaatosHyvaksyttyViranomaisille();
   }
 
-  protected getProjektiPaths(oid: string, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
+  protected getProjektiPaths(oid: string, julkaisu: PaatosVaiheJulkaisu) {
     return new ProjektiPaths(oid).jatkoPaatos2Vaihe(julkaisu);
   }
 
@@ -368,8 +372,8 @@ class JatkoPaatos2HyvaksyntaEmailSender extends JatkoPaatosHyvaksyntaEmailSender
     return AsiakirjaTyyppi.JATKOPAATOSKUULUTUS2_LAHETEKIRJE;
   }
 
-  protected async updateProjektiJulkaisut(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu) {
-    await projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(projekti, julkaisu);
+  protected async updateProjektiJulkaisut(_projekti: DBProjekti, julkaisu: PaatosVaiheJulkaisu) {
+    await projektiEntityDatabase.put(julkaisu);
   }
 }
 

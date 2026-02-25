@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
+import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
@@ -14,14 +14,14 @@ export class Kuulutus70 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   protected header: string;
   protected kieli: KaannettavaKieli;
-  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu;
   private kasittelynTila: KasittelynTila;
   private asiakirjaTyyppi: AsiakirjaTyyppi;
   private kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
   constructor(
     asiakirjaTyyppi: AsiakirjaTyyppi,
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
+    hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     props: HyvaksymisPaatosVaiheKutsuAdapterProps
   ) {

@@ -6,6 +6,7 @@ import { fileService } from "../files/fileService";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "./paths";
 import { ENNAKKONEUVOTTELU_JULKAISU_PATH, ENNAKKONEUVOTTELU_PATH } from "../ennakkoneuvottelu/tallenna";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../database/KuulutusJulkaisuDatabase";
 
 class AineistoDeleterService {
   async deleteAineistoIfEpaaktiivinen(ctx: ImportContext) {
@@ -34,7 +35,7 @@ class AineistoDeleterService {
       await Promise.all(
         (
           await manager.getHyvaksymisPaatosVaihe().deleteAineistotIfEpaaktiivinen(ctx.projektiStatus)
-        ).map((julkaisu) => projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(ctx.projekti, julkaisu))
+        ).map((julkaisu) => projektiEntityDatabase.put(julkaisu))
       );
 
       const s3PathsForRecursiveDelete = [
@@ -66,14 +67,14 @@ class AineistoDeleterService {
       await Promise.all(
         (
           await manager.getJatkoPaatos1Vaihe().deleteAineistotIfEpaaktiivinen(ctx.projektiStatus)
-        ).map((julkaisu) => projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(ctx.projekti, julkaisu))
+        ).map((julkaisu) => projektiEntityDatabase.delete(julkaisu))
       );
     }
     if (ctx.projektiStatus === Status.EPAAKTIIVINEN_3) {
       await Promise.all(
         (
           await manager.getJatkoPaatos2Vaihe().deleteAineistotIfEpaaktiivinen(ctx.projektiStatus)
-        ).map((julkaisu) => projektiDatabase.jatkoPaatos2VaiheJulkaisut.update(ctx.projekti, julkaisu))
+        ).map((julkaisu) => projektiEntityDatabase.put(julkaisu))
       );
     }
   }

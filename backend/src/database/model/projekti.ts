@@ -15,6 +15,8 @@ import {
   NahtavillaoloVaiheJulkaisu,
   HyvaksymisPaatosVaihe,
   HyvaksymisPaatosVaiheJulkaisu,
+  JatkoPaatos1VaiheJulkaisu,
+  JatkoPaatos2VaiheJulkaisu,
   LausuntoPyynto,
   LausuntoPyynnonTaydennys,
 } from ".";
@@ -169,14 +171,24 @@ export type Hyvaksymispaatos = {
 
 const tallennettu: keyof DBProjekti = "tallennettu";
 const nahtavillaoloVaiheJulkaisut: keyof DBProjekti = "nahtavillaoloVaiheJulkaisut";
-export const DBPROJEKTI_OMITTED_FIELDS = [tallennettu, nahtavillaoloVaiheJulkaisut] as const;
+const hyvaksymisPaatosVaiheJulkaisut: keyof DBProjekti = "hyvaksymisPaatosVaiheJulkaisut";
+const jatkoPaatos1VaiheJulkaisut: keyof DBProjekti = "jatkoPaatos1VaiheJulkaisut";
+const jatkoPaatos2VaiheJulkaisut: keyof DBProjekti = "jatkoPaatos2VaiheJulkaisut";
+export const DBPROJEKTI_OMITTED_FIELDS = [
+  tallennettu,
+  nahtavillaoloVaiheJulkaisut,
+  hyvaksymisPaatosVaiheJulkaisut,
+  jatkoPaatos1VaiheJulkaisut,
+  jatkoPaatos2VaiheJulkaisut,
+] as const;
 export type DBProjektiOmittedField = (typeof DBPROJEKTI_OMITTED_FIELDS)[number];
 
 /** Data stored in a particular item in Projekti-<env> table */
 export type DBProjektiSlim = Omit<DBProjekti, DBProjektiOmittedField>;
+
 export type DBProjektiExtras = Pick<DBProjekti, DBProjektiOmittedField>;
 
-// Data combined by joining multiple tables
+// Data combined by joining data from multiple items from multiple tables
 export type DBProjekti = {
   oid: string;
   versio: number;
@@ -206,9 +218,9 @@ export type DBProjekti = {
   hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
   hyvaksymisPaatosVaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
   jatkoPaatos1Vaihe?: HyvaksymisPaatosVaihe | null;
-  jatkoPaatos1VaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
+  jatkoPaatos1VaiheJulkaisut?: JatkoPaatos1VaiheJulkaisu[] | null;
   jatkoPaatos2Vaihe?: HyvaksymisPaatosVaihe | null;
-  jatkoPaatos2VaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
+  jatkoPaatos2VaiheJulkaisut?: JatkoPaatos2VaiheJulkaisu[] | null;
   uusiaPalautteita?: number;
 
   kayttoOikeudet: DBVaylaUser[];

@@ -24,15 +24,22 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   DBVaylaUser,
-  HyvaksymisPaatosVaiheJulkaisu,
+  jatkopaatos1VaiheJulkaisuPrefix,
   Velho,
   VuorovaikutusKierros,
+  hyvaksymisPaatosVaiheJulkaisuPrefix,
+  jatkopaatos2VaiheJulkaisuPrefix,
+  PaatosVaiheJulkaisuTiedot,
+  HyvaksymisPaatosVaiheJulkaisu,
+  JatkoPaatos1VaiheJulkaisu,
+  JatkoPaatos2VaiheJulkaisu,
 } from "../../src/database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import pick from "lodash/pick";
 import { assertIsDefined } from "../../src/util/assertions";
 import { nyt } from "../../src/util/dateUtil";
+import merge from "lodash/merge";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -1747,7 +1754,7 @@ export class ProjektiFixture {
         },
       };
     };
-    const hyvaksymisPaatosVaiheJulkaisut = (polku: string) => {
+    const paatosVaiheJulkaisuTiedot = (polku: string): PaatosVaiheJulkaisuTiedot[] => {
       return [
         {
           aineistoNahtavilla: [
@@ -1817,12 +1824,12 @@ export class ProjektiFixture {
               },
             ],
           },
-          kielitiedot: saameProjekti.kielitiedot,
+          kielitiedot: saameProjekti.kielitiedot!,
           kuulutusPaiva: "2022-06-09",
           kuulutusVaihePaattyyPaiva: "2020-01-01T00:00:00+02:00",
           muokkaaja: "A000112",
           tila: KuulutusJulkaisuTila.HYVAKSYTTY,
-          velho: saameProjekti.velho,
+          velho: saameProjekti.velho!,
           yhteystiedot: [
             {
               etunimi: "A-tunnus1",
@@ -1869,7 +1876,7 @@ export class ProjektiFixture {
             yhteysHenkilot: [],
           },
         },
-      ] as HyvaksymisPaatosVaiheJulkaisu[];
+      ];
     };
     return {
       ...saameProjekti,
@@ -1879,11 +1886,27 @@ export class ProjektiFixture {
         toinenJatkopaatos: { paatoksenPvm: "2022-02-03", asianumero: "traficom-123", aktiivinen: true },
       },
       hyvaksymisPaatosVaihe: hyvaksymisPaatosVaihe("/hyvaksymispaatos/1"),
-      hyvaksymisPaatosVaiheJulkaisut: hyvaksymisPaatosVaiheJulkaisut("/hyvaksymispaatos/1"),
+      hyvaksymisPaatosVaiheJulkaisut: paatosVaiheJulkaisuTiedot("/hyvaksymispaatos/1").map<HyvaksymisPaatosVaiheJulkaisu>(
+        (julkaisuTiedot) =>
+          merge(julkaisuTiedot, {
+            projektiOid: saameProjekti.oid,
+            sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
+          })
+      ),
       jatkoPaatos1Vaihe: hyvaksymisPaatosVaihe("/jatkopaatos1/1"),
-      jatkoPaatos1VaiheJulkaisut: hyvaksymisPaatosVaiheJulkaisut("/jatkopaatos1/1"),
+      jatkoPaatos1VaiheJulkaisut: paatosVaiheJulkaisuTiedot("/jatkopaatos1/1").map<JatkoPaatos1VaiheJulkaisu>((julkaisuTiedot) =>
+        merge(julkaisuTiedot, {
+          projektiOid: saameProjekti.oid,
+          sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
+        })
+      ),
       jatkoPaatos2Vaihe: hyvaksymisPaatosVaihe("/jatkopaatos2/1"),
-      jatkoPaatos2VaiheJulkaisut: hyvaksymisPaatosVaiheJulkaisut("/jatkopaatos2/1"),
+      jatkoPaatos2VaiheJulkaisut: paatosVaiheJulkaisuTiedot("/jatkopaatos2/1").map<JatkoPaatos2VaiheJulkaisu>((julkaisuTiedot) =>
+        merge(julkaisuTiedot, {
+          projektiOid: saameProjekti.oid,
+          sortKey: `${jatkopaatos2VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
+        })
+      ),
     };
   }
 

@@ -22,17 +22,26 @@ import {
   DBProjekti,
   DBVaylaUser,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
   IlmoituksenVastaanottajat,
   Kielitiedot,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
+  PaatosVaiheJulkaisuTiedot,
   StandardiYhteystiedot,
   Velho,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   Yhteystieto,
 } from "../../src/database/model";
+import {
+  HyvaksymisPaatosVaiheJulkaisu,
+  hyvaksymisPaatosVaiheJulkaisuPrefix,
+  JatkoPaatos1VaiheJulkaisu,
+  jatkopaatos1VaiheJulkaisuPrefix,
+  JatkoPaatos2VaiheJulkaisu,
+  jatkopaatos2VaiheJulkaisuPrefix,
+} from "../../src/database/model/projektiDataItem";
+import merge from "lodash/merge";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -157,23 +166,38 @@ export class DBProjektiForSpecificVaiheFixture {
     switch (currentVaihe) {
       case Vaihe.JATKOPAATOS2:
         projekti.jatkoPaatos2Vaihe = this.hyvaksymisPaatosVaihe("/jatkopaatos2/1");
-        projekti.jatkoPaatos2VaiheJulkaisut = this.hyvaksymisPaatosVaiheJulkaisut(
+        projekti.jatkoPaatos2VaiheJulkaisut = this.paatosVaiheJulkaisuTiedot(
           haeVaiheenTila(currentVaihe, Vaihe.JATKOPAATOS2),
           "/jatkopaatos2/1"
+        )?.map<JatkoPaatos2VaiheJulkaisu>((julkaisuTiedot) =>
+          merge(julkaisuTiedot, {
+            projektiOid: this.PROJEKTI_OID,
+            sortKey: `${jatkopaatos2VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
+          })
         );
       // fall through
       case Vaihe.JATKOPAATOS:
         projekti.jatkoPaatos1Vaihe = this.hyvaksymisPaatosVaihe("/jatkopaatos1/1");
-        projekti.jatkoPaatos1VaiheJulkaisut = this.hyvaksymisPaatosVaiheJulkaisut(
+        projekti.jatkoPaatos1VaiheJulkaisut = this.paatosVaiheJulkaisuTiedot(
           haeVaiheenTila(currentVaihe, Vaihe.JATKOPAATOS),
           "/jatkopaatos1/1"
+        )?.map<JatkoPaatos1VaiheJulkaisu>((julkaisuTiedot) =>
+          merge(julkaisuTiedot, {
+            projektiOid: this.PROJEKTI_OID,
+            sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
+          })
         );
       // fall through
       case Vaihe.HYVAKSYMISPAATOS:
         projekti.hyvaksymisPaatosVaihe = this.hyvaksymisPaatosVaihe("/hyvaksymispaatos/1");
-        projekti.hyvaksymisPaatosVaiheJulkaisut = this.hyvaksymisPaatosVaiheJulkaisut(
+        projekti.hyvaksymisPaatosVaiheJulkaisut = this.paatosVaiheJulkaisuTiedot(
           haeVaiheenTila(currentVaihe, Vaihe.HYVAKSYMISPAATOS),
           "/hyvaksymispaatos/1"
+        )?.map<HyvaksymisPaatosVaiheJulkaisu>((julkaisuTiedot) =>
+          merge(julkaisuTiedot, {
+            projektiOid: this.PROJEKTI_OID,
+            sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
+          })
         );
       // fall through
       case Vaihe.NAHTAVILLAOLO:
@@ -473,11 +497,12 @@ export class DBProjektiForSpecificVaiheFixture {
     };
   }
 
-  private hyvaksymisPaatosVaiheJulkaisut(vaiheenTila: VaiheenTila, polku: string): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  private paatosVaiheJulkaisuTiedot(vaiheenTila: VaiheenTila, polku: string): PaatosVaiheJulkaisuTiedot[] | undefined {
     if (vaiheenTila === VaiheenTila.LUONNOS) {
       return undefined;
     }
 
+    const id = 1;
     return [
       {
         aineistoNahtavilla: [
@@ -516,7 +541,7 @@ export class DBProjektiForSpecificVaiheFixture {
           },
         },
         hyvaksymisPaiva: this.hyvaksymisPaiva(vaiheenTila),
-        id: 1,
+        id,
         ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
         kielitiedot: this.haeKielitiedot(),
         kuulutusPaiva: "2022-06-09",

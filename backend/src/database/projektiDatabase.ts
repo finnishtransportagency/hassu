@@ -6,7 +6,7 @@ import {
   DBProjektiExtras,
   DBProjektiSlim,
   Hyvaksymispaatos,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
@@ -15,6 +15,13 @@ import {
   SaveDBProjektiSlimWithoutLockingInput,
   SaveDBProjektiWithoutLockingInput,
   VuorovaikutusKierrosJulkaisu,
+  AnyProjektiDataItem,
+  HyvaksymisPaatosVaiheJulkaisu,
+  hyvaksymisPaatosVaiheJulkaisuPrefix,
+  JatkoPaatos1VaiheJulkaisu,
+  jatkopaatos1VaiheJulkaisuPrefix,
+  JatkoPaatos2VaiheJulkaisu,
+  jatkopaatos2VaiheJulkaisuPrefix,
 } from "./model";
 import { config } from "../config";
 import { migrateFromOldSchema } from "./projektiSchemaUpdate";
@@ -41,16 +48,7 @@ import merge from "lodash/merge";
 import cloneDeep from "lodash/cloneDeep";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
-
-const specialFields = ["oid", "versio", "tallennettu", "vuorovaikutukset", "nahtavillaoloVaiheJulkaisut"];
-const skipAutomaticUpdateFields = [
-  "aloitusKuulutusJulkaisut",
-  "hyvaksymisPaatosVaiheJulkaisut",
-  "julkaistuHyvaksymisEsitys",
-  "jatkoPaatos1VaiheJulkaisut",
-  "jatkoPaatos2VaiheJulkaisut",
-  "synkronoinnit",
-] as (keyof DBProjekti)[] as string[];
+import { projektiEntityDatabase } from "./KuulutusJulkaisuDatabase";
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
@@ -58,17 +56,10 @@ function createExpression(expression: string, properties: string[]) {
 
 type JulkaisuWithId = { id: number };
 
-type JulkaisutFieldName = keyof Pick<
-  DBProjekti,
-  | "aloitusKuulutusJulkaisut"
-  | "vuorovaikutusKierrosJulkaisut"
-  | "hyvaksymisPaatosVaiheJulkaisut"
-  | "jatkoPaatos1VaiheJulkaisut"
-  | "jatkoPaatos2VaiheJulkaisut"
->;
+type JulkaisutFieldName = keyof Pick<DBProjekti, "aloitusKuulutusJulkaisut" | "vuorovaikutusKierrosJulkaisut">;
 
 export class JulkaisuFunctions<
-  T extends AloitusKuulutusJulkaisu | VuorovaikutusKierrosJulkaisu | HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu
+  T extends AloitusKuulutusJulkaisu | VuorovaikutusKierrosJulkaisu | PaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu
 > {
   private julkaisutFieldName: JulkaisutFieldName;
   private description: string;
@@ -97,7 +88,7 @@ export class JulkaisuFunctions<
   }
 }
 
-type UpdateParams = {
+export type UpdateParams = {
   setExpression: string[];
   removeExpression: string[];
   attributeNames: Record<string, string>;
@@ -106,6 +97,15 @@ type UpdateParams = {
 };
 
 export class ProjektiDatabase {
+  protected updateDisabledAttributes = [
+    "oid",
+    "versio",
+    "aloitusKuulutusJulkaisut",
+    "vuorovaikutusKierrosJulkaisut",
+    "julkaistuHyvaksymisEsitys",
+    "synkronoinnit",
+  ];
+
   constructor(projektiTableName: string) {
     this.projektiTableName = projektiTableName;
   }
@@ -117,21 +117,6 @@ export class ProjektiDatabase {
     this,
     "vuorovaikutusKierrosJulkaisut",
     "VuorovaikutusKierrosJulkaisu"
-  );
-  hyvaksymisPaatosVaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
-    this,
-    "hyvaksymisPaatosVaiheJulkaisut",
-    "HyvaksymisPaatosVaiheJulkaisu"
-  );
-  jatkoPaatos1VaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
-    this,
-    "jatkoPaatos1VaiheJulkaisut",
-    "JatkoPaatos1VaiheJulkaisu"
-  );
-  jatkoPaatos2VaiheJulkaisut = new JulkaisuFunctions<HyvaksymisPaatosVaiheJulkaisu>(
-    this,
-    "jatkoPaatos2VaiheJulkaisut",
-    "JatkoPaatos2VaiheJulkaisu"
   );
 
   /**
@@ -198,7 +183,7 @@ export class ProjektiDatabase {
   async saveSlimProjektiWithoutLocking<T extends SaveDBProjektiSlimWithoutLockingInput>(
     dbProjekti: Exact<T, SaveDBProjektiSlimWithoutLockingInput>
   ): Promise<number> {
-    return await this.saveProjektiInternal(dbProjekti, false, true);
+    return await this.saveProjektiInternal(dbProjekti, true);
   }
 
   /**
@@ -207,11 +192,7 @@ export class ProjektiDatabase {
    * @param forceUpdateInTests Salli kaikkien kenttien päivittäminen. Sallittua käyttää vain testeissä.
    * @param bypassLocking Ohita projektin lukitusmekanismi. Voidaan käyttää päivityksissä, jotka eivät liity käytt
    */
-  protected async saveProjektiInternal(
-    dbProjekti: SaveDBProjektiWithoutLockingInput,
-    forceUpdateInTests = false,
-    bypassLocking = false
-  ): Promise<number> {
+  protected async saveProjektiInternal(dbProjekti: SaveDBProjektiWithoutLockingInput, bypassLocking = false): Promise<number> {
     if (log.isLevelEnabled("debug")) {
       log.debug("Updating projekti to Hassu", { projekti: dbProjekti });
     } else {
@@ -233,7 +214,7 @@ export class ProjektiDatabase {
     }
 
     dbProjekti.paivitetty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-    this.handleFieldsToSave(dbProjekti, updateParams, forceUpdateInTests);
+    this.handleFieldsToSave(dbProjekti, updateParams);
 
     const updateExpression =
       createExpression("SET", updateParams.setExpression) + " " + createExpression("REMOVE", updateParams.removeExpression);
@@ -266,12 +247,12 @@ export class ProjektiDatabase {
     }
   }
 
-  private handleFieldsToSave(dbProjekti: Partial<DBProjekti>, updateParams: UpdateParams, forceUpdateInTests: boolean) {
+  private handleFieldsToSave(dbProjekti: Partial<DBProjektiSlim>, updateParams: UpdateParams) {
     for (const property in dbProjekti) {
-      if (specialFields.includes(property) || (skipAutomaticUpdateFields.includes(property) && !forceUpdateInTests)) {
+      if (this.updateDisabledAttributes.includes(property)) {
         continue;
       }
-      const value = dbProjekti[property as keyof DBProjekti];
+      const value = dbProjekti[property as keyof DBProjektiSlim];
       if (value === undefined) {
         continue;
       }
@@ -304,6 +285,12 @@ export class ProjektiDatabase {
   async createProjekti(projekti: DBProjekti): Promise<PutCommandOutput> {
     const slimProjekti: DBProjektiSlim = omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS);
     await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut);
+    const entities = [
+      ...(projekti.hyvaksymisPaatosVaiheJulkaisut ?? []),
+      ...(projekti.jatkoPaatos1VaiheJulkaisut ?? []),
+      ...(projekti.jatkoPaatos2VaiheJulkaisut ?? []),
+    ];
+    await projektiEntityDatabase.putAll(entities);
     return await this.createSlimProjekti(slimProjekti);
   }
 
@@ -680,11 +667,46 @@ export class ProjektiDatabase {
 
 export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing");
 
+function isHyvaksymisPaatosJulkaisu(item: AnyProjektiDataItem): item is HyvaksymisPaatosVaiheJulkaisu {
+  return item.sortKey.startsWith(hyvaksymisPaatosVaiheJulkaisuPrefix);
+}
+
+function isJatkoPaatos1Julkaisu(item: AnyProjektiDataItem): item is JatkoPaatos1VaiheJulkaisu {
+  return item.sortKey.startsWith(jatkopaatos1VaiheJulkaisuPrefix);
+}
+
+function isJatkoPaatos2Julkaisu(item: AnyProjektiDataItem): item is JatkoPaatos2VaiheJulkaisu {
+  return item.sortKey.startsWith(jatkopaatos2VaiheJulkaisuPrefix);
+}
+
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
+  const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, true);
+
   const extras: DBProjektiExtras = {
     nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
     tallennettu: true,
   };
-  const dbProjektiExtended: DBProjekti = merge(slimProjekti, extras);
+
+  const dbProjektiExtras = entities.reduce((acc, item) => {
+    if (isHyvaksymisPaatosJulkaisu(item)) {
+      if (!acc.hyvaksymisPaatosVaiheJulkaisut) {
+        acc.hyvaksymisPaatosVaiheJulkaisut = [];
+      }
+      acc.hyvaksymisPaatosVaiheJulkaisut.push(item);
+    } else if (isJatkoPaatos1Julkaisu(item)) {
+      if (!acc.jatkoPaatos1VaiheJulkaisut) {
+        acc.jatkoPaatos1VaiheJulkaisut = [];
+      }
+      acc.jatkoPaatos1VaiheJulkaisut.push(item);
+    } else if (isJatkoPaatos2Julkaisu(item)) {
+      if (!acc.jatkoPaatos2VaiheJulkaisut) {
+        acc.jatkoPaatos2VaiheJulkaisut = [];
+      }
+      acc.jatkoPaatos2VaiheJulkaisut.push(item);
+    }
+    return acc;
+  }, extras);
+
+  const dbProjektiExtended: DBProjekti = merge(slimProjekti, dbProjektiExtras);
   return migrateFromOldSchema(cloneDeep(dbProjektiExtended));
 }
