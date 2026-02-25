@@ -5,8 +5,6 @@ import { projektiSearchService } from "./projektiSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
 
-import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { AttributeValue } from "@aws-sdk/client-dynamodb";
 import { getSQS } from "../aws/clients/getSQS";
 import { parameters } from "../aws/parameters";
 import { SQSEvent } from "aws-lambda/trigger/sqs";
@@ -15,24 +13,24 @@ import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
 import { chunkArray } from "../database/chunkArray";
 import { uuid } from "hassu-common/util/uuid";
 
-async function handleUpdate(record: DynamoDBRecord) {
-  if (record.dynamodb?.NewImage) {
-    const projekti = unmarshall(record.dynamodb.NewImage as unknown as Record<string, AttributeValue>) as DBProjekti;
-    log.info(`${record.eventName}`, { oid: projekti.oid });
+async function handleChange(record: DynamoDBRecord) {
+  const oid = record.dynamodb?.Keys?.oid.S ?? record.dynamodb?.Keys?.projektiOid.S;
+  const { eventName, eventSource, eventSourceARN } = record;
+  const { Keys } = record.dynamodb ?? {};
+  const logInfo = { eventName, eventSource, Keys, eventSourceARN };
 
-    await projektiSearchService.indexProjekti(projekti);
-  } else {
-    log.error("No DynamoDB record to update");
+  if (!oid) {
+    log.error("No oid found for record", logInfo);
+    return;
   }
-}
 
-async function handleRemove(record: DynamoDBRecord) {
-  if (record.dynamodb?.Keys?.oid.S) {
-    const oid: string = record.dynamodb.Keys.oid.S;
-    log.info("REMOVE", { oid });
+  const projekti = await projektiDatabase.loadProjektiByOid(oid);
+  if (!projekti) {
+    log.info("No projekti found, remove from index", logInfo);
     await projektiSearchService.removeProjekti(oid);
   } else {
-    log.error("No DynamoDB key to remove");
+    log.info(`Update projekti to index`, logInfo);
+    await projektiSearchService.indexProjekti(projekti);
   }
 }
 
@@ -116,14 +114,7 @@ function handleStreamEvent(event: DynamoDBStreamEvent) {
       setupLambdaMonitoringMetaData(subsegment);
       try {
         for (const record of event.Records) {
-          switch (record.eventName) {
-            case "INSERT":
-            case "MODIFY":
-              await handleUpdate(record);
-              break;
-            case "REMOVE":
-              await handleRemove(record);
-          }
+          await handleChange(record);
         }
       } catch (e: unknown) {
         log.error(e);
