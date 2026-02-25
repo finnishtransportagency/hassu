@@ -22,7 +22,7 @@ const migrate004: PagedMigrationRunPlan = async (options) => {
   const updateInput = projektis.map<UpdateCommandInput>((projekti) => ({
     TableName: options.tableName,
     Key: {
-      oid: { S: projekti.oid },
+      oid: projekti.oid,
     },
     UpdateExpression: "REMOVE #attr",
     ExpressionAttributeNames: {

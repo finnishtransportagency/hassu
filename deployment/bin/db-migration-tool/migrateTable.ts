@@ -72,8 +72,8 @@ export async function migrateTable(
               console.log(
                 `${dryRun ? "🧪 Would create" : "🆕 Creating"} ${putInput.length} item(s): ${JSON.stringify(
                   putInput.map((input) => {
-                    const { pk, sk, id, oid, projektiOid } = input.Item ?? {};
-                    return { pk, sk, id, oid, projektiOid };
+                    const { pk, sk, sortKey, id, oid, projektiOid } = input.Item ?? {};
+                    return { pk, sk, sortKey, id, oid, projektiOid };
                   })
                 )}`
               );
