@@ -20,7 +20,7 @@ import { log } from "../../logger";
 import { parameters } from "../../aws/parameters";
 import { isKieliSaame } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
-import { projektiEntityDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager<HyvaksymisPaatosVaiheJulkaisu> {
   constructor() {

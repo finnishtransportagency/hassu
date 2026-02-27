@@ -27,7 +27,7 @@ import { projektiPaallikkoJaVarahenkilotEmails } from "../../email/emailTemplate
 import { getProjektipaallikkoAndOrganisaatio } from "../../util/userUtil";
 import { translate } from "../../util/localization";
 import { fileService } from "../../files/fileService";
-import { projektiEntityDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   protected findLastApproved(projekti: DBProjekti) {

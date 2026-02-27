@@ -13,7 +13,7 @@ import { sendJatkoPaatos2KuulutusApprovalMailsAndAttachments } from "../email/em
 import { findJatkoPaatos2VaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
-import { projektiEntityDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 class JatkoPaatos2VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager<JatkoPaatos2VaiheJulkaisu> {
   constructor() {

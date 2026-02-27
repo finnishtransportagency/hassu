@@ -22,7 +22,7 @@ import {
   findNahtavillaoloWaitingForApproval,
 } from "../../projekti/projektiUtil";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
-import { projektiEntityDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 type UndefinedOrNullOr<T> = T | undefined | null;
 

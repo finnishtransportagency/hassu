@@ -14,7 +14,7 @@ import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/em
 import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
-import { projektiEntityDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager<JatkoPaatos1VaiheJulkaisu> {
   constructor() {

@@ -14,7 +14,7 @@ import {
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
-import { projektiEntityDatabase } from "../database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
 import { createJulkaisuSortKey } from "../database/julkaisuItemKeys";
 
 export const migraatioTilat = ["SUUNNITTELU", "NAHTAVILLAOLO", "HYVAKSYMISPAATOS", "JATKOPAATOS1", "JATKOPAATOS2"] as const;

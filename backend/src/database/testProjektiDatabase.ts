@@ -15,7 +15,7 @@ import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
 import { Exact } from "hassu-common/specialTypes";
 import omit from "lodash/omit";
-import { projektiEntityDatabase } from "./KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "./projektiEntityDatabase";
 
 /***
  * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternalia kutsutaan poikkeavilla parametreilla niin,

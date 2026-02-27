@@ -29,7 +29,7 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../../src/handler/tila/hyvaksy
 import { fakeEventInSqsQueue } from "../sqsEvents/sqsEventHandlerLambdaTests/util/util";
 import { SqsEventType } from "../../src/sqsEvents/sqsEvent";
 import Mail from "nodemailer/lib/mailer";
-import { projektiEntityDatabase } from "../../src/database/KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../src/database/projektiEntityDatabase";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;

@@ -48,7 +48,7 @@ import merge from "lodash/merge";
 import cloneDeep from "lodash/cloneDeep";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
-import { projektiEntityDatabase } from "./KuulutusJulkaisuDatabase";
+import { projektiEntityDatabase } from "./projektiEntityDatabase";
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
