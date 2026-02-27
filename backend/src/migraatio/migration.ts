@@ -15,7 +15,7 @@ import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../database/KuulutusJulkaisuDatabase";
-import { hyvaksymisPaatosVaiheJulkaisuPrefix, jatkopaatos1VaiheJulkaisuPrefix } from "../database/model/projektiDataItem";
+import { createJulkaisuSortKey } from "../database/julkaisuItemKeys";
 
 export const migraatioTilat = ["SUUNNITTELU", "NAHTAVILLAOLO", "HYVAKSYMISPAATOS", "JATKOPAATOS1", "JATKOPAATOS2"] as const;
 
@@ -114,7 +114,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     const id = 1;
     const hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
       projektiOid: projekti.oid,
-      sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${id}`,
+      sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id),
       kielitiedot,
       id,
       tila: KuulutusJulkaisuTila.MIGROITU,
@@ -143,7 +143,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     const id = 1;
     const jatkoPaatosVaiheJulkaisu: JatkoPaatos1VaiheJulkaisu = {
       projektiOid: projekti.oid,
-      sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${id}`,
+      sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", id),
       kielitiedot,
       id,
       tila: KuulutusJulkaisuTila.MIGROITU,

@@ -5,7 +5,7 @@ import { log } from "../logger";
 import { NotFoundError } from "hassu-common/error";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
-import { DBProjekti } from "../database/model";
+import { DBProjekti, PaatosVaiheJulkaisu } from "../database/model";
 import assert from "assert";
 import { pdfGeneratorClient } from "../asiakirja/lambda/pdfGeneratorClient";
 import { NahtavillaoloKuulutusAsiakirjaTyyppi } from "../asiakirja/asiakirjaTypes";
@@ -123,23 +123,26 @@ async function handleHyvaksymisPaatosKuulutus(
   const kasittelynTila = projektiWithChanges.kasittelynTila;
   assert(kasittelynTila, "Käsittelyn tila puuttuu");
   const muutostenAvaimet = Object.keys(muutokset);
-  let avainPaatokselle: keyof DBProjekti;
-  let avainJulkaisut: keyof DBProjekti;
+  let vaihe: PaatosVaiheJulkaisu;
   if (muutostenAvaimet.includes("hyvaksymisPaatosVaihe")) {
-    avainPaatokselle = "hyvaksymisPaatosVaihe";
-    avainJulkaisut = "hyvaksymisPaatosVaiheJulkaisut";
+    vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projektiWithChanges,
+      projektiWithChanges.hyvaksymisPaatosVaihe,
+      projektiWithChanges.hyvaksymisPaatosVaiheJulkaisut
+    );
   } else if (muutostenAvaimet.includes("jatkoPaatos1Vaihe")) {
-    avainPaatokselle = "jatkoPaatos1Vaihe";
-    avainJulkaisut = "jatkoPaatos1VaiheJulkaisut";
+    vaihe = await asiakirjaAdapter.adaptJatkoPaatos1VaiheJulkaisu(
+      projektiWithChanges,
+      projektiWithChanges.jatkoPaatos1Vaihe,
+      projektiWithChanges.jatkoPaatos1VaiheJulkaisut
+    );
   } else {
-    avainPaatokselle = "jatkoPaatos2Vaihe";
-    avainJulkaisut = "jatkoPaatos2VaiheJulkaisut";
+    vaihe = await asiakirjaAdapter.adaptJatkoPaatos2VaiheJulkaisu(
+      projektiWithChanges,
+      projektiWithChanges.jatkoPaatos2Vaihe,
+      projektiWithChanges.jatkoPaatos2VaiheJulkaisut
+    );
   }
-  const vaihe = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
-    projektiWithChanges,
-    projektiWithChanges[avainPaatokselle],
-    projektiWithChanges[avainJulkaisut]
-  );
   return pdfGeneratorClient.createHyvaksymisPaatosKuulutusPdf({
     oid: projekti.oid,
     lyhytOsoite: projekti.lyhytOsoite,

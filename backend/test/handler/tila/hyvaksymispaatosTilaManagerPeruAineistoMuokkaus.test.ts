@@ -3,7 +3,7 @@ import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import MockDate from "mockdate";
-import { DBProjekti, PaatosVaiheJulkaisu, hyvaksymisPaatosVaiheJulkaisuPrefix } from "../../../src/database/model";
+import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -11,6 +11,7 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../../../src/handler/tila/hyva
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 import { parameters } from "../../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../../src/database/julkaisuItemKeys";
 
 describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
   let projekti: DBProjekti;
@@ -79,7 +80,7 @@ describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
       aineistoMuokkaus: _aineistoMuokkaus,
       uudelleenKuulutus: _uudelleenKuulutus,
       ...rest
-    } = (projekti.hyvaksymisPaatosVaiheJulkaisut as PaatosVaiheJulkaisu[])[0];
+    } = (projekti.hyvaksymisPaatosVaiheJulkaisut as HyvaksymisPaatosVaiheJulkaisu[])[0];
     const uusiHyvaksymisPaatosVaihe = { ...rest, aineistoMuokkaus: null, uudelleenKuulutus: null };
     await hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti);
     expect(saveProjekti.getCall(0).args[0]).to.eql({
@@ -125,9 +126,9 @@ describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
     };
     projekti.hyvaksymisPaatosVaiheJulkaisut?.push({
       ...projekti.hyvaksymisPaatosVaihe,
-      id,
       projektiOid: projekti.oid,
-      sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${id}`,
+      sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id),
+      id,
       yhteystiedot: [],
       kuulutusYhteystiedot: projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot!,
       tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,

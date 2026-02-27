@@ -24,11 +24,8 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   DBVaylaUser,
-  jatkopaatos1VaiheJulkaisuPrefix,
   Velho,
   VuorovaikutusKierros,
-  hyvaksymisPaatosVaiheJulkaisuPrefix,
-  jatkopaatos2VaiheJulkaisuPrefix,
   PaatosVaiheJulkaisuTiedot,
   HyvaksymisPaatosVaiheJulkaisu,
   JatkoPaatos1VaiheJulkaisu,
@@ -39,7 +36,7 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import pick from "lodash/pick";
 import { assertIsDefined } from "../../src/util/assertions";
 import { nyt } from "../../src/util/dateUtil";
-import merge from "lodash/merge";
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -1887,26 +1884,33 @@ export class ProjektiFixture {
       },
       hyvaksymisPaatosVaihe: hyvaksymisPaatosVaihe("/hyvaksymispaatos/1"),
       hyvaksymisPaatosVaiheJulkaisut: paatosVaiheJulkaisuTiedot("/hyvaksymispaatos/1").map<HyvaksymisPaatosVaiheJulkaisu>(
-        (julkaisuTiedot) =>
-          merge(julkaisuTiedot, {
+        (julkaisuTiedot) => {
+          const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
+            ...julkaisuTiedot,
             projektiOid: saameProjekti.oid,
-            sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
-          })
+            sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", julkaisuTiedot.id),
+          };
+          return julkaisu;
+        }
       ),
       jatkoPaatos1Vaihe: hyvaksymisPaatosVaihe("/jatkopaatos1/1"),
-      jatkoPaatos1VaiheJulkaisut: paatosVaiheJulkaisuTiedot("/jatkopaatos1/1").map<JatkoPaatos1VaiheJulkaisu>((julkaisuTiedot) =>
-        merge(julkaisuTiedot, {
+      jatkoPaatos1VaiheJulkaisut: paatosVaiheJulkaisuTiedot("/jatkopaatos1/1").map<JatkoPaatos1VaiheJulkaisu>((julkaisuTiedot) => {
+        const julkaisu: JatkoPaatos1VaiheJulkaisu = {
+          ...julkaisuTiedot,
           projektiOid: saameProjekti.oid,
-          sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
-        })
-      ),
+          sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", julkaisuTiedot.id),
+        };
+        return julkaisu;
+      }),
       jatkoPaatos2Vaihe: hyvaksymisPaatosVaihe("/jatkopaatos2/1"),
-      jatkoPaatos2VaiheJulkaisut: paatosVaiheJulkaisuTiedot("/jatkopaatos2/1").map<JatkoPaatos2VaiheJulkaisu>((julkaisuTiedot) =>
-        merge(julkaisuTiedot, {
+      jatkoPaatos2VaiheJulkaisut: paatosVaiheJulkaisuTiedot("/jatkopaatos2/1").map<JatkoPaatos2VaiheJulkaisu>((julkaisuTiedot) => {
+        const julkaisu: JatkoPaatos2VaiheJulkaisu = {
+          ...julkaisuTiedot,
           projektiOid: saameProjekti.oid,
-          sortKey: `${jatkopaatos2VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
-        })
-      ),
+          sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS2#", julkaisuTiedot.id),
+        };
+        return julkaisu;
+      }),
     };
   }
 

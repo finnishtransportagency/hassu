@@ -35,13 +35,10 @@ import {
 } from "../../src/database/model";
 import {
   HyvaksymisPaatosVaiheJulkaisu,
-  hyvaksymisPaatosVaiheJulkaisuPrefix,
   JatkoPaatos1VaiheJulkaisu,
-  jatkopaatos1VaiheJulkaisuPrefix,
   JatkoPaatos2VaiheJulkaisu,
-  jatkopaatos2VaiheJulkaisuPrefix,
 } from "../../src/database/model/projektiDataItem";
-import merge from "lodash/merge";
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -169,36 +166,42 @@ export class DBProjektiForSpecificVaiheFixture {
         projekti.jatkoPaatos2VaiheJulkaisut = this.paatosVaiheJulkaisuTiedot(
           haeVaiheenTila(currentVaihe, Vaihe.JATKOPAATOS2),
           "/jatkopaatos2/1"
-        )?.map<JatkoPaatos2VaiheJulkaisu>((julkaisuTiedot) =>
-          merge(julkaisuTiedot, {
+        )?.map<JatkoPaatos2VaiheJulkaisu>((julkaisuTiedot) => {
+          const julkaisu: JatkoPaatos2VaiheJulkaisu = {
+            ...julkaisuTiedot,
             projektiOid: this.PROJEKTI_OID,
-            sortKey: `${jatkopaatos2VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
-          })
-        );
+            sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS2#", julkaisuTiedot.id),
+          };
+          return julkaisu;
+        });
       // fall through
       case Vaihe.JATKOPAATOS:
         projekti.jatkoPaatos1Vaihe = this.hyvaksymisPaatosVaihe("/jatkopaatos1/1");
         projekti.jatkoPaatos1VaiheJulkaisut = this.paatosVaiheJulkaisuTiedot(
           haeVaiheenTila(currentVaihe, Vaihe.JATKOPAATOS),
           "/jatkopaatos1/1"
-        )?.map<JatkoPaatos1VaiheJulkaisu>((julkaisuTiedot) =>
-          merge(julkaisuTiedot, {
+        )?.map<JatkoPaatos1VaiheJulkaisu>((julkaisuTiedot) => {
+          const julkaisu: JatkoPaatos1VaiheJulkaisu = {
+            ...julkaisuTiedot,
             projektiOid: this.PROJEKTI_OID,
-            sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
-          })
-        );
+            sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", julkaisuTiedot.id),
+          };
+          return julkaisu;
+        });
       // fall through
       case Vaihe.HYVAKSYMISPAATOS:
         projekti.hyvaksymisPaatosVaihe = this.hyvaksymisPaatosVaihe("/hyvaksymispaatos/1");
         projekti.hyvaksymisPaatosVaiheJulkaisut = this.paatosVaiheJulkaisuTiedot(
           haeVaiheenTila(currentVaihe, Vaihe.HYVAKSYMISPAATOS),
           "/hyvaksymispaatos/1"
-        )?.map<HyvaksymisPaatosVaiheJulkaisu>((julkaisuTiedot) =>
-          merge(julkaisuTiedot, {
+        )?.map<HyvaksymisPaatosVaiheJulkaisu>((julkaisuTiedot) => {
+          const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
+            ...julkaisuTiedot,
             projektiOid: this.PROJEKTI_OID,
-            sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${julkaisuTiedot.id}` as const,
-          })
-        );
+            sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", julkaisuTiedot.id),
+          };
+          return julkaisu;
+        });
       // fall through
       case Vaihe.NAHTAVILLAOLO:
         projekti.nahtavillaoloVaihe = this.haeNahtavillaolo();

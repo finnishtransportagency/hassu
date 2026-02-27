@@ -243,9 +243,9 @@ describe("Hyväksymisesitys-aineistolambdan apufunktio zipHyvEsAineistot", () =>
     // Aseta projekti DB:hen
     await insertProjektiToDB(projektiInDB);
     const projektiBefore = await getProjektiFromDB(oid);
-    expect(projektiBefore.hyvEsAineistoPaketti).to.eql(undefined);
+    expect(projektiBefore?.hyvEsAineistoPaketti).to.eql(undefined);
     await zipHyvEsAineistot(oid);
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.hyvEsAineistoPaketti).to.eql("hyvaksymisesitys/aineisto.zip");
+    expect(projektiAfter?.hyvEsAineistoPaketti).to.eql("hyvaksymisesitys/aineisto.zip");
   });
 });

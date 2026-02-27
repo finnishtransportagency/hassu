@@ -4,12 +4,10 @@ import { PagedMigrationRunPlan } from "../types";
 import {
   DBProjekti,
   HyvaksymisPaatosVaiheJulkaisu,
-  hyvaksymisPaatosVaiheJulkaisuPrefix,
   JatkoPaatos1VaiheJulkaisu,
-  jatkopaatos1VaiheJulkaisuPrefix,
   JatkoPaatos2VaiheJulkaisu,
-  jatkopaatos2VaiheJulkaisuPrefix,
 } from "../../../../backend/src/database/model";
+import { createJulkaisuSortKey } from "../../../../backend/src/database/julkaisuItemKeys";
 
 const migrate005: PagedMigrationRunPlan = async (options) => {
   const page = await ddb.send(
@@ -37,8 +35,8 @@ const migrate005: PagedMigrationRunPlan = async (options) => {
         ?.filter((julkaisu) => !!julkaisu)
         ?.map<HyvaksymisPaatosVaiheJulkaisu>((value) => ({
           ...value,
-          sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${value.id}`,
           projektiOid: projekti.oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", value.id),
         })) ?? []
   );
 
@@ -48,8 +46,8 @@ const migrate005: PagedMigrationRunPlan = async (options) => {
         ?.filter((julkaisu) => !!julkaisu)
         ?.map<JatkoPaatos1VaiheJulkaisu>((value) => ({
           ...value,
-          sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${value.id}`,
           projektiOid: projekti.oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", value.id),
         })) ?? []
   );
 
@@ -59,8 +57,8 @@ const migrate005: PagedMigrationRunPlan = async (options) => {
         ?.filter((julkaisu) => !!julkaisu)
         ?.map<JatkoPaatos2VaiheJulkaisu>((value) => ({
           ...value,
-          sortKey: `${jatkopaatos2VaiheJulkaisuPrefix}${value.id}`,
           projektiOid: projekti.oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS2#", value.id),
         })) ?? []
   );
 

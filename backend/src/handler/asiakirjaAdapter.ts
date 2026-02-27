@@ -13,6 +13,8 @@ import {
   HyvaksymisPaatosVaiheJulkaisu,
   JatkoPaatos2VaiheJulkaisu,
   JatkoPaatos1VaiheJulkaisu,
+  PaatosVaiheJulkaisuTiedot,
+  PaatosVaiheJulkaisu,
 } from "../database/model";
 import cloneDeep from "lodash/cloneDeep";
 import { VuorovaikutusKierrosTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
@@ -25,11 +27,7 @@ import { assertIsDefined } from "../util/assertions";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../util/isProjektiAsianhallintaIntegrationEnabled";
 import { uuid } from "hassu-common/util/uuid";
 import omit from "lodash/omit";
-import {
-  hyvaksymisPaatosVaiheJulkaisuPrefix,
-  jatkopaatos1VaiheJulkaisuPrefix,
-  jatkopaatos2VaiheJulkaisuPrefix,
-} from "../database/model/projektiDataItem";
+import { createJulkaisuSortKey } from "../database/julkaisuItemKeys";
 
 function createNextAloitusKuulutusJulkaisuID(dbProjekti: DBProjekti) {
   if (!dbProjekti.aloitusKuulutusJulkaisut) {
@@ -188,39 +186,51 @@ export class AsiakirjaAdapter {
     throw new Error("NahtavillaoloVaihe puuttuu");
   }
 
+  private async adaptPaatosVaiheJulkaisuTiedot(
+    dbProjekti: DBProjekti,
+    luonnos: HyvaksymisPaatosVaihe,
+    julkaisut: PaatosVaiheJulkaisu[] | null | undefined
+  ): Promise<PaatosVaiheJulkaisuTiedot> {
+    assertIsDefined(dbProjekti.kielitiedot);
+
+    const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, id, ...includedFields } = luonnos;
+
+    const julkaisuTiedot: PaatosVaiheJulkaisuTiedot = {
+      ...includedFields,
+      id,
+      velho: adaptVelho(dbProjekti),
+      kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
+      yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
+      kielitiedot: cloneDeep(dbProjekti.kielitiedot),
+      projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
+    };
+    if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
+      julkaisuTiedot.asianhallintaEventId = uuid.v4();
+    }
+    if (luonnos.aineistoMuokkaus) {
+      // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
+      // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
+      const aiempiJulkaisu = findJulkaisuWithTila(julkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
+      if (aiempiJulkaisu) {
+        julkaisuTiedot.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
+      }
+    }
+    return julkaisuTiedot;
+  }
+
   async adaptHyvaksymisPaatosVaiheJulkaisu(
     dbProjekti: DBProjekti,
     hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
     hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
   ): Promise<HyvaksymisPaatosVaiheJulkaisu> {
-    if (hyvaksymisPaatosVaihe) {
-      assertIsDefined(dbProjekti.kielitiedot);
-      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, id, ...includedFields } = hyvaksymisPaatosVaihe;
-      const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
-        ...includedFields,
-        id,
-        projektiOid: dbProjekti.oid,
-        sortKey: `${hyvaksymisPaatosVaiheJulkaisuPrefix}${id}`,
-        velho: adaptVelho(dbProjekti),
-        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
-        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
-        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
-      };
-      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
-        julkaisu.asianhallintaEventId = uuid.v4();
-      }
-      if (hyvaksymisPaatosVaihe.aineistoMuokkaus) {
-        // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
-        // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
-        const aiempiJulkaisu = findJulkaisuWithTila(hyvaksymisPaatosVaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-        if (aiempiJulkaisu) {
-          julkaisu.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
-        }
-      }
-      return julkaisu;
-    }
-    throw new Error("HyvaksymisPaatosVaihe puuttuu");
+    assertIsDefined(hyvaksymisPaatosVaihe, "HyvaksymisPaatosVaihe puuttuu");
+    const julkaisuTiedot = await this.adaptPaatosVaiheJulkaisuTiedot(dbProjekti, hyvaksymisPaatosVaihe, hyvaksymisPaatosVaiheJulkaisut);
+    const julkaisu: HyvaksymisPaatosVaiheJulkaisu = {
+      ...julkaisuTiedot,
+      projektiOid: dbProjekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", julkaisuTiedot.id),
+    };
+    return julkaisu;
   }
 
   async adaptJatkoPaatos1VaiheJulkaisu(
@@ -228,69 +238,29 @@ export class AsiakirjaAdapter {
     jatkoPaatos1Vaihe: HyvaksymisPaatosVaihe | null | undefined,
     jatkoPaatos1VaiheJulkaisut: JatkoPaatos1VaiheJulkaisu[] | null | undefined
   ): Promise<JatkoPaatos1VaiheJulkaisu> {
-    if (jatkoPaatos1Vaihe) {
-      assertIsDefined(dbProjekti.kielitiedot);
-      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, id, ...includedFields } = jatkoPaatos1Vaihe;
-      const julkaisu: JatkoPaatos1VaiheJulkaisu = {
-        ...includedFields,
-        id,
-        projektiOid: dbProjekti.oid,
-        sortKey: `${jatkopaatos1VaiheJulkaisuPrefix}${id}`,
-        velho: adaptVelho(dbProjekti),
-        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
-        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
-        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
-      };
-      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
-        julkaisu.asianhallintaEventId = uuid.v4();
-      }
-      if (jatkoPaatos1Vaihe.aineistoMuokkaus) {
-        // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
-        // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
-        const aiempiJulkaisu = findJulkaisuWithTila(jatkoPaatos1VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-        if (aiempiJulkaisu) {
-          julkaisu.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
-        }
-      }
-      return julkaisu;
-    }
-    throw new Error("HyvaksymisPaatosVaihe puuttuu");
+    assertIsDefined(jatkoPaatos1Vaihe, "HyvaksymisPaatosVaihe puuttuu");
+    const julkaisuTiedot = await this.adaptPaatosVaiheJulkaisuTiedot(dbProjekti, jatkoPaatos1Vaihe, jatkoPaatos1VaiheJulkaisut);
+    const julkaisu: JatkoPaatos1VaiheJulkaisu = {
+      ...julkaisuTiedot,
+      projektiOid: dbProjekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", julkaisuTiedot.id),
+    };
+    return julkaisu;
   }
 
   async adaptJatkoPaatos2VaiheJulkaisu(
     dbProjekti: DBProjekti,
-    jatkopaatos2Vaihe: HyvaksymisPaatosVaihe | null | undefined,
+    jatkoPaatos2Vaihe: HyvaksymisPaatosVaihe | null | undefined,
     jatkoPaatos2VaiheJulkaisut: JatkoPaatos2VaiheJulkaisu[] | null | undefined
   ): Promise<JatkoPaatos2VaiheJulkaisu> {
-    if (jatkopaatos2Vaihe) {
-      assertIsDefined(dbProjekti.kielitiedot);
-      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, id, ...includedFields } = jatkopaatos2Vaihe;
-      const julkaisu: JatkoPaatos2VaiheJulkaisu = {
-        ...includedFields,
-        id,
-        projektiOid: dbProjekti.oid,
-        sortKey: `${jatkopaatos2VaiheJulkaisuPrefix}${id}`,
-        velho: adaptVelho(dbProjekti),
-        kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
-        yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa
-        kielitiedot: cloneDeep(dbProjekti.kielitiedot),
-        projektinJakautuminen: cloneDeep(dbProjekti.projektinJakautuminen),
-      };
-      if (await isProjektiAsianhallintaIntegrationEnabled(dbProjekti)) {
-        julkaisu.asianhallintaEventId = uuid.v4();
-      }
-      if (jatkopaatos2Vaihe.aineistoMuokkaus) {
-        // Säilytä aiemman julkaisun vastaanottajatiedot mikäli kyseessä on ollut aineistomuokkaus
-        // Sähköpostia ei lähetetä ilmoituksen vastaanottajille aineistomuokkauksen yhteydessä
-        const aiempiJulkaisu = findJulkaisuWithTila(jatkoPaatos2VaiheJulkaisut, KuulutusJulkaisuTila.HYVAKSYTTY);
-        if (aiempiJulkaisu) {
-          julkaisu.ilmoituksenVastaanottajat = aiempiJulkaisu.ilmoituksenVastaanottajat;
-        }
-      }
-      return julkaisu;
-    }
-    throw new Error("HyvaksymisPaatosVaihe puuttuu");
+    assertIsDefined(jatkoPaatos2Vaihe, "HyvaksymisPaatosVaihe puuttuu");
+    const julkaisuTiedot = await this.adaptPaatosVaiheJulkaisuTiedot(dbProjekti, jatkoPaatos2Vaihe, jatkoPaatos2VaiheJulkaisut);
+    const julkaisu: JatkoPaatos2VaiheJulkaisu = {
+      ...julkaisuTiedot,
+      projektiOid: dbProjekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS2#", julkaisuTiedot.id),
+    };
+    return julkaisu;
   }
 }
 
