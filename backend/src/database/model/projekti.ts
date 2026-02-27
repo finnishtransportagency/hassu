@@ -1,14 +1,10 @@
-import { ELY, Elinvoimakeskus, KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
+import { ELY, Elinvoimakeskus, KayttajaTyyppi, ProjektiTyyppi, Status } from "hassu-common/graphql/apiModel";
 import {
-  IlmoituksenVastaanottajat,
   Kielitiedot,
   LadattuTiedosto,
   LocalizedMap,
   SaameLocalizedMap,
-  StandardiYhteystiedot,
-  UudelleenKuulutus,
   Velho,
-  Yhteystieto,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   NahtavillaoloVaihe,
@@ -19,6 +15,8 @@ import {
   JatkoPaatos2VaiheJulkaisu,
   LausuntoPyynto,
   LausuntoPyynnonTaydennys,
+  AloitusKuulutus,
+  AloitusKuulutusJulkaisu,
 } from ".";
 import { suunnitelmanTilat } from "hassu-common/generated/kasittelynTila";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
@@ -39,53 +37,12 @@ export type DBVaylaUser = {
   evkOrganisaatio?: Elinvoimakeskus;
 };
 
-export type AloitusKuulutus = {
-  id: number;
-  kuulutusPaiva?: string | null;
-  siirtyySuunnitteluVaiheeseen?: string | null;
-  hankkeenKuvaus?: LocalizedMap<string>;
-  kuulutusYhteystiedot?: StandardiYhteystiedot;
-  aloituskuulutusSaamePDFt?: KuulutusSaamePDFt | null;
-  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  palautusSyy?: string | null;
-  uudelleenKuulutus?: UudelleenKuulutus | null;
-};
-
-export type AloitusKuulutusPDF = {
-  aloituskuulutusPDFPath: string;
-  aloituskuulutusIlmoitusPDFPath: string;
-};
-
 export type KuulutusSaamePDFt = SaameLocalizedMap<KuulutusSaamePDF>;
 
 export type KuulutusSaamePDF = {
   kuulutusPDF?: LadattuTiedosto | null;
   kuulutusIlmoitusPDF?: LadattuTiedosto | null;
   kirjeTiedotettavillePDF?: LadattuTiedosto | null;
-};
-
-export type AloitusKuulutusJulkaisu = {
-  id: number;
-  kuulutusPaiva?: string | null;
-  siirtyySuunnitteluVaiheeseen?: string | null;
-  hankkeenKuvaus?: LocalizedMap<string>;
-  yhteystiedot: Yhteystieto[];
-  kuulutusYhteystiedot: StandardiYhteystiedot;
-  velho: Velho;
-  suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null;
-  kielitiedot?: Kielitiedot | null;
-  aloituskuulutusPDFt?: LocalizedMap<AloitusKuulutusPDF>;
-  aloituskuulutusSaamePDFt?: KuulutusSaamePDFt | null;
-  lahetekirje?: LadattuTiedosto | null;
-  tila?: KuulutusJulkaisuTila | null;
-  muokkaaja?: string | null;
-  hyvaksyja?: string | null;
-  hyvaksymisPaiva?: string | null;
-  ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
-  uudelleenKuulutus?: UudelleenKuulutus | null;
-  asianhallintaEventId?: string | null;
-  kopioituProjektista?: string | null;
-  projektinJakautuminen?: ProjektinJakautuminen;
 };
 
 export type SuunnitteluSopimus = {
