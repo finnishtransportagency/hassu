@@ -219,65 +219,64 @@ export class HassuAccountStack extends Stack {
 
   private async configureNextJSImageECR(config: Config) {
     const repositoryName = Config.nextjsImageRepositoryName;
-    const lifecycleRules: LifecycleRule [] = Config.isProdAccount()
+    const lifecycleRules: LifecycleRule[] = Config.isProdAccount()
       ? [
-        {
-          rulePriority: 1,
-          description: "Keep two latest released prod images",
-          tagPatternList: ["*-prod"],
-          maxImageCount: 2,
-          tagStatus: TagStatus.TAGGED,
-        },
-        {
-          rulePriority: 2,
-          description: "Keep latest training candidate image",
-          tagPatternList: ["*-training*"],
-          maxImageCount: 1,
-          tagStatus: TagStatus.TAGGED,
-        },
-        {
-          rulePriority: 3,
-          description: "Keep latest test candidate image",
-          tagPatternList: ["*-test*"],
-          maxImageCount: 1,
-          tagStatus: TagStatus.TAGGED,
-        },
-        {
-          rulePriority: 4,
-          description: "Remove all the other images after 1 day",
-          maxImageAge: Duration.days(1),
-          tagStatus: TagStatus.ANY,
-        },
-      ]
-    : [
-        {
-          rulePriority: 1,
-          description: "Keep two latest training candidate image",
-          tagPatternList: ["*-training*"],
-          maxImageCount: 2,
-          tagStatus: TagStatus.TAGGED,
-        },
-        {
-          rulePriority: 2,
-          description: "Keep two latest test candidate image",
-          tagPatternList: ["*-test*"],
-          maxImageCount: 2,
-          tagStatus: TagStatus.TAGGED,
-        },
-        // image 
-        {
-          rulePriority: 3,
-          description: "Keep two latest commit sha (dev) images",
-          maxImageCount: 2,
-          tagStatus: TagStatus.TAGGED,
-        },
-        {
-          rulePriority: 4,
-          description: "Remove all the other images after 1 day",
-          maxImageAge: Duration.days(1),
-          tagStatus: TagStatus.ANY,
-        },
-      ]
+          {
+            rulePriority: 1,
+            description: "Keep two latest released prod images",
+            tagPatternList: ["*-prod"],
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 2,
+            description: "Keep latest training candidate image",
+            tagPatternList: ["*-training*"],
+            maxImageCount: 1,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 3,
+            description: "Keep latest test candidate image",
+            tagPatternList: ["*-test*"],
+            maxImageCount: 1,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 4,
+            description: "Remove all the other images after 1 day",
+            maxImageAge: Duration.days(1),
+            tagStatus: TagStatus.ANY,
+          },
+        ]
+      : [
+          {
+            rulePriority: 1,
+            description: "Keep two latest training candidate image",
+            tagPatternList: ["*-training*"],
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 2,
+            description: "Keep two latest test candidate image",
+            tagPatternList: ["*-test*"],
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 3,
+            description: "Keep two latest commit sha (dev) images",
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 4,
+            description: "Remove all the other images after 1 day",
+            maxImageAge: Duration.days(1),
+            tagStatus: TagStatus.ANY,
+          },
+        ];
     new aws_ecr.Repository(this, "NextJSECRRepo", {
       repositoryName,
       lifecycleRules,
