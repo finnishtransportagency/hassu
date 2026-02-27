@@ -895,8 +895,12 @@ export class HassuFrontendCoreStack extends Stack {
       minHealthyPercent: 50,
       maxHealthyPercent: 200,
       healthCheckGracePeriod: Duration.seconds(180),
+      // Circuit breaker detects failed deployments and stops them without automatic rollback.
+      // On failure, the old task keeps serving traffic (guaranteed by minHealthyPercent: 50)
+      // and the deployment is marked failed explicitly. Redeploy the previous working version
+      // through the pipeline manually - this ensures only pipeline-controlled images run in prod.
       circuitBreaker: {
-        rollback: true,
+        rollback: false,
       },
       securityGroups: [securityGroup],
     });
