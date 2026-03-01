@@ -132,7 +132,7 @@ describe("HaeHyvaksymisEsityksenTiedot", () => {
     expect(omit(tiedot.asianhallinta, "__typename")).to.eql({
       aktivoitavissa: true,
       inaktiivinen: false,
-      linkkiAsianhallintaan: "ashabaseurl/group/asianhallinta/asianhallinta/-/case/123/view",
+      linkkiAsianhallintaan: "ashabaseurl/group/asianhallinta2/asianhallinta#/123/-/actions",
     });
   });
 
