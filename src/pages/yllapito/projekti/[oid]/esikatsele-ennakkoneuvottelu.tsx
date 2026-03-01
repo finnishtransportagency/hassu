@@ -170,7 +170,14 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
       </Section>
 
       <Section>
-        <H2>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H2>
+        <H2>Hyväksymisesityksen aineisto</H2>
+        <Section noDivider>
+          <ButtonLink disabled={true}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
+        </Section>
+        <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (
           <ul style={{ listStyle: "none" }}>
             {hyvaksymisEsitys?.map((tiedosto, index) => (
@@ -190,9 +197,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
         ) : (
           <div>Ei aineistoja</div>
         )}
-      </Section>
-      <Section>
-        <H2>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H2>
+        <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={kategoriat}
           aineistot={suunnitelma?.map((a) => {
@@ -207,7 +212,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
         />
       </Section>
       <Section>
-        <H2>Vuorovaikutus</H2>
+        <H3>Vuorovaikutus</H3>
         <HassuAccordion
           items={[
             {
@@ -295,7 +300,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
           items={[
             {
               id: "3",
-              title: <H2 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H2>,
+              title: <H3 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H3>,
               content: muutAineistot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
@@ -312,7 +317,7 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
         />
       </Section>
       <Section noDivider>
-        <H2>{`Liittyvän suunnitelman aineisto (${linkitetynProjektinAineisto?.length ?? 0})`}</H2>
+        <H3>{`Liittyvän suunnitelman aineisto (${linkitetynProjektinAineisto?.length ?? 0})`}</H3>
         <SuunnittelmaLadattavatTiedostotAccordion
           kategoriat={kategoriat}
           aineistot={linkitetynProjektinAineisto?.map((a) => {
@@ -325,12 +330,6 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
           })}
           esikatselu={true}
         />
-      </Section>
-      <Section noDivider>
-        <ButtonLink disabled={true}>
-          Lataa kaikki
-          <DownloadIcon className="ml-2" />
-        </ButtonLink>
       </Section>
     </>
   );
