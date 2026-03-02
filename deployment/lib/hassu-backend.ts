@@ -33,7 +33,9 @@ import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_20_X;
-const insightsVersion = LambdaInsightsVersion.VERSION_1_0_333_0;
+const insightsVersion = LambdaInsightsVersion.fromInsightVersionArn(
+  "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
+);
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
 
