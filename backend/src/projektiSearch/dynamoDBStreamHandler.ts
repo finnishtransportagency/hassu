@@ -14,7 +14,7 @@ import { chunkArray } from "../database/chunkArray";
 import { uuid } from "hassu-common/util/uuid";
 
 async function handleChange(record: DynamoDBRecord) {
-  const oid = record.dynamodb?.Keys?.oid.S ?? record.dynamodb?.Keys?.projektiOid.S;
+  const oid = record.dynamodb?.Keys?.oid?.S ?? record.dynamodb?.Keys?.projektiOid?.S;
   const { eventName, eventSource, eventSourceARN } = record;
   const { Keys } = record.dynamodb ?? {};
   const logInfo = { eventName, eventSource, Keys, eventSourceARN };

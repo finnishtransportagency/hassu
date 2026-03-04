@@ -42,7 +42,7 @@ export function isAllowedToMoveBackToSuunnitteluvaihe(projekti: DBProjekti | Pro
     // Nähtävilläolossa on aineistomuokkaus käynnissä. Se on hylättävä tai vietävä hyväksyttäväksi.
     return false;
   }
-  if ((projekti as DBProjekti).hyvaksymisPaatosVaiheJulkaisut || (projekti as Projekti).hyvaksymisPaatosVaiheJulkaisu) {
+  if ((projekti as DBProjekti).hyvaksymisPaatosVaiheJulkaisut?.length || (projekti as Projekti).hyvaksymisPaatosVaiheJulkaisu) {
     // Ollaan edetty jo hyväksymispäätösvaiheeseen. Ei ole mahdollista palata enää suunnitteluun.
     return false;
   }
