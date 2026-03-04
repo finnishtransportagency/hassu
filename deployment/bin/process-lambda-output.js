@@ -16,7 +16,6 @@ process.stdin.on("end", () => {
 
   if (!data) {
     console.error("No input received");
-    process.exit(1);
   }
 
   try {
