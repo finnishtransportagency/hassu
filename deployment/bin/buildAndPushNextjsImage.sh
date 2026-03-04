@@ -54,7 +54,7 @@ fi
 echo "$BUILD_MESSAGE"
 
 CODE_ARTIFACT_DOMAIN="hassu-domain"
-export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $CODE_ARTIFACT_DOMAIN --domain-owner $ACCOUNT_ID --query authorizationToken --output text --duration-seconds 900)
+CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $CODE_ARTIFACT_DOMAIN --domain-owner $ACCOUNT_ID --query authorizationToken --output text --duration-seconds 900)
 NPM_SCOPE="@hassu"
 NPM_REGISTRY="hassu-private-npm"
 
