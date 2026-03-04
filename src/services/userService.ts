@@ -1,14 +1,16 @@
+import { getPublicEnv } from "src/util/env";
+
 function getAppDomainUri() {
   if (process.env.NODE_ENV === "development") {
     return "http://localhost:3000/";
   } else {
-    return "https://" + process.env.NEXT_PUBLIC_FRONTEND_DOMAIN_NAME + "/";
+    return "https://" + getPublicEnv("FRONTEND_DOMAIN_NAME") + "/";
   }
 }
 
 export function getSuomiFiAuthenticationURL(state?: string): string | undefined {
-  const domain = process.env.NEXT_PUBLIC_KEYCLOAK_DOMAIN;
-  const clientId = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID;
+  const domain = getPublicEnv("KEYCLOAK_DOMAIN");
+  const clientId = getPublicEnv("KEYCLOAK_CLIENT_ID");
   if (domain && clientId) {
     const url = new URL(domain);
     url.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/auth";

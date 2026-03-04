@@ -83,6 +83,7 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       asianhallintaEventId,
       projektinJakautuminen: _jakautuminen,
       kopioituProjektista,
+      projektiOid: _projektiOid,
       ...fieldsToCopyAsIs
     } = julkaisu;
 

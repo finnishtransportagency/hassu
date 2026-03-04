@@ -21,7 +21,7 @@ describe("DateMoverTool", () => {
     assert(projekti.nahtavillaoloVaiheJulkaisut?.[0]);
     const tiedostonimi = "1400-72L-6708_Yleiskartta_kmv209-216.pdf";
     projekti.nahtavillaoloVaiheJulkaisut[0].aineistoNahtavilla = [
-      { dokumenttiOid: "testi.oid", nimi: tiedostonimi, tila: AineistoTila.VALMIS },
+      { dokumenttiOid: "testi.oid", nimi: tiedostonimi, tila: AineistoTila.VALMIS, uuid: "08393ada-041a-4a0f-9bc3-2d02d7fbc24b" },
     ];
     siirraProjektinAikaa(projekti, 365);
     expect(projekti.nahtavillaoloVaiheJulkaisut[0].aineistoNahtavilla[0].nimi).to.eq(tiedostonimi);

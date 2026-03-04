@@ -1,5 +1,5 @@
 import pLimit from "p-limit";
-import { ScanCommandInput, ScanCommandOutput, UpdateCommandInput, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommandInput, ScanCommandOutput, UpdateCommandInput, UpdateCommand, PutCommandInput, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "./ddb";
 import { SchemaMetaTable } from "./SchemaMetaTable";
 import { TableConfig, MigrateAllTablesOptions, DryRunMigrateAllTablesOptions, PagedMigrationRunPlanResponse } from "./types";
@@ -43,27 +43,49 @@ export async function migrateTable(
             });
 
             const lastEvaluatedKey: ScanCommandOutput["LastEvaluatedKey"] = page.lastEvaluatedKey;
-            const updateInput: UpdateCommandInput[] = page.updateInput;
+            const updateInput: UpdateCommandInput[] = page.updateInput ?? [];
+            const putInput: PutCommandInput[] = page.putInput ?? [];
 
-            if (!updateInput.length) {
+            const writesThisPage = updateInput.length + putInput.length;
+
+            if (writesThisPage === 0) {
               console.log(
-                `💤 Page returned 0 update inputs - no updates needed${
+                `💤 Page returned 0 write operations${
                   lastEvaluatedKey ? `. Continuing to the next page as lastEvaluatedKey=${JSON.stringify(lastEvaluatedKey)}` : ""
                 }`
               );
               startKey = lastEvaluatedKey;
               continue;
             }
-            updatedItemsTotal += updateInput.length;
 
-            console.log(
-              `${dryRun ? "🧪 Would update" : "✏️ Updating"} ${updateInput.length} item(s): ${JSON.stringify(
-                updateInput.map((input) => input.Key)
-              )}`
-            );
-            if (!dryRun) {
-              await Promise.all(updateInput.map((item) => limit(() => ddb.send(new UpdateCommand(item)))));
+            updatedItemsTotal += writesThisPage;
+
+            if (updateInput.length) {
+              console.log(
+                `${dryRun ? "🧪 Would update" : "✏️ Updating"} ${updateInput.length} item(s): ${JSON.stringify(
+                  updateInput.map((input) => input.Key)
+                )}`
+              );
             }
+
+            if (putInput.length) {
+              console.log(
+                `${dryRun ? "🧪 Would create" : "🆕 Creating"} ${putInput.length} item(s): ${JSON.stringify(
+                  putInput.map((input) => {
+                    const { pk, sk, id, oid, projektiOid } = input.Item ?? {};
+                    return { pk, sk, id, oid, projektiOid };
+                  })
+                )}`
+              );
+            }
+
+            if (!dryRun) {
+              await Promise.all([
+                ...updateInput.map((item) => limit(() => ddb.send(new UpdateCommand(item)))),
+                ...putInput.map((item) => limit(() => ddb.send(new PutCommand(item)))),
+              ]);
+            }
+
             startKey = lastEvaluatedKey;
           } while (startKey);
 
@@ -72,9 +94,11 @@ export async function migrateTable(
             await schemaMetaTable.setSchemaVersion(cfg.name, m.versionId);
           }
           if (updatedItemsTotal === 0) {
-            console.log(`💤 Migration ${cfg.name} v${m.versionId} had nothing to update`);
+            console.log(`💤 Migration ${cfg.name} v${m.versionId} had nothing to write`);
           } else {
-            console.log(`✅ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} processed ${updatedItemsTotal} item(s)`);
+            console.log(
+              `✅ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} processed ${updatedItemsTotal} write operation(s)`
+            );
           }
         } catch (err) {
           console.error(`❌ ${dryRun ? "Dry run" : "Migration"} ${cfg.name} v${m.versionId} FAILED`, err);

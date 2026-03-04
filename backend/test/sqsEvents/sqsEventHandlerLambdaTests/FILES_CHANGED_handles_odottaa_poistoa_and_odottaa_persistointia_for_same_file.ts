@@ -26,6 +26,7 @@ export const filesChangedHandlesOdottaaPoistoaAndOdottaaTuontiaForTheSameFile = 
             jarjestys: 0,
             tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
             tiedosto: "/e6169b47-2035-40e5-9343-46fec03f7e95/Screenshot 2023-09-29 at 17.59.03.png",
+            uuid: "220a901e-f3ab-47f2-a926-a6f1019f6004",
           },
           {
             nimi: "Screenshot 2023-09-29 at 17.59.03.png",
@@ -33,6 +34,7 @@ export const filesChangedHandlesOdottaaPoistoaAndOdottaaTuontiaForTheSameFile = 
             tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
             tiedosto: "/lausuntopyynto/ee626b8b-e719-4d47-b161-06f7455614b4/Screenshot 2023-09-29 at 17.59.03.png",
             tuotu: "2020-01-01T01:01",
+            uuid: "7aabc270-5eda-4c37-8c03-fde7f2eb44a0",
           },
         ],
       },
@@ -62,6 +64,7 @@ export const filesChangedHandlesOdottaaPoistoaAndOdottaaTuontiaForTheSameFile = 
           tila: API.LadattuTiedostoTila.VALMIS,
           tiedosto: "/lausuntopyynto/ee626b8b-e719-4d47-b161-06f7455614b4/Screenshot 2023-09-29 at 17.59.03.png",
           tuotu: "***unittest***",
+          uuid: "220a901e-f3ab-47f2-a926-a6f1019f6004",
         },
       ],
     },

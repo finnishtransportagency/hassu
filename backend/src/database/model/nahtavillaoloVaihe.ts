@@ -32,6 +32,7 @@ export type NahtavillaoloVaihe = {
 };
 
 export type NahtavillaoloVaiheJulkaisu = {
+  projektiOid: string;
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   aineistopaketti?: string | null;

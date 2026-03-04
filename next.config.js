@@ -37,51 +37,12 @@ const lyhytOsoiteRedirects = [
   },
 ];
 
-function setupLocalDevelopmentMode(config) {
-  let envTest = dotenv.parse(fs.readFileSync("./.env.test").toString());
-  const { VELHO_AUTH_URL, VELHO_API_URL, VELHO_USERNAME, VELHO_PASSWORD } = envTest;
-
-  process.env.AWS_SDK_LOAD_CONFIG = "true";
-  let env = {
-    AWS_REGION: "eu-west-1",
-    "x-hassudev-uid": process.env.HASSUDEV_UID,
-    "x-hassudev-roles": process.env.HASSUDEV_ROLES,
-    REACT_APP_API_URL: "http://localhost:3000/graphql",
-    APPSYNC_URL: process.env.REACT_APP_API_URL,
-    SEARCH_DOMAIN: process.env.SEARCH_DOMAIN,
-    NEXT_PUBLIC_VERSION: process.env.VERSION ?? "",
-    NEXT_PUBLIC_AJANSIIRTO_SALLITTU: "true",
-    NEXT_PUBLIC_FRONTEND_DOMAIN_NAME: process.env.FRONTEND_DOMAIN_NAME,
-    NEXT_PUBLIC_KEYCLOAK_DOMAIN: process.env.KEYCLOAK_DOMAIN,
-    NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: process.env.KEYCLOAK_CLIENT_ID,
-    NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL ?? envTest.NEXT_PUBLIC_VAYLA_EXTRANET_URL,
-    NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL,
-    NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: process.env.NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT,
-    NEXT_PUBLIC_EVK_ACTIVATION_DATE: process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE,
-    INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
-    NEXT_PUBLIC_ENVIRONMENT: BaseConfig.env,
-    ENVIRONMENT: BaseConfig.env,
-    TABLE_PROJEKTI: BaseConfig.projektiTableName,
-    TABLE_LYHYTOSOITE: BaseConfig.lyhytOsoiteTableName,
-    INTERNAL_BUCKET_NAME: BaseConfig.internalBucketName,
-    EVENT_SQS_URL: process.env.EVENT_SQS_URL,
-    HYVAKSYMISESITYS_SQS_URL: process.env.HYVAKSYMISESITYS_SQS_URL,
-    // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
-    ASIANHALLINTA_SQS_URL: process.env.ASIANHALLINTA_SQS_URL,
-    PUBLIC_BUCKET_NAME: process.env.PUBLIC_BUCKET_NAME,
-    YLLAPITO_BUCKET_NAME: process.env.YLLAPITO_BUCKET_NAME,
-    VELHO_AUTH_URL,
-    VELHO_API_URL,
-    VELHO_USERNAME,
-    VELHO_PASSWORD,
-  };
-
+function setupLocalDevelopmentMode(config, env) {
   /**
    * @type {import("next").NextConfig}
    */
   config = {
     ...config,
-    env,
     async rewrites() {
       return [
         {
@@ -150,7 +111,6 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config);
   } else {
-    // env variables starting with NEXT_PUBLIC_ are bundled -> placeholder values at build time
     // actual env variables are provided runtime
     config.redirects = async () => {
       return lyhytOsoiteRedirects;

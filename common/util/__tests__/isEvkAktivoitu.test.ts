@@ -12,7 +12,7 @@ const DAY = "day";
 
 describe("isEvkAktivoitu", () => {
   afterEach(() => {
-    delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
+    delete process.env.EVK_ACTIVATION_DATE; // Reset after each test
   });
 
   it("current date is before EVK activation date", () => {
@@ -21,7 +21,7 @@ describe("isEvkAktivoitu", () => {
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.false;
   });
@@ -32,14 +32,14 @@ describe("isEvkAktivoitu", () => {
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.true;
   });
 
   it("environment variable is undefined string", () => {
     const EVK_ACTIVATION_DATE = "";
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.false;
   });
@@ -50,7 +50,7 @@ describe("isEvkAktivoitu", () => {
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.true;
   });
@@ -63,7 +63,7 @@ describe("isEvkAktivoitu", () => {
     };
     // simulate how it appears in process.env
     const doubleEscapedEnvVariable = JSON.stringify(JSON.stringify(EVK_ACTIVATION_DATE));
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
+    process.env.EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.true;
   });
@@ -76,7 +76,7 @@ describe("isEvkAktivoitu", () => {
     };
     // simulate how it appears in process.env
     const doubleEscapedEnvVariable = JSON.stringify(JSON.stringify(EVK_ACTIVATION_DATE));
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
+    process.env.EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.true;
   });
@@ -89,7 +89,7 @@ describe("isEvkAktivoitu", () => {
     };
     // simulate how it appears in process.env
     const doubleEscapedEnvVariable = JSON.stringify(JSON.stringify(EVK_ACTIVATION_DATE));
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
+    process.env.EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
     const isActive = isEvkAktivoitu();
     expect(isActive).to.be.true;
   });
@@ -97,7 +97,7 @@ describe("isEvkAktivoitu", () => {
 
 describe("isEvkAktivoituAt", () => {
   afterEach(() => {
-    delete process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE; // Reset after each test
+    delete process.env.EVK_ACTIVATION_DATE; // Reset after each test
   });
 
   it("given date is before EVK activation date", () => {
@@ -106,7 +106,7 @@ describe("isEvkAktivoituAt", () => {
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.false;
   });
@@ -117,7 +117,7 @@ describe("isEvkAktivoituAt", () => {
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.true;
   });
@@ -125,7 +125,7 @@ describe("isEvkAktivoituAt", () => {
   it("environment variable is undefined string", () => {
     const EVK_ACTIVATION_DATE = "";
     const DATE_TO_COMPARE = today().format(ONLY_DATE_FORMAT);
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.false;
   });
@@ -136,7 +136,7 @@ describe("isEvkAktivoituAt", () => {
     const EVK_ACTIVATION_DATE = {
       startDate,
     };
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
+    process.env.EVK_ACTIVATION_DATE = JSON.stringify(EVK_ACTIVATION_DATE);
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.true;
   });
@@ -149,7 +149,7 @@ describe("isEvkAktivoituAt", () => {
     };
     // simulate how it appears in process.env
     const doubleEscapedEnvVariable = JSON.stringify(JSON.stringify(EVK_ACTIVATION_DATE));
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
+    process.env.EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.true;
   });
@@ -162,7 +162,7 @@ describe("isEvkAktivoituAt", () => {
     };
     // simulate how it appears in process.env
     const doubleEscapedEnvVariable = JSON.stringify(JSON.stringify(EVK_ACTIVATION_DATE));
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
+    process.env.EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.true;
   });
@@ -175,7 +175,7 @@ describe("isEvkAktivoituAt", () => {
     };
     // simulate how it appears in process.env
     const doubleEscapedEnvVariable = JSON.stringify(JSON.stringify(EVK_ACTIVATION_DATE));
-    process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
+    process.env.EVK_ACTIVATION_DATE = doubleEscapedEnvVariable.slice(1, -1); // removes outer quotes
     const isActive = isEvkAktivoituAt(DATE_TO_COMPARE);
     expect(isActive).to.be.true;
   });
