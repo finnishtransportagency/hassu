@@ -787,7 +787,7 @@ export class HassuFrontendCoreStack extends Stack {
     try {
       const buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
       if (buffer) {
-        version = buffer.toString("utf8");
+        version = buffer.toString("utf8").trim();
       }
     } catch (e) {
       // Ignore
