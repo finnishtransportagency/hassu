@@ -3,7 +3,6 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   DBPROJEKTI_OMITTED_FIELDS,
-  DBProjektiExtras,
   DBProjektiSlim,
   Hyvaksymispaatos,
   PaatosVaiheJulkaisu,
@@ -44,8 +43,6 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { Status } from "hassu-common/graphql/apiModel";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
-import merge from "lodash/merge";
-import cloneDeep from "lodash/cloneDeep";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
@@ -682,12 +679,9 @@ function isJatkoPaatos2Julkaisu(item: AnyProjektiDataItem): item is JatkoPaatos2
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
   const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, true);
 
-  const extras: DBProjektiExtras = {
-    nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
-    tallennettu: true,
-  };
-
-  const dbProjektiExtras = entities.reduce((acc, item) => {
+  const paatosJulkaisut = entities.reduce<
+    Pick<DBProjekti, "hyvaksymisPaatosVaiheJulkaisut" | "jatkoPaatos1VaiheJulkaisut" | "jatkoPaatos2VaiheJulkaisut">
+  >((acc, item) => {
     if (isHyvaksymisPaatosJulkaisu(item)) {
       if (!acc.hyvaksymisPaatosVaiheJulkaisut) {
         acc.hyvaksymisPaatosVaiheJulkaisut = [];
@@ -705,8 +699,15 @@ async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRe
       acc.jatkoPaatos2VaiheJulkaisut.push(item);
     }
     return acc;
-  }, extras);
+  }, {});
 
-  const dbProjektiExtended: DBProjekti = merge(slimProjekti, dbProjektiExtras);
-  return migrateFromOldSchema(cloneDeep(dbProjektiExtended));
+  const dbProjektiExtended: DBProjekti = {
+    ...slimProjekti,
+    nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
+    hyvaksymisPaatosVaiheJulkaisut: paatosJulkaisut.hyvaksymisPaatosVaiheJulkaisut,
+    jatkoPaatos1VaiheJulkaisut: paatosJulkaisut.jatkoPaatos1VaiheJulkaisut,
+    jatkoPaatos2VaiheJulkaisut: paatosJulkaisut.jatkoPaatos2VaiheJulkaisut,
+    tallennettu: true,
+  };
+  return migrateFromOldSchema(dbProjektiExtended);
 }
