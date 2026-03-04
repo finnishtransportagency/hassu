@@ -94,14 +94,7 @@ export type UpdateParams = {
 };
 
 export class ProjektiDatabase {
-  protected updateDisabledAttributes = [
-    "oid",
-    "versio",
-    "aloitusKuulutusJulkaisut",
-    "vuorovaikutusKierrosJulkaisut",
-    "julkaistuHyvaksymisEsitys",
-    "synkronoinnit",
-  ];
+  protected updateDisabledAttributes = ["oid", "versio", "aloitusKuulutusJulkaisut", "julkaistuHyvaksymisEsitys", "synkronoinnit"];
 
   constructor(projektiTableName: string) {
     this.projektiTableName = projektiTableName;
