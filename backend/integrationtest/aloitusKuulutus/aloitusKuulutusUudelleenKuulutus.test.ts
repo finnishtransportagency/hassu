@@ -14,6 +14,7 @@ import { testProjektiDatabase } from "../../src/database/testProjektiDatabase";
 import { uudelleenkuulutaAloitusKuulutus } from "./uudelleenkuulutaAloitusKuulutus";
 import { expect } from "chai";
 import { tilaHandler } from "../../src/handler/tila/tilaHandler";
+import { projektiEntityDatabase } from "../../src/database/projektiEntityDatabase";
 
 describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
   const userFixture = new UserFixture(userService);
@@ -127,7 +128,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     await eventSqsClientMock.processQueue();
 
     uudelleenKuulutusJulkaisu.kuulutusPaiva = "2000-01-01"; // Simuloidaan ajan kulumista asettamalla kuulutuspäivä varmasti menneisyyteen, jotta julkaisu on julkinen
-    await testProjektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);
+    await projektiEntityDatabase.put(uudelleenKuulutusJulkaisu);
     await schedulerMock.verifyAndRunSchedule();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 

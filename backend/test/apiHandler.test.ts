@@ -38,6 +38,7 @@ import chai from "chai";
 import { assertIsDefined } from "../src/util/assertions";
 import { asetaAika } from "../integrationtest/api/testUtil/tests";
 import { preventArrayMergingCustomizer } from "../src/util/preventArrayMergingCustomizer";
+import { projektiEntityDatabase } from "../src/database/projektiEntityDatabase";
 
 const { expect } = chai;
 
@@ -53,9 +54,8 @@ describe("apiHandler", () => {
   let loadProjektiByOidStub: sinon.SinonStub;
   let getKayttajasStub: sinon.SinonStub;
   let loadVelhoProjektiByOidStub: sinon.SinonStub;
-  let insertAloitusKuulutusJulkaisuStub: sinon.SinonStub;
-  let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
-  let deleteAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let putProjektiEntityStub: sinon.SinonStub;
+  let deleteProjektiEntityStub: sinon.SinonStub;
   let generateAndSetLyhytOsoiteStub: sinon.SinonStub;
   let persistFileToProjektiStub: sinon.SinonStub;
   let sendEmailStub: sinon.SinonStub;
@@ -71,9 +71,8 @@ describe("apiHandler", () => {
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-    insertAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "insert");
-    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
-    deleteAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "delete");
+    putProjektiEntityStub = sinon.stub(projektiEntityDatabase, "put");
+    deleteProjektiEntityStub = sinon.stub(projektiEntityDatabase, "delete");
     generateAndSetLyhytOsoiteStub = sinon.stub(lyhytOsoiteDatabase, "generateAndSetLyhytOsoite");
     loadVelhoProjektiByOidStub = velhoStub.loadVelhoProjektiByOidStub;
     persistFileToProjektiStub = sinon.stub(fileService, "persistFileToProjekti");
@@ -200,13 +199,13 @@ describe("apiHandler", () => {
         mockedDatabaseProjekti = dbProjekti;
       });
 
-      insertAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
+      putProjektiEntityStub.callsFake((julkaisu: AloitusKuulutusJulkaisu) => {
         if (mockedDatabaseProjekti) {
           // Just a simple mock to support only one julkaisu
           mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [julkaisu];
         }
       });
-      updateAloitusKuulutusJulkaisuStub.callsFake((_oid: string, julkaisu: AloitusKuulutusJulkaisu) => {
+      putProjektiEntityStub.callsFake((julkaisu: AloitusKuulutusJulkaisu) => {
         if (mockedDatabaseProjekti) {
           // Just a simple mock to support only one julkaisu
           mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [
@@ -236,7 +235,7 @@ describe("apiHandler", () => {
           ];
         }
       });
-      deleteAloitusKuulutusJulkaisuStub.callsFake(() => {
+      deleteProjektiEntityStub.callsFake(() => {
         if (mockedDatabaseProjekti) {
           // Just a simple mock to support only one julkaisu
           mockedDatabaseProjekti.aloitusKuulutusJulkaisut = [];

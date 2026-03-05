@@ -37,6 +37,7 @@ import { findAloitusKuulutusWaitingForApproval } from "../../projekti/projektiUt
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -152,8 +153,8 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     await sendAloitusKuulutusApprovalMailsAndAttachments(oid);
   }
 
-  async updateJulkaisu(projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
-    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisu);
+  async updateJulkaisu(_projekti: DBProjekti, julkaisu: AloitusKuulutusJulkaisu): Promise<void> {
+    await projektiEntityDatabase.put(julkaisu);
   }
 
   async validateUudelleenkuulutus(
@@ -238,7 +239,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
-    await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
+    await projektiEntityDatabase.put(aloitusKuulutusJulkaisu);
     await approvalEmailSender.sendEmails(projekti, tilasiirtymaTyyppi);
   }
 
@@ -254,7 +255,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
       await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.aloituskuulutusPDFt);
     }
     await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
-    await projektiDatabase.aloitusKuulutusJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);
+    await projektiEntityDatabase.delete(julkaisuWaitingForApproval);
   }
 
   private async generatePDFs(projekti: DBProjekti, julkaisuWaitingForApproval: AloitusKuulutusJulkaisu) {

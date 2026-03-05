@@ -9,7 +9,7 @@ import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaol
 import MockDate from "mockdate";
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../../src/database/projektiEntityDatabase";
 import { parameters } from "../../../src/aws/parameters";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { fileService } from "../../../src/files/fileService";
@@ -51,9 +51,9 @@ describe("nahtavillaoloTilaManager", () => {
 
   it("should set old julkaisu tila to PERUUTETTU when making uudelleenkuuluta, if old julkaisu's kuulutusPaiva has not passed", async function () {
     MockDate.set("2020-01-01");
-    const nahtavillaoloJulkaisuPutStub = sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "put");
+    const putJulkaisuStub = sinon.stub(projektiEntityDatabase, "put");
     await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(0).args[0]).to.eql({
+    expect(putJulkaisuStub.getCall(0).args[0]).to.eql({
       ...(projekti.nahtavillaoloVaiheJulkaisut as NahtavillaoloVaiheJulkaisu[])[0],
       tila: KuulutusJulkaisuTila.PERUUTETTU,
     });
@@ -61,7 +61,7 @@ describe("nahtavillaoloTilaManager", () => {
 
   it("should not set old julkaisu tila to PERUUTETTU when making uudelleenkuuluta, if old julkaisu's kuulutusPaiva has passed", async function () {
     MockDate.set("2023-01-01");
-    const nahtavillaoloJulkaisuPutStub = sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "put");
+    const nahtavillaoloJulkaisuPutStub = sinon.stub(projektiEntityDatabase, "put");
     await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
     expect(nahtavillaoloJulkaisuPutStub.callCount).to.eql(0);
   });
@@ -78,7 +78,7 @@ describe("nahtavillaoloTilaManager", () => {
     sinon.stub(emailClient, "sendEmail");
     const loadProjektiStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     loadProjektiStub.resolves(projekti);
-    const nahtavillaoloJulkaisuPutStub = sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "put");
+    const nahtavillaoloJulkaisuPutStub = sinon.stub(projektiEntityDatabase, "put");
     // Uudelleenkuuluta
     await nahtavillaoloTilaManager.uudelleenkuuluta(projekti);
     projekti = { ...projekti, ...saveProjektiStub.getCall(0).args[0] };
@@ -87,15 +87,15 @@ describe("nahtavillaoloTilaManager", () => {
     // Send for approval
     await nahtavillaoloTilaManager.sendForApproval(projekti, UserFixture.hassuAdmin, TilasiirtymaTyyppi.NAHTAVILLAOLO);
     expect(nahtavillaoloJulkaisuPutStub.callCount).to.eql(1);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(0).args[0].id).to.eql(2);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(0).args[0].projektiOid).to.eql(projekti.oid);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(0).args[0].tila).to.eql(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(0).args[0].uudelleenKuulutus).to.eql(
-      saveProjektiStub.getCall(0).args[0]?.nahtavillaoloVaihe?.uudelleenKuulutus
-    );
+    const julkaisuToPut1 = nahtavillaoloJulkaisuPutStub.getCall(0).args[0] as NahtavillaoloVaiheJulkaisu;
+    expect(julkaisuToPut1.sortKey).to.eql("JULKAISU#NAHTAVILLAOLO#002");
+    expect(julkaisuToPut1.id).to.eql(2);
+    expect(julkaisuToPut1.projektiOid).to.eql(projekti.oid);
+    expect(julkaisuToPut1.tila).to.eql(KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
+    expect(julkaisuToPut1.uudelleenKuulutus).to.eql(saveProjektiStub.getCall(0).args[0]?.nahtavillaoloVaihe?.uudelleenKuulutus);
     projekti = {
       ...projekti,
-      nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisut?.concat(nahtavillaoloJulkaisuPutStub.getCall(0).args[0]),
+      nahtavillaoloVaiheJulkaisut: projekti.nahtavillaoloVaiheJulkaisut?.concat(julkaisuToPut1),
     };
 
     sinon.stub(nahtavillaoloTilaManager, "cleanupKuulutusLuonnosAfterApproval");
@@ -108,12 +108,16 @@ describe("nahtavillaoloTilaManager", () => {
     // so it is published right away.
     // Therefore, we should set the old julkaisu status to PERUUTETTU.
     expect(nahtavillaoloJulkaisuPutStub.callCount).to.eql(3);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(1).args[0].id).to.eql(1); //The first julkaisu has id 1
-    expect(nahtavillaoloJulkaisuPutStub.getCall(1).args[0].projektiOid).to.eql(projekti.oid);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(1).args[0].tila).to.eql(KuulutusJulkaisuTila.PERUUTETTU);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(2).args[0].id).to.eql(2); //The second julkaisu should have id 2
-    expect(nahtavillaoloJulkaisuPutStub.getCall(2).args[0].tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
-    expect(nahtavillaoloJulkaisuPutStub.getCall(2).args[0].kuulutusPaiva).to.eql(originalKuulutusPaiva);
+    const julkaisuToPut2 = nahtavillaoloJulkaisuPutStub.getCall(1).args[0] as NahtavillaoloVaiheJulkaisu;
+    expect(julkaisuToPut2.sortKey).to.eql("JULKAISU#NAHTAVILLAOLO#001");
+    expect(julkaisuToPut2.id).to.eql(1); //The first julkaisu has id 1
+    expect(julkaisuToPut2.projektiOid).to.eql(projekti.oid);
+    expect(julkaisuToPut2.tila).to.eql(KuulutusJulkaisuTila.PERUUTETTU);
+    const julkaisuToPut3 = nahtavillaoloJulkaisuPutStub.getCall(2).args[0] as NahtavillaoloVaiheJulkaisu;
+    expect(julkaisuToPut3.sortKey).to.eql("JULKAISU#NAHTAVILLAOLO#002");
+    expect(julkaisuToPut3.id).to.eql(2); //The second julkaisu should have id 2
+    expect(julkaisuToPut3.tila).to.eql(KuulutusJulkaisuTila.HYVAKSYTTY);
+    expect(julkaisuToPut3.kuulutusPaiva).to.eql(originalKuulutusPaiva);
   });
 
   it("should remove saamePDFs from old kuulutus when making uudelleenkuulutus", async function () {

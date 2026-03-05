@@ -6,7 +6,6 @@ import {
   DBProjektiExtras,
   DBProjektiSlim,
   Hyvaksymispaatos,
-  PaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
@@ -22,6 +21,8 @@ import {
   jatkopaatos1VaiheJulkaisuPrefix,
   JatkoPaatos2VaiheJulkaisu,
   jatkopaatos2VaiheJulkaisuPrefix,
+  aloitusVaiheJulkaisuPrefix,
+  nahtavillaoloVaiheJulkaisuPrefix,
 } from "./model";
 import { config } from "../config";
 import { migrateFromOldSchema } from "./projektiSchemaUpdate";
@@ -56,11 +57,9 @@ function createExpression(expression: string, properties: string[]) {
 
 type JulkaisuWithId = { id: number };
 
-type JulkaisutFieldName = keyof Pick<DBProjekti, "aloitusKuulutusJulkaisut" | "vuorovaikutusKierrosJulkaisut">;
+type JulkaisutFieldName = keyof Pick<DBProjekti, "vuorovaikutusKierrosJulkaisut">;
 
-export class JulkaisuFunctions<
-  T extends AloitusKuulutusJulkaisu | VuorovaikutusKierrosJulkaisu | PaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu
-> {
+export class JulkaisuFunctions<T extends VuorovaikutusKierrosJulkaisu> {
   private julkaisutFieldName: JulkaisutFieldName;
   private description: string;
   private projektiDatabase: ProjektiDatabase;
@@ -112,7 +111,6 @@ export class ProjektiDatabase {
 
   projektiTableName: string;
 
-  aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
   vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(
     this,
     "vuorovaikutusKierrosJulkaisut",
@@ -665,7 +663,15 @@ export class ProjektiDatabase {
   }
 }
 
-export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing");
+export const projektiDatabase = new ProjektiDatabase(config.projektiDataTableName ?? "missing");
+
+function isAloitusJulkaisu(item: AnyProjektiDataItem): item is AloitusKuulutusJulkaisu {
+  return item.sortKey.startsWith(aloitusVaiheJulkaisuPrefix);
+}
+
+function isNahtavillaoloJulkaisu(item: AnyProjektiDataItem): item is NahtavillaoloVaiheJulkaisu {
+  return item.sortKey.startsWith(nahtavillaoloVaiheJulkaisuPrefix);
+}
 
 function isHyvaksymisPaatosJulkaisu(item: AnyProjektiDataItem): item is HyvaksymisPaatosVaiheJulkaisu {
   return item.sortKey.startsWith(hyvaksymisPaatosVaiheJulkaisuPrefix);
@@ -680,15 +686,24 @@ function isJatkoPaatos2Julkaisu(item: AnyProjektiDataItem): item is JatkoPaatos2
 }
 
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
-  const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, true);
+  const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead);
 
   const extras: DBProjektiExtras = {
-    nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
     tallennettu: true,
   };
 
   const dbProjektiExtras = entities.reduce((acc, item) => {
-    if (isHyvaksymisPaatosJulkaisu(item)) {
+    if (isAloitusJulkaisu(item)) {
+      if (!acc.aloitusKuulutusJulkaisut) {
+        acc.aloitusKuulutusJulkaisut = [];
+      }
+      acc.aloitusKuulutusJulkaisut.push(item);
+    } else if (isNahtavillaoloJulkaisu(item)) {
+      if (!acc.nahtavillaoloVaiheJulkaisut) {
+        acc.nahtavillaoloVaiheJulkaisut = [];
+      }
+      acc.nahtavillaoloVaiheJulkaisut.push(item);
+    } else if (isHyvaksymisPaatosJulkaisu(item)) {
       if (!acc.hyvaksymisPaatosVaiheJulkaisut) {
         acc.hyvaksymisPaatosVaiheJulkaisut = [];
       }
@@ -707,6 +722,6 @@ async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRe
     return acc;
   }, extras);
 
-  const dbProjektiExtended: DBProjekti = merge(slimProjekti, dbProjektiExtras);
+  const dbProjektiExtended: DBProjekti = (slimProjekti, dbProjektiExtras);
   return migrateFromOldSchema(cloneDeep(dbProjektiExtended));
 }

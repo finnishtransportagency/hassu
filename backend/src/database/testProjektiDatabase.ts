@@ -12,7 +12,6 @@ import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
 import { Exact } from "hassu-common/specialTypes";
 import omit from "lodash/omit";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
@@ -45,9 +44,9 @@ export class TestProjektiDatabase extends ProjektiDatabase {
 
   /** Poistaa kaikki ja asettaa sitten inputissa tulleet taulut */
   private async updateOtherTables(dbProjekti: SaveDBProjektiInput | SaveDBProjektiWithoutLockingInput) {
-    const nahtavillaoloJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(dbProjekti.oid, true);
-    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(nahtavillaoloJulkaisut);
-    await nahtavillaoloVaiheJulkaisuDatabase.putAll(dbProjekti.nahtavillaoloVaiheJulkaisut);
+    const nahtavillaoloJulkaisut = await projektiEntityDatabase.getAllForProjekti(dbProjekti.oid, true);
+    await projektiEntityDatabase.deleteAll(nahtavillaoloJulkaisut);
+    await projektiEntityDatabase.putAll(dbProjekti.nahtavillaoloVaiheJulkaisut);
 
     const entitiesToDelete = await projektiEntityDatabase.getAllForProjekti(dbProjekti.oid, true);
     await projektiEntityDatabase.deleteAll(entitiesToDelete);
@@ -108,8 +107,8 @@ export class TestProjektiDatabase extends ProjektiDatabase {
       }
 
       try {
-        const items = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-        await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(items);
+        const items = await projektiEntityDatabase.getAllForProjekti(oid, true);
+        await projektiEntityDatabase.deleteAll(items);
       } catch (e) {
         log.error(e);
       }

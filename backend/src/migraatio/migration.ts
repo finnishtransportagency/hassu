@@ -13,7 +13,6 @@ import {
 } from "../database/model";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
 import { createJulkaisuSortKey } from "../database/julkaisuItemKeys";
 
@@ -79,7 +78,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
+    await projektiEntityDatabase.put(aloitusKuulutusJulkaisu);
   }
 
   const versio = projekti.versio;
@@ -104,7 +103,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await nahtavillaoloVaiheJulkaisuDatabase.put(nahtavillaoloVaiheJulkaisu);
+    await projektiEntityDatabase.put(nahtavillaoloVaiheJulkaisu);
   }
 
   const kasittelynTila: KasittelynTila = {

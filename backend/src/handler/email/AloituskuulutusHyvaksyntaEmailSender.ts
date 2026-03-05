@@ -10,6 +10,7 @@ import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil"
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { KuulutusHyvaksyntaEmailSender } from "./KuulutusHyvaksyntaEmailSender";
 import { findAloitusKuulutusLastApproved } from "../../projekti/projektiUtil";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 const saamet = [Kieli.POHJOISSAAME];
 
@@ -120,7 +121,7 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         emailOptionsLahetekirje,
         AsiakirjaTyyppi.ALOITUSKUULUTUS_LAHETEKIRJE
       );
-      await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, aloituskuulutus);
+      await projektiEntityDatabase.put(aloituskuulutus);
     } else {
       log.error("Ilmoitus aloituskuulutuksesta sahkopostin vastaanottajia ei loytynyt");
     }
