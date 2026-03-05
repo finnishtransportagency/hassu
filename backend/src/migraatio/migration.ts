@@ -67,9 +67,12 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
 
   const targetStatusRank = statusOrder(projektiStatusAfterMigration[tila]);
   if (targetStatusRank >= statusOrder(Status.SUUNNITTELU)) {
+    const id = 1;
     const aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu = {
+      projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", id),
       kielitiedot,
-      id: 1,
+      id,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       kuulutusYhteystiedot: {},
@@ -89,10 +92,12 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   }
 
   if (targetStatusRank >= statusOrder(Status.HYVAKSYMISMENETTELYSSA)) {
+    const id = 1;
     const nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu = {
       projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", id),
       kielitiedot,
-      id: 1,
+      id,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       kuulutusYhteystiedot: {},

@@ -1,3 +1,4 @@
+import { createJulkaisuSortKey } from "../../../../src/database/julkaisuItemKeys";
 import { NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
@@ -17,6 +18,7 @@ export const nahtavillaoloVaiheAineistoC: NahtavillaoloVaihe = {
 
 export const hyvaksyttyNahtavillaoloJulkaisuAineistoA: NahtavillaoloVaiheJulkaisu = {
   projektiOid: "1",
+  sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
   id: 1,
   aineistoNahtavilla: [
     {
@@ -40,6 +42,7 @@ export const hyvaksyttyNahtavillaoloJulkaisuAineistoA: NahtavillaoloVaiheJulkais
 export const hyvaksymatonNahtavillaoloJulkaisuAineistoB: NahtavillaoloVaiheJulkaisu = {
   id: 2,
   projektiOid: "1",
+  sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 2),
   aineistoNahtavilla: [
     {
       tila: API.AineistoTila.VALMIS,

@@ -5,15 +5,10 @@ import {
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
   NahtavillaoloVaihe,
-  NahtavillaoloVaiheJulkaisu,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
-  JatkoPaatos1VaiheJulkaisu,
-  JatkoPaatos2VaiheJulkaisu,
   LausuntoPyynto,
   LausuntoPyynnonTaydennys,
   AloitusKuulutus,
-  AloitusKuulutusJulkaisu,
   SuunnitteluSopimus,
   DBVaylaUser,
   KasittelynTila,
@@ -25,29 +20,11 @@ import {
 } from ".";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "./hyvaksymisEsitys";
-
-const tallennettu: keyof DBProjekti = "tallennettu";
-const nahtavillaoloVaiheJulkaisut: keyof DBProjekti = "nahtavillaoloVaiheJulkaisut";
-const hyvaksymisPaatosVaiheJulkaisut: keyof DBProjekti = "hyvaksymisPaatosVaiheJulkaisut";
-const jatkoPaatos1VaiheJulkaisut: keyof DBProjekti = "jatkoPaatos1VaiheJulkaisut";
-const jatkoPaatos2VaiheJulkaisut: keyof DBProjekti = "jatkoPaatos2VaiheJulkaisut";
-export const DBPROJEKTI_OMITTED_FIELDS = [
-  tallennettu,
-  nahtavillaoloVaiheJulkaisut,
-  hyvaksymisPaatosVaiheJulkaisut,
-  jatkoPaatos1VaiheJulkaisut,
-  jatkoPaatos2VaiheJulkaisut,
-] as const;
-export type DBProjektiOmittedField = (typeof DBPROJEKTI_OMITTED_FIELDS)[number];
-
-/** Data stored in a particular item in Projekti-<env> table */
-export type DBProjektiSlim = Omit<DBProjekti, DBProjektiOmittedField>;
-
-export type DBProjektiExtras = Pick<DBProjekti, DBProjektiOmittedField>;
+import { IProjektiDataItem } from "./IProjektiDataItem";
 
 // Data combined by joining data from multiple items from multiple tables
-export type DBProjekti = {
-  oid: string;
+
+export interface ProjektiMeta extends IProjektiDataItem<{ sortKey: "META" }> {
   versio: number;
   lyhytOsoite?: string | null;
   muistiinpano?: string | null;
@@ -57,7 +34,6 @@ export type DBProjekti = {
   euRahoitusLogot?: LocalizedMap<string> | null;
   vahainenMenettely?: boolean | null;
   aloitusKuulutus?: AloitusKuulutus | null;
-  aloitusKuulutusJulkaisut?: AloitusKuulutusJulkaisu[] | null;
   suunnitteluSopimus?: SuunnitteluSopimus | null;
   velho?: Velho | null;
   vuorovaikutusKierros?: VuorovaikutusKierros | null;
@@ -65,15 +41,11 @@ export type DBProjekti = {
   muokattavaHyvaksymisEsitys?: MuokattavaHyvaksymisEsitys | null;
   julkaistuHyvaksymisEsitys?: JulkaistuHyvaksymisEsitys | null;
   nahtavillaoloVaihe?: NahtavillaoloVaihe | null;
-  nahtavillaoloVaiheJulkaisut?: NahtavillaoloVaiheJulkaisu[] | null;
   lausuntoPyynnot?: LausuntoPyynto[] | null;
   lausuntoPyynnonTaydennykset?: LausuntoPyynnonTaydennys[] | null;
   hyvaksymisPaatosVaihe?: HyvaksymisPaatosVaihe | null;
-  hyvaksymisPaatosVaiheJulkaisut?: HyvaksymisPaatosVaiheJulkaisu[] | null;
   jatkoPaatos1Vaihe?: HyvaksymisPaatosVaihe | null;
-  jatkoPaatos1VaiheJulkaisut?: JatkoPaatos1VaiheJulkaisu[] | null;
   jatkoPaatos2Vaihe?: HyvaksymisPaatosVaihe | null;
-  jatkoPaatos2VaiheJulkaisut?: JatkoPaatos2VaiheJulkaisu[] | null;
   uusiaPalautteita?: number;
 
   kayttoOikeudet: DBVaylaUser[];
@@ -96,12 +68,4 @@ export type DBProjekti = {
   ennakkoNeuvotteluJulkaisu?: DBEnnakkoNeuvotteluJulkaisu;
   ennakkoNeuvotteluAineistoPaketti?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
-
-  // false, jos projekti ladattiin Velhosta, mutta ei ole vielä tallennettu tietokantaan
-  tallennettu?: boolean;
-};
-
-export type SaveDBProjektiInput = Partial<DBProjekti> & Pick<DBProjekti, "oid" | "versio">;
-export type SaveDBProjektiWithoutLockingInput = Partial<DBProjekti> & Pick<DBProjekti, "oid">;
-export type SaveDBProjektiSlimInput = Partial<DBProjektiSlim> & Pick<DBProjektiSlim, "oid" | "versio">;
-export type SaveDBProjektiSlimWithoutLockingInput = Partial<DBProjektiSlim> & Pick<DBProjektiSlim, "oid">;
+}

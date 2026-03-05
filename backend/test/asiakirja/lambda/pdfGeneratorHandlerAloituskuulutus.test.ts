@@ -20,6 +20,7 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { fileService } from "../../../src/files/fileService";
 import { bankHolidaysClient } from "../../../src/endDateCalculator/bankHolidaysClient";
 import { BankHolidays } from "../../../src/endDateCalculator/bankHolidays";
+import { createJulkaisuSortKey } from "../../../src/database/julkaisuItemKeys";
 
 const kirjaamoOsoitteet: KirjaamoOsoite[] = [
   { __typename: "KirjaamoOsoite", nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "kirjaamo@vayla.fi" },
@@ -87,6 +88,8 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
         },
       ],
       aloitusKuulutusJulkaisu: {
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
+        projektiOid: "1.2.3",
         id: 1,
         kielitiedot: {
           ensisijainenKieli: event.ensisijainenKieli,

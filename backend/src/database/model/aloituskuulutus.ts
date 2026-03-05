@@ -9,7 +9,9 @@ import {
   Kielitiedot,
   LadattuTiedosto,
 } from "./common";
-import { KuulutusSaamePDFt, SuunnitteluSopimusJulkaisu, ProjektinJakautuminen } from "./projekti";
+import { KuulutusSaamePDFt, SuunnitteluSopimusJulkaisu, ProjektinJakautuminen } from "./common";
+import { IProjektiDataItem } from "./IProjektiDataItem";
+import { aloitusVaiheJulkaisuPrefix } from ".";
 
 export type AloitusKuulutus = {
   id: number;
@@ -28,7 +30,7 @@ export type AloitusKuulutusPDF = {
   aloituskuulutusIlmoitusPDFPath: string;
 };
 
-export type AloitusKuulutusJulkaisu = {
+export interface AloitusKuulutusJulkaisu extends IProjektiDataItem<{ sortKey: `${typeof aloitusVaiheJulkaisuPrefix}${string}` }> {
   id: number;
   kuulutusPaiva?: string | null;
   siirtyySuunnitteluVaiheeseen?: string | null;
@@ -50,4 +52,4 @@ export type AloitusKuulutusJulkaisu = {
   asianhallintaEventId?: string | null;
   kopioituProjektista?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
-};
+}
