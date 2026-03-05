@@ -1,28 +1,16 @@
 import { log, setLogContextOid } from "../logger";
 import {
-  AloitusKuulutusJulkaisu,
   DBProjekti,
   DBPROJEKTI_OMITTED_FIELDS,
-  DBProjektiExtras,
   DBProjektiSlim,
   Hyvaksymispaatos,
   KasittelynTila,
-  NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
   SaveDBProjektiInput,
   SaveDBProjektiSlimInput,
   SaveDBProjektiSlimWithoutLockingInput,
   SaveDBProjektiWithoutLockingInput,
   VuorovaikutusKierrosJulkaisu,
-  AnyProjektiDataItem,
-  HyvaksymisPaatosVaiheJulkaisu,
-  hyvaksymisPaatosVaiheJulkaisuPrefix,
-  JatkoPaatos1VaiheJulkaisu,
-  jatkopaatos1VaiheJulkaisuPrefix,
-  JatkoPaatos2VaiheJulkaisu,
-  jatkopaatos2VaiheJulkaisuPrefix,
-  aloitusVaiheJulkaisuPrefix,
-  nahtavillaoloVaiheJulkaisuPrefix,
 } from "./model";
 import { config } from "../config";
 import { migrateFromOldSchema } from "./projektiSchemaUpdate";
@@ -45,11 +33,10 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { Status } from "hassu-common/graphql/apiModel";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
-import merge from "lodash/merge";
-import cloneDeep from "lodash/cloneDeep";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
+import { groupProjektiEntitiesByType } from "./groupProjektiEntitiesByType";
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
@@ -96,14 +83,7 @@ export type UpdateParams = {
 };
 
 export class ProjektiDatabase {
-  protected updateDisabledAttributes = [
-    "oid",
-    "versio",
-    "aloitusKuulutusJulkaisut",
-    "vuorovaikutusKierrosJulkaisut",
-    "julkaistuHyvaksymisEsitys",
-    "synkronoinnit",
-  ];
+  protected updateDisabledAttributes = ["oid", "versio", "aloitusKuulutusJulkaisut", "julkaistuHyvaksymisEsitys", "synkronoinnit"];
 
   constructor(projektiTableName: string) {
     this.projektiTableName = projektiTableName;
@@ -665,63 +645,18 @@ export class ProjektiDatabase {
 
 export const projektiDatabase = new ProjektiDatabase(config.projektiDataTableName ?? "missing");
 
-function isAloitusJulkaisu(item: AnyProjektiDataItem): item is AloitusKuulutusJulkaisu {
-  return item.sortKey.startsWith(aloitusVaiheJulkaisuPrefix);
-}
-
-function isNahtavillaoloJulkaisu(item: AnyProjektiDataItem): item is NahtavillaoloVaiheJulkaisu {
-  return item.sortKey.startsWith(nahtavillaoloVaiheJulkaisuPrefix);
-}
-
-function isHyvaksymisPaatosJulkaisu(item: AnyProjektiDataItem): item is HyvaksymisPaatosVaiheJulkaisu {
-  return item.sortKey.startsWith(hyvaksymisPaatosVaiheJulkaisuPrefix);
-}
-
-function isJatkoPaatos1Julkaisu(item: AnyProjektiDataItem): item is JatkoPaatos1VaiheJulkaisu {
-  return item.sortKey.startsWith(jatkopaatos1VaiheJulkaisuPrefix);
-}
-
-function isJatkoPaatos2Julkaisu(item: AnyProjektiDataItem): item is JatkoPaatos2VaiheJulkaisu {
-  return item.sortKey.startsWith(jatkopaatos2VaiheJulkaisuPrefix);
-}
-
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
   const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead);
+  const entitiesByType = groupProjektiEntitiesByType(entities);
 
-  const extras: DBProjektiExtras = {
+  const dbProjektiExtended: DBProjekti = {
+    ...slimProjekti,
+    aloitusKuulutusJulkaisut: entitiesByType.aloitusKuulutusJulkaisut,
+    nahtavillaoloVaiheJulkaisut: entitiesByType.nahtavillaoloVaiheJulkaisut,
+    hyvaksymisPaatosVaiheJulkaisut: entitiesByType.hyvaksymisPaatosVaiheJulkaisut,
+    jatkoPaatos1VaiheJulkaisut: entitiesByType.jatkoPaatos1VaiheJulkaisut,
+    jatkoPaatos2VaiheJulkaisut: entitiesByType.jatkoPaatos2VaiheJulkaisut,
     tallennettu: true,
   };
-
-  const dbProjektiExtras = entities.reduce((acc, item) => {
-    if (isAloitusJulkaisu(item)) {
-      if (!acc.aloitusKuulutusJulkaisut) {
-        acc.aloitusKuulutusJulkaisut = [];
-      }
-      acc.aloitusKuulutusJulkaisut.push(item);
-    } else if (isNahtavillaoloJulkaisu(item)) {
-      if (!acc.nahtavillaoloVaiheJulkaisut) {
-        acc.nahtavillaoloVaiheJulkaisut = [];
-      }
-      acc.nahtavillaoloVaiheJulkaisut.push(item);
-    } else if (isHyvaksymisPaatosJulkaisu(item)) {
-      if (!acc.hyvaksymisPaatosVaiheJulkaisut) {
-        acc.hyvaksymisPaatosVaiheJulkaisut = [];
-      }
-      acc.hyvaksymisPaatosVaiheJulkaisut.push(item);
-    } else if (isJatkoPaatos1Julkaisu(item)) {
-      if (!acc.jatkoPaatos1VaiheJulkaisut) {
-        acc.jatkoPaatos1VaiheJulkaisut = [];
-      }
-      acc.jatkoPaatos1VaiheJulkaisut.push(item);
-    } else if (isJatkoPaatos2Julkaisu(item)) {
-      if (!acc.jatkoPaatos2VaiheJulkaisut) {
-        acc.jatkoPaatos2VaiheJulkaisut = [];
-      }
-      acc.jatkoPaatos2VaiheJulkaisut.push(item);
-    }
-    return acc;
-  }, extras);
-
-  const dbProjektiExtended: DBProjekti = (slimProjekti, dbProjektiExtras);
-  return migrateFromOldSchema(cloneDeep(dbProjektiExtended));
+  return migrateFromOldSchema(dbProjektiExtended);
 }
