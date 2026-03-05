@@ -16,17 +16,18 @@ REPO_NAME="hassu-nextjs"
 AWS_REGION="eu-west-1"
 
 git fetch --tags
-SEMVER_TAG=$(git tag --points-at HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+(-(test|training)\.[0-9]+)?$' | head -1)
-
-if [[ -z "$SEMVER_TAG" ]]; then
-    echo "No semver tag found in git."
-    exit 1
-fi
-
 if [[ "$ENVIRONMENT" == "prod" ]]; then
+    SEMVER_TAG=$(git tag --points-at "$CODEBUILD_RESOLVED_SOURCE_VERSION" | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$')
     SEMVER_TAG="${SEMVER_TAG}-prod"
     echo "Prod environment detected, appended -prod suffix to semver tag."
     echo "This is needed to efficiently run lifecycle policies in prod ECR."
+else
+    SEMVER_TAG=$(git tag --points-at "$CODEBUILD_RESOLVED_SOURCE_VERSION" | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+-${ENVIRONMENT}\.[0-9]+$")
+fi
+
+if [[ -z "$SEMVER_TAG" ]]; then
+    echo "No semver tag found in git for environment $ENVIRONMENT."
+    exit 1
 fi
 
 echo "Using semver tag: $SEMVER_TAG"
