@@ -61,10 +61,7 @@ class ProjektiEntityDatabase {
     await getDynamoDBDocumentClient().send(command);
   }
 
-  async deleteAll(
-    julkaisut: AnyProjektiDataItem[] | null | undefined,
-    description: string | undefined = undefined
-  ): Promise<BatchWriteCommandOutput | undefined> {
+  async deleteAll(julkaisut: AnyProjektiDataItem[] | null | undefined, description: string | undefined = undefined): Promise<void> {
     if (!julkaisut?.length) {
       return;
     }
