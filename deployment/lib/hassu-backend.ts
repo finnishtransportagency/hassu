@@ -749,6 +749,7 @@ export class HassuBackendStack extends Stack {
         TABLE_PROJEKTI_MUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
         TABLE_NAHTAVILLAOLOVAIHEJULKAISU: this.props.nahtavillaoloVaiheJulkaisuTable.tableName,
+        TABLE_PROJEKTI_DATA: this.props.projektiDataTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
@@ -772,6 +773,7 @@ export class HassuBackendStack extends Stack {
     this.props.kiinteistonomistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(suomiFiLambda);
+    this.props.projektiDataTable.grantReadData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
