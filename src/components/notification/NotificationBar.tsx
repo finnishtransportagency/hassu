@@ -1,5 +1,6 @@
 import { useTheme } from "@mui/material";
 import React, { ReactElement } from "react";
+import { getPublicEnv } from "src/util/env";
 
 export interface HeaderProps {
   scrolledPastOffset: boolean;
@@ -10,8 +11,8 @@ export default function NotificationBar(): ReactElement {
   return (
     <div style={{ zIndex: theme.zIndex.appBar }} className="sticky bg-green transition-all">
       <div style={{ width: "100%", textAlign: "center" }} className="">
-        <span>YMPÄRISTÖ: {process.env.NEXT_PUBLIC_ENVIRONMENT} </span>
-        <span>VERSIO: {process.env.NEXT_PUBLIC_VERSION} </span>
+        <span>YMPÄRISTÖ: {getPublicEnv("ENVIRONMENT")} </span>
+        <span>VERSIO: {getPublicEnv("VERSION")} </span>
       </div>
     </div>
   );

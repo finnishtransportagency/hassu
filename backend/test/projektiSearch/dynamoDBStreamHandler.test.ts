@@ -15,7 +15,7 @@ import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientY
 import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 import { mockUUID } from "../../integrationtest/shared/sharedMock";
-import { DBProjekti } from "../../src/database/model";
+import { DBProjekti, DBProjektiSlim } from "../../src/database/model";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -125,12 +125,16 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should reindex the database successfully on maintenance event", async () => {
+    const makeProjektiSlim = ({ oid, versio, kayttoOikeudet }: DBProjekti): DBProjektiSlim => ({ oid, versio, kayttoOikeudet });
     sinon
-      .stub(projektiDatabase, "scanProjektit")
+      .stub(projektiDatabase, "scanSlimProjektit")
       .onFirstCall()
-      .resolves({ projektis: [projekti1, projekti2], startKey: "startkey1" })
+      .resolves({
+        projektis: [projekti1, projekti2].map(makeProjektiSlim),
+        startKey: "startkey1",
+      })
       .onSecondCall()
-      .resolves({ projektis: [projekti3], startKey: undefined });
+      .resolves({ projektis: [projekti3].map(makeProjektiSlim), startKey: undefined });
     sinon.stub(parameters, "getIndexerSQSUrl").resolves("mockedIndexerSQSUrl");
     const sqsStub = mockClient(SQSClient);
 
