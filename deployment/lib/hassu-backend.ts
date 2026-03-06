@@ -746,6 +746,7 @@ export class HassuBackendStack extends Stack {
         TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
         TABLE_PROJEKTI_MUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
+        TABLE_NAHTAVILLAOLOVAIHEJULKAISU: this.props.nahtavillaoloVaiheJulkaisuTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
