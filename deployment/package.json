@@ -2,9 +2,6 @@
   "name": "hassu-deployment",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@smithy/protocol-http": "^4.1.5"
-  },
   "devDependencies": {
     "@semantic-release/exec": "^6.0.3",
     "@types/inquirer": "^8.2.9",
