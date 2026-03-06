@@ -17,9 +17,8 @@ import omit from "lodash/omit";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
 
 /***
- * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternalia kutsutaan poikkeavilla parametreilla niin,
- * että siellä kutsuttava dynamodb.UpdateItem -komento päivittää myös kentät,
- * joita saveProjektiInternal ei normaalisti päivitä eg. nahtavillaoloVaiheJulkaisut (ks. projektiDatabase -> skipAutomaticUpdateFields)
+ * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternal -metodi saadaan päivittämään kenttiä, joita ei normaalisti päivitetä
+ * joita saveProjektiInternal ei normaalisti päivitä. ks. updateDisabledAttributes
  */
 export class TestProjektiDatabase extends ProjektiDatabase {
   protected updateDisabledAttributes = ["oid", "versio", "tallennettu"];
@@ -44,17 +43,15 @@ export class TestProjektiDatabase extends ProjektiDatabase {
 
   /** Poistaa kaikki ja asettaa sitten inputissa tulleet taulut */
   private async updateOtherTables(dbProjekti: SaveDBProjektiInput | SaveDBProjektiWithoutLockingInput) {
-    const nahtavillaoloJulkaisut = await projektiEntityDatabase.getAllForProjekti(dbProjekti.oid, true);
-    await projektiEntityDatabase.deleteAll(nahtavillaoloJulkaisut);
-    await projektiEntityDatabase.putAll(dbProjekti.nahtavillaoloVaiheJulkaisut);
-
     const entitiesToDelete = await projektiEntityDatabase.getAllForProjekti(dbProjekti.oid, true);
     await projektiEntityDatabase.deleteAll(entitiesToDelete);
     const entities = [
-      ...(dbProjekti.hyvaksymisPaatosVaiheJulkaisut ?? []),
-      ...(dbProjekti.jatkoPaatos1VaiheJulkaisut ?? []),
-      ...(dbProjekti.jatkoPaatos2VaiheJulkaisut ?? []),
-    ];
+      dbProjekti.aloitusKuulutusJulkaisut ?? [],
+      dbProjekti.nahtavillaoloVaiheJulkaisut ?? [],
+      dbProjekti.hyvaksymisPaatosVaiheJulkaisut ?? [],
+      dbProjekti.jatkoPaatos1VaiheJulkaisut ?? [],
+      dbProjekti.jatkoPaatos2VaiheJulkaisut ?? [],
+    ].flat();
     await projektiEntityDatabase.putAll(entities);
   }
 

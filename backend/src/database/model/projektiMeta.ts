@@ -20,11 +20,11 @@ import {
 } from ".";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { JulkaistuHyvaksymisEsitys, MuokattavaHyvaksymisEsitys } from "./hyvaksymisEsitys";
-import { IProjektiDataItem } from "./IProjektiDataItem";
 
 // Data combined by joining data from multiple items from multiple tables
 
-export interface ProjektiMeta extends IProjektiDataItem<{ sortKey: "META" }> {
+export interface ProjektiMeta {
+  oid: string;
   versio: number;
   lyhytOsoite?: string | null;
   muistiinpano?: string | null;

@@ -1931,8 +1931,10 @@ Object {
       },
     ],
   },
+  "projektiOid": "1",
   "projektinJakautuminen": undefined,
   "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+  "sortKey": "JULKAISU#ALOITUS#001",
   "suunnitteluSopimus": Object {
     "email": "Kunta.Kuntalainen@vayla.fi",
     "etunimi": "Kunta",

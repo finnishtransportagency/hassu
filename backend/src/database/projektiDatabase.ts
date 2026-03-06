@@ -13,7 +13,6 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
-import { migrateFromOldSchema } from "./projektiSchemaUpdate";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import assert from "assert";
 import { SimultaneousUpdateError } from "hassu-common/error";
@@ -32,11 +31,10 @@ import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { Status } from "hassu-common/graphql/apiModel";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
-import { groupProjektiEntitiesByType } from "./groupProjektiEntitiesByType";
+import { mapProjektiEntitiesToDBProjekti } from "./mapProjektiEntitiesToDBProjekti";
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
@@ -262,12 +260,13 @@ export class ProjektiDatabase {
 
   async createProjekti(projekti: DBProjekti): Promise<PutCommandOutput> {
     const slimProjekti: DBProjektiSlim = omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS);
-    await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut);
     const entities = [
-      ...(projekti.hyvaksymisPaatosVaiheJulkaisut ?? []),
-      ...(projekti.jatkoPaatos1VaiheJulkaisut ?? []),
-      ...(projekti.jatkoPaatos2VaiheJulkaisut ?? []),
-    ];
+      projekti.aloitusKuulutusJulkaisut ?? [],
+      projekti.nahtavillaoloVaiheJulkaisut ?? [],
+      projekti.hyvaksymisPaatosVaiheJulkaisut ?? [],
+      projekti.jatkoPaatos1VaiheJulkaisut ?? [],
+      projekti.jatkoPaatos2VaiheJulkaisut ?? [],
+    ].flat();
     await projektiEntityDatabase.putAll(entities);
     return await this.createSlimProjekti(slimProjekti);
   }
@@ -643,20 +642,9 @@ export class ProjektiDatabase {
   }
 }
 
-export const projektiDatabase = new ProjektiDatabase(config.projektiDataTableName ?? "missing");
+export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing");
 
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
   const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead);
-  const entitiesByType = groupProjektiEntitiesByType(entities);
-
-  const dbProjektiExtended: DBProjekti = {
-    ...slimProjekti,
-    aloitusKuulutusJulkaisut: entitiesByType.aloitusKuulutusJulkaisut,
-    nahtavillaoloVaiheJulkaisut: entitiesByType.nahtavillaoloVaiheJulkaisut,
-    hyvaksymisPaatosVaiheJulkaisut: entitiesByType.hyvaksymisPaatosVaiheJulkaisut,
-    jatkoPaatos1VaiheJulkaisut: entitiesByType.jatkoPaatos1VaiheJulkaisut,
-    jatkoPaatos2VaiheJulkaisut: entitiesByType.jatkoPaatos2VaiheJulkaisut,
-    tallennettu: true,
-  };
-  return migrateFromOldSchema(dbProjektiExtended);
+  return mapProjektiEntitiesToDBProjekti(slimProjekti, entities);
 }

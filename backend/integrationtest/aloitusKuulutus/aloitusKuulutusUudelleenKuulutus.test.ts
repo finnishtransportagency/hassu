@@ -50,6 +50,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     userFixture.loginAs(UserFixture.hassuAdmin);
 
     const initialProjekti = await projektiDatabase.loadProjektiByOid(oid);
+    console.log(initialProjekti);
     assertIsDefined(initialProjekti?.aloitusKuulutusJulkaisut?.[0]);
     // Aloituskuulutusjulkaisu on varmasti julkinen
     const kuulutusPaiva = "2000-01-01";

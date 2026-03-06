@@ -15,9 +15,8 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import * as API from "hassu-common/graphql/apiModel";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { NotFoundError, SimultaneousUpdateError } from "hassu-common/error";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
-import { groupProjektiEntitiesByType } from "../database/groupProjektiEntitiesByType";
+import { mapProjektiEntitiesToDBProjekti } from "../database/mapProjektiEntitiesToDBProjekti";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
@@ -120,7 +119,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "asianhallinta, " +
         "euRahoitus, " +
         "velho, " +
-        "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
@@ -139,14 +137,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
       }
       const projekti = data.Item as ProjektiTiedostoineen;
-      projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
       const entitities = await projektiEntityDatabase.getAllForProjekti(oid, true);
-      const entitiesByType = groupProjektiEntitiesByType(entitities);
-      projekti.hyvaksymisPaatosVaiheJulkaisut = entitiesByType.hyvaksymisPaatosVaiheJulkaisut;
-      projekti.jatkoPaatos1VaiheJulkaisut = entitiesByType.jatkoPaatos1VaiheJulkaisut;
-      projekti.jatkoPaatos2VaiheJulkaisut = entitiesByType.jatkoPaatos2VaiheJulkaisut;
-
-      return projekti;
+      return mapProjektiEntitiesToDBProjekti(projekti, entitities);
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
       throw e;
@@ -398,7 +390,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "asianhallinta, " +
         "euRahoitus, " +
         "velho, " +
-        "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
         "ennakkoNeuvottelu, " +
         "ennakkoNeuvotteluJulkaisu, " +
@@ -417,13 +408,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
       }
       const projekti = data.Item as ProjektiTiedostoineen;
-      projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-      const entitities = await projektiEntityDatabase.getAllForProjekti(oid, true);
-      const entitiesByType = groupProjektiEntitiesByType(entitities);
-      projekti.hyvaksymisPaatosVaiheJulkaisut = entitiesByType.hyvaksymisPaatosVaiheJulkaisut;
-      projekti.jatkoPaatos1VaiheJulkaisut = entitiesByType.jatkoPaatos1VaiheJulkaisut;
-      projekti.jatkoPaatos2VaiheJulkaisut = entitiesByType.jatkoPaatos2VaiheJulkaisut;
-      return projekti;
+      const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+      return mapProjektiEntitiesToDBProjekti(projekti, entities);
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
       throw e;
