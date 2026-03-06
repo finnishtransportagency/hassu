@@ -31,7 +31,7 @@ export type HyvaksymisPaatosVaihe = {
   alkuperainenPaatos?: Array<Aineisto> | null;
 };
 
-export type HyvaksymisPaatosVaiheJulkaisu = {
+export interface PaatosVaiheJulkaisuTiedot {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   hyvaksymisPaatos?: Array<Aineisto> | null;
@@ -58,7 +58,7 @@ export type HyvaksymisPaatosVaiheJulkaisu = {
   kopioituProjektista?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
   alkuperainenPaatos?: Array<Aineisto> | null;
-};
+}
 
 export type HyvaksymisPaatosVaihePDF = {
   hyvaksymisKuulutusPDFPath: string;

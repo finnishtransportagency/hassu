@@ -20,8 +20,9 @@ import { log } from "../../logger";
 import { parameters } from "../../aws/parameters";
 import { isKieliSaame } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
-class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager<HyvaksymisPaatosVaiheJulkaisu> {
   constructor() {
     super(Vaihe.HYVAKSYMISPAATOS);
   }
@@ -32,12 +33,20 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     await sendHyvaksymiskuulutusApprovalMailsAndAttachments(oid);
   }
 
-  async updateJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.update(projekti, julkaisu);
+  async updateJulkaisu(_projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
+    await projektiEntityDatabase.put(julkaisu);
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
     return findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
+  }
+
+  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
+    const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
+    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    }
+    await this.peruAineistoMuokkaus(projekti);
   }
 
   getUpdatedAineistotForVaihe(
@@ -191,7 +200,7 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       );
     }
 
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, julkaisu);
+    await projektiEntityDatabase.put(julkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
       throw new Error("Projektia oid:lla ${projekti.oid)} ei löydy");
@@ -242,11 +251,11 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
         reason: "Hyväksymispäätösvaihe rejected",
       });
     }
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
+    await projektiEntityDatabase.delete(julkaisu);
     return {
       ...projekti,
       hyvaksymisPaatosVaihe,
-      hyvaksymisPaatosVaiheJulkaisut: projekti.jatkoPaatos1VaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
+      hyvaksymisPaatosVaiheJulkaisut: projekti.hyvaksymisPaatosVaiheJulkaisut?.filter((j) => julkaisu.id != j.id),
     };
   }
 }

@@ -1,7 +1,7 @@
 import {
   DBProjekti,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
   LocalizedMap,
   NahtavillaoloPDF,
@@ -21,7 +21,8 @@ import {
   findJatkoPaatos2VaiheWaitingForApproval,
   findNahtavillaoloWaitingForApproval,
 } from "../../projekti/projektiUtil";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 type UndefinedOrNullOr<T> = T | undefined | null;
 
@@ -131,9 +132,9 @@ export class SimpleNahtavillaoloVaiheTilaManager extends SimpleKuulutusTilaManag
 
 export abstract class SimpleAbstractHyvaksymisPaatosVaiheTilaManager extends SimpleKuulutusTilaManager<
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu
+  PaatosVaiheJulkaisu
 > {
-  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihe {
+  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: PaatosVaiheJulkaisu): HyvaksymisPaatosVaihe {
     const {
       yhteystiedot: _yhteystiedot,
       aineistoMuokkaus: _aineistoMuokkaus,
@@ -187,11 +188,11 @@ export class SimpleHyvaksymisPaatosVaiheTilaManager extends SimpleAbstractHyvaks
       await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
       await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, hyvaksymisPaatosVaihe });
-      await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.delete(projekti, julkaisu.id);
+      await projektiEntityDatabase.delete(julkaisu);
     }
   }
 
-  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  getJulkaisut(projekti: DBProjekti): PaatosVaiheJulkaisu[] | undefined {
     return projekti.hyvaksymisPaatosVaiheJulkaisut ?? undefined;
   }
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: UndefinedOrNullOr<HyvaksymisPaatosVaihe>): PathTuple {
@@ -223,11 +224,11 @@ export class SimpleJatkoPaatos1VaiheTilaManager extends SimpleAbstractHyvaksymis
       await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
       await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe });
-      await projektiDatabase.jatkoPaatos1VaiheJulkaisut.delete(projekti, julkaisu.id);
+      await projektiEntityDatabase.delete(julkaisu);
     }
   }
 
-  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  getJulkaisut(projekti: DBProjekti): PaatosVaiheJulkaisu[] | undefined {
     return projekti.jatkoPaatos1VaiheJulkaisut ?? undefined;
   }
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: UndefinedOrNullOr<HyvaksymisPaatosVaihe>): PathTuple {
@@ -259,11 +260,11 @@ export class SimpleJatkoPaatos2VaiheTilaManager extends SimpleAbstractHyvaksymis
       await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
       await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos2Vaihe });
-      await projektiDatabase.jatkoPaatos2VaiheJulkaisut.delete(projekti, julkaisu.id);
+      await projektiEntityDatabase.delete(julkaisu);
     }
   }
 
-  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  getJulkaisut(projekti: DBProjekti): PaatosVaiheJulkaisu[] | undefined {
     return projekti.jatkoPaatos2VaiheJulkaisut ?? undefined;
   }
   getProjektiPathForKuulutus(projekti: DBProjekti, kuulutus: UndefinedOrNullOr<HyvaksymisPaatosVaihe>): PathTuple {

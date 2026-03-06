@@ -127,7 +127,7 @@ describe("AloitusKuulutuksen uudelleenkuuluttaminen", () => {
     await eventSqsClientMock.processQueue();
 
     uudelleenKuulutusJulkaisu.kuulutusPaiva = "2000-01-01"; // Simuloidaan ajan kulumista asettamalla kuulutuspäivä varmasti menneisyyteen, jotta julkaisu on julkinen
-    await testProjektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(resultProjekti, uudelleenKuulutusJulkaisu);
     await schedulerMock.verifyAndRunSchedule();
     awsCloudfrontInvalidationStub.verifyCloudfrontWasInvalidated();
 

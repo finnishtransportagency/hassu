@@ -3,7 +3,7 @@ import { AsiakirjaTyyppi, PDF, ProjektiTyyppi } from "hassu-common/graphql/apiMo
 import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   KasittelynTila,
   LocalizedMap,
   NahtavillaoloVaiheJulkaisu,
@@ -84,7 +84,7 @@ export type EnhancedPDF = PDF & { textContent: string };
 export type CreateHyvaksymisPaatosKuulutusPdfOptions = {
   oid: string;
   lyhytOsoite: string | undefined | null;
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu;
   kasittelynTila: KasittelynTila;
   kieli: KaannettavaKieli;
   luonnos: boolean;

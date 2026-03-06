@@ -15,7 +15,9 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import * as API from "hassu-common/graphql/apiModel";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { NotFoundError, SimultaneousUpdateError } from "hassu-common/error";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
+import { groupProjektiEntitiesByType } from "../database/groupProjektiEntitiesByType";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
@@ -125,11 +127,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "aineistoHandledAt, " +
         "hyvEsAineistoPaketti, " +
         "hyvaksymisPaatosVaihe, " +
-        "hyvaksymisPaatosVaiheJulkaisut, " +
         "jatkoPaatos1Vaihe, " +
-        "jatkoPaatos1VaiheJulkaisut, " +
-        "jatkoPaatos2Vaihe, " +
-        "jatkoPaatos2VaiheJulkaisut",
+        "jatkoPaatos2Vaihe",
     });
 
     try {
@@ -141,6 +140,12 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       }
       const projekti = data.Item as ProjektiTiedostoineen;
       projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+      const entitities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+      const entitiesByType = groupProjektiEntitiesByType(entitities);
+      projekti.hyvaksymisPaatosVaiheJulkaisut = entitiesByType.hyvaksymisPaatosVaiheJulkaisut;
+      projekti.jatkoPaatos1VaiheJulkaisut = entitiesByType.jatkoPaatos1VaiheJulkaisut;
+      projekti.jatkoPaatos2VaiheJulkaisut = entitiesByType.jatkoPaatos2VaiheJulkaisut;
+
       return projekti;
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
@@ -400,11 +405,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "aineistoHandledAt, " +
         "ennakkoNeuvotteluAineistoPaketti, " +
         "hyvaksymisPaatosVaihe, " +
-        "hyvaksymisPaatosVaiheJulkaisut, " +
         "jatkoPaatos1Vaihe, " +
-        "jatkoPaatos1VaiheJulkaisut, " +
-        "jatkoPaatos2Vaihe, " +
-        "jatkoPaatos2VaiheJulkaisut",
+        "jatkoPaatos2Vaihe",
     });
 
     try {
@@ -416,6 +418,11 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       }
       const projekti = data.Item as ProjektiTiedostoineen;
       projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+      const entitities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+      const entitiesByType = groupProjektiEntitiesByType(entitities);
+      projekti.hyvaksymisPaatosVaiheJulkaisut = entitiesByType.hyvaksymisPaatosVaiheJulkaisut;
+      projekti.jatkoPaatos1VaiheJulkaisut = entitiesByType.jatkoPaatos1VaiheJulkaisut;
+      projekti.jatkoPaatos2VaiheJulkaisut = entitiesByType.jatkoPaatos2VaiheJulkaisut;
       return projekti;
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });

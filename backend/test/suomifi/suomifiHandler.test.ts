@@ -17,12 +17,12 @@ import { PublishOrExpireEventType } from "../../src/sqsEvents/projektiScheduleMa
 import { fileService } from "../../src/files/fileService";
 import {
   DBProjektiSlim,
-  HyvaksymisPaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
   KuulutusSaamePDFt,
   LocalizedMap,
   NahtavillaoloPDF,
   NahtavillaoloVaiheJulkaisu,
+  HyvaksymisPaatosVaiheJulkaisu,
 } from "../../src/database/model";
 import { DBOmistaja } from "../../src/database/omistajaDatabase";
 import { fail } from "assert";
@@ -32,6 +32,7 @@ import { SQS, SendMessageBatchCommand } from "@aws-sdk/client-sqs";
 import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 import { sdkStreamMixin } from "@smithy/util-stream";
 import { Readable } from "stream";
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 const testiPdf =
   "JVBERi0xLjIgCjkgMCBvYmoKPDwKPj4Kc3RyZWFtCkJULyAzMiBUZiggIFlPVVIgVEVYVCBIRVJFICAgKScgRVQKZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgNSAwIFIKL0NvbnRlbnRzIDkgMCBSCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9LaWRzIFs0IDAgUiBdCi9Db3VudCAxCi9UeXBlIC9QYWdlcwovTWVkaWFCb3ggWyAwIDAgMjUwIDUwIF0KPj4KZW5kb2JqCjMgMCBvYmoKPDwKL1BhZ2VzIDUgMCBSCi9UeXBlIC9DYXRhbG9nCj4+CmVuZG9iagp0cmFpbGVyCjw8Ci9Sb290IDMgMCBSCj4+CiUlRU9G";
@@ -649,23 +650,27 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
+    const projektiEntities = [
+      {
+        id: 1,
+        projektiOid: "1",
+        sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", 1),
+        hyvaksymisPaatosVaihePDFt: {
+          RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/1" },
+        } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
+      } as unknown as HyvaksymisPaatosVaiheJulkaisu,
+      {
+        id: 2,
+        projektiOid: "1",
+        sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", 2),
+        hyvaksymisPaatosVaihePDFt: {
+          RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/2" },
+        } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
+      } as unknown as HyvaksymisPaatosVaiheJulkaisu,
+    ];
     const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       hyvaksymisPaatosVaihe: { id: 1 },
-      hyvaksymisPaatosVaiheJulkaisut: [
-        {
-          id: 1,
-          hyvaksymisPaatosVaihePDFt: {
-            RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/1" },
-          } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
-        } as unknown as HyvaksymisPaatosVaiheJulkaisu,
-        {
-          id: 2,
-          hyvaksymisPaatosVaihePDFt: {
-            RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/2" },
-          } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
-        } as unknown as HyvaksymisPaatosVaiheJulkaisu,
-      ],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -685,7 +690,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      });
+      })
+      .on(QueryCommand, { TableName: config.projektiDataTableName })
+      .resolves({ Items: projektiEntities });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
     const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
@@ -789,23 +796,27 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
+    const projektiEntities = [
+      {
+        id: 1,
+        projektiOid: "1",
+        sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", 1),
+        hyvaksymisPaatosVaihePDFt: {
+          RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/1" },
+        } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
+      } as unknown as HyvaksymisPaatosVaiheJulkaisu,
+      {
+        id: 2,
+        projektiOid: "1",
+        sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", 2),
+        hyvaksymisPaatosVaihePDFt: {
+          RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/2" },
+        } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
+      } as unknown as HyvaksymisPaatosVaiheJulkaisu,
+    ];
     const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       hyvaksymisPaatosVaihe: { id: 1 },
-      hyvaksymisPaatosVaiheJulkaisut: [
-        {
-          id: 1,
-          hyvaksymisPaatosVaihePDFt: {
-            RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/1" },
-          } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
-        } as unknown as HyvaksymisPaatosVaiheJulkaisu,
-        {
-          id: 2,
-          hyvaksymisPaatosVaihePDFt: {
-            RUOTSI: { hyvaksymisIlmoitusMuistuttajillePDFPath: "/path/2" },
-          } as unknown as LocalizedMap<HyvaksymisPaatosVaihePDF>,
-        } as unknown as HyvaksymisPaatosVaiheJulkaisu,
-      ],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -819,9 +830,13 @@ describe("suomifiHandler", () => {
         toissijainenKieli: Kieli.RUOTSI,
       },
     };
-    const mock = mockClient(DynamoDBDocumentClient).on(GetCommand, { TableName: config.projektiTableName }).resolves({
-      Item: dbProjekti,
-    });
+    const mock = mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: dbProjekti,
+      })
+      .on(QueryCommand, { TableName: config.projektiDataTableName })
+      .resolves({ Items: projektiEntities });
 
     kaikkiOmistajat.forEach((omistaja) =>
       mock
