@@ -13,6 +13,7 @@ import { UudelleenkuulutusTila } from "../../../../src/database/model";
 
 import { expect } from "chai";
 import { parameters } from "../../../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../../../src/database/julkaisuItemKeys";
 
 describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
   let fixture: ProjektiFixture;
@@ -137,6 +138,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     delete projekti.aloitusKuulutusJulkaisut;
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -172,6 +175,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -206,6 +211,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -254,6 +261,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -309,6 +318,8 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,

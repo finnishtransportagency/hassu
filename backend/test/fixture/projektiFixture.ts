@@ -365,6 +365,8 @@ export class ProjektiFixture {
       velho: this.dbProjekti2Velho(),
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: this.PROJEKTI2_OID,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
@@ -571,6 +573,8 @@ export class ProjektiFixture {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: this.PROJEKTI3_OID,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
@@ -808,6 +812,8 @@ export class ProjektiFixture {
     },
     aloitusKuulutusJulkaisut: [
       {
+        projektiOid: this.PROJEKTI3_OID,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         aloituskuulutusPDFt: {
           SUOMI: {
             aloituskuulutusIlmoitusPDFPath:
@@ -985,6 +991,8 @@ export class ProjektiFixture {
     },
     aloitusKuulutusJulkaisut: [
       {
+        projektiOid: this.PROJEKTI3_OID,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         aloituskuulutusPDFt: {
           SUOMI: {
             aloituskuulutusIlmoitusPDFPath:
@@ -1203,6 +1211,7 @@ export class ProjektiFixture {
     nahtavillaoloVaiheJulkaisut: [
       {
         projektiOid: this.PROJEKTI3_OID,
+        sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
         aineistoNahtavilla: [],
         hankkeenKuvaus: {
           RUOTSI:
@@ -1346,6 +1355,8 @@ export class ProjektiFixture {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: this.PROJEKTI3_OID,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
@@ -1564,6 +1575,7 @@ export class ProjektiFixture {
       nahtavillaoloVaiheJulkaisut: [
         {
           projektiOid: this.PROJEKTI3_OID,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           aineistoNahtavilla: [],
           hankkeenKuvaus: {
             RUOTSI:
@@ -1945,6 +1957,8 @@ export class ProjektiFixture {
       velho: saameVelho,
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: this.PROJEKTI3_OID,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           aloituskuulutusPDFt: {
             SUOMI: {
               aloituskuulutusIlmoitusPDFPath:
@@ -2144,6 +2158,7 @@ export class ProjektiFixture {
       nahtavillaoloVaiheJulkaisut: [
         {
           projektiOid: this.PROJEKTI3_OID,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           aineistoNahtavilla: [
             {
               dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",

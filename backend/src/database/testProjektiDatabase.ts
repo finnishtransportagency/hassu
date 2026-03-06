@@ -12,15 +12,13 @@ import { log } from "../logger";
 import { feedbackDatabase } from "./palauteDatabase";
 import { lyhytOsoiteDatabase } from "./lyhytOsoiteDatabase";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
 import { Exact } from "hassu-common/specialTypes";
 import omit from "lodash/omit";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
 
 /***
- * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternalia kutsutaan poikkeavilla parametreilla niin,
- * että siellä kutsuttava dynamodb.UpdateItem -komento päivittää myös kentät,
- * joita saveProjektiInternal ei normaalisti päivitä eg. nahtavillaoloVaiheJulkaisut (ks. projektiDatabase -> skipAutomaticUpdateFields)
+ * Luokan olemassaolo perustuu paljolti siihen, että saveProjektiInternal -metodi saadaan päivittämään kenttiä, joita ei normaalisti päivitetä
+ * joita saveProjektiInternal ei normaalisti päivitä. ks. updateDisabledAttributes
  */
 export class TestProjektiDatabase extends ProjektiDatabase {
   protected updateDisabledAttributes = ["oid", "versio", "tallennettu"];
@@ -88,8 +86,8 @@ export class TestProjektiDatabase extends ProjektiDatabase {
       }
 
       try {
-        const items = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-        await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(items);
+        const items = await projektiEntityDatabase.getAllForProjekti(oid, true);
+        await projektiEntityDatabase.deleteAll(items);
       } catch (e) {
         log.error(e);
       }

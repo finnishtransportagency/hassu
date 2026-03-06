@@ -5,7 +5,6 @@ import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { JULKAISTU_HYVAKSYMISESITYS_PATH, MUOKATTAVA_HYVAKSYMISESITYS_PATH } from "./paths";
 import { ENNAKKONEUVOTTELU_JULKAISU_PATH, ENNAKKONEUVOTTELU_PATH } from "../ennakkoneuvottelu/tallenna";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
 
 class AineistoDeleterService {
@@ -17,7 +16,7 @@ class AineistoDeleterService {
       await Promise.all(
         (
           await manager.getAloitusKuulutusVaihe().deleteAineistotIfEpaaktiivinen(ctx.projektiStatus)
-        ).map((julkaisu) => projektiDatabase.aloitusKuulutusJulkaisut.update(ctx.projekti, julkaisu))
+        ).map((julkaisu) => projektiEntityDatabase.put(julkaisu))
       );
 
       await Promise.all(
@@ -29,7 +28,7 @@ class AineistoDeleterService {
       await Promise.all(
         (
           await manager.getNahtavillaoloVaihe().deleteAineistotIfEpaaktiivinen(ctx.projektiStatus)
-        ).map((julkaisu) => nahtavillaoloVaiheJulkaisuDatabase.put(julkaisu))
+        ).map((julkaisu) => projektiEntityDatabase.put(julkaisu))
       );
 
       await Promise.all(

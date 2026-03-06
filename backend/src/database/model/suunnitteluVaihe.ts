@@ -7,8 +7,8 @@ import {
   RequiredLocalizedMap,
   StandardiYhteystiedot,
   Yhteystieto,
+  ProjektinJakautuminen,
 } from "./common";
-import { ProjektinJakautuminen } from "./projekti";
 
 export type VuorovaikutusKierros = {
   // Viimeisimmän vuorovaikutuksen jarjestysnumero

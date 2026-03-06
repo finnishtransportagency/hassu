@@ -9,7 +9,6 @@ Object {
   "kasittelynTila": undefined,
   "kayttoOikeudet": Array [],
   "oid": "100",
-  "tyyppi": "TIE",
   "velho": Object {
     "asiatunnusELY": undefined,
     "asiatunnusVayla": undefined,
@@ -45,7 +44,6 @@ Object {
   "kasittelynTila": undefined,
   "kayttoOikeudet": Array [],
   "oid": "100",
-  "tyyppi": "TIE",
   "velho": Object {
     "asiatunnusELY": undefined,
     "asiatunnusVayla": undefined,

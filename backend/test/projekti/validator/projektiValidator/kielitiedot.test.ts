@@ -12,6 +12,7 @@ import { AloitusKuulutusJulkaisu, DBProjekti, UudelleenkuulutusTila, Velho } fro
 import { IllegalArgumentError } from "hassu-common/error";
 import { expect } from "chai";
 import { parameters } from "../../../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../../../src/database/julkaisuItemKeys";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -73,6 +74,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
       ...projekti,
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: projekti.oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -202,6 +205,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -240,6 +245,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -273,6 +280,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -321,6 +330,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,
@@ -370,6 +381,8 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     };
     projekti.aloitusKuulutusJulkaisut = [
       {
+        projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
         velho: { nimi: "" },
         tila: KuulutusJulkaisuTila.MIGROITU,
         id: 1,

@@ -17,6 +17,7 @@ import { fileService } from "../../src/files/fileService";
 import { parameters } from "../../src/aws/parameters";
 import { expect } from "chai";
 import { IllegalAccessError } from "hassu-common/error";
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 describe("tiedostoDownloadLinkHandler", () => {
   // Scroll down for test data definitions.
   // Test projekti has:
@@ -501,6 +502,7 @@ const nahtavillaolo: NahtavillaoloVaihe = {
 
 const nahtavillaoloJulkaisu1: NahtavillaoloVaiheJulkaisu = {
   projektiOid: "1",
+  sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
   id: 1,
   aineistoNahtavilla: [
     {
@@ -525,6 +527,7 @@ const nahtavillaoloJulkaisu1: NahtavillaoloVaiheJulkaisu = {
 
 const nahtavillaoloJulkaisu2: NahtavillaoloVaiheJulkaisu = {
   projektiOid: "1",
+  sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 2),
   id: 2,
   aineistoNahtavilla: [
     {

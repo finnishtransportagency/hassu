@@ -13,6 +13,8 @@ import { BankHolidays } from "../../src/endDateCalculator/bankHolidays";
 import { assertIsDefined } from "../../src/util/assertions";
 import { JULKAISU_KEYS } from "../../src/database/model/julkaisuKey";
 import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
+import omit from "lodash/omit";
+import { DBPROJEKTI_OMITTED_FIELDS } from "../../src/database/model";
 
 describe("haeLiittyvanProjektinTiedot", () => {
   const tableName = "Projekti-localstack";
@@ -110,7 +112,7 @@ describe("haeLiittyvanProjektinTiedot", () => {
     const mock = mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
-        Item: projekti,
+        Item: omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS),
       })
       .on(QueryCommand, {
         TableName: tableDataName,
@@ -118,7 +120,8 @@ describe("haeLiittyvanProjektinTiedot", () => {
           ":projektiOid": projekti.oid,
         },
       })
-      .resolves({ Items: [] });
+      .resolves({ Items: projekti.aloitusKuulutusJulkaisut! });
+
     const result = await haeLiittyvanProjektinTiedot(projekti.oid);
     const expectedResult: ProjektinJakotieto = {
       oid: projekti.oid,
@@ -143,7 +146,7 @@ describe("haeLiittyvanProjektinTiedot", () => {
     const mock = mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
-        Item: projekti,
+        Item: omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS),
       })
       .on(QueryCommand, {
         TableName: tableDataName,
@@ -151,7 +154,7 @@ describe("haeLiittyvanProjektinTiedot", () => {
           ":projektiOid": projekti.oid,
         },
       })
-      .resolves({ Items: [] });
+      .resolves({ Items: projekti.aloitusKuulutusJulkaisut! });
     const result = await haeLiittyvanProjektinTiedot(projekti.oid);
     const expectedResult: ProjektinJakotieto = {
       oid: projekti.oid,

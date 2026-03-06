@@ -11,8 +11,12 @@ import {
   Yhteystieto,
   KuulutusSaamePDFt,
   ProjektinJakautuminen,
+  hyvaksymisPaatosVaiheJulkaisuPrefix,
+  jatkopaatos1VaiheJulkaisuPrefix,
+  jatkopaatos2VaiheJulkaisuPrefix,
 } from ".";
 import { HallintoOikeus, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { IProjektiDataItem } from "./IProjektiDataItem";
 
 export type HyvaksymisPaatosVaihe = {
   id: number;
@@ -30,6 +34,18 @@ export type HyvaksymisPaatosVaihe = {
   aineistoMuokkaus?: AineistoMuokkaus | null;
   alkuperainenPaatos?: Array<Aineisto> | null;
 };
+
+export interface HyvaksymisPaatosVaiheJulkaisu
+  extends IProjektiDataItem<{ sortKey: `${typeof hyvaksymisPaatosVaiheJulkaisuPrefix}${string}` }>,
+    PaatosVaiheJulkaisuTiedot {}
+export interface JatkoPaatos1VaiheJulkaisu
+  extends IProjektiDataItem<{ sortKey: `${typeof jatkopaatos1VaiheJulkaisuPrefix}${string}` }>,
+    PaatosVaiheJulkaisuTiedot {}
+export interface JatkoPaatos2VaiheJulkaisu
+  extends IProjektiDataItem<{ sortKey: `${typeof jatkopaatos2VaiheJulkaisuPrefix}${string}` }>,
+    PaatosVaiheJulkaisuTiedot {}
+
+export type PaatosVaiheJulkaisu = HyvaksymisPaatosVaiheJulkaisu | JatkoPaatos1VaiheJulkaisu | JatkoPaatos2VaiheJulkaisu;
 
 export interface PaatosVaiheJulkaisuTiedot {
   id: number;

@@ -96,7 +96,9 @@ Object {
         ],
       },
       "muokkaaja": "A000111",
+      "projektiOid": "3",
       "siirtyySuunnitteluVaiheeseen": "2021-04-28",
+      "sortKey": "JULKAISU#ALOITUS#001",
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "asiatunnusELY": "ELY/3/2022",
@@ -958,6 +960,7 @@ Object {
         },
       },
       "projektiOid": "3",
+      "sortKey": "JULKAISU#NAHTAVILLAOLO#001",
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "asiatunnusELY": "ELY/3/2022",

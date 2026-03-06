@@ -159,7 +159,9 @@ Object {
       },
       "muokkaaja": "A000111",
       "muokkausTila": "MUOKKAUS",
+      "projektiOid": "3",
       "siirtyySuunnitteluVaiheeseen": "2022-04-28",
+      "sortKey": "JULKAISU#ALOITUS#001",
       "suunnitteluSopimus": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": undefined,
@@ -427,7 +429,9 @@ Object {
       },
       "muokkaaja": "A000111",
       "muokkausTila": "MUOKKAUS",
+      "projektiOid": "3",
       "siirtyySuunnitteluVaiheeseen": "2022-04-28",
+      "sortKey": "JULKAISU#ALOITUS#002",
       "suunnitteluSopimus": undefined,
       "tila": "HYVAKSYTTY",
       "uudelleenKuulutus": Object {
@@ -782,7 +786,9 @@ Object {
         ],
       },
       "muokkaaja": "A000111",
+      "projektiOid": "1",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "sortKey": "JULKAISU#ALOITUS#001",
       "suunnitteluSopimus": Object {
         "email": "Kunta.Kuntalainen@vayla.fi",
         "etunimi": "Kunta",
@@ -887,7 +893,7 @@ Object {
     "palautusSyy": "Korjaa teksti",
     "siirtyySuunnitteluVaiheeseen": "2022-01-01",
   },
-  "aloitusKuulutusJulkaisut": Array [],
+  "aloitusKuulutusJulkaisut": undefined,
 }
 `;
 
@@ -992,7 +998,9 @@ Object {
         ],
       },
       "muokkaaja": "A000111",
+      "projektiOid": "1",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "sortKey": "JULKAISU#ALOITUS#001",
       "suunnitteluSopimus": Object {
         "email": "Kunta.Kuntalainen@vayla.fi",
         "etunimi": "Kunta",
@@ -1169,7 +1177,9 @@ Object {
         "uuid": "00000001-6041-4c97-9b54-f3f98a121bc1",
       },
       "muokkaaja": "A000111",
+      "projektiOid": "1",
       "siirtyySuunnitteluVaiheeseen": "2022-01-01",
+      "sortKey": "JULKAISU#ALOITUS#001",
       "suunnitteluSopimus": Object {
         "email": "Kunta.Kuntalainen@vayla.fi",
         "etunimi": "Kunta",

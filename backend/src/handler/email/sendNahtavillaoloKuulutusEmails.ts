@@ -10,7 +10,7 @@ import { examineEmailSentResults, saveEmailAsFile } from "../../email/emailUtil"
 import { ProjektiPaths } from "../../files/ProjektiPath";
 import { KuulutusHyvaksyntaEmailSender } from "./KuulutusHyvaksyntaEmailSender";
 import { findNahtavillaoloLastApproved } from "../../projekti/projektiUtil";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   public async sendEmails(oid: string): Promise<void> {
@@ -44,7 +44,7 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
       );
     }
 
-    await nahtavillaoloVaiheJulkaisuDatabase.put(nahtavillakuulutus);
+    await projektiEntityDatabase.put(nahtavillakuulutus);
   }
 
   private async sendEmailToProjektipaallikko(

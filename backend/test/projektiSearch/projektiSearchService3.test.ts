@@ -82,7 +82,6 @@ const projekti: DBProjekti = {
     },
     yhteysHenkilo: "A000112",
   },
-  tyyppi: API.ProjektiTyyppi.TIE,
   vahainenMenettely: false,
   velho: {
     nimi: "HASSU AUTOMAATTITESTIPROJEKTI1",

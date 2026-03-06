@@ -25,6 +25,7 @@ import { SqsClient } from "../../src/HyvaksymisEsitys/aineistoHandling/sqsClient
 import { SqsEvent } from "../../src/HyvaksymisEsitys/aineistoHandling/sqsEvent";
 import { DeepReadonly } from "hassu-common/specialTypes";
 import { parameters } from "../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 const projari = UserFixture.pekkaProjari;
 const projariAsVaylaDBUser: DBVaylaUser = {
@@ -581,7 +582,16 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const projektiBefore: DeepReadonly<DBProjekti> = {
       ...projekti,
       vuorovaikutusKierros: undefined,
-      aloitusKuulutusJulkaisut: [{ id: 1, yhteystiedot: [], kuulutusYhteystiedot: {}, velho: { nimi: "Nimi" } }],
+      aloitusKuulutusJulkaisut: [
+        {
+          id: 1,
+          projektiOid: projekti.oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
+          yhteystiedot: [],
+          kuulutusYhteystiedot: {},
+          velho: { nimi: "Nimi" },
+        },
+      ],
     };
     await insertProjektiToDB(projektiBefore);
     await Promise.all(INPUTIN_LADATUT_TIEDOSTOT.map(({ nimi, uuid }) => insertUploadFileToS3(uuid, nimi)));

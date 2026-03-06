@@ -40,9 +40,12 @@ export class AsiakirjaAdapter {
   async adaptAloitusKuulutusJulkaisu(dbProjekti: DBProjekti): Promise<AloitusKuulutusJulkaisu> {
     if (dbProjekti.aloitusKuulutus) {
       const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.aloitusKuulutus;
+      const id = createNextAloitusKuulutusJulkaisuID(dbProjekti);
       const julkaisu: AloitusKuulutusJulkaisu = {
         ...includedFields,
-        id: createNextAloitusKuulutusJulkaisuID(dbProjekti),
+        projektiOid: dbProjekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", id),
+        id,
         kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, true),
         velho: adaptVelho(dbProjekti),
@@ -159,11 +162,13 @@ export class AsiakirjaAdapter {
 
   async adaptNahtavillaoloVaiheJulkaisu(dbProjekti: DBProjekti): Promise<NahtavillaoloVaiheJulkaisu> {
     if (dbProjekti.nahtavillaoloVaihe) {
-      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
+      const { kuulutusYhteystiedot, palautusSyy: _palautusSyy, id, ...includedFields } = dbProjekti.nahtavillaoloVaihe;
       assertIsDefined(dbProjekti.kielitiedot);
       const julkaisu: NahtavillaoloVaiheJulkaisu = {
         ...includedFields,
         projektiOid: dbProjekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", id),
+        id,
         velho: adaptVelho(dbProjekti),
         kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa

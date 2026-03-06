@@ -22,6 +22,7 @@ import { parameters } from "../../src/aws/parameters";
 import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientYllapito";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 const sandbox = createSandbox();
 
@@ -76,7 +77,6 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   paivitetty: "2022-10-12T14:48:10+03:00",
   muistiinpano: "",
   vaihe: undefined,
-  tyyppi: ProjektiTyyppi.TIE,
   aloitusKuulutus: {
     id: 1,
     kuulutusPaiva: "2022-10-10",
@@ -100,6 +100,8 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
   },
   aloitusKuulutusJulkaisut: [
     {
+      projektiOid: "1.2.246.578.5.1.2724991921.3534113206",
+      sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
       id: 1,
       kuulutusPaiva: "2022-10-10",
       siirtyySuunnitteluVaiheeseen: "2022-11-09",

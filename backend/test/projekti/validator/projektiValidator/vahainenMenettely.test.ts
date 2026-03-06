@@ -12,6 +12,7 @@ import { DBProjekti, UudelleenkuulutusTila } from "../../../../src/database/mode
 import { IllegalArgumentError } from "hassu-common/error";
 import { expect } from "chai";
 import { parameters } from "../../../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../../../src/database/julkaisuItemKeys";
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -88,8 +89,9 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
   it("antaa tehdä nähtävilläoloon migroidusta projektista vähäisen menettelyn projektin", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiFixture = new ProjektiFixture();
+    const oid = "123";
     const migroituProjekti: DBProjekti = {
-      oid: "123",
+      oid,
       velho: { nimi: "testi" },
       versio: 1,
       kayttoOikeudet: [projektiFixture.pekkaProjariProjektiKayttaja()],
@@ -104,6 +106,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -133,7 +137,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           id: 1,
           velho: {
             nimi: "testi",
@@ -158,8 +163,9 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
   it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolovaiheeseen on tehty hyväksyntää odottava julkaisu", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiFixture = new ProjektiFixture();
+    const oid = "123";
     const migroituProjekti: DBProjekti = {
-      oid: "123",
+      oid,
       velho: { nimi: "testi" },
       versio: 1,
       salt: "jotain",
@@ -175,6 +181,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -204,7 +212,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           id: 1,
           velho: {
             nimi: "testi",
@@ -235,8 +244,9 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
   it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolovaiheeseen on tehty hyväksytty odottava julkaisu", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiFixture = new ProjektiFixture();
+    const oid = "123";
     const migroituProjekti: DBProjekti = {
-      oid: "123",
+      oid,
       velho: { nimi: "testi" },
       versio: 1,
       salt: "jotain",
@@ -252,6 +262,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -281,7 +293,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           id: 1,
           velho: {
             nimi: "testi",
@@ -312,8 +325,9 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
   it("antaa tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektin, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiFixture = new ProjektiFixture();
+    const oid = "123";
     const migroituProjekti: DBProjekti = {
-      oid: "123",
+      oid,
       salt: "jotain",
       velho: { nimi: "testi" },
       versio: 1,
@@ -329,6 +343,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -361,7 +377,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           id: 1,
           velho: {
             nimi: "testi",
@@ -392,8 +409,9 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
   it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus, mutta uudelleenkuulutus odottaa hyväksyntää", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiFixture = new ProjektiFixture();
+    const oid = "123";
     const migroituProjekti: DBProjekti = {
-      oid: "123",
+      oid,
       salt: "jotain",
       velho: { nimi: "testi" },
       versio: 1,
@@ -409,6 +427,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -441,7 +461,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           id: 1,
           velho: {
             nimi: "testi",
@@ -460,7 +481,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           },
         },
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 2),
           id: 2,
           velho: {
             nimi: "testi",
@@ -494,8 +516,9 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
   it("ei anna tehdä suunnitteluvaiheeseen migroidusta projektista vähäisen menettelyn projektia, jos nähtävilläolo on julkaistu mutta sitten avattu uudelleenkuulutus, mutta uudelleenkuulutus on hyväksytty", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiFixture = new ProjektiFixture();
+    const oid = "123";
     const migroituProjekti: DBProjekti = {
-      oid: "123",
+      oid,
       salt: "jotain",
       velho: { nimi: "testi" },
       versio: 1,
@@ -511,6 +534,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       aloitusKuulutusJulkaisut: [
         {
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
           id: 1,
           tila: KuulutusJulkaisuTila.MIGROITU,
           yhteystiedot: [],
@@ -540,7 +565,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
           id: 1,
           velho: {
             nimi: "testi",
@@ -560,7 +586,8 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           kuulutusPaiva: "2022-01-01",
         },
         {
-          projektiOid: "123",
+          projektiOid: oid,
+          sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 2),
           id: 2,
           velho: {
             nimi: "testi",

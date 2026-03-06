@@ -1,4 +1,4 @@
-import { DBVaylaUser, SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../database/model/projekti";
+import { DBVaylaUser, SuunnitteluSopimus, SuunnitteluSopimusJulkaisu } from "../database/model";
 import { Yhteystieto } from "../database/model/common";
 
 export function vaylaUserToYhteystieto(
