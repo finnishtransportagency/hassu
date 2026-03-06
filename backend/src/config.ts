@@ -48,7 +48,7 @@ const config = {
   emailsOn: process.env.EMAILS_ON,
   emailsTo: process.env.EMAILS_TO,
 
-  ajansiirtoSallittu: process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU,
+  ajansiirtoSallittu: process.env.AJANSIIRTO_SALLITTU,
   isProd: (): boolean => process.env.ENVIRONMENT == "prod",
   isPermanentEnvironment: (): boolean => BaseConfig.isPermanentEnvironment(),
 
