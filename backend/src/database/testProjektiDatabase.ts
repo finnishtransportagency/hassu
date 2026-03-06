@@ -31,28 +31,10 @@ export class TestProjektiDatabase extends ProjektiDatabase {
 
   /** Tallettaa erikseen myös julkaisut */
   async saveProjekti(dbProjekti: SaveDBProjektiInput): Promise<number> {
-    const versionNumber = await this.saveSlimProjekti(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
-    await this.updateOtherTables(dbProjekti);
-    return versionNumber;
+    return await this.saveSlimProjekti(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
   }
   async saveProjektiWithoutLocking(dbProjekti: SaveDBProjektiWithoutLockingInput): Promise<number> {
-    const versionNumber = await this.saveSlimProjektiWithoutLocking(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
-    await this.updateOtherTables(dbProjekti);
-    return versionNumber;
-  }
-
-  /** Poistaa kaikki ja asettaa sitten inputissa tulleet taulut */
-  private async updateOtherTables(dbProjekti: SaveDBProjektiInput | SaveDBProjektiWithoutLockingInput) {
-    const entitiesToDelete = await projektiEntityDatabase.getAllForProjekti(dbProjekti.oid, true);
-    await projektiEntityDatabase.deleteAll(entitiesToDelete);
-    const entities = [
-      dbProjekti.aloitusKuulutusJulkaisut ?? [],
-      dbProjekti.nahtavillaoloVaiheJulkaisut ?? [],
-      dbProjekti.hyvaksymisPaatosVaiheJulkaisut ?? [],
-      dbProjekti.jatkoPaatos1VaiheJulkaisut ?? [],
-      dbProjekti.jatkoPaatos2VaiheJulkaisut ?? [],
-    ].flat();
-    await projektiEntityDatabase.putAll(entities);
+    return await this.saveSlimProjektiWithoutLocking(omit(dbProjekti, ...DBPROJEKTI_OMITTED_FIELDS));
   }
 
   /*** forceUpdateInTests and no locking */
@@ -99,6 +81,13 @@ export class TestProjektiDatabase extends ProjektiDatabase {
             );
           }
         }
+      } catch (e) {
+        log.error(e);
+      }
+
+      try {
+        const items = await projektiEntityDatabase.getAllForProjekti(oid, true);
+        await projektiEntityDatabase.deleteAll(items);
       } catch (e) {
         log.error(e);
       }
