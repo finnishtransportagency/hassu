@@ -18,6 +18,7 @@ export const zipLausuntoPyyntoZipsLausuntoPyyntoFiles = async () => {
       nimi: "Tiedosto%201.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "d6a29718-d5ce-4f8b-bc09-2e3fbe10be38",
     },
   ];
   const lausuntoPyynnot: LausuntoPyynto[] = [

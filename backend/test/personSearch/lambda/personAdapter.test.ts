@@ -15,7 +15,7 @@ describe("personAdapter", () => {
 
   it("should adapt person search result succesfully", () => {
     const kayttajas = {};
-    adaptPersonSearchResult(searchResultFixture.pekkaProjariSearchResult.person.person, kayttajas);
+    adaptPersonSearchResult(searchResultFixture.pekkaProjariSearchResult.person.person, kayttajas, undefined);
     const person: Person = {
       email: ["pekka.projari@vayla.fi"],
       etuNimi: "Pekka",
@@ -30,7 +30,7 @@ describe("personAdapter", () => {
 
   it("should adapt person search result succesfully", () => {
     const kayttajas = {};
-    adaptPersonSearchResult(searchResultFixture.mattiMeikalainenSearchResult.person.person, kayttajas);
+    adaptPersonSearchResult(searchResultFixture.mattiMeikalainenSearchResult.person.person, kayttajas, undefined);
     const person: Person = {
       email: ["matti.meikalainen@vayla.fi"],
       etuNimi: "Matti",

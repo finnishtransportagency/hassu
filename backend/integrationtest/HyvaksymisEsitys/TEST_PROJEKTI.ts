@@ -84,6 +84,7 @@ function getTestVuorovaikutusKierrosJulkaisu(number: number = 1) {
   };
 }
 const TEST_NAHTAVILLAOLOVAIHE_JULKAISU: DeepPartial<NahtavillaoloVaiheJulkaisu> = {
+  projektiOid: "Testi1",
   id: 1,
   tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
   aineistoNahtavilla: [

@@ -89,6 +89,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
       lyhytOsoite: "lyhytOsoite",
       nahtavillaoloVaihe: {
         id: 1,
+        projektiOid: "1.2.3",
         kielitiedot: {
           ensisijainenKieli: event.ensisijainenKieli,
           toissijainenKieli: event.toissijainenKieli,
@@ -97,6 +98,12 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
         kuulutusYhteystiedot: {},
         velho: {
           nimi: "Projekti 1",
+          asiatunnusELY: "ELY/456",
+          asiatunnusVayla: "VAYLA/123",
+          tyyppi: event.tyyppi,
+          kunnat: [91],
+          suunnittelustaVastaavaViranomainen: event.suunnittelustaVastaavaViranomainen,
+          vaylamuoto: ["tie", "rata"],
         },
         kuulutusVaihePaattyyPaiva: "2024-02-08",
         kuulutusPaiva: "2024-01-01",
@@ -175,7 +182,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf tie vaylavirasto ei osoitetta", async () => {
     const event: PdfEvent = {
@@ -189,7 +196,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla", async () => {
     const event: PdfEvent = {
@@ -203,7 +210,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla", async () => {
     const event: PdfEvent = {
@@ -217,7 +224,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla ruotsi", async () => {
     const event: PdfEvent = {
@@ -232,7 +239,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla ruotsi", async () => {
     const event: PdfEvent = {
@@ -247,7 +254,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla ruotsi", async () => {
     const event: PdfEvent = {
@@ -262,7 +269,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf tie ely osoitetiedoilla eu", async () => {
     const event: PdfEvent = {
@@ -276,7 +283,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf rata ely osoitetiedoilla", async () => {
     const event: PdfEvent = {
@@ -290,7 +297,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf yleinen ely osoitetiedoilla", async () => {
     const event: PdfEvent = {
@@ -304,7 +311,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf rata ely ei osoitetta", async () => {
     const event: PdfEvent = {
@@ -318,7 +325,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
 
   it("generate kiinteiston omistaja pdf tie vaylavirasto osoitetiedoilla vahainen menettely", async () => {
@@ -334,7 +341,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf rata vaylavirasto osoitetiedoilla vahainen menettely", async () => {
     const event: PdfEvent = {
@@ -349,7 +356,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf yleinen vaylavirasto osoitetiedoilla vahainen menettely", async () => {
     const event: PdfEvent = {
@@ -364,7 +371,7 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName(event), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName(event), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
   it("generate kiinteiston omistaja pdf tie vaylavirasto vanha", async () => {
     parameterStub.resolves(false);
@@ -380,6 +387,6 @@ describe("pdfGeneratorHandler", () => {
     const pdf = await handleEvent(generateEvent(event));
     expect(pdf.textContent).toMatchSnapshot();
     expect(pdf.nimi).to.equal(pdfFileName(event));
-    fs.writeFileSync(testPdfFileName({ ...event, vanha: true }), Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(testPdfFileName({ ...event, vanha: true }), new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
 });

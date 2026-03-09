@@ -133,6 +133,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: "123",
           id: 1,
           velho: {
             nimi: "testi",
@@ -203,6 +204,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: "123",
           id: 1,
           velho: {
             nimi: "testi",
@@ -279,6 +281,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: "123",
           id: 1,
           velho: {
             nimi: "testi",
@@ -358,6 +361,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: "123",
           id: 1,
           velho: {
             nimi: "testi",
@@ -437,6 +441,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: "123",
           id: 1,
           velho: {
             nimi: "testi",
@@ -455,6 +460,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           },
         },
         {
+          projektiOid: "123",
           id: 2,
           velho: {
             nimi: "testi",
@@ -534,6 +540,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: "123",
           id: 1,
           velho: {
             nimi: "testi",
@@ -553,6 +560,7 @@ describe("projektiValidator (vahainenMenettelyValidator)", () => {
           kuulutusPaiva: "2022-01-01",
         },
         {
+          projektiOid: "123",
           id: 2,
           velho: {
             nimi: "testi",

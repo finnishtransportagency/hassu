@@ -26,8 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const code = req.query["code"] as string;
   const state = req.query["state"] as string;
   const redirect_uri = getRedirectUri();
-  const client_id = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID!;
-  const userPoolUrl = new URL(process.env.NEXT_PUBLIC_KEYCLOAK_DOMAIN!);
+  const client_id = process.env.KEYCLOAK_CLIENT_ID!;
+  const userPoolUrl = new URL(process.env.KEYCLOAK_DOMAIN!);
   userPoolUrl.pathname = "/keycloak/auth/realms/suomifi/protocol/openid-connect/token";
   const details: Record<string, string> = {
     grant_type: "authorization_code",
@@ -48,12 +48,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     method: "POST",
     body: formBody,
   });
-  const json = await response.json();
-  if (json["access_token"] && json["refresh_token"]) {
+  const { access_token, refresh_token, id_token } = await response.json();
+  if (access_token && refresh_token && id_token) {
     // set cookie as Secure AND SameSite=Strict
     const cookie = [
-      `x-vls-access-token=${json["access_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
-      `x-vls-refresh-token=${json["refresh_token"]};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-access-token=${access_token};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-refresh-token=${refresh_token};path=/;Secure;SameSite=Strict;HttpOnly `,
+      `x-vls-id-token=${id_token};path=/;Secure;SameSite=Strict;HttpOnly `,
     ];
     res.setHeader("Set-Cookie", cookie);
   }
