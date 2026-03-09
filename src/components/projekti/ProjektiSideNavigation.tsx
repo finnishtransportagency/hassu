@@ -21,6 +21,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { styled, experimental_sx as sx } from "@mui/system";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import Ajansiirto from "./Ajansiirto";
+import { getPublicEnv } from "src/util/env";
 
 export default function ProjektiSideNavigationWrapper(): ReactElement {
   const { data: projekti } = useProjekti();
@@ -45,7 +46,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
     [projekti, router]
   );
 
-  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
+  const ajansiirtoSallittu = isAjansiirtoSallittu(getPublicEnv("AJANSIIRTO_SALLITTU"));
 
   useEffect(() => {
     if (!projekti.nykyinenKayttaja.omaaMuokkausOikeuden) {

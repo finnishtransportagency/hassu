@@ -326,6 +326,16 @@ export class HassuBackendStack extends Stack {
       })
     );
 
+    streamHandler.addEventSource(
+      new DynamoEventSource(this.props.nahtavillaoloVaiheJulkaisuTable, {
+        startingPosition: StartingPosition.LATEST,
+        batchSize: 5,
+        bisectBatchOnError: true,
+        retryAttempts: 5,
+        maxBatchingWindow: Duration.seconds(1),
+      })
+    );
+
     const indexerQueue = this.createIndexerQueue();
     streamHandler.node.addDependency(indexerQueue);
     streamHandler.addToRolePolicy(new PolicyStatement({ actions: ["sqs:SendMessage"], resources: [indexerQueue.queueArn] }));
@@ -736,6 +746,7 @@ export class HassuBackendStack extends Stack {
         TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
         TABLE_PROJEKTI_MUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
+        TABLE_NAHTAVILLAOLOVAIHEJULKAISU: this.props.nahtavillaoloVaiheJulkaisuTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
@@ -758,6 +769,7 @@ export class HassuBackendStack extends Stack {
     suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
     this.props.kiinteistonomistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
