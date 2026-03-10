@@ -56,10 +56,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED=1
 
-
-# use separate next.config.js file to keep things as isolated as possible
-RUN mv docker_next.config.js next.config.js
-
 RUN mv middleware.ts src/
 
 # Build the project
