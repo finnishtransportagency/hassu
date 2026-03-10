@@ -14,6 +14,7 @@ export const zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles = async () =>
       nimi: "tiedosto_odottaa_persistointia.txt",
       tila: API.LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
       jarjestys: 2,
+      uuid: "140c2abe-2a53-4143-bf6c-8f982d2d5d6d",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/tiedosto_valmis.txt",
@@ -21,6 +22,7 @@ export const zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles = async () =>
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 1,
       tuotu: "2021-06-01T01:01",
+      uuid: "040a6a49-3e00-4ff5-a670-42fd398ddd4d",
     },
     {
       tiedosto: "/lausuntopyynnon_taydennys/joku-uuid/tiedosto_odottaa_poistoa.txt",
@@ -28,6 +30,7 @@ export const zipLausuntoPyynnonTaydennyksetDoesNotZipNotReadyFiles = async () =>
       tila: API.LadattuTiedostoTila.ODOTTAA_POISTOA,
       jarjestys: 3,
       tuotu: "2021-06-01T01:02",
+      uuid: "7c175762-1e7b-4b0b-a32f-5f279a2bb29d",
     },
   ];
   const muuAineisto: LadattuTiedosto[] = getThreeLadattuTiedostosValmisAndOdottaaPersistointiaAndOdottaaPoistoa({

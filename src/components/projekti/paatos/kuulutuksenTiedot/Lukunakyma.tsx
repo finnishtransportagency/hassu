@@ -29,6 +29,7 @@ import { label } from "src/util/textUtil";
 import { H2, H3 } from "../../../Headings";
 import KuulutuksenSisalto from "../../common/KuulutuksenSisalto";
 import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
+import { getPublicEnv } from "src/util/env";
 
 interface Props {
   julkaisu?: HyvaksymisPaatosVaiheJulkaisu | null;
@@ -65,7 +66,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
 
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
 
-  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
+  const ajansiirtoSallittu = isAjansiirtoSallittu(getPublicEnv("AJANSIIRTO_SALLITTU"));
 
   let { kuulutusPaiva } = examineKuulutusPaiva(julkaisu.kuulutusPaiva);
 

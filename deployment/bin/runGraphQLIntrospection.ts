@@ -17,7 +17,7 @@ type Schema = {
 };
 
 if (Config.isDeveloperEnvironment()) {
-  const urlObject = new URL(process.env.REACT_APP_API_URL || "");
+  const urlObject = new URL(process.env.APPSYNC_URL || process.env.REACT_APP_API_URL || "");
 
   sendSignedRequest(
     new HttpRequest({

@@ -1,8 +1,8 @@
-import { DBProjekti } from "../../../database/model";
+import { DBProjektiSlim } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { nyt, parseDate } from "../../../util/dateUtil";
 
-export function adaptOmistajahakuTila(projektiFromDB: DBProjekti | undefined): API.OmistajahakuTila {
+export function adaptOmistajahakuTila(projektiFromDB: DBProjektiSlim | undefined): API.OmistajahakuTila {
   if (projektiFromDB?.omistajahaku?.virhe) {
     return API.OmistajahakuTila.VIRHE;
   } else if (hasHakuTimeouted(projektiFromDB?.omistajahaku?.kaynnistetty)) {

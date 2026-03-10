@@ -32,6 +32,7 @@ process.env.VELHO_API_URL = "http://localhost";
 process.env.VELHO_USERNAME = "top";
 process.env.VELHO_PASSWORD = "secret";
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
+process.env.TABLE_NAHTAVILLAOLOVAIHEJULKAISU = "NahtavillaoloVaiheJulkaisu-localstack";
 process.env.TABLE_LYHYTOSOITE = "Lyhytosoite-localstack";
 process.env.TABLE_FEEDBACK = "Palaute-localstack";
 process.env.TABLE_PROJEKTI_MUISTUTTAJA = "ProjektiMuistuttaja-localstack";
@@ -54,8 +55,7 @@ process.env.CLOUDFRONT_DISTRIBUTION_ID = "unit-test-distribution-id";
 process.env.FRONTEND_PUBLIC_KEY_ID = "test_public_key_id";
 
 process.env.HASSU_XRAY_ENABLED = process.env.HASSU_XRAY_ENABLED ?? "false";
-process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE = JSON.stringify({"startDate":"2025-01-01"});
-
+process.env.EVK_ACTIVATION_DATE = JSON.stringify({ startDate: "2025-01-01" });
 
 // Koodi säästetty jos halutaan tarvittaessa testeissä kytkeä X-Ray päälle
 if (process.env.HASSU_XRAY_ENABLED !== "false") {

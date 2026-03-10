@@ -209,7 +209,9 @@ class KuntaMetadata {
    * @param key
    */
   elinvoimakeskusIdFromKey(key: string) {
-    return Object.keys(alueData.elinvoimakeskukset).find((elinvoimakeskusKey) => alueData.elinvoimakeskukset[elinvoimakeskusKey].lyhenne == key);
+    return Object.keys(alueData.elinvoimakeskukset).find(
+      (elinvoimakeskusKey) => alueData.elinvoimakeskukset[elinvoimakeskusKey].lyhenne == key
+    );
   }
 }
 

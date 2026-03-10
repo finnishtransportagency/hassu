@@ -18,6 +18,7 @@ export const zipLausuntoPyyntoZipsSpecifiedLausuntoPyynto = async () => {
       nimi: "Tiedosto%201.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "23e81b5d-6cc3-4941-898e-8ca4bb531751",
     },
   ];
   const lisaAineistot2: LadattuTiedosto[] = [
@@ -26,6 +27,7 @@ export const zipLausuntoPyyntoZipsSpecifiedLausuntoPyynto = async () => {
       nimi: "Tiedosto%202.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "",
     },
   ];
   const lausuntoPyynnot: LausuntoPyynto[] = [
