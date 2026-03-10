@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
 import { today } from "./dateUtils";
+import { getPublicEnv } from "../../src/util/env";
 
 export const isEvkAktivoitu = (): boolean => {
   const TODAY: string = today().format("YYYY-MM-DD");
-  const envParam = process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE;
+  const envParam = getPublicEnv("EVK_ACTIVATION_DATE");
   if (envParam) {
     try {
       const evkAktivointiPvm = JSON.parse(envParam);
@@ -24,7 +25,7 @@ export const isEvkAktivoitu = (): boolean => {
 };
 
 export const isEvkAktivoituAt = (when: string): boolean => {
-  const envParam = process.env.NEXT_PUBLIC_EVK_ACTIVATION_DATE;
+  const envParam = getPublicEnv("EVK_ACTIVATION_DATE");
   if (envParam) {
     try {
       const evkAktivointiPvm = JSON.parse(envParam);
