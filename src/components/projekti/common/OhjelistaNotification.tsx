@@ -42,6 +42,12 @@ export const OhjelistaNotification: FunctionComponent<Props> = ({ children, asia
       <div>
         <H3 variant="h4">Ohjeet</H3>
         <DottedList className="list-disc block pl-5">
+          {asianhallintaTiedot?.vaihe === Vaihe.ALOITUSKUULUTUS && (
+            <li>
+              Ennen kuulutuksen täyttämistä tarkista, että suunnitelman nimi on oikein ja sisältö- ja esitystapaohjeiden mukainen. Jos nimeä
+              tarvitsee muuttaa, tee muutos Projektivelhoon.
+            </li>
+          )}
           {vaylaAsianhallinta && nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
             <li>
               <AshaKuulutusToimenpideTeksti vaihe={asianhallintaTiedot.vaihe} />
