@@ -5,33 +5,35 @@ const CopyPlugin = require("copy-webpack-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
+// Sovellukselle tuleva liikenne on /frontend prefixin takana pilviympäristöissä
+// tulee huomioida redirecteissä
 const lyhytOsoiteRedirects = [
   {
-    source: "/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
-    source: "/fi/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/fi/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
-    source: "/sv/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/sv/s/:path*`,
     destination: "/api/sv/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
-    source: "/sv/keycloak/:path*",
+    source: `${BaseConfig.frontendPrefix}/sv/keycloak/:path*`,
     destination: "/keycloak/:path*",
     permanent: true,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
 ];
 
@@ -102,19 +104,14 @@ module.exports = (phase) => {
     reactStrictMode: true,
     // trailingSlash: true,
 
-    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are only available in non-prod environments
-    pageExtensions: ["ts", "tsx", "js", "jsx"]
-      .map((extension) => {
-        const isDevServer = BaseConfig.env !== "prod";
-        const prodExtension = `(?<!dev\.)${extension}`;
-        const devExtension = `dev\.${extension}`;
-        return isDevServer ? [devExtension, extension] : prodExtension;
-      })
-      .flat(),
+    // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are always bundled but 404 is shown in prod
+    pageExtensions: ["ts", "tsx", "js", "jsx"].map((ext) => [`dev.${ext}`, ext]).flat(),
+    output: "standalone",
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config);
   } else {
+    // actual env variables are provided runtime
     config.redirects = async () => {
       return lyhytOsoiteRedirects;
     };
