@@ -201,8 +201,7 @@
     "uuid": "$uuid",
     "shell-quote": "$shell-quote",
     "postcss": "$postcss",
-    "got": "12.6.1",
-    "fast-xml-parser": "4.5.4"
+    "got": "12.6.1"
   },
   "scripts": {
     "postinstall": "(cd deployment && npm i) && (cd common && npm i) && (cd migration-cli && npm i --ignore-scripts) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
