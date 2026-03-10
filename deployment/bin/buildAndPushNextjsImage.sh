@@ -54,7 +54,7 @@ fi
 echo "$BUILD_MESSAGE"
 
 CODE_ARTIFACT_DOMAIN="hassu-domain"
-export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $CODE_ARTIFACT_DOMAIN --domain-owner $ACCOUNT_ID --query authorizationToken --output text --duration-seconds 900)
+CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $CODE_ARTIFACT_DOMAIN --domain-owner $ACCOUNT_ID --query authorizationToken --output text --duration-seconds 900)
 NPM_SCOPE="@hassu"
 NPM_REGISTRY="hassu-private-npm"
 
@@ -65,11 +65,10 @@ docker buildx build \
   $PUSH_FLAG \
   --progress=plain \
   --platform linux/amd64 \
-  --secret id=code_artifact_token,env=CODE_ARTIFACT_TOKEN \
-  --build-arg CODE_ARTIFACT_DOMAIN=$CODE_ARTIFACT_DOMAIN \
-  --build-arg ACCOUNT_ID=$ACCOUNT_ID \
-  --build-arg AWS_REGION=$AWS_REGION \
-  --build-arg NPM_SCOPE=$NPM_SCOPE \
-  --build-arg NPM_REGISTRY=$NPM_REGISTRY \
+  --secret id=npmrc,src=<(cat <<EOF
+${NPM_SCOPE}:registry=https://${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/
+//${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/:_authToken=${CODE_ARTIFACT_TOKEN}
+EOF
+) \
   -t "$ECR_URI":"$IMAGE_TAG" \
   -f "frontend.Dockerfile" .

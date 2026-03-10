@@ -17,8 +17,6 @@
     "semantic-release": "^23.1.1"
   },
   "overrides": {
-    "next": "12.3.4",
-    "eslint-config-next": "12.3.4",
     "loader-utils": "1.4.2",
     "shell-quote": "1.7.3",
     "node-fetch": "$node-fetch",
