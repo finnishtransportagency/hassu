@@ -16,7 +16,7 @@ import { findUpdatedFields } from "../velho/velhoAdapter";
 import {
   DBProjekti,
   LadattuTiedosto,
-  PartialDBProjekti,
+  SaveDBProjektiInput,
   Velho,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
@@ -240,7 +240,7 @@ export async function updateVuorovaikutus(input: API.VuorovaikutusPaivitysInput 
       vuorovaikutusTilaisuudet: vuorovaikutusTilaisuusJulkaisut,
     };
 
-    const tallennaProjektiInput: PartialDBProjekti = {
+    const tallennaProjektiInput: SaveDBProjektiInput = {
       oid: input.oid,
       versio: input.versio,
       vuorovaikutusKierros,

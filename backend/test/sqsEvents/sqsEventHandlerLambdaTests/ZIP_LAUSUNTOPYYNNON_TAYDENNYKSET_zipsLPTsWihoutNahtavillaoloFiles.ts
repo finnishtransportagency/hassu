@@ -18,6 +18,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTsWithoutNahtavillaoloFiles = a
       nimi: "Tiedosto%201.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "deed5381-974e-447f-8b05-ff8bec1a1978",
     },
   ];
   const muuAineisto: LadattuTiedosto[] = [
@@ -26,6 +27,7 @@ export const zipLausuntoPyynnonTaydennyksetZipsLPTsWithoutNahtavillaoloFiles = a
       nimi: "Aineisto%20123.txt",
       tila: API.LadattuTiedostoTila.VALMIS,
       jarjestys: 2,
+      uuid: "e3c166b8-2aaa-4fe4-8b09-2211ea6dc4ea",
     },
   ];
   const lausuntoPyynnonTaydennykset: LausuntoPyynnonTaydennys[] = [

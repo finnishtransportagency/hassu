@@ -10,4 +10,4 @@ export const isElyJulkaisuEstetty = (projekti: Projekti, when: string): boolean 
 
 const isElySuunnittelustaVastaavaViranomainen = (projekti: Projekti): boolean => {
   return projekti.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("ELY") ?? false;
-}
+};

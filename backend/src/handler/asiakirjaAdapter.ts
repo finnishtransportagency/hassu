@@ -158,6 +158,7 @@ export class AsiakirjaAdapter {
       assertIsDefined(dbProjekti.kielitiedot);
       const julkaisu: NahtavillaoloVaiheJulkaisu = {
         ...includedFields,
+        projektiOid: dbProjekti.oid,
         velho: adaptVelho(dbProjekti),
         kuulutusYhteystiedot: adaptStandardiYhteystiedotToIncludePakotukset(dbProjekti, kuulutusYhteystiedot, true, true),
         yhteystiedot: adaptStandardiYhteystiedotToYhteystiedot(dbProjekti, kuulutusYhteystiedot, true, false), // dbProjekti.kielitiedot on oltava olemassa

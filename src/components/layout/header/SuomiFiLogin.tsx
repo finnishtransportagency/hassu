@@ -31,13 +31,17 @@ const SuomiFiLogin = styled((props: SuomiFiLoginProps) => {
         return <></>;
       }
       return (
-        <ButtonLink href={suomiFiAuthenticationURL} {...props}>
+        <ButtonLink href={suomiFiAuthenticationURL} useNextLink={false} {...props}>
           {t("kirjaudu-palveluun")}
         </ButtonLink>
       );
     } else {
       const logoutURL = getSuomiFiLogoutURL();
-      return <ButtonLink href={logoutURL}>{t("kirjaudu-ulos")}</ButtonLink>;
+      return (
+        <ButtonLink href={logoutURL} useNextLink={false}>
+          {t("kirjaudu-ulos")}
+        </ButtonLink>
+      );
     }
   } else {
     return <></>;

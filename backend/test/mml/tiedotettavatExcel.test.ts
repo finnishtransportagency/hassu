@@ -1,4 +1,4 @@
-import { ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import { ProjektiTyyppi, TiedotettavanLahetyksenTila, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, DBVaylaUser } from "../../src/database/model";
 import { generateExcel, generateExcelByQuery, tallennaMaanomistajaluettelo } from "../../src/mml/tiedotettavatExcel";
 import { mockClient } from "aws-sdk-client-mock";
@@ -53,8 +53,8 @@ const omistaja1: DBOmistaja = {
   maakoodi: "FI",
   suomifiLahetys: true,
   lahetykset: [
-    { tila: "VIRHE", lahetysaika: "2024-11-04 09:09:00+02:00" },
-    { tila: "OK", lahetysaika: "2024-11-04 10:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 09:09:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 10:00:00+02:00" },
   ],
 };
 const omistaja2: DBOmistaja = {
@@ -70,7 +70,7 @@ const omistaja2: DBOmistaja = {
   paikkakunta: "Vantaa",
   maakoodi: "FI",
   suomifiLahetys: true,
-  lahetykset: [{ tila: "VIRHE", lahetysaika: "2024-11-04 09:09:00+02:00" }],
+  lahetykset: [{ tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 09:09:00+02:00" }],
 };
 const omistaja3: DBOmistaja = {
   id: "3",
@@ -122,8 +122,8 @@ const muistuttaja1: DBMuistuttaja = {
   maakoodi: "FI",
   suomifiLahetys: true,
   lahetykset: [
-    { tila: "VIRHE", lahetysaika: "2024-11-04 09:00:00+02:00" },
-    { tila: "OK", lahetysaika: "2024-11-04 11:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 09:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 11:00:00+02:00" },
   ],
 };
 const muistuttaja2: DBMuistuttaja = {
@@ -140,8 +140,8 @@ const muistuttaja2: DBMuistuttaja = {
   maakoodi: "FI",
   suomifiLahetys: true,
   lahetykset: [
-    { tila: "VIRHE", lahetysaika: "2024-11-04 11:00:01+02:00" },
-    { tila: "OK", lahetysaika: "2024-11-04 11:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 11:00:01+02:00" },
+    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 11:00:00+02:00" },
   ],
 };
 const muistuttaja3: DBMuistuttaja = {

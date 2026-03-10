@@ -140,7 +140,10 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({
 }) => {
   const router = useRouter();
 
-  const defaultValues = useMemo(() => defaultFormValues(kayttoOikeudet, projekti.oid, projekti.versio), [kayttoOikeudet, projekti.oid, projekti.versio]);
+  const defaultValues = useMemo(
+    () => defaultFormValues(kayttoOikeudet, projekti.oid, projekti.versio),
+    [kayttoOikeudet, projekti.oid, projekti.versio]
+  );
 
   const { isLoading: formIsSubmitting, withLoadingSpinner } = useLoadingSpinner();
 

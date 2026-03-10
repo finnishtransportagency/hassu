@@ -110,10 +110,7 @@ export function findUserByKayttajatunnus(
   return kayttoOikeudet.find((value) => value.kayttajatunnus == kayttajatunnus);
 }
 
-export function adaptMuokkausTila<J extends GenericDbKuulutusJulkaisu>(
-  kuulutus: GenericKuulutus,
-  julkaisut: J[] | null | undefined
-): API.MuokkausTila {
+export function adaptMuokkausTila(kuulutus: GenericKuulutus, julkaisut: GenericDbKuulutusJulkaisu[] | null | undefined): API.MuokkausTila {
   // Hyväksyntää odottaessa aina lukutilassa
   if (findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA)) {
     return API.MuokkausTila.LUKU;

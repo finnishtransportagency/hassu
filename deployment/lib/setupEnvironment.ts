@@ -181,16 +181,15 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     PERSON_SEARCH_API_PASSWORD_PROD: variables.PersonSearchApiPasswordProd,
     PERSON_SEARCH_API_ACCOUNT_TYPES: variables.PersonSearchApiAccountTypes,
 
-    NEXT_PUBLIC_VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,
-    NEXT_PUBLIC_VELHO_BASE_URL: variables.VelhoBaseUrl,
-    NEXT_PUBLIC_PALAUTE_KYSELY_TIEDOT: variables.PalauteKyselyTiedot,
+    VAYLA_EXTRANET_URL: variables.ExtranetHomePageUrl,
+    VELHO_BASE_URL: variables.VelhoBaseUrl,
 
     EMAILS_ON: variables.EmailsOn,
     EMAILS_TO: variables.EmailsTo,
 
-    NEXT_PUBLIC_AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
+    AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
 
-    NEXT_PUBLIC_EVK_ACTIVATION_DATE: variables.EvkActivationDate,
+    EVK_ACTIVATION_DATE: variables.EvkActivationDate,
 
     KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
     KEYCLOAK_DOMAIN: variables.KeycloakDomain,

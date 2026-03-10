@@ -27,10 +27,12 @@ function isValueArrayOfStrings(value: unknown) {
  * Konvertoi vanhanmuotoisen projektidatan uudenmuotoiseksi
  * @param projekti
  */
-export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
+export function migrateFromOldSchema(projekti: DBProjekti, isUpgradeDatabase = false): DBProjekti {
   const projektiAsAny: any = projekti as any;
   const lausuntoPyynnot = projekti.lausuntoPyynnot ?? [];
   const nahtavillaoloVaiheJulkaisut = projektiAsAny["nahtavillaoloVaiheJulkaisut"];
+
+  // 1. Korvaa vanhat nähtävilläolojulkaisujen lausuntopyynnöt
   nahtavillaoloVaiheJulkaisut?.map((julkaisu: any) => {
     const lisaAineisto = julkaisu["lisaAineisto"];
     if (lisaAineisto && !lausuntoPyynnot?.some((pyynto) => pyynto.legacy === julkaisu.id)) {
@@ -52,10 +54,14 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       lausuntoPyynnot.push(legacyLausuntoPyynto);
     }
   });
+
   const p: DBProjekti = cloneDeepWith(projektiAsAny, (value, key) => {
+    // 2. Kaikkien SAAME kieliarvojen vaihtaminen POHJOISSAAME:ksi
     if (value === "SAAME") {
       return "POHJOISSAAME";
     }
+
+    // 3. Korvaa kunnat ja maakunnat
     if (key == "kunta") {
       try {
         return kuntametadata.idForKuntaName(value);
@@ -78,17 +84,21 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
         return [];
       }
     }
+
+    // 4. Korvaa nimi etunimi ja sukunimi kentillä
     if (key == "kayttoOikeudet" && value) {
       const kayttoOikeudet: DBVaylaUser[] = value;
       return kayttoOikeudet.map((user) => {
         if ("nimi" in user) {
-          const nimi = (user as unknown as Record<string, string>)["nimi"];
+          const { nimi, ...rest } = user as unknown as Record<string, string>;
           const [sukunimi, etunimi] = nimi.split(/, /g);
-          return { ...user, etunimi, sukunimi };
+          return { ...rest, etunimi, sukunimi };
         }
         return user;
       });
     }
+
+    // 5. Korvaa kunnan nimi kenttä kunnan id kentällä ilmoituksenvastaanottajissa
     if (key == "ilmoituksenVastaanottajat") {
       const ilmoituksenVastaanottajat: IlmoituksenVastaanottajat = value;
       if (ilmoituksenVastaanottajat.kunnat && ilmoituksenVastaanottajat.kunnat.length > 0) {
@@ -100,6 +110,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
         return ilmoituksenVastaanottajat;
       }
     }
+
+    // 6. Korvaa nykyisin lokalisoitu arvioSeuraavanVaiheenAlkamisesta kenttä, joka oli ei objektimuotoinen (oletetaan, että oli string muotoinen)
     if ("arvioSeuraavanVaiheenAlkamisesta" == key && value) {
       if (!Object.keys(value).includes("SUOMI")) {
         const arvioSeuraavanVaiheenAlkamisesta: LocalizedMap<string> = {
@@ -112,6 +124,7 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
     }
 
+    // 7. Korvaa nykyisin lokalisoitu suunnittelunEteneminenJaKesto kenttä, joka oli ei objektimuotoinen (oletetaan, että oli string muotoinen)
     if ("suunnittelunEteneminenJaKesto" == key && value) {
       if (!Object.keys(value).includes("SUOMI")) {
         const suunnittelunEteneminenJaKesto: LocalizedMap<string> = {
@@ -123,6 +136,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
         return suunnittelunEteneminenJaKesto;
       }
     }
+
+    // 8. Poista mahdollinen saamenkielinen kenttä kun sitä ei lisätä
     if ("videot" == key && value) {
       const videot: LocalizedMap<Linkki>[] = value.map((video: Linkki | LocalizedMap<Linkki>) => {
         if (video && Object.keys(video).includes("SUOMI")) {
@@ -146,6 +161,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       });
       return videot;
     }
+
+    // 9. Varmistetaan, että suunnittelumateriaali on suomi/ruotsi muotoinen LocalizedString objekti
     if ("suunnittelumateriaali" == key && value) {
       let newValue = value;
 
@@ -165,6 +182,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
       return newValue;
     }
+
+    // 10. Korvataan vanhan niminen "Saapumisohjeet" kentällä "lisatiedot"
     if ("vuorovaikutusTilaisuudet" == key && value) {
       let vuorovaikutusTilaisuudet: VuorovaikutusTilaisuus[] = value.map((tilaisuus: Record<string, any>) => {
         if (Object.keys(tilaisuus).includes("Saapumisohjeet")) {
@@ -177,6 +196,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
           return tilaisuus;
         }
       });
+
+      // 11. Varmistetaan, että vuorovaikutustilaisuuksien kentät on suomi/ruotsi muotoisia LocalizedString objekteja
       if (vuorovaikutusTilaisuudet) {
         vuorovaikutusTilaisuudet = cloneDeepWith(vuorovaikutusTilaisuudet, (value2, key2) => {
           if (["nimi", "paikka", "osoite", "postitoimipaikka", "lisatiedot"].includes(key2 as string)) {
@@ -209,6 +230,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
       return vuorovaikutusTilaisuudet;
     }
+
+    // 12. Korvataan siirretään pdf polku toiselle avaimelle (kunta -> kunta tai toinen viranomainen)
     if ("hyvaksymisPaatosVaihePDFt" == key && value) {
       ["SUOMI", "RUOTSI"].forEach((kieli) => {
         delete value.SAAME; //In this "if", there is no fall-through, so we delete possible SAAME here.
@@ -227,6 +250,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       });
       return value;
     }
+
+    // 13. Varmistetaan, että EU-rahoituslogoille lisätään ruotsinkielinen versio, jos ruotsi toisena kielenä
     if ("euRahoitusLogot" == key && value?.logoFI) {
       const { logoFI, logoSV, ...rest } = value;
       const returned = {
@@ -238,6 +263,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
       return returned;
     }
+
+    // 14. Varmistetaan, että suunnittelusopimuksen logoille lisätään ruotsinkielinen versio, jos ruotsi toisena kielenä
     if ("logo" == key && value && !value.SUOMI) {
       const returned: LocalizedMap<string> = {
         SUOMI: value,
@@ -247,6 +274,8 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       }
       return returned;
     }
+
+    // 15. Poistetaan mistä tahansa LocalizedMap kentästä saamenkieli
     if (value && typeof value === "object" && Object.keys(value).includes("SAAME")) {
       const newValue: LocalizedMap<string> | LocalizedMap<Linkki> = {
         SUOMI: value[Kieli.SUOMI],
@@ -258,9 +287,13 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
     }
     return undefined;
   });
+
+  // 16. Lisätään projektille versiotieto jos se puuttuu
   if (!p.versio) {
     p.versio = 1;
   }
+
+  // 17. Julkaisuille lisätään kuulutusyhteystiedot / esitettavat yhteystiedot
   p.aloitusKuulutusJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -269,7 +302,6 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       };
     }
   });
-
   p.vuorovaikutusKierrosJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.esitettavatYhteystiedot) {
       julkaisu.esitettavatYhteystiedot = {
@@ -281,7 +313,6 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       julkaisu.yhteystiedot = [];
     }
   });
-
   p.nahtavillaoloVaiheJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -290,7 +321,6 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       };
     }
   });
-
   p.hyvaksymisPaatosVaiheJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -299,7 +329,6 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       };
     }
   });
-
   p.jatkoPaatos1VaiheJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -308,7 +337,6 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
       };
     }
   });
-
   p.jatkoPaatos2VaiheJulkaisut?.forEach((julkaisu) => {
     if (!julkaisu.kuulutusYhteystiedot) {
       julkaisu.kuulutusYhteystiedot = {
@@ -318,15 +346,18 @@ export function migrateFromOldSchema(projekti: DBProjekti): DBProjekti {
     }
   });
 
+  // 18. Yhdistää suunnitelmaluonnokset ja esittelyaineistot yhteen arrayhin, ellei ne jo ole
   updateVuorovaikutusAineistot(p);
 
   p.lausuntoPyynnot = lausuntoPyynnot;
 
+  // 19. Poistaa lausuntopyyntökentän, jos se on falsy tai tyhjä array
   if (p.lausuntoPyynnot && !p.lausuntoPyynnot.length) {
     delete p.lausuntoPyynnot;
   }
 
-  return addUuidToAineistoAndLadattuTiedosto(p);
+  // 20. Lisää kaikkiin aineistoihin tai ladattuihin tiedostoihin UUID:t jos ne puuttuvat
+  return addUuidToAineistoAndLadattuTiedosto(p, isUpgradeDatabase);
 }
 
 function updateVuorovaikutusAineistot(p: DBProjekti) {
@@ -372,7 +403,7 @@ function combineEsittelyAineistotAndSuunnitelmaluonnokset(
   return [...esittelyaineistoKategorisoitu, ...suunnitelmaluonnoksetKategorisoitu];
 }
 
-function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
+function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti, isUpgradeDatabase: boolean) {
   return cloneDeepWith(p as any, (value, key) => {
     if (
       key &&
@@ -381,6 +412,9 @@ function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
       Array.isArray(value)
     ) {
       if (!value.every((item) => !!item.uuid)) {
+        if (isUpgradeDatabase) {
+          return value.map<Aineisto>((item) => ({ ...item, uuid: uuid.v4() }));
+        }
         return value.map<Aineisto>((item) => ({ ...item, uuid: uuid.v4(), uuidGeneratedBySchemaMigration: true }));
       } else {
         return value;
@@ -391,18 +425,22 @@ function addUuidToAineistoAndLadattuTiedosto(p: DBProjekti) {
       ["lahetekirje", "kuulutusPDF", "kuulutusIlmoitusPDF"].includes(key) &&
       typeof value == "object"
     ) {
+      const tila = value.tila ?? LadattuTiedostoTila.VALMIS;
       if (!value?.uuid) {
-        return { ...value, uuid: uuid.v4() };
+        return { ...value, uuid: uuid.v4(), tila };
       } else {
-        return value;
+        return { ...value, tila };
       }
     } else if (key == "vuorovaikutusSaamePDFt" && typeof value == "object" && value.POHJOISSAAME) {
-      if (!value.POHJOISSAAME.uuid) {
+      if (!value.POHJOISSAAME.uuid || !value.POHJOISSAAME.tila) {
+        const tila = value.POHJOISSAAME?.tila ?? LadattuTiedostoTila.VALMIS;
+        const uuidv4 = value.POHJOISSAAME?.uuid ?? uuid.v4();
         return {
           ...value,
           POHJOISSAAME: {
             ...value.POHJOISSAAME,
-            uuid: uuid.v4(),
+            tila,
+            uuid: uuidv4,
           },
         };
       } else {

@@ -17,6 +17,7 @@ import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { BuildEnvironmentVariable } from "aws-cdk-lib/aws-codebuild/lib/project";
 import { BlockPublicAccess, Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
 import { OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
+import { Table } from "aws-cdk-lib/aws-dynamodb";
 
 // These should correspond to CfnOutputs produced by this stack
 export type PipelineStackOutputs = {
@@ -200,11 +201,11 @@ export class HassuPipelineStack extends Stack {
           value: config.getInfraParameterPath("PersonSearchApiAccountTypes"),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },
-        NEXT_PUBLIC_VAYLA_EXTRANET_URL: {
+        VAYLA_EXTRANET_URL: {
           value: config.getInfraParameterPath("ExtranetHomePageUrl"),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },
-        NEXT_PUBLIC_VELHO_BASE_URL: {
+        VELHO_BASE_URL: {
           value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },
@@ -309,6 +310,17 @@ export class HassuPipelineStack extends Stack {
           resources: ["arn:aws:iam::*:role/aws-service-role/*"],
         })
       );
+      const nahtavillaoloVaiheJulkaisuTable = Table.fromTableName(
+        this,
+        `NahtavillaoloVaiheJulkaisuTable-${name}`,
+        `NahtavillaoloVaiheJulkaisu-${pipelineConfig.env}`
+      );
+      const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, `Projekti-${pipelineConfig.env}`);
+      const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, `SchemaMeta-${pipelineConfig.env}`);
+      projektiTable.grantReadWriteData(buildProject);
+      nahtavillaoloVaiheJulkaisuTable.grantReadWriteData(buildProject);
+      schemaMetaTable.grantReadWriteData(buildProject);
+
       if (isE2eTest) {
         buildProject.addToRolePolicy(
           new PolicyStatement({
