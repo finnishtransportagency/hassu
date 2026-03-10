@@ -607,7 +607,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     });
     expect(ilmoitusProjarille).to.exist;
     expect(
-      /getParameterValue_AshaBaseUrl\/group\/asianhallinta\/asianhallinta\/-\/case\/14\/view/.test(
+      /getParameterValue_AshaBaseUrl\/group\/asianhallinta2\/asianhallinta#\/14\/-\/actions/.test(
         (ilmoitusProjarille?.firstArg as EmailOptions).text as string
       )
     ).to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia
