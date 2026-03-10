@@ -136,7 +136,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                     );
                   })}
                 >
-                  Ilmoitus muistuttajille esikatselu
+                  Ilmoitus muistuttajille ja kiinteistönomistajille esikatselu
                 </Button>
               )}
             </Box>

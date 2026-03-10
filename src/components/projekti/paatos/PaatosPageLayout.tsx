@@ -106,10 +106,6 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
           <li>Valitse hallinto-oikeus, jolta muutoksenhakua voidaan hakea.</li>
           <li>Valitse ja lisää kuulutuksessa esitettävät yhteystiedot ja ilmoituksen vastaanottajat.</li>
           <li>Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle.</li>
-          <li>
-            Huomioithan, että maakuntaliittoja tulee tiedottaa järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä
-            sivulta PDF-muotoisen ilmoituksen, joka heille lähetetään.
-          </li>
           {projekti.asianhallinta.inaktiivinen && (
             <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan. </li>
           )}
