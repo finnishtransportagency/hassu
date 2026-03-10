@@ -1,6 +1,5 @@
 import { log } from "../logger";
 import { DynamoDBRecord, DynamoDBStreamEvent } from "aws-lambda/trigger/dynamodb-stream";
-import { DBProjekti } from "../database/model";
 import { projektiSearchService } from "./projektiSearchService";
 import { setupLambdaMonitoring, setupLambdaMonitoringMetaData, wrapXRayAsync } from "../aws/monitoring";
 import { MaintenanceEvent, ProjektiSearchMaintenanceService } from "./projektiSearchMaintenanceService";
@@ -14,7 +13,7 @@ import { chunkArray } from "../database/chunkArray";
 import { uuid } from "hassu-common/util/uuid";
 
 async function handleChange(record: DynamoDBRecord) {
-  const oid = record.dynamodb?.Keys?.oid.S ?? record.dynamodb?.Keys?.projektiOid.S;
+  const oid = record.dynamodb?.Keys?.oid?.S ?? record.dynamodb?.Keys?.projektiOid?.S;
   const { eventName, eventSource, eventSourceARN } = record;
   const { Keys } = record.dynamodb ?? {};
   const logInfo = { eventName, eventSource, Keys, eventSourceARN };
@@ -43,10 +42,7 @@ async function handleManagementAction(event: MaintenanceEvent) {
     let startKey: string | undefined = undefined;
     const queueUrl = await parameters.getIndexerSQSUrl();
     do {
-      const scanResult: {
-        startKey: string | undefined;
-        projektis: DBProjekti[];
-      } = await projektiDatabase.scanProjektit(startKey);
+      const scanResult = await projektiDatabase.scanSlimProjektit(startKey);
       startKey = scanResult.startKey;
       const entries = scanResult.projektis.map<SendMessageBatchRequestEntry>((projekti) => ({
         Id: uuid.v4(),
