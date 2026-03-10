@@ -62,7 +62,7 @@ docker buildx create --use
 
 # Using placeholder values at build time 
 docker buildx build \
-  --load \
+  $PUSH_FLAG \
   --progress=plain \
   --platform linux/amd64 \
   --secret id=npmrc,src=<(cat <<EOF
