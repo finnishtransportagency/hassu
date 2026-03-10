@@ -150,6 +150,14 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
 
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
+        {(aineistopaketti || tiedostotEiLadattavissa) && (
+          <Section noDivider>
+            <ButtonLink disabled={tiedostotEiLadattavissa} href={aineistopaketti ?? undefined}>
+              Lataa kaikki
+              <DownloadIcon className="ml-2" />
+            </ButtonLink>
+          </Section>
+        )}
         <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (
           <ul style={{ listStyle: "none" }}>
@@ -166,7 +174,7 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
         <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={tiedostotEiLadattavissa} />
       </Section>
       <Section>
-        <H2>Vuorovaikutus</H2>
+        <H3>Vuorovaikutus</H3>
         <HassuAccordion
           items={[
             {
@@ -271,14 +279,6 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
           esikatselu={tiedostotEiLadattavissa}
         />
       </Section>
-      {(aineistopaketti || tiedostotEiLadattavissa) && (
-        <Section noDivider>
-          <ButtonLink disabled={tiedostotEiLadattavissa} href={aineistopaketti ?? undefined}>
-            Lataa kaikki
-            <DownloadIcon className="ml-2" />
-          </ButtonLink>
-        </Section>
-      )}
     </>
   );
 }

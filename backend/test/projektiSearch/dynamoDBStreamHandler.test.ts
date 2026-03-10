@@ -15,6 +15,7 @@ import openSearchClientYllapito from "../../src/projektiSearch/openSearchClientY
 import { openSearchClientJulkinen } from "../../src/projektiSearch/openSearchClientJulkinen";
 import { openSearchClientIlmoitustauluSyote } from "../../src/projektiSearch/openSearchClientIlmoitustauluSyote";
 import { mockUUID } from "../../integrationtest/shared/sharedMock";
+import { DBProjekti, DBProjektiSlim } from "../../src/database/model";
 
 describe("dynamoDBStreamHandler", () => {
   let fixture: ProjektiSearchFixture;
@@ -29,11 +30,15 @@ describe("dynamoDBStreamHandler", () => {
   let removeProjektiSuomiStub: sinon.SinonStub;
   let removeProjektiRuotsiStub: sinon.SinonStub;
   let openSearchClientIlmoitustauluSyoteStub: SinonStubbedInstance<OpenSearchClient>;
+  let loadProjektiByOidStub: sinon.SinonStub<
+    [oid: string, stronglyConsistentRead?: boolean | undefined, setContextOid?: boolean | undefined],
+    Promise<DBProjekti | undefined>
+  >;
   mockUUID();
 
   before(() => {
     fixture = new ProjektiSearchFixture();
-
+    loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     indexProjektiStub = sinon.stub(openSearchClientYllapito, "putDocument");
     removeProjektiStub = sinon.stub(openSearchClientYllapito, "deleteDocument");
     indexProjektiSuomiStub = sinon.stub(openSearchClientJulkinen["SUOMI"], "putDocument");
@@ -58,6 +63,7 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should index new projektis successfully", async () => {
+    loadProjektiByOidStub.resolves(projekti2);
     await handleDynamoDBEvents(fixture.createNewProjektiEvent(projekti2));
     expect(indexProjektiStub.calledOnce).to.be.true;
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti2.oid);
@@ -68,6 +74,7 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should index projekti updates successfully", async () => {
+    loadProjektiByOidStub.resolves(projekti2);
     await handleDynamoDBEvents(fixture.createUpdateProjektiEvent(projekti2));
     expect(indexProjektiStub.calledOnce).to.be.true;
     expect(indexProjektiStub.getCall(0).args[0]).to.be.equal(projekti2.oid);
@@ -77,6 +84,7 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should remove deleted projekti from index successfully", async () => {
+    loadProjektiByOidStub.resolves(undefined);
     const indexedKuulutusId = "indexed_kuulutus_id";
     openSearchClientIlmoitustauluSyoteStub.query.resolves({
       hits: {
@@ -98,7 +106,7 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should reindex the database successfully", async () => {
-    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti2);
+    loadProjektiByOidStub.resolves(projekti2);
     const sqsEvent: SQSEvent = {
       Records: [
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -117,12 +125,16 @@ describe("dynamoDBStreamHandler", () => {
   });
 
   it("should reindex the database successfully on maintenance event", async () => {
+    const makeProjektiSlim = ({ oid, versio, kayttoOikeudet }: DBProjekti): DBProjektiSlim => ({ oid, versio, kayttoOikeudet });
     sinon
-      .stub(projektiDatabase, "scanProjektit")
+      .stub(projektiDatabase, "scanSlimProjektit")
       .onFirstCall()
-      .resolves({ projektis: [projekti1, projekti2], startKey: "startkey1" })
+      .resolves({
+        projektis: [projekti1, projekti2].map(makeProjektiSlim),
+        startKey: "startkey1",
+      })
       .onSecondCall()
-      .resolves({ projektis: [projekti3], startKey: undefined });
+      .resolves({ projektis: [projekti3].map(makeProjektiSlim), startKey: undefined });
     sinon.stub(parameters, "getIndexerSQSUrl").resolves("mockedIndexerSQSUrl");
     const sqsStub = mockClient(SQSClient);
 

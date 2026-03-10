@@ -54,7 +54,7 @@ fi
 echo "$BUILD_MESSAGE"
 
 CODE_ARTIFACT_DOMAIN="hassu-domain"
-export CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $CODE_ARTIFACT_DOMAIN --domain-owner $ACCOUNT_ID --query authorizationToken --output text --duration-seconds 900)
+CODE_ARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain $CODE_ARTIFACT_DOMAIN --domain-owner $ACCOUNT_ID --query authorizationToken --output text --duration-seconds 900)
 NPM_SCOPE="@hassu"
 NPM_REGISTRY="hassu-private-npm"
 
@@ -65,22 +65,10 @@ docker buildx build \
   $PUSH_FLAG \
   --progress=plain \
   --platform linux/amd64 \
-  --secret id=code_artifact_token,env=CODE_ARTIFACT_TOKEN \
-  --build-arg CODE_ARTIFACT_DOMAIN=$CODE_ARTIFACT_DOMAIN \
-  --build-arg ACCOUNT_ID=$ACCOUNT_ID \
-  --build-arg AWS_REGION=$AWS_REGION \
-  --build-arg NPM_SCOPE=$NPM_SCOPE \
-  --build-arg NPM_REGISTRY=$NPM_REGISTRY \
-  --build-arg NEXT_PUBLIC_VERSION=_NEXT_PUBLIC_VERSION_ \
-  --build-arg NEXT_PUBLIC_ENVIRONMENT=_NEXT_PUBLIC_ENVIRONMENT_ \
-  --build-arg NEXT_PUBLIC_VAYLA_EXTRANET_URL=_NEXT_PUBLIC_VAYLA_EXTRANET_URL_ \
-  --build-arg NEXT_PUBLIC_VELHO_BASE_URL=_NEXT_PUBLIC_VELHO_BASE_URL_ \
-  --build-arg NEXT_PUBLIC_AJANSIIRTO_SALLITTU=_NEXT_PUBLIC_AJANSIIRTO_SALLITTU_ \
-  --build-arg NEXT_PUBLIC_REACT_APP_API_URL=_NEXT_PUBLIC_REACT_APP_API_URL_ \
-  --build-arg NEXT_PUBLIC_REACT_APP_API_KEY=_NEXT_PUBLIC_REACT_APP_API_KEY_ \
-  --build-arg NEXT_PUBLIC_FRONTEND_DOMAIN_NAME=_NEXT_PUBLIC_FRONTEND_DOMAIN_NAME_ \
-  --build-arg NEXT_PUBLIC_KEYCLOAK_CLIENT_ID=_NEXT_PUBLIC_KEYCLOAK_CLIENT_ID_ \
-  --build-arg NEXT_PUBLIC_KEYCLOAK_DOMAIN=_NEXT_PUBLIC_KEYCLOAK_DOMAIN_ \
-  --build-arg NEXT_PUBLIC_EVK_ACTIVATION_DATE=_NEXT_PUBLIC_EVK_ACTIVATION_DATE_ \
+  --secret id=npmrc,src=<(cat <<EOF
+${NPM_SCOPE}:registry=https://${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/
+//${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/:_authToken=${CODE_ARTIFACT_TOKEN}
+EOF
+) \
   -t "$ECR_URI":"$IMAGE_TAG" \
   -f "frontend.Dockerfile" .
