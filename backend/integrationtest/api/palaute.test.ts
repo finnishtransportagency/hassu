@@ -78,6 +78,6 @@ describe("Palaute", () => {
 
     const pdf = await api.lataaPalautteetPDF(oid);
     fs.mkdirSync(".report", { recursive: true });
-    fs.writeFileSync(".report/" + pdf.nimi, Buffer.from(pdf.sisalto, "base64"));
+    fs.writeFileSync(".report/" + pdf.nimi, new Uint8Array(Buffer.from(pdf.sisalto, "base64")));
   });
 });

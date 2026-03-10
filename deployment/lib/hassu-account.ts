@@ -3,7 +3,7 @@ import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { CfnRegistryPolicy, CfnReplicationConfiguration, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
+import { CfnRegistryPolicy, CfnReplicationConfiguration, LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -71,7 +71,9 @@ export class HassuAccountStack extends Stack {
       },
       vpc,
       tracing: Tracing.ACTIVE,
-      insightsVersion: LambdaInsightsVersion.VERSION_1_0_333_0,
+      insightsVersion: LambdaInsightsVersion.fromInsightVersionArn(
+        "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
+      ),
       layers: [
         new LayerVersion(this, "BaseLayer-" + Config.env, {
           code: Code.fromAsset("./layers/lambda-base"),
@@ -81,7 +83,7 @@ export class HassuAccountStack extends Stack {
         LayerVersion.fromLayerVersionArn(
           this,
           "paramLayer",
-          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:24"
+          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:63"
         ),
       ],
       logRetention: RetentionDays.SEVEN_YEARS,
@@ -219,8 +221,67 @@ export class HassuAccountStack extends Stack {
 
   private async configureNextJSImageECR(config: Config) {
     const repositoryName = Config.nextjsImageRepositoryName;
+    const lifecycleRules: LifecycleRule[] = Config.isProdAccount()
+      ? [
+          {
+            rulePriority: 1,
+            description: "Keep two latest released prod images",
+            tagPatternList: ["*-prod"],
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 2,
+            description: "Keep latest training candidate image",
+            tagPatternList: ["*-training*"],
+            maxImageCount: 1,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 3,
+            description: "Keep latest test candidate image",
+            tagPatternList: ["*-test*"],
+            maxImageCount: 1,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 4,
+            description: "Remove all the other images after 30 days",
+            maxImageAge: Duration.days(30),
+            tagStatus: TagStatus.ANY,
+          },
+        ]
+      : [
+          {
+            rulePriority: 1,
+            description: "Keep two latest training candidate image",
+            tagPatternList: ["*-training*"],
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 2,
+            description: "Keep two latest test candidate image",
+            tagPatternList: ["*-test*"],
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 3,
+            description: "Keep two latest commit sha (dev) images",
+            maxImageCount: 2,
+            tagStatus: TagStatus.TAGGED,
+          },
+          {
+            rulePriority: 4,
+            description: "Remove all the other images after 30 days",
+            maxImageAge: Duration.days(30),
+            tagStatus: TagStatus.ANY,
+          },
+        ];
     new aws_ecr.Repository(this, "NextJSECRRepo", {
       repositoryName,
+      lifecycleRules,
       removalPolicy: RemovalPolicy.DESTROY,
       encryption: RepositoryEncryption.AES_256,
       imageScanOnPush: true,

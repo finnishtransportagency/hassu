@@ -575,7 +575,7 @@ export class HassuFrontendStack extends Stack {
   }
 
   // Todellisuudessa dev, test ja training ympäristöjen Keycloak pyynnöt päätyvät dev ympäristön Cloudfrontin läpi,
-  // Tämä määritetty NEXT_PUBLIC_KEYCLOAK_DOMAIN muuttujassa
+  // Tämä määritetty process.env.KEYCLOAK_DOMAIN muuttujassa
   private createKeycloakBehaviour(dmzProxyEndpoint: string, frontendDomainName: string) {
     const keycloakBehavior: BehaviorOptions = {
       compress: true,
@@ -772,7 +772,7 @@ export class HassuFrontendCoreStack extends Stack {
     try {
       const buffer = fs.readFileSync(path.resolve(__dirname, "../../.version"));
       if (buffer) {
-        version = buffer.toString("utf8");
+        version = buffer.toString("utf8").trim();
       }
     } catch (e) {
       // Ignore
@@ -780,23 +780,21 @@ export class HassuFrontendCoreStack extends Stack {
 
     // Runtime env & secrets
     const containerEnv: { [key: string]: string } = {
-      NEXT_PUBLIC_VERSION: version,
-      NEXT_PUBLIC_ENVIRONMENT: Config.env,
-      NEXT_PUBLIC_VAYLA_EXTRANET_URL: process.env.NEXT_PUBLIC_VAYLA_EXTRANET_URL || "", // asetetaan deployment/lib/hassu-pipelines.ts
-      NEXT_PUBLIC_VELHO_BASE_URL: process.env.NEXT_PUBLIC_VELHO_BASE_URL || "", // sama kuin ^^
-      NEXT_PUBLIC_AJANSIIRTO_SALLITTU: ssmParameters.AjansiirtoSallittu,
-      NEXT_PUBLIC_REACT_APP_API_KEY: AppSyncAPIKey || "",
-      NEXT_PUBLIC_REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
-      NEXT_PUBLIC_FRONTEND_DOMAIN_NAME: config.frontendDomainName,
-      NEXT_PUBLIC_KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
-      NEXT_PUBLIC_KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
-      NEXT_PUBLIC_EVK_ACTIVATION_DATE: ssmParameters.EvkActivationDate,
-      INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
+      VERSION: version,
       ENVIRONMENT: Config.env,
+      VAYLA_EXTRANET_URL: process.env.VAYLA_EXTRANET_URL || "", // asetetaan deployment/lib/hassu-pipelines.ts
+      VELHO_BASE_URL: process.env.VELHO_BASE_URL || "", // sama kuin ^^
+      AJANSIIRTO_SALLITTU: ssmParameters.AjansiirtoSallittu,
+      REACT_APP_API_KEY: AppSyncAPIKey || "",
+      REACT_APP_API_URL: `https://${config.frontendApiDomainName}/graphql`,
+      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
+      KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
+      KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
+      EVK_ACTIVATION_DATE: ssmParameters.EvkActivationDate,
+      INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,
       INTERNAL_BUCKET_NAME: Config.internalBucketName,
-      FRONTEND_DOMAIN_NAME: config.frontendDomainName,
       VELHO_API_URL: ssmParameters.VelhoApiUrl,
       VELHO_AUTH_URL: ssmParameters.VelhoAuthenticationUrl,
       EVENT_SQS_URL: EventSqsUrl,
@@ -880,8 +878,12 @@ export class HassuFrontendCoreStack extends Stack {
       minHealthyPercent: 50,
       maxHealthyPercent: 200,
       healthCheckGracePeriod: Duration.seconds(180),
+      // Circuit breaker detects failed deployments and stops them without automatic rollback.
+      // On failure, the old task keeps serving traffic (guaranteed by minHealthyPercent: 50)
+      // and the deployment is marked failed explicitly. Redeploy the previous working version
+      // through the pipeline manually - this ensures only pipeline-controlled images run in prod.
       circuitBreaker: {
-        rollback: true,
+        rollback: false,
       },
       securityGroups: [securityGroup],
     });

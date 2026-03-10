@@ -40,6 +40,7 @@ phases:
       - npm run deploy:monitoring
       - npm run deploy:stackpolicies
       - npm run release
+      - ./deployment/bin/updateNextjsImageTags.sh
       - npm run opensearch:delete-index
       - npm run opensearch:index
   post_build:

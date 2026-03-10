@@ -16,7 +16,7 @@ import { HaeTilaTietoResponse, ViranomaispalvelutWsInterfaceClient } from "../..
 import { PublishOrExpireEventType } from "../../src/sqsEvents/projektiScheduleManager";
 import { fileService } from "../../src/files/fileService";
 import {
-  DBProjekti,
+  DBProjektiSlim,
   HyvaksymisPaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
   KuulutusSaamePDFt,
@@ -126,7 +126,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiMuistuttajaTableName })
       .resolves({ Item: muistuttaja })
       .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { id: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } });
+      .resolves({ Item: { oid: "1", velho: { nimi: "Projektin nimi", asiatunnusVayla: "vayla123", asiatunnusELY: "ely123" } } })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({ Items: [] });
     const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
@@ -316,10 +318,10 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const nahtavillaoloVaiheJulkaisut = [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu];
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
-      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -335,6 +337,10 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
+      })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({
+        Items: nahtavillaoloVaiheJulkaisut,
       });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { oid: "1", muistuttajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
@@ -372,10 +378,10 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const nahtavillaoloVaiheJulkaisut = [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu];
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
-      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -391,7 +397,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      });
+      })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({ Items: nahtavillaoloVaiheJulkaisut });
     const body: SuomiFiSanoma = { muistuttajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO, oid: "1" };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
     await handleEvent(msg as SQSEvent);
@@ -425,10 +433,10 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const nahtavillaoloVaiheJulkaisut = [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu];
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
-      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -444,7 +452,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      });
+      })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({ Items: nahtavillaoloVaiheJulkaisut });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
@@ -481,23 +491,23 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const nahtavillaoloVaiheJulkaisut = [
+      {
+        id: 1,
+        nahtavillaoloPDFt: {
+          RUOTSI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/11" },
+        } as unknown as LocalizedMap<NahtavillaoloPDF>,
+      } as unknown as NahtavillaoloVaiheJulkaisu,
+      {
+        id: 2,
+        nahtavillaoloPDFt: {
+          RUOTSI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/22" },
+        } as unknown as LocalizedMap<NahtavillaoloPDF>,
+      } as unknown as NahtavillaoloVaiheJulkaisu,
+    ];
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
-      nahtavillaoloVaiheJulkaisut: [
-        {
-          id: 1,
-          nahtavillaoloPDFt: {
-            RUOTSI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/11" },
-          } as unknown as LocalizedMap<NahtavillaoloPDF>,
-        } as unknown as NahtavillaoloVaiheJulkaisu,
-        {
-          id: 2,
-          nahtavillaoloPDFt: {
-            RUOTSI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/22" },
-          } as unknown as LocalizedMap<NahtavillaoloPDF>,
-        } as unknown as NahtavillaoloVaiheJulkaisu,
-      ],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -517,7 +527,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      });
+      })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({ Items: nahtavillaoloVaiheJulkaisut });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
     const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
@@ -556,22 +568,22 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const nahtavillaoloVaiheJulkaisut = [
+      {
+        id: 1,
+        nahtavillaoloPDFt: {
+          SUOMI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/11" },
+        } as unknown as LocalizedMap<NahtavillaoloPDF>,
+        nahtavillaoloSaamePDFt: {
+          POHJOISSAAME: {
+            kirjeTiedotettavillePDF: { tiedosto: "/path/33" },
+          },
+        } as unknown as KuulutusSaamePDFt,
+      } as unknown as NahtavillaoloVaiheJulkaisu,
+    ];
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
-      nahtavillaoloVaiheJulkaisut: [
-        {
-          id: 1,
-          nahtavillaoloPDFt: {
-            SUOMI: { nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/path/11" },
-          } as unknown as LocalizedMap<NahtavillaoloPDF>,
-          nahtavillaoloSaamePDFt: {
-            POHJOISSAAME: {
-              kirjeTiedotettavillePDF: { tiedosto: "/path/33" },
-            },
-          } as unknown as KuulutusSaamePDFt,
-        } as unknown as NahtavillaoloVaiheJulkaisu,
-      ],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -591,7 +603,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      });
+      })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({ Items: nahtavillaoloVaiheJulkaisut });
 
     const fileStub = sinon.stub(fileService, "getProjektiYllapitoS3Object").resolves({
       ContentType: "application/pdf",
@@ -635,7 +649,7 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       hyvaksymisPaatosVaihe: { id: 1 },
       hyvaksymisPaatosVaiheJulkaisut: [
@@ -775,7 +789,7 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       hyvaksymisPaatosVaihe: { id: 1 },
       hyvaksymisPaatosVaiheJulkaisut: [
@@ -909,10 +923,10 @@ describe("suomifiHandler", () => {
     const request: SuomiFiRequest = {};
     const client = mockSuomiFiClient(request, 300, 200);
     setMockSuomiFiClient(client);
-    const dbProjekti: Partial<DBProjekti> = {
+    const nahtavillaoloVaiheJulkaisut = [{ id: 1, projektiOid: "1" } as unknown as NahtavillaoloVaiheJulkaisu];
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
       nahtavillaoloVaihe: { id: 1 },
-      nahtavillaoloVaiheJulkaisut: [{ id: 1 } as unknown as NahtavillaoloVaiheJulkaisu],
       velho: {
         nimi: "Projektin nimi",
         asiatunnusVayla: "vayla123",
@@ -928,7 +942,9 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      });
+      })
+      .on(QueryCommand, { TableName: config.nahtavillaoloVaiheJulkaisuTableName })
+      .resolves({ Items: nahtavillaoloVaiheJulkaisut });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO };
     const msg = { Records: [{ body: JSON.stringify(body), messageId: "123456" }] };
@@ -952,7 +968,7 @@ describe("suomifiHandler", () => {
   it("lähetä suomi.fi viestit uniikeille omistajille ja muistuttajille", async () => {
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
-    const dbProjekti: Partial<DBProjekti> = {
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
     };
     mockClient(DynamoDBDocumentClient)
@@ -976,13 +992,13 @@ describe("suomifiHandler", () => {
       });
 
     const mock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
-    await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
+    await lahetaSuomiFiViestit(dbProjekti as DBProjektiSlim, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
     let input = mock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
     assert(input.Entries);
     let ids = input.Entries.map((e) => e.Id);
     expect(ids).to.eql(["omistaja-1", "omistaja-3", "omistaja-4", "muistuttaja-8"]);
-    await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    await lahetaSuomiFiViestit(dbProjekti as DBProjektiSlim, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     expect(mock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
     input = mock.commandCalls(SendMessageBatchCommand)[1].args[0].input;
     assert(input.Entries);
@@ -994,7 +1010,7 @@ describe("suomifiHandler", () => {
   it("lisää tiedot saman henkilön muista kiinteistöistä ja muistutuksista lähetystilatiedon päivitystä varten", async () => {
     sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
     sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
-    const dbProjekti: Partial<DBProjekti> = {
+    const dbProjekti: Partial<DBProjektiSlim> = {
       oid: "1",
     };
     mockClient(DynamoDBDocumentClient)
@@ -1021,7 +1037,7 @@ describe("suomifiHandler", () => {
       });
 
     const sqsMock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
-    await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
+    await lahetaSuomiFiViestit(dbProjekti as DBProjektiSlim, PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE);
     expect(sqsMock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
     let input = sqsMock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
     assert(input.Entries);
@@ -1051,7 +1067,7 @@ describe("suomifiHandler", () => {
         eriMuistutukset: ["10", "11"],
       },
     ]);
-    await lahetaSuomiFiViestit(dbProjekti as DBProjekti, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
+    await lahetaSuomiFiViestit(dbProjekti as DBProjektiSlim, PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO);
     expect(sqsMock.commandCalls(SendMessageBatchCommand).length).to.equal(2);
     input = sqsMock.commandCalls(SendMessageBatchCommand)[1].args[0].input;
     assert(input.Entries);
