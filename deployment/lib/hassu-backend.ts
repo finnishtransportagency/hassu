@@ -33,7 +33,9 @@ import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_20_X;
-const insightsVersion = LambdaInsightsVersion.VERSION_1_0_333_0;
+const insightsVersion = LambdaInsightsVersion.fromInsightVersionArn(
+  "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
+);
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
 
@@ -93,7 +95,7 @@ export class HassuBackendStack extends Stack {
       LayerVersion.fromLayerVersionArn(
         this,
         "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:24"
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:63"
       ),
     ];
   }
@@ -746,6 +748,7 @@ export class HassuBackendStack extends Stack {
         TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
         TABLE_PROJEKTI_MUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
+        TABLE_NAHTAVILLAOLOVAIHEJULKAISU: this.props.nahtavillaoloVaiheJulkaisuTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
@@ -768,6 +771,7 @@ export class HassuBackendStack extends Stack {
     suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
     this.props.kiinteistonomistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
+    this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
