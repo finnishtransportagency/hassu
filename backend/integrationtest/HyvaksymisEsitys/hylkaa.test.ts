@@ -1,6 +1,6 @@
 import sinon from "sinon";
 import * as API from "hassu-common/graphql/apiModel";
-import { DBVaylaUser } from "../../src/database/model";
+import { DBProjekti, DBVaylaUser, MuokattavaHyvaksymisEsitys } from "../../src/database/model";
 import { UserFixture } from "../../test/fixture/userFixture";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS from "./TEST_HYVAKSYMISESITYS";
@@ -28,11 +28,15 @@ describe("Hyväksymisesityksen hylkääminen", () => {
 
   it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn", async () => {
     userFixture.loginAsAdmin();
-    const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA };
-    const projektiBefore = {
+    const muokattavaHyvaksymisEsitys = {
+      ...TEST_HYVAKSYMISESITYS,
+      tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
+    } as unknown as MuokattavaHyvaksymisEsitys;
+    const projektiBefore: Omit<DBProjekti, "kayttoOikeudet"> = {
       oid,
       versio,
       muokattavaHyvaksymisEsitys,
+      nahtavillaoloVaiheJulkaisut: undefined,
     };
     const syy = "Virheitä";
     await insertProjektiToDB(projektiBefore);
@@ -43,7 +47,7 @@ describe("Hyväksymisesityksen hylkääminen", () => {
       versio: versio + 1,
       muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.MUOKKAUS, palautusSyy: syy },
     });
-    expect(projektiAfter.paivitetty).to.exist;
+    expect(projektiAfter?.paivitetty).to.exist;
     await removeProjektiFromDB(oid);
   });
 

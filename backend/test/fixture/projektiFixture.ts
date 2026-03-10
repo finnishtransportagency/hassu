@@ -33,7 +33,6 @@ import { kuntametadata } from "hassu-common/kuntametadata";
 import pick from "lodash/pick";
 import { assertIsDefined } from "../../src/util/assertions";
 import { nyt } from "../../src/util/dateUtil";
-import { julkaisuIsVuorovaikutusKierrosLista } from "hassu-common/util/haeVaiheidentiedot";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
 const juva = kuntametadata.idForKuntaName("Juva");
@@ -1199,6 +1198,7 @@ export class ProjektiFixture {
     },
     nahtavillaoloVaiheJulkaisut: [
       {
+        projektiOid: this.PROJEKTI3_OID,
         aineistoNahtavilla: [],
         hankkeenKuvaus: {
           RUOTSI:
@@ -1559,6 +1559,7 @@ export class ProjektiFixture {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: this.PROJEKTI3_OID,
           aineistoNahtavilla: [],
           hankkeenKuvaus: {
             RUOTSI:
@@ -2115,6 +2116,7 @@ export class ProjektiFixture {
       },
       nahtavillaoloVaiheJulkaisut: [
         {
+          projektiOid: this.PROJEKTI3_OID,
           aineistoNahtavilla: [
             {
               dokumenttiOid: "1.2.246.578.5.100.2147637429.4251089044",

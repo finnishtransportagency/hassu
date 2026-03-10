@@ -315,8 +315,8 @@
       "ilmoitus_vaihe_suunnitelman_nahtaville_asettamista_pitka": "nähtäville asettamista",
       "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta": "hyväksymispäätöstä",
       "ilmoitus_vaihe_suunnitelman_hyvaksymispaatosta_pitka": "hyväksymispäätöstä",
-      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämistä",
-      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta_pitka": "hyväksymispäätöksen voimassaoloajan pidentämistä"
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta": "hyväksymispäätöksen voimassaoloajan pidentämisestä",
+      "ilmoitus_vaihe_paatoksen_voimassaoloajan_pidentamisesta_pitka": "hyväksymispäätöksen voimassaoloajan pidentämisestä"
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",

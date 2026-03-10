@@ -21,7 +21,6 @@ import {
 import { getVaylaUser } from "../user";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { ilmoitustauluSyoteService } from "../ilmoitustauluSyote/ilmoitustauluSyoteService";
-import { migrateFromOldSchema } from "../database/projektiSchemaUpdate";
 import { isKieliTranslatable } from "hassu-common/kaannettavatKielet";
 import openSearchClientYllapito from "./openSearchClientYllapito";
 import { openSearchClientJulkinen } from "./openSearchClientJulkinen";
@@ -37,8 +36,7 @@ const projektiSarakeToField: Record<ProjektiSarake, string> = {
 };
 
 class ProjektiSearchService {
-  async indexProjekti(p: DBProjekti) {
-    const projekti = migrateFromOldSchema(p);
+  async indexProjekti(projekti: DBProjekti) {
     setLogContextOid(projekti.oid);
     try {
       const projektiToIndex = await adaptProjektiToIndex(projekti);

@@ -16,6 +16,7 @@ import useApi from "src/hooks/useApi";
 import { VuorovaikuttamisenYhteysHenkilot } from "./VuorovaikuttamisenYhteysHenkilot";
 import { isAjansiirtoSallittu } from "src/util/isAjansiirtoSallittu";
 import { LiittyvatSuunnitelmat } from "@components/projekti/LiittyvatSuunnitelmat";
+import { getPublicEnv } from "src/util/env";
 
 type Props = {
   vuorovaikutusnro: number;
@@ -41,7 +42,7 @@ export default function VuorovaikutusKierrosLukutila({ vuorovaikutusnro, projekt
 
   const api = useApi();
 
-  const ajansiirtoSallittu = isAjansiirtoSallittu(process.env.NEXT_PUBLIC_AJANSIIRTO_SALLITTU ?? "");
+  const ajansiirtoSallittu = isAjansiirtoSallittu(getPublicEnv("AJANSIIRTO_SALLITTU"));
 
   const showAjansiirtopainikkeet = useMemo(
     () => ajansiirtoSallittu && vuorovaikutusnro === projekti.vuorovaikutusKierros?.vuorovaikutusNumero,

@@ -15,6 +15,7 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import * as API from "hassu-common/graphql/apiModel";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { NotFoundError, SimultaneousUpdateError } from "hassu-common/error";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
 
 export type HyvaksymisEsityksenTiedot = Pick<
   DBProjekti,
@@ -119,7 +120,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "velho, " +
         "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
-        "nahtavillaoloVaiheJulkaisut, " +
         "muokattavaHyvaksymisEsitys, " +
         "julkaistuHyvaksymisEsitys, " +
         "aineistoHandledAt, " +
@@ -140,6 +140,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
       }
       const projekti = data.Item as ProjektiTiedostoineen;
+      projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
       return projekti;
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
@@ -394,7 +395,6 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         "velho, " +
         "aloitusKuulutusJulkaisut, " +
         "vuorovaikutusKierrosJulkaisut, " +
-        "nahtavillaoloVaiheJulkaisut, " +
         "ennakkoNeuvottelu, " +
         "ennakkoNeuvotteluJulkaisu, " +
         "aineistoHandledAt, " +
@@ -415,6 +415,7 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
         throw new NotFoundError(`Projektia oid:lla ${oid} ei löydy`);
       }
       const projekti = data.Item as ProjektiTiedostoineen;
+      projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
       return projekti;
     } catch (e) {
       log.error(e instanceof Error ? e.message : String(e), { params });
@@ -423,5 +424,5 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
   }
 }
 
-const projektiDatabase = new HyvaksymisEsityksenDynamoKutsut(config.projektiTableName ?? "missing", config.feedbackTableName ?? "missing");
+const projektiDatabase = new HyvaksymisEsityksenDynamoKutsut(config.projektiTableName ?? "missing");
 export default projektiDatabase;

@@ -8,7 +8,7 @@ import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
 import { UserFixture } from "../../../fixture/userFixture";
 import { userService } from "../../../../src/user";
-import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { AineistoTila, KuulutusJulkaisuTila, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { Kielitiedot, Velho } from "../../../../src/database/model";
 import MockDate from "mockdate";
 
@@ -43,6 +43,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
     projekti.nahtavillaoloVaiheJulkaisut = [
       {
         ...projekti.nahtavillaoloVaihe,
+        projektiOid: projekti.oid,
         velho: projekti.velho as Velho,
         kielitiedot: projekti.kielitiedot as Kielitiedot,
         yhteystiedot: [],
@@ -54,7 +55,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
       },
     ];
 
-    const input = {
+    const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
       nahtavillaoloVaihe: {
@@ -64,6 +65,8 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
             kategoriaId: "1",
             nimi: "Nimi",
             jarjestys: 1,
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+            uuid: "4ce5e5bf-bcf5-4e0b-a194-d1d952d21b66",
           },
         ],
       },
@@ -74,7 +77,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
   it("should allow modifying nahtavillaolo if nahtavillaolo muokkausTila is MUOKKAUS", async () => {
     const projekti = fixture.dbProjekti2();
     MockDate.set("2022-06-06");
-    const input = {
+    const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
       nahtavillaoloVaihe: {
@@ -84,6 +87,8 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
             kategoriaId: "1",
             nimi: "Nimi",
             jarjestys: 1,
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+            uuid: "420c5a1d-7d9b-4f3b-9e10-306b00c5c647",
           },
         ],
       },
@@ -97,6 +102,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
     projekti.nahtavillaoloVaiheJulkaisut = [
       {
         ...projekti.nahtavillaoloVaihe,
+        projektiOid: projekti.oid,
         velho: projekti.velho as Velho,
         kielitiedot: projekti.kielitiedot as Kielitiedot,
         yhteystiedot: [],
@@ -114,7 +120,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
         alkuperainenHyvaksymisPaiva: "2022-06-06",
       },
     };
-    const input = {
+    const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
       nahtavillaoloVaihe: {
@@ -124,6 +130,8 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
             kategoriaId: "1",
             nimi: "Nimi",
             jarjestys: 1,
+            tila: AineistoTila.ODOTTAA_TUONTIA,
+            uuid: "863ecd5c-f4af-4659-b125-62d051eaf0a2",
           },
         ],
       },
@@ -137,6 +145,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
     projekti.nahtavillaoloVaiheJulkaisut = [
       {
         ...projekti.nahtavillaoloVaihe,
+        projektiOid: projekti.oid,
         velho: projekti.velho as Velho,
         kielitiedot: projekti.kielitiedot as Kielitiedot,
         yhteystiedot: [],

@@ -48,6 +48,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
     suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
     kunnat: [91, 92],
   },
+  nahtavillaoloVaiheJulkaisut: undefined,
 });
 
 describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
@@ -119,7 +120,7 @@ describe("Hyväksymisesityksen avaaHyvaksymisEsityksenMuokkaus", () => {
         tila: API.HyvaksymisTila.MUOKKAUS,
       },
     });
-    expect(projektiAfter.paivitetty).to.exist;
+    expect(projektiAfter?.paivitetty).to.exist;
   });
 
   it("onnistuu projektikayttajalta", async () => {
