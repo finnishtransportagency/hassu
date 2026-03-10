@@ -111,7 +111,16 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
         </SectionContent>
       </Section>
       <Section>
-        <H2>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H2>
+        <H2>Hyväksymisesityksen aineisto</H2>
+        {aineistopaketti && (
+          <Section noDivider>
+            <ButtonLink href={aineistopaketti}>
+              Lataa kaikki
+              <DownloadIcon className="ml-2" />
+            </ButtonLink>
+          </Section>
+        )}
+        <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (
           <ul style={{ listStyle: "none" }}>
             {hyvaksymisEsitys?.map((tiedosto, index) => (
@@ -125,11 +134,11 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
         )}
       </Section>
       <Section>
-        <H2>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H2>
+        <H3>{`Suunnitelma (${suunnitelma?.length ?? 0})`}</H3>
         <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={suunnitelma} esikatselu={false} />
       </Section>
       <Section>
-        <H2>Vuorovaikutus</H2>
+        <H3>Vuorovaikutus</H3>
         <HassuAccordion
           items={[
             {
@@ -209,7 +218,7 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
           items={[
             {
               id: "3",
-              title: <H2 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H2>,
+              title: <H3 sx={{ margin: 0 }}>{`Muu tekninen aineisto (${muutAineistot?.length ?? 0})`}</H3>,
               content: muutAineistot?.length ? (
                 <ul style={{ listStyle: "none" }}>
                   {muutAineistot?.map((tiedosto, index) => (
@@ -229,14 +238,6 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
         <H3>{`Liittyvän suunnitelman aineisto (${linkitetynProjektinAineisto?.length ?? 0})`}</H3>
         <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={linkitetynProjektinAineisto} esikatselu={false} />
       </Section>
-      {aineistopaketti && (
-        <Section noDivider>
-          <ButtonLink href={aineistopaketti}>
-            Lataa kaikki
-            <DownloadIcon className="ml-2" />
-          </ButtonLink>
-        </Section>
-      )}
     </>
   );
 }
