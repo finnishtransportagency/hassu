@@ -269,6 +269,7 @@ export class HassuAccountStack extends Stack {
           {
             rulePriority: 3,
             description: "Keep two latest commit sha (dev) images",
+            tagPatternList: ["*"],
             maxImageCount: 2,
             tagStatus: TagStatus.TAGGED,
           },
