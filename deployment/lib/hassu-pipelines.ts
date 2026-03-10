@@ -201,11 +201,11 @@ export class HassuPipelineStack extends Stack {
           value: config.getInfraParameterPath("PersonSearchApiAccountTypes"),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },
-        NEXT_PUBLIC_VAYLA_EXTRANET_URL: {
+        VAYLA_EXTRANET_URL: {
           value: config.getInfraParameterPath("ExtranetHomePageUrl"),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },
-        NEXT_PUBLIC_VELHO_BASE_URL: {
+        VELHO_BASE_URL: {
           value: config.getInfraParameterPath("VelhoBaseUrl", config.velhoEnv),
           type: BuildEnvironmentVariableType.PARAMETER_STORE,
         },

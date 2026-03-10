@@ -3,7 +3,6 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   DBPROJEKTI_OMITTED_FIELDS,
-  DBProjektiExtras,
   DBProjektiSlim,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaiheJulkaisu,
@@ -37,7 +36,6 @@ import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { Status } from "hassu-common/graphql/apiModel";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "./KuulutusJulkaisuDatabase";
-import merge from "lodash/merge";
 import cloneDeep from "lodash/cloneDeep";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
@@ -681,10 +679,10 @@ export class ProjektiDatabase {
 export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ?? "missing");
 
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
-  const extras: DBProjektiExtras = {
+  const dbProjektiExtended: DBProjekti = {
+    ...slimProjekti,
     nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
     tallennettu: true,
   };
-  const dbProjektiExtended: DBProjekti = merge(slimProjekti, extras);
   return migrateFromOldSchema(cloneDeep(dbProjektiExtended));
 }
