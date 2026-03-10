@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@aws-sdk/client-sts": "^3.1002.0",
     "@semantic-release/exec": "^6.0.3",
     "@types/inquirer": "^8.2.9",
     "@types/node-fetch": "^2.6.13",
-    "aws-cdk": "^2.188.0",
-    "aws-cdk-lib": "^2.188.0",
-    "aws-cdk-local": "^2.19.2",
+    "aws-cdk": "^2.1109.0",
+    "aws-cdk-lib": "^2.241.0",
+    "aws-cdk-local": "^3.0.1",
     "cdk-sso-sync": "^0.0.6",
     "constructs": "^10.4.2",
     "inquirer": "^8.2.6",
@@ -21,7 +22,8 @@
     "loader-utils": "1.4.2",
     "shell-quote": "1.7.3",
     "node-fetch": "$node-fetch",
-    "jsonwebtoken": "9.0.2"
+    "jsonwebtoken": "9.0.2",
+    "fast-xml-parser": "^4.5.4"
   },
   "engines": {
     "node": ">=20.19.4",
