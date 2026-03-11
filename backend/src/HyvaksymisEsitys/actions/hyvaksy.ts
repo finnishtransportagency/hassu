@@ -142,7 +142,11 @@ export default async function hyvaksyHyvaksymisEsitys(input: API.TilaMuutosInput
   } else {
     log.error("Ilmoitukselle ei loytynyt projektipäällikön ja varahenkilöiden sahkopostiosoitetta");
   }
-  await tallennaSuunnitelmanTilaJaTraficomilleLahetysPvmKasittelynTilaSivulle(projektiInDB, nextDbVersioNumber, "suunnitelman-tila/sutil03");
+  await tallennaSuunnitelmanTilaJaTraficomilleLahetysPvmKasittelynTilaSivulle(
+    projektiInDB,
+    nextDbVersioNumber,
+    "suunnitelman-tila/sutil03"
+  );
   return oid;
 }
 
