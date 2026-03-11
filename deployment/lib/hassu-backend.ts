@@ -49,6 +49,7 @@ export type HassuBackendStackProps = {
   projektiMuistuttajaTable: Table;
   tiedoteTable: Table;
   nahtavillaoloVaiheJulkaisuTable: Table;
+  projektiDataTable: Table;
   uploadBucket: Bucket;
   yllapitoBucket: Bucket;
   internalBucket: Bucket;
@@ -180,6 +181,7 @@ export class HassuBackendStack extends Stack {
       "TABLE_NAHTAVILLAOLOVAIHEJULKAISU",
       this.props.nahtavillaoloVaiheJulkaisuTable.tableName
     );
+    hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI_DATA", this.props.projektiDataTable.tableName);
     this.props.projektiTable.grantReadWriteData(hyvaksymisEsitysAineistoHandlerLambda);
     this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(hyvaksymisEsitysAineistoHandlerLambda);
 
@@ -749,6 +751,7 @@ export class HassuBackendStack extends Stack {
         TABLE_PROJEKTI_MUISTUTTAJA: this.props.projektiMuistuttajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
         TABLE_NAHTAVILLAOLOVAIHEJULKAISU: this.props.nahtavillaoloVaiheJulkaisuTable.tableName,
+        TABLE_PROJEKTI_DATA: this.props.projektiDataTable.tableName,
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
@@ -772,6 +775,7 @@ export class HassuBackendStack extends Stack {
     this.props.kiinteistonomistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
     this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(suomiFiLambda);
+    this.props.projektiDataTable.grantReadData(suomiFiLambda);
     this.props.projektiTable.grantReadData(suomiFiLambda);
     this.grantYllapitoBucketRead(suomiFiLambda);
     pdfGeneratorLambda.grantInvoke(suomiFiLambda);
@@ -1049,11 +1053,13 @@ export class HassuBackendStack extends Stack {
 
   private attachDatabaseToLambda(backendFn: NodejsFunction, isYllapitoBackend: boolean) {
     const projektiTable = this.props.projektiTable;
+    const projektiDataTable = this.props.projektiDataTable;
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
     const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
+      projektiDataTable.grantFullAccess(backendFn);
       lyhytOsoiteTable.grantFullAccess(backendFn);
       tiedoteTable.grantFullAccess(backendFn);
       backendFn.addEnvironment("TABLE_LYHYTOSOITE", lyhytOsoiteTable.tableName);
@@ -1064,11 +1070,13 @@ export class HassuBackendStack extends Stack {
       nahtavillaoloVaiheJulkaisuTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
+      projektiDataTable.grantReadData(backendFn);
       nahtavillaoloVaiheJulkaisuTable.grantReadData(backendFn);
       this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
     }
     backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
+    backendFn.addEnvironment("TABLE_PROJEKTI_DATA", projektiDataTable.tableName);
     backendFn.addEnvironment("TABLE_NAHTAVILLAOLOVAIHEJULKAISU", nahtavillaoloVaiheJulkaisuTable.tableName);
 
     const feedbackTable = this.props.feedbackTable;

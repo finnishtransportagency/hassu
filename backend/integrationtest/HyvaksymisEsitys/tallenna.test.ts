@@ -117,13 +117,13 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
     const expectedMuokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS };
-    expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys).to.eql({
       ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
       muokkaaja: "theadminuid",
       tila: API.HyvaksymisTila.MUOKKAUS,
       vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
     });
-    expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
+    expect(projektiAfter?.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
   it("tallentaa kiireellisyyden muutoksen tietokantaan", async () => {
@@ -144,7 +144,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     };
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.muokattavaHyvaksymisEsitys.kiireellinen).to.eql(false);
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.kiireellinen).to.eql(false);
   });
 
   it("tallentaa hyväksymisesitystiedostot annetussa järjestyksessä tietokantaan", async () => {
@@ -186,7 +186,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
     // Järjestys vastaa inputissa annettua, vaikka se oli alun perin db:ssä toisin päin
-    expect(projektiAfter.muokattavaHyvaksymisEsitys.hyvaksymisEsitys).to.eql([
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.hyvaksymisEsitys).to.eql([
       {
         nimi: `hyvaksymisEsitys äöå .png`,
         uuid: `hyvaksymis-esitys-uuid`,
@@ -198,7 +198,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
         lisatty: "2022-01-02T02:00:00+02:00",
       },
     ]);
-    expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
+    expect(projektiAfter?.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
   it("vaatii OVT-tunnuksen inputissa", async () => {
@@ -469,7 +469,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
         },
       ],
     };
-    expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys).to.eql({
       ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
       muokkaaja: "theadminuid",
       tila: API.HyvaksymisTila.MUOKKAUS,
@@ -487,13 +487,13 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys });
     const projektiAfter = await getProjektiFromDB(oid);
     const expectedMuokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS };
-    expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys).to.eql({
       ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
       muokkaaja: "theadminuid",
       tila: API.HyvaksymisTila.MUOKKAUS,
       vastaanottajat: [{ sahkoposti: "vastaanottaja@sahkoposti.fi" }],
     });
-    expect(projektiAfter.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
+    expect(projektiAfter?.paivitetty).to.eql("2022-01-02T02:00:00+02:00");
   });
 
   it("korvaa vanhat tiedot uusilla", async () => {
@@ -521,7 +521,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: muokattavaHyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
     const expectedMuokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS };
-    expect(projektiAfter.muokattavaHyvaksymisEsitys).to.eql({
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys).to.eql({
       ...omit(expectedMuokattavaHyvaksymisEsitys, ["muokkaaja", "vastanottajat"]),
       muokkaaja: "theadminuid",
       tila: API.HyvaksymisTila.MUOKKAUS,
@@ -646,7 +646,7 @@ describe("Hyväksymisesityksen tallentaminen", () => {
     const hyvaksymisEsitysInput = { ...TEST_HYVAKSYMISESITYS_INPUT_NO_TIEDOSTO };
     await tallennaHyvaksymisEsitys({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
-    await expect(projektiAfter.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
+    await expect(projektiAfter?.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
   });
 
   it("laukaisee oikeanlaisen tapahtuman, jos on uusi aineisto", async () => {

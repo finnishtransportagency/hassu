@@ -3,7 +3,7 @@ import {
   DBVaylaUser,
   Hyvaksymispaatos,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
   LocalizedMap,
 } from "../../../database/model";
@@ -31,7 +31,7 @@ export function adaptHyvaksymisPaatosVaiheToAPI(
   hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | null | undefined,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
   paths: PathTuple,
-  hyvaksymisPaatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined
+  hyvaksymisPaatosVaiheJulkaisut: PaatosVaiheJulkaisu[] | null | undefined
 ): API.HyvaksymisPaatosVaihe | undefined {
   if (!hyvaksymisPaatosVaihe) {
     return undefined;
@@ -68,8 +68,8 @@ export function adaptHyvaksymisPaatosVaiheToAPI(
 export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
   projekti: DBProjekti,
   hyvaksymisPaatos: Hyvaksymispaatos | null | undefined,
-  julkaisut: HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
-  getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple
+  julkaisut: PaatosVaiheJulkaisu[] | null | undefined,
+  getPathCallback: (julkaisu: PaatosVaiheJulkaisu) => PathTuple
 ): API.HyvaksymisPaatosVaiheJulkaisu | undefined {
   const julkaisu =
     findJulkaisuWithTila(julkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA) ??
@@ -99,6 +99,8 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     asianhallintaEventId,
     kopioituProjektista,
     projektinJakautuminen: _jakautuminen,
+    projektiOid: _projektiOid,
+    sortKey: _sortKey,
     ...fieldsToCopyAsIs
   } = julkaisu;
 

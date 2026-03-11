@@ -5,6 +5,9 @@ import { ProjektiPaths } from "../files/ProjektiPath";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { TestiKomentoVaihe } from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
+import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { groupProjektiEntitiesByType } from "../database/groupProjektiEntitiesByType";
 
 async function requireProjekti(oid: string) {
   const projekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -16,24 +19,20 @@ async function requireProjekti(oid: string) {
 
 const jatkoPaatos2VaiheFields: Partial<DBProjekti> = {
   jatkoPaatos2Vaihe: null,
-  jatkoPaatos2VaiheJulkaisut: null,
 };
 
 const jatkoPaatos1VaiheFields: Partial<DBProjekti> = {
   jatkoPaatos1Vaihe: null,
-  jatkoPaatos1VaiheJulkaisut: null,
   ...jatkoPaatos2VaiheFields,
 };
 
 const hyvaksymisPaatosVaiheFields: Partial<DBProjekti> = {
   hyvaksymisPaatosVaihe: null,
-  hyvaksymisPaatosVaiheJulkaisut: null,
   ...jatkoPaatos1VaiheFields,
 };
 
 const nahtavillaoloVaiheFields: Partial<DBProjekti> = {
   nahtavillaoloVaihe: null,
-  nahtavillaoloVaiheJulkaisut: null,
   ...hyvaksymisPaatosVaiheFields,
 };
 
@@ -61,6 +60,10 @@ class ProjektiResetTool {
       ...aloituskuulutusFields,
       synkronoinnit: {},
     });
+    const nahtavillaoloJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(nahtavillaoloJulkaisut);
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    await projektiEntityDatabase.deleteAll(entities);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_ALOITUSKUULUTUS);
   }
 
@@ -70,6 +73,10 @@ class ProjektiResetTool {
       oid,
       ...suunnitteluVaiheFields,
     });
+    const nahtavillaoloJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(nahtavillaoloJulkaisut);
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    await projektiEntityDatabase.deleteAll(entities);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_SUUNNITTELUVAIHE);
   }
 
@@ -79,6 +86,10 @@ class ProjektiResetTool {
       oid,
       ...vuorovaikutusJulkaisuFields,
     });
+    const nahtavillaoloJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(nahtavillaoloJulkaisut);
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    await projektiEntityDatabase.deleteAll(entities);
   }
 
   async resetNahtavillaolo(oid: string) {
@@ -87,6 +98,10 @@ class ProjektiResetTool {
       oid,
       ...nahtavillaoloVaiheFields,
     });
+    const nahtavillaoloJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(nahtavillaoloJulkaisut);
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    await projektiEntityDatabase.deleteAll(entities);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   }
 
@@ -97,6 +112,8 @@ class ProjektiResetTool {
       kasittelynTila: null,
       ...hyvaksymisPaatosVaiheFields,
     });
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    await projektiEntityDatabase.deleteAll(entities);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_HYVAKSYMISPAATOS);
   }
 
@@ -114,6 +131,11 @@ class ProjektiResetTool {
         : null,
       ...jatkoPaatos1VaiheFields,
     });
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    const groupedEntities = groupProjektiEntitiesByType(entities);
+    await projektiEntityDatabase.deleteAll(
+      [groupedEntities.jatkoPaatos1VaiheJulkaisut ?? [], groupedEntities.jatkoPaatos2VaiheJulkaisut ?? []].flat()
+    );
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(oid), ProjektiPaths.PATH_JATKOPAATOS1);
   }
 

@@ -116,8 +116,8 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.muokattavaHyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA);
-    expect(projektiAfter.muokattavaHyvaksymisEsitys?.palautusSyy).is.undefined;
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.tila).to.eql(API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA);
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.palautusSyy).is.undefined;
   });
 
   it("ei onnistu, jos projektin status on liian pieni", async () => {
@@ -472,12 +472,12 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     MockDate.set(date);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.muokattavaHyvaksymisEsitys?.muistutukset).to.eql([
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.muistutukset).to.eql([
       { kunta: 2, nimi: muistutusFileName, uuid: muistutusUuid, lisatty: "2022-02-01T02:00:00+02:00" },
     ]);
-    expect(projektiAfter.muokattavaHyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
-    expect(projektiAfter.muokattavaHyvaksymisEsitys?.lisatiedot).to.eql("Lisätietoja2");
-    expect(projektiAfter.muokattavaHyvaksymisEsitys?.laskutustiedot).to.eql({
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.poistumisPaiva).to.eql("2033-01-02");
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.lisatiedot).to.eql("Lisätietoja2");
+    expect(projektiAfter?.muokattavaHyvaksymisEsitys?.laskutustiedot).to.eql({
       ovtTunnus: "ovtTunnus2",
       verkkolaskuoperaattorinTunnus: "verkkolaskuoperaattorinTunnus2",
       viitetieto: "viitetieto2",
@@ -657,6 +657,6 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
     await insertProjektiToDB(projektiBefore);
     await tallennaHyvaksymisEsitysJaLahetaHyvaksyttavaksi({ oid, versio: 2, muokattavaHyvaksymisEsitys: hyvaksymisEsitysInput });
     const projektiAfter = await getProjektiFromDB(oid);
-    expect(projektiAfter.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
+    expect(projektiAfter?.aineistoHandledAt).to.eql("2022-01-02T03:00:00+02:00");
   });
 });

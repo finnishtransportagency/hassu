@@ -27,6 +27,7 @@ export class HassuDatabaseStack extends Stack {
   public tiedoteTable!: ddb.Table;
   public schemaMetaTable!: ddb.Table;
   public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
+  public projektiDataTable!: ddb.Table;
   public uploadBucket!: Bucket;
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
@@ -56,6 +57,7 @@ export class HassuDatabaseStack extends Stack {
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
     this.tiedoteTable = this.createTiedoteTable();
     this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
+    this.projektiDataTable = this.createProjektiDataTable();
     this.schemaMetaTable = this.createSchemaMetaTable();
     let oai;
     if (Config.isNotLocalStack()) {
@@ -245,6 +247,28 @@ export class HassuDatabaseStack extends Stack {
       stream: StreamViewType.NEW_IMAGE,
       pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
       timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+    return table;
+  }
+
+  private createProjektiDataTable(): ddb.Table {
+    const table = new ddb.Table(this, "ProjektiData", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.projektiDataTableName,
+      partitionKey: {
+        name: "projektiOid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "sortKey",
+        type: ddb.AttributeType.STRING,
+      },
+      stream: StreamViewType.NEW_IMAGE,
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
     });
     HassuDatabaseStack.enableBackup(table);
     if (Config.isPermanentEnvironment()) {

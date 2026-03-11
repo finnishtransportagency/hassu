@@ -19,6 +19,7 @@ import { expect } from "chai";
 import fs from "fs";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { fileService } from "../../../src/files/fileService";
+import { createJulkaisuSortKey } from "../../../src/database/julkaisuItemKeys";
 
 const kirjaamoOsoitteet: KirjaamoOsoite[] = [
   { __typename: "KirjaamoOsoite", nimi: IlmoitettavaViranomainen.VAYLAVIRASTO, sahkoposti: "kirjaamo@vayla.fi" },
@@ -67,6 +68,8 @@ function testPdfFileName({
 }
 
 function generateEvent(event: PdfEvent): GeneratePDFEvent {
+  const oid = "1.2.3";
+  const id = 1;
   return {
     createHyvaksymisPaatosKuulutusPdf: {
       asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
@@ -96,7 +99,9 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
       luonnos: false,
       lyhytOsoite: "lyhytOsoite",
       hyvaksymisPaatosVaihe: {
-        id: 1,
+        projektiOid: oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id),
+        id,
         hallintoOikeus: HallintoOikeus.HELSINKI,
         kielitiedot: {
           ensisijainenKieli: event.ensisijainenKieli,
@@ -137,7 +142,7 @@ function generateEvent(event: PdfEvent): GeneratePDFEvent {
           },
         ],
       },
-      oid: "1.2.3",
+      oid,
       euRahoitusLogot: event.eunRahoittama
         ? {
             SUOMI: "xxx",

@@ -17,6 +17,8 @@ import {
   JATKOPAATOS2_VAIHE_PAATTYY,
   PublishOrExpireEventType,
 } from "../sqsEvents/projektiScheduleManager";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
 
 class DateMoverTool {
   async ajansiirto(params: Pick<TestiKomentoInput, "oid" | "vaihe" | "ajansiirtoPaivina">) {
@@ -39,6 +41,14 @@ class DateMoverTool {
     if (deltaInDays !== 0) {
       siirraProjektinAikaa(projekti, deltaInDays);
       await testProjektiDatabase.saveProjekti(projekti);
+      await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut);
+      await projektiEntityDatabase.putAll(
+        [
+          projekti.hyvaksymisPaatosVaiheJulkaisut ?? [],
+          projekti.jatkoPaatos1VaiheJulkaisut ?? [],
+          projekti.jatkoPaatos2VaiheJulkaisut ?? [],
+        ].flat()
+      );
       let reason;
       if (params.vaihe === TestiKomentoVaihe.HYVAKSYMISVAIHE) {
         reason = HYVAKSYMISPAATOS_VAIHE_PAATTYY;

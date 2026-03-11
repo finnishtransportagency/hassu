@@ -9,7 +9,7 @@ import { nahtavillaoloTilaManager } from "../../../src/handler/tila/nahtavillaol
 import MockDate from "mockdate";
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../../src/database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 import { parameters } from "../../../src/aws/parameters";
 import { pdfGeneratorClient } from "../../../src/asiakirja/lambda/pdfGeneratorClient";
 import { fileService } from "../../../src/files/fileService";

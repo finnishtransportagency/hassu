@@ -1,5 +1,5 @@
 import { ProjektiTyyppi, TiedotettavanLahetyksenTila, Vaihe } from "hassu-common/graphql/apiModel";
-import { DBProjekti, DBVaylaUser } from "../../src/database/model";
+import { DBProjektiSlim, DBVaylaUser } from "../../src/database/model";
 import { generateExcel, generateExcelByQuery, tallennaMaanomistajaluettelo } from "../../src/mml/tiedotettavatExcel";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient, GetCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
@@ -15,7 +15,7 @@ import sinon from "sinon";
 import MockDate from "mockdate";
 import { DBMuistuttaja } from "../../src/database/muistuttajaDatabase";
 
-const projekti: Partial<DBProjekti> = {
+const projekti: Partial<DBProjektiSlim> = {
   oid: "1.2.3",
   kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
   velho: {
@@ -23,7 +23,7 @@ const projekti: Partial<DBProjekti> = {
     tyyppi: ProjektiTyyppi.TIE,
   },
 };
-const rataProjekti: Partial<DBProjekti> = {
+const rataProjekti: Partial<DBProjektiSlim> = {
   oid: "1.2.3",
   kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
   velho: {
@@ -31,7 +31,7 @@ const rataProjekti: Partial<DBProjekti> = {
     tyyppi: ProjektiTyyppi.RATA,
   },
 };
-const yleisProjekti: Partial<DBProjekti> = {
+const yleisProjekti: Partial<DBProjektiSlim> = {
   oid: "1.2.3",
   kayttoOikeudet: [{ kayttajatunnus: "testuid" } as unknown as DBVaylaUser],
   velho: {
@@ -174,16 +174,16 @@ describe("tiedotettavatExcel", () => {
     MockDate.reset();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon nähtävilläolo", async () => {
-    const buffer = await generateExcel(projekti as DBProjekti, true, Vaihe.NAHTAVILLAOLO, "2024-02-21");
-    fs.writeFileSync(__dirname + "/maanomistajaluettelo_nahtavillaolo.xlsx", buffer);
+    const buffer = await generateExcel(projekti as DBProjektiSlim, true, Vaihe.NAHTAVILLAOLO, "2024-02-21");
+    fs.writeFileSync(__dirname + "/maanomistajaluettelo_nahtavillaolo.xlsx", new Uint8Array(buffer));
     let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
     rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös", async () => {
-    const buffer = await generateExcel(projekti as DBProjekti, true, Vaihe.HYVAKSYMISPAATOS, "2024-02-21");
-    fs.writeFileSync(__dirname + "/maanomistajaluettelo_hyvaksymispaatos.xlsx", buffer);
+    const buffer = await generateExcel(projekti as DBProjektiSlim, true, Vaihe.HYVAKSYMISPAATOS, "2024-02-21");
+    fs.writeFileSync(__dirname + "/maanomistajaluettelo_hyvaksymispaatos.xlsx", new Uint8Array(buffer));
     let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
     rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
@@ -194,12 +194,12 @@ describe("tiedotettavatExcel", () => {
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon Suomi.fi", async () => {
-    const buffer = await generateExcel(projekti as DBProjekti, true, undefined, undefined, true);
+    const buffer = await generateExcel(projekti as DBProjektiSlim, true, undefined, undefined, true);
     const rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon muut", async () => {
-    const buffer = await generateExcel(projekti as DBProjekti, true, undefined, undefined, false);
+    const buffer = await generateExcel(projekti as DBProjektiSlim, true, undefined, undefined, false);
     const rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
@@ -245,21 +245,33 @@ describe("tiedotettavatExcel", () => {
   });
   it("tallenna maanomistajaluettelo excel nähtävilläolo tie", async () => {
     const file = sinon.stub(fileService, "createFileToProjekti");
-    await tallennaMaanomistajaluettelo(projekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 1);
+    await tallennaMaanomistajaluettelo(projekti as DBProjektiSlim, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 1);
     const createParams = file.getCall(0).args[0];
     expect(createParams.fileName).to.be.equal("T416 Maanomistajaluettelo 20240228.xlsx");
     file.restore();
   });
   it("tallenna maanomistajaluettelo excel nähtävilläolo yleis", async () => {
     const file = sinon.stub(fileService, "createFileToProjekti");
-    await tallennaMaanomistajaluettelo(yleisProjekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 1);
+    await tallennaMaanomistajaluettelo(
+      yleisProjekti as DBProjektiSlim,
+      new ProjektiPaths(projekti.oid!),
+      Vaihe.NAHTAVILLAOLO,
+      "2024-02-28",
+      1
+    );
     const createParams = file.getCall(0).args[0];
     expect(createParams.fileName).to.be.equal("Y416 Maanomistajaluettelo 20240228.xlsx");
     file.restore();
   });
   it("tallenna maanomistajaluettelo excel nähtävilläolo yleis 2", async () => {
     const file = sinon.stub(fileService, "createFileToProjekti");
-    await tallennaMaanomistajaluettelo(yleisProjekti as DBProjekti, new ProjektiPaths(projekti.oid!), Vaihe.NAHTAVILLAOLO, "2024-02-28", 2);
+    await tallennaMaanomistajaluettelo(
+      yleisProjekti as DBProjektiSlim,
+      new ProjektiPaths(projekti.oid!),
+      Vaihe.NAHTAVILLAOLO,
+      "2024-02-28",
+      2
+    );
     const createParams = file.getCall(0).args[0];
     expect(createParams.fileName).to.be.equal("Y416 Maanomistajaluettelo 20240228 2.xlsx");
     file.restore();
@@ -267,7 +279,7 @@ describe("tiedotettavatExcel", () => {
   it("tallenna maanomistajaluettelo excel hyväksymispäätös", async () => {
     const file = sinon.stub(fileService, "createFileToProjekti");
     await tallennaMaanomistajaluettelo(
-      rataProjekti as DBProjekti,
+      rataProjekti as DBProjektiSlim,
       new ProjektiPaths(projekti.oid!),
       Vaihe.HYVAKSYMISPAATOS,
       "2024-02-28",
