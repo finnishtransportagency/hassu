@@ -7,7 +7,6 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { useRouter } from "next/router";
 import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
 import NotificationBar from "@components/notification/NotificationBar";
-import { getPublicEnv } from "src/util/env";
 
 interface Props {
   children?: ReactNode;
@@ -27,8 +26,7 @@ export default function Layout({ children }: Props): ReactElement {
   ) {
     return (
       <div className="min-h-screen relative flex flex-col">
-        {getPublicEnv("ENVIRONMENT") !== "dev" && <NotificationBar />}
-
+        <NotificationBar />
         <Container sx={{ marginBottom: "110px", marginTop: "50px" }}>
           <main>{children}</main>
         </Container>
@@ -39,7 +37,7 @@ export default function Layout({ children }: Props): ReactElement {
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      {getPublicEnv("ENVIRONMENT") !== "dev" && <NotificationBar />}
+      <NotificationBar />
       <Header />
       <div style={{ minWidth: "90%", margin: "10px auto 10px" }}>
         <TiedoteNotification />
