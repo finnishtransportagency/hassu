@@ -212,8 +212,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       },
       kasittelynTila: {
         hyvaksymisesitysTraficomiinPaiva: "2000-01-01T02:00:00+02:00",
-        suunnitelmanTila: "suunnitelman-tila/sutil03"
-      }
+        suunnitelmanTila: "suunnitelman-tila/sutil03",
+      },
     });
     expect(projektiAfter?.paivitetty).to.exist;
     expect(projektiAfter?.julkaistuHyvaksymisEsitys?.hyvaksymisPaiva).to.exist;

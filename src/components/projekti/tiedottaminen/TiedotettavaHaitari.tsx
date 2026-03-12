@@ -138,11 +138,13 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
                 })
               );
             } else {
-              setTiedotettavat(response.tiedotettavat.sort((a, b) => {
-                const nimiA = (a.nimi as string) || "";
-                const nimiB = (b.nimi as string) || "";
-                return nimiA.localeCompare(nimiB, "fi");
-              }));
+              setTiedotettavat(
+                response.tiedotettavat.sort((a, b) => {
+                  const nimiA = (a.nimi as string) || "";
+                  const nimiB = (b.nimi as string) || "";
+                  return nimiA.localeCompare(nimiB, "fi");
+                })
+              );
             }
           } catch {}
         })()
