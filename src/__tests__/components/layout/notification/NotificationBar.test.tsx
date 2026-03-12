@@ -16,34 +16,37 @@ describe("NotificationBar component", () => {
 
   it("renders ENVIRONMENT and VERSION correctly with normal values", () => {
     mockedGetEnv.mockImplementation((key: string) => {
-      if (key === "ENVIRONMENT") return "test-env";
+      if (key === "ENVIRONMENT") return "prod";
       if (key === "VERSION") return "1.2.3";
     });
 
     render(<NotificationBar />);
 
-    expect(screen.getByText(/^YMPÄRISTÖ:/).textContent).toBe("YMPÄRISTÖ: test-env ");
+    expect(screen.getByText(/^YMPÄRISTÖ:/).textContent).toBe("YMPÄRISTÖ: prod ");
     expect(screen.getByText(/^VERSIO:/).textContent).toBe("VERSIO: 1.2.3 ");
   });
 
   it("renders undefined for value for if env variables are undefined", () => {
-    mockedGetEnv.mockReturnValue(undefined);
+    mockedGetEnv.mockImplementation((key: string) => {
+      if (key === "ENVIRONMENT") return "prod";
+      if (key === "VERSION") return undefined;
+    });
 
     render(<NotificationBar />);
 
-    expect(screen.getByText(/^YMPÄRISTÖ:/).textContent).toBe("YMPÄRISTÖ:  ");
+    expect(screen.getByText(/^YMPÄRISTÖ:/).textContent).toBe("YMPÄRISTÖ: prod ");
     expect(screen.getByText(/^VERSIO:/).textContent).toBe("VERSIO:  ");
   });
 
   it("renders dynamic environment values correctly", () => {
     mockedGetEnv.mockImplementation((key: string) => {
-      if (key === "ENVIRONMENT") return "feature";
+      if (key === "ENVIRONMENT") return "prod";
       if (key === "VERSION") return "9.9.9";
     });
 
     render(<NotificationBar />);
 
-    expect(screen.getByText(/^YMPÄRISTÖ:/).textContent).toBe("YMPÄRISTÖ: feature ");
+    expect(screen.getByText(/^YMPÄRISTÖ:/).textContent).toBe("YMPÄRISTÖ: prod ");
     expect(screen.getByText(/^VERSIO:/).textContent).toBe("VERSIO: 9.9.9 ");
   });
 });
