@@ -14,6 +14,11 @@ import Notification, { NotificationType } from "@components/notification/Notific
 import { DottedList } from "@components/notification/DottedList";
 import TiedotteenVahvistusDialog from "@components/projekti/common/TiedotteenVahvistusDialog";
 
+// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
+// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
+// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
+export const getServerSideProps = async () => ({ props: {} });
+
 export default function Jarjestelmatiedotteet(): ReactElement {
   const [tiedoteDialogOpen, setTiedoteDialogOpen] = useState(false);
   const [tiedotteet, setTiedotteet] = useState<Tiedote[]>([]);

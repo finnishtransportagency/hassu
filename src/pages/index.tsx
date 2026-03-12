@@ -130,6 +130,11 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
 
 export default FrontPage;
 
+// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
+// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
+// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
+export const getServerSideProps = async () => ({ props: {} });
+
 type HookProps = { kuntaOptions: SelectOption[]; maakuntaOptions: SelectOption[] };
 export type HookReturnType = {
   vapaasanahaku: string;

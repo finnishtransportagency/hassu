@@ -3,6 +3,11 @@ import StyledLink from "@components/StyledLink";
 import { styled } from "@mui/material";
 import React, { ReactElement } from "react";
 
+// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
+// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
+// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
+export const getServerSideProps = async () => ({ props: {} });
+
 export default function Ohjeet(): ReactElement {
   const ohjevideot = [
     {

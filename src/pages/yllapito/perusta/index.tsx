@@ -37,6 +37,11 @@ const velhoVirheet = {
   SEARCH_UNSUCCESSFUL: "Haku epäonnistui. Mikäli ongelma jatkuu, ota yhteys järjestelmän ylläpitäjään.",
 };
 
+// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
+// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
+// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
+export const getServerSideProps = async () => ({ props: {} });
+
 export default function Perusta() {
   const router = useRouter();
   const [hakuTulos, setHakuTulos] = useState<VelhoHakuTulos[] | null>(null);
