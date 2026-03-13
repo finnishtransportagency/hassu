@@ -47,6 +47,12 @@ export default function LausuntopyyntoTaydennysAineistoPage(props: Props): React
           </Notification>
         )}
         {kunta && <H2>{kuntametadata.nameForKuntaId(kunta, "fi")}</H2>}
+        {aineistopaketti && (
+          <ButtonLink disabled={esikatselu} href={aineistopaketti}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
+        )}
         {muistutukset && (
           <ContentSpacer>
             <H3>Muistutukset</H3>
@@ -72,14 +78,6 @@ export default function LausuntopyyntoTaydennysAineistoPage(props: Props): React
           </ContentSpacer>
         )}
       </Section>
-      {aineistopaketti && (
-        <Section noDivider>
-          <ButtonLink disabled={esikatselu} href={aineistopaketti}>
-            Lataa kaikki
-            <DownloadIcon className="ml-2" />
-          </ButtonLink>
-        </Section>
-      )}
     </>
   );
 }
