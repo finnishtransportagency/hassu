@@ -151,12 +151,10 @@ export default function HyvaksymisEsitysAineistoPage(props: HyvaksymisEsityksenA
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
         {(aineistopaketti || tiedostotEiLadattavissa) && (
-          <Section noDivider>
-            <ButtonLink disabled={tiedostotEiLadattavissa} href={aineistopaketti ?? undefined}>
-              Lataa kaikki
-              <DownloadIcon className="ml-2" />
-            </ButtonLink>
-          </Section>
+          <ButtonLink disabled={tiedostotEiLadattavissa} href={aineistopaketti ?? undefined}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
         )}
         <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (

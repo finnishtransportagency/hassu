@@ -51,6 +51,12 @@ export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): Reac
           </Notification>
         )}
         <H2>Suunnitelma</H2>
+        {aineistopaketti && (
+          <ButtonLink disabled={props.esikatselu} href={aineistopaketti}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
+        )}
         <SuunnittelmaLadattavatTiedostotAccordion kategoriat={kategoriat} aineistot={aineistot} esikatselu={!!props.esikatselu} />
         {!!lisaAineistot?.length && (
           <ContentSpacer>
@@ -65,14 +71,6 @@ export default function LausuntopyyntoAineistoPage(props: Readonly<Props>): Reac
           </ContentSpacer>
         )}
       </Section>
-      {aineistopaketti && (
-        <Section noDivider>
-          <ButtonLink disabled={props.esikatselu} href={aineistopaketti}>
-            Lataa kaikki
-            <DownloadIcon className="ml-2" />
-          </ButtonLink>
-        </Section>
-      )}
     </>
   );
 }

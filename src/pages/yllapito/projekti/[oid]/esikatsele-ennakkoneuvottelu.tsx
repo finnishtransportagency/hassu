@@ -171,12 +171,10 @@ export default function EnnakkoNeuvotteluEsikatseluPage(): ReactElement {
 
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
-        <Section noDivider>
-          <ButtonLink disabled={true}>
-            Lataa kaikki
-            <DownloadIcon className="ml-2" />
-          </ButtonLink>
-        </Section>
+        <ButtonLink disabled={true}>
+          Lataa kaikki
+          <DownloadIcon className="ml-2" />
+        </ButtonLink>
         <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (
           <ul style={{ listStyle: "none" }}>
