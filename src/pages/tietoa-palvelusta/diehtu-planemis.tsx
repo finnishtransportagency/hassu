@@ -3,11 +3,7 @@ import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import React from "react";
-
-// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
-// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
-// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
-export const getServerSideProps = async () => ({ props: {} });
+import { GetServerSideProps } from "next";
 
 export default function DiehtuPlanemisSivu() {
   return (
@@ -136,3 +132,7 @@ export default function DiehtuPlanemisSivu() {
     </TietoaPalvelustaPageLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};

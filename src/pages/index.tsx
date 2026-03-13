@@ -17,6 +17,7 @@ import { H1, H3 } from "@components/Headings";
 import { PalauteKyselyMuistutusPopup } from "@components/projekti/kansalaisnakyma/PalauteKyselyMuistutusPopup";
 import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import { EVKinfo } from "@components/kansalaisenEtusivu/ElinvoimakeskusInfo";
+import { GetServerSideProps } from "next";
 
 const SIVUN_KOKO = 10;
 
@@ -130,10 +131,9 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
 
 export default FrontPage;
 
-// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
-// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
-// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
-export const getServerSideProps = async () => ({ props: {} });
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
 
 type HookProps = { kuntaOptions: SelectOption[]; maakuntaOptions: SelectOption[] };
 export type HookReturnType = {

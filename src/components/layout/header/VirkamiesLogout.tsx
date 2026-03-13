@@ -1,16 +1,11 @@
-import React from "react";
 import ButtonLink from "@components/button/ButtonLink";
 import StyledLink from "@components/StyledLink";
 import { getPublicEnv } from "src/util/env";
 
-interface VirkamiesLogoutProps {
-  variant?: "button" | "link";
-}
-
-export default function VirkamiesLogout({ variant = "button" }: VirkamiesLogoutProps) {
+export default function VirkamiesLogout({ mobile }: { mobile?: true }) {
   const logoutHref = getPublicEnv("VAYLA_EXTRANET_URL");
 
-  if (variant === "link") {
+  if (mobile) {
     return (
       <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
         Poistu Palvelusta

@@ -9,11 +9,7 @@ import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React, { useCallback, useState } from "react";
-
-// Pakottaa SSR:n, jotta next-translate-plugin ei generoi sivua staattisesti build-aikana.
-// Ilman tätä ENVIRONMENT-arvo (ja muut runtime-muuttujat) leivottaisiin HTML:ään build-vaiheessa,
-// mikä aiheuttaa React-hydraatiovirheen (418, 423) kun runtime-arvo poikkeaa build-arvosta.
-export const getServerSideProps = async () => ({ props: {} });
+import { GetServerSideProps } from "next";
 
 export default function TietoaPalvelustaSivu() {
   const { t } = useTranslation("tietoa-palvelusta/yhteystiedot-ja-palaute");
@@ -91,3 +87,7 @@ export default function TietoaPalvelustaSivu() {
 }
 
 const EmailLink = styled("a")({ fontWeight: 700 });
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
