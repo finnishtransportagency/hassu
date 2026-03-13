@@ -1,6 +1,5 @@
 import React, { ReactElement, ReactNode } from "react";
 import dynamic from "next/dynamic";
-import Breadcrumbs from "./Breadcrumbs";
 import Header from "./header/header";
 import { Footer } from "./footer";
 import { Container } from "@mui/material";
@@ -9,6 +8,10 @@ import { useRouter } from "next/router";
 import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
 
 const NotificationBar = dynamic(() => import("@components/notification/NotificationBar"), {
+  ssr: false,
+});
+
+const Breadcrumbs = dynamic(() => import("./Breadcrumbs"), {
   ssr: false,
 });
 
