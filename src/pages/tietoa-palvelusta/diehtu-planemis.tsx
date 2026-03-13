@@ -3,6 +3,7 @@ import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import React from "react";
+import { GetServerSideProps } from "next";
 
 export default function DiehtuPlanemisSivu() {
   return (
@@ -131,3 +132,7 @@ export default function DiehtuPlanemisSivu() {
     </TietoaPalvelustaPageLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};

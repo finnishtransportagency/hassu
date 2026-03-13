@@ -1,5 +1,4 @@
 import React from "react";
-
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { H1 } from "@components/Headings";
@@ -8,7 +7,7 @@ export default function Custom404() {
   const { t } = useTranslation("common");
   const router = useRouter();
 
-  const isTiedostoSivu = /^(\/yllapito)?\/tiedostot/.test(router.pathname);
+  const isTiedostoSivu = /^(\/yllapito)?\/tiedostot/.test(router.asPath);
 
   return (
     <>

@@ -6,6 +6,7 @@ import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React from "react";
+import { GetServerSideProps } from "next";
 
 export default function TietoaPalvelustaSivu() {
   const { t } = useTranslation("tietoa-palvelusta/tietoa-suunnittelusta");
@@ -101,3 +102,7 @@ export default function TietoaPalvelustaSivu() {
     </TietoaPalvelustaPageLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
