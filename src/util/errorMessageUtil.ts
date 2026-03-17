@@ -2,6 +2,7 @@ import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 import { ErrorResponse } from "@apollo/client/link/error";
 import { Translate } from "next-translate";
 import { GraphQLFormattedError } from "graphql";
+import { getPublicEnv } from "./env";
 
 type GenerateErrorMessage = (props: GenerateErrorMessageProps) => string;
 type GenerateErrorMessageProps = { errorResponse: ErrorResponse; isYllapito: boolean; t: Translate };
@@ -12,8 +13,10 @@ type ErrorInfo = {
 };
 
 // Ei nayteta korrelaatio IDeita eikä virheyksityiskohtia kansalaisille tuotanto- ja koulutusympäristöissä
-const showErrorDetails = (props: GenerateErrorMessageProps): boolean =>
-  (process.env.ENVIRONMENT !== "prod" && process.env.ENVIRONMENT !== "training") || props.isYllapito;
+const showErrorDetails = (props: GenerateErrorMessageProps): boolean => {
+  const environment = getPublicEnv("ENVIRONMENT");
+  return (environment !== "prod" && environment !== "training") || props.isYllapito;
+};
 
 // Jos halutaan näyttää ei-geneerinen virheviesti api-virheestä,
 // lisätään tähän arrayhin validator ja errorMessage -pari.

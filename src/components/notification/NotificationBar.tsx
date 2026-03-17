@@ -6,8 +6,9 @@ export interface HeaderProps {
   scrolledPastOffset: boolean;
 }
 
-export default function NotificationBar(): ReactElement {
+export default function NotificationBar(): ReactElement | null {
   const theme = useTheme();
+  if (getPublicEnv("ENVIRONMENT") === "prod") return null;
   return (
     <div style={{ zIndex: theme.zIndex.appBar }} className="sticky bg-green transition-all">
       <div style={{ width: "100%", textAlign: "center" }} className="">

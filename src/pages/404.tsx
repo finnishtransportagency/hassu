@@ -1,14 +1,14 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
-import { useRouter } from "next/router";
 import { H1 } from "@components/Headings";
 
 export default function Custom404() {
   const { t } = useTranslation("common");
-  const router = useRouter();
+  const [isTiedostoSivu, setIsTiedostoSivu] = useState(false);
 
-  const isTiedostoSivu = /^(\/yllapito)?\/tiedostot/.test(router.pathname);
+  useEffect(() => {
+    setIsTiedostoSivu(/^(\/yllapito)?\/tiedostot/.test(window.location.pathname));
+  }, []);
 
   return (
     <>

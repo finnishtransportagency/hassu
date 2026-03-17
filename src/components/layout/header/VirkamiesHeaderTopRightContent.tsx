@@ -1,21 +1,17 @@
 import React, { FunctionComponent } from "react";
-import ButtonLink from "@components/button/ButtonLink";
 import useCurrentUser from "../../../hooks/useCurrentUser";
-import { getPublicEnv } from "src/util/env";
+import dynamic from "next/dynamic";
+
+const VirkamiesLogout = dynamic(() => import("./VirkamiesLogout"), { ssr: false });
 
 const VirkamiesHeaderTopRightContent: FunctionComponent<{ mobile?: true }> = ({ mobile }) => {
   const { data: kayttaja } = useCurrentUser();
   const kayttajaNimi = kayttaja && kayttaja.etunimi && kayttaja.sukunimi && `${kayttaja.sukunimi}, ${kayttaja.etunimi}`;
-  const logoutHref = getPublicEnv("VAYLA_EXTRANET_URL");
 
   return (
     <div className="flex flex-wrap items-center justify-end gap-x-5 gap-y-3 py-5 md:py-0 vayla-paragraph">
       <span>{kayttajaNimi}</span>
-      {!mobile && (
-        <ButtonLink href={logoutHref} useNextLink={false}>
-          Poistu Palvelusta
-        </ButtonLink>
-      )}
+      {!mobile && <VirkamiesLogout />}
     </div>
   );
 };
