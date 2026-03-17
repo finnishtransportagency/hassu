@@ -1,13 +1,10 @@
 import { log, setLogContextOid } from "../logger";
 import {
-  AloitusKuulutusJulkaisu,
   DBProjekti,
   DBPROJEKTI_OMITTED_FIELDS,
   DBProjektiSlim,
   Hyvaksymispaatos,
-  PaatosVaiheJulkaisu,
   KasittelynTila,
-  NahtavillaoloVaiheJulkaisu,
   OmistajaHaku,
   SaveDBProjektiInput,
   SaveDBProjektiSlimInput,
@@ -16,7 +13,6 @@ import {
   VuorovaikutusKierrosJulkaisu,
 } from "./model";
 import { config } from "../config";
-import { migrateFromOldSchema } from "./projektiSchemaUpdate";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import assert from "assert";
 import { SimultaneousUpdateError } from "hassu-common/error";
@@ -35,11 +31,10 @@ import { NativeAttributeValue } from "@aws-sdk/util-dynamodb";
 import { FULL_DATE_TIME_FORMAT_WITH_TZ, nyt } from "../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { Status } from "hassu-common/graphql/apiModel";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "./nahtavillaoloVaiheJulkaisuDatabase";
 import omit from "lodash/omit";
 import { Exact } from "hassu-common/specialTypes";
 import { projektiEntityDatabase } from "./projektiEntityDatabase";
-import { groupProjektiEntitiesByType } from "./groupProjektiEntitiesByType";
+import { mapProjektiEntitiesToDBProjekti } from "./mapProjektiEntitiesToDBProjekti";
 
 function createExpression(expression: string, properties: string[]) {
   return properties.length > 0 ? expression + " " + properties.join(" , ") : "";
@@ -47,11 +42,9 @@ function createExpression(expression: string, properties: string[]) {
 
 type JulkaisuWithId = { id: number };
 
-type JulkaisutFieldName = keyof Pick<DBProjekti, "aloitusKuulutusJulkaisut" | "vuorovaikutusKierrosJulkaisut">;
+type JulkaisutFieldName = keyof Pick<DBProjekti, "vuorovaikutusKierrosJulkaisut">;
 
-export class JulkaisuFunctions<
-  T extends AloitusKuulutusJulkaisu | VuorovaikutusKierrosJulkaisu | PaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu
-> {
+export class JulkaisuFunctions<T extends VuorovaikutusKierrosJulkaisu> {
   private julkaisutFieldName: JulkaisutFieldName;
   private description: string;
   private projektiDatabase: ProjektiDatabase;
@@ -96,7 +89,6 @@ export class ProjektiDatabase {
 
   projektiTableName: string;
 
-  aloitusKuulutusJulkaisut = new JulkaisuFunctions<AloitusKuulutusJulkaisu>(this, "aloitusKuulutusJulkaisut", "AloitusKuulutusJulkaisu");
   vuorovaikutusKierrosJulkaisut = new JulkaisuFunctions<VuorovaikutusKierrosJulkaisu>(
     this,
     "vuorovaikutusKierrosJulkaisut",
@@ -268,12 +260,13 @@ export class ProjektiDatabase {
 
   async createProjekti(projekti: DBProjekti): Promise<PutCommandOutput> {
     const slimProjekti: DBProjektiSlim = omit(projekti, ...DBPROJEKTI_OMITTED_FIELDS);
-    await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut);
     const entities = [
-      ...(projekti.hyvaksymisPaatosVaiheJulkaisut ?? []),
-      ...(projekti.jatkoPaatos1VaiheJulkaisut ?? []),
-      ...(projekti.jatkoPaatos2VaiheJulkaisut ?? []),
-    ];
+      projekti.aloitusKuulutusJulkaisut ?? [],
+      projekti.nahtavillaoloVaiheJulkaisut ?? [],
+      projekti.hyvaksymisPaatosVaiheJulkaisut ?? [],
+      projekti.jatkoPaatos1VaiheJulkaisut ?? [],
+      projekti.jatkoPaatos2VaiheJulkaisut ?? [],
+    ].flat();
     await projektiEntityDatabase.putAll(entities);
     return await this.createSlimProjekti(slimProjekti);
   }
@@ -653,15 +646,5 @@ export const projektiDatabase = new ProjektiDatabase(config.projektiTableName ??
 
 async function fattenProjekti(slimProjekti: DBProjektiSlim, stronglyConsistentRead: boolean) {
   const entities = await projektiEntityDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead);
-  const entitiesByType = groupProjektiEntitiesByType(entities);
-
-  const dbProjektiExtended: DBProjekti = {
-    ...slimProjekti,
-    nahtavillaoloVaiheJulkaisut: await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(slimProjekti.oid, stronglyConsistentRead),
-    hyvaksymisPaatosVaiheJulkaisut: entitiesByType.hyvaksymisPaatosVaiheJulkaisut,
-    jatkoPaatos1VaiheJulkaisut: entitiesByType.jatkoPaatos1VaiheJulkaisut,
-    jatkoPaatos2VaiheJulkaisut: entitiesByType.jatkoPaatos2VaiheJulkaisut,
-    tallennettu: true,
-  };
-  return migrateFromOldSchema(dbProjektiExtended);
+  return mapProjektiEntitiesToDBProjekti(slimProjekti, entities);
 }

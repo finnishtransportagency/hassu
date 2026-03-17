@@ -12,8 +12,10 @@ import {
   KuulutusSaamePDFt,
   ProjektinJakautuminen,
   SuunnitteluSopimusJulkaisu,
+  nahtavillaoloVaiheJulkaisuPrefix,
 } from ".";
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+import { IProjektiDataItem } from "./IProjektiDataItem";
 
 export type NahtavillaoloVaihe = {
   id: number;
@@ -31,8 +33,7 @@ export type NahtavillaoloVaihe = {
   aineistoMuokkaus?: AineistoMuokkaus | null;
 };
 
-export type NahtavillaoloVaiheJulkaisu = {
-  projektiOid: string;
+export interface NahtavillaoloVaiheJulkaisu extends IProjektiDataItem<{ sortKey: `${typeof nahtavillaoloVaiheJulkaisuPrefix}${string}` }> {
   id: number;
   aineistoNahtavilla?: Array<Aineisto> | null;
   aineistopaketti?: string | null;
@@ -59,7 +60,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   maanomistajaluettelo?: string | null;
   kopioituProjektista?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
-};
+}
 
 export type NahtavillaoloPDF = {
   nahtavillaoloPDFPath: string;

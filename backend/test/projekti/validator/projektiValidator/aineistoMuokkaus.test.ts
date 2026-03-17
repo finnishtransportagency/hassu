@@ -14,6 +14,7 @@ import MockDate from "mockdate";
 
 import { expect } from "chai";
 import { parameters } from "../../../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../../../src/database/julkaisuItemKeys";
 
 describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", () => {
   let fixture: ProjektiFixture;
@@ -44,6 +45,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
       {
         ...projekti.nahtavillaoloVaihe,
         projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
         velho: projekti.velho as Velho,
         kielitiedot: projekti.kielitiedot as Kielitiedot,
         yhteystiedot: [],
@@ -103,6 +105,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
       {
         ...projekti.nahtavillaoloVaihe,
         projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
         velho: projekti.velho as Velho,
         kielitiedot: projekti.kielitiedot as Kielitiedot,
         yhteystiedot: [],
@@ -146,6 +149,7 @@ describe("validateTallennaProjekti ('muokkaustila allows editing' validator)", (
       {
         ...projekti.nahtavillaoloVaihe,
         projektiOid: projekti.oid,
+        sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
         velho: projekti.velho as Velho,
         kielitiedot: projekti.kielitiedot as Kielitiedot,
         yhteystiedot: [],

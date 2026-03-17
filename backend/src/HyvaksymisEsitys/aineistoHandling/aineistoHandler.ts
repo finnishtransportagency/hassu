@@ -20,7 +20,8 @@ import { assertIsDefined } from "../../util/assertions";
 import { ENNAKKONEUVOTTELU_PATH } from "../../ennakkoneuvottelu/tallenna";
 import { Status } from "hassu-common/graphql/apiModel";
 import GetProjektiStatus from "../../projekti/status/getProjektiStatus";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
+import { groupProjektiEntitiesByType } from "../../database/groupProjektiEntitiesByType";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -228,7 +229,9 @@ async function haeZipattavatAineistotHyvaksymisEsityksen(
       throw new Error();
     }
     const projekti = data.Item as ZipattavatAineistotHyvaksymisEsitykseen;
-    projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
+    const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+    const groupedEntities = groupProjektiEntitiesByType(entities);
+    projekti.nahtavillaoloVaiheJulkaisut = groupedEntities.nahtavillaoloVaiheJulkaisut;
     return projekti;
   } catch (e) {
     log.error(e instanceof Error ? e.message : String(e), { params });

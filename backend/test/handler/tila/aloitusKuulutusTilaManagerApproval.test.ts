@@ -28,11 +28,12 @@ import {
 import { isDateTimeInThePast, nyt } from "../../../src/util/dateUtil";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { parameters } from "../../../src/aws/parameters";
+import { projektiEntityDatabase } from "../../../src/database/projektiEntityDatabase";
 
 describe("aloitusKuulutusTilaManagerApproval", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
-  let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
+  let putJulkaisuStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   let personSearchFixture: PersonSearchFixture;
@@ -46,7 +47,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
   before(() => {
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
+    putJulkaisuStub = sinon.stub(projektiEntityDatabase, "put");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     saveProjektiAloituskuulutusPaivaStub = mockSaveProjektiToVelho(new VelhoStub()).saveProjektiAloituskuulutusPaivaStub;
@@ -88,7 +89,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     it("should set all other kuulutuksien tila to PERUUTETTU", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
+      putJulkaisuStub.resolves();
 
       const todayIso = nyt().format("YYYY-MM-DD");
       let projekti: DBProjekti | undefined = fixture.dbProjekti2UseammallaKuulutuksella(todayIso);
@@ -108,7 +109,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     it("should call saveProjektiAloituskuulutusPaivaStub with kuulutus information", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
+      putJulkaisuStub.resolves();
       const todayIso = dayjs().format("YYYY-MM-DD");
       const projekti: DBProjekti | undefined = fixture.dbProjekti2UseammallaKuulutuksella(todayIso);
       await aloitusKuulutusTilaManager.approve(projekti, UserFixture.pekkaProjari);
@@ -136,7 +137,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
     it("should set all but the most recent published kuulutuksien tila to PERUUTETTU", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
+      putJulkaisuStub.resolves();
 
       let projekti: DBProjekti | undefined = fixture.dbProjekti2UseammallaKuulutuksella(tomorrowIso);
 

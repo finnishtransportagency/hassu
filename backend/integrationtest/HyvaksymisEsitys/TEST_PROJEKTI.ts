@@ -1,3 +1,4 @@
+import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 import { AloitusKuulutusJulkaisu, DBProjekti, NahtavillaoloVaiheJulkaisu, VuorovaikutusKierrosJulkaisu } from "../../src/database/model";
 import * as API from "hassu-common/graphql/apiModel";
 
@@ -9,6 +10,8 @@ type DeepPartial<T> = T extends object
 
 const TEST_ALOITUSKUULUTUS_JULKAISU: DeepPartial<AloitusKuulutusJulkaisu> = {
   id: 1,
+  projektiOid: "Testi1",
+  sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", 1),
   tila: API.KuulutusJulkaisuTila.HYVAKSYTTY,
   aloituskuulutusPDFt: {
     SUOMI: {

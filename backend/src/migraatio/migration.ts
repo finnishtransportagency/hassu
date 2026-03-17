@@ -13,7 +13,6 @@ import {
 } from "../database/model";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
 import { createJulkaisuSortKey } from "../database/julkaisuItemKeys";
 
@@ -67,16 +66,19 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
 
   const targetStatusRank = statusOrder(projektiStatusAfterMigration[tila]);
   if (targetStatusRank >= statusOrder(Status.SUUNNITTELU)) {
+    const id = 1;
     const aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu = {
+      projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", id),
       kielitiedot,
-      id: 1,
+      id,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
+    await projektiEntityDatabase.put(aloitusKuulutusJulkaisu);
   }
 
   const versio = projekti.versio;
@@ -89,17 +91,19 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
   }
 
   if (targetStatusRank >= statusOrder(Status.HYVAKSYMISMENETTELYSSA)) {
+    const id = 1;
     const nahtavillaoloVaiheJulkaisu: NahtavillaoloVaiheJulkaisu = {
       projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", id),
       kielitiedot,
-      id: 1,
+      id,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await nahtavillaoloVaiheJulkaisuDatabase.put(nahtavillaoloVaiheJulkaisu);
+    await projektiEntityDatabase.put(nahtavillaoloVaiheJulkaisu);
   }
 
   const kasittelynTila: KasittelynTila = {

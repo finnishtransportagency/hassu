@@ -21,7 +21,6 @@ import {
   findJatkoPaatos2VaiheWaitingForApproval,
   findNahtavillaoloWaitingForApproval,
 } from "../../projekti/projektiUtil";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 type UndefinedOrNullOr<T> = T | undefined | null;
@@ -81,7 +80,7 @@ export class SimpleNahtavillaoloVaiheTilaManager extends SimpleKuulutusTilaManag
       await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.nahtavillaoloPDFt);
 
       await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, nahtavillaoloVaihe });
-      await nahtavillaoloVaiheJulkaisuDatabase.delete(julkaisuWaitingForApproval);
+      await projektiEntityDatabase.delete(julkaisuWaitingForApproval);
     }
   }
   getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: NahtavillaoloVaiheJulkaisu): NahtavillaoloVaihe {

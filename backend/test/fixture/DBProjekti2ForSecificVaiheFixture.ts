@@ -33,11 +33,7 @@ import {
   VuorovaikutusKierrosJulkaisu,
   Yhteystieto,
 } from "../../src/database/model";
-import {
-  HyvaksymisPaatosVaiheJulkaisu,
-  JatkoPaatos1VaiheJulkaisu,
-  JatkoPaatos2VaiheJulkaisu,
-} from "../../src/database/model/projektiDataItem";
+import { HyvaksymisPaatosVaiheJulkaisu, JatkoPaatos1VaiheJulkaisu, JatkoPaatos2VaiheJulkaisu } from "../../src/database/model";
 import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 const mikkeli = kuntametadata.idForKuntaName("Mikkeli");
@@ -224,8 +220,11 @@ export class DBProjektiForSpecificVaiheFixture {
     if (vaiheenTila === VaiheenTila.LUONNOS) {
       return undefined;
     }
+    const id = 1;
     return [
       {
+        projektiOid: this.PROJEKTI_OID,
+        sortKey: createJulkaisuSortKey("JULKAISU#ALOITUS#", id),
         aloituskuulutusPDFt: {
           SUOMI: {
             aloituskuulutusIlmoitusPDFPath:
@@ -251,7 +250,7 @@ export class DBProjektiForSpecificVaiheFixture {
         yhteystiedot: this.yhteystiedot(),
         kuulutusYhteystiedot: this.kuulutusYhteystiedot(),
         velho: this.velho(),
-        id: 1,
+        id,
         tila: this.julkaisunTila(vaiheenTila),
         siirtyySuunnitteluVaiheeseen: "2022-04-28T14:28",
         hyvaksymisPaiva: this.hyvaksymisPaiva(vaiheenTila),
@@ -447,9 +446,11 @@ export class DBProjektiForSpecificVaiheFixture {
     if (vaiheenTila === VaiheenTila.LUONNOS) {
       return undefined;
     }
+    const id = 1;
     return [
       {
         projektiOid: this.PROJEKTI_OID,
+        sortKey: createJulkaisuSortKey("JULKAISU#NAHTAVILLAOLO#", 1),
         aineistoNahtavilla: [],
         hankkeenKuvaus: {
           RUOTSI:
@@ -459,7 +460,7 @@ export class DBProjektiForSpecificVaiheFixture {
         },
         hyvaksyja: this.hyvaksyja(vaiheenTila),
         hyvaksymisPaiva: this.hyvaksymisPaiva(vaiheenTila),
-        id: 1,
+        id,
         ilmoituksenVastaanottajat: this.ilmoituksenVastaanottajat,
         kielitiedot: this.haeKielitiedot(),
         kuulutusPaiva: "2022-06-20T11:54",

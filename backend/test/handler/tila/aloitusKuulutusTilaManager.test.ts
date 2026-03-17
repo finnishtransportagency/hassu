@@ -15,6 +15,7 @@ import { expect } from "chai";
 import { SchedulerMock } from "../../../integrationtest/api/testUtil/util";
 import { parameters } from "../../../src/aws/parameters";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { projektiEntityDatabase } from "../../../src/database/projektiEntityDatabase";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
@@ -23,7 +24,7 @@ describe("aloitusKuulutusTilaManager", () => {
   new S3Mock();
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
-    sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
+    sinon.stub(projektiEntityDatabase, "put");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
   });

@@ -35,7 +35,7 @@ import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 import { velho } from "../../velho/velhoClient";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
 async function createNahtavillaoloVaihePDF(
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi,
@@ -109,7 +109,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   }
 
   async updateJulkaisu(_projekti: DBProjekti, julkaisu: NahtavillaoloVaiheJulkaisu): Promise<void> {
-    await nahtavillaoloVaiheJulkaisuDatabase.put(julkaisu);
+    await projektiEntityDatabase.put(julkaisu);
   }
 
   getKuulutusWaitingForApproval(projekti: DBProjekti): NahtavillaoloVaiheJulkaisu | undefined {
@@ -248,7 +248,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       nahtavillaoloVaihe: null,
       vuorovaikutusKierros: { ...projekti.vuorovaikutusKierros, palattuNahtavillaolosta: true },
     });
-    await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(projekti.nahtavillaoloVaiheJulkaisut);
+    await projektiEntityDatabase.deleteAll(projekti.nahtavillaoloVaiheJulkaisut);
     await fileService.deleteProjektiFilesRecursively(new ProjektiPaths(projekti.oid), ProjektiPaths.PATH_NAHTAVILLAOLO);
   }
 
@@ -290,7 +290,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         nahtavillaoloVaiheJulkaisu.id
       );
     }
-    await nahtavillaoloVaiheJulkaisuDatabase.put(nahtavillaoloVaiheJulkaisu);
+    await projektiEntityDatabase.put(nahtavillaoloVaiheJulkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
       throw new Error("Projektia oid:lla ${projekti.oid)} ei löydy");
@@ -321,7 +321,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         reason: "Nähtävilläolo rejected",
       });
     }
-    await nahtavillaoloVaiheJulkaisuDatabase.delete(julkaisu);
+    await projektiEntityDatabase.delete(julkaisu);
     return {
       ...projekti,
       nahtavillaoloVaihe,

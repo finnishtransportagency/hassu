@@ -98,7 +98,7 @@ export class ProjektiAdapter {
       lyhytOsoite: dbProjekti.lyhytOsoite,
       tallennettu: !!dbProjekti.tallennettu,
       kayttoOikeudet: adaptDBVaylaUsertoAPIProjektiKayttaja(kayttoOikeudet),
-      tyyppi: velho?.tyyppi ?? dbProjekti.tyyppi, // remove usage of projekti.tyyppi after all data has been migrated to new format
+      tyyppi: velho?.tyyppi,
       aloitusKuulutus: adaptAloitusKuulutusToAPI(
         projektiPath.aloituskuulutus(aloitusKuulutus ?? undefined),
         kayttoOikeudet,

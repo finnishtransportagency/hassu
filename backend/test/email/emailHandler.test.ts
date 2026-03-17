@@ -1,7 +1,6 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
@@ -34,8 +33,6 @@ import { projektiEntityDatabase } from "../../src/database/projektiEntityDatabas
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
-  let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
-  let putNahtavillaoloKuulutusJulkaisuStub: sinon.SinonStub;
   let putJulkaisutStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
@@ -49,8 +46,6 @@ describe("emailHandler", () => {
   before(() => {
     getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
-    updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
-    putNahtavillaoloKuulutusJulkaisuStub = sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "put");
     putJulkaisutStub = sinon.stub(projektiEntityDatabase, "put");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
@@ -104,7 +99,7 @@ describe("emailHandler", () => {
     it("should send emails and attachments succesfully", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
+      putJulkaisutStub.resolves();
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: Readable.from(""),
         ContentType: "application/pdf",
@@ -122,7 +117,7 @@ describe("emailHandler", () => {
 
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      updateAloitusKuulutusJulkaisuStub.resolves();
+      putJulkaisutStub.resolves();
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: Readable.from(""),
         ContentType: "application/pdf",
@@ -183,7 +178,7 @@ describe("emailHandler", () => {
     it("approval should send emails and attachments succesfully", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      putNahtavillaoloKuulutusJulkaisuStub.resolves();
+      putJulkaisutStub.resolves();
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: Readable.from(""),
         ContentType: "application/pdf",
@@ -237,7 +232,7 @@ describe("emailHandler", () => {
       it("approval wont send ilmoitus mails for aineistoMuokkaus", async () => {
         publishProjektiFileStub.resolves();
         synchronizeProjektiFilesStub.resolves();
-        putNahtavillaoloKuulutusJulkaisuStub.resolves();
+        putJulkaisutStub.resolves();
         s3Mock.s3Mock.on(GetObjectCommand).resolves({
           Body: Readable.from(""),
           ContentType: "application/pdf",

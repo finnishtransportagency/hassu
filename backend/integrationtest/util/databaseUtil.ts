@@ -5,11 +5,12 @@ import { DeleteItemCommand, DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import * as awsClient from "../../src/aws/client";
 import mocha from "mocha";
-import { DBProjekti, DBPROJEKTI_OMITTED_FIELDS, NahtavillaoloVaiheJulkaisu } from "../../src/database/model";
+import { DBProjekti, DBPROJEKTI_OMITTED_FIELDS } from "../../src/database/model";
 import { getDynamoDBDocumentClient } from "../../src/aws/client";
 import { config } from "../../src/config";
 import omit from "lodash/omit";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../../src/database/projektiEntityDatabase";
+import { mapProjektiEntitiesToDBProjekti } from "../../src/database/mapProjektiEntitiesToDBProjekti";
 
 const localDynamoDB = new DynamoDB({
   endpoint: "http://localhost:4566",
@@ -43,11 +44,17 @@ export async function insertProjektiToDB<A extends Pick<DBProjekti, "oid">>(proj
   });
   await getDynamoDBDocumentClient().send(params);
 
-  const julkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(projekti.oid, true);
-  await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(julkaisut);
-  if ("nahtavillaoloVaiheJulkaisut" in projekti) {
-    await nahtavillaoloVaiheJulkaisuDatabase.putAll(projekti.nahtavillaoloVaiheJulkaisut as NahtavillaoloVaiheJulkaisu[]);
-  }
+  const julkaisutToDelete = await projektiEntityDatabase.getAllForProjekti(projekti.oid, true);
+  await projektiEntityDatabase.deleteAll(julkaisutToDelete);
+
+  const julkaisutToAdd = [
+    (projekti as unknown as DBProjekti).aloitusKuulutusJulkaisut ?? [],
+    (projekti as unknown as DBProjekti).nahtavillaoloVaiheJulkaisut ?? [],
+    (projekti as unknown as DBProjekti).hyvaksymisPaatosVaiheJulkaisut ?? [],
+    (projekti as unknown as DBProjekti).jatkoPaatos1VaiheJulkaisut ?? [],
+    (projekti as unknown as DBProjekti).jatkoPaatos2VaiheJulkaisut ?? [],
+  ].flat();
+  await projektiEntityDatabase.putAll(julkaisutToAdd);
 }
 
 export async function removeProjektiFromDB(oid: string) {
@@ -60,8 +67,8 @@ export async function removeProjektiFromDB(oid: string) {
     },
   });
   await getDynamoDBDocumentClient().send(params);
-  const julkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-  await nahtavillaoloVaiheJulkaisuDatabase.deleteAll(julkaisut);
+  const julkaisut = await projektiEntityDatabase.getAllForProjekti(oid, true);
+  await projektiEntityDatabase.deleteAll(julkaisut);
 }
 
 export async function getProjektiFromDB(oid: string): Promise<DBProjekti | undefined> {
@@ -75,6 +82,7 @@ export async function getProjektiFromDB(oid: string): Promise<DBProjekti | undef
   if (!item) {
     return undefined;
   }
-  item.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-  return item;
+
+  const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+  return mapProjektiEntitiesToDBProjekti(item, entities);
 }
