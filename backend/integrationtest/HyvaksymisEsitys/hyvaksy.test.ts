@@ -183,7 +183,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       julkaistuHyvaksymisEsitys: omit(projektiAfter?.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva"),
     }).to.eql({
       ...projektiBefore,
-      versio: projektiBefore.versio + 1,
+      versio: projektiBefore.versio + 2,
       muokattavaHyvaksymisEsitys: { ...muokattavaHyvaksymisEsitys, tila: API.HyvaksymisTila.HYVAKSYTTY, palautusSyy: null },
       julkaistuHyvaksymisEsitys: {
         asianhallintaEventId: "uuid123",
@@ -209,6 +209,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           toimenpideTyyppi: "ENSIMMAINEN_VERSIO",
           vaylaAsianhallinta: false,
         },
+      },
+      kasittelynTila: {
+        hyvaksymisesitysTraficomiinPaiva: "2000-01-01T02:00:00+02:00",
+        suunnitelmanTila: "suunnitelman-tila/sutil03",
       },
     });
     expect(projektiAfter?.paivitetty).to.exist;
@@ -603,7 +607,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     });
     expect(ilmoitusProjarille).to.exist;
     expect(
-      /getParameterValue_AshaBaseUrl\/group\/asianhallinta\/asianhallinta\/-\/case\/14\/view/.test(
+      /getParameterValue_AshaBaseUrl\/group\/asianhallinta2\/asianhallinta#\/14\/-\/actions/.test(
         (ilmoitusProjarille?.firstArg as EmailOptions).text as string
       )
     ).to.be.true; // "includes" ei toiminut tässä erikoismerkkien takia

@@ -1,12 +1,17 @@
 import { Html, Head, Main, NextScript } from "next/document";
 import { css, Global } from "@emotion/react";
-import Script from "next/script";
 
 const StyledDocument = () => (
   <Html>
     <Head>
+      {/* 
+        Ladataan __env.js synkronisesti ennen React-skriptejä estämään hydration mismatch
+        ensimmäisellä latauskerralla.
+        Huom: Next.js <Script strategy="beforeInteractive"> 
+              lisää defer-attribuutin, joka aiheuttaa race conditionin.
+      */}
       {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-      <Script src="/assets/__env.js" strategy="beforeInteractive" />
+      <script src="/assets/__env.js" />
     </Head>
     <body>
       <Main />
