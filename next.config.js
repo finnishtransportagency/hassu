@@ -1,39 +1,35 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
-const { BaseConfig } = require("./common/BaseConfig");
 const CopyPlugin = require("copy-webpack-plugin");
-const dotenv = require("dotenv");
-const fs = require("fs");
 
-// Sovellukselle tuleva liikenne on /frontend prefixin takana pilviympäristöissä
-// tulee huomioida redirecteissä
+// Middleware poistaa /frontend prefixin ennen kuin redirectit ajetaan
 const lyhytOsoiteRedirects = [
   {
-    source: `${BaseConfig.frontendPrefix}/s/:path*`,
+    source: "/s/:path*",
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: BaseConfig.frontendPrefix ? undefined : false,
+    locale: false,
   },
   {
-    source: `${BaseConfig.frontendPrefix}/fi/s/:path*`,
+    source: "/fi/s/:path*",
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: BaseConfig.frontendPrefix ? undefined : false,
+    locale: false,
   },
   {
-    source: `${BaseConfig.frontendPrefix}/sv/s/:path*`,
+    source: "/sv/s/:path*",
     destination: "/api/sv/s/:path*",
     permanent: true,
     basePath: false,
-    locale: BaseConfig.frontendPrefix ? undefined : false,
+    locale: false,
   },
   {
-    source: `${BaseConfig.frontendPrefix}/sv/keycloak/:path*`,
+    source: "/sv/keycloak/:path*",
     destination: "/keycloak/:path*",
     permanent: true,
-    locale: BaseConfig.frontendPrefix ? undefined : false,
+    locale: false,
   },
 ];
 
