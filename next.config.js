@@ -10,27 +10,27 @@ const lyhytOsoiteRedirects = [
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
     source: `${BaseConfig.frontendPrefix}/fi/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
     source: `${BaseConfig.frontendPrefix}/sv/s/:path*`,
     destination: "/api/sv/s/:path*",
     permanent: true,
     basePath: false,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
   {
     source: `${BaseConfig.frontendPrefix}/sv/keycloak/:path*`,
     destination: "/keycloak/:path*",
     permanent: true,
-    locale: false,
+    locale: BaseConfig.frontendPrefix ? undefined : false,
   },
 ];
 
