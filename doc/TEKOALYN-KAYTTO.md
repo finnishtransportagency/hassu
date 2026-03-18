@@ -5,9 +5,9 @@ Tämä dokumentti kuvaa tekoälyn hyödyntämisen projektissa Väyläviraston
 
 ## Tekoälyn käyttötapa
 
-- **Työkalu:** Amazon Q Developer -laajennus VS Codessa, Claude Sonnet 4.6 (Anthropic)
-- **Tehtävä & rooli:** Koodin generointi – tekoäly tuottaa ehdotuksia, ihminen ohjaa ja muokkaa
-- **Ihmisen tarkistus:** Kehittäjän tarkistus ennen commitia ja koodikatselmointi PR:ssä
+- **Työkalu:** Amazon Q Developer -laajennus VS Codessa, Claude Sonnet 4.6 (Anthropic).
+- **Tehtävä & rooli:** Koodin generointi ja sparrausapu – tekoäly tuottaa ehdotuksia, ihminen ohjaa, arvioi ja päättää mitä ehdotuksista käytetään.
+- **Ihmisen tarkistus:** Kehittäjän tarkistus ja lokaali testaus ennen commitia sekä koodikatselmointi PR-vaiheessa.
 
 ## Tietolähteet ja tietoluokitus
 
@@ -17,7 +17,7 @@ Tämä dokumentti kuvaa tekoälyn hyödyntämisen projektissa Väyläviraston
 
 Tekoälyn käyttö on jäljitettävissä seuraavasti:
 
-- **Koodikommentit:** Kokonaan tai merkittäviltä osin tekoälyn tuottamat tiedostot merkitään kommentilla.
+- **Koodikommentit:** Tiedostot, jotka sisältävät tekoälyn tuottamaa tai suosittelemaa koodia merkitään kommentilla "Contains code generated or recommended by Amazon Q".
 
 ## Ihmisen tarkistus
 
