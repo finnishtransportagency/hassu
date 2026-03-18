@@ -1,4 +1,4 @@
-// File modified by Amazon Q
+// Contains code generated or recommended by Amazon Q
 import { ScanCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
 import { PagedMigrationRunPlan } from "../types";
