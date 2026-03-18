@@ -3,7 +3,7 @@ const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyPlugin = require("copy-webpack-plugin");
 
-// Middleware poistaa /frontend prefixin ennen kuin redirectit ajetaan
+// Middleware poistaa /frontend prefixin ennen kuin redirectit ajetaa
 const lyhytOsoiteRedirects = [
   {
     source: `${BaseConfig.frontendPrefix}/s/:path*`,
