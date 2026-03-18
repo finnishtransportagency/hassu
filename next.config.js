@@ -1,32 +1,33 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
+const { BaseConfig } = require("./common/BaseConfig");
 const CopyPlugin = require("copy-webpack-plugin");
 
 // Middleware poistaa /frontend prefixin ennen kuin redirectit ajetaan
 const lyhytOsoiteRedirects = [
   {
-    source: "/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
     locale: false,
   },
   {
-    source: "/fi/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/fi/s/:path*`,
     destination: "/api/s/:path*",
     permanent: true,
     basePath: false,
     locale: false,
   },
   {
-    source: "/sv/s/:path*",
+    source: `${BaseConfig.frontendPrefix}/sv/s/:path*`,
     destination: "/api/sv/s/:path*",
     permanent: true,
     basePath: false,
     locale: false,
   },
   {
-    source: "/sv/keycloak/:path*",
+    source: `${BaseConfig.frontendPrefix}/sv/keycloak/:path*`,
     destination: "/keycloak/:path*",
     permanent: true,
     locale: false,
