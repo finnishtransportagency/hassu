@@ -201,16 +201,14 @@ export class CommonKutsuAdapter {
         if (osapuoliNimet.length === 0) {
           return "osapuoli";
         } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
+          return osapuoliNimet[0] as string;
         } else if (osapuoliNimet.length === 2) {
           const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+          return ((osapuoliNimet[0] as string) + " " + ja + " " + osapuoliNimet[1]) as string;
         } else {
           const ja = this.text("ja");
           const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
+          return (osapuoliNimet.map((nimi) => nimi as string).join(", ") + " " + ja + " " + viimeinenNimi) as string;
         }
       }
     }
@@ -243,7 +241,7 @@ export class CommonKutsuAdapter {
     const suunnittelustaVastaavaViranomainen = this.velho.suunnittelustaVastaavaViranomainen;
     const kaannos: string = translate("viranomainen." + suunnittelustaVastaavaViranomainen, this.kieli) ?? "";
     if (!kaannos) {
-      throw new Error(`Käänbös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
+      throw new Error(`Käännös puuttuu viranomainen.${suunnittelustaVastaavaViranomainen}:lle!`);
     }
     return kaannos.replace("keskus", "keskusta").replace("virasto", "virastoa");
   }
