@@ -1,5 +1,13 @@
 # Hassu
 
+## Tekoälyn käyttö
+
+Tässä projektissa on hyödynnetty tekoälytyökaluja osana kehitystyötä.
+Kaikki tekoälyn tuottama tai osin tuottama sisältö on tarkistettu ihmisen toimesta ennen toimittamista.
+
+Yksityiskohtainen dokumentaatio tekoälyn käytöstä löytyy:
+[doc/TEKOALYN-KAYTTO.md](doc/TEKOALYN-KAYTTO.md)
+
 ## Asentaminen työasemalta
 
 Kirjaudu komentoriviltä AWS-tilille. Aseta ympäristömuuttuja AWS_PROFILE vastaamaan AWS-sisäänkirjautumistasi. Aseta
