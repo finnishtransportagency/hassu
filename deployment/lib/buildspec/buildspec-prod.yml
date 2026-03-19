@@ -1,3 +1,4 @@
+# Contains code generated or recommended by Amazon Q
 version: 0.2
 
 env:
@@ -33,7 +34,7 @@ phases:
       - npm run deploy:monitoring
       - npm run deploy:stackpolicies
       - npm run release
-      - ./deployment/bin/updateNextjsImageTags.sh
+      - ./deployment/bin/tagAndReplicateNextjsImage.sh
       - npm run opensearch:index
   post_build:
     on-failure: ABORT
