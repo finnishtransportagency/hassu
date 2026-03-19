@@ -247,7 +247,7 @@ export class HassuAccountStack extends Stack {
           {
             rulePriority: 4,
             description: "Remove all the other images after 30 days",
-            maxImageAge: Duration.days(30),
+            maxImageAge: Duration.days(1),
             tagStatus: TagStatus.ANY,
           },
         ]
@@ -276,7 +276,7 @@ export class HassuAccountStack extends Stack {
           {
             rulePriority: 4,
             description: "Remove all the other images after 30 days",
-            maxImageAge: Duration.days(30),
+            maxImageAge: Duration.days(1),
             tagStatus: TagStatus.ANY,
           },
         ];
