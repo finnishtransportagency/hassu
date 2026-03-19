@@ -227,7 +227,7 @@ export class HassuAccountStack extends Stack {
       ? [
           {
             rulePriority: 1,
-            description: "Keep ten latest released prod images",
+            description: "Keep 15 latest released prod images",
             tagPatternList: ["*-prod"],
             maxImageCount: 15,
             tagStatus: TagStatus.TAGGED,
