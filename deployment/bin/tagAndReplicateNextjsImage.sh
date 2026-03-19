@@ -72,28 +72,30 @@ if [[ "$ENVIRONMENT" == "test" || "$ENVIRONMENT" == "training" ]]; then
 
     if ! aws ecr describe-images \
         --repository-name "$REPO_NAME" \
-        --image-ids imageTag="$SEMVER_TAG" \
+        --image-ids imageTag="$SOURCE_TAG" \
         --registry-id "$PROD_ACCOUNT_ID" \
         --region "$AWS_REGION" &>/dev/null; then
-        echo "Image '$SEMVER_TAG' not found in prod ECR. Copying from dev account..."
+        echo "Image '$SOURCE_TAG' not found in prod ECR. Copying from dev account..."
         docker pull "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$SOURCE_TAG"
         docker tag "$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:$SOURCE_TAG" "$PROD_ECR_HOST/$REPO_NAME:$SOURCE_TAG"
         docker push "$PROD_ECR_HOST/$REPO_NAME:$SOURCE_TAG"
-        PROD_MANIFEST=$(aws ecr batch-get-image \
-            --repository-name "$REPO_NAME" \
-            --image-ids imageTag="$SOURCE_TAG" \
-            --registry-id "$PROD_ACCOUNT_ID" \
-            --region "$AWS_REGION" \
-            --query 'images[0].imageManifest' \
-            --output text)
-        aws ecr put-image \
-            --repository-name "$REPO_NAME" \
-            --image-tag "$SEMVER_TAG" \
-            --image-manifest "$PROD_MANIFEST" \
-            --registry-id "$PROD_ACCOUNT_ID" \
-            --region "$AWS_REGION"
-        echo "Copied image to prod ECR as '$SEMVER_TAG' and '$SOURCE_TAG'."
+        echo "Copied image to prod ECR as '$SOURCE_TAG'."
     else
-        echo "Image '$SEMVER_TAG' already exists in prod ECR. Skipping copy."
+        echo "Image '$SOURCE_TAG' already exists in prod ECR. Skipping copy."
     fi
+
+    PROD_MANIFEST=$(aws ecr batch-get-image \
+        --repository-name "$REPO_NAME" \
+        --image-ids imageTag="$SOURCE_TAG" \
+        --registry-id "$PROD_ACCOUNT_ID" \
+        --region "$AWS_REGION" \
+        --query 'images[0].imageManifest' \
+        --output text)
+    aws ecr put-image \
+        --repository-name "$REPO_NAME" \
+        --image-tag "$SEMVER_TAG" \
+        --image-manifest "$PROD_MANIFEST" \
+        --registry-id "$PROD_ACCOUNT_ID" \
+        --region "$AWS_REGION"
+    echo "Tagged '$SOURCE_TAG' with '$SEMVER_TAG' in prod ECR."
 fi
