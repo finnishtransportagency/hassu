@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { ScanCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
 import { PagedMigrationRunPlan } from "../types";
@@ -22,7 +23,7 @@ const migrate004: PagedMigrationRunPlan = async (options) => {
   const updateInput = projektis.map<UpdateCommandInput>((projekti) => ({
     TableName: options.tableName,
     Key: {
-      oid: { S: projekti.oid },
+      oid: projekti.oid,
     },
     UpdateExpression: "REMOVE #attr",
     ExpressionAttributeNames: {
