@@ -9,6 +9,7 @@ import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React, { useCallback, useState } from "react";
+import { GetServerSideProps } from "next";
 
 export default function TietoaPalvelustaSivu() {
   const { t } = useTranslation("tietoa-palvelusta/yhteystiedot-ja-palaute");
@@ -86,3 +87,7 @@ export default function TietoaPalvelustaSivu() {
 }
 
 const EmailLink = styled("a")({ fontWeight: 700 });
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};

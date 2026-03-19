@@ -21,6 +21,10 @@ RUN --mount=type=secret,id=npmrc,target=/root/.npmrc \
 
 # Rebuild the source code only when needed
 FROM base AS builder
+
+ARG ENVIRONMENT
+ENV ENVIRONMENT=${ENVIRONMENT}
+
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 # TODO - Copy only files that are needed for the build - was quite difficult task so skipped for now..

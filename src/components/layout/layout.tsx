@@ -1,17 +1,17 @@
 import React, { ReactElement, ReactNode } from "react";
 import dynamic from "next/dynamic";
-import Breadcrumbs from "./Breadcrumbs";
 import Header from "./header/header";
 import { Footer } from "./footer";
 import { Container } from "@mui/material";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { useRouter } from "next/router";
 import { TiedoteNotification } from "@components/projekti/common/TiedoteNotification";
-import { getPublicEnv } from "src/util/env";
 
-// Renderöidään NotificationBar vain clientilla (ssr: false),
-// jotta vältytään ensimmäisen latauksen aikaiselta vilkkumiselta,
 const NotificationBar = dynamic(() => import("@components/notification/NotificationBar"), {
+  ssr: false,
+});
+
+const Breadcrumbs = dynamic(() => import("./Breadcrumbs"), {
   ssr: false,
 });
 
@@ -33,8 +33,7 @@ export default function Layout({ children }: Props): ReactElement {
   ) {
     return (
       <div className="min-h-screen relative flex flex-col">
-        {getPublicEnv("ENVIRONMENT") !== "prod" && <NotificationBar />}
-
+        <NotificationBar />
         <Container sx={{ marginBottom: "110px", marginTop: "50px" }}>
           <main>{children}</main>
         </Container>
@@ -45,7 +44,7 @@ export default function Layout({ children }: Props): ReactElement {
 
   return (
     <div className="min-h-screen relative flex flex-col">
-      {getPublicEnv("ENVIRONMENT") !== "prod" && <NotificationBar />}
+      <NotificationBar />
       <Header />
       <div style={{ minWidth: "90%", margin: "10px auto 10px" }}>
         <TiedoteNotification />

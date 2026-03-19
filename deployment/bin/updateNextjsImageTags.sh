@@ -26,7 +26,10 @@ else
 fi
 
 if [[ -z "$SEMVER_TAG" ]]; then
-    echo "No semver tag found in git for environment $ENVIRONMENT."
+    echo "❌ No semver tag found in git for environment $ENVIRONMENT."
+    echo "💡 Most likely Reason: PR merge commit did not follow conventional commit format (feat:, fix:, chore:, etc.)"
+    echo "✅ Proper fix: Revert the merge and re-merge with correct commit message format"
+    echo "⚡ Quick fix: git commit --allow-empty -m 'chore: trigger release' && git push"
     exit 1
 fi
 

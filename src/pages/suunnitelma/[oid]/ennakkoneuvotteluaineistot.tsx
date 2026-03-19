@@ -113,12 +113,10 @@ function EnnakkoNeuvotteluAineistoPage(props: Readonly<EnnakkoNeuvottelunAineist
       <Section>
         <H2>Hyväksymisesityksen aineisto</H2>
         {aineistopaketti && (
-          <Section noDivider>
-            <ButtonLink href={aineistopaketti}>
-              Lataa kaikki
-              <DownloadIcon className="ml-2" />
-            </ButtonLink>
-          </Section>
+          <ButtonLink href={aineistopaketti}>
+            Lataa kaikki
+            <DownloadIcon className="ml-2" />
+          </ButtonLink>
         )}
         <H3>{`Hyväksymisesitys (${hyvaksymisEsitys?.length ?? 0})`}</H3>
         {hyvaksymisEsitys?.length ? (
