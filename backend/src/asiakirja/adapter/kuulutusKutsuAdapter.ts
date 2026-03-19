@@ -59,16 +59,14 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
         if (osapuoliNimet.length === 0) {
           return super.kuuluttaja;
         } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
+          return osapuoliNimet[0] as string;
         } else if (osapuoliNimet.length === 2) {
           const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+          return ((osapuoliNimet[0] as string) + " " + ja + " " + osapuoliNimet[1]) as string;
         } else {
           const ja = this.text("ja");
           const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
+          return (osapuoliNimet.map((nimi) => nimi as string).join(", ") + " " + ja + " " + viimeinenNimi) as string;
         }
       }
     }
@@ -94,16 +92,14 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
         if (osapuoliNimet.length === 0) {
           return super.kuuluttaja_pitka;
         } else if (osapuoliNimet.length === 1) {
-          return formatProperNoun(osapuoliNimet[0] as any);
+          return osapuoliNimet[0] as string;
         } else if (osapuoliNimet.length === 2) {
           const ja = this.text("ja");
-          return formatProperNoun(osapuoliNimet[0] as any) + " " + ja + " " + formatProperNoun(osapuoliNimet[1] as any);
+          return ((osapuoliNimet[0] as string) + " " + ja + " " + osapuoliNimet[1]) as string;
         } else {
           const ja = this.text("ja");
           const viimeinenNimi = osapuoliNimet.pop();
-          return (
-            osapuoliNimet.map((nimi) => formatProperNoun(nimi as any)).join(", ") + " " + ja + " " + formatProperNoun(viimeinenNimi as any)
-          );
+          return (osapuoliNimet.map((nimi) => nimi as string).join(", ") + " " + ja + " " + viimeinenNimi) as string;
         }
       }
     }
