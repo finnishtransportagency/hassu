@@ -1,9 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import { Construct } from "constructs";
 import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import { CfnRegistryPolicy, CfnReplicationConfiguration, LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
+import * as iam from "aws-cdk-lib/aws-iam";
+import { LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
@@ -225,52 +227,52 @@ export class HassuAccountStack extends Stack {
       ? [
           {
             rulePriority: 1,
-            description: "Keep two latest released prod images",
+            description: "Keep 15 latest released prod images",
             tagPatternList: ["*-prod"],
-            maxImageCount: 2,
+            maxImageCount: 15,
             tagStatus: TagStatus.TAGGED,
           },
           {
             rulePriority: 2,
-            description: "Keep latest training candidate image",
+            description: "Keep latest training release candidate image",
             tagPatternList: ["*-training*"],
             maxImageCount: 1,
             tagStatus: TagStatus.TAGGED,
           },
           {
             rulePriority: 3,
-            description: "Keep latest test candidate image",
+            description: "Keep latest test release candidate image",
             tagPatternList: ["*-test*"],
             maxImageCount: 1,
             tagStatus: TagStatus.TAGGED,
           },
           {
             rulePriority: 4,
-            description: "Remove all the other images after 30 days",
-            maxImageAge: Duration.days(30),
+            description: "Remove all the other images after 1 day",
+            maxImageAge: Duration.days(1),
             tagStatus: TagStatus.ANY,
           },
         ]
       : [
           {
             rulePriority: 1,
-            description: "Keep two latest training candidate image",
+            description: "Keep ten latest training release candidate image",
             tagPatternList: ["*-training*"],
-            maxImageCount: 2,
+            maxImageCount: 10,
             tagStatus: TagStatus.TAGGED,
           },
           {
             rulePriority: 2,
-            description: "Keep two latest test candidate image",
+            description: "Keep ten latest test release candidate image",
             tagPatternList: ["*-test*"],
-            maxImageCount: 2,
+            maxImageCount: 10,
             tagStatus: TagStatus.TAGGED,
           },
           {
             rulePriority: 3,
-            description: "Keep two latest commit sha (dev) images",
+            description: "Keep ten latest commit sha (dev) images",
             tagPatternList: ["*"],
-            maxImageCount: 2,
+            maxImageCount: 10,
             tagStatus: TagStatus.TAGGED,
           },
           {
@@ -280,59 +282,34 @@ export class HassuAccountStack extends Stack {
             tagStatus: TagStatus.ANY,
           },
         ];
-    new aws_ecr.Repository(this, "NextJSECRRepo", {
+    const repo = new aws_ecr.Repository(this, "NextJSECRRepo", {
       repositoryName,
       lifecycleRules,
       removalPolicy: RemovalPolicy.DESTROY,
       encryption: RepositoryEncryption.AES_256,
       imageScanOnPush: true,
     });
-    await this.replicateECR(repositoryName, config);
+    if (Config.isProdAccount()) {
+      await this.allowCrossAccountPushFromDev(repo, config);
+    }
   }
 
-  private async replicateECR(repository: string, config: Config) {
-    if (Config.isDevAccount()) {
-      const prodAccountId = await config.getParameterNow("ProdAccountId");
-      new CfnReplicationConfiguration(this, "NextjsRepoReplicationConfig", {
-        replicationConfiguration: {
-          rules: [
-            {
-              destinations: [
-                {
-                  region: this.region,
-                  registryId: prodAccountId,
-                },
-              ],
-              repositoryFilters: [
-                {
-                  filter: repository,
-                  filterType: "PREFIX_MATCH",
-                },
-              ],
-            },
-          ],
-        },
-      });
-    }
-
-    if (Config.isProdAccount()) {
-      const devAccountId = await config.getParameterNow("DevAccountId");
-      new CfnRegistryPolicy(this, "NextjsRepoReplicationPolicy", {
-        policyText: {
-          Version: "2008-10-17",
-          Statement: [
-            {
-              Sid: "AllowCrossAccountECRReplication",
-              Effect: "Allow",
-              Principal: {
-                AWS: `arn:aws:iam::${devAccountId}:root`,
-              },
-              Action: ["ecr:ReplicateImage"],
-              Resource: [`arn:aws:ecr:${this.region}:${this.account}:repository/${repository}`],
-            },
-          ],
-        },
-      });
-    }
+  private async allowCrossAccountPushFromDev(repository: aws_ecr.Repository, config: Config) {
+    const devAccountId = await config.getParameterNow("DevAccountId");
+    repository.addToResourcePolicy(
+      new PolicyStatement({
+        sid: "AllowCrossAccountECRPushFromDev",
+        effect: Effect.ALLOW,
+        principals: [new iam.AccountPrincipal(devAccountId)],
+        actions: [
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:BatchGetImage",
+        ],
+      })
+    );
   }
 }
