@@ -1,8 +1,8 @@
-FROM public.ecr.aws/lambda/nodejs:20 AS nodesource
+FROM public.ecr.aws/lambda/nodejs:22 AS nodesource
 
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023
 
-ENV NPM_VERSION=10.8.2
+ENV NPM_VERSION=10.9.4
 ENV AMPLIFY_CLI_VERSION=12.14.4
 ENV DOCKER_COMPOSE_VERSION=v2.40.2
 
