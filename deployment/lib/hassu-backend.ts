@@ -32,7 +32,7 @@ import assert from "assert";
 import { IVpc, Vpc } from "aws-cdk-lib/aws-ec2";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
-const lambdaRuntime = lambda.Runtime.NODEJS_20_X;
+const lambdaRuntime = lambda.Runtime.NODEJS_22_X;
 const insightsVersion = LambdaInsightsVersion.fromInsightVersionArn(
   "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
 );
