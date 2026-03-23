@@ -152,7 +152,7 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    projektiEntityDatabase.put(jatkoPaatosVaiheJulkaisu);
+    await projektiEntityDatabase.put(jatkoPaatosVaiheJulkaisu);
     kasittelynTila.ensimmainenJatkopaatos = {
       asianumero: jatkopaatos1Asianumero,
       paatoksenPvm: dayjs(jatkopaatos1Paivamaara).format("YYYY-MM-DD"),
