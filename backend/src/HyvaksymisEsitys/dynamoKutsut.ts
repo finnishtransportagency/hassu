@@ -140,8 +140,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       }
       const projekti = data.Item as ProjektiTiedostoineen;
       projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-      const entitities = await projektiEntityDatabase.getAllForProjekti(oid, true);
-      const entitiesByType = groupProjektiEntitiesByType(entitities);
+      const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+      const entitiesByType = groupProjektiEntitiesByType(entities);
       projekti.hyvaksymisPaatosVaiheJulkaisut = entitiesByType.hyvaksymisPaatosVaiheJulkaisut;
       projekti.jatkoPaatos1VaiheJulkaisut = entitiesByType.jatkoPaatos1VaiheJulkaisut;
       projekti.jatkoPaatos2VaiheJulkaisut = entitiesByType.jatkoPaatos2VaiheJulkaisut;
@@ -418,8 +418,8 @@ class HyvaksymisEsityksenDynamoKutsut extends ProjektiDatabase {
       }
       const projekti = data.Item as ProjektiTiedostoineen;
       projekti.nahtavillaoloVaiheJulkaisut = await nahtavillaoloVaiheJulkaisuDatabase.getAllForProjekti(oid, true);
-      const entitities = await projektiEntityDatabase.getAllForProjekti(oid, true);
-      const entitiesByType = groupProjektiEntitiesByType(entitities);
+      const entities = await projektiEntityDatabase.getAllForProjekti(oid, true);
+      const entitiesByType = groupProjektiEntitiesByType(entities);
       projekti.hyvaksymisPaatosVaiheJulkaisut = entitiesByType.hyvaksymisPaatosVaiheJulkaisut;
       projekti.jatkoPaatos1VaiheJulkaisut = entitiesByType.jatkoPaatos1VaiheJulkaisut;
       projekti.jatkoPaatos2VaiheJulkaisut = entitiesByType.jatkoPaatos2VaiheJulkaisut;
