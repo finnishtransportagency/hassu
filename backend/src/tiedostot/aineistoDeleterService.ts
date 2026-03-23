@@ -67,7 +67,7 @@ class AineistoDeleterService {
       await Promise.all(
         (
           await manager.getJatkoPaatos1Vaihe().deleteAineistotIfEpaaktiivinen(ctx.projektiStatus)
-        ).map((julkaisu) => projektiEntityDatabase.delete(julkaisu))
+        ).map((julkaisu) => projektiEntityDatabase.put(julkaisu))
       );
     }
     if (ctx.projektiStatus === Status.EPAAKTIIVINEN_3) {
