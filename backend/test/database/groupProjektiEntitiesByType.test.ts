@@ -2,24 +2,13 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { groupProjektiEntitiesByType } from "../../src/database/groupProjektiEntitiesByType";
-import {
-  HyvaksymisPaatosVaiheJulkaisu,
-  JatkoPaatos1VaiheJulkaisu,
-  JatkoPaatos2VaiheJulkaisu,
-  PaatosVaiheJulkaisu,
-} from "../../src/database/model";
+import { PaatosVaiheJulkaisu } from "../../src/database/model";
 import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
+import { JulkaisuByPrefix, JulkaisuPrefix } from "../../src/database/model/projektiDataItem";
 
-function createHyvaksymisJulkaisu(id: number): HyvaksymisPaatosVaiheJulkaisu {
-  return { projektiOid: "oid-1", sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id), id } as HyvaksymisPaatosVaiheJulkaisu;
-}
-
-function createJatko1Julkaisu(id: number): JatkoPaatos1VaiheJulkaisu {
-  return { projektiOid: "oid-1", sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", id), id } as JatkoPaatos1VaiheJulkaisu;
-}
-
-function createJatko2Julkaisu(id: number): JatkoPaatos2VaiheJulkaisu {
-  return { projektiOid: "oid-1", sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS2#", id), id } as JatkoPaatos2VaiheJulkaisu;
+function createJulkaisu<P extends JulkaisuPrefix>(prefix: P, id: number): JulkaisuByPrefix<P> {
+  const item = { projektiOid: "oid-1", sortKey: createJulkaisuSortKey(prefix, id), id };
+  return item as JulkaisuByPrefix<P>;
 }
 
 describe("groupProjektiEntitiesByType", () => {
@@ -29,7 +18,7 @@ describe("groupProjektiEntitiesByType", () => {
   });
 
   it("should group hyvaksymisPaatosVaiheJulkaisut correctly", () => {
-    const julkaisu = createHyvaksymisJulkaisu(1);
+    const julkaisu = createJulkaisu("JULKAISU#HYVAKSYMISPAATOS#", 1);
     const result = groupProjektiEntitiesByType([julkaisu]);
     expect(result.hyvaksymisPaatosVaiheJulkaisut).to.have.lengthOf(1);
     expect(result.hyvaksymisPaatosVaiheJulkaisut?.[0]).to.equal(julkaisu);
@@ -38,7 +27,7 @@ describe("groupProjektiEntitiesByType", () => {
   });
 
   it("should group jatkoPaatos1VaiheJulkaisut correctly", () => {
-    const julkaisu = createJatko1Julkaisu(1);
+    const julkaisu = createJulkaisu("JULKAISU#JATKOPAATOS1#", 1);
     const result = groupProjektiEntitiesByType([julkaisu]);
     expect(result.jatkoPaatos1VaiheJulkaisut).to.have.lengthOf(1);
     expect(result.jatkoPaatos1VaiheJulkaisut?.[0]).to.equal(julkaisu);
@@ -47,7 +36,7 @@ describe("groupProjektiEntitiesByType", () => {
   });
 
   it("should group jatkoPaatos2VaiheJulkaisut correctly", () => {
-    const julkaisu = createJatko2Julkaisu(1);
+    const julkaisu = createJulkaisu("JULKAISU#JATKOPAATOS2#", 1);
     const result = groupProjektiEntitiesByType([julkaisu]);
     expect(result.jatkoPaatos2VaiheJulkaisut).to.have.lengthOf(1);
     expect(result.jatkoPaatos2VaiheJulkaisut?.[0]).to.equal(julkaisu);
@@ -56,10 +45,10 @@ describe("groupProjektiEntitiesByType", () => {
   });
 
   it("should group mixed types correctly", () => {
-    const hyv1 = createHyvaksymisJulkaisu(1);
-    const hyv2 = createHyvaksymisJulkaisu(2);
-    const jatko1 = createJatko1Julkaisu(1);
-    const jatko2 = createJatko2Julkaisu(1);
+    const hyv1 = createJulkaisu("JULKAISU#HYVAKSYMISPAATOS#", 1);
+    const hyv2 = createJulkaisu("JULKAISU#HYVAKSYMISPAATOS#", 2);
+    const jatko1 = createJulkaisu("JULKAISU#JATKOPAATOS1#", 1);
+    const jatko2 = createJulkaisu("JULKAISU#JATKOPAATOS2#", 1);
 
     const entities: PaatosVaiheJulkaisu[] = [hyv1, jatko1, hyv2, jatko2];
     const result = groupProjektiEntitiesByType(entities);
@@ -74,7 +63,11 @@ describe("groupProjektiEntitiesByType", () => {
   });
 
   it("should handle multiple julkaisut of same type", () => {
-    const entities: PaatosVaiheJulkaisu[] = [createJatko1Julkaisu(1), createJatko1Julkaisu(2), createJatko1Julkaisu(3)];
+    const entities: PaatosVaiheJulkaisu[] = [
+      createJulkaisu("JULKAISU#JATKOPAATOS1#", 1),
+      createJulkaisu("JULKAISU#JATKOPAATOS1#", 2),
+      createJulkaisu("JULKAISU#JATKOPAATOS1#", 3),
+    ];
     const result = groupProjektiEntitiesByType(entities);
 
     expect(result.jatkoPaatos1VaiheJulkaisut).to.have.lengthOf(3);

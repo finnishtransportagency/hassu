@@ -8,11 +8,12 @@ import { HyvaksymisPaatosVaiheJulkaisu } from "../../src/database/model";
 import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
 
 function createItem(id: number): HyvaksymisPaatosVaiheJulkaisu {
-  return {
+  const item = {
     projektiOid: "oid-1",
     sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id),
     id,
-  } as HyvaksymisPaatosVaiheJulkaisu;
+  };
+  return item as HyvaksymisPaatosVaiheJulkaisu;
 }
 
 describe("projektiEntityDatabase", () => {
