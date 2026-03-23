@@ -184,6 +184,7 @@ export class HassuBackendStack extends Stack {
     hyvaksymisEsitysAineistoHandlerLambda.addEnvironment("TABLE_PROJEKTI_DATA", this.props.projektiDataTable.tableName);
     this.props.projektiTable.grantReadWriteData(hyvaksymisEsitysAineistoHandlerLambda);
     this.props.nahtavillaoloVaiheJulkaisuTable.grantReadData(hyvaksymisEsitysAineistoHandlerLambda);
+    this.props.projektiDataTable.grantReadData(hyvaksymisEsitysAineistoHandlerLambda);
 
     this.createAndProvideSchedulerExecutionRole(
       eventSQS,
