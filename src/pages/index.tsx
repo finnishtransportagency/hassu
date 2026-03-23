@@ -17,6 +17,7 @@ import { H1, H3 } from "@components/Headings";
 import { PalauteKyselyMuistutusPopup } from "@components/projekti/kansalaisnakyma/PalauteKyselyMuistutusPopup";
 import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import { EVKinfo } from "@components/kansalaisenEtusivu/ElinvoimakeskusInfo";
+import { GetServerSideProps } from "next";
 
 const SIVUN_KOKO = 10;
 
@@ -129,6 +130,10 @@ function Etusivu({ query, maakuntaOptions, kuntaOptions }: Props) {
 }
 
 export default FrontPage;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return { props: {} };
+};
 
 type HookProps = { kuntaOptions: SelectOption[]; maakuntaOptions: SelectOption[] };
 export type HookReturnType = {

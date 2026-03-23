@@ -38,14 +38,14 @@ const envConfigs: Record<EnvName, Env> = {
     isDevAccount: true,
     isProd: false,
     waf: true,
-    pointInTimeRecovery: false,
+    pointInTimeRecovery: true,
   },
   test: {
     terminationProtection: true,
     isDevAccount: true,
     isProd: false,
     waf: true,
-    pointInTimeRecovery: false,
+    pointInTimeRecovery: true,
   },
   training: {
     terminationProtection: true,

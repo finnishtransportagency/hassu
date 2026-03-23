@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
@@ -40,6 +41,7 @@ import { parameters } from "../../src/aws/parameters";
 import { DBMuistuttaja, muistuttajaDatabase } from "../../src/database/muistuttajaDatabase";
 import { feedbackDatabase } from "../../src/database/palauteDatabase";
 import { uuid } from "hassu-common/util/uuid";
+import { lyhytOsoiteDatabase } from "../../src/database/lyhytOsoiteDatabase";
 
 describe("jaaProjekti", () => {
   const userFixture = new UserFixture(userService);
@@ -148,6 +150,7 @@ describe("jaaProjekti", () => {
         .withArgs(targetProjektiOid)
         .returns(Promise.resolve(undefined));
       sinon.stub(lisaAineistoService, "generateSalt").returns("foo-salt");
+      sinon.stub(lyhytOsoiteDatabase, "generateAndSetLyhytOsoite").resolves("ab12");
       targetVelho = { ...cloneDeep(srcProjekti.velho), nimi: "Toinen-oid projektin nimi" };
       targetProjektiFromVelho = {
         oid: targetProjektiOid,

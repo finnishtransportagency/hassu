@@ -60,11 +60,12 @@ NPM_REGISTRY="hassu-private-npm"
 
 docker buildx create --use
 
-# Using placeholder values at build time 
+# Using placeholder values at build time
 docker buildx build \
   $PUSH_FLAG \
   --progress=plain \
   --platform linux/amd64 \
+  --build-arg ENVIRONMENT="$ENVIRONMENT" \
   --secret id=npmrc,src=<(cat <<EOF
 ${NPM_SCOPE}:registry=https://${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/
 //${CODE_ARTIFACT_DOMAIN}-${ACCOUNT_ID}.d.codeartifact.${AWS_REGION}.amazonaws.com/npm/${NPM_REGISTRY}/:_authToken=${CODE_ARTIFACT_TOKEN}

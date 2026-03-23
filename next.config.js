@@ -2,11 +2,8 @@ const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
 const CopyPlugin = require("copy-webpack-plugin");
-const dotenv = require("dotenv");
-const fs = require("fs");
 
-// Sovellukselle tuleva liikenne on /frontend prefixin takana pilviympäristöissä
-// tulee huomioida redirecteissä
+// Middleware poistaa /frontend prefixin ennen kuin redirectit ajetaa
 const lyhytOsoiteRedirects = [
   {
     source: `${BaseConfig.frontendPrefix}/s/:path*`,

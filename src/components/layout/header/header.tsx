@@ -12,6 +12,7 @@ import React, {
   useState,
 } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import VirkamiesHeaderTopRightContent from "./VirkamiesHeaderTopRightContent";
 import { Backdrop, Container, styled, useMediaQuery, useTheme } from "@mui/material";
 import HeaderNavigationItem, { NavigationRoute, NavigationRouteCollection } from "../navigation/HeaderNavigationItem";
@@ -29,7 +30,8 @@ import { Box } from "@mui/system";
 import useKansalaiskieli from "../../../hooks/useKansalaiskieli";
 import { Kieli } from "../../../../common/graphql/apiModel";
 import { useIsYllapito } from "src/hooks/useIsYllapito";
-import { getPublicEnv } from "src/util/env";
+
+const VirkamiesLogout = dynamic(() => import("./VirkamiesLogout"), { ssr: false });
 
 const virkamiesNavigationRoutes: (NavigationRoute | NavigationRouteCollection)[] = [
   {
@@ -173,8 +175,6 @@ export default function Header(): ReactElement {
 
   const isResizing = useIsResizing();
 
-  const logoutHref = getPublicEnv("VAYLA_EXTRANET_URL");
-
   useEffect(() => {
     const handleScrollProps: HandleScrollProps = {
       headerRef,
@@ -317,9 +317,7 @@ export default function Header(): ReactElement {
                       marginTop: 11,
                     }}
                   >
-                    <StyledLink sx={{ fontWeight: 400 }} href={logoutHref} useNextLink={false}>
-                      Poistu Palvelusta
-                    </StyledLink>
+                    <VirkamiesLogout mobile />
                   </Box>
                 )}
               </Box>
