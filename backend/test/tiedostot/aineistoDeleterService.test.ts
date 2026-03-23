@@ -8,9 +8,9 @@ import { projektiEntityDatabase } from "../../src/database/projektiEntityDatabas
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 import { fileService } from "../../src/files/fileService";
 import { ImportContext } from "../../src/tiedostot/importContext";
-import { HyvaksymisPaatosVaiheJulkaisu, JatkoPaatos1VaiheJulkaisu, JatkoPaatos2VaiheJulkaisu } from "../../src/database/model";
 import { Status } from "hassu-common/graphql/apiModel";
 import { createJulkaisuSortKey } from "../../src/database/julkaisuItemKeys";
+import { JulkaisuByPrefix, JulkaisuPrefix } from "../../src/database/model/projektiDataItem";
 
 describe("aineistoDeleterService", () => {
   let putStub: sinon.SinonStub;
@@ -30,24 +30,15 @@ describe("aineistoDeleterService", () => {
     sinon.restore();
   });
 
+  function createMockJulkaisu<P extends JulkaisuPrefix>(prefix: P): Partial<JulkaisuByPrefix<P>> {
+    const julkaisu = { projektiOid: "oid-1", sortKey: createJulkaisuSortKey(prefix, 1), id: 1 };
+    return julkaisu as Partial<JulkaisuByPrefix<P>>;
+  }
+
   function createMockContext(status: Status): ImportContext {
-    const hyvJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
-      projektiOid: "oid-1",
-      sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", 1),
-      id: 1,
-    } as HyvaksymisPaatosVaiheJulkaisu;
-
-    const jatko1Julkaisu: JatkoPaatos1VaiheJulkaisu = {
-      projektiOid: "oid-1",
-      sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", 1),
-      id: 1,
-    } as JatkoPaatos1VaiheJulkaisu;
-
-    const jatko2Julkaisu: JatkoPaatos2VaiheJulkaisu = {
-      projektiOid: "oid-1",
-      sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS2#", 1),
-      id: 1,
-    } as JatkoPaatos2VaiheJulkaisu;
+    const hyvJulkaisu = createMockJulkaisu("JULKAISU#HYVAKSYMISPAATOS#");
+    const jatko1Julkaisu = createMockJulkaisu("JULKAISU#JATKOPAATOS1#");
+    const jatko2Julkaisu = createMockJulkaisu("JULKAISU#JATKOPAATOS2#");
 
     const mockManager = {
       getAloitusKuulutusVaihe: () => ({ deleteAineistotIfEpaaktiivinen: sinon.stub().resolves([]) }),
