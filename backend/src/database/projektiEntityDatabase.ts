@@ -1,6 +1,6 @@
+// Contains code generated or recommended by Amazon Q
 import {
   BatchWriteCommand,
-  BatchWriteCommandOutput,
   DeleteCommand,
   PutCommand,
   PutCommandOutput,
@@ -8,10 +8,14 @@ import {
   QueryCommandInput,
   QueryCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
+
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { log } from "../logger";
 import { AnyProjektiDataItem } from "./model";
+
+// DynamoDB BatchWriteItem API:n absoluuttinen yläraja per kutsu
+const BATCH_WRITE_MAX_ITEMS = 25;
 
 class ProjektiEntityDatabase {
   tableName = config.projektiDataTableName;
@@ -29,10 +33,7 @@ class ProjektiEntityDatabase {
     return await getDynamoDBDocumentClient().send(command);
   }
 
-  async putAll(
-    julkaisut: AnyProjektiDataItem[] | null | undefined,
-    description: string | undefined = undefined
-  ): Promise<BatchWriteCommandOutput | undefined> {
+  async putAll(julkaisut: AnyProjektiDataItem[] | null | undefined, description: string | undefined = undefined): Promise<void> {
     if (!julkaisut?.length) {
       return;
     }
@@ -40,12 +41,8 @@ class ProjektiEntityDatabase {
       julkaisut: julkaisut.map(({ projektiOid, sortKey }) => ({ projektiOid, sortKey })),
       description,
     });
-    const command = new BatchWriteCommand({
-      RequestItems: {
-        [this.tableName]: julkaisut.map((julkaisu) => ({ PutRequest: { Item: julkaisu } })),
-      },
-    });
-    return await getDynamoDBDocumentClient().send(command);
+    const requests = julkaisut.map((julkaisu) => ({ PutRequest: { Item: julkaisu } }));
+    await this.batchWriteInChunks(requests);
   }
 
   async delete({ projektiOid, sortKey }: AnyProjektiDataItem, description: string | undefined = undefined): Promise<void> {
@@ -69,12 +66,21 @@ class ProjektiEntityDatabase {
       julkaisut: julkaisut.map(({ projektiOid, sortKey }) => ({ projektiOid, sortKey })),
       description,
     });
-    const command = new BatchWriteCommand({
-      RequestItems: {
-        [this.tableName]: julkaisut.map(({ sortKey, projektiOid }) => ({ DeleteRequest: { Key: { sortKey, projektiOid } } })),
-      },
-    });
-    await getDynamoDBDocumentClient().send(command);
+    const requests = julkaisut.map(({ sortKey, projektiOid }) => ({ DeleteRequest: { Key: { sortKey, projektiOid } } }));
+    await this.batchWriteInChunks(requests);
+  }
+
+  private async batchWriteInChunks(requests: Record<string, unknown>[]): Promise<void> {
+    for (let i = 0; i < requests.length; i += BATCH_WRITE_MAX_ITEMS) {
+      let unprocessed: Record<string, unknown>[] | undefined = requests.slice(i, i + BATCH_WRITE_MAX_ITEMS);
+      while (unprocessed?.length) {
+        const result = await getDynamoDBDocumentClient().send(new BatchWriteCommand({ RequestItems: { [this.tableName]: unprocessed } }));
+        unprocessed = result.UnprocessedItems?.[this.tableName] as Record<string, unknown>[] | undefined;
+        if (unprocessed?.length) {
+          log.info(`Retrying ${unprocessed.length} unprocessed items for ${this.tableName}`);
+        }
+      }
+    }
   }
 
   async getAllForProjekti(projektiOid: string, stronglyConsistentRead: boolean): Promise<AnyProjektiDataItem[]> {
