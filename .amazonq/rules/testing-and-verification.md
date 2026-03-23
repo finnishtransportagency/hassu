@@ -66,11 +66,13 @@ Key lint rules to be aware of:
 
 ### 3. Run Tests
 
+Run in this order — first the modified file alone, then all backend tests together (as CI does):
+
 ```bash
 # Single test file
 npx cross-env AWS_PROFILE=nonexistent npx ts-mocha -p "./backend/tsconfig.json" "backend/test/path/to/file.test.ts"
 
-# All backend tests
+# All backend tests (must pass — catches mock collisions and test isolation issues)
 npm run test:backend
 
 # All frontend tests
@@ -80,10 +82,13 @@ npm run test:frontend
 npm run test
 ```
 
+**Important:** Always run `npm run test:backend` (or `npm run test`) even if the single file passes. Tests that pass alone can fail when run together due to shared global state (e.g. `mockClient` patching `DynamoDBDocumentClient.prototype.send`).
+
 ### 4. Summary
 
 Before considering the work done, confirm:
 
 - [ ] `tsc --noEmit` passes
 - [ ] `lint` passes (no errors)
-- [ ] All related tests pass
+- [ ] Single test file passes
+- [ ] All backend tests pass together (`npm run test:backend`)
