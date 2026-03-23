@@ -2,13 +2,16 @@ import {
   AloitusKuulutus,
   AloitusKuulutusJulkaisu,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   LausuntoPyynnonTaydennys,
   LausuntoPyynto,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   VuorovaikutusKierros,
   VuorovaikutusKierrosJulkaisu,
+  JatkoPaatos1VaiheJulkaisu,
+  JatkoPaatos2VaiheJulkaisu,
+  HyvaksymisPaatosVaiheJulkaisu,
 } from "../database/model";
 import { assertIsDefined } from "../util/assertions";
 
@@ -132,13 +135,13 @@ export class ProjektiPaths extends PathTuple {
   }
 
   jatkoPaatos1Vaihe(
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | JatkoPaatos1VaiheJulkaisu | undefined | null
   ): HyvaksymisPaatosVaihePaths {
     return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_JATKOPAATOS1, hyvaksymisPaatosVaihe);
   }
 
   jatkoPaatos2Vaihe(
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null
+    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaihe | JatkoPaatos2VaiheJulkaisu | undefined | null
   ): HyvaksymisPaatosVaihePaths {
     return new HyvaksymisPaatosVaihePaths(this, ProjektiPaths.PATH_JATKOPAATOS2, hyvaksymisPaatosVaihe);
   }
@@ -406,7 +409,7 @@ class VersionedPaths<T extends { id: number } | undefined | null> extends PathTu
   }
 }
 
-export class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosVaihe | HyvaksymisPaatosVaiheJulkaisu | undefined | null> {
+export class HyvaksymisPaatosVaihePaths extends VersionedPaths<HyvaksymisPaatosVaihe | PaatosVaiheJulkaisu | undefined | null> {
   get paatos(): PathTuple {
     return new (class extends PathTuple {
       get yllapitoPath(): string {

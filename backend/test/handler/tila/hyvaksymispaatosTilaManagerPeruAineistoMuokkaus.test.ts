@@ -3,7 +3,7 @@ import { ProjektiFixture } from "../../fixture/projektiFixture";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import MockDate from "mockdate";
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, Kielitiedot, StandardiYhteystiedot, Velho } from "../../../src/database/model";
+import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { fileService } from "../../../src/files/fileService";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -11,6 +11,7 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../../../src/handler/tila/hyva
 import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import { expect } from "chai";
 import { parameters } from "../../../src/aws/parameters";
+import { createJulkaisuSortKey } from "../../../src/database/julkaisuItemKeys";
 
 describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
   let projekti: DBProjekti;
@@ -115,20 +116,24 @@ describe("hyvaksymisPaatosTilaManager (peru aineistomuokkaus)", () => {
 
   it("should reject peruAineistoMuokkaus if julkaisu tila is ODOTTAA_HYVAKSYNTAA", async function () {
     MockDate.set("2022-06-08");
+    const id = (projekti.hyvaksymisPaatosVaihe?.id as number) + 1;
     projekti.hyvaksymisPaatosVaihe = {
       ...projekti.hyvaksymisPaatosVaihe,
-      id: (projekti.hyvaksymisPaatosVaihe?.id as number) + 1,
+      id,
       aineistoMuokkaus: {
         alkuperainenHyvaksymisPaiva: projekti.hyvaksymisPaatosVaiheJulkaisut?.[0]?.hyvaksymisPaiva as string,
       },
     };
     projekti.hyvaksymisPaatosVaiheJulkaisut?.push({
       ...projekti.hyvaksymisPaatosVaihe,
+      projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id),
+      id,
       yhteystiedot: [],
-      kuulutusYhteystiedot: projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot as StandardiYhteystiedot,
+      kuulutusYhteystiedot: projekti.hyvaksymisPaatosVaihe.kuulutusYhteystiedot!,
       tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
-      velho: projekti.velho as Velho,
-      kielitiedot: projekti.kielitiedot as Kielitiedot,
+      velho: projekti.velho!,
+      kielitiedot: projekti.kielitiedot!,
     });
     expect(hyvaksymisPaatosVaiheTilaManager.peruAineistoMuokkaus(projekti)).to.eventually.be.rejectedWith(
       IllegalArgumentError,

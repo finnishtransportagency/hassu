@@ -85,6 +85,15 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
           versionId: 4,
           plan: (options) => import("./Projekti/migrate-004").then((m) => m.default(options)),
         },
+        {
+          versionId: 5,
+          plan: (options) => import("./Projekti/migrate-005").then((m) => m.default(options)),
+        },
+        /* Cleanup for Projekti taulu. Can be done separately */
+        // {
+        //   versionId: 6,
+        //   plan: (options) => import("./Projekti/migrate-006").then((m) => m.default(options)),
+        // },
       ],
     },
     // {

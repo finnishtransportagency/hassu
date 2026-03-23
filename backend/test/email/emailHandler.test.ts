@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
 import { personSearch } from "../../src/personSearch/personSearchClient";
 import { ProjektiFixture } from "../fixture/projektiFixture";
@@ -29,13 +29,14 @@ import { hyvaksymisPaatosVaiheTilaManager } from "../../src/handler/tila/hyvaksy
 import { fakeEventInSqsQueue } from "../sqsEvents/sqsEventHandlerLambdaTests/util/util";
 import { SqsEventType } from "../../src/sqsEvents/sqsEvent";
 import Mail from "nodemailer/lib/mailer";
+import { projektiEntityDatabase } from "../../src/database/projektiEntityDatabase";
 
 describe("emailHandler", () => {
   let getKayttajasStub: sinon.SinonStub;
   let loadProjektiByOidStub: sinon.SinonStub;
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let putNahtavillaoloKuulutusJulkaisuStub: sinon.SinonStub;
-  let updateHyvaksymisPaatosVaiheJulkaisutStub: sinon.SinonStub;
+  let putJulkaisutStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   let fixture: ProjektiFixture;
@@ -50,7 +51,7 @@ describe("emailHandler", () => {
     loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     putNahtavillaoloKuulutusJulkaisuStub = sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "put");
-    updateHyvaksymisPaatosVaiheJulkaisutStub = sinon.stub(projektiDatabase.hyvaksymisPaatosVaiheJulkaisut, "update");
+    putJulkaisutStub = sinon.stub(projektiEntityDatabase, "put");
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
@@ -270,7 +271,7 @@ describe("emailHandler", () => {
     it("approval should send emails and attachments succesfully", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
-      updateHyvaksymisPaatosVaiheJulkaisutStub.resolves();
+      putJulkaisutStub.resolves();
       s3Mock.s3Mock.on(GetObjectCommand).resolves({
         Body: Readable.from(""),
         ContentType: "application/pdf",
@@ -326,7 +327,7 @@ describe("emailHandler", () => {
       it("approval wont send ilmoitus mails for aineistoMuokkaus", async () => {
         publishProjektiFileStub.resolves();
         synchronizeProjektiFilesStub.resolves();
-        updateHyvaksymisPaatosVaiheJulkaisutStub.resolves();
+        putJulkaisutStub.resolves();
         s3Mock.s3Mock.on(GetObjectCommand).resolves({
           Body: Readable.from(""),
           ContentType: "application/pdf",

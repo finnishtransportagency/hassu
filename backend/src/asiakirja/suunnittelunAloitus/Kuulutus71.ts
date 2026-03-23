@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
+import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
@@ -13,13 +13,13 @@ const baseline = -7;
 // noinspection JSUnusedGlobalSymbols
 export class Kuulutus71 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
-  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu;
   private asiakirjaTyyppi: AsiakirjaTyyppi;
   private kasittelynTila: KasittelynTila;
 
   constructor(
     asiakirjaTyyppi: AsiakirjaTyyppi,
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
+    hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu,
     kasittelynTila: KasittelynTila,
     props: HyvaksymisPaatosVaiheKutsuAdapterProps
   ) {

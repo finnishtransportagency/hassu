@@ -20,7 +20,7 @@ import { assertIsDefined } from "../../util/assertions";
 import { ENNAKKONEUVOTTELU_PATH } from "../../ennakkoneuvottelu/tallenna";
 import { Status } from "hassu-common/graphql/apiModel";
 import GetProjektiStatus from "../../projekti/status/getProjektiStatus";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();

@@ -33,6 +33,7 @@ process.env.VELHO_USERNAME = "top";
 process.env.VELHO_PASSWORD = "secret";
 process.env.TABLE_PROJEKTI = "Projekti-localstack";
 process.env.TABLE_NAHTAVILLAOLOVAIHEJULKAISU = "NahtavillaoloVaiheJulkaisu-localstack";
+process.env.TABLE_PROJEKTI_DATA = "ProjektiData-localstack";
 process.env.TABLE_LYHYTOSOITE = "Lyhytosoite-localstack";
 process.env.TABLE_FEEDBACK = "Palaute-localstack";
 process.env.TABLE_PROJEKTI_MUISTUTTAJA = "ProjektiMuistuttaja-localstack";

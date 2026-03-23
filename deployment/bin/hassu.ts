@@ -55,6 +55,7 @@ async function main() {
       internalBucket: hassuDatabaseStack.internalBucket,
       publicBucket: hassuDatabaseStack.publicBucket,
       kiinteistonomistajaTable: hassuDatabaseStack.kiinteistonOmistajaTable,
+      projektiDataTable: hassuDatabaseStack.projektiDataTable,
       projektiMuistuttajaTable: hassuDatabaseStack.projektiMuistuttajaTable,
       nahtavillaoloVaiheJulkaisuTable: hassuDatabaseStack.nahtavillaoloVaiheJulkaisuTable,
       tiedoteTable: hassuDatabaseStack.tiedoteTable,

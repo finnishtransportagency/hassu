@@ -13,7 +13,7 @@ import { log } from "../logger";
 
 type GenericKuulutusJulkaisu = Pick<NahtavillaoloVaiheJulkaisu, "projektiOid" | "id">;
 
-export class KuulutusJulkaisuDatabase<T extends GenericKuulutusJulkaisu> {
+class KuulutusJulkaisuDatabase<T extends GenericKuulutusJulkaisu> {
   constructor(julkaisuTableName: string) {
     this.julkaisuTableName = julkaisuTableName;
   }
