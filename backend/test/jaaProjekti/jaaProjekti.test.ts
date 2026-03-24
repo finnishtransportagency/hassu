@@ -276,6 +276,29 @@ describe("jaaProjekti", () => {
       });
     });
 
+    it("should update projektiOid on julkaisut that have it", async () => {
+      srcProjekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.HYVAKSYMISPAATOS, VaiheenTila.HYVAKSYTTY);
+      (projektiDatabase.loadProjektiByOid as sinon.SinonStub).withArgs(srcProjekti.oid).returns(Promise.resolve(srcProjekti));
+      await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
+        .fulfilled;
+      const targetProjektiToCreate = createProjektiStub.firstCall.args[0];
+      // Julkaisut joilla on projektiOid pitää päivittää targetOid:ksi
+      targetProjektiToCreate.nahtavillaoloVaiheJulkaisut?.forEach((j) => {
+        expect(j.projektiOid).to.equal(targetProjektiOid);
+        expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
+      });
+      // Tällä branchilla hyvaksymisPaatosVaiheJulkaisut ei vielä sisällä projektiOid:ta (lisätään HASSUYP-769:ssä)
+      targetProjektiToCreate.hyvaksymisPaatosVaiheJulkaisut?.forEach((j) => {
+        expect(j).to.not.have.property("projektiOid");
+        expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
+      });
+      // Julkaisuilla joilla ei ole projektiOid:ta ei pitäisi olla sitä
+      targetProjektiToCreate.aloitusKuulutusJulkaisut?.forEach((j) => {
+        expect(j).to.not.have.property("projektiOid");
+        expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
+      });
+    });
+
     it("should copy muistuttajat and palautteet", async () => {
       uuidStub.onFirstCall().returns("1");
       uuidStub.onSecondCall().returns("2");

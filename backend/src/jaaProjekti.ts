@@ -43,6 +43,9 @@ export async function jaaProjekti(input: Variables) {
   JULKAISU_KEYS.forEach((julkaisuKey) =>
     clonedProjekti[julkaisuKey]?.forEach((julkaisu) => {
       julkaisu.kopioituProjektista = input.oid;
+      if ("projektiOid" in julkaisu) {
+        julkaisu.projektiOid = input.targetOid;
+      }
     })
   );
 
