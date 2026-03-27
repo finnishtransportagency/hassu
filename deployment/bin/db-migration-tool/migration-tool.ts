@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DryRunMigrateAllTablesOptions, MigrateAllTablesOptions, TableConfig, TableVersionMap } from "./types";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -192,10 +193,12 @@ async function assertMigrationPrerequisites(
   tables: TableConfig[]
 ): Promise<void> {
   const schemaMetaTableName = `SchemaMeta-${options.environment}`;
+  const projektiDataTableName = `ProjektiData-${options.environment}`;
 
   console.log("🔍 Verifying DynamoDB access...");
 
   await assertTableReadable(schemaMetaTableName);
+  await assertTableReadable(projektiDataTableName);
 
   for (const table of tables) {
     await assertTableReadable(table.name);
