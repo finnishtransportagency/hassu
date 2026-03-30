@@ -1,7 +1,8 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, ReactNode, useMemo, FunctionComponent } from "react";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
-import { Link, Tabs } from "@mui/material";
+import { Tabs } from "@mui/material";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 import { LinkTab, LinkTabProps } from "@components/layout/LinkTab";
@@ -53,9 +54,9 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
           </li>
           <li>
             Pääkäyttäjä tai projektipäällikkö lisää projektille Liikenne- ja viestintäviraston päätöksen päivän ja asiatunnuksen{" "}
-            <Link underline="none" href={`/yllapito/projekti/${projekti?.oid}/kasittelyntila`}>
+            <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/kasittelyntila`, query: { oid: projekti.oid } }}>
               Käsittelyn tila
-            </Link>{" "}
+            </StyledLink>{" "}
             -sivulle.
           </li>
           <li>Valitse hallinto-oikeus, johon valitus osoitetaan.</li>
