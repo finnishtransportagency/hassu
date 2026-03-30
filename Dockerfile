@@ -4,7 +4,7 @@ FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023
 
 ENV NPM_VERSION=10.8.2
 ENV AMPLIFY_CLI_VERSION=12.14.4
-ENV DOCKER_COMPOSE_VERSION=v2.40.2
+ENV DOCKER_COMPOSE_VERSION=v5.1.1
 
 ENV PATH="$PATH:/var/lang/bin"
 COPY --from=nodesource /var/lang /var/lang
