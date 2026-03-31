@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as cdk from "aws-cdk-lib";
 import { aws_codebuild, aws_ecr, RemovalPolicy, SecretValue, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
@@ -299,6 +300,7 @@ export class HassuPipelineStack extends Stack {
             "codeartifact:GetAuthorizationToken",
             "codeartifact:GetRepositoryEndpoint",
             "sts:GetServiceBearerToken",
+            "dynamodb:DescribeTable",
           ],
           resources: ["*"],
         })
@@ -316,8 +318,10 @@ export class HassuPipelineStack extends Stack {
         `NahtavillaoloVaiheJulkaisu-${pipelineConfig.env}`
       );
       const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, `Projekti-${pipelineConfig.env}`);
+      const projektiDataTable = Table.fromTableName(this, `ProjektiDataTable-${name}`, `ProjektiData-${pipelineConfig.env}`);
       const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, `SchemaMeta-${pipelineConfig.env}`);
       projektiTable.grantReadWriteData(buildProject);
+      projektiDataTable.grantReadWriteData(buildProject);
       nahtavillaoloVaiheJulkaisuTable.grantReadWriteData(buildProject);
       schemaMetaTable.grantReadWriteData(buildProject);
 
