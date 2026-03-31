@@ -9,7 +9,7 @@ import { DBProjekti, DBPROJEKTI_OMITTED_FIELDS, NahtavillaoloVaiheJulkaisu } fro
 import { getDynamoDBDocumentClient } from "../../src/aws/client";
 import { config } from "../../src/config";
 import omit from "lodash/omit";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 
 const localDynamoDB = new DynamoDB({
   endpoint: "http://localhost:4566",

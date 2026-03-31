@@ -3,7 +3,7 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   KasittelynTila,
   NahtavillaoloVaiheJulkaisu,
   Velho,
@@ -254,7 +254,7 @@ async function projektinPerustiedoissaOnOngelma(projekti: ProjektiForGetStatus):
 }
 
 function projektiOnEpaAktiivinen3(
-  jatkoPaatos2Julkaisu: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined
+  jatkoPaatos2Julkaisu: Pick<PaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined
 ): boolean {
   const jatkoPaatos2JulkaisunTila = jatkoPaatos2Julkaisu?.tila;
   const kuulutusJP2VaihePaattyyPaiva = jatkoPaatos2Julkaisu?.kuulutusVaihePaattyyPaiva;
@@ -300,7 +300,7 @@ function projektinStatusOnVahintaanJatkoPaatos2Hyvaksymisesitys(kasittelynTila: 
 }
 
 function projektiOnVahintaanEpaAktiivinen2(
-  jatkoPaatos1Julkaisu: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined
+  jatkoPaatos1Julkaisu: Pick<PaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva"> | undefined
 ): boolean {
   const jatkoPaatos1JulkaisunTila = jatkoPaatos1Julkaisu?.tila;
   const kuulutusJP1VaihePaattyyPaiva = jatkoPaatos1Julkaisu?.kuulutusVaihePaattyyPaiva;
@@ -346,7 +346,7 @@ function projektinStatusOnVahintaanJatkoPaatos1Aineistot(kasittelynTila: Kasitte
 }
 
 function projektinStatusOnVahintaanEpaAktiivinen1(projekti: {
-  hyvaksymisPaatosVaiheJulkaisut?: Pick<HyvaksymisPaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva">[] | null;
+  hyvaksymisPaatosVaiheJulkaisut?: Pick<PaatosVaiheJulkaisu, "tila" | "kuulutusVaihePaattyyPaiva">[] | null;
 }): boolean {
   const hyvaksymisPaatosJulkaisu = getJulkaisu(projekti.hyvaksymisPaatosVaiheJulkaisut);
   const hyvaksymisPaatosJulkaisunTila = hyvaksymisPaatosJulkaisu?.tila;

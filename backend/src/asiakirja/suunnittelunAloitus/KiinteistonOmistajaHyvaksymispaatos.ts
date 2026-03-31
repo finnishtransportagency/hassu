@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
+import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { formatDate, toPdfPoints } from "../asiakirjaUtil";
@@ -11,15 +11,11 @@ import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 export class KiinteistonOmistajaHyvaksymispaatos extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   protected header: string;
   protected kieli: KaannettavaKieli;
-  private readonly hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private readonly hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu;
   private readonly kasittelynTila: KasittelynTila;
   private readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 
-  constructor(
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-    kasittelynTila: KasittelynTila,
-    params: HyvaksymisPaatosVaiheKutsuAdapterProps
-  ) {
+  constructor(hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu, kasittelynTila: KasittelynTila, params: HyvaksymisPaatosVaiheKutsuAdapterProps) {
     const velho = params.velho;
     const kieli = params.kieli;
     if (!velho.tyyppi) {

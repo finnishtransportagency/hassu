@@ -7,7 +7,10 @@ import {
   Velho,
   AloitusKuulutusJulkaisu,
   DBProjekti,
+  PaatosVaiheJulkaisu,
   HyvaksymisPaatosVaiheJulkaisu,
+  JatkoPaatos1VaiheJulkaisu,
+  JatkoPaatos2VaiheJulkaisu,
 } from "../database/model";
 import { nyt, parseDate } from "../util/dateUtil";
 import { assertIsDefined } from "../util/assertions";
@@ -168,13 +171,13 @@ export function findHyvaksymisPaatosVaiheWaitingForApproval(projekti: DBProjekti
   }
 }
 
-export function findJatkoPaatos1VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findJatkoPaatos1VaiheWaitingForApproval(projekti: DBProjekti): JatkoPaatos1VaiheJulkaisu | undefined {
   if (projekti.jatkoPaatos1VaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
   }
 }
 
-export function findJatkoPaatos2VaiheWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findJatkoPaatos2VaiheWaitingForApproval(projekti: DBProjekti): JatkoPaatos2VaiheJulkaisu | undefined {
   if (projekti.jatkoPaatos2VaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA);
   }
@@ -186,19 +189,19 @@ export function findAloitusKuulutusLastApproved(projekti: DBProjekti): AloitusKu
   }
 }
 
-export function findHyvaksymisKuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findHyvaksymisKuulutusLastApproved(projekti: DBProjekti): PaatosVaiheJulkaisu | undefined {
   if (projekti.hyvaksymisPaatosVaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.hyvaksymisPaatosVaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
   }
 }
 
-export function findHJatko1KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findHJatko1KuulutusLastApproved(projekti: DBProjekti): PaatosVaiheJulkaisu | undefined {
   if (projekti.jatkoPaatos1VaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.jatkoPaatos1VaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
   }
 }
 
-export function findHJatko2KuulutusLastApproved(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+export function findHJatko2KuulutusLastApproved(projekti: DBProjekti): PaatosVaiheJulkaisu | undefined {
   if (projekti.jatkoPaatos2VaiheJulkaisut) {
     return findJulkaisuWithTila(projekti.jatkoPaatos2VaiheJulkaisut, API.KuulutusJulkaisuTila.HYVAKSYTTY);
   }

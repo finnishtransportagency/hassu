@@ -1,4 +1,4 @@
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
+import { DBProjekti, PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { HallintoOikeus, Kieli, KuulutusTekstit } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
@@ -30,7 +30,7 @@ function getAsiaNumero(kasittelynTila: KasittelynTila, paatosTyyppi: PaatosTyypp
 type PropsCreatorOptions = {
   projekti: Pick<DBProjekti, "oid" | "kasittelynTila" | "lyhytOsoite" | "kayttoOikeudet" | "euRahoitusLogot" | "suunnitteluSopimus">;
   kieli: KaannettavaKieli;
-  hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu;
   paatosTyyppi: PaatosTyyppi;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
