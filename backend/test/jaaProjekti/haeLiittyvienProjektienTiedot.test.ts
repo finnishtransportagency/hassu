@@ -3,7 +3,7 @@ import * as sinon from "sinon";
 import { expect } from "chai";
 import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
 import { Kieli, ProjektinJakotieto, Vaihe } from "hassu-common/graphql/apiModel";
-import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, QueryCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { mockClient } from "aws-sdk-client-mock";
 import { config } from "../../src/config";
 import { haeLiittyvanProjektinTiedot } from "../../src/projekti/haeLiittyvanProjektinTiedot";
@@ -16,6 +16,7 @@ import { kirjaamoOsoitteetService } from "../../src/kirjaamoOsoitteet/kirjaamoOs
 
 describe("haeLiittyvanProjektinTiedot", () => {
   const tableName = "Projekti-localstack";
+  const tableDataName = "ProjektiData-localstack";
 
   beforeEach(() => {
     sinon.stub(config, "projektiTableName").returns(tableName);
@@ -43,7 +44,14 @@ describe("haeLiittyvanProjektinTiedot", () => {
       .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
         Item: projekti,
-      });
+      })
+      .on(QueryCommand, {
+        TableName: tableDataName,
+        ExpressionAttributeValues: {
+          ":projektiOid": projekti.oid,
+        },
+      })
+      .resolves({ Items: [] });
     const result = await haeLiittyvanProjektinTiedot(projekti.oid);
     const expectedResult: ProjektinJakotieto = {
       oid: projekti.oid,
@@ -70,7 +78,14 @@ describe("haeLiittyvanProjektinTiedot", () => {
       .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
         Item: projekti,
-      });
+      })
+      .on(QueryCommand, {
+        TableName: tableDataName,
+        ExpressionAttributeValues: {
+          ":projektiOid": projekti.oid,
+        },
+      })
+      .resolves({ Items: [] });
     const result = await haeLiittyvanProjektinTiedot(projekti.oid);
     const expectedResult: ProjektinJakotieto = {
       oid: projekti.oid,
@@ -96,7 +111,14 @@ describe("haeLiittyvanProjektinTiedot", () => {
       .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
         Item: projekti,
-      });
+      })
+      .on(QueryCommand, {
+        TableName: tableDataName,
+        ExpressionAttributeValues: {
+          ":projektiOid": projekti.oid,
+        },
+      })
+      .resolves({ Items: [] });
     const result = await haeLiittyvanProjektinTiedot(projekti.oid);
     const expectedResult: ProjektinJakotieto = {
       oid: projekti.oid,
@@ -122,7 +144,14 @@ describe("haeLiittyvanProjektinTiedot", () => {
       .on(GetCommand, { TableName: tableName, Key: { oid: projekti.oid } })
       .resolves({
         Item: projekti,
-      });
+      })
+      .on(QueryCommand, {
+        TableName: tableDataName,
+        ExpressionAttributeValues: {
+          ":projektiOid": projekti.oid,
+        },
+      })
+      .resolves({ Items: [] });
     const result = await haeLiittyvanProjektinTiedot(projekti.oid);
     const expectedResult: ProjektinJakotieto = {
       oid: projekti.oid,

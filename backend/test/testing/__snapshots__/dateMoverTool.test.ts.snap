@@ -297,6 +297,8 @@ Object {
         ],
       },
       "muokkaaja": "A000112",
+      "projektiOid": "3",
+      "sortKey": "JULKAISU#HYVAKSYMISPAATOS#001",
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "asiatunnusELY": "ELY/3/2022",
@@ -508,6 +510,8 @@ Object {
         ],
       },
       "muokkaaja": "A000112",
+      "projektiOid": "3",
+      "sortKey": "JULKAISU#JATKOPAATOS1#001",
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "asiatunnusELY": "ELY/3/2022",
@@ -719,6 +723,8 @@ Object {
         ],
       },
       "muokkaaja": "A000112",
+      "projektiOid": "3",
+      "sortKey": "JULKAISU#JATKOPAATOS2#001",
       "tila": "HYVAKSYTTY",
       "velho": Object {
         "asiatunnusELY": "ELY/3/2022",

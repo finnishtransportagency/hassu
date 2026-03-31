@@ -1,6 +1,6 @@
 import { assertIsDefined } from "../util/assertions";
 import { Kieli } from "hassu-common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu } from "../database/model";
+import { DBProjekti, PaatosVaiheJulkaisu } from "../database/model";
 import { createHyvaksymispaatosHyvaksyttyViranomaisilleEmail, createJatkopaatosHyvaksyttyViranomaisilleEmail } from "./emailTemplates";
 import {
   createHyvaksymisPaatosVaiheKutsuAdapterProps,
@@ -15,13 +15,13 @@ import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallint
 export class HyvaksymisPaatosEmailCreator extends KuulutusEmailCreator {
   static async newInstance(
     projekti: DBProjekti,
-    julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+    julkaisu: PaatosVaiheJulkaisu,
     paatosTyyppi: PaatosTyyppi
   ): Promise<HyvaksymisPaatosEmailCreator> {
     return new HyvaksymisPaatosEmailCreator().asyncConstructor(projekti, julkaisu, paatosTyyppi);
   }
 
-  private async asyncConstructor(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, paatosTyyppi: PaatosTyyppi) {
+  private async asyncConstructor(projekti: DBProjekti, julkaisu: PaatosVaiheJulkaisu, paatosTyyppi: PaatosTyyppi) {
     assertIsDefined(projekti.kayttoOikeudet, "kayttoOikeudet pitää olla annettu");
     assertIsDefined(julkaisu.kuulutusPaiva);
     this.adapter = new HyvaksymisPaatosVaiheKutsuAdapter(
