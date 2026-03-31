@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DryRunMigrateAllTablesOptions, MigrateAllTablesOptions, TableConfig, TableVersionMap } from "./types";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -85,6 +86,15 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
           versionId: 4,
           plan: (options) => import("./Projekti/migrate-004").then((m) => m.default(options)),
         },
+        {
+          versionId: 5,
+          plan: (options) => import("./Projekti/migrate-005").then((m) => m.default(options)),
+        },
+        /* Cleanup for Projekti taulu. Can be done separately */
+        // {
+        //   versionId: 6,
+        //   plan: (options) => import("./Projekti/migrate-006").then((m) => m.default(options)),
+        // },
       ],
     },
     // {
@@ -183,10 +193,12 @@ async function assertMigrationPrerequisites(
   tables: TableConfig[]
 ): Promise<void> {
   const schemaMetaTableName = `SchemaMeta-${options.environment}`;
+  const projektiDataTableName = `ProjektiData-${options.environment}`;
 
   console.log("🔍 Verifying DynamoDB access...");
 
   await assertTableReadable(schemaMetaTableName);
+  await assertTableReadable(projektiDataTableName);
 
   for (const table of tables) {
     await assertTableReadable(table.name);

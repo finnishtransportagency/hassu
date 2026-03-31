@@ -1,4 +1,4 @@
-import { HyvaksymisPaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
+import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
@@ -14,15 +14,11 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private readonly asiakirjanMuoto: AsiakirjanMuoto;
   protected header: string;
   protected kieli: KaannettavaKieli;
-  private hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu;
+  private hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu;
   private kuulutettuYhdessaSuunnitelmanimi: string | undefined;
   private kasittelynTila: KasittelynTila;
 
-  constructor(
-    hyvaksymisPaatosVaihe: HyvaksymisPaatosVaiheJulkaisu,
-    kasittelynTila: KasittelynTila,
-    props: HyvaksymisPaatosVaiheKutsuAdapterProps
-  ) {
+  constructor(hyvaksymisPaatosVaihe: PaatosVaiheJulkaisu, kasittelynTila: KasittelynTila, props: HyvaksymisPaatosVaiheKutsuAdapterProps) {
     const velho = props.velho;
     if (!velho.tyyppi) {
       throw new Error("velho.tyyppi ei ole määritelty");

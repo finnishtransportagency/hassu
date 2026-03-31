@@ -6,13 +6,16 @@ import { statusOrder } from "hassu-common/statusOrder";
 import {
   AloitusKuulutusJulkaisu,
   KasittelynTila,
-  HyvaksymisPaatosVaiheJulkaisu,
   NahtavillaoloVaiheJulkaisu,
   VuorovaikutusKierros,
+  HyvaksymisPaatosVaiheJulkaisu,
+  JatkoPaatos1VaiheJulkaisu,
 } from "../database/model";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
-import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/KuulutusJulkaisuDatabase";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
+import { createJulkaisuSortKey } from "../database/julkaisuItemKeys";
 
 export const migraatioTilat = ["SUUNNITTELU", "NAHTAVILLAOLO", "HYVAKSYMISPAATOS", "JATKOPAATOS1", "JATKOPAATOS2"] as const;
 
@@ -108,16 +111,19 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     if (!hyvaksymispaatosAsianumero || !hyvaksymispaatosPaivamaara) {
       log.error("Hyväksymispäätös puuttuu!", { oid });
     }
+    const id = 1;
     const hyvaksymisPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
+      projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#HYVAKSYMISPAATOS#", id),
       kielitiedot,
-      id: 1,
+      id,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await projektiDatabase.hyvaksymisPaatosVaiheJulkaisut.insert(projekti.oid, hyvaksymisPaatosVaiheJulkaisu);
+    await projektiEntityDatabase.put(hyvaksymisPaatosVaiheJulkaisu);
     kasittelynTila.hyvaksymispaatos = {
       asianumero: hyvaksymispaatosAsianumero,
       paatoksenPvm: dayjs(hyvaksymispaatosPaivamaara).format("YYYY-MM-DD"),
@@ -134,16 +140,19 @@ export async function importProjekti(params: ImportProjektiParams): Promise<void
     if (!jatkopaatos1Asianumero || !jatkopaatos1Paivamaara) {
       log.error("Jatkopäätös puuttuu!", { oid });
     }
-    const jatkoPaatosVaiheJulkaisu: HyvaksymisPaatosVaiheJulkaisu = {
+    const id = 1;
+    const jatkoPaatosVaiheJulkaisu: JatkoPaatos1VaiheJulkaisu = {
+      projektiOid: projekti.oid,
+      sortKey: createJulkaisuSortKey("JULKAISU#JATKOPAATOS1#", id),
       kielitiedot,
-      id: 1,
+      id,
       tila: KuulutusJulkaisuTila.MIGROITU,
       yhteystiedot: [],
       kuulutusYhteystiedot: {},
       velho: cloneDeep(projekti.velho),
       muokkaaja: kayttaja.uid,
     };
-    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, jatkoPaatosVaiheJulkaisu);
+    await projektiEntityDatabase.put(jatkoPaatosVaiheJulkaisu);
     kasittelynTila.ensimmainenJatkopaatos = {
       asianumero: jatkopaatos1Asianumero,
       paatoksenPvm: dayjs(jatkopaatos1Paivamaara).format("YYYY-MM-DD"),
