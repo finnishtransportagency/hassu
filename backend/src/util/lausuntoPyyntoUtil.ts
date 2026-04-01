@@ -2,7 +2,7 @@ import { KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
 import {
   DBProjekti,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   LausuntoPyynnonTaydennys,
   LausuntoPyynto,
   NahtavillaoloVaihe,
@@ -19,7 +19,7 @@ export function findLatestHyvaksyttyNahtavillaoloVaiheJulkaisu(
   );
 }
 
-type PaatosVaihe = HyvaksymisPaatosVaiheJulkaisu | HyvaksymisPaatosVaihe | undefined;
+type PaatosVaihe = PaatosVaiheJulkaisu | HyvaksymisPaatosVaihe | undefined;
 
 export function findLatestHyvaksyttyHyvaksymispaatosVaiheJulkaisu(
   projekti: Pick<DBProjekti, "hyvaksymisPaatosVaiheJulkaisut" | "hyvaksymisPaatosVaihe">

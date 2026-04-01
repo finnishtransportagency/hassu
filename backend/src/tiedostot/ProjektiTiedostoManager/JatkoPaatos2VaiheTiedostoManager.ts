@@ -1,6 +1,6 @@
 import { KuulutusJulkaisuTila, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
-import { AbstractHyvaksymisPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
-import { DBProjekti, HyvaksymisPaatosVaihe } from "../../database/model";
+import { AbstractPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
+import { DBProjekti, HyvaksymisPaatosVaihe, JatkoPaatos2VaiheJulkaisu } from "../../database/model";
 import { findJulkaisuWithAsianhallintaEventId, findJulkaisuWithTila, getAsiatunnus } from "../../projekti/projektiUtil";
 import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { nyt, parseOptionalDate } from "../../util/dateUtil";
@@ -10,7 +10,7 @@ import { forEverySaameDo, forSuomiRuotsiDo } from "../../projekti/adapter/common
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 import { Dayjs } from "dayjs";
 
-export class JatkoPaatos2VaiheTiedostoManager extends AbstractHyvaksymisPaatosVaiheTiedostoManager {
+export class JatkoPaatos2VaiheTiedostoManager extends AbstractPaatosVaiheTiedostoManager<JatkoPaatos2VaiheJulkaisu> {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
     const paths = this.projektiPaths.jatkoPaatos2Vaihe(this.vaihe);
     return [

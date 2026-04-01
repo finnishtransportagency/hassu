@@ -1,11 +1,11 @@
-import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
+import { HyvaksymisPaatosVaihe, PaatosVaiheJulkaisu, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
 import { HyvaksymisPaatosVaiheInput, MuokkausTila, NahtavillaoloVaiheInput } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { adaptMuokkausTila } from "../projektiUtil";
 
 export function validateMuokkaustilaAllowsInput(
   vaihe: NahtavillaoloVaihe | HyvaksymisPaatosVaihe | null | undefined,
-  julkaisut: NahtavillaoloVaiheJulkaisu[] | HyvaksymisPaatosVaiheJulkaisu[] | null | undefined,
+  julkaisut: NahtavillaoloVaiheJulkaisu[] | PaatosVaiheJulkaisu[] | null | undefined,
   input: NahtavillaoloVaiheInput | HyvaksymisPaatosVaiheInput | null | undefined
 ) {
   if (!vaihe || input === undefined) {

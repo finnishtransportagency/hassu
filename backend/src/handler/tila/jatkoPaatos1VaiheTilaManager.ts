@@ -1,5 +1,5 @@
 import { KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
+import { DBProjekti, HyvaksymisPaatosVaihe, JatkoPaatos1VaiheJulkaisu } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
@@ -14,8 +14,9 @@ import { sendJatkopaatos1KuulutusApprovalMailsAndAttachments } from "../email/em
 import { findJatkoPaatos1VaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
+import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
 
-class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager {
+class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaManager<JatkoPaatos1VaiheJulkaisu> {
   constructor() {
     super(Vaihe.JATKOPAATOS);
   }
@@ -26,12 +27,20 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     await sendJatkopaatos1KuulutusApprovalMailsAndAttachments(oid);
   }
 
-  async updateJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu): Promise<void> {
-    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.update(projekti, julkaisu);
+  async updateJulkaisu(_projekti: DBProjekti, julkaisu: JatkoPaatos1VaiheJulkaisu): Promise<void> {
+    await projektiEntityDatabase.put(julkaisu);
   }
 
-  getKuulutusWaitingForApproval(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu | undefined {
+  getKuulutusWaitingForApproval(projekti: DBProjekti): JatkoPaatos1VaiheJulkaisu | undefined {
     return findJatkoPaatos1VaiheWaitingForApproval(projekti);
+  }
+
+  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
+    const julkaisuWaitingForApproval = findJatkoPaatos1VaiheWaitingForApproval(projekti);
+    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
+      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
+    }
+    await this.peruAineistoMuokkaus(projekti);
   }
 
   getUpdatedAineistotForVaihe(
@@ -85,18 +94,18 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     return vaihe;
   }
 
-  getVaiheAineisto(projekti: DBProjekti): VaiheTiedostoManager<HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu> {
+  getVaiheAineisto(projekti: DBProjekti): VaiheTiedostoManager<HyvaksymisPaatosVaihe, JatkoPaatos1VaiheJulkaisu> {
     return new ProjektiTiedostoManager(projekti).getJatkoPaatos1Vaihe();
   }
 
-  getJulkaisut(projekti: DBProjekti): HyvaksymisPaatosVaiheJulkaisu[] | undefined {
+  getJulkaisut(projekti: DBProjekti): JatkoPaatos1VaiheJulkaisu[] | undefined {
     return projekti.jatkoPaatos1VaiheJulkaisut ?? undefined;
   }
 
   async validateUudelleenkuulutus(
     projekti: DBProjekti,
     kuulutus: HyvaksymisPaatosVaihe,
-    hyvaksyttyJulkaisu: HyvaksymisPaatosVaiheJulkaisu | undefined
+    hyvaksyttyJulkaisu: JatkoPaatos1VaiheJulkaisu | undefined
   ): Promise<void> {
     // Tarkista, että on olemassa hyväksytty julkaisu, jonka perua
     if (!hyvaksyttyJulkaisu) {
@@ -149,11 +158,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
 
     await this.removeRejectionReasonIfExists(projekti, "jatkoPaatos1Vaihe", this.getVaihe(projekti));
 
-    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
-      projekti,
-      this.getVaihe(projekti),
-      this.getJulkaisut(projekti)
-    );
+    const julkaisu = await asiakirjaAdapter.adaptJatkoPaatos1VaiheJulkaisu(projekti, this.getVaihe(projekti), this.getJulkaisut(projekti));
     if (!julkaisu.ilmoituksenVastaanottajat) {
       throw new IllegalArgumentError("Jatkopäätösvaiheelle on oltava ilmoituksenVastaanottajat!");
     }
@@ -171,7 +176,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
       PaatosTyyppi.JATKOPAATOS1
     );
 
-    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.insert(projekti.oid, julkaisu);
+    await projektiEntityDatabase.put(julkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
       throw new Error("Projektia oid:lla ${projekti.oid)} ei löydy");
@@ -188,7 +193,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, jatkoPaatos1Vaihe: projekti.jatkoPaatos1Vaihe });
   }
 
-  async rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti> {
+  async rejectJulkaisu(projekti: DBProjekti, julkaisu: JatkoPaatos1VaiheJulkaisu, syy: string): Promise<DBProjekti> {
     const jatkoPaatos1Vaihe = this.getVaihe(projekti);
     jatkoPaatos1Vaihe.palautusSyy = syy;
     if (!julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -196,7 +201,7 @@ class JatkoPaatos1VaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTilaMana
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
-    await projektiDatabase.jatkoPaatos1VaiheJulkaisut.delete(projekti, julkaisu.id);
+    await projektiEntityDatabase.delete(julkaisu);
     return {
       ...projekti,
       jatkoPaatos1Vaihe,

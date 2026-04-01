@@ -2,7 +2,7 @@ import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   HyvaksymisPaatosVaihePDF,
   KuulutusSaamePDFt,
   LocalizedMap,
@@ -18,27 +18,18 @@ import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
 import { isKieliSaame, isKieliTranslatable, KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
 import { IllegalArgumentError } from "hassu-common/error";
-import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { HyvaksymisPaatosKuulutusAsiakirjaTyyppi, paatosSpecificRoutesMap, PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 
-export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusTilaManager<
+export abstract class AbstractHyvaksymisPaatosVaiheTilaManager<T extends PaatosVaiheJulkaisu> extends KuulutusTilaManager<
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu
+  T
 > {
   returnKuulutusWithoutSaamePDFs(kuulutus: HyvaksymisPaatosVaihe): HyvaksymisPaatosVaihe {
     const { hyvaksymisPaatosVaiheSaamePDFt: _leaveOut, ...rest } = kuulutus;
     return rest;
-  }
-
-  async rejectAndPeruAineistoMuokkaus(projekti: DBProjekti, syy: string): Promise<void> {
-    const julkaisuWaitingForApproval = findHyvaksymisPaatosVaiheWaitingForApproval(projekti);
-    if (julkaisuWaitingForApproval && julkaisuWaitingForApproval.aineistoMuokkaus) {
-      projekti = await this.rejectJulkaisu(projekti, julkaisuWaitingForApproval, syy);
-    }
-    await this.peruAineistoMuokkaus(projekti);
   }
 
   async removeRejectionReasonIfExists(
@@ -54,16 +45,13 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
 
   protected async generatePDFs(
     projekti: DBProjekti,
-    julkaisuWaitingForApproval: HyvaksymisPaatosVaiheJulkaisu,
+    julkaisuWaitingForApproval: T,
     path: PathTuple,
     paatosTyyppi: PaatosTyyppi
   ): Promise<LocalizedMap<HyvaksymisPaatosVaihePDF>> {
     const kielitiedot = julkaisuWaitingForApproval.kielitiedot;
 
-    async function generatePDFsForLanguage(
-      kieli: KaannettavaKieli,
-      julkaisu: HyvaksymisPaatosVaiheJulkaisu
-    ): Promise<HyvaksymisPaatosVaihePDF> {
+    async function generatePDFsForLanguage(kieli: KaannettavaKieli, julkaisu: T): Promise<HyvaksymisPaatosVaihePDF> {
       async function createPDFOfType(type: HyvaksymisPaatosKuulutusAsiakirjaTyyppi) {
         return createPDF(type, julkaisu, projekti, kieli, path);
       }
@@ -140,7 +128,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     }
   }
 
-  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: HyvaksymisPaatosVaiheJulkaisu): HyvaksymisPaatosVaihe {
+  getUpdatedVaiheTiedotForPeruAineistoMuokkaus(viimeisinJulkaisu: T): HyvaksymisPaatosVaihe {
     const {
       yhteystiedot: _yhteystiedot,
       aineistoMuokkaus: _aineistoMuokkaus,
@@ -166,12 +154,12 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager extends KuulutusT
     }
   }
 
-  abstract rejectJulkaisu(projekti: DBProjekti, julkaisu: HyvaksymisPaatosVaiheJulkaisu, syy: string): Promise<DBProjekti>;
+  abstract rejectJulkaisu(projekti: DBProjekti, julkaisu: T, syy: string): Promise<DBProjekti>;
 }
 
-async function createPDF(
+async function createPDF<T extends PaatosVaiheJulkaisu>(
   asiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi,
-  julkaisu: HyvaksymisPaatosVaiheJulkaisu,
+  julkaisu: T,
   projekti: DBProjekti,
   kieli: KaannettavaKieli,
   path: PathTuple

@@ -287,9 +287,8 @@ describe("jaaProjekti", () => {
         expect(j.projektiOid).to.equal(targetProjektiOid);
         expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
       });
-      // Tällä branchilla hyvaksymisPaatosVaiheJulkaisut ei vielä sisällä projektiOid:ta (lisätään HASSUYP-769:ssä)
       targetProjektiToCreate.hyvaksymisPaatosVaiheJulkaisut?.forEach((j) => {
-        expect(j).to.not.have.property("projektiOid");
+        expect(j.projektiOid).to.equal(targetProjektiOid);
         expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
       });
       // Julkaisuilla joilla ei ole projektiOid:ta ei pitäisi olla sitä

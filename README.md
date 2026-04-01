@@ -52,11 +52,13 @@ npm run deploy:app
 ### Paikallinen kehitys
 
 Ympäristömuuttujat määritellään `.env.local` ja `public/assets/__env.js` tiedostoissa paikallista kehitystä varten. Tiedostot generoidaan automaattisesti kun suoritat:
+
 - `npm run deploy:backend` - kutsuu `npm run setupenvironment` suoraan komennossa
 - `npm run deploy:frontend` - kutsuu `postdeploy:frontend` hookissa `npm run setupenvironment`
 - `npm run deploy:database` - kutsuu `postdeploy:database` hookissa `npm run setupenvironment`
 
 `setupenvironment` skripti suorittaa `deployment/bin/setupEnvironment.ts` tiedoston, joka:
+
 - Hakee arvot AWS SSM Parameter Storesta ja CloudFormation stack outputeista
 - Kirjoittaa palvelinpuolen muuttujat `.env.local` tiedostoon
 - Kirjoittaa selainpuolen julkiset muuttujat `public/assets/__env.js` tiedostoon
@@ -93,7 +95,8 @@ const MyComponent = () => {
 };
 ```
 
-**Miksi getPublicEnv()?** 
+**Miksi getPublicEnv()?**
+
 - Tarvitaan layout-komponenteissa joissa getServerSideProps ei ole käytettävissä
 - Docker-julkaisussa ympäristömuuttujat injektoidaan runtime-vaiheessa `entrypoint.sh` skriptillä `__env.js` tiedostoon
 - Mahdollistaa saman Docker-imagen käytön eri ympäristöissä ilman uudelleenrakentamista (build once, deploy many)
@@ -107,9 +110,11 @@ Kun lisäät uuden selainpuolella käytettävän ympäristömuuttujan, tee muuto
 **Huom:** Voit tutustua olemassa oleviin muuttujiin katsomalla `types/env.d.ts` (PUBLIC_ENV_KEYS) ja `deployment/lib/setupEnvironment.ts` (HassuSSMParameters) tiedostoja.
 
 1. **Lisää muuttuja AWS SSM Parameter Storeen** (jos muuttuja tulee SSM:stä):
+
    - Lisää parametri AWS-konsolissa tai CLI:llä polkuun `/<env>/UusiMuuttuja`
 
 2. **Lisää muuttuja `types/env.d.ts` tiedostoon:**
+
 ```typescript
 const PUBLIC_ENV_KEYS = [
   "VERSION",
@@ -121,13 +126,16 @@ const PUBLIC_ENV_KEYS = [
 
 3. **Lisää muuttuja `deployment/lib/setupEnvironment.ts` tiedostoon:**
    - `HassuSSMParameters` tyyppiin jos muuttuja tulee SSM Parameter Storesta:
+
 ```typescript
 export type HassuSSMParameters = {
   // ...
   UusiMuuttuja: string;
 };
 ```
-   - `getEnvironmentVariablesFromSSM()` funktioon:
+
+- `getEnvironmentVariablesFromSSM()` funktioon:
+
 ```typescript
 export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParameters) {
   return {
@@ -139,13 +147,16 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
 
 4. **Lisää muuttuja `deployment/bin/setupEnvironment.ts` tiedostoon:**
    - `env` objektiin `.env.local` tiedostoa varten:
+
 ```typescript
 let env: Record<string, string> = {
   // ...
   UUSI_MUUTTUJA: environmentVariables.UUSI_MUUTTUJA,
 };
 ```
-   - `writePublicEnvFile()` funktioon `__env.js` tiedostoa varten:
+
+- `writePublicEnvFile()` funktioon `__env.js` tiedostoa varten:
+
 ```typescript
 writePublicEnvFile({
   // ...
@@ -155,6 +166,7 @@ writePublicEnvFile({
 
 5. **Lisää muuttuja `deployment/lib/hassu-frontend.ts` tiedostoon:**
    - `containerEnv` objektiin ECS-kontin ympäristömuuttujiin:
+
 ```typescript
 const containerEnv: { [key: string]: string } = {
   // ...
@@ -164,6 +176,7 @@ const containerEnv: { [key: string]: string } = {
 
 6. **Lisää muuttuja `entrypoint.sh` tiedostoon:**
    - Docker-kontti injektoi muuttujan runtime-vaiheessa:
+
 ```bash
 cat <<EOF > /app/public/assets/__env.js
 window.__ENV = {
@@ -175,6 +188,7 @@ EOF
 ```
 
 7. **Käytä muuttujaa komponentissa:**
+
 ```typescript
 import { getPublicEnv } from "src/util/env";
 
@@ -184,6 +198,7 @@ const arvo = getPublicEnv("UUSI_MUUTTUJA");
 ### Troubleshooting
 
 **Ympäristömuuttujat eivät päivity paikallisessa kehityksessä:**
+
 1. Varmista että `npm run switchenv` osoittaa developer-tiliin
 2. Suorita `npm run setupenvironment` manuaalisesti
 3. Tarkista että muuttuja on lisätty AWS SSM Parameter Storeen
@@ -191,6 +206,7 @@ const arvo = getPublicEnv("UUSI_MUUTTUJA");
 5. Käynnistä kehityspalvelin uudelleen (`npm run dev`)
 
 **Build-aikainen virhe "getPublicEnv() called during static page generation":**
+
 - Ks. [Staattisen generoinnin ongelmat](#staattisen-generoinnin-ongelmat) -osio
 
 ### Staattisen generoinnin ongelmat
@@ -208,6 +224,7 @@ Jos käytät getPublicEnv() komponentissa joka generoidaan staattisesti build-ai
 **Ratkaisu:** Käytä jompaa kumpaa seuraavista tavoista:
 
 **Ratkaisu 1:** Aseta sivu palvelinpuolella renderöitäväksi:
+
 ```typescript
 import { GetServerSideProps } from "next";
 
@@ -217,6 +234,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 ```
 
 **Ratkaisu 2:** Lataa komponentti dynaamisesti ilman SSR:ää:
+
 ```typescript
 import dynamic from "next/dynamic";
 
@@ -226,7 +244,6 @@ const Breadcrumbs = dynamic(() => import("./Breadcrumbs"), {
 ```
 
 **Huom:** Dynaamiset sivut kuten `pages/suunnitelma/[oid]/*.tsx` renderöidään aina ajon aikana, joten ne eivät tarvitse näitä ratkaisuja.
-
 
 ## Riippuvuudet
 
