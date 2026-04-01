@@ -363,7 +363,7 @@ export class HassuFrontendStack extends Stack {
         ENVIRONMENT: Config.env,
       });
       return new cloudfront.experimental.EdgeFunction(this, "frontendRequestFunction", {
-        runtime: Runtime.NODEJS_20_X,
+        runtime: Runtime.NODEJS_22_X,
         functionName: "frontendRequestFunction" + env,
         code: Code.fromInline(functionCode),
         handler: "index.handler",
@@ -407,7 +407,7 @@ export class HassuFrontendStack extends Stack {
   private createSuomifiRequestFunction(env: string, role: Role): EdgeFunction {
     const sourceCode = fs.readFileSync(`${__dirname}/lambda/suomifiHeader.js`).toString("utf-8");
     return new cloudfront.experimental.EdgeFunction(this, "suomifiRequestFunction", {
-      runtime: Runtime.NODEJS_20_X,
+      runtime: Runtime.NODEJS_22_X,
       functionName: "suomifiRequestFunction" + env,
       code: Code.fromInline(sourceCode),
       handler: "index.handler",
@@ -443,7 +443,7 @@ export class HassuFrontendStack extends Stack {
     const functionCode = fs.readFileSync(`${__dirname}/lambda/tiedostotOriginResponse.js`).toString("utf-8");
 
     return new cloudfront.experimental.EdgeFunction(this, "tiedostotOriginResponseFunction", {
-      runtime: Runtime.NODEJS_20_X,
+      runtime: Runtime.NODEJS_22_X,
       functionName: "tiedostotOriginResponseFunction" + env,
       code: Code.fromInline(functionCode),
       handler: "index.handler",

@@ -1,5 +1,5 @@
 import * as API from "hassu-common/graphql/apiModel";
-import { DBProjekti, HyvaksymisPaatosVaiheJulkaisu, Hyvaksymispaatos } from "../../../../database/model";
+import { DBProjekti, PaatosVaiheJulkaisu, Hyvaksymispaatos } from "../../../../database/model";
 import { PathTuple } from "../../../../files/ProjektiPath";
 import { HyvaksymisPaatosVaiheScheduleManager } from "../../../../sqsEvents/projektiScheduleManager";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
@@ -23,9 +23,9 @@ import { fileService } from "../../../../files/fileService";
 
 export async function adaptHyvaksymisPaatosVaiheJulkinen(
   dbProjekti: DBProjekti,
-  paatosVaiheJulkaisut: HyvaksymisPaatosVaiheJulkaisu[] | undefined | null,
+  paatosVaiheJulkaisut: PaatosVaiheJulkaisu[] | undefined | null,
   hyvaksymispaatos: Hyvaksymispaatos | undefined | null,
-  getPathCallback: (julkaisu: HyvaksymisPaatosVaiheJulkaisu) => PathTuple,
+  getPathCallback: (julkaisu: PaatosVaiheJulkaisu) => PathTuple,
   paatosVaiheAineisto: HyvaksymisPaatosVaiheScheduleManager,
   paatosTyyppi: PaatosTyyppi,
   kieli?: KaannettavaKieli
@@ -126,7 +126,7 @@ export async function adaptHyvaksymisPaatosVaiheJulkinen(
 
 function adaptHyvaksymispaatosPDFPaths(
   projektiPath: PathTuple,
-  hyvaksymispaatos: HyvaksymisPaatosVaiheJulkaisu
+  hyvaksymispaatos: PaatosVaiheJulkaisu
 ): API.KuulutusPDFJulkinen | undefined {
   if (!hyvaksymispaatos.hyvaksymisPaatosVaihePDFt) {
     return undefined;

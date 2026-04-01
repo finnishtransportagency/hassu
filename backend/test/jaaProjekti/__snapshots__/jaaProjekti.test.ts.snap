@@ -189,6 +189,7 @@ Object {
     "projektinNimiVieraskielella": "Marikas testprojekt",
     "toissijainenKieli": "RUOTSI",
   },
+  "lyhytOsoite": "ab12",
   "nahtavillaoloVaihe": Object {
     "hankkeenKuvaus": Object {
       "SUOMI": "Lorem Ipsum nahtavillaoloVaihe",

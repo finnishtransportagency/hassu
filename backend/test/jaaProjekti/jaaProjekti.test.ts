@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
@@ -40,6 +41,7 @@ import { parameters } from "../../src/aws/parameters";
 import { DBMuistuttaja, muistuttajaDatabase } from "../../src/database/muistuttajaDatabase";
 import { feedbackDatabase } from "../../src/database/palauteDatabase";
 import { uuid } from "hassu-common/util/uuid";
+import { lyhytOsoiteDatabase } from "../../src/database/lyhytOsoiteDatabase";
 
 describe("jaaProjekti", () => {
   const userFixture = new UserFixture(userService);
@@ -148,6 +150,7 @@ describe("jaaProjekti", () => {
         .withArgs(targetProjektiOid)
         .returns(Promise.resolve(undefined));
       sinon.stub(lisaAineistoService, "generateSalt").returns("foo-salt");
+      sinon.stub(lyhytOsoiteDatabase, "generateAndSetLyhytOsoite").resolves("ab12");
       targetVelho = { ...cloneDeep(srcProjekti.velho), nimi: "Toinen-oid projektin nimi" };
       targetProjektiFromVelho = {
         oid: targetProjektiOid,
@@ -270,6 +273,28 @@ describe("jaaProjekti", () => {
       expect(deleteObjectCommands[0].args[0].input).to.eql({
         Bucket: "hassu-localstack-yllapito",
         Key: "yllapito/tiedostot/projekti/toinen-oid/karttarajaus/karttarajaus.geojson",
+      });
+    });
+
+    it("should update projektiOid on julkaisut that have it", async () => {
+      srcProjekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.HYVAKSYMISPAATOS, VaiheenTila.HYVAKSYTTY);
+      (projektiDatabase.loadProjektiByOid as sinon.SinonStub).withArgs(srcProjekti.oid).returns(Promise.resolve(srcProjekti));
+      await expect(jaaProjekti({ oid: srcProjekti.oid, versio: srcProjekti.versio, targetOid: targetProjektiOid })).to.eventually.be
+        .fulfilled;
+      const targetProjektiToCreate = createProjektiStub.firstCall.args[0];
+      // Julkaisut joilla on projektiOid pitää päivittää targetOid:ksi
+      targetProjektiToCreate.nahtavillaoloVaiheJulkaisut?.forEach((j) => {
+        expect(j.projektiOid).to.equal(targetProjektiOid);
+        expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
+      });
+      targetProjektiToCreate.hyvaksymisPaatosVaiheJulkaisut?.forEach((j) => {
+        expect(j.projektiOid).to.equal(targetProjektiOid);
+        expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
+      });
+      // Julkaisuilla joilla ei ole projektiOid:ta ei pitäisi olla sitä
+      targetProjektiToCreate.aloitusKuulutusJulkaisut?.forEach((j) => {
+        expect(j).to.not.have.property("projektiOid");
+        expect(j.kopioituProjektista).to.equal(srcProjekti.oid);
       });
     });
 

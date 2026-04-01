@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { UpdateCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { IllegalArgumentError, SimultaneousUpdateError } from "hassu-common/error";
@@ -17,6 +18,7 @@ import { haeVelhoSynkronoinninMuutoksetTallennukseen } from "./projekti/projekti
 import { lisaAineistoService } from "./tiedostot/lisaAineistoService";
 import { requireAdmin } from "./user";
 import { velho as velhoClient } from "./velho/velhoClient";
+import { lyhytOsoiteDatabase } from "./database/lyhytOsoiteDatabase";
 
 export async function jaaProjekti(input: Variables) {
   requireAdmin();
@@ -41,6 +43,9 @@ export async function jaaProjekti(input: Variables) {
   JULKAISU_KEYS.forEach((julkaisuKey) =>
     clonedProjekti[julkaisuKey]?.forEach((julkaisu) => {
       julkaisu.kopioituProjektista = input.oid;
+      if ("projektiOid" in julkaisu) {
+        julkaisu.projektiOid = input.targetOid;
+      }
     })
   );
 
@@ -57,13 +62,16 @@ export async function jaaProjekti(input: Variables) {
     velho: _velho,
     kayttoOikeudet: _kayttooikeudet,
     asianhallinta: _asianhallinta,
+    lyhytOsoite: _lyhytOsoite,
     ...kopioitavatKentat
   } = clonedProjekti;
+  const targetLyhytOsoite = await lyhytOsoiteDatabase.generateAndSetLyhytOsoite(input.targetOid);
   const targetProjektiToCreate: DBProjekti = {
     ...kopioitavatKentat,
     ...synkronoinnistaTallennettavatTiedot,
     projektinJakautuminen: { jaettuProjektista: input.oid },
     salt: lisaAineistoService.generateSalt(),
+    lyhytOsoite: targetLyhytOsoite,
   };
 
   await updateJaettuProjekteihin(input);

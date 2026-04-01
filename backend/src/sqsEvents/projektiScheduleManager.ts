@@ -3,7 +3,7 @@ import {
   AloitusKuulutusJulkaisu,
   DBProjekti,
   HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu,
+  PaatosVaiheJulkaisu,
   NahtavillaoloVaihe,
   NahtavillaoloVaiheJulkaisu,
   VuorovaikutusKierros,
@@ -251,11 +251,8 @@ export class NahtavillaoloVaiheScheduleManager extends VaiheScheduleManager<Naht
   }
 }
 
-abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheScheduleManager<
-  HyvaksymisPaatosVaihe,
-  HyvaksymisPaatosVaiheJulkaisu
-> {
-  isAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu): boolean {
+abstract class AbstractHyvaksymisPaatosVaiheScheduleManager extends VaiheScheduleManager<HyvaksymisPaatosVaihe, PaatosVaiheJulkaisu> {
+  isAineistoVisible(julkaisu: PaatosVaiheJulkaisu): boolean {
     return isVaiheAineistoVisible(julkaisu);
   }
 }
@@ -295,7 +292,7 @@ export const JATKOPAATOS_VAIHE_EPAAKTIVOI = JATKOPAATOS1_VAIHE + EPAAKTIVOI;
 export const JATKOPAATOS2_VAIHE_EPAAKTIVOI = JATKOPAATOS2_VAIHE + EPAAKTIVOI;
 
 function getPublishExpireScheduleForVaiheJulkaisut(
-  julkaisut: Pick<NahtavillaoloVaiheJulkaisu & HyvaksymisPaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
+  julkaisut: Pick<NahtavillaoloVaiheJulkaisu & PaatosVaiheJulkaisu, "kuulutusPaiva" | "kuulutusVaihePaattyyPaiva">[] | undefined,
   description: string,
   vaihe: "NAHTAVILLAOLO" | "HYVAKSYMISPAATOSVAIHE" | "JATKOPAATOS1VAIHE" | "JATKOPAATOS2VAIHE",
   epaAktiivinenDuration?: DateAddTuple
@@ -337,7 +334,7 @@ function getPublishExpireScheduleForVaiheJulkaisut(
   );
 }
 
-function isVaiheAineistoVisible(julkaisu: HyvaksymisPaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu) {
+function isVaiheAineistoVisible(julkaisu: PaatosVaiheJulkaisu | NahtavillaoloVaiheJulkaisu) {
   return (
     !!julkaisu &&
     !!julkaisu.kuulutusPaiva &&
