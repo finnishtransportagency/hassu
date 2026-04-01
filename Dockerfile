@@ -2,9 +2,14 @@ FROM public.ecr.aws/lambda/nodejs:22 AS nodesource
 
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023
 
+# Version should match the repo's version in general
 ENV NPM_VERSION=10.9.4
+# https://github.com/aws-amplify/amplify-cli/releases
 ENV AMPLIFY_CLI_VERSION=12.14.4
+# https://github.com/docker/compose/releases
 ENV DOCKER_COMPOSE_VERSION=v5.1.1
+# https://raw.githubusercontent.com/aws/aws-cli/v2/CHANGELOG.rst
+ENV AWS_CLI_VERSION=2.34.21
 
 ENV PATH="$PATH:/var/lang/bin"
 COPY --from=nodesource /var/lang /var/lang
@@ -29,9 +34,9 @@ RUN dnf swap -y curl-minimal curl && \
 
 # Asenna AWS CLI v2
 RUN if [ "$(uname -m)" == "x86_64" ]; then \
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip"; \
     else \
-        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"; \
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-${AWS_CLI_VERSION}.zip" -o "awscliv2.zip"; \
     fi && \
     unzip awscliv2.zip && \
     ./aws/install && \
