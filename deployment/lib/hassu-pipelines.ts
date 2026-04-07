@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import * as cdk from "aws-cdk-lib";
-import { aws_codebuild, aws_ecr, RemovalPolicy, SecretValue, Stack } from "aws-cdk-lib";
+import { aws_codebuild, aws_codeconnections, aws_ecr, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
 import { Construct } from "constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
@@ -115,9 +115,18 @@ export class HassuPipelineStack extends Stack {
     const config = await Config.instance(this);
     const isDevAccount = Config.isDevAccount();
 
-    // GitHub creds only once per account
-    new codebuild.GitHubSourceCredentials(this, "HassuCodeBuildGitHubCreds", {
-      accessToken: SecretValue.secretsManager("github-token"),
+    // GitHub App connection (replaces PAT-based GitHubSourceCredentials)
+    const connection = new aws_codeconnections.CfnConnection(this, "HassuGitHubConnection", {
+      connectionName: "hassu-github",
+      providerType: "GitHub",
+      tags: Config.tagsArray.map(({ key, value }) => ({ key, value })),
+    });
+
+    // Register the connection as account-level GitHub credential for CodeBuild
+    new aws_codebuild.CfnSourceCredential(this, "HassuCodeBuildGitHubCreds", {
+      authType: "CODECONNECTIONS",
+      serverType: "GITHUB",
+      token: connection.attrConnectionArn,
     });
 
     let robotTestArtifactsBucket: IArtifacts | undefined;
@@ -301,6 +310,8 @@ export class HassuPipelineStack extends Stack {
             "codeartifact:GetRepositoryEndpoint",
             "sts:GetServiceBearerToken",
             "dynamodb:DescribeTable",
+            "codeconnections:GetConnectionToken",
+            "codeconnections:GetConnection",
           ],
           resources: ["*"],
         })
@@ -358,10 +369,11 @@ export class HassuPipelineStack extends Stack {
         computeType: ComputeType.MEDIUM,
       },
     });
+
     imageBuilderProject.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:*", "ecr:*", "ssm:*", "codebuild:StartBuild"],
+        actions: ["s3:*", "ecr:*", "ssm:*", "codebuild:StartBuild", "codeconnections:GetConnectionToken", "codeconnections:GetConnection"],
         resources: ["*"],
       })
     );
