@@ -30,6 +30,7 @@ export enum EnvName {
 
 export enum SSMParameterName {
   "HassuAlarmsSNSArn" = "/outputs/HassuAlarmsSNSArn",
+  "GitHubConnectionArn" = "/outputs/GitHubConnectionArn",
 }
 
 const envConfigs: Record<EnvName, Env> = {

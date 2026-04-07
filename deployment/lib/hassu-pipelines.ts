@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import * as cdk from "aws-cdk-lib";
-import { aws_codebuild, aws_codeconnections, aws_ecr, RemovalPolicy, SecretValue, Stack } from "aws-cdk-lib";
+import { aws_codebuild, aws_ecr, RemovalPolicy, SecretValue, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
 import { Construct } from "constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
@@ -115,30 +115,22 @@ export class HassuPipelineStack extends Stack {
     const config = await Config.instance(this);
     const isDevAccount = Config.isDevAccount();
 
-    // GitHub App connection for CodeBuild.
-    // The connection will be in PENDING status until activated in the AWS Console
-    // with a GitHub org admin (Developer Tools → Connections → hassu-github → Update pending connection).
-    // @ts-ignore connection is used in Phase 2 (commented out below)
-    const connection = new aws_codeconnections.CfnConnection(this, "HassuGitHubConnection", {
-      connectionName: "hassu-github",
-      providerType: "GitHub",
-      tags: Config.tagsArray.map(({ key, value }) => ({ key, value })),
-    });
-
-    // Phase 1 (current): PAT-based credential, keeps builds working while the connection is being activated.
+    // GitHub creds only once per account
     new codebuild.GitHubSourceCredentials(this, "HassuCodeBuildGitHubCreds", {
       accessToken: SecretValue.secretsManager("github-token"),
     });
 
-    // Phase 2: Once the connection status is AVAILABLE, uncomment the block below,
-    // remove the GitHubSourceCredentials above, remove SecretValue from imports,
+    // Phase 2: Once the finnishtransportagency-github connection (in hassu-account stack) is AVAILABLE,
+    // replace the GitHubSourceCredentials above with the block below,
+    // remove SecretValue from imports,
     // update buildspecs to use getGitHubAppToken.sh (see deployment/bin/getGitHubAppToken.sh),
     // and delete the github-token secret from Secrets Manager.
     //
+    // const connectionArn = ssm.StringParameter.valueForStringParameter(this, SSMParameterName.GitHubConnectionArn);
     // new aws_codebuild.CfnSourceCredential(this, "HassuCodeBuildGitHubCreds", {
     //   authType: "CODECONNECTIONS",
     //   serverType: "GITHUB",
-    //   token: connection.attrConnectionArn,
+    //   token: connectionArn,
     // });
 
     let robotTestArtifactsBucket: IArtifacts | undefined;
