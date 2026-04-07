@@ -11,7 +11,7 @@
     "test": "npm run setup && cross-env TS_NODE_PROJECT=\"./tsconfig.json\" mocha -r ts-node/register \"./**/*.test.ts\""
   },
   "dependencies": {
-    "@types/node": "^22",
+    "@types/node": "22.19.17",
     "aws-xray-sdk-core": "^3.10.1",
     "cross-env": "^7.0.3",
     "hassu": "file:..",
