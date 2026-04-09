@@ -1,7 +1,7 @@
 // Contains code generated or recommended by Amazon Q
 import * as cdk from "aws-cdk-lib";
 import { aws_codebuild, aws_ecr, RemovalPolicy, Stack } from "aws-cdk-lib";
-import { Config } from "./config";
+import { Config, SSMParameterName } from "./config";
 import { Construct } from "constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
 import {
@@ -19,6 +19,7 @@ import { BuildEnvironmentVariable } from "aws-cdk-lib/aws-codebuild/lib/project"
 import { BlockPublicAccess, Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
 import { OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 // These should correspond to CfnOutputs produced by this stack
 export type PipelineStackOutputs = {
@@ -298,8 +299,6 @@ export class HassuPipelineStack extends Stack {
             "codeartifact:GetRepositoryEndpoint",
             "sts:GetServiceBearerToken",
             "dynamodb:DescribeTable",
-            "codeconnections:GetConnectionToken",
-            "codeconnections:GetConnection",
           ],
           resources: ["*"],
         })
@@ -311,6 +310,7 @@ export class HassuPipelineStack extends Stack {
           resources: ["arn:aws:iam::*:role/aws-service-role/*"],
         })
       );
+      this.grantCodeConnectionAccess(buildProject);
       const nahtavillaoloVaiheJulkaisuTable = Table.fromTableName(
         this,
         `NahtavillaoloVaiheJulkaisuTable-${name}`,
@@ -361,10 +361,21 @@ export class HassuPipelineStack extends Stack {
     imageBuilderProject.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:*", "ecr:*", "ssm:*", "codebuild:StartBuild", "codeconnections:GetConnectionToken", "codeconnections:GetConnection"],
+        actions: ["s3:*", "ecr:*", "ssm:*", "codebuild:StartBuild"],
         resources: ["*"],
       })
     );
+    this.grantCodeConnectionAccess(imageBuilderProject);
     return imageBuilderProject;
+  }
+
+  private grantCodeConnectionAccess(project: codebuild.Project) {
+    project.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["codeconnections:GetConnectionToken", "codeconnections:GetConnection"],
+        resources: [StringParameter.valueForStringParameter(this, SSMParameterName.GitHubConnectionArn)],
+      })
+    );
   }
 }
