@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import * as cdk from "aws-cdk-lib";
-import { aws_codebuild, aws_ecr, RemovalPolicy, SecretValue, Stack } from "aws-cdk-lib";
+import { aws_codebuild, aws_ecr, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
 import { Construct } from "constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
@@ -115,23 +115,7 @@ export class HassuPipelineStack extends Stack {
     const config = await Config.instance(this);
     const isDevAccount = Config.isDevAccount();
 
-    // GitHub creds only once per account
-    new codebuild.GitHubSourceCredentials(this, "HassuCodeBuildGitHubCreds", {
-      accessToken: SecretValue.secretsManager("github-token"),
-    });
-
-    // Phase 2: Once the finnishtransportagency-github connection (in hassu-account stack) is AVAILABLE,
-    // replace the GitHubSourceCredentials above with the block below,
-    // remove SecretValue from imports,
-    // update buildspecs to use getGitHubAppToken.sh (see deployment/bin/getGitHubAppToken.sh),
-    // and delete the github-token secret from Secrets Manager.
-    //
-    // const connectionArn = ssm.StringParameter.valueForStringParameter(this, SSMParameterName.GitHubConnectionArn);
-    // new aws_codebuild.CfnSourceCredential(this, "HassuCodeBuildGitHubCreds", {
-    //   authType: "CODECONNECTIONS",
-    //   serverType: "GITHUB",
-    //   token: connectionArn,
-    // });
+    // Account-level GitHub credential is managed in hassu-account stack in configureGitHubConnection()
 
     let robotTestArtifactsBucket: IArtifacts | undefined;
     if (isDevAccount) {
