@@ -13,8 +13,7 @@ import {
   PagedMigrationRunPlanResponse,
 } from "../../../deployment/bin/db-migration-tool/types";
 
-// TODO: Skipped until mockClient isolation issue with projektiDatabase.test.ts is resolved
-describe.skip("sendWithRetry", () => {
+describe("sendWithRetry", () => {
   let clock: sinon.SinonFakeTimers;
 
   beforeEach(() => {
@@ -77,8 +76,7 @@ describe.skip("sendWithRetry", () => {
   });
 });
 
-// TODO: Skipped until mockClient isolation issue with projektiDatabase.test.ts is resolved
-describe.skip("migrateTable", () => {
+describe("migrateTable", () => {
   let acquireLockStub: sinon.SinonStub;
   let releaseLockStub: sinon.SinonStub;
   let getVersionStub: sinon.SinonStub;
