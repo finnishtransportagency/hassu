@@ -6,17 +6,17 @@ import { DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-
 import { SchemaMetaTable } from "../../../deployment/bin/db-migration-tool/SchemaMetaTable";
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 
-// aws-sdk-client-mock@4.1.0 has type incompatibility with @smithy/types@4.x — use `as any`
-const ddbMock = mockClient(DynamoDBDocumentClient as any);
-
 // TODO: Skipped until mockClient isolation issue with projektiDatabase.test.ts is resolved
 describe.skip("SchemaMetaTable", () => {
   const environment = "test";
   const tableName = `SchemaMeta-${environment}`;
   let schemaMeta: SchemaMetaTable;
+  // aws-sdk-client-mock@4.1.0 has type incompatibility with @smithy/types@4.x — use `as any`
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let ddbMock: any;
 
   beforeEach(() => {
-    ddbMock.reset();
+    ddbMock = mockClient(DynamoDBDocumentClient as any);
     schemaMeta = new SchemaMetaTable(environment);
   });
 
