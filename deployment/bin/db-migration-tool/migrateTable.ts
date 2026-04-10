@@ -9,7 +9,7 @@ const limit = pLimit(5);
 const MAX_RETRIES = 8;
 const BASE_DELAY_MS = 200;
 
-async function sendWithRetry<T>(sendFn: () => Promise<T>): Promise<T> {
+export async function sendWithRetry<T>(sendFn: () => Promise<T>): Promise<T> {
   for (let attempt = 0; ; attempt++) {
     try {
       return await sendFn();
