@@ -118,7 +118,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                   />
                   <RadioButton
                     id="tiedotaKiinteistonomistajiaEi"
-                    label="Kiinteistönomistajille ja muistuttajille ei lähetetä tietoa uudesta kuulutuksesta."
+                    label="Kiinteistönomistajille ja muistuttajille ei lähetetä tietoa uudesta kuulutuksesta"
                     onChange={(value) => {
                       field.onChange(value.target.value === "off");
                     }}
