@@ -9,17 +9,20 @@
         "-y",
         "@modelcontextprotocol/server-filesystem",
         ".",
-        "../hassu-asianhallinta-main"
+        "../hassu-asianhallinta",
+        "../hassu-suomifi"
       ]
     },
     "aws-docs": {
       "command": "uvx",
+      "UV_NATIVE_TLS": "true",
       "args": [
         "awslabs.aws-documentation-mcp-server@latest"
       ]
     },
     "cdk": {
       "command": "uvx",
+      "UV_NATIVE_TLS": "true",
       "args": [
         "awslabs.cdk-mcp-server@latest"
       ],
@@ -31,11 +34,13 @@
     },
     "aws-api": {
       "command": "uvx",
+      "UV_NATIVE_TLS": "true",
       "args": [
         "awslabs.aws-api-mcp-server@latest"
       ],
       "env": {
-        "AWS_REGION": "eu-west-1"
+        "AWS_REGION": "eu-west-1",
+        "AWS_PROFILE": "hassudev"
       },
       "disabled": false,
       "autoApprove": []
