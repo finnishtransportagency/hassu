@@ -5,28 +5,20 @@
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        ".",
-        "../hassu-asianhallinta",
-        "../hassu-suomifi"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", ".", "../hassu-asianhallinta", "../hassu-suomifi"]
     },
     "aws-docs": {
       "command": "uvx",
-      "UV_NATIVE_TLS": "true",
-      "args": [
-        "awslabs.aws-documentation-mcp-server@latest"
-      ]
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "UV_NATIVE_TLS": "true"
+      }
     },
     "cdk": {
       "command": "uvx",
-      "UV_NATIVE_TLS": "true",
-      "args": [
-        "awslabs.cdk-mcp-server@latest"
-      ],
+      "args": ["awslabs.cdk-mcp-server@latest"],
       "env": {
+        "UV_NATIVE_TLS": "true",
         "FASTMCP_LOG_LEVEL": "ERROR"
       },
       "timeout": 60000,
@@ -34,11 +26,9 @@
     },
     "aws-api": {
       "command": "uvx",
-      "UV_NATIVE_TLS": "true",
-      "args": [
-        "awslabs.aws-api-mcp-server@latest"
-      ],
+      "args": ["awslabs.aws-api-mcp-server@latest"],
       "env": {
+        "UV_NATIVE_TLS": "true",
         "AWS_REGION": "eu-west-1",
         "AWS_PROFILE": "hassudev"
       },
@@ -46,26 +36,9 @@
       "autoApprove": []
     }
   },
-  "tools": [
-    "fs_read",
-    "execute_bash",
-    "fs_write",
-    "report_issue",
-    "use_aws",
-    "@filesystem",
-    "@aws-docs",
-    "@cdk",
-    "@aws",
-    "@aws-api"
-  ],
+  "tools": ["fs_read", "execute_bash", "fs_write", "report_issue", "use_aws", "@filesystem", "@aws-docs", "@cdk", "@aws", "@aws-api"],
   "toolAliases": {},
-  "allowedTools": [
-    "fs_read",
-    "report_issue",
-    "use_aws",
-    "execute_bash",
-    "fs_write"
-  ],
+  "allowedTools": ["fs_read", "report_issue", "use_aws", "execute_bash", "fs_write"],
   "toolsSettings": {
     "use_aws": {
       "preset": "readOnly"
@@ -74,11 +47,7 @@
       "preset": "readOnly"
     }
   },
-  "resources": [
-    "file://AmazonQ.md",
-    "file://README.md",
-    "file://.amazonq/rules/**/*.md"
-  ],
+  "resources": ["file://AmazonQ.md", "file://README.md", "file://.amazonq/rules/**/*.md"],
   "hooks": {
     "agentSpawn": [],
     "userPromptSubmit": []
