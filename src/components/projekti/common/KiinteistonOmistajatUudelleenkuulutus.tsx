@@ -45,9 +45,9 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
   const { control } = useFormContext<FormFields>();
   if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     const pvm = dayjs(uudelleenKuulutus.alkuperainenKuulutusPaiva, ISO_DATE_FORMAT).endOf("date");
-    const inPast = pvm.isBefore(nyt());
-    const isToday = pvm.isSame(nyt(), "date");
-    const showRadioButtons = isToday || inPast;
+    const kuulutuspaivaInPast = pvm.isBefore(nyt());
+    const kuulutuspaivaIsToday = pvm.isSame(nyt(), "date");
+    const showRadioButtons = kuulutuspaivaIsToday || kuulutuspaivaInPast;
     return (
       <SectionContent>
         <H4 className="font-bold">Kiinteistönomistajat</H4>
@@ -94,7 +94,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
     );
   } else if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
     const pvm = dayjs(uudelleenKuulutus.alkuperainenKuulutusPaiva, ISO_DATE_FORMAT).endOf("date");
-    const isToday = pvm.isSame(nyt(), "date");
+    const kuulutuspaivaIsToday = pvm.isSame(nyt(), "date");
     return (
       <SectionContent>
         <H4 className="font-bold">Kiinteistönomistajat ja muistuttajat</H4>
@@ -103,7 +103,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
           control={control}
           render={({ field }) => (
             <>
-              {isToday && (
+              {kuulutuspaivaIsToday && (
                 <FormGroupWithBoldLabel
                   label="Kiinteistönomistajien ja muistuttajien tiedottaminen uudelleenkuulutuksen yhteydessä"
                   flexDirection="col"
