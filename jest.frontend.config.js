@@ -20,6 +20,7 @@ module.exports = {
     "^common/(.*)$": "<rootDir>/common/$1",
     "^components/(.*)$": "<rootDir>/src/components/$1",
     "^src/(.*)$": "<rootDir>/src/$1",
+    "^backend/(.*)$": "<rootDir>/backend/$1",
   },
   testMatch: ["<rootDir>/src/__tests__/**/*.[jt]s?(x)", "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
   testEnvironment: "jsdom",
