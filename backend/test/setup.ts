@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import AWSXRay from "aws-xray-sdk-core";
 import mocha from "mocha";
 
@@ -7,7 +8,7 @@ import { addSerializer, jestSnapshotPlugin } from "mocha-chai-jest-snapshot";
 
 import chai_as_promised from "chai-as-promised";
 // Serializer for Dayjs
-import { isDayjs } from "dayjs";
+import dayjs from "dayjs";
 
 import dotenv from "dotenv";
 
@@ -15,7 +16,7 @@ chai.use(chai_as_promised);
 chai.use(jestSnapshotPlugin());
 
 addSerializer({
-  test: (val) => isDayjs(val),
+  test: (val) => dayjs.isDayjs(val),
   print: (val) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
