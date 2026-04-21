@@ -21,7 +21,17 @@ phases:
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
       # DEBUG - remove after testing
-      - HELPER_RESULT=$( (printf 'host=github.com\nprotocol=https\n\n') | /codebuild/readonly/bin/git-credential-helper get 2>&1 ) || true && echo "HELPER_DIRECT $(echo $HELPER_RESULT | sed 's/password=.*/password=REDACTED/')" && git config credential.helper '/codebuild/readonly/bin/git-credential-helper' && GIT_FILL=$( (printf 'host=github.com\nprotocol=https\n') | git credential fill 2>&1 ) || true && echo "GIT_FILL $(echo $GIT_FILL | sed 's/password=.*/password=REDACTED/')" && echo "AUTH_TOKEN_LEN $(echo -n $CODEBUILD_AUTH_TOKEN | wc -c)"
+      - echo "=== credential helpers ==="
+      - file /codebuild/readonly/git-credential-helper /codebuild/readonly/bin/git-credential-helper /codebuild/bootstrap/git-credential-helper 2>&1 || true
+      - echo "=== readonly/git-credential-helper ===" && cat /codebuild/readonly/git-credential-helper 2>/dev/null || true
+      - echo "=== readonly/bin/git-credential-helper ===" && cat /codebuild/readonly/bin/git-credential-helper 2>/dev/null || true
+      - echo "=== bootstrap/git-credential-helper ===" && cat /codebuild/bootstrap/git-credential-helper 2>/dev/null || true
+      - echo "=== try using helper directly ==="
+      - (echo "host=github.com"; echo "protocol=https"; echo "") | /codebuild/readonly/bin/git-credential-helper get 2>&1 | sed 's/password=.*/password=REDACTED/' || true
+      - echo "=== try with git config ==="
+      - git config credential.helper '/codebuild/readonly/bin/git-credential-helper' && (echo "host=github.com"; echo "protocol=https") | git credential fill 2>&1 | sed 's/password=.*/password=REDACTED/' || true
+      - echo "=== CODEBUILD_AUTH_TOKEN length ===" && echo "${CODEBUILD_AUTH_TOKEN}" | wc -c
+      - echo "=== END DEBUG ==="
       - eval $(./deployment/bin/getGitHubAppToken.sh) || echo "Token extraction failed, continuing for debug"
       - ./deployment/lib/buildspec/commonInstallCommands.sh
   build:
