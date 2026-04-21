@@ -9,7 +9,7 @@ ENV AMPLIFY_CLI_VERSION=12.14.4
 # https://github.com/docker/compose/releases
 ENV DOCKER_COMPOSE_VERSION=v5.1.3
 # https://raw.githubusercontent.com/aws/aws-cli/v2/CHANGELOG.rst
-ENV AWS_CLI_VERSION=2.34.32
+ENV AWS_CLI_VERSION=2.34.33
 
 ENV PATH="$PATH:/var/lang/bin"
 COPY --from=nodesource /var/lang /var/lang
