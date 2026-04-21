@@ -8,6 +8,8 @@ env:
     ROCKET_CHAT_USER_ID: /RocketChatUserId
     SONARQUBE_HOST_URL: /SonarQubeHostURL
     SONARQUBE_ACCESS_TOKEN: /SonarQubeAccessToken
+  secrets-manager:
+    GITHUB_TOKEN: github-token
 
 phases:
   install:
@@ -20,7 +22,6 @@ phases:
       - mv /packages/tools/velho/.gradle /tools/velho/
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
-      - eval $(./deployment/bin/getGitHubAppToken.sh)
       - ./deployment/lib/buildspec/commonInstallCommands.sh
   build:
     commands:
