@@ -6,8 +6,6 @@ env:
   parameter-store:
     ROCKET_CHAT_TOKEN: /RocketChatToken
     ROCKET_CHAT_USER_ID: /RocketChatUserId
-  secrets-manager:
-    GITHUB_TOKEN: github-token
 
 phases:
   install:
@@ -20,6 +18,7 @@ phases:
       - mv /packages/tools/velho/.gradle /tools/velho/
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
+      - eval $(./deployment/bin/getGitHubAppToken.sh)
       - ./deployment/bin/checkoutBranch.sh
       - ./deployment/lib/buildspec/commonInstallCommands.sh
   build:
