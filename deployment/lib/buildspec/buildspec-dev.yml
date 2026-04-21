@@ -20,7 +20,17 @@ phases:
       - mv /packages/tools/velho/.gradle /tools/velho/
       - mv /packages/tools/velho/buildSrc/.gradle /tools/velho/buildSrc/
 
-      - eval $(./deployment/bin/getGitHubAppToken.sh)
+      # DEBUG - remove after testing
+      - echo "=== Remote URL ===" && git remote get-url origin 2>&1 || true
+      - echo "=== .netrc ===" && cat "$HOME/.netrc" 2>/dev/null || echo "no .netrc"
+      - echo "=== .gitconfig ===" && cat "$HOME/.gitconfig" 2>/dev/null || echo "no .gitconfig"
+      - echo "=== git credential fill ===" && (echo "host=github.com"; echo "protocol=https") | git credential fill 2>&1 | sed 's/password=.*/password=REDACTED/' || true
+      - echo "=== GIT_ASKPASS ===" && echo "${GIT_ASKPASS:-unset}" && ([ -n "$GIT_ASKPASS" ] && file "$GIT_ASKPASS" && cat "$GIT_ASKPASS" 2>/dev/null || true)
+      - echo "=== CODEBUILD env ===" && env | grep -iE "CODEBUILD_SOURCE|AUTH|TOKEN|CREDENTIAL|CODECONNECTION" | sed 's/=.*TOKEN.*/=REDACTED/' | sort || true
+      - echo "=== git config ===" && git config --list 2>/dev/null | grep -iE "credential|helper|askpass" || echo "no credential config"
+      - echo "=== /codebuild ===" && find /codebuild -name "*credential*" -o -name "*token*" -o -name "*gitconfig*" -o -name "*netrc*" 2>/dev/null || echo "nothing found"
+      - echo "=== END DEBUG ==="
+      - eval $(./deployment/bin/getGitHubAppToken.sh) || echo "Token extraction failed, continuing for debug"
       - ./deployment/lib/buildspec/commonInstallCommands.sh
   build:
     commands:
