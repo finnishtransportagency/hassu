@@ -120,6 +120,19 @@ export class HassuPipelineStack extends Stack {
       accessToken: SecretValue.secretsManager("github-token"),
     });
 
+    // Phase 2: Once the finnishtransportagency-github connection (in hassu-account stack) is AVAILABLE,
+    // replace the GitHubSourceCredentials above with the block below,
+    // remove SecretValue from imports,
+    // update buildspecs to use getGitHubAppToken.sh (see deployment/bin/getGitHubAppToken.sh),
+    // and delete the github-token secret from Secrets Manager.
+    //
+    // const connectionArn = ssm.StringParameter.valueForStringParameter(this, SSMParameterName.GitHubConnectionArn);
+    // new aws_codebuild.CfnSourceCredential(this, "HassuCodeBuildGitHubCreds", {
+    //   authType: "CODECONNECTIONS",
+    //   serverType: "GITHUB",
+    //   token: connectionArn,
+    // });
+
     let robotTestArtifactsBucket: IArtifacts | undefined;
     if (isDevAccount) {
       // Common bucket for test reports
@@ -301,6 +314,8 @@ export class HassuPipelineStack extends Stack {
             "codeartifact:GetRepositoryEndpoint",
             "sts:GetServiceBearerToken",
             "dynamodb:DescribeTable",
+            "codeconnections:GetConnectionToken",
+            "codeconnections:GetConnection",
           ],
           resources: ["*"],
         })
@@ -358,10 +373,11 @@ export class HassuPipelineStack extends Stack {
         computeType: ComputeType.MEDIUM,
       },
     });
+
     imageBuilderProject.addToRolePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        actions: ["s3:*", "ecr:*", "ssm:*", "codebuild:StartBuild"],
+        actions: ["s3:*", "ecr:*", "ssm:*", "codebuild:StartBuild", "codeconnections:GetConnectionToken", "codeconnections:GetConnection"],
         resources: ["*"],
       })
     );

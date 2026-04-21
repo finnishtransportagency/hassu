@@ -1,5 +1,6 @@
+// Contains code generated or recommended by Amazon Q
 import { Construct } from "constructs";
-import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Aws, aws_codeconnections, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
@@ -45,6 +46,7 @@ export class HassuAccountStack extends Stack {
     const config = await Config.instance(this);
     this.configureOpenSearch();
     this.configureBuildImageECR();
+    this.configureGitHubConnection();
     this.configureSNSForAlarms();
     const vpcName = await config.getParameterNow("HassuVpcName");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
@@ -192,6 +194,25 @@ export class HassuAccountStack extends Stack {
     new StringParameter(this, "SNSForAlarmsArn", {
       parameterName: SSMParameterName.HassuAlarmsSNSArn,
       stringValue: topic.topicArn,
+    });
+  }
+
+  private configureGitHubConnection() {
+    // GitHub App connection for CodeBuild, shared across all repos in this account.
+    // After deploying, activate in AWS Console:
+    // CodePipeline → Settings → Connections → finnishtransportagency-github → Update pending connection
+    // Requires a GitHub org admin to approve the AWS Connector app installation.
+    const connection = new aws_codeconnections.CfnConnection(this, "GitHubConnection", {
+      connectionName: "finnishtransportagency-github",
+      providerType: "GitHub",
+      tags: Config.tagsArray.map(({ key, value }) => ({ key, value })),
+    });
+
+    new StringParameter(this, "GitHubConnectionArn", {
+      parameterName: SSMParameterName.GitHubConnectionArn,
+      stringValue: connection.attrConnectionArn,
+      description:
+        "ARN of the finnishtransportagency-github CodeConnections (GitHub App) connection, used by CodeBuild and CodePipeline across all repos",
     });
   }
 
