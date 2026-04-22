@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import fetch from "cross-fetch";
 import { assertIsDefined } from "../util/assertions";
 import { config } from "../config";
@@ -5,6 +6,7 @@ import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { log } from "../logger";
 import { SuomiFiConfig } from "../suomifi/viranomaispalvelutwsinterface/suomifi";
+import { SuomiFiConfig as SuomiFiRestConfig } from "../suomifiRest/suomifi";
 import { PrhConfig } from "../mml/prh/prh";
 
 interface ParameterStoreResponse {
@@ -162,14 +164,22 @@ class Parameters {
     return this.getParamOrVariable("outputs/MuistuttajaIndexerSQSUrl");
   }
 
+  async getSuomiFiClientType(): Promise<"SOAP" | "REST"> {
+    const value = await this.getParameter("SuomiFiClientType");
+    if (value === "REST" || value === "SOAP") {
+      return value;
+    }
+    return "SOAP";
+  }
+
   async getSuomiFiConfig() {
     const param = await this.getRequiredAccountParameter("SuomiFiConfig");
-    const cfg: Partial<SuomiFiConfig> = {};
-    param.split("\n").forEach((e) => {
-      const v = e.split("=");
-      cfg[v[0] as keyof SuomiFiConfig] = v[1].trim();
-    });
-    return cfg as SuomiFiConfig;
+    return parseKeyValueConfig<SuomiFiConfig>(param);
+  }
+
+  async getSuomiFiRestConfig() {
+    const param = await this.getRequiredAccountParameter("SuomiFiRestConfig");
+    return parseKeyValueConfig<SuomiFiRestConfig>(param);
   }
 
   async getSuomiFiCertificate() {
@@ -210,12 +220,7 @@ class Parameters {
 
   async getPrhConfig() {
     const param = await this.getRequiredParameter("PrhConfig");
-    const cfg: Partial<PrhConfig> = {};
-    param.split("\n").forEach((e) => {
-      const v = e.split("=");
-      cfg[v[0] as keyof PrhConfig] = v[1].trim();
-    });
-    return cfg as PrhConfig;
+    return parseKeyValueConfig<PrhConfig>(param);
   }
 
   private async getRequiredAccountParameter(paramName: string): Promise<string> {
@@ -241,6 +246,15 @@ class Parameters {
     }
     return this.getParameter(ssmPath);
   }
+}
+
+function parseKeyValueConfig<T extends Record<string, string>>(param: string): T {
+  const cfg: Partial<T> = {};
+  param.split("\n").forEach((e) => {
+    const v = e.split("=");
+    cfg[v[0] as keyof T] = v[1].trim() as T[keyof T];
+  });
+  return cfg as T;
 }
 
 export const parameters = new Parameters();
