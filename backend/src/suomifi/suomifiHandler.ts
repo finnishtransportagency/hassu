@@ -1,7 +1,9 @@
+// Contains code generated or recommended by Amazon Q
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log } from "../logger";
-import { PdfViesti, SuomiFiClient, Viesti, getSuomiFiClient } from "./viranomaispalvelutwsinterface/suomifi";
+import { PdfViesti, Viesti, getSuomiFiClient as getSoapClient } from "./viranomaispalvelutwsinterface/suomifi";
+import { SuomiFiClient, getSuomiFiClient as getRestClient } from "../suomifiRest/suomifi";
 import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
@@ -54,9 +56,14 @@ type Kohde = {
 };
 
 let mockSuomiFiClient: SuomiFiClient | undefined;
+let cachedClient: SuomiFiClient | undefined;
 
 export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
+}
+
+export function resetCachedClient() {
+  cachedClient = undefined;
 }
 
 export function parseLaskutus(tunniste?: string) {
@@ -74,31 +81,62 @@ export function parseLaskutus(tunniste?: string) {
   return {};
 }
 
-async function getClient(): Promise<SuomiFiClient> {
+async function createSoapClient(): Promise<SuomiFiClient> {
+  const cfg = await parameters.getSuomiFiConfig();
+  if (!cfg) {
+    throw new Error("SuomiFiConfig -parametria ei löydy");
+  }
+  return getSoapClient({
+    apiKey: cfg.apikey,
+    endpoint: cfg.endpoint,
+    palveluTunnus: cfg.palvelutunnus,
+    viranomaisTunnus: cfg.viranomaistunnus,
+    laskutusTunniste: parseLaskutus(cfg.laskutustunniste),
+    laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
+    yhteysHenkilo: cfg.yhteyshenkilo,
+    publicCertificate: await parameters.getSuomiFiCertificate(),
+    privateKey: await parameters.getSuomiFiPrivateKey(),
+  });
+}
+
+async function createRestClient(): Promise<SuomiFiClient> {
+  const restCfg = await parameters.getSuomiFiRestConfig();
+  if (!restCfg) {
+    throw new Error("SuomiFiRestConfig -parametria ei löydy");
+  }
+  return getRestClient({
+    apiKey: restCfg.apikey,
+    endpoint: restCfg.endpoint,
+    palveluTunnus: restCfg.palvelutunnus,
+    viranomaisTunnus: restCfg.viranomaistunnus,
+    laskutusTunniste: parseLaskutus(restCfg.laskutustunniste),
+    laskutusSalasana: parseLaskutus(restCfg.laskutussalasana),
+    yhteysHenkilo: restCfg.yhteyshenkilo,
+  });
+}
+
+export async function getClient(): Promise<SuomiFiClient> {
   if (config.isInTest) {
     if (!mockSuomiFiClient) {
       throw new Error("Suomi.fi clientia ei ole asetettu");
     }
     return mockSuomiFiClient;
   }
-  // luodaan client aina uudestaan kun muuten viestin allekirjoituksen verifiointi epäonnistuu
-  const now = Date.now();
-  const cfg = await parameters.getSuomiFiConfig();
-  try {
-    return await getSuomiFiClient({
-      apiKey: cfg.apikey,
-      endpoint: cfg.endpoint,
-      palveluTunnus: cfg.palvelutunnus,
-      viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: parseLaskutus(cfg.laskutustunniste),
-      laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
-      publicCertificate: await parameters.getSuomiFiCertificate(),
-      privateKey: await parameters.getSuomiFiPrivateKey(),
-      yhteysHenkilo: cfg.yhteyshenkilo,
-    });
-  } finally {
-    log.info(`Suomi.fi client alustusaika: ${Date.now() - now} ms`);
+  const clientType = await parameters.getSuomiFiClientType();
+  if (clientType === "REST") {
+    if (cachedClient) {
+      return cachedClient;
+    }
+    const now = Date.now();
+    cachedClient = await createRestClient();
+    log.info(`Suomi.fi REST client alustusaika: ${Date.now() - now} ms`);
+    return cachedClient;
   }
+  // SOAP: luodaan client aina uudestaan kun muuten viestin allekirjoituksen verifiointi epäonnistuu
+  const now = Date.now();
+  const client = await createSoapClient();
+  log.info(`Suomi.fi SOAP client alustusaika: ${Date.now() - now} ms`);
+  return client;
 }
 
 function createMuistutus(muistuttaja: DBMuistuttaja): Muistutus {
@@ -424,7 +462,7 @@ function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProj
   if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
     let sisalto = `Hei,
 
-Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamisesta sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
 ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
@@ -567,6 +605,7 @@ async function lahetaPdfViesti({
   }
 }
 
+// REST-rajapinta tukee pelkän paperikirjeen lähettämistä pelkällä osoitteella ilman hetua/y-tunnusta
 function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
   return (
     (!!kohde.henkilotunnus || !!kohde.ytunnus) &&
