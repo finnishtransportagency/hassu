@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import {
-  createRestClient,
+  createHttpClient,
   SuomiFiRestClient,
   MultichannelMessageRequest,
   ElectronicMessageRequest,
@@ -102,7 +102,7 @@ export type SuomiFiClient = {
 };
 
 export async function getSuomiFiClient(options: Options): Promise<SuomiFiClient> {
-  const client = createRestClient(options.endpoint, options.apiKey);
+  const client = createHttpClient(options.endpoint, options.apiKey);
 
   return {
     rajapinnanTila: async () => {

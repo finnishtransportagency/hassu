@@ -137,7 +137,7 @@ async function postMessageWithConflictHandling(
   }
 }
 
-export function createRestClient(endpoint: string, apiKey: string): SuomiFiRestClient {
+export function createHttpClient(endpoint: string, apiKey: string): SuomiFiRestClient {
   const http: AxiosInstance = axios.create({
     baseURL: endpoint,
     headers: {
