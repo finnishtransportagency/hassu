@@ -6,7 +6,7 @@ import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
 import { defaultProvider } from "@aws-sdk/credential-provider-node";
 import { log } from "../logger";
 import { SuomiFiConfig } from "../suomifi/viranomaispalvelutwsinterface/suomifi";
-import { SuomiFiConfig as SuomiFiRestConfig } from "../suomifiRest/suomifi";
+import { SuomiFiConfig as SuomiFiRestConfig } from "../suomifi/suomifiRest/suomifi";
 import { PrhConfig } from "../mml/prh/prh";
 
 interface ParameterStoreResponse {
