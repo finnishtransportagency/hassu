@@ -1,6 +1,8 @@
 // Contains code generated or recommended by Amazon Q
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance } from "axios";
+import axiosRetry from "axios-retry";
 import FormData from "form-data";
+import { log } from "../../logger";
 
 export interface SuomiFiRestClient {
   postMailboxesActive(endUsers: { id: string }[]): Promise<MailboxesActiveResponse>;
@@ -93,6 +95,48 @@ export interface MultichannelMessageRequest {
   };
 }
 
+interface MessageAlreadyExistsResponse {
+  messageId: number;
+  reason: string;
+}
+
+function logAxiosError(context: string, error: AxiosError): void {
+  log.error(`Suomi.fi REST ${context} epäonnistui`, {
+    status: error.response?.status,
+    traceId: error.response?.headers?.["traceid"],
+    data: error.response?.data,
+  });
+}
+
+function handle409AsSuccess(error: AxiosError): MessageResponse {
+  const data = error.response?.data as MessageAlreadyExistsResponse | undefined;
+  if (data?.messageId !== undefined) {
+    log.info("Suomi.fi REST 409: viesti jo lähetetty, käsitellään onnistuneena", { messageId: data.messageId });
+    const result: MessageResponse = { messageId: data.messageId };
+    return result;
+  }
+  throw error;
+}
+
+async function postMessageWithConflictHandling(
+  http: AxiosInstance,
+  url: string,
+  message: unknown
+): Promise<MessageResponse> {
+  try {
+    const response = await http.post<MessageResponse>(url, message);
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.status === 409) {
+      return handle409AsSuccess(error);
+    }
+    if (error instanceof AxiosError) {
+      logAxiosError(`POST ${url}`, error);
+    }
+    throw error;
+  }
+}
+
 export function createRestClient(endpoint: string, apiKey: string): SuomiFiRestClient {
   const http: AxiosInstance = axios.create({
     baseURL: endpoint,
@@ -101,30 +145,50 @@ export function createRestClient(endpoint: string, apiKey: string): SuomiFiRestC
     },
   });
 
+  axiosRetry(http, {
+    retries: 3,
+    retryCondition: (error) => (error.response?.status ?? 0) >= 500,
+    retryDelay: (retryCount) => Math.pow(2, retryCount) * 1000,
+    onRetry: (retryCount, error) => {
+      log.warn(`Suomi.fi REST retry ${retryCount}/3`, { status: error.response?.status, url: error.config?.url });
+    },
+  });
+
   return {
     async postMailboxesActive(endUsers) {
-      const response = await http.post<MailboxesActiveResponse>("/v1/mailboxes/active", { endUsers });
-      return response.data;
+      try {
+        const response = await http.post<MailboxesActiveResponse>("/v1/mailboxes/active", { endUsers });
+        return response.data;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          logAxiosError("postMailboxesActive", error);
+        }
+        throw error;
+      }
     },
     async uploadAttachment(file, filename) {
-      const form = new FormData();
-      form.append("file", file, { filename, contentType: "application/pdf" });
-      const response = await http.post<UploadAttachmentResponse>("/v2/attachments", form, {
-        headers: form.getHeaders(),
-      });
-      return response.data;
+      try {
+        const form = new FormData();
+        form.append("file", file, { filename, contentType: "application/pdf" });
+        const response = await http.post<UploadAttachmentResponse>("/v2/attachments", form, {
+          headers: form.getHeaders(),
+        });
+        return response.data;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          logAxiosError("uploadAttachment", error);
+        }
+        throw error;
+      }
     },
     async postMessage(message) {
-      const response = await http.post<MessageResponse>("/v2/messages", message);
-      return response.data;
+      return postMessageWithConflictHandling(http, "/v2/messages", message);
     },
     async postElectronicMessage(message) {
-      const response = await http.post<MessageResponse>("/v2/messages/electronic", message);
-      return response.data;
+      return postMessageWithConflictHandling(http, "/v2/messages/electronic", message);
     },
     async postPaperMailMessage(message) {
-      const response = await http.post<PaperMailResponse>("/v2/paper-mail-without-id", message);
-      return response.data;
+      return postMessageWithConflictHandling(http, "/v2/paper-mail-without-id", message);
     },
   };
 }

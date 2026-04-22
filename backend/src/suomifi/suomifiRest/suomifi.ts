@@ -117,21 +117,37 @@ export async function getSuomiFiClient(options: Options): Promise<SuomiFiClient>
 }
 
 async function haeAsiakkaita(client: SuomiFiRestClient, tunnus: string, tunnusTyyppi: "SSN" | "CRN"): Promise<HaeAsiakkaitaResponse> {
-  const response = await client.postMailboxesActive([{ id: tunnus }]);
-  const isActive = response.endUsersWithActiveMailbox.some((u) => u.id === tunnus);
-  return {
-    HaeAsiakkaitaResult: {
-      TilaKoodi: { TilaKoodi: 0 },
-      Asiakkaat: {
-        Asiakas: [
-          {
-            Tila: isActive ? 300 : 310,
-            attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: tunnusTyyppi },
-          },
-        ],
+  try {
+    const response = await client.postMailboxesActive([{ id: tunnus }]);
+    const isActive = response.endUsersWithActiveMailbox.some((u) => u.id === tunnus);
+    return {
+      HaeAsiakkaitaResult: {
+        TilaKoodi: { TilaKoodi: 0 },
+        Asiakkaat: {
+          Asiakas: [
+            {
+              Tila: isActive ? 300 : 310,
+              attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: tunnusTyyppi },
+            },
+          ],
+        },
       },
-    },
-  };
+    };
+  } catch (e) {
+    return {
+      HaeAsiakkaitaResult: {
+        TilaKoodi: { TilaKoodi: -1 },
+        Asiakkaat: {
+          Asiakas: [
+            {
+              Tila: 0,
+              attributes: { AsiakasTunnus: tunnus, TunnusTyyppi: tunnusTyyppi },
+            },
+          ],
+        },
+      },
+    };
+  }
 }
 
 async function lahetaInfoViesti(client: SuomiFiRestClient, options: Options, viesti: Viesti): Promise<LisaaKohteitaResponse> {
@@ -258,19 +274,31 @@ function buildPaperMail(
 async function lahetaViesti(client: SuomiFiRestClient, options: Options, viesti: PdfViesti): Promise<LahetaViestiResponse> {
   const tunnus = viesti.hetu ?? viesti.ytunnus;
 
-  const fileBuffer = await toBuffer(viesti.tiedosto.sisalto);
-  const uploadResponse = await client.uploadAttachment(fileBuffer, viesti.tiedosto.nimi);
-
   const externalId = `VLS-${uuid.v4()}`;
   const printingAndEnvelopingService = getLaskutus(viesti, options);
   if (!printingAndEnvelopingService) {
     throw new Error("Laskutustunniste puuttuu");
   }
 
+  let uploadResponse;
+  try {
+    const fileBuffer = await toBuffer(viesti.tiedosto.sisalto);
+    uploadResponse = await client.uploadAttachment(fileBuffer, viesti.tiedosto.nimi);
+  } catch (e) {
+    const errorMessage = e instanceof Error ? e.message : "Tuntematon virhe";
+    return {
+      LahetaViestiResult: {
+        TilaKoodi: {
+          TilaKoodi: -1,
+          TilaKoodiKuvaus: `Liitteen lataus epäonnistui: ${errorMessage}`,
+        },
+      },
+    };
+  }
+
   const paperMail = buildPaperMail(viesti, uploadResponse.attachmentId, printingAndEnvelopingService);
 
   if (!tunnus) {
-    // Ei hetua/y-tunnusta — lähetetään pelkkä paperikirje osoitteella
     const message: PaperMailOnlyMessageRequest = {
       externalId,
       sender: { serviceId: options.palveluTunnus },
