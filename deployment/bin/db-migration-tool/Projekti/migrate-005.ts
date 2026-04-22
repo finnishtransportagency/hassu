@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { PutCommandInput, ScanCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
 import { PagedMigrationRunPlan } from "../types";
@@ -7,7 +8,10 @@ import {
   JatkoPaatos1VaiheJulkaisu,
   JatkoPaatos2VaiheJulkaisu,
 } from "../../../../backend/src/database/model";
-import { createJulkaisuSortKey } from "../../../../backend/src/database/julkaisuItemKeys";
+
+function createJulkaisuSortKey<P extends string>(prefix: P, id: number): `${P}${string}` {
+  return `${prefix}${String(id).padStart(3, "0")}`;
+}
 
 const migrate005: PagedMigrationRunPlan = async (options) => {
   const page = await ddb.send(
