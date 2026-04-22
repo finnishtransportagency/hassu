@@ -3,7 +3,7 @@ import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log } from "../logger";
 import { PdfViesti, Viesti, getSuomiFiClient as getSoapClient } from "./viranomaispalvelutwsinterface/suomifi";
-import { SuomiFiClient, getSuomiFiClient as getRestClient } from "../suomifiRest/suomifi";
+import { SuomiFiClient, getSuomiFiClient as getRestClient } from "./suomifiRest/suomifi";
 import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
