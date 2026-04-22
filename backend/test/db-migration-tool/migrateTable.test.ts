@@ -115,7 +115,10 @@ describe("migrateTable", () => {
 
     const cfg: TableConfig = {
       name: "TestTable",
-      migrations: [{ versionId: 3, plan }, { versionId: 5, plan }],
+      migrations: [
+        { versionId: 3, plan },
+        { versionId: 5, plan },
+      ],
     };
 
     await migrateTable(cfg, makeOptions());
@@ -127,8 +130,14 @@ describe("migrateTable", () => {
   it("should run pending migrations in order", async () => {
     getVersionStub.resolves(1);
 
-    const plan2 = makePlan({ updateInput: [{ TableName: "T", Key: { id: "a" }, UpdateExpression: "SET x = :v" }], lastEvaluatedKey: undefined });
-    const plan3 = makePlan({ updateInput: [{ TableName: "T", Key: { id: "b" }, UpdateExpression: "SET x = :v" }], lastEvaluatedKey: undefined });
+    const plan2 = makePlan({
+      updateInput: [{ TableName: "T", Key: { id: "a" }, UpdateExpression: "SET x = :v" }],
+      lastEvaluatedKey: undefined,
+    });
+    const plan3 = makePlan({
+      updateInput: [{ TableName: "T", Key: { id: "b" }, UpdateExpression: "SET x = :v" }],
+      lastEvaluatedKey: undefined,
+    });
 
     const cfg: TableConfig = {
       name: "TestTable",
@@ -148,12 +157,15 @@ describe("migrateTable", () => {
   it("should handle pagination across multiple pages", async () => {
     getVersionStub.resolves(0);
 
-    const plan: PagedMigrationRunPlan = sinon.stub()
-      .onFirstCall().resolves({
+    const plan: PagedMigrationRunPlan = sinon
+      .stub()
+      .onFirstCall()
+      .resolves({
         updateInput: [{ TableName: "T", Key: { id: "1" }, UpdateExpression: "SET x = :v" }],
         lastEvaluatedKey: { id: "1" },
       })
-      .onSecondCall().resolves({
+      .onSecondCall()
+      .resolves({
         updateInput: [{ TableName: "T", Key: { id: "2" }, UpdateExpression: "SET x = :v" }],
         lastEvaluatedKey: undefined,
       });
@@ -171,12 +183,15 @@ describe("migrateTable", () => {
   it("should continue to next page when a page has 0 writes", async () => {
     getVersionStub.resolves(0);
 
-    const plan: PagedMigrationRunPlan = sinon.stub()
-      .onFirstCall().resolves({
+    const plan: PagedMigrationRunPlan = sinon
+      .stub()
+      .onFirstCall()
+      .resolves({
         updateInput: [],
         lastEvaluatedKey: { id: "cursor" },
       })
-      .onSecondCall().resolves({
+      .onSecondCall()
+      .resolves({
         updateInput: [{ TableName: "T", Key: { id: "1" }, UpdateExpression: "SET x = :v" }],
         lastEvaluatedKey: undefined,
       });
@@ -229,7 +244,10 @@ describe("migrateTable", () => {
 
     const cfg: TableConfig = {
       name: "TestTable",
-      migrations: [{ versionId: 2, plan }, { versionId: 3, plan }],
+      migrations: [
+        { versionId: 2, plan },
+        { versionId: 3, plan },
+      ],
     };
 
     await migrateTable(cfg, makeDryRunOptions({ forcedTableVersions: { TestTable: 2 } }));
