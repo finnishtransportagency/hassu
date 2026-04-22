@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import HassuDialog from "@components/HassuDialog";
 import { DialogActions, DialogContent, DialogProps } from "@mui/material";
@@ -66,6 +67,8 @@ export const UudelleenkuulutaModal: FunctionComponent<DialogProps & Uudelleenkuu
           } catch (error) {
             log.log("Uudelleenkuulutus Error", error);
             showErrorMessage("Kuulutuksen avaaminen uudelleenkuulutettavaksi epäonnistui");
+            // Ladataan projekti uudelleen, koska backend on saattanut jo päivittää versiota.
+            await reloadProjekti();
           }
           closeDialog(event);
         })()

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section";
 import { DialogActions, DialogContent, Stack } from "@mui/material";
@@ -127,7 +128,10 @@ export default function AineistoSivunPainikkeet({
           showSuccessMessage("Aineistojen muokkaustila suljettu");
           await reloadProjekti();
           close();
-        } catch {}
+        } catch {
+          // Ladataan projekti uudelleen, koska backend on saattanut jo päivittää versiota.
+          await reloadProjekti();
+        }
       })()
     );
   }, [withLoadingSpinner, projekti.oid, api, siirtymaTyyppi, showSuccessMessage, reloadProjekti, close]);
@@ -177,6 +181,8 @@ export default function AineistoSivunPainikkeet({
               showSuccessMessage("Aineistot lähetetty hyväksyttäväksi");
             } catch (e) {
               log.error(e);
+              // Ladataan projekti uudelleen, koska backend on saattanut jo päivittää versiota.
+              await reloadProjekti();
             }
           };
           try {
@@ -208,6 +214,8 @@ export default function AineistoSivunPainikkeet({
             await sendForApproval();
           } catch (e) {
             log.error(e);
+            // Ladataan projekti uudelleen, koska tallennus on saattanut onnistua ja kasvattaa versiota.
+            await reloadProjekti();
           }
         })()
       ),
