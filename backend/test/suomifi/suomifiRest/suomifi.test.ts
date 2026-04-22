@@ -2,9 +2,9 @@
 import { assert, expect } from "chai";
 import * as sinon from "sinon";
 import { Readable } from "stream";
-import { SuomiFiRestClient } from "../../src/suomifi/suomifiRest/client";
-import * as clientModule from "../../src/suomifi/suomifiRest/client";
-import { getSuomiFiClient, Options, PdfViesti, Viesti } from "../../src/suomifi/suomifiRest/suomifi";
+import { SuomiFiRestClient } from "../../../src/suomifi/suomifiRest/client";
+import * as clientModule from "../../../src/suomifi/suomifiRest/client";
+import { getSuomiFiClient, Options, PdfViesti, Viesti } from "../../../src/suomifi/suomifiRest/suomifi";
 
 function createMockRestClient(): sinon.SinonStubbedInstance<SuomiFiRestClient> {
   return {
@@ -46,7 +46,7 @@ describe("suomifiRest/suomifi", () => {
 
   beforeEach(() => {
     mockClient = createMockRestClient();
-    sinon.stub(clientModule, "createRestClient").returns(mockClient);
+    sinon.stub(clientModule, "createHttpClient").returns(mockClient);
   });
 
   afterEach(() => {
