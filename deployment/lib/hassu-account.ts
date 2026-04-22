@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import { Construct } from "constructs";
-import { Aws, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Aws, aws_codebuild, aws_codeconnections, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
@@ -47,6 +47,7 @@ export class HassuAccountStack extends Stack {
     const config = await Config.instance(this);
     this.configureOpenSearch();
     this.configureBuildImageECR();
+    this.configureGitHubConnection();
     this.configureSNSForAlarms();
     const vpcName = await config.getParameterNow("HassuVpcName");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
@@ -194,6 +195,34 @@ export class HassuAccountStack extends Stack {
     new StringParameter(this, "SNSForAlarmsArn", {
       parameterName: SSMParameterName.HassuAlarmsSNSArn,
       stringValue: topic.topicArn,
+    });
+  }
+
+  private configureGitHubConnection() {
+    // GitHub App connection for CodeBuild, shared across all repos in this account.
+    // This is already done but in case it need to be done again then
+    // After deploying, activate in AWS Console:
+    // CodePipeline → Settings → Connections → finnishtransportagency-github → Update pending connection
+    // Requires a GitHub org admin to approve the AWS Connector app installation.
+    const connection = new aws_codeconnections.CfnConnection(this, "GitHubConnection", {
+      connectionName: "finnishtransportagency-github",
+      providerType: "GitHub",
+      tags: Config.tagsArray.map(({ key, value }) => ({ key, value })),
+    });
+
+    // hassu-suomifi repo's pipeline needs the ARN
+    new StringParameter(this, "GitHubConnectionArn", {
+      parameterName: SSMParameterName.GitHubConnectionArn,
+      stringValue: connection.attrConnectionArn,
+      description:
+        "ARN of the finnishtransportagency-github CodeConnections (GitHub App) connection, used by CodeBuild and CodePipeline across all repos",
+    });
+
+    // Account-level GitHub credential for CodeBuild — all projects using codebuild.Source.gitHub() use this automatically
+    new aws_codebuild.CfnSourceCredential(this, "GitHubCodeBuildCredential", {
+      authType: "CODECONNECTIONS",
+      serverType: "GITHUB",
+      token: connection.attrConnectionArn,
     });
   }
 
