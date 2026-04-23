@@ -577,6 +577,16 @@ function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
   );
 }
 
+// TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+// function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
+//   return (
+//     (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) &&
+//     !!kohde.jakeluosoite &&
+//     !!kohde.paikkakunta &&
+//     !!kohde.postinumero
+//   );
+// }
+
 function isMuistuttujanTiedotOk(kohde: DBMuistuttaja): boolean {
   return (
     !!kohde.henkilotunnus && !!kohde.etunimi && !!kohde.sukunimi && !!kohde.lahiosoite && !!kohde.postitoimipaikka && !!kohde.postinumero
@@ -707,6 +717,9 @@ async function handleOmistaja({
         hetu: omistaja.henkilotunnus,
         ytunnus: omistaja.ytunnus,
         maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
+        // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+        // hetu: omistaja.henkilotunnus ?? undefined,
+        // ytunnus: omistaja.ytunnus ?? undefined,
       },
       omistaja: true,
       tyyppi,
@@ -810,8 +823,19 @@ async function paivitaMapKiinteistonOmistajilla(projektiFromDB: DBProjekti, tied
         });
         return;
       }
+      // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+      // Ilman tunnusta olevat omistajat eivät voi olla duplikaatteja, joten käytetään id:tä avaimena
+      // if (!tunnus) {
+      //   log.info("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta, lähetetään pelkkä paperikirje", {
+      //     id: omistaja.id,
+      //   });
+      // }
       const tiedotettavanRivit =
         tiedotettavaMap.get(tunnus) ?? tiedotettavaMap.set(tunnus, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(tunnus)!;
+      // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+      // const avain = tunnus ?? omistaja.id;
+      // const tiedotettavanRivit =
+      //   tiedotettavaMap.get(avain) ?? tiedotettavaMap.set(avain, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(avain)!;
       tiedotettavanRivit.kiinteistonOmistajaIds.push(omistaja.id);
     });
 }
