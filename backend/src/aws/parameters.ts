@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import fetch from "cross-fetch";
 import { assertIsDefined } from "../util/assertions";
 import { config } from "../config";
@@ -24,7 +25,17 @@ interface ParameterData {
   Version: number;
 }
 
+const PARAMETER_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minuuttia
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 100;
+
+interface CachedParameter {
+  value: string | undefined;
+  timestamp: number;
+}
+
 class Parameters {
+  private cache = new Map<string, CachedParameter>();
   private async getParameterForEnv(paramName: string, envName?: string): Promise<string | undefined> {
     let name;
     if (envName) {
@@ -46,28 +57,51 @@ class Parameters {
       }
     } else {
       assertIsDefined(process.env.AWS_SESSION_TOKEN, "process.env.AWS_SESSION_TOKEN puuttuu!");
-      const response = await fetch(
-        `http://localhost:2773/systemsmanager/parameters/get/?name=${encodeURIComponent(name)}&withDecryption=true`,
-        {
-          headers: {
-            "X-Aws-Parameters-Secrets-Token": process.env.AWS_SESSION_TOKEN,
-          },
+      const url = `http://localhost:2773/systemsmanager/parameters/get/?name=${encodeURIComponent(name)}&withDecryption=true`;
+      const headers = { "X-Aws-Parameters-Secrets-Token": process.env.AWS_SESSION_TOKEN };
+      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          const response = await fetch(url, { headers });
+          if (response.ok) {
+            const data = (await response.json()) as ParameterStoreResponse;
+            return data.Parameter.Value;
+          } else if (!envName) {
+            log.error("getParameter(" + name + ") failed", { response });
+          } else {
+            log.info("getParameter(" + name + ") failed", { response });
+          }
+          break;
+        } catch (e) {
+          if (attempt < MAX_RETRIES) {
+            log.warn(`SSM Lambda Extension -kutsu epäonnistui (yritys ${attempt + 1}/${MAX_RETRIES + 1}), yritetään uudelleen`, {
+              name,
+              error: e instanceof Error ? e.message : String(e),
+            });
+            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * (attempt + 1)));
+          } else {
+            log.error(`SSM Lambda Extension -kutsu epäonnistui kaikkien yritysten jälkeen`, {
+              name,
+              error: e instanceof Error ? e.message : String(e),
+            });
+            throw e;
+          }
         }
-      );
-      if (response.ok) {
-        const data = (await response.json()) as ParameterStoreResponse;
-        return data.Parameter.Value;
-      } else if (!envName) {
-        log.error("getParameter(" + name + ") failed", { response });
-      } else {
-        // ei lokiteta virhettä kun ympäristökohtaista parametria ei välttämättä löydy
-        log.info("getParameter(" + name + ") failed", { response });
       }
     }
     return undefined;
   }
 
   async getParameter(paramName: string): Promise<string | undefined> {
+    const cached = this.cache.get(paramName);
+    if (cached && Date.now() - cached.timestamp < PARAMETER_CACHE_TTL_MS) {
+      return cached.value;
+    }
+    const value = await this.getParameterUncached(paramName);
+    this.cache.set(paramName, { value, timestamp: Date.now() });
+    return value;
+  }
+
+  private async getParameterUncached(paramName: string): Promise<string | undefined> {
     let value: string | undefined;
     if (process.env.ENVIRONMENT) {
       value = await this.getParameterForEnv(paramName, process.env.ENVIRONMENT);

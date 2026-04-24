@@ -1,10 +1,29 @@
+// Contains code generated or recommended by Amazon Q
 import pLimit from "p-limit";
 import { ScanCommandInput, ScanCommandOutput, UpdateCommandInput, UpdateCommand, PutCommandInput, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "./ddb";
 import { SchemaMetaTable } from "./SchemaMetaTable";
 import { TableConfig, MigrateAllTablesOptions, DryRunMigrateAllTablesOptions, PagedMigrationRunPlanResponse } from "./types";
 
-const limit = pLimit(10);
+const limit = pLimit(5);
+const MAX_RETRIES = 8;
+const BASE_DELAY_MS = 200;
+
+export async function sendWithRetry<T>(sendFn: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await sendFn();
+    } catch (err: unknown) {
+      const isThrottling = err instanceof Error && err.name === "ThrottlingException";
+      if (!isThrottling || attempt >= MAX_RETRIES) {
+        throw err;
+      }
+      const delay = BASE_DELAY_MS * Math.pow(2, attempt) + Math.random() * 100;
+      console.warn(`⏳ Throttled (attempt ${attempt + 1}/${MAX_RETRIES + 1}), retrying in ${Math.round(delay)}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+}
 
 export async function migrateTable(
   cfg: TableConfig,
@@ -81,8 +100,8 @@ export async function migrateTable(
 
             if (!dryRun) {
               await Promise.all([
-                ...updateInput.map((item) => limit(() => ddb.send(new UpdateCommand(item)))),
-                ...putInput.map((item) => limit(() => ddb.send(new PutCommand(item)))),
+                ...updateInput.map((item) => limit(() => sendWithRetry(() => ddb.send(new UpdateCommand(item))))),
+                ...putInput.map((item) => limit(() => sendWithRetry(() => ddb.send(new PutCommand(item))))),
               ]);
             }
 
