@@ -1,5 +1,4 @@
-// Contains code generated or recommended by Amazon Q
-import writeXlsxFile, { Columns, Row, SheetData } from "write-excel-file/node";
+import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
 import {
@@ -11,6 +10,7 @@ import {
   Vaihe,
 } from "hassu-common/graphql/apiModel";
 import { omistajaDatabase } from "../database/omistajaDatabase";
+import { Columns, Row_, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { auditLog, log } from "../logger";
 import { fileService } from "../files/fileService";
@@ -59,11 +59,11 @@ function getKiinteistonomistajaColumnsWithLahetysaika(): Columns {
   return getKiinteistonomistajaColumns().concat({ width: 25 });
 }
 
-function lisaaMuistuttajaRiviWithLahetysaika(rivi: Rivi): Row {
+function lisaaMuistuttajaRiviWithLahetysaika(rivi: Rivi): Row_<ImageData> {
   return lisaaMuistuttajaRivi(rivi).concat({ value: rivi.lahetysaika });
 }
 
-function lisaaMuistuttajaRivi(rivi: Rivi): Row {
+function lisaaMuistuttajaRivi(rivi: Rivi): Row_<ImageData> {
   auditLog.info("Lisätään muistuttajan tiedot exceliin", { muistuttajaId: rivi.id });
   return [
     {
@@ -90,11 +90,11 @@ function lisaaMuistuttajaRivi(rivi: Rivi): Row {
   ];
 }
 
-function lisaaRiviWithLahetysaika(rivi: Rivi): Row {
+function lisaaRiviWithLahetysaika(rivi: Rivi): Row_<ImageData> {
   return lisaaRivi(rivi).concat({ value: rivi.lahetysaika });
 }
 
-function lisaaRivi(rivi: Rivi): Row {
+function lisaaRivi(rivi: Rivi): Row_<ImageData> {
   auditLog.info("Lisätään omistajan tiedot exceliin", { omistajaId: rivi.id });
   return [
     {

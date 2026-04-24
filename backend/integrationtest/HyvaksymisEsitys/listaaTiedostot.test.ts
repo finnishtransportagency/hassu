@@ -67,7 +67,6 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     // Before eachissä haetaan projektin tiedot, mitä varten tarvitaan getProjektiStatusta
     sinon.stub(GetProjektiStatus, "getProjektiStatus").resolves(API.Status.NAHTAVILLAOLO);
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
-    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(async () => {

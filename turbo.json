@@ -1,7 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "tasks": {
+  "pipeline": {
     "lint:backend": {
       "inputs": ["backend/**/*.ts"],
       "dependsOn": ["lint:common"]
