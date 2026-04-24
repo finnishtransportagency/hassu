@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import dayjs from "dayjs";
 import { today } from "./dateUtils";
 import { getPublicEnv } from "../../src/util/env";
@@ -15,7 +16,7 @@ export const isEvkAktivoitu = (): boolean => {
         const unescaped = envParam.replace(/\\"/g, '"');
         const evkAktivointiPvm = JSON.parse(unescaped);
         return isEvkActiveAt(TODAY, evkAktivointiPvm);
-      } catch (error) {
+      } catch {
         // unable to parse envParam, return the 'default' values below
         console.log("unable to parse envParam");
       }
@@ -36,7 +37,7 @@ export const isEvkAktivoituAt = (when: string): boolean => {
         const unescaped = envParam.replace(/\\"/g, '"');
         const evkAktivointiPvm = JSON.parse(unescaped);
         return isEvkActiveAt(when, evkAktivointiPvm);
-      } catch (error) {
+      } catch {
         // unable to parse envParam, return the 'default' values below
         console.log("unable to parse envParam");
       }

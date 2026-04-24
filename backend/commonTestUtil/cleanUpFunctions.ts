@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as API from "hassu-common/graphql/apiModel";
 import { cleanupAnyProjektiData } from "../integrationtest/api/testFixtureRecorder";
 import sortBy from "lodash/sortBy";
@@ -114,7 +115,7 @@ type APIorDBVaihe = {
   } | null;
 };
 
-interface APIorDBAloituskuulutus extends APIorDBVaihe {}
+type APIorDBAloituskuulutus = APIorDBVaihe;
 
 /**
  *
