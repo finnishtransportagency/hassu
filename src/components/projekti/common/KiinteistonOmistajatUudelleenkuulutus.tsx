@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import SectionContent from "@components/layout/SectionContent";
 import { UudelleenKuulutus, Vaihe } from "@services/api";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
@@ -43,6 +44,10 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
   const { data } = useSuomifiUser();
   const { control } = useFormContext<FormFields>();
   if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
+    const pvm = dayjs(uudelleenKuulutus.alkuperainenKuulutusPaiva, ISO_DATE_FORMAT).endOf("date");
+    const kuulutuspaivaInPast = pvm.isBefore(nyt());
+    const kuulutuspaivaIsToday = pvm.isSame(nyt(), "date");
+    const showRadioButtons = kuulutuspaivaIsToday || kuulutuspaivaInPast;
     return (
       <SectionContent>
         <H4 className="font-bold">Kiinteistönomistajat</H4>
@@ -51,24 +56,26 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
           control={control}
           render={({ field }) => (
             <>
-              <FormGroupWithBoldLabel label="Kiinteistönomistajien tiedottaminen uudelleenkuulutuksen yhteydessä" flexDirection="col">
-                <RadioButton
-                  id="tiedotaKiinteistonomistajiaKylla"
-                  label={"Kiinteistönomistajille lähetetään tieto uudesta kuulutuksesta"}
-                  onChange={(value) => {
-                    field.onChange(value.target.value === "on" ? true : false);
-                  }}
-                  checked={field.value === true}
-                />
-                <RadioButton
-                  id="tiedotaKiinteistonomistajiaEi"
-                  label="Kiinteistönomistajille ei lähetetä tietoa uudesta kuulutuksesta"
-                  checked={field.value === false}
-                  onChange={(value) => {
-                    field.onChange(value.target.value === "off" ? true : false);
-                  }}
-                />
-              </FormGroupWithBoldLabel>
+              {showRadioButtons && (
+                <FormGroupWithBoldLabel label="Kiinteistönomistajien tiedottaminen uudelleenkuulutuksen yhteydessä" flexDirection="col">
+                  <RadioButton
+                    id="tiedotaKiinteistonomistajiaKylla"
+                    label={"Kiinteistönomistajille lähetetään tieto uudesta kuulutuksesta"}
+                    onChange={(value) => {
+                      field.onChange(value.target.value === "on" ? true : false);
+                    }}
+                    checked={field.value === true}
+                  />
+                  <RadioButton
+                    id="tiedotaKiinteistonomistajiaEi"
+                    label="Kiinteistönomistajille ei lähetetä tietoa uudesta kuulutuksesta"
+                    checked={field.value === false}
+                    onChange={(value) => {
+                      field.onChange(value.target.value === "off" ? true : false);
+                    }}
+                  />
+                </FormGroupWithBoldLabel>
+              )}
               {field.value === true && (
                 <p>
                   Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen -sivun{" "}
@@ -87,7 +94,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
     );
   } else if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.HYVAKSYMISPAATOS) {
     const pvm = dayjs(uudelleenKuulutus.alkuperainenKuulutusPaiva, ISO_DATE_FORMAT).endOf("date");
-    const inPast = pvm.isBefore(nyt());
+    const kuulutuspaivaIsToday = pvm.isSame(nyt(), "date");
     return (
       <SectionContent>
         <H4 className="font-bold">Kiinteistönomistajat ja muistuttajat</H4>
@@ -96,7 +103,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
           control={control}
           render={({ field }) => (
             <>
-              {!inPast && (
+              {kuulutuspaivaIsToday && (
                 <FormGroupWithBoldLabel
                   label="Kiinteistönomistajien ja muistuttajien tiedottaminen uudelleenkuulutuksen yhteydessä"
                   flexDirection="col"

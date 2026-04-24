@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
@@ -128,6 +129,9 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             reloadProjekti();
           } catch (e) {
             log.error("Virhe hyväksyntään lähetyksessä", e);
+            // tallennaJaSiirraTilaa on ei-atominen: tallennus voi onnistua (versio kasvaa) vaikka tilasiirtymä epäonnistuu.
+            // Ladataan projekti uudelleen, jotta lomakkeen versio pysyy synkronissa tietokannan kanssa.
+            await reloadProjekti();
           }
         })()
       ),
