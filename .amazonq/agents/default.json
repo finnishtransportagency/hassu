@@ -1,0 +1,56 @@
+{
+  "name": "q_ide_default",
+  "description": "Default agent configuration",
+  "prompt": "",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", ".", "../hassu-asianhallinta", "../hassu-suomifi"]
+    },
+    "aws-docs": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "UV_NATIVE_TLS": "true"
+      }
+    },
+    "cdk": {
+      "command": "uvx",
+      "args": ["awslabs.cdk-mcp-server@latest"],
+      "env": {
+        "UV_NATIVE_TLS": "true",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "timeout": 60000,
+      "disabled": false
+    },
+    "aws-api": {
+      "command": "uvx",
+      "args": ["awslabs.aws-api-mcp-server@latest"],
+      "env": {
+        "UV_NATIVE_TLS": "true",
+        "AWS_REGION": "eu-west-1",
+        "AWS_PROFILE": "hassudev"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  },
+  "tools": ["fs_read", "execute_bash", "fs_write", "report_issue", "use_aws", "@filesystem", "@aws-docs", "@cdk", "@aws", "@aws-api"],
+  "toolAliases": {},
+  "allowedTools": ["fs_read", "report_issue", "use_aws", "execute_bash", "fs_write"],
+  "toolsSettings": {
+    "use_aws": {
+      "preset": "readOnly"
+    },
+    "execute_bash": {
+      "preset": "readOnly"
+    }
+  },
+  "resources": ["file://AmazonQ.md", "file://README.md", "file://.amazonq/rules/**/*.md"],
+  "hooks": {
+    "agentSpawn": [],
+    "userPromptSubmit": []
+  },
+  "useLegacyMcpJson": true
+}
