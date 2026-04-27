@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "@aws-sdk/client-sts": "^3.1002.0",
-    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
     "@types/inquirer": "^8.2.9",
     "@types/node-fetch": "^2.6.13",
     "aws-cdk": "^2.1109.0",
@@ -12,9 +12,9 @@
     "aws-cdk-local": "^3.0.1",
     "cdk-sso-sync": "^0.0.6",
     "constructs": "^10.4.2",
-    "inquirer": "^8.2.6",
+    "inquirer": "^8.2.7",
     "node-fetch": "^2.7.0",
-    "semantic-release": "^23.1.1"
+    "semantic-release": "^25.0.3"
   },
   "overrides": {
     "loader-utils": "1.4.2",
