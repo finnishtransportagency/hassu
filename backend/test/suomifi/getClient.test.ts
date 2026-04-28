@@ -75,3 +75,59 @@ describe("getClient", () => {
     expect(restStub.callCount).to.equal(2);
   });
 });
+
+describe("getClient clientType vaihto", () => {
+  beforeEach(() => {
+    resetCachedClient();
+    sinon.stub(config, "isInTest").value(false);
+  });
+
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it("REST-cache tyhjennetään kun clientType vaihtuu SOAP:iin", async () => {
+    const clientTypeStub = sinon.stub(parameters, "getSuomiFiClientType");
+    sinon.stub(parameters, "getSuomiFiRestConfig").resolves(fakeSuomiFiConfig);
+    sinon.stub(parameters, "getSuomiFiConfig").resolves(fakeSuomiFiConfig);
+    sinon.stub(parameters, "getSuomiFiCertificate").resolves("cert");
+    sinon.stub(parameters, "getSuomiFiPrivateKey").resolves("key");
+    const restStub = sinon.stub(restModule, "getSuomiFiClient").resolves(createFakeClient());
+    const soapStub = sinon.stub(soapModule, "getSuomiFiClient").resolves(createFakeClient() as soapModule.SuomiFiClient);
+
+    clientTypeStub.resolves("REST");
+    await getClient();
+    expect(restStub.callCount).to.equal(1);
+
+    clientTypeStub.resolves("SOAP");
+    await getClient();
+    expect(soapStub.callCount).to.equal(1);
+
+    // Varmistetaan ettei REST-cachea enää käytetä
+    clientTypeStub.resolves("REST");
+    await getClient();
+    expect(restStub.callCount).to.equal(2);
+  });
+
+  it("SOAP:sta REST:iin vaihto luo uuden REST-clientin", async () => {
+    const clientTypeStub = sinon.stub(parameters, "getSuomiFiClientType");
+    sinon.stub(parameters, "getSuomiFiRestConfig").resolves(fakeSuomiFiConfig);
+    sinon.stub(parameters, "getSuomiFiConfig").resolves(fakeSuomiFiConfig);
+    sinon.stub(parameters, "getSuomiFiCertificate").resolves("cert");
+    sinon.stub(parameters, "getSuomiFiPrivateKey").resolves("key");
+    const restStub = sinon.stub(restModule, "getSuomiFiClient").resolves(createFakeClient());
+    const soapStub = sinon.stub(soapModule, "getSuomiFiClient").resolves(createFakeClient() as soapModule.SuomiFiClient);
+
+    clientTypeStub.resolves("SOAP");
+    await getClient();
+    expect(soapStub.callCount).to.equal(1);
+
+    clientTypeStub.resolves("REST");
+    await getClient();
+    expect(restStub.callCount).to.equal(1);
+
+    // REST-cache toimii vaihdon jälkeen
+    await getClient();
+    expect(restStub.callCount).to.equal(1);
+  });
+});
