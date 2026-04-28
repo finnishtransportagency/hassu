@@ -1,4 +1,5 @@
 // Contains code generated or recommended by Amazon Q
+import { AxiosError } from "axios";
 import {
   createHttpClient,
   SuomiFiRestClient,
@@ -285,7 +286,12 @@ async function lahetaViesti(client: SuomiFiRestClient, options: Options, viesti:
     const fileBuffer = await toBuffer(viesti.tiedosto.sisalto);
     uploadResponse = await client.uploadAttachment(fileBuffer, viesti.tiedosto.nimi);
   } catch (e) {
-    const errorMessage = e instanceof Error ? e.message : "Tuntematon virhe";
+    const axiosError = e instanceof AxiosError ? e : undefined;
+    const errorMessage = axiosError
+      ? `status=${axiosError.response?.status ?? "N/A"} data=${JSON.stringify(axiosError.response?.data ?? axiosError.message)}` 
+      : e instanceof Error
+        ? e.message || e.stack || String(e)
+        : String(e) || "Tuntematon virhe";
     return {
       LahetaViestiResult: {
         TilaKoodi: {
@@ -341,7 +347,12 @@ async function sendAndMapResponse(promise: Promise<MessageResponse | PaperMailRe
       },
     };
   } catch (e) {
-    const errorMessage = e instanceof Error ? e.message : "Tuntematon virhe";
+    const axiosError = e instanceof AxiosError ? e : undefined;
+    const errorMessage = axiosError
+      ? `status=${axiosError.response?.status ?? "N/A"} data=${JSON.stringify(axiosError.response?.data ?? axiosError.message)}`
+      : e instanceof Error
+        ? e.message || e.stack || String(e)
+        : String(e) || "Tuntematon virhe";
     return {
       LahetaViestiResult: {
         TilaKoodi: {
