@@ -57,6 +57,7 @@ type Kohde = {
 
 let mockSuomiFiClient: SuomiFiClient | undefined;
 let cachedClient: SuomiFiClient | undefined;
+let cachedClientType: string | undefined;
 
 export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
@@ -64,6 +65,7 @@ export function setMockSuomiFiClient(client: SuomiFiClient) {
 
 export function resetCachedClient() {
   cachedClient = undefined;
+  cachedClientType = undefined;
 }
 
 export function parseLaskutus(tunniste?: string) {
@@ -123,12 +125,18 @@ export async function getClient(): Promise<SuomiFiClient> {
     return mockSuomiFiClient;
   }
   const clientType = await parameters.getSuomiFiClientType();
+  if (clientType !== cachedClientType) {
+    cachedClient = undefined;
+    cachedClientType = clientType;
+  }
   if (clientType === "REST") {
     if (cachedClient) {
+      log.info("Käytetään cachessa olevaa Suomi.fi REST clientia");
       return cachedClient;
     }
     const now = Date.now();
     cachedClient = await createRestClient();
+
     log.info(`Suomi.fi REST client alustusaika: ${Date.now() - now} ms`);
     return cachedClient;
   }
