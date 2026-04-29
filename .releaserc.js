@@ -10,9 +10,7 @@ module.exports = {
     [
       "@semantic-release/commit-analyzer",
       {
-        preset: {
-          name: "conventionalcommits",
-        },
+        preset: "conventionalcommits",
         releaseRules: [
           {
             type: "feat",
@@ -68,8 +66,8 @@ module.exports = {
     [
       "@semantic-release/release-notes-generator",
       {
-        preset: {
-          name: "conventionalcommits",
+        preset: "conventionalcommits",
+        presetConfig: {
           types: [
             {
               type: "feature",
