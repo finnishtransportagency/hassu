@@ -25,5 +25,8 @@
   "engines": {
     "node": ">=22.22.1",
     "npm": ">=10.9.4"
+  },
+  "dependencies": {
+    "conventional-changelog-conventionalcommits": "^8.0.0"
   }
 }

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 module.exports = {
   repositoryUrl: "https://github.com/finnishtransportagency/hassu.git",
   branches: [
@@ -9,7 +10,9 @@ module.exports = {
     [
       "@semantic-release/commit-analyzer",
       {
-        preset: "conventionalcommits",
+        preset: {
+          name: "conventionalcommits",
+        },
         releaseRules: [
           {
             type: "feat",
@@ -65,8 +68,8 @@ module.exports = {
     [
       "@semantic-release/release-notes-generator",
       {
-        preset: "conventionalcommits",
-        presetConfig: {
+        preset: {
+          name: "conventionalcommits",
           types: [
             {
               type: "feature",
