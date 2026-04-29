@@ -15,6 +15,7 @@ import { LahetaViestiResponse } from "../viranomaispalvelutwsinterface/definitio
 import { HaeAsiakkaitaResponse } from "../viranomaispalvelutwsinterface/definitions/HaeAsiakkaitaResponse";
 import { uuid } from "hassu-common/util/uuid";
 import { Readable } from "stream";
+import { log } from "../../logger";
 
 // REST-toteutus: kun SOAP-riippuvuudet poistetaan, korvaa yllä olevat SOAP-importit näillä omilla tyypeillä:
 //
@@ -135,6 +136,7 @@ async function haeAsiakkaita(client: SuomiFiRestClient, tunnus: string, tunnusTy
       },
     };
   } catch (e) {
+    log.error("Suomi.fi REST haeAsiakkaita epäonnistui", { error: e });
     return {
       HaeAsiakkaitaResult: {
         TilaKoodi: { TilaKoodi: -1 },
@@ -191,6 +193,7 @@ async function lahetaInfoViesti(client: SuomiFiRestClient, options: Options, vie
       },
     };
   } catch (e) {
+    log.error("Suomi.fi REST lahetaInfoViesti epäonnistui", { error: e });
     return {
       LisaaKohteitaResult: {
         TilaKoodi: { TilaKoodi: -1 },
@@ -350,16 +353,19 @@ async function sendAndMapResponse(promise: Promise<MessageResponse | PaperMailRe
     };
   } catch (e) {
     const axiosError = e instanceof AxiosError ? e : undefined;
+    const traceId = axiosError?.response?.headers?.["traceid"] as string | undefined;
     const errorMessage = axiosError
       ? `status=${axiosError.response?.status ?? "N/A"} data=${JSON.stringify(axiosError.response?.data ?? axiosError.message)}`
       : e instanceof Error
       ? e.message || e.stack || String(e)
       : String(e) || "Tuntematon virhe";
+    log.error("Suomi.fi REST sendAndMapResponse epäonnistui", { errorMessage, traceId });
     return {
       LahetaViestiResult: {
         TilaKoodi: {
           TilaKoodi: -1,
           TilaKoodiKuvaus: errorMessage,
+          SanomaTunniste: traceId,
         },
       },
     };

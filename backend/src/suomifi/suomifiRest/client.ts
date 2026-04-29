@@ -153,7 +153,7 @@ export function createHttpClient(endpoint: string, apiKey: string): SuomiFiRestC
     retryCondition: (error) => (error.response?.status ?? 0) >= 500,
     retryDelay: (retryCount) => Math.pow(2, retryCount) * 1000,
     onRetry: (retryCount, error) => {
-      log.warn(`Suomi.fi REST retry ${retryCount}/3`, { status: error.response?.status, url: error.config?.url });
+      log.warn(`Suomi.fi REST retry ${retryCount}/3`, { status: error.response?.status, url: error.config?.url, traceId: error.response?.headers?.["traceid"] });
     },
   });
 

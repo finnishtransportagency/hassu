@@ -590,10 +590,12 @@ async function lahetaPdfViesti({
         omistajaIdsForLahetystilaUpdate,
       });
     } else {
+      const traceId = parseTraceId(resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
       auditLog.info("Suomi.fi pdf-viestin lähetys epäonnistui", {
         omistajaId: omistaja ? kohde.id : undefined,
         muistuttajaId: omistaja ? undefined : kohde.id,
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
+        traceId,
         tilaKoodi: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodi,
         tilaKoodiKuvaus: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus,
       });
