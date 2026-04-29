@@ -179,10 +179,10 @@ async function lahetaInfoViesti(client: SuomiFiRestClient, options: Options, vie
   };
 
   try {
-    await client.postElectronicMessage(message);
+    const response = await client.postElectronicMessage(message);
     return {
       LisaaKohteitaResult: {
-        TilaKoodi: { TilaKoodi: 0 },
+        TilaKoodi: { TilaKoodi: 0, SanomaTunniste: response.traceId },
         Kohteet: {
           Kohde: [
             {
@@ -193,10 +193,11 @@ async function lahetaInfoViesti(client: SuomiFiRestClient, options: Options, vie
       },
     };
   } catch (e) {
-    log.error("Suomi.fi REST lahetaInfoViesti epäonnistui", { error: e });
+    const traceId = e instanceof AxiosError ? (e.response?.headers?.["traceid"] as string | undefined) : undefined;
+    log.error("Suomi.fi REST lahetaInfoViesti epäonnistui", { error: e, traceId });
     return {
       LisaaKohteitaResult: {
-        TilaKoodi: { TilaKoodi: -1 },
+        TilaKoodi: { TilaKoodi: -1, SanomaTunniste: traceId },
         Kohteet: {
           Kohde: [
             {

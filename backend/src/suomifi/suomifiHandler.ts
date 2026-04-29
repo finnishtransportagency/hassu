@@ -195,11 +195,13 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
     auditLog.info("Suomi.fi infoviesti lähetetty muistuttajalle", {
       muistuttajaId: muistuttaja.id,
       sanomaTunniste: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
+      traceId: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
     });
   } else {
     auditLog.info("Suomi.fi infoviestin lähetys muistuttajalle epäonnistui", {
       muistuttajaId: muistuttaja.id,
       sanomaTunniste: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
+      traceId: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
       tilaKoodi: resp.LisaaKohteitaResult?.TilaKoodi?.TilaKoodi,
       kohteenTila: asiakas?.KohteenTila,
     });
