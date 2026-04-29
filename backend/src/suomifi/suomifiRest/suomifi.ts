@@ -288,10 +288,10 @@ async function lahetaViesti(client: SuomiFiRestClient, options: Options, viesti:
   } catch (e) {
     const axiosError = e instanceof AxiosError ? e : undefined;
     const errorMessage = axiosError
-      ? `status=${axiosError.response?.status ?? "N/A"} data=${JSON.stringify(axiosError.response?.data ?? axiosError.message)}` 
+      ? `status=${axiosError.response?.status ?? "N/A"} data=${JSON.stringify(axiosError.response?.data ?? axiosError.message)}`
       : e instanceof Error
-        ? e.message || e.stack || String(e)
-        : String(e) || "Tuntematon virhe";
+      ? e.message || e.stack || String(e)
+      : String(e) || "Tuntematon virhe";
     return {
       LahetaViestiResult: {
         TilaKoodi: {
@@ -304,6 +304,7 @@ async function lahetaViesti(client: SuomiFiRestClient, options: Options, viesti:
 
   const paperMail = buildPaperMail(viesti, uploadResponse.attachmentId, printingAndEnvelopingService);
 
+  // TODO: tämä on valmiina, mutta ei voi vielä toteutua, koska suomifiHandlerin isOmistajanTiedotOk estää
   if (!tunnus) {
     const message: PaperMailOnlyMessageRequest = {
       externalId,
@@ -343,6 +344,7 @@ async function sendAndMapResponse(promise: Promise<MessageResponse | PaperMailRe
         TilaKoodi: {
           TilaKoodi: 202,
           TilaKoodiKuvaus: `Trace ID: ${response.messageId}`,
+          SanomaTunniste: response.traceId,
         },
       },
     };
@@ -351,8 +353,8 @@ async function sendAndMapResponse(promise: Promise<MessageResponse | PaperMailRe
     const errorMessage = axiosError
       ? `status=${axiosError.response?.status ?? "N/A"} data=${JSON.stringify(axiosError.response?.data ?? axiosError.message)}`
       : e instanceof Error
-        ? e.message || e.stack || String(e)
-        : String(e) || "Tuntematon virhe";
+      ? e.message || e.stack || String(e)
+      : String(e) || "Tuntematon virhe";
     return {
       LahetaViestiResult: {
         TilaKoodi: {

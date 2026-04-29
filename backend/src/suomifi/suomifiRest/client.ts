@@ -22,10 +22,12 @@ export interface UploadAttachmentResponse {
 
 export interface MessageResponse {
   messageId: number;
+  traceId?: string;
 }
 
 export interface PaperMailResponse {
   messageId: number;
+  traceId?: string;
 }
 
 export interface ElectronicMessageRequest {
@@ -111,8 +113,9 @@ function logAxiosError(context: string, error: AxiosError): void {
 function handle409AsSuccess(error: AxiosError): MessageResponse {
   const data = error.response?.data as MessageAlreadyExistsResponse | undefined;
   if (data?.messageId !== undefined) {
-    log.info("Suomi.fi REST 409: viesti jo lähetetty, käsitellään onnistuneena", { messageId: data.messageId });
-    const result: MessageResponse = { messageId: data.messageId };
+    const traceId = error.response?.headers?.["traceid"] as string | undefined;
+    log.info("Suomi.fi REST 409: viesti jo lähetetty, käsitellään onnistuneena", { messageId: data.messageId, traceId });
+    const result: MessageResponse = { messageId: data.messageId, traceId };
     return result;
   }
   throw error;
@@ -125,7 +128,7 @@ async function postMessageWithConflictHandling(
 ): Promise<MessageResponse> {
   try {
     const response = await http.post<MessageResponse>(url, message);
-    return response.data;
+    return { ...response.data, traceId: response.headers?.["traceid"] as string | undefined };
   } catch (error) {
     if (error instanceof AxiosError && error.response?.status === 409) {
       return handle409AsSuccess(error);
