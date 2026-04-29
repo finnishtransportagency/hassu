@@ -25,6 +25,13 @@ Tekoälyn käyttö on jäljitettävissä seuraavasti:
 - **Automaattiset testit:** CI/CD-putki ajaa yksikkö- ja integraatiotestit.
 - **Manuaalinen testaus:** Toiminnallisuus testataan aina myös manuaalisesti.
 
-## Rajoitteet ja poikkeamat
+## MCP serverit
 
-N/A
+Amazon Q hyödyntää MCP servereitä, jotka tehostavat sen toimintaa.
+Niiden ajaminen edellyttää uv:n asentamista.
+
+Asenna itsellesi [uv](https://docs.astral.sh/uv/)
+
+```
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
