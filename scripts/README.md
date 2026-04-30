@@ -1,13 +1,15 @@
 <!-- Contains code generated or recommended by Amazon Q -->
+
 # scripts/
 
 Apuskriptejä debuggaukseen, selvityksiin, ylläpitoon ja muihin ad-hoc-tehtäviin.
 
 ## Saatavilla olevat skriptit
 
-| Skripti | Kuvaus | Käyttö |
-|---------|--------|--------|
+| Skripti                     | Kuvaus                                                                                 | Käyttö                                                                                                             |
+| --------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `recreateMuistutusEmail.ts` | Luo ja tulostaa muistutussähköpostit (kirjaamo + valinnaisesti kuittaus kansalaiselle) | `npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]` |
+| `resendSuomiFiMessages`     | Suomi.fi-sanomien uudelleenlähetys                                                     | `npx ts-node scripts/resendSuomiFiMessages/resendSuomiFiMessages.ts --env dev/prod [--dry-run]`                    |
 
 ## Uuden skriptin lisääminen
 
