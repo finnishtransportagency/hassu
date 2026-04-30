@@ -5,7 +5,7 @@
  * Read-only: does not send emails or modify any data.
  *
  * Usage:
- *   npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]
+ *   npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]
  *
  * Options:
  *   --kuittaus  Also print the confirmation email sent to the muistuttaja
@@ -21,16 +21,18 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import { SSM } from "@aws-sdk/client-ssm";
-import { createMuistutusKirjaamolleEmail, createKuittausMuistuttajalleEmail } from "../backend/src/email/emailTemplates";
-import { DBProjekti, Muistutus } from "../backend/src/database/model";
-import { DBMuistuttaja } from "../backend/src/database/muistuttajaDatabase";
+import { createMuistutusKirjaamolleEmail, createKuittausMuistuttajalleEmail } from "../../backend/src/email/emailTemplates";
+import { DBProjekti, Muistutus } from "../../backend/src/database/model";
+import { DBMuistuttaja } from "../../backend/src/database/muistuttajaDatabase";
 
 const args = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const showKuittaus = process.argv.includes("--kuittaus");
 const [oid, muistuttajaId] = args;
 
 if (!oid || !muistuttajaId) {
-  console.error("Usage: npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]");
+  console.error(
+    "Usage: npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]"
+  );
   process.exit(1);
 }
 
@@ -94,9 +96,7 @@ async function main() {
   }
 
   console.log(`Fetching muistuttaja ${muistuttajaId} from ${muistuttajaTable}...`);
-  const muistuttajaResult = await ddbClient.send(
-    new GetCommand({ TableName: muistuttajaTable, Key: { oid, id: muistuttajaId } })
-  );
+  const muistuttajaResult = await ddbClient.send(new GetCommand({ TableName: muistuttajaTable, Key: { oid, id: muistuttajaId } }));
   const muistuttaja = muistuttajaResult.Item as DBMuistuttaja | undefined;
   if (!muistuttaja) {
     throw new Error(`Muistuttaja not found: oid=${oid}, id=${muistuttajaId}`);
