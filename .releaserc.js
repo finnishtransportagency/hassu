@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 module.exports = {
   repositoryUrl: "https://github.com/finnishtransportagency/hassu.git",
   branches: [
