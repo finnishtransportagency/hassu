@@ -14,18 +14,19 @@
 // Käyttö:
 //   Dry run:  npm run restore:attribute -- <bucket> <export-prefix> <taulu> <partition-key> <attribuutti>
 //   Oikea ajo: npm run restore:attribute -- <bucket> <export-prefix> <taulu> <partition-key> <attribuutti> --execute
-const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
-const { DynamoDBDocumentClient, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
-const { S3Client, GetObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
-const { unmarshall } = require("@aws-sdk/util-dynamodb");
-const { createGunzip } = require("zlib");
-const { pipeline } = require("stream/promises");
-const { createWriteStream, createReadStream, mkdirSync, rmSync, readFileSync } = require("fs");
-const { join } = require("path");
+import { AttributeValue, DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+import { createGunzip } from "zlib";
+import { pipeline } from "stream/promises";
+import { createWriteStream, createReadStream, mkdirSync, rmSync, readFileSync } from "fs";
+import { join } from "path";
+import { Readable } from "stream";
 
-const args = process.argv.slice(2);
-const DRY_RUN = !args.includes("--execute");
-const filtered = args.filter((a) => a !== "--execute");
+const args: string[] = process.argv.slice(2);
+const DRY_RUN: boolean = !args.includes("--execute");
+const filtered: string[] = args.filter((a) => a !== "--execute");
 
 if (filtered.length < 5) {
   console.log("Käyttö: npm run restore:attribute -- <bucket> <export-prefix> <taulu> <partition-key> <attribuutti> [--execute]");
@@ -38,7 +39,7 @@ const region = process.env.AWS_REGION || "eu-west-1";
 const s3 = new S3Client({ region });
 const dynamo = DynamoDBDocumentClient.from(new DynamoDBClient({ region }));
 
-async function downloadAndExtract() {
+async function downloadAndExtract(): Promise<string[]> {
   rmSync(TMP_DIR, { recursive: true, force: true });
   mkdirSync(TMP_DIR, { recursive: true });
 
@@ -50,29 +51,29 @@ async function downloadAndExtract() {
     return [];
   }
 
-  const files = [];
+  const files: string[] = [];
   for (const obj of Contents) {
-    const fileName = obj.Key.split("/").pop();
+    const fileName = obj.Key!.split("/").pop()!;
     const gzPath = join(TMP_DIR, fileName);
     const jsonPath = gzPath.replace(".gz", "");
     const { Body } = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: obj.Key }));
-    await pipeline(Body, createWriteStream(gzPath));
+    await pipeline(Body as Readable, createWriteStream(gzPath));
     await pipeline(createReadStream(gzPath), createGunzip(), createWriteStream(jsonPath));
     files.push(jsonPath);
   }
   return files;
 }
 
-async function restoreAttribute(files) {
+async function restoreAttribute(files: string[]): Promise<{ updated: number; skipped: number }> {
   let updated = 0;
   let skipped = 0;
 
   for (const file of files) {
     const lines = readFileSync(file, "utf-8").split("\n").filter(Boolean);
     for (const line of lines) {
-      const { Item } = JSON.parse(line);
+      const { Item } = JSON.parse(line) as { Item: Record<string, AttributeValue> };
       const unmarshalled = unmarshall(Item);
-      const key = unmarshalled[PARTITION_KEY] || "tuntematon";
+      const key = (unmarshalled[PARTITION_KEY] as string) || "tuntematon";
       const value = unmarshalled[ATTRIBUTE];
 
       if (value === undefined) {
@@ -104,7 +105,7 @@ async function restoreAttribute(files) {
   return { updated, skipped };
 }
 
-async function main() {
+async function main(): Promise<void> {
   if (DRY_RUN) console.log("DRY RUN - näytetään mitä tapahtuisi:\n");
 
   const files = await downloadAndExtract();

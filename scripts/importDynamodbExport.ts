@@ -11,16 +11,17 @@
 // Käyttö:
 //   Dry run:  npm run import:dynamodb -- <bucket> <export-prefix> <taulu> <partition-key>
 //   Oikea ajo: npm run import:dynamodb -- <bucket> <export-prefix> <taulu> <partition-key> --execute
-const { DynamoDBClient, PutItemCommand } = require("@aws-sdk/client-dynamodb");
-const { S3Client, GetObjectCommand, ListObjectsV2Command } = require("@aws-sdk/client-s3");
-const { createGunzip } = require("zlib");
-const { pipeline } = require("stream/promises");
-const { createWriteStream, createReadStream, mkdirSync, readFileSync, rmSync } = require("fs");
-const { join, resolve, normalize } = require("path");
+import { AttributeValue, DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { S3Client, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { createGunzip } from "zlib";
+import { pipeline } from "stream/promises";
+import { createWriteStream, createReadStream, mkdirSync, readFileSync, rmSync } from "fs";
+import { resolve, normalize } from "path";
+import { Readable } from "stream";
 
-const args = process.argv.slice(2);
-const DRY_RUN = !args.includes("--execute");
-const filtered = args.filter((a) => a !== "--execute");
+const args: string[] = process.argv.slice(2);
+const DRY_RUN: boolean = !args.includes("--execute");
+const filtered: string[] = args.filter((a) => a !== "--execute");
 
 if (filtered.length < 4) {
   console.log("Käyttö: npm run import:dynamodb -- <bucket> <export-prefix> <taulu> <partition-key> [--execute]");
@@ -40,7 +41,7 @@ const s3 = new S3Client({ region });
 const dynamo = new DynamoDBClient({ region });
 const TMP_DIR = "/tmp/dynamo-import";
 
-async function downloadAndExtract() {
+async function downloadAndExtract(): Promise<string[]> {
   rmSync(TMP_DIR, { recursive: true, force: true });
   mkdirSync(TMP_DIR, { recursive: true });
 
@@ -52,9 +53,9 @@ async function downloadAndExtract() {
     return [];
   }
 
-  const files = [];
+  const files: string[] = [];
   for (const obj of Contents) {
-    const fileName = obj.Key.split("/").pop();
+    const fileName = obj.Key!.split("/").pop()!;
     const gzPath = resolve(TMP_DIR, normalize(fileName));
     if (!gzPath.startsWith(resolve(TMP_DIR))) {
       console.log(`Ohitettu (epäilyttävä polku): ${fileName}`);
@@ -63,7 +64,7 @@ async function downloadAndExtract() {
     const jsonPath = gzPath.replace(".gz", "");
 
     const { Body } = await s3.send(new GetObjectCommand({ Bucket: BUCKET, Key: obj.Key }));
-    await pipeline(Body, createWriteStream(gzPath));
+    await pipeline(Body as Readable, createWriteStream(gzPath));
     await pipeline(createReadStream(gzPath), createGunzip(), createWriteStream(jsonPath));
 
     files.push(jsonPath);
@@ -72,15 +73,15 @@ async function downloadAndExtract() {
   return files;
 }
 
-async function importItems(files) {
+async function importItems(files: string[]): Promise<{ imported: number; skipped: number }> {
   let imported = 0;
   let skipped = 0;
 
   for (const file of files) {
     const lines = readFileSync(file, "utf-8").split("\n").filter(Boolean);
     for (const line of lines) {
-      const { Item } = JSON.parse(line);
-      const key = Item[PARTITION_KEY]?.S || "tuntematon";
+      const { Item } = JSON.parse(line) as { Item: Record<string, AttributeValue> };
+      const key = (Item[PARTITION_KEY] as { S?: string })?.S || "tuntematon";
 
       if (DRY_RUN) {
         console.log(`Tuotaisiin: ${key}`);
@@ -98,8 +99,8 @@ async function importItems(files) {
         );
         console.log(`Tuotu: ${key}`);
         imported++;
-      } catch (e) {
-        if (e.name === "ConditionalCheckFailedException") {
+      } catch (e: unknown) {
+        if (e instanceof Error && e.name === "ConditionalCheckFailedException") {
           console.log(`Ohitettu (jo olemassa): ${key}`);
           skipped++;
         } else {
@@ -111,7 +112,7 @@ async function importItems(files) {
   return { imported, skipped };
 }
 
-async function main() {
+async function main(): Promise<void> {
   if (DRY_RUN) {
     console.log("DRY RUN - näytetään mitä tapahtuisi:\n");
   }
