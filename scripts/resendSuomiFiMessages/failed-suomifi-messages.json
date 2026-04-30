@@ -1,0 +1,38 @@
+[
+  {
+    "@timestamp": "2026-01-01 00:00:00.000",
+    "msg": "Suomi.fi sanoma",
+    "@message": {
+      "level": "info",
+      "time": "2026-01-01T00:00:00.000Z",
+      "correlationId": "1-00000000-000000000000000000000000",
+      "tag": "BACKEND",
+      "sanoma": {
+        "omistajaId": "00000000-0000-0000-0000-000000000001",
+        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
+        "oid": "1.2.246.578.5.1.0000000000.0000000000",
+        "muistuttajaIdsForLahetystilaUpdate": [],
+        "omistajaIdsForLahetystilaUpdate": []
+      },
+      "msg": "Suomi.fi sanoma"
+    }
+  },
+  {
+    "@timestamp": "2026-01-01 00:00:01.000",
+    "msg": "Suomi.fi sanoma",
+    "@message": {
+      "level": "info",
+      "time": "2026-01-01T00:00:01.000Z",
+      "correlationId": "1-00000000-000000000000000000000001",
+      "tag": "BACKEND",
+      "sanoma": {
+        "muistuttajaId": "00000000-0000-0000-0000-000000000002",
+        "tyyppi": "PUBLISH_NAHTAVILLAOLO",
+        "oid": "1.2.246.578.5.1.0000000000.0000000000",
+        "muistuttajaIdsForLahetystilaUpdate": [],
+        "omistajaIdsForLahetystilaUpdate": []
+      },
+      "msg": "Suomi.fi sanoma"
+    }
+  }
+]
