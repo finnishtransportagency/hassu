@@ -1,13 +1,16 @@
 <!-- Contains code generated or recommended by Amazon Q -->
+
 # scripts/
 
 Apuskriptejä debuggaukseen, selvityksiin, ylläpitoon ja muihin ad-hoc-tehtäviin.
 
 ## Saatavilla olevat skriptit
 
-| Skripti | Kuvaus | Käyttö |
-|---------|--------|--------|
+| Skripti                     | Kuvaus                                                                                 | Käyttö                                                                                                             |
+| --------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `recreateMuistutusEmail.ts` | Luo ja tulostaa muistutussähköpostit (kirjaamo + valinnaisesti kuittaus kansalaiselle) | `npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]` |
+| `restoreAttribute.ts`       | Palauta yksittäinen attribuutti DynamoDB:hen                                           | `npm run restore:attribute -- <bucket> <export-prefix> <taulu> <partition-key> <attribuutti> --execute`            |
+| `importDynamodbExports.ts`  | Tuo DynamoDB:hen sieltä aiemmin exportattu item                                        | `npm run import:dynamodb -- <bucket> <export-prefix> <taulu> <partition-key> --execute`                            |
 
 ## Uuden skriptin lisääminen
 
