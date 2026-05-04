@@ -13,6 +13,10 @@ export async function haeKuulutettuYhdessaSuunnitelmanimi(
   if (!jaetunProjektinOid) {
     return undefined;
   }
+  // Haetaan nimi suoraan tietokannasta eikä haeLiittyvanProjektinTiedot-funktion kautta,
+  // koska se kutsuu projektiAdapterJulkinen.adaptProjekti:a joka tuo transitiivisen
+  // riippuvuuden s3Cache:en (calculateEndDate → getBankHolidays → s3Cache).
+  // Tässä tarvitaan vain projektin nimi, ei julkisuusstatusta.
   const projekti = await projektiDatabase.loadProjektiByOid(jaetunProjektinOid, true, false);
   if (!projekti?.velho?.nimi) {
     return undefined;
