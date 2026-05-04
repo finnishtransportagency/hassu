@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 import { ErrorResponse } from "@apollo/client/link/error";
 import { Translate } from "next-translate";
@@ -48,6 +49,12 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
       return errorResponse.operation.operationName === "LataaProjekti";
     },
     errorMessage: () => "Projektin lataus epäonnistui.",
+  },
+  {
+    validator: ({ errorResponse }) => {
+      return errorResponse.operation.operationName === "NykyinenSuomifiKayttaja";
+    },
+    errorMessage: () => "Käyttäjätietojen haku epäonnistui. Kokeile päivittää sivu.",
   },
   {
     validator: ({ errorResponse }) => {
