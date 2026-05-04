@@ -20,10 +20,10 @@ const createMockErrorResponse = (operationName: string): ErrorResponse => ({
 const mockTranslate = ((key: string) => key) as any;
 
 describe("generateErrorMessage", () => {
-  it("should return specific message for NykyinenSuomifiKayttaja", () => {
+  it("should return generic translated message for kansalainen on NykyinenSuomifiKayttaja error", () => {
     const errorResponse = createMockErrorResponse("NykyinenSuomifiKayttaja");
     const message = generateErrorMessage({ errorResponse, isYllapito: false, t: mockTranslate });
-    expect(message).toBe("Käyttäjätietojen haku epäonnistui. Kokeile päivittää sivu.");
+    expect(message).toBe("error:yleinen");
   });
 
   it("should return specific message for LataaProjekti", () => {

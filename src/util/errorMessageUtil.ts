@@ -52,12 +52,6 @@ const nonGenericErrorMessages: { validator: NonGenericErrorMessageValidator; err
   },
   {
     validator: ({ errorResponse }) => {
-      return errorResponse.operation.operationName === "NykyinenSuomifiKayttaja";
-    },
-    errorMessage: () => "Käyttäjätietojen haku epäonnistui. Kokeile päivittää sivu.",
-  },
-  {
-    validator: ({ errorResponse }) => {
       return errorResponse.operation.operationName === "TallennaProjekti";
     },
     errorMessage: () => "Projektin tallennus epäonnistui.",
