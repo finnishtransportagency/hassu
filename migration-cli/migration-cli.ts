@@ -34,27 +34,27 @@ AWSXRay.middleware.disableCentralizedSampling();
 
 const schema = {
   oid: {
-    prop: "oid",
+    column: "oid",
     type: String,
   },
-  Tila: {
-    prop: "tila",
+  tila: {
+    column: "Tila",
     type: String,
   },
-  ["Hyväksymispäätös asianumero"]: {
-    prop: "hyvaksymispaatosAsianumero",
+  hyvaksymispaatosAsianumero: {
+    column: "Hyväksymispäätös asianumero",
     type: String,
   },
-  ["Hyväksymispäätös päivämäärä"]: {
-    prop: "hyvaksymispaatosPaivamaara",
+  hyvaksymispaatosPaivamaara: {
+    column: "Hyväksymispäätös päivämäärä",
     type: Date,
   },
-  ["1. Jatkopäätös asianumero"]: {
-    prop: "jatkopaatos1Asianumero",
+  jatkopaatos1Asianumero: {
+    column: "1. Jatkopäätös asianumero",
     type: String,
   },
-  ["1. Jatkopäätös päivämäärä"]: {
-    prop: "jatkopaatos1Paivamaara",
+  jatkopaatos1Paivamaara: {
+    column: "1. Jatkopäätös päivämäärä",
     type: Date,
   },
 };
