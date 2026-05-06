@@ -66,6 +66,7 @@ export function setMockSuomiFiClient(client: SuomiFiClient) {
 export function resetCachedClient() {
   cachedClient = undefined;
   cachedClientType = undefined;
+  parameters.clearCachedParameter("SuomiFiClientType");
 }
 
 export function parseLaskutus(tunniste?: string) {
@@ -106,6 +107,9 @@ async function createRestClient(): Promise<SuomiFiClient> {
   if (!restCfg) {
     throw new Error("SuomiFiRestConfig -parametria ei löydy");
   }
+  log.info("Suomi.fi REST client config", {
+    endpoint: restCfg.endpoint,
+  });
   return getRestClient({
     apiKey: restCfg.apikey,
     endpoint: restCfg.endpoint,
@@ -779,6 +783,11 @@ async function handleOmistaja({
 }
 
 const handlerFactory = (event: SuomifiEvent) => async () => {
+  if (isEventResetAction(event)) {
+    resetCachedClient();
+    log.info("Suomi.fi client cache resetoitu");
+    return;
+  }
   if (isEventStatusCheckAction(event)) {
     return await isCognitoKayttajaSuomiFiViestitEnabled(event.hetu);
   }
@@ -821,20 +830,28 @@ async function handleSqsEvent(event: SQSEvent) {
   }
 }
 
+function isEventResetAction(event: SuomifiEvent): event is SuomiFiResetAction {
+  return (event as SuomiFiResetAction).action === "resetClient";
+}
+
 function isEventStatusCheckAction(event: SuomifiEvent): event is SuomiFiViestitStatusCheckAction {
   return !!(event as SuomiFiViestitStatusCheckAction).hetu;
 }
 
 function isEventSqsEvent(event: SuomifiEvent): event is SQSEvent {
   const records = (event as SQSEvent).Records;
-  return !!records.length && records.every((record) => record.body);
+  return !!records && !!records.length && records.every((record) => record.body);
 }
+
+type SuomiFiResetAction = {
+  action: "resetClient";
+};
 
 type SuomiFiViestitStatusCheckAction = {
   hetu: string;
 };
 
-type SuomifiEvent = SuomiFiViestitStatusCheckAction | SQSEvent;
+type SuomifiEvent = SuomiFiResetAction | SuomiFiViestitStatusCheckAction | SQSEvent;
 
 export const handleEvent = async (event: SuomifiEvent) => {
   setupLambdaMonitoring();
