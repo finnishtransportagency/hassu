@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { concatCorrelationIdToErrorMessage } from "@components/ApiProvider";
 import { ErrorResponse } from "@apollo/client/link/error";
 import { Translate } from "next-translate";
