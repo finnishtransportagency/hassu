@@ -36,10 +36,12 @@ const schema = {
   oid: {
     column: "oid",
     type: String,
+    required: true,
   },
   tila: {
     column: "Tila",
     type: String,
+    required: true,
   },
   hyvaksymispaatosAsianumero: {
     column: "Hyväksymispäätös asianumero",
