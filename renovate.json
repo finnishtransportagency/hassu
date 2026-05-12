@@ -23,9 +23,79 @@
     "enabled": false
   },
   "dockerfile": {
-    "enabled": false
+    "fileMatch": ["^Dockerfile$"],
+    "groupName": "build-image base images (minor/patch)",
+    "groupSlug": "build-image-base-images",
+    "semanticCommitType": "build"
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$", "^\\.envrc$"],
+      "matchStrings": ["(?:ENV NPM_VERSION=|npm@)(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "npm",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["ENV AMPLIFY_CLI_VERSION=(?<currentValue>\\S+)\\n"],
+      "depNameTemplate": "@aws-amplify/cli",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["ENV DOCKER_COMPOSE_VERSION=v(?<currentValue>\\S+)\\n"],
+      "depNameTemplate": "docker/compose",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": ["ENV AWS_CLI_VERSION=(?<currentValue>\\S+)\\n"],
+      "depNameTemplate": "aws/aws-cli",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+)$"
+    }
+  ],
   "packageRules": [
+    {
+      "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli", "npm"],
+      "matchUpdateTypes": ["major"],
+      "enabled": true,
+      "dependencyDashboardApproval": true,
+      "groupName": "build-image major updates",
+      "groupSlug": "build-image-major",
+      "semanticCommitType": "build",
+      "prBodyNotes": [
+        "⚠️ **Major-päivitys! Testaa huolellisesti ja päivitä `.buildimageversion` ennen yhdistämistä mainiin.**"
+      ]
+    },
+    {
+      "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli"],
+      "groupName": "build-image tools (minor/patch)",
+      "groupSlug": "build-image-tools",
+      "semanticCommitType": "build",
+      "schedule": ["after 9pm on sunday"],
+      "prBodyNotes": [
+        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**"
+      ]
+    },
+    {
+      "matchDepNames": ["npm"],
+      "groupName": "npm (Dockerfile + .envrc) (minor/patch)",
+      "groupSlug": "npm",
+      "semanticCommitType": "build",
+      "schedule": ["after 9pm on sunday"],
+      "prBodyNotes": [
+        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**",
+        "⚠️ **Muista päivittää npm myös seuraavissa repoissa:**",
+        "- `hassu-suomifi`",
+        "- `hassu-asianhallinta`"
+      ]
+    },
     {
       "matchPackagePatterns": ["*"],
       "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "inquirer"],
