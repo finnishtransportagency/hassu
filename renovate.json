@@ -70,7 +70,7 @@
       "groupSlug": "build-image-major",
       "semanticCommitType": "build",
       "prBodyNotes": [
-        "⚠️ **Major-päivitys! Testaa huolellisesti ja päivitä `.buildimageversion` ennen mergaamista mainiin.**"
+        "⚠️ **Major-päivitys! Testaa huolellisesti ja päivitä `.buildimageversion` ennen yhdistämistä mainiin.**"
       ]
     },
     {
@@ -80,7 +80,7 @@
       "semanticCommitType": "build",
       "schedule": ["after 9pm on sunday"],
       "prBodyNotes": [
-        "⚠️ **Muista päivittää `.buildimageversion` ennen mergaamista mainiin.**"
+        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**"
       ]
     },
     {
@@ -90,7 +90,7 @@
       "semanticCommitType": "build",
       "schedule": ["after 9pm on sunday"],
       "prBodyNotes": [
-        "⚠️ **Muista päivittää `.buildimageversion` ennen mergaamista mainiin.**",
+        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**",
         "⚠️ **Muista päivittää npm myös seuraavissa repoissa:**",
         "- `hassu-suomifi`",
         "- `hassu-asianhallinta`"
