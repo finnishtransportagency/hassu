@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
@@ -18,6 +19,7 @@ import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
+import { OMISTAJA_EXCEL_HEADERS } from "hassu-common/excelHeaders";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -124,31 +126,31 @@ function lisaaRivi(rivi: Rivi): Row_<ImageData> {
   ];
 }
 
-function lisaaOtsikko() {
+function lisaaOtsikko(): { value: string }[] {
   return [
     {
-      value: "Kiinteistötunnus",
+      value: OMISTAJA_EXCEL_HEADERS.kiinteistotunnus,
     },
     {
-      value: "Omistajan nimi",
+      value: OMISTAJA_EXCEL_HEADERS.nimi,
     },
     {
-      value: "Postiosoite",
+      value: OMISTAJA_EXCEL_HEADERS.postiosoite,
     },
     {
-      value: "Postinumero",
+      value: OMISTAJA_EXCEL_HEADERS.postinumero,
     },
     {
-      value: "Postitoimipaikka",
+      value: OMISTAJA_EXCEL_HEADERS.postitoimipaikka,
     },
     {
-      value: "Maa",
+      value: OMISTAJA_EXCEL_HEADERS.maa,
     },
     {
-      value: "Tiedot haettu",
+      value: OMISTAJA_EXCEL_HEADERS.tiedotHaettu,
     },
     {
-      value: "Tiedotustapa",
+      value: OMISTAJA_EXCEL_HEADERS.tiedotustapa,
     },
   ];
 }
