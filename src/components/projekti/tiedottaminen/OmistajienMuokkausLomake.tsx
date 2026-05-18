@@ -563,18 +563,20 @@ export const FormContents: FunctionComponent<{
               Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
             </p>
             {initialSearchResponses.muut.hakutulosMaara ? (
-              <PaginatedTaulukko
-                oid={projekti.oid}
-                initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
-                columns={muutColumns}
-                fieldArrayName="muutOmistajat"
-              />
+              <>
+                <PaginatedTaulukko
+                  oid={projekti.oid}
+                  initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
+                  columns={muutColumns}
+                  fieldArrayName="muutOmistajat"
+                  extraActions={<TuoExcelistaButton />}
+                />
+              </>
             ) : (
               <GrayBackgroundText>
                 <p>Karttarajaukseen ei osunut ainuttakaan muilla tavoin tiedotettavaa.</p>
               </GrayBackgroundText>
             )}
-            <TuoExcelistaButton />
             <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
             <p>
               Tässä voit lisätä muulla tavalla tiedotettavia kiinteistönomistajia. Huomaathan, että ne lisätään
@@ -633,11 +635,13 @@ const PaginatedTaulukko = ({
   initialHakutulosMaara,
   columns,
   fieldArrayName,
+  extraActions,
 }: {
   oid: string;
   initialHakutulosMaara: number;
   fieldArrayName: "muutOmistajat" | "suomifiOmistajat";
   columns: ColumnDef<OmistajaRow>[];
+  extraActions?: React.ReactNode;
 }) => {
   const {
     control,
@@ -705,26 +709,29 @@ const PaginatedTaulukko = ({
   return (
     <>
       <HassuTable table={table} />
-      <Stack alignItems="center">
-        {slicedFields.length > PAGE_SIZE && (
-          <RectangleButton type="button" onClick={showLess}>
-            Näytä vähemmän kiinteistönomistajia
-          </RectangleButton>
-        )}
-        {hakutulosMaara > slicedFields.length && (
-          <RectangleButton type="button" onClick={getNextPage}>
-            Näytä enemmän kiinteistönomistajia
-          </RectangleButton>
-        )}
-        {hakutulosMaara > PAGE_SIZE && (
-          <ButtonFlatWithIcon
-            type="button"
-            icon={hakutulosMaara <= slicedFields.length ? "chevron-up" : "chevron-down"}
-            onClick={toggleShowHideAll}
-          >
-            {hakutulosMaara <= slicedFields.length ? "Piilota kaikki" : "Näytä kaikki"}
-          </ButtonFlatWithIcon>
-        )}
+      <Stack direction="row" alignItems="flex-start">
+        <Stack alignItems="center" flex={1}>
+          {slicedFields.length > PAGE_SIZE && (
+            <RectangleButton type="button" onClick={showLess}>
+              Näytä vähemmän kiinteistönomistajia
+            </RectangleButton>
+          )}
+          {hakutulosMaara > slicedFields.length && (
+            <RectangleButton type="button" onClick={getNextPage}>
+              Näytä enemmän kiinteistönomistajia
+            </RectangleButton>
+          )}
+          {hakutulosMaara > PAGE_SIZE && (
+            <ButtonFlatWithIcon
+              type="button"
+              icon={hakutulosMaara <= slicedFields.length ? "chevron-up" : "chevron-down"}
+              onClick={toggleShowHideAll}
+            >
+              {hakutulosMaara <= slicedFields.length ? "Piilota kaikki" : "Näytä kaikki"}
+            </ButtonFlatWithIcon>
+          )}
+        </Stack>
+        {extraActions}
       </Stack>
     </>
   );
