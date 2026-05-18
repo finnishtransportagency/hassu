@@ -35,7 +35,7 @@ import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { useRouter } from "next/router";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import HassuDialog from "@components/HassuDialog";
-import readXlsxFile from "read-excel-file";
+import readXlsxFile from "read-excel-file/browser";
 import { findColumnIndices, matchExcelRowsToOmistajat } from "src/util/excelImport";
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
