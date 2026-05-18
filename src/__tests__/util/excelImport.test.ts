@@ -104,10 +104,11 @@ describe("excelImport", () => {
       expect(results).toHaveLength(0);
     });
 
-    it("skips rows with empty address data", () => {
+    it("includes rows with empty address data (Excel is source of truth)", () => {
       const omistajat = [{ kiinteistotunnus: "345-678-9-0", nimi: "Yritys Oy" }];
       const results = matchExcelRowsToOmistajat(rows, columns, omistajat);
-      expect(results).toHaveLength(0);
+      expect(results).toHaveLength(1);
+      expect(results[0]).toEqual({ index: 0, jakeluosoite: "", postinumero: "", paikkakunta: "" });
     });
 
     it("updates existing address data", () => {

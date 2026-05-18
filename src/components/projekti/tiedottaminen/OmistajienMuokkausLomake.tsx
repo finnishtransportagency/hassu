@@ -449,8 +449,6 @@ export const FormContents: FunctionComponent<{
     );
   }
   const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
-  const [siirtoDialogCount, setSiirtoDialogCount] = useState<number | null>(null);
-  const [pendingSubmitData, setPendingSubmitData] = useState<KiinteistonOmistajatFormFields | null>(null);
 
   const doSave = useCallback(
     async (apiData: TallennaKiinteistonOmistajatMutationVariables, data: KiinteistonOmistajatFormFields) => {
@@ -468,9 +466,8 @@ export const FormContents: FunctionComponent<{
       }
       newData.lisatytOmistajat = newData.lisatytOmistajat.filter((o) => !(!o.id && o.toBeDeleted));
       useFormReturn.reset(newData);
-      showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
     },
-    [api, showSuccessMessage, useFormReturn]
+    [api, useFormReturn]
   );
 
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
@@ -487,18 +484,8 @@ export const FormContents: FunctionComponent<{
           }
           if (apiData) {
             try {
-              // Count omistajat that will move to upper list:
-              // all muutOmistajat with complete address will move after save
-              const siirtyneet = data.muutOmistajat.filter(
-                (o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta
-              ).length;
-              if (siirtyneet > 0) {
-                // Show confirmation popup before saving
-                setSiirtoDialogCount(siirtyneet);
-                setPendingSubmitData(data);
-                return;
-              }
               await doSave(apiData, data);
+              showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
             } catch (error) {
               log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
             }
@@ -506,26 +493,8 @@ export const FormContents: FunctionComponent<{
         })()
       );
     },
-    [doSave, showErrorMessage, withLoadingSpinner]
+    [doSave, showErrorMessage, showSuccessMessage, withLoadingSpinner]
   );
-
-  const confirmSiirtoAndSave = useCallback(() => {
-    setSiirtoDialogCount(null);
-    if (pendingSubmitData) {
-      withLoadingSpinner(
-        (async () => {
-          try {
-            const apiData = mapFormDataForApi(pendingSubmitData);
-            await doSave(apiData, pendingSubmitData);
-          } catch (error) {
-            log.error("Virhe kiinteistötietojen tallennuksessa: \n", error);
-          } finally {
-            setPendingSubmitData(null);
-          }
-        })()
-      );
-    }
-  }, [doSave, pendingSubmitData, withLoadingSpinner]);
 
   const resetAndClose = useCallback(async () => {
     await router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
@@ -605,23 +574,6 @@ export const FormContents: FunctionComponent<{
             Peruuta
           </Button>
           <Button type="button" onClick={handleSubmit(onSubmit)} primary>
-            Tallenna
-          </Button>
-        </DialogActions>
-      </HassuDialog>
-      <HassuDialog
-        open={siirtoDialogCount !== null}
-        title="Kiinteistönomistajien siirtyminen"
-        onClose={() => { setSiirtoDialogCount(null); setPendingSubmitData(null); }}
-      >
-        <DialogContent>
-          <p>{`${siirtoDialogCount} kiinteistönomistaja${siirtoDialogCount === 1 ? "" : "a"} siirtyy Suomi.fi-tiedotettaviin. Tallenna vahvistaaksesi.`}</p>
-        </DialogContent>
-        <DialogActions>
-          <Button type="button" onClick={() => { setSiirtoDialogCount(null); setPendingSubmitData(null); }}>
-            Peruuta
-          </Button>
-          <Button type="button" onClick={confirmSiirtoAndSave} primary>
             Tallenna
           </Button>
         </DialogActions>
@@ -806,15 +758,15 @@ const TuoExcelistaButton: FunctionComponent = () => {
         for (const result of results) {
           const current = muutOmistajat[result.index];
           let changed = false;
-          if (result.jakeluosoite && result.jakeluosoite !== (current.jakeluosoite ?? "")) {
+          if (result.jakeluosoite !== (current.jakeluosoite ?? "")) {
             setValue(`muutOmistajat.${result.index}.jakeluosoite`, result.jakeluosoite, { shouldDirty: true });
             changed = true;
           }
-          if (result.postinumero && result.postinumero !== (current.postinumero ?? "")) {
+          if (result.postinumero !== (current.postinumero ?? "")) {
             setValue(`muutOmistajat.${result.index}.postinumero`, result.postinumero, { shouldDirty: true });
             changed = true;
           }
-          if (result.paikkakunta && result.paikkakunta !== (current.paikkakunta ?? "")) {
+          if (result.paikkakunta !== (current.paikkakunta ?? "")) {
             setValue(`muutOmistajat.${result.index}.paikkakunta`, result.paikkakunta, { shouldDirty: true });
             changed = true;
           }
@@ -824,7 +776,7 @@ const TuoExcelistaButton: FunctionComponent = () => {
         if (updatedCount > 0) {
           showSuccessMessage(`Osoitetiedot päivitetty ${updatedCount} kiinteistönomistajalle. Muista tallentaa muutokset.`);
         } else {
-          showSuccessMessage("Excelistä ei löytynyt uusia osoitetietoja päivitettäväksi.");
+          showSuccessMessage("Excelistä ei löytynyt päivitettäviä osoitetietoja.");
         }
       } catch (e) {
         log.error("Excel-tiedoston lukeminen epäonnistui", e);

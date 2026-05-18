@@ -67,9 +67,7 @@ export function matchExcelRowsToOmistajat(
       const postinumero = columns.postinumero >= 0 ? String(matchingRow[columns.postinumero] ?? "").trim() : "";
       const paikkakunta = columns.postitoimipaikka >= 0 ? String(matchingRow[columns.postitoimipaikka] ?? "").trim() : "";
 
-      if (jakeluosoite || postinumero || paikkakunta) {
-        results.push({ index: i, jakeluosoite, postinumero, paikkakunta });
-      }
+      results.push({ index: i, jakeluosoite, postinumero, paikkakunta });
     }
   }
 
