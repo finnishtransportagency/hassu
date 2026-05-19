@@ -446,45 +446,69 @@ export const FormContents: FunctionComponent<{
     );
   }
   const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
+  const [siirtoInfo, setSiirtoInfo] = useState<{ ylempaan: number; alempaan: number } | null>(null);
+  const [pendingSubmitData, setPendingSubmitData] = useState<KiinteistonOmistajatFormFields | null>(null);
+
+  const doSave = useCallback(
+    async (data: KiinteistonOmistajatFormFields) => {
+      let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
+      try {
+        apiData = mapFormDataForApi(data);
+      } catch (error) {
+        log.error("Virhe kiinteistötietojen muuttamisessa tallennettavaan muotoon \n", error, data);
+        showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
+        return;
+      }
+      try {
+        await api.tallennaKiinteistonOmistajat(apiData);
+        // Refetch data from backend to get updated list assignments
+        const suomifi = await api.haeKiinteistonOmistajat(projekti.oid, false, undefined, 0, PAGE_SIZE);
+        const muut = await api.haeKiinteistonOmistajat(projekti.oid, true, undefined, 0, PAGE_SIZE, false, true);
+        const lisatyt = await api.haeKiinteistonOmistajat(projekti.oid, true, undefined, 0, undefined, true);
+        useFormReturn.reset({
+          oid: projekti.oid,
+          suomifiOmistajat: suomifi.omistajat.map(mapOmistajaToOmistajaRow()),
+          muutOmistajat: muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
+          lisatytOmistajat: lisatyt.omistajat.map(
+            mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")
+          ),
+        });
+        showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
+      } catch (error) {
+        log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
+      }
+    },
+    [api, projekti.oid, showErrorMessage, showSuccessMessage, useFormReturn]
+  );
+
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
     (data) => {
-      withLoadingSpinner(
-        (async () => {
-          setPoistaDialogOpen(false);
-          let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
-          try {
-            apiData = mapFormDataForApi(data);
-          } catch (error) {
-            log.error("Virhe kiinteistötietojen muuttamisessa tallennettavaan muotoon \n", error, data);
-            showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
-          }
-          if (apiData) {
-            try {
-              const ids = await api.tallennaKiinteistonOmistajat(apiData);
-              const newData: KiinteistonOmistajatFormFields = {
-                oid: data.oid,
-                suomifiOmistajat: data.suomifiOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
-                muutOmistajat: data.muutOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
-                lisatytOmistajat: data.lisatytOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
-              };
-              for (let i = 0; i < ids.length; i++) {
-                if (!newData.lisatytOmistajat[i].id) {
-                  newData.lisatytOmistajat[i].id = ids[i];
-                }
-              }
-              // poistetaan uusi lisätty mutta merkitty poistetuksi
-              newData.lisatytOmistajat = newData.lisatytOmistajat.filter((o) => !(!o.id && o.toBeDeleted));
-              useFormReturn.reset(newData);
-              showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
-            } catch (error) {
-              log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
-            }
-          }
-        })()
-      );
+      setPoistaDialogOpen(false);
+      // Count omistajat moving between lists
+      const siirtyvatYlempaan = data.muutOmistajat.filter(
+        (o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta
+      ).length;
+      const siirtyvatAlempaan = data.suomifiOmistajat.filter(
+        (o) => !o.toBeDeleted && !(o.jakeluosoite && o.postinumero && o.paikkakunta)
+      ).length;
+
+      if (siirtyvatYlempaan > 0 || siirtyvatAlempaan > 0) {
+        setSiirtoInfo({ ylempaan: siirtyvatYlempaan, alempaan: siirtyvatAlempaan });
+        setPendingSubmitData(data);
+      } else {
+        withLoadingSpinner(doSave(data));
+      }
     },
-    [api, showErrorMessage, showSuccessMessage, useFormReturn, withLoadingSpinner]
+    [doSave, withLoadingSpinner]
   );
+
+  const confirmSiirtoAndSave = useCallback(() => {
+    setSiirtoInfo(null);
+    if (pendingSubmitData) {
+      withLoadingSpinner(doSave(pendingSubmitData));
+      setPendingSubmitData(null);
+    }
+  }, [doSave, pendingSubmitData, withLoadingSpinner]);
 
   const resetAndClose = useCallback(async () => {
     await router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
@@ -562,6 +586,28 @@ export const FormContents: FunctionComponent<{
           </Button>
           <Button type="button" onClick={handleSubmit(onSubmit)} primary>
             Tallenna
+          </Button>
+        </DialogActions>
+      </HassuDialog>
+      <HassuDialog
+        open={siirtoInfo !== null}
+        title="Tiedottamisen tapaa muutetaan"
+        onClose={() => { setSiirtoInfo(null); setPendingSubmitData(null); }}
+      >
+        <DialogContent>
+          {siirtoInfo?.ylempaan ? (
+            <p>{`${siirtoInfo.ylempaan} kiinteistönomistaja${siirtoInfo.ylempaan === 1 ? "" : "a"} siirtyy Suomi.fi:n kautta tiedotettavaksi.`}</p>
+          ) : null}
+          {siirtoInfo?.alempaan ? (
+            <p>{`${siirtoInfo.alempaan} kiinteistönomistaja${siirtoInfo.alempaan === 1 ? "" : "a"} siirtyy kiinteistönomistajiin, joilla ei ole yhteystietoja.`}</p>
+          ) : null}
+        </DialogContent>
+        <DialogActions>
+          <Button type="button" onClick={confirmSiirtoAndSave} primary>
+            Jatka
+          </Button>
+          <Button type="button" onClick={() => { setSiirtoInfo(null); setPendingSubmitData(null); }}>
+            Peruuta
           </Button>
         </DialogActions>
       </HassuDialog>
