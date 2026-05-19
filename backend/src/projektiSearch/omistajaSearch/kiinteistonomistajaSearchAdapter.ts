@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import * as API from "hassu-common/graphql/apiModel";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
@@ -18,6 +19,7 @@ export type OmistajaDocument = Pick<
   | "suomifiLahetys"
   | "kaytossa"
   | "userCreated"
+  | "osoitetiedotSaatu"
 > & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: API.TiedotettavanLahetyksenTila | null };
 
 export function adaptOmistajaToIndex({
@@ -35,6 +37,7 @@ export function adaptOmistajaToIndex({
   suomifiLahetys,
   kaytossa,
   userCreated,
+  osoitetiedotSaatu,
   lahetykset,
 }: DBOmistaja): OmistajaDocument {
   const viimeisinLahetys = lahetykset?.sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
@@ -52,6 +55,7 @@ export function adaptOmistajaToIndex({
     suomifiLahetys,
     kaytossa,
     userCreated,
+    osoitetiedotSaatu,
     viimeisinLahetysaika: viimeisinLahetys?.lahetysaika ?? null,
     viimeisinTila: viimeisinLahetys?.tila ?? null,
   };
@@ -93,6 +97,7 @@ function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
     postinumero,
     maa,
     maakoodi,
+    osoitetiedotSaatu,
     viimeisinLahetysaika,
     viimeisinTila,
   } = hit._source;
@@ -108,6 +113,7 @@ function mapHitToApiOmistaja(hit: OmistajaDocumentHit) {
     paikkakunta,
     maa,
     maakoodi,
+    osoitetiedotSaatu,
     paivitetty,
     postinumero,
     viimeisinLahetysaika,
