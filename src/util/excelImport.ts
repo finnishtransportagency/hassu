@@ -1,5 +1,6 @@
 // Contains code generated or recommended by Amazon Q
-import { OMISTAJA_EXCEL_HEADERS } from "common/excelHeaders";
+import { OMISTAJA_EXCEL_HEADERS } from "common/excelConstants";
+import { OMISTAJA_EXCEL_SHEETS } from "common/excelConstants";
 
 export type ExcelColumnIndices = {
   kiinteistotunnus: number;
@@ -72,4 +73,18 @@ export function matchExcelRowsToOmistajat(
   }
 
   return results;
+}
+
+/**
+ * Determines which sheet to read from an Excel file.
+ * If multiple sheets, reads "Muut kiinteistönomistajat" sheet.
+ * If single sheet, reads that one.
+ * Returns 1-based sheet index.
+ */
+export function getSheetIndexToRead(sheetNames: string[]): number {
+  if (sheetNames.length > 1) {
+    const muutIndex = sheetNames.indexOf(OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
+    return muutIndex >= 0 ? muutIndex + 1 : 1;
+  }
+  return 1;
 }

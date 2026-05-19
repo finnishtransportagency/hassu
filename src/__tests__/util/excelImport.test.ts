@@ -1,5 +1,5 @@
 // Contains code generated or recommended by Amazon Q
-import { findColumnIndices, matchExcelRowsToOmistajat } from "src/util/excelImport";
+import { findColumnIndices, matchExcelRowsToOmistajat, getSheetIndexToRead } from "src/util/excelImport";
 
 describe("excelImport", () => {
   describe("findColumnIndices", () => {
@@ -141,6 +141,24 @@ describe("excelImport", () => {
       expect(results).toHaveLength(2);
       expect(results[0].index).toBe(1);
       expect(results[1].index).toBe(2);
+    });
+  });
+
+  describe("getSheetIndexToRead", () => {
+    it("returns 1 for single sheet", () => {
+      expect(getSheetIndexToRead(["Muut kiinteistönomistajat"])).toBe(1);
+    });
+
+    it("returns 'Muut kiinteistönomistajat' sheet index for multiple sheets", () => {
+      expect(getSheetIndexToRead(["Suomi.fi kiinteistönomistajat", "Muut kiinteistönomistajat"])).toBe(2);
+    });
+
+    it("returns 1 as fallback if 'Muut kiinteistönomistajat' not found in multiple sheets", () => {
+      expect(getSheetIndexToRead(["Sheet1", "Sheet2"])).toBe(1);
+    });
+
+    it("handles sheet name in different position", () => {
+      expect(getSheetIndexToRead(["Muut kiinteistönomistajat", "Suomi.fi kiinteistönomistajat"])).toBe(1);
     });
   });
 });

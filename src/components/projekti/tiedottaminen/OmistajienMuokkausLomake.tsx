@@ -35,8 +35,8 @@ import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { useRouter } from "next/router";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import HassuDialog from "@components/HassuDialog";
-import readXlsxFile from "read-excel-file/browser";
-import { findColumnIndices, matchExcelRowsToOmistajat } from "src/util/excelImport";
+import readXlsxFile, { readSheetNames } from "read-excel-file/browser";
+import { findColumnIndices, matchExcelRowsToOmistajat, getSheetIndexToRead } from "src/util/excelImport";
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -741,7 +741,9 @@ const TuoExcelistaButton: FunctionComponent = () => {
         return;
       }
       try {
-        const rows = await readXlsxFile(file);
+        const sheetNames = await readSheetNames(file);
+        const sheetIndex = getSheetIndexToRead(sheetNames);
+        const rows = await readXlsxFile(file, { sheet: sheetIndex });
         const columns = findColumnIndices(rows);
         if (!columns || columns.kiinteistotunnus < 0 || columns.nimi < 0) {
           showErrorMessage("Excel-tiedostosta ei löytynyt tunnistettavia otsikoita (Kiinteistötunnus, Omistajan nimi).");
