@@ -74,6 +74,9 @@ const suomiFiEiTiedotettavatYritykset = [
 function isSuomifiLahetys(
   omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">
 ): boolean {
+  if (omistaja.ytunnus && suomiFiEiTiedotettavatYritykset.includes(omistaja.ytunnus)) {
+    return false;
+  }
   // Kiinteistönomistaja päätyy Suomi.fi-listalle jos täydelliset osoitetiedot löytyvät
   return !!omistaja.jakeluosoite && !!omistaja.paikkakunta && !!omistaja.postinumero;
 }
