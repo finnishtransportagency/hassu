@@ -624,23 +624,12 @@ async function lahetaPdfViesti({
 // REST-rajapinta tukee pelkän paperikirjeen lähettämistä pelkällä osoitteella ilman hetua/y-tunnusta
 function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
   return (
-    (!!kohde.henkilotunnus || !!kohde.ytunnus) &&
     (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) &&
     !!kohde.jakeluosoite &&
     !!kohde.paikkakunta &&
     !!kohde.postinumero
   );
 }
-
-// TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
-// function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
-//   return (
-//     (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) &&
-//     !!kohde.jakeluosoite &&
-//     !!kohde.paikkakunta &&
-//     !!kohde.postinumero
-//   );
-// }
 
 function isMuistuttujanTiedotOk(kohde: DBMuistuttaja): boolean {
   return (
@@ -769,12 +758,9 @@ async function handleOmistaja({
         lahiosoite: omistaja.jakeluosoite!,
         postinumero: omistaja.postinumero!,
         postitoimipaikka: omistaja.paikkakunta!,
-        hetu: omistaja.henkilotunnus,
-        ytunnus: omistaja.ytunnus,
+        hetu: omistaja.henkilotunnus ?? undefined,
+        ytunnus: omistaja.ytunnus ?? undefined,
         maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
-        // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
-        // hetu: omistaja.henkilotunnus ?? undefined,
-        // ytunnus: omistaja.ytunnus ?? undefined,
       },
       omistaja: true,
       tyyppi,
@@ -885,25 +871,15 @@ async function paivitaMapKiinteistonOmistajilla(projektiFromDB: DBProjekti, tied
     .filter((o) => o.suomifiLahetys)
     .forEach((omistaja) => {
       const tunnus = omistaja.henkilotunnus ?? omistaja.ytunnus;
+      // Ilman tunnusta olevat omistajat eivät voi olla duplikaatteja, joten käytetään id:tä avaimena
       if (!tunnus) {
-        log.warn("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta tiedottamiseen. Tiedotusta ei pystytä tekemään.", {
+        log.info("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta, lähetetään pelkkä paperikirje", {
           id: omistaja.id,
         });
-        return;
       }
-      // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
-      // Ilman tunnusta olevat omistajat eivät voi olla duplikaatteja, joten käytetään id:tä avaimena
-      // if (!tunnus) {
-      //   log.info("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta, lähetetään pelkkä paperikirje", {
-      //     id: omistaja.id,
-      //   });
-      // }
+      const avain = tunnus ?? omistaja.id;
       const tiedotettavanRivit =
-        tiedotettavaMap.get(tunnus) ?? tiedotettavaMap.set(tunnus, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(tunnus)!;
-      // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
-      // const avain = tunnus ?? omistaja.id;
-      // const tiedotettavanRivit =
-      //   tiedotettavaMap.get(avain) ?? tiedotettavaMap.set(avain, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(avain)!;
+        tiedotettavaMap.get(avain) ?? tiedotettavaMap.set(avain, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(avain)!;
       tiedotettavanRivit.kiinteistonOmistajaIds.push(omistaja.id);
     });
 }
