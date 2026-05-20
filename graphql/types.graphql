@@ -1594,8 +1594,10 @@ type Omistaja {
   maakoodi: String
   maa: String
   osoitetiedotSaatu: Boolean
+  hasHetu: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
+  viimeisinLahetysTapa: LahetysTapa
 }
 
 enum TiedotettavanLahetyksenTila {
@@ -1603,6 +1605,11 @@ enum TiedotettavanLahetyksenTila {
   VIRHE
   OK_ERI_KIINTEISTO_MUISTUTUS
   VIRHE_ERI_KIINTEISTO_MUISTUTUS
+}
+
+enum LahetysTapa {
+  VIESTI
+  KIRJE
 }
 
 type TallennaKiinteistonOmistajaResponse {
@@ -1627,8 +1634,10 @@ type Muistuttaja {
   tiedotustapa: String
   sahkoposti: String
   paivitetty: String
+  hasHetu: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
+  viimeisinLahetysTapa: LahetysTapa
 }
 
 type Muistuttajat {
