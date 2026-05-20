@@ -492,6 +492,11 @@ export const FormContents: FunctionComponent<{
   const api = useApi();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const router = useRouter();
+  const [hakutulosMaarat, setHakutulosMaarat] = useState({
+    suomifi: initialSearchResponses.suomifi.hakutulosMaara,
+    muut: initialSearchResponses.muut.hakutulosMaara,
+  });
+  const [resetKey, setResetKey] = useState(0);
 
   function getRemoveCount() {
     return (
@@ -515,20 +520,27 @@ export const FormContents: FunctionComponent<{
           }
           if (apiData) {
             try {
-              const ids = await api.tallennaKiinteistonOmistajat(apiData);
+              await api.tallennaKiinteistonOmistajat(apiData);
+              // Re-fetch lists from API so owners appear in the correct list after suomifiLahetys changes
+              const [suomifi, muut, lisatyt] = await Promise.all([
+                api.haeKiinteistonOmistajat(data.oid, false, undefined, 0, PAGE_SIZE),
+                api.haeKiinteistonOmistajat(data.oid, true, undefined, 0, PAGE_SIZE, false, true),
+                api.haeKiinteistonOmistajat(data.oid, true, undefined, 0, undefined, true),
+              ]);
               const newData: KiinteistonOmistajatFormFields = {
                 oid: data.oid,
-                suomifiOmistajat: data.suomifiOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
-                muutOmistajat: data.muutOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
-                lisatytOmistajat: data.lisatytOmistajat.filter((m) => !apiData?.poistettavatOmistajat.includes(m.id ?? "")),
+                suomifiOmistajat: suomifi.omistajat.map((o) =>
+                  o.osoitetiedotSaatu === false
+                    ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
+                    : mapOmistajaToOmistajaRow()(o)
+                ),
+                muutOmistajat: muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
+                lisatytOmistajat: lisatyt.omistajat.map(
+                  mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")
+                ),
               };
-              for (let i = 0; i < ids.length; i++) {
-                if (!newData.lisatytOmistajat[i].id) {
-                  newData.lisatytOmistajat[i].id = ids[i];
-                }
-              }
-              // poistetaan uusi lisätty mutta merkitty poistetuksi
-              newData.lisatytOmistajat = newData.lisatytOmistajat.filter((o) => !(!o.id && o.toBeDeleted));
+              setHakutulosMaarat({ suomifi: suomifi.hakutulosMaara, muut: muut.hakutulosMaara });
+              setResetKey((k) => k + 1);
               useFormReturn.reset(newData);
               showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
             } catch (error) {
@@ -555,10 +567,11 @@ export const FormContents: FunctionComponent<{
               Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
               Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
             </p>
-            {initialSearchResponses.suomifi.hakutulosMaara ? (
+            {hakutulosMaarat.suomifi ? (
               <PaginatedTaulukko
+                key={`suomifi-${resetKey}`}
                 oid={projekti.oid}
-                initialHakutulosMaara={initialSearchResponses.suomifi.hakutulosMaara}
+                initialHakutulosMaara={hakutulosMaarat.suomifi}
                 columns={suomifiColumns}
                 fieldArrayName="suomifiOmistajat"
               />
@@ -576,10 +589,11 @@ export const FormContents: FunctionComponent<{
               muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse.
               Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
             </p>
-            {initialSearchResponses.muut.hakutulosMaara ? (
+            {hakutulosMaarat.muut ? (
               <PaginatedTaulukko
+                key={`muut-${resetKey}`}
                 oid={projekti.oid}
-                initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
+                initialHakutulosMaara={hakutulosMaarat.muut}
                 columns={muutColumns}
                 fieldArrayName="muutOmistajat"
               />
