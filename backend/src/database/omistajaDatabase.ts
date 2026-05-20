@@ -13,7 +13,7 @@ import {
   TransactWriteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
-import { TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { LahetysTapa, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
 
 export type OmistajaKey = {
   oid: string;
@@ -40,7 +40,7 @@ export type DBOmistaja = {
   kaytossa: boolean;
   suomifiLahetys?: boolean;
   osoitetiedotSaatu?: boolean;
-  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[];
+  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; lahetysTapa?: LahetysTapa }[];
   userCreated?: boolean;
 };
 
