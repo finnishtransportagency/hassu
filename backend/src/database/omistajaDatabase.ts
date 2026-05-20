@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { log } from "../logger";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -38,6 +39,7 @@ export type DBOmistaja = {
   expires?: number;
   kaytossa: boolean;
   suomifiLahetys?: boolean;
+  osoitetiedotSaatu?: boolean;
   lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[];
   userCreated?: boolean;
 };
