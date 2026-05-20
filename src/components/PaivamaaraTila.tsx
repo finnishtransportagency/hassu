@@ -1,14 +1,17 @@
+// Contains code generated or recommended by Amazon Q
 import {} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import { faCheck, faEnvelope, faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "@mui/material";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { TiedotettavanLahetyksenTila } from "@services/api";
+import { LahetysTapa, TiedotettavanLahetyksenTila } from "@services/api";
 
 interface TilaProps {
   pvm?: string | null;
   tila?: TiedotettavanLahetyksenTila | null;
+  hasHetu?: boolean | null;
+  lahetysTapa?: LahetysTapa | null;
 }
 
 export const tilaIcons: Record<TiedotettavanLahetyksenTila, IconProp> = {
@@ -34,22 +37,36 @@ export const tilaTooltipTitles: Record<TiedotettavanLahetyksenTila, string> = {
 
 export function PaivamaaraTila(props: Readonly<TilaProps>) {
   const pvm = props.pvm ? dayjs(props.pvm).format("DD.MM.YYYY HH:mm") : undefined;
+  const vainOsoitetiedot = props.hasHetu === false;
+
+  // Before sending
   if (!props.tila) {
-    return <>{pvm ?? "-"}</>;
+    return <>{vainOsoitetiedot ? "-, vain osoitetiedot" : pvm ?? "-"}</>;
   }
 
   const icon = tilaIcons[props.tila];
   const iconColor = tilaIconColors[props.tila];
   const tooltipTitle = tilaTooltipTitles[props.tila];
+  const lahetystapaTeksti = props.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : "Suomi.fi: kirje";
 
   return (
     <>
-      {pvm ?? "-"}
-      {props.tila && (
-        <Tooltip title={tooltipTitle}>
-          <FontAwesomeIcon style={{ marginLeft: "8px" }} icon={icon} color={iconColor} />
-        </Tooltip>
-      )}
+      <div>{pvm ?? "-"}</div>
+      <div>
+        {lahetystapaTeksti}{vainOsoitetiedot && ","}
+        {vainOsoitetiedot ? (
+          <div>
+            vain osoitetiedot
+            <Tooltip title={tooltipTitle}>
+              <FontAwesomeIcon style={{ marginLeft: "8px" }} icon={icon} color={iconColor} />
+            </Tooltip>
+          </div>
+        ) : (
+          <Tooltip title={tooltipTitle}>
+            <FontAwesomeIcon style={{ marginLeft: "8px" }} icon={icon} color={iconColor} />
+          </Tooltip>
+        )}
+      </div>
     </>
   );
 }

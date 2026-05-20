@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { useCallback, FunctionComponent } from "react";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import ProjektiConsumer from "@components/projekti/ProjektiConsumer";
@@ -67,8 +68,8 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
     },
     cell: (c) => {
       const value = c.getValue() as string | null;
-      const tila = c.row.original.viimeisinTila;
-      return <PaivamaaraTila pvm={value} tila={tila} />;
+      const { viimeisinTila, hasHetu, viimeisinLahetysTapa } = c.row.original;
+      return <PaivamaaraTila pvm={value} tila={viimeisinTila} hasHetu={hasHetu} lahetysTapa={viimeisinLahetysTapa} />;
     },
   },
 ];
