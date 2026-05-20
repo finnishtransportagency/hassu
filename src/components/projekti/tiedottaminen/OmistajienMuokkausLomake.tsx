@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { useCallback, useState, useMemo, FunctionComponent } from "react";
 import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
@@ -39,6 +40,7 @@ type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
   maakoodi: string | null;
   maa: string | null | undefined;
+  osoitetiedotSaatu?: boolean | null;
 };
 
 type KiinteistonOmistajatFormFields = {
@@ -52,7 +54,7 @@ const PAGE_SIZE = 25;
 
 const mapOmistajaToOmistajaRow =
   (...fieldsToSetDefaultsTo: (keyof OmistajaInput)[]) =>
-  ({ id, kiinteistotunnus, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi }: Omistaja): OmistajaRow => {
+  ({ id, kiinteistotunnus, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi, osoitetiedotSaatu }: Omistaja): OmistajaRow => {
     const omistajaRow: OmistajaRow = {
       id,
       kiinteistotunnus,
@@ -63,6 +65,7 @@ const mapOmistajaToOmistajaRow =
       toBeDeleted: false,
       maakoodi: maakoodi ?? null,
       maa,
+      osoitetiedotSaatu,
     };
     fieldsToSetDefaultsTo.forEach((key) => {
       omistajaRow[key] = omistajaRow[key] ?? "";
@@ -96,10 +99,22 @@ const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiint
       maakoodi,
     })
   );
+  const suomifiOmistajat = data.suomifiOmistajat
+    .filter((omistaja) => !omistaja.toBeDeleted && omistaja.osoitetiedotSaatu === false)
+    .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero, maakoodi }) => ({
+      id,
+      jakeluosoite,
+      kiinteistotunnus,
+      nimi,
+      paikkakunta,
+      postinumero,
+      maakoodi,
+    }));
   const variables: TallennaKiinteistonOmistajatMutationVariables = {
     oid: data.oid,
     muutOmistajat,
     poistettavatOmistajat,
+    suomifiOmistajat: suomifiOmistajat.length > 0 ? suomifiOmistajat : undefined,
   };
 
   return variables;
@@ -203,24 +218,60 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     accessorKey: "jakeluosoite",
     id: "postiosoite",
     meta: getDefaultColumnMeta(),
+    cell: (context) =>
+      context.row.original.osoitetiedotSaatu === false ? (
+        <TextFieldWithController<KiinteistonOmistajatFormFields>
+          autoComplete="off"
+          fullWidth
+          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.jakeluosoite` }}
+        />
+      ) : (
+        <>{context.getValue() || "-"}</>
+      ),
   },
   {
     header: "Postinumero",
     accessorKey: "postinumero",
     id: "postinumero",
     meta: getDefaultColumnMeta(),
+    cell: (context) =>
+      context.row.original.osoitetiedotSaatu === false ? (
+        <TextFieldWithController<KiinteistonOmistajatFormFields>
+          autoComplete="off"
+          fullWidth
+          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.postinumero` }}
+        />
+      ) : (
+        <>{context.getValue() || "-"}</>
+      ),
   },
   {
     header: "Postitoimipaikka",
     accessorKey: "paikkakunta",
     id: "postitoimipaikka",
     meta: getDefaultColumnMeta(),
+    cell: (context) =>
+      context.row.original.osoitetiedotSaatu === false ? (
+        <TextFieldWithController<KiinteistonOmistajatFormFields>
+          autoComplete="off"
+          fullWidth
+          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.paikkakunta` }}
+        />
+      ) : (
+        <>{context.getValue() || "-"}</>
+      ),
   },
   {
     header: "Maa",
     accessorFn: ({ maakoodi }) => getLocalizedCountryName("fi", maakoodi ?? "FI"),
     id: "maakoodi",
     meta: getDefaultColumnMeta(),
+    cell: (context) =>
+      context.row.original.osoitetiedotSaatu === false ? (
+        <Maa fieldArrayName="suomifiOmistajat" index={context.row.index} />
+      ) : (
+        <>{context.getValue() || "-"}</>
+      ),
   },
 
   createPoistaColumn("suomifiOmistajat"),
@@ -418,7 +469,11 @@ export const FormContents: FunctionComponent<{
   const useFormReturn = useForm<KiinteistonOmistajatFormFields>(
     getFormOptions({
       oid: projekti.oid,
-      suomifiOmistajat: initialSearchResponses.suomifi.omistajat.map(mapOmistajaToOmistajaRow()),
+      suomifiOmistajat: initialSearchResponses.suomifi.omistajat.map((o) =>
+        o.osoitetiedotSaatu === false
+          ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
+          : mapOmistajaToOmistajaRow()(o)
+      ),
       muutOmistajat: initialSearchResponses.muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
       lisatytOmistajat: initialSearchResponses.lisatyt.omistajat.map(
         mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")
@@ -602,10 +657,13 @@ const PaginatedTaulukko = ({
             const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, undefined, from, size, false, true);
             setHakutulosMaara(response.hakutulosMaara);
             const omistajat = response.omistajat;
-            const resettableFields: (keyof OmistajaInput)[] = muutOmistajat ? ["jakeluosoite", "postinumero", "paikkakunta"] : [];
             const toBeAdded = omistajat
               .filter((omistaja) => !fields.some(({ id }) => id === omistaja.id))
-              .map(mapOmistajaToOmistajaRow(...resettableFields));
+              .map((o) => {
+                const resettableFields: (keyof OmistajaInput)[] =
+                  muutOmistajat || o.osoitetiedotSaatu === false ? ["jakeluosoite", "postinumero", "paikkakunta"] : [];
+                return mapOmistajaToOmistajaRow(...resettableFields)(o);
+              });
             setSliceAt(Math.ceil((from + size) / PAGE_SIZE) * PAGE_SIZE);
             appendMuut(toBeAdded);
             if (!isDirty) {
