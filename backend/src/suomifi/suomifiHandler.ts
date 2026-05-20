@@ -1,7 +1,9 @@
+// Contains code generated or recommended by Amazon Q
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log } from "../logger";
-import { PdfViesti, SuomiFiClient, Viesti, getSuomiFiClient } from "./viranomaispalvelutwsinterface/suomifi";
+import { PdfViesti, Viesti, getSuomiFiClient as getSoapClient } from "./viranomaispalvelutwsinterface/suomifi";
+import { SuomiFiClient, getSuomiFiClient as getRestClient } from "./suomifiRest/suomifi";
 import { parameters } from "../aws/parameters";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
@@ -54,9 +56,17 @@ type Kohde = {
 };
 
 let mockSuomiFiClient: SuomiFiClient | undefined;
+let cachedClient: SuomiFiClient | undefined;
+let cachedClientType: string | undefined;
 
 export function setMockSuomiFiClient(client: SuomiFiClient) {
   mockSuomiFiClient = client;
+}
+
+export function resetCachedClient() {
+  cachedClient = undefined;
+  cachedClientType = undefined;
+  parameters.clearCachedParameter("SuomiFiClientType");
 }
 
 export function parseLaskutus(tunniste?: string) {
@@ -74,31 +84,71 @@ export function parseLaskutus(tunniste?: string) {
   return {};
 }
 
-async function getClient(): Promise<SuomiFiClient> {
+async function createSoapClient(): Promise<SuomiFiClient> {
+  const cfg = await parameters.getSuomiFiConfig();
+  if (!cfg) {
+    throw new Error("SuomiFiConfig -parametria ei löydy");
+  }
+  return getSoapClient({
+    apiKey: cfg.apikey,
+    endpoint: cfg.endpoint,
+    palveluTunnus: cfg.palvelutunnus,
+    viranomaisTunnus: cfg.viranomaistunnus,
+    laskutusTunniste: parseLaskutus(cfg.laskutustunniste),
+    laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
+    yhteysHenkilo: cfg.yhteyshenkilo,
+    publicCertificate: await parameters.getSuomiFiCertificate(),
+    privateKey: await parameters.getSuomiFiPrivateKey(),
+  });
+}
+
+async function createRestClient(): Promise<SuomiFiClient> {
+  const restCfg = await parameters.getSuomiFiRestConfig();
+  if (!restCfg) {
+    throw new Error("SuomiFiRestConfig -parametria ei löydy");
+  }
+  log.info("Suomi.fi REST client config", {
+    endpoint: restCfg.endpoint,
+  });
+  return getRestClient({
+    apiKey: restCfg.apikey,
+    endpoint: restCfg.endpoint,
+    palveluTunnus: restCfg.palvelutunnus,
+    viranomaisTunnus: restCfg.viranomaistunnus,
+    laskutusTunniste: parseLaskutus(restCfg.laskutustunniste),
+    laskutusSalasana: parseLaskutus(restCfg.laskutussalasana),
+    yhteysHenkilo: restCfg.yhteyshenkilo,
+  });
+}
+
+export async function getClient(): Promise<SuomiFiClient> {
   if (config.isInTest) {
     if (!mockSuomiFiClient) {
       throw new Error("Suomi.fi clientia ei ole asetettu");
     }
     return mockSuomiFiClient;
   }
-  // luodaan client aina uudestaan kun muuten viestin allekirjoituksen verifiointi epäonnistuu
-  const now = Date.now();
-  const cfg = await parameters.getSuomiFiConfig();
-  try {
-    return await getSuomiFiClient({
-      apiKey: cfg.apikey,
-      endpoint: cfg.endpoint,
-      palveluTunnus: cfg.palvelutunnus,
-      viranomaisTunnus: cfg.viranomaistunnus,
-      laskutusTunniste: parseLaskutus(cfg.laskutustunniste),
-      laskutusSalasana: parseLaskutus(cfg.laskutussalasana),
-      publicCertificate: await parameters.getSuomiFiCertificate(),
-      privateKey: await parameters.getSuomiFiPrivateKey(),
-      yhteysHenkilo: cfg.yhteyshenkilo,
-    });
-  } finally {
-    log.info(`Suomi.fi client alustusaika: ${Date.now() - now} ms`);
+  const clientType = await parameters.getSuomiFiClientType();
+  if (clientType !== cachedClientType) {
+    cachedClient = undefined;
+    cachedClientType = clientType;
   }
+  if (clientType === "REST") {
+    if (cachedClient) {
+      log.info("Käytetään cachessa olevaa Suomi.fi REST clientia");
+      return cachedClient;
+    }
+    const now = Date.now();
+    cachedClient = await createRestClient();
+
+    log.info(`Suomi.fi REST client alustusaika: ${Date.now() - now} ms`);
+    return cachedClient;
+  }
+  // SOAP: luodaan client aina uudestaan kun muuten viestin allekirjoituksen verifiointi epäonnistuu
+  const now = Date.now();
+  const client = await createSoapClient();
+  log.info(`Suomi.fi SOAP client alustusaika: ${Date.now() - now} ms`);
+  return client;
 }
 
 function createMuistutus(muistuttaja: DBMuistuttaja): Muistutus {
@@ -149,11 +199,13 @@ async function lahetaInfoViesti(hetu: string, projektiFromDB: DBProjekti, muistu
     auditLog.info("Suomi.fi infoviesti lähetetty muistuttajalle", {
       muistuttajaId: muistuttaja.id,
       sanomaTunniste: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
+      traceId: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
     });
   } else {
     auditLog.info("Suomi.fi infoviestin lähetys muistuttajalle epäonnistui", {
       muistuttajaId: muistuttaja.id,
       sanomaTunniste: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
+      traceId: resp.LisaaKohteitaResult?.TilaKoodi?.SanomaTunniste,
       tilaKoodi: resp.LisaaKohteitaResult?.TilaKoodi?.TilaKoodi,
       kohteenTila: asiakas?.KohteenTila,
     });
@@ -424,7 +476,7 @@ function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProj
   if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
     let sisalto = `Hei,
 
-Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamista sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamisesta sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
 Ystävällisin terveisin
 ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
@@ -544,10 +596,12 @@ async function lahetaPdfViesti({
         omistajaIdsForLahetystilaUpdate,
       });
     } else {
+      const traceId = parseTraceId(resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
       auditLog.info("Suomi.fi pdf-viestin lähetys epäonnistui", {
         omistajaId: omistaja ? kohde.id : undefined,
         muistuttajaId: omistaja ? undefined : kohde.id,
         sanomaTunniste: resp.LahetaViestiResult?.TilaKoodi?.SanomaTunniste,
+        traceId,
         tilaKoodi: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodi,
         tilaKoodiKuvaus: resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus,
       });
@@ -567,6 +621,7 @@ async function lahetaPdfViesti({
   }
 }
 
+// REST-rajapinta tukee pelkän paperikirjeen lähettämistä pelkällä osoitteella ilman hetua/y-tunnusta
 function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
   return (
     (!!kohde.henkilotunnus || !!kohde.ytunnus) &&
@@ -576,6 +631,16 @@ function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
     !!kohde.postinumero
   );
 }
+
+// TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+// function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
+//   return (
+//     (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) &&
+//     !!kohde.jakeluosoite &&
+//     !!kohde.paikkakunta &&
+//     !!kohde.postinumero
+//   );
+// }
 
 function isMuistuttujanTiedotOk(kohde: DBMuistuttaja): boolean {
   return (
@@ -707,6 +772,9 @@ async function handleOmistaja({
         hetu: omistaja.henkilotunnus,
         ytunnus: omistaja.ytunnus,
         maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
+        // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+        // hetu: omistaja.henkilotunnus ?? undefined,
+        // ytunnus: omistaja.ytunnus ?? undefined,
       },
       omistaja: true,
       tyyppi,
@@ -728,6 +796,11 @@ async function handleOmistaja({
 }
 
 const handlerFactory = (event: SuomifiEvent) => async () => {
+  if (isEventResetAction(event)) {
+    resetCachedClient();
+    log.info("Suomi.fi client cache resetoitu");
+    return;
+  }
   if (isEventStatusCheckAction(event)) {
     return await isCognitoKayttajaSuomiFiViestitEnabled(event.hetu);
   }
@@ -770,20 +843,28 @@ async function handleSqsEvent(event: SQSEvent) {
   }
 }
 
+function isEventResetAction(event: SuomifiEvent): event is SuomiFiResetAction {
+  return (event as SuomiFiResetAction).action === "resetClient";
+}
+
 function isEventStatusCheckAction(event: SuomifiEvent): event is SuomiFiViestitStatusCheckAction {
   return !!(event as SuomiFiViestitStatusCheckAction).hetu;
 }
 
 function isEventSqsEvent(event: SuomifiEvent): event is SQSEvent {
   const records = (event as SQSEvent).Records;
-  return !!records.length && records.every((record) => record.body);
+  return !!records && !!records.length && records.every((record) => record.body);
 }
+
+type SuomiFiResetAction = {
+  action: "resetClient";
+};
 
 type SuomiFiViestitStatusCheckAction = {
   hetu: string;
 };
 
-type SuomifiEvent = SuomiFiViestitStatusCheckAction | SQSEvent;
+type SuomifiEvent = SuomiFiResetAction | SuomiFiViestitStatusCheckAction | SQSEvent;
 
 export const handleEvent = async (event: SuomifiEvent) => {
   setupLambdaMonitoring();
@@ -810,8 +891,19 @@ async function paivitaMapKiinteistonOmistajilla(projektiFromDB: DBProjekti, tied
         });
         return;
       }
+      // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+      // Ilman tunnusta olevat omistajat eivät voi olla duplikaatteja, joten käytetään id:tä avaimena
+      // if (!tunnus) {
+      //   log.info("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta, lähetetään pelkkä paperikirje", {
+      //     id: omistaja.id,
+      //   });
+      // }
       const tiedotettavanRivit =
         tiedotettavaMap.get(tunnus) ?? tiedotettavaMap.set(tunnus, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(tunnus)!;
+      // TODO: Ota käyttöön kun pelkkä paperikirje ilman hetua/y-tunnusta halutaan sallia
+      // const avain = tunnus ?? omistaja.id;
+      // const tiedotettavanRivit =
+      //   tiedotettavaMap.get(avain) ?? tiedotettavaMap.set(avain, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(avain)!;
       tiedotettavanRivit.kiinteistonOmistajaIds.push(omistaja.id);
     });
 }
