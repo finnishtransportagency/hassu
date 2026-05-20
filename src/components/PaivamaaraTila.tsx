@@ -37,6 +37,7 @@ export const tilaTooltipTitles: Record<TiedotettavanLahetyksenTila, string> = {
 
 export function PaivamaaraTila(props: Readonly<TilaProps>) {
   const pvm = props.pvm ? dayjs(props.pvm).format("DD.MM.YYYY HH:mm") : undefined;
+  const hasHetuData = props.hasHetu != null;
   const vainOsoitetiedot = props.hasHetu === false;
 
   // Before sending
@@ -47,6 +48,19 @@ export function PaivamaaraTila(props: Readonly<TilaProps>) {
   const icon = tilaIcons[props.tila];
   const iconColor = tilaIconColors[props.tila];
   const tooltipTitle = tilaTooltipTitles[props.tila];
+
+  // Fallback: show old simple format when hasHetu/lahetysTapa data is not yet available
+  if (!hasHetuData || !props.lahetysTapa) {
+    return (
+      <>
+        {pvm ?? "-"}
+        <Tooltip title={tooltipTitle}>
+          <FontAwesomeIcon style={{ marginLeft: "8px" }} icon={icon} color={iconColor} />
+        </Tooltip>
+      </>
+    );
+  }
+
   const lahetystapaTeksti = props.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : "Suomi.fi: kirje";
 
   return (
