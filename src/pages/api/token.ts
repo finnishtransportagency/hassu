@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { SSM } from "@aws-sdk/client-ssm";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -55,6 +56,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `x-vls-access-token=${access_token};path=/;Secure;SameSite=Strict;HttpOnly `,
       `x-vls-refresh-token=${refresh_token};path=/;Secure;SameSite=Strict;HttpOnly `,
       `x-vls-id-token=${id_token};path=/;Secure;SameSite=Strict;HttpOnly `,
+    ];
+    res.setHeader("Set-Cookie", cookie);
+  } else {
+    // Token exchange failed — clear any stale cookies from previous session
+    const cookie = [
+      "x-vls-access-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;",
+      "x-vls-refresh-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;",
+      "x-vls-id-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;",
     ];
     res.setHeader("Set-Cookie", cookie);
   }
