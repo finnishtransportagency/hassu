@@ -202,7 +202,8 @@
     "uuid": "$uuid",
     "shell-quote": "$shell-quote",
     "postcss": "$postcss",
-    "got": "12.6.1"
+    "got": "12.6.1",
+    "flatted": ">=3.4.2"
   },
   "scripts": {
     "import:dynamodb": "node importDynamodbExport.js",
