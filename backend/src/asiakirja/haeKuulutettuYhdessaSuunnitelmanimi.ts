@@ -1,8 +1,9 @@
+// Contains code generated or recommended by Amazon Q
 import { Kieli } from "hassu-common/graphql/apiModel";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { ProjektinJakautuminen } from "../database/model";
 import { haeJaetunProjektinOid } from "../projekti/haeJaetunProjektinOid";
-import { haeLiittyvanProjektinTiedot } from "../projekti/haeLiittyvanProjektinTiedot";
+import { projektiDatabase } from "../database/projektiDatabase";
 
 export async function haeKuulutettuYhdessaSuunnitelmanimi(
   projektinJakautuminen: ProjektinJakautuminen | undefined,
@@ -12,9 +13,20 @@ export async function haeKuulutettuYhdessaSuunnitelmanimi(
   if (!jaetunProjektinOid) {
     return undefined;
   }
-  const liittyvanProjektinTiedot = (await haeLiittyvanProjektinTiedot(jaetunProjektinOid))?.nimi;
-  if (!liittyvanProjektinTiedot) {
+  // Haetaan nimi suoraan tietokannasta eikä haeLiittyvanProjektinTiedot-funktion kautta,
+  // koska se kutsuu projektiAdapterJulkinen.adaptProjekti:a joka tuo transitiivisen
+  // riippuvuuden s3Cache:en (calculateEndDate → getBankHolidays → s3Cache).
+  // Tässä tarvitaan vain projektin nimi, ei julkisuusstatusta.
+  const projekti = await projektiDatabase.loadProjektiByOid(jaetunProjektinOid, true, false);
+  if (!projekti?.velho?.nimi) {
     return undefined;
   }
-  return kieli === Kieli.RUOTSI && liittyvanProjektinTiedot.RUOTSI ? liittyvanProjektinTiedot.RUOTSI : liittyvanProjektinTiedot.SUOMI;
+  if (
+    kieli === Kieli.RUOTSI &&
+    projekti.kielitiedot?.projektinNimiVieraskielella &&
+    [projekti.kielitiedot.ensisijainenKieli, projekti.kielitiedot.toissijainenKieli].includes(Kieli.RUOTSI)
+  ) {
+    return projekti.kielitiedot.projektinNimiVieraskielella;
+  }
+  return projekti.velho.nimi;
 }

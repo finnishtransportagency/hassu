@@ -55,6 +55,7 @@
     "archiver": "^6.0.1",
     "aws-appsync-auth-link": "^3.0.7",
     "axios": "^1.15.0",
+    "axios-retry": "^4.5.0",
     "classnames": "^2.3.2",
     "content-disposition": "^0.5.4",
     "convert-units": "^2.3.4",
@@ -204,6 +205,8 @@
     "got": "12.6.1"
   },
   "scripts": {
+    "import:dynamodb": "node importDynamodbExport.js",
+    "restore:attribute": "node restoreAttribute.js",
     "postinstall": "(cd deployment && npm i) && (cd common && npm i) && (cd migration-cli && npm i --ignore-scripts) && (cd layers/lambda-base/nodejs && npm i --production) && ./deployment/bin/patchPdfkitTable.sh",
     "clean": "rimraf .cdk-* .next .report .serverless .serverless_nextjs build cdk.out out schema.graphql common/graphql/*",
     "clean:packages": "rimraf node_modules package-lock.json deployment/node_modules deployment/package-lock.json migration-cli/node_modules migration-cli/package-lock.json layers/lambda-base/nodejs/node_modules layers/lambda-base/nodejs/package-lock.json",
