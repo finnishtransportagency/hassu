@@ -83,3 +83,4 @@ backend/test/mml/maanomistajaluettelo_nahtavillaolo.xlsx
 .vscode/launch.json
 
 public/assets/__env.js
+migration-cli/public/assets/__env.js
