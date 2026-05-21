@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { userService } from "../../src/user";
@@ -8,6 +9,8 @@ import { GetParameterCommand, SSM } from "@aws-sdk/client-ssm";
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { defaultUnitTestMocks } from "../mocks";
 import { mockClient } from "aws-sdk-client-mock";
+import * as lambdaModule from "../../src/aws/lambda";
+import { parameters } from "../../src/aws/parameters";
 
 import { expect } from "chai";
 
@@ -78,5 +81,77 @@ describe("userService", () => {
     } as unknown as AppSyncResolverEvent<unknown>);
     const user = userService.requireVaylaUser();
     expect(user.roolit).to.eql(["hassu_admin", "hassu_kayttaja", "HassuAdmin"]);
+  });
+
+  describe("Suomi.fi user identification", () => {
+    let suomifiEnabledStub: sinon.SinonStub;
+    let suomifiViestitEnabledStub: sinon.SinonStub;
+    let invokeLambdaStub: sinon.SinonStub;
+
+    before(() => {
+      suomifiEnabledStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled");
+      suomifiViestitEnabledStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled");
+      invokeLambdaStub = sinon.stub(lambdaModule, "invokeLambda");
+    });
+
+    beforeEach(() => {
+      validateTokenStub.returns(undefined);
+      suomifiEnabledStub.resolves(true);
+      suomifiViestitEnabledStub.resolves(false);
+      invokeLambdaStub.resolves("");
+    });
+
+    after(() => {
+      suomifiEnabledStub.restore();
+      suomifiViestitEnabledStub.restore();
+      invokeLambdaStub.restore();
+    });
+
+    it("should return user with kayttajaSuomifiViestitEnabled false when invokeLambda fails", async () => {
+      suomifiViestitEnabledStub.resolves(true);
+      invokeLambdaStub.rejects(new Error("Lambda timeout"));
+
+      // Simulate an identified Suomi.fi user by setting it directly
+      (globalThis as any).currentSuomifiUser = {
+        sub: "test-sub",
+        email: "test@example.com",
+        email_verified: "true",
+        given_name: "Testi",
+        family_name: "Kayttaja",
+        username: "testikayttaja",
+        "custom:hetu": "010101-123A",
+        "custom:lahiosoite": "Testikatu 1",
+        "custom:postinumero": "00100",
+        "custom:postitoimipaikka": "Helsinki",
+        "custom:ulkomainenkunta": "",
+        "custom:ulkomainenlahiosoite": "",
+        "custom:maakoodi": "FI",
+      };
+
+      const kayttaja = await userService.getSuomiFiKayttaja();
+      expect(kayttaja).to.not.be.undefined;
+      expect(kayttaja?.tunnistautunut).to.equal(true);
+      expect(kayttaja?.kayttajaSuomifiViestitEnabled).to.equal(false);
+      expect(kayttaja?.etunimi).to.equal("Testi");
+    });
+
+    it("should return tunnistautunut false when no Suomi.fi user is identified", async () => {
+      (globalThis as any).currentSuomifiUser = undefined;
+
+      const kayttaja = await userService.getSuomiFiKayttaja();
+      expect(kayttaja).to.not.be.undefined;
+      expect(kayttaja?.tunnistautunut).to.equal(false);
+      expect(kayttaja?.suomifiEnabled).to.equal(true);
+    });
+
+    it("should return tunnistautunut false when Suomi.fi integration is disabled", async () => {
+      suomifiEnabledStub.resolves(false);
+      (globalThis as any).currentSuomifiUser = undefined;
+
+      const kayttaja = await userService.getSuomiFiKayttaja();
+      expect(kayttaja).to.not.be.undefined;
+      expect(kayttaja?.tunnistautunut).to.equal(false);
+      expect(kayttaja?.suomifiEnabled).to.equal(false);
+    });
   });
 });
