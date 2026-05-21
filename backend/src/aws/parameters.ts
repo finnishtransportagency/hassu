@@ -102,6 +102,10 @@ class Parameters {
     return value;
   }
 
+  clearCachedParameter(paramName: string): void {
+    this.cache.delete(paramName);
+  }
+
   private async getParameterUncached(paramName: string): Promise<string | undefined> {
     let value: string | undefined;
     if (process.env.ENVIRONMENT) {
