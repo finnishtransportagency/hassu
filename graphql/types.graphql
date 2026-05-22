@@ -1593,7 +1593,7 @@ type Omistaja {
   paikkakunta: String
   maakoodi: String
   maa: String
-  hasHetu: Boolean
+  hasTunnus: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
   viimeisinLahetysTapa: LahetysTapa
@@ -1633,7 +1633,7 @@ type Muistuttaja {
   tiedotustapa: String
   sahkoposti: String
   paivitetty: String
-  hasHetu: Boolean
+  hasTunnus: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
   viimeisinLahetysTapa: LahetysTapa

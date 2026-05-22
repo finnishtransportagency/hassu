@@ -6,7 +6,7 @@ import { LahetysTapa, TiedotettavanLahetyksenTila } from "hassu-common/graphql/a
 
 describe("kiinteistonomistajaSearchAdapter", () => {
   describe("adaptOmistajaToIndex", () => {
-    it("should set hasHetu true when henkilotunnus exists", () => {
+    it("should set hasTunnus true when henkilotunnus exists", () => {
       const omistaja: DBOmistaja = {
         id: "1",
         oid: "1.2.3",
@@ -22,10 +22,10 @@ describe("kiinteistonomistajaSearchAdapter", () => {
         expires: 0,
       };
       const result = adaptOmistajaToIndex(omistaja);
-      expect(result.hasHetu).to.equal(true);
+      expect(result.hasTunnus).to.equal(true);
     });
 
-    it("should set hasHetu false when henkilotunnus is missing", () => {
+    it("should set hasTunnus false when henkilotunnus is missing", () => {
       const omistaja: DBOmistaja = {
         id: "2",
         oid: "1.2.3",
@@ -40,7 +40,7 @@ describe("kiinteistonomistajaSearchAdapter", () => {
         expires: 0,
       };
       const result = adaptOmistajaToIndex(omistaja);
-      expect(result.hasHetu).to.equal(false);
+      expect(result.hasTunnus).to.equal(false);
     });
 
     it("should set viimeisinLahetysTapa from latest lahetys", () => {
@@ -110,7 +110,7 @@ describe("kiinteistonomistajaSearchAdapter", () => {
   });
 
   describe("adaptSearchResultsToApiOmistaja", () => {
-    it("should map hasHetu and viimeisinLahetysTapa to API model", () => {
+    it("should map hasTunnus and viimeisinLahetysTapa to API model", () => {
       const results = {
         hits: {
           hits: [
@@ -127,7 +127,7 @@ describe("kiinteistonomistajaSearchAdapter", () => {
                 maakoodi: "FI",
                 lisatty: "2024-01-01",
                 paivitetty: null,
-                hasHetu: true,
+                hasTunnus: true,
                 osoitetiedotSaatu: true,
                 viimeisinLahetysaika: "2024-06-01T10:00:00+02:00",
                 viimeisinTila: TiedotettavanLahetyksenTila.OK,
@@ -147,7 +147,7 @@ describe("kiinteistonomistajaSearchAdapter", () => {
                 maakoodi: "FI",
                 lisatty: "2024-01-01",
                 paivitetty: null,
-                hasHetu: false,
+                hasTunnus: false,
                 osoitetiedotSaatu: true,
                 viimeisinLahetysaika: "2024-06-01T10:00:00+02:00",
                 viimeisinTila: TiedotettavanLahetyksenTila.OK,
@@ -159,10 +159,10 @@ describe("kiinteistonomistajaSearchAdapter", () => {
       };
       const apiOmistajat = adaptSearchResultsToApiOmistaja(results);
       expect(apiOmistajat).to.have.length(2);
-      expect(apiOmistajat[0].hasHetu).to.equal(true);
+      expect(apiOmistajat[0].hasTunnus).to.equal(true);
       expect(apiOmistajat[0].viimeisinLahetysTapa).to.equal(LahetysTapa.VIESTI);
       expect(apiOmistajat[0].osoitetiedotSaatu).to.equal(true);
-      expect(apiOmistajat[1].hasHetu).to.equal(false);
+      expect(apiOmistajat[1].hasTunnus).to.equal(false);
       expect(apiOmistajat[1].viimeisinLahetysTapa).to.equal(LahetysTapa.KIRJE);
     });
   });

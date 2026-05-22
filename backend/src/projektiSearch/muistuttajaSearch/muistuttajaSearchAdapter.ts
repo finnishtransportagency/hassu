@@ -21,7 +21,7 @@ export type MuistuttajaDocument = Pick<
   | "kaytossa"
 > & {
   maa: string | null;
-  hasHetu: boolean;
+  hasTunnus: boolean;
   viimeisinLahetysaika: string | null;
   viimeisinTila: API.TiedotettavanLahetyksenTila | null;
   viimeisinLahetysTapa: API.LahetysTapa | null;
@@ -60,7 +60,7 @@ export function adaptMuistuttajaToIndex({
     sahkoposti,
     suomifiLahetys,
     kaytossa,
-    hasHetu: !!henkilotunnus,
+    hasTunnus: !!henkilotunnus,
     viimeisinLahetysaika: viimeisinLahetys?.lahetysaika ?? null,
     viimeisinTila: viimeisinLahetys?.tila ?? null,
     viimeisinLahetysTapa: viimeisinLahetys?.lahetysTapa ?? null,
@@ -105,7 +105,7 @@ function mapHitToApiMuistuttaja(hit: MuistuttajaDocumentHit) {
     tiedotustapa: hit._source.tiedotustapa,
     paivitetty: hit._source.paivitetty,
     sahkoposti: hit._source.sahkoposti,
-    hasHetu: hit._source.hasHetu,
+    hasTunnus: hit._source.hasTunnus,
     viimeisinLahetysaika: hit._source.viimeisinLahetysaika,
     viimeisinTila: hit._source.viimeisinTila,
     viimeisinLahetysTapa: hit._source.viimeisinLahetysTapa,
