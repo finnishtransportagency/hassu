@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import { ButtonFlat, ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import ButtonLink from "@components/button/ButtonLink";
@@ -139,7 +140,7 @@ const UnstyledTableAccordionDetails = <T extends Record<string, unknown>>({
               );
             } else {
               setTiedotettavat(
-                response.tiedotettavat.sort((a, b) => {
+                [...response.tiedotettavat].sort((a, b) => {
                   const nimiA = (a.nimi as string) || "";
                   const nimiB = (b.nimi as string) || "";
                   return nimiA.localeCompare(nimiB, "fi");

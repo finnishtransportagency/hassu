@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { SQSRecord } from "aws-lambda";
 import {
   OmistajaHakuEvent,
@@ -171,16 +172,16 @@ describe("kiinteistoHandler", () => {
   it("tallenna kiinteistön omistajat", async () => {
     const event: OmistajaHakuEvent = { oid: "1.2.3", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4", "5"] };
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     await handleEvent({ Records: [record] });
-    dbMock.on(TransactWriteCommand).resolves({});
-    expect(dbMock.commandCalls(TransactWriteCommand).length).to.be.equal(1);
-    const writeCommand = dbMock.commandCalls(TransactWriteCommand)[0];
+    dbMock.on(TransactWriteCommand as any).resolves({});
+    expect(dbMock.commandCalls(TransactWriteCommand as any).length).to.be.equal(1);
+    const writeCommand = dbMock.commandCalls(TransactWriteCommand as any)[0];
     assert(writeCommand.args[0].input.TransactItems);
     expect(writeCommand.args[0].input.TransactItems.length).to.be.equal(6);
-    expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(2);
-    const updateCommand = dbMock.commandCalls(UpdateCommand)[0];
-    const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
+    expect(dbMock.commandCalls(UpdateCommand as any).length).to.be.equal(2);
+    const updateCommand = dbMock.commandCalls(UpdateCommand as any)[0];
+    const updateCommand2 = dbMock.commandCalls(UpdateCommand as any)[1];
     assert(updateCommand.args[0].input.ExpressionAttributeValues);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahaku"].virhe).to.be.equal(false);
     expect(updateCommand.args[0].input.ExpressionAttributeValues[":omistajahaku"].kaynnistetty).to.be.equal(time);
@@ -190,21 +191,21 @@ describe("kiinteistoHandler", () => {
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajahaku"].kaynnistetty).to.be.equal(null);
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":omistajahaku"].kiinteistotunnusMaara).to.be.equal(null);
     const snapshot: DBOmistaja[] = [];
-    writeCommand.args[0].input.TransactItems.forEach((c, i) => {
+    writeCommand.args[0].input.TransactItems.forEach((c: any, i: number) => {
       snapshot.push({ ...c.Put?.Item, id: `${i}`, lisatty: "", expires: 0 } as DBOmistaja);
     });
     expect(snapshot).toMatchSnapshot();
   });
 
   it("päivitä ja poista kiinteistön omistajia", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+    dbMock.on(GetCommand as any, { TableName: config.projektiTableName }).resolves({
       Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
-    });
+    } as any);
     dbMock
-      .on(QueryCommand, {
+      .on(QueryCommand as any, {
         TableName: config.kiinteistonomistajaTableName,
         KeyConditionExpression: "#oid = :oid",
         ExpressionAttributeValues: {
@@ -224,7 +225,7 @@ describe("kiinteistoHandler", () => {
           { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
           { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
         ],
-      });
+      } as any);
 
     await tallennaKiinteistonOmistajat({
       oid: "1",
@@ -247,40 +248,40 @@ describe("kiinteistoHandler", () => {
       poistettavatOmistajat: ["11", "44"],
     });
 
-    expect(dbMock.commandCalls(PutCommand).length).to.be.equal(2);
-    const putCommand = dbMock.commandCalls(PutCommand)[0];
+    expect(dbMock.commandCalls(PutCommand as any).length).to.be.equal(2);
+    const putCommand = dbMock.commandCalls(PutCommand as any)[0];
     const o1 = putCommand.args[0].input.Item as DBOmistaja;
     expect(o1.id).to.be.equal("33");
     expect(o1.jakeluosoite).to.be.equal("Osoite 2");
     expect(o1.postinumero).to.be.equal("00100");
     expect(o1.paikkakunta).to.be.equal("Helsinki");
-    const putCommand2 = dbMock.commandCalls(PutCommand)[1];
+    const putCommand2 = dbMock.commandCalls(PutCommand as any)[1];
     const o2 = putCommand2.args[0].input.Item as DBOmistaja;
     expect([...omistajaIdt, ...muutOmistajaIdt]).to.not.have.members([o2.id]);
     expect(o2.nimi).to.be.equal("Matti Ruohonen");
     expect(o2.jakeluosoite).to.be.equal("Osoite 1");
     expect(o2.postinumero).to.be.equal("01000");
     expect(o2.paikkakunta).to.be.equal("Vantaa");
-    expect(dbMock.commandCalls(UpdateCommand).length).to.be.equal(2);
-    const updateCommand1 = dbMock.commandCalls(UpdateCommand)[0];
+    expect(dbMock.commandCalls(UpdateCommand as any).length).to.be.equal(2);
+    const updateCommand1 = dbMock.commandCalls(UpdateCommand as any)[0];
     assert(updateCommand1.args[0].input.ExpressionAttributeValues);
     expect(updateCommand1.args[0].input.Key).to.eql({ oid: "1", id: "11" });
     expect(updateCommand1.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
-    const updateCommand2 = dbMock.commandCalls(UpdateCommand)[1];
+    const updateCommand2 = dbMock.commandCalls(UpdateCommand as any)[1];
     assert(updateCommand2.args[0].input.ExpressionAttributeValues);
     expect(updateCommand2.args[0].input.Key).to.eql({ oid: "1", id: "44" });
     expect(updateCommand2.args[0].input.ExpressionAttributeValues[":kaytossa"]).to.be.false;
   });
 
   it("heittää virhettä olemattoman omistajan poistamisesta", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any);  // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+    dbMock.on(GetCommand as any, { TableName: config.projektiTableName }).resolves({
       Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
-    });
+    } as any);
     dbMock
-      .on(QueryCommand, {
+      .on(QueryCommand as any, {
         TableName: config.kiinteistonomistajaTableName,
         KeyConditionExpression: "#oid = :oid",
         ExpressionAttributeValues: {
@@ -300,7 +301,7 @@ describe("kiinteistoHandler", () => {
           { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
           { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
         ],
-      });
+      } as any);
     await expect(
       tallennaKiinteistonOmistajat({
         oid: "1",
@@ -326,14 +327,14 @@ describe("kiinteistoHandler", () => {
   });
 
   it("heittää virhettä jos muokattava omistaja ei ole muuOmistaja", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+    dbMock.on(GetCommand as any, { TableName: config.projektiTableName }).resolves({
       Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
-    });
+    } as any);
     dbMock
-      .on(QueryCommand, {
+      .on(QueryCommand as any, {
         TableName: config.kiinteistonomistajaTableName,
         KeyConditionExpression: "#oid = :oid",
         ExpressionAttributeValues: {
@@ -353,7 +354,7 @@ describe("kiinteistoHandler", () => {
           { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
           { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
         ],
-      });
+      } as any);
     await expect(
       tallennaKiinteistonOmistajat({
         oid: "1",
@@ -372,14 +373,14 @@ describe("kiinteistoHandler", () => {
   });
 
   it("heittää virhettä jos poistettavaa omistajaa yritetään muokata", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({
+    dbMock.on(GetCommand as any, { TableName: config.projektiTableName }).resolves({
       Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] },
-    });
+    } as any);
     dbMock
-      .on(QueryCommand, {
+      .on(QueryCommand as any, {
         TableName: config.kiinteistonomistajaTableName,
         KeyConditionExpression: "#oid = :oid",
         ExpressionAttributeValues: {
@@ -399,7 +400,7 @@ describe("kiinteistoHandler", () => {
           { id: muutOmistajaIdt[0], oid: "1", etunimet: "Jarkko", sukunimi: "Jarkon sukunimi", suomifiLahetys: false },
           { id: muutOmistajaIdt[1], oid: "1", etunimet: "Sini", sukunimi: "Sinin sukunimi", suomifiLahetys: false },
         ],
-      });
+      } as any);
     await expect(
       tallennaKiinteistonOmistajat({
         oid: "1",
@@ -418,18 +419,18 @@ describe("kiinteistoHandler", () => {
   });
 
   it("tuoKarttarajausJaTallennaKiinteistotunnukset testiympäristö", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     sinon.stub(parameters, "getKiinteistoSQSUrl").resolves("");
     dbMock
-      .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-    const sqsMock = mockClient(SQSClient);
+      .on(GetCommand as any, { TableName: config.projektiTableName })
+      .resolves({ Item: { oid: "1", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } } as any);
+    const sqsMock = mockClient(SQSClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     await tuoKarttarajausJaTallennaKiinteistotunnukset({
       geoJSON: "",
       oid: "1",
       kiinteistotunnukset: ["491001491", "49100263", "227001491"],
     });
-    const body = sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.MessageBody;
+    const body = sqsMock.commandCalls(SendMessageCommand as any)[0].args[0].input.MessageBody;
     assert(body);
     const hakuEvent = JSON.parse(body) as OmistajaHakuEvent;
     expect(hakuEvent.oid).to.equal("1");
@@ -440,19 +441,19 @@ describe("kiinteistoHandler", () => {
     expect(hakuEvent.kiinteistotunnukset[2]).to.equal("227001491");
   });
   it("tuoKarttarajausJaTallennaKiinteistotunnukset tuotantoympäristö", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient);
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     sinon.stub(parameters, "getKiinteistoSQSUrl").resolves("");
     sinon.stub(config, "isProd").resolves(true);
     dbMock
-      .on(GetCommand, { TableName: config.projektiTableName })
-      .resolves({ Item: { oid: "1.2.3", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } });
-    const sqsMock = mockClient(SQSClient);
+      .on(GetCommand as any, { TableName: config.projektiTableName })
+      .resolves({ Item: { oid: "1.2.3", kayttoOikeudet: [{ kayttajatunnus: "testuid" }] } } as any);
+    const sqsMock = mockClient(SQSClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     await tuoKarttarajausJaTallennaKiinteistotunnukset({
       geoJSON: "",
       oid: "1.2.3",
       kiinteistotunnukset: ["491001491", "49100263", "227001491"],
     });
-    const body = sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.MessageBody;
+    const body = sqsMock.commandCalls(SendMessageCommand as any)[0].args[0].input.MessageBody;
     assert(body);
     const hakuEvent = JSON.parse(body) as OmistajaHakuEvent;
     expect(hakuEvent.oid).to.equal("1.2.3");

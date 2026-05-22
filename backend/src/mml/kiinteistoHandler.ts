@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { SQSEvent } from "aws-lambda";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
 import { auditLog, log, setLogContextOid } from "../logger";
@@ -145,6 +146,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         yhteystiedot.push(...tiekunnat);
         yhteystiedot.forEach((k) => {
           k.omistajat.forEach((o) => {
+            const osoitetiedotSaatu = !!(o.yhteystiedot?.jakeluosoite || o.yhteystiedot?.postinumero || o.yhteystiedot?.paikkakunta);
             const omistaja: DBOmistaja = {
               id: uuid.v4(),
               kiinteistotunnus: k.kiinteistotunnus,
@@ -159,6 +161,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
               postinumero: o.yhteystiedot?.postinumero,
               paikkakunta: o.yhteystiedot?.paikkakunta,
               maakoodi: o.yhteystiedot?.maakoodi,
+              osoitetiedotSaatu,
               kaytossa: true,
               expires,
             };
