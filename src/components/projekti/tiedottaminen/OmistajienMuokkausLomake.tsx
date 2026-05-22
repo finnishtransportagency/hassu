@@ -429,7 +429,6 @@ export const FormContents: FunctionComponent<{
   const {
     handleSubmit,
     formState: { isDirty, isSubmitting },
-    getValues,
   } = useFormReturn;
   useLeaveConfirm(!isSubmitting && isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -438,15 +437,7 @@ export const FormContents: FunctionComponent<{
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const router = useRouter();
 
-  function getRemoveCount() {
-    return (
-      getValues().muutOmistajat.filter((o) => o.toBeDeleted).length +
-      getValues().suomifiOmistajat.filter((o) => o.toBeDeleted).length +
-      getValues().lisatytOmistajat.filter((o) => o.toBeDeleted && o.id).length
-    );
-  }
-  const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
-  const [siirtoInfo, setSiirtoInfo] = useState<{ ylempaan: number; alempaan: number } | null>(null);
+  const [vahvistusInfo, setVahvistusInfo] = useState<{ ylempaan: number; alempaan: number; poistettavat: number } | null>(null);
   const [pendingSubmitData, setPendingSubmitData] = useState<KiinteistonOmistajatFormFields | null>(null);
 
   const doSave = useCallback(
@@ -483,17 +474,22 @@ export const FormContents: FunctionComponent<{
 
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
     (data) => {
-      setPoistaDialogOpen(false);
-      // Count omistajat moving between lists
-      const siirtyvatYlempaan = data.muutOmistajat.filter(
-        (o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta
-      ).length;
+      // Count all changes that need confirmation
+      const siirtyvatYlempaan = [
+        ...data.muutOmistajat.filter((o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta),
+        ...data.lisatytOmistajat.filter((o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta),
+      ].length;
       const siirtyvatAlempaan = data.suomifiOmistajat.filter(
         (o) => !o.toBeDeleted && !(o.jakeluosoite && o.postinumero && o.paikkakunta)
       ).length;
+      const poistettavat = [
+        ...data.muutOmistajat.filter((o) => o.toBeDeleted),
+        ...data.suomifiOmistajat.filter((o) => o.toBeDeleted),
+        ...data.lisatytOmistajat.filter((o) => o.toBeDeleted && o.id),
+      ].length;
 
-      if (siirtyvatYlempaan > 0 || siirtyvatAlempaan > 0) {
-        setSiirtoInfo({ ylempaan: siirtyvatYlempaan, alempaan: siirtyvatAlempaan });
+      if (siirtyvatYlempaan > 0 || siirtyvatAlempaan > 0 || poistettavat > 0) {
+        setVahvistusInfo({ ylempaan: siirtyvatYlempaan, alempaan: siirtyvatAlempaan, poistettavat });
         setPendingSubmitData(data);
       } else {
         withLoadingSpinner(doSave(data));
@@ -502,8 +498,8 @@ export const FormContents: FunctionComponent<{
     [doSave, withLoadingSpinner]
   );
 
-  const confirmSiirtoAndSave = useCallback(() => {
-    setSiirtoInfo(null);
+  const confirmAndSave = useCallback(() => {
+    setVahvistusInfo(null);
     if (pendingSubmitData) {
       withLoadingSpinner(doSave(pendingSubmitData));
       setPendingSubmitData(null);
@@ -569,44 +565,34 @@ export const FormContents: FunctionComponent<{
               <Button type="button" onClick={resetAndClose}>
                 Palaa listaukseen
               </Button>
-              <Button type="button" onClick={getRemoveCount() > 0 ? () => setPoistaDialogOpen(true) : handleSubmit(onSubmit)} primary>
+              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
                 Tallenna
               </Button>
             </Stack>
           </Section>
         </DialogContent>
       </DialogForm>
-      <HassuDialog open={poistaDialogOpen} title="Kiinteistönomistajatietojen tallentaminen" onClose={() => setPoistaDialogOpen(false)}>
-        <DialogContent>
-          <p>{`Olet poistamassa ${getRemoveCount()} määrä kiinteistönomistajia. Tallenna vahvistaaksesi.`}</p>
-        </DialogContent>
-        <DialogActions>
-          <Button type="button" onClick={() => setPoistaDialogOpen(false)}>
-            Peruuta
-          </Button>
-          <Button type="button" onClick={handleSubmit(onSubmit)} primary>
-            Tallenna
-          </Button>
-        </DialogActions>
-      </HassuDialog>
       <HassuDialog
-        open={siirtoInfo !== null}
-        title="Tiedottamisen tapaa muutetaan"
-        onClose={() => { setSiirtoInfo(null); setPendingSubmitData(null); }}
+        open={vahvistusInfo !== null}
+        title="Kiinteistönomistajatietojen tallentaminen"
+        onClose={() => { setVahvistusInfo(null); setPendingSubmitData(null); }}
       >
         <DialogContent>
-          {siirtoInfo?.ylempaan ? (
-            <p>{`${siirtoInfo.ylempaan} kiinteistönomistaja${siirtoInfo.ylempaan === 1 ? "" : "a"} siirtyy Suomi.fi:n kautta tiedotettavaksi.`}</p>
+          {vahvistusInfo?.poistettavat ? (
+            <p>{`Olet poistamassa ${vahvistusInfo.poistettavat} kiinteistönomistaja${vahvistusInfo.poistettavat === 1 ? "n" : "a"}.`}</p>
           ) : null}
-          {siirtoInfo?.alempaan ? (
-            <p>{`${siirtoInfo.alempaan} kiinteistönomistaja${siirtoInfo.alempaan === 1 ? "" : "a"} siirtyy kiinteistönomistajiin, joilla ei ole yhteystietoja.`}</p>
+          {vahvistusInfo?.ylempaan ? (
+            <p>{`${vahvistusInfo.ylempaan} kiinteistönomistaja${vahvistusInfo.ylempaan === 1 ? "" : "a"} siirtyy Suomi.fi:n kautta tiedotettavaksi.`}</p>
+          ) : null}
+          {vahvistusInfo?.alempaan ? (
+            <p>{`${vahvistusInfo.alempaan} kiinteistönomistaja${vahvistusInfo.alempaan === 1 ? "" : "a"} siirtyy kiinteistönomistajiin, joilla ei ole yhteystietoja.`}</p>
           ) : null}
         </DialogContent>
         <DialogActions>
-          <Button type="button" onClick={confirmSiirtoAndSave} primary>
+          <Button type="button" onClick={confirmAndSave} primary>
             Jatka
           </Button>
-          <Button type="button" onClick={() => { setSiirtoInfo(null); setPendingSubmitData(null); }}>
+          <Button type="button" onClick={() => { setVahvistusInfo(null); setPendingSubmitData(null); }}>
             Peruuta
           </Button>
         </DialogActions>
