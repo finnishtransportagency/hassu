@@ -1,5 +1,5 @@
 // Contains code generated or recommended by Amazon Q
-import React, { useCallback, useState, useMemo, useRef, FunctionComponent } from "react";
+import React, { useCallback, useState, useMemo, useRef, useContext, createContext, FunctionComponent } from "react";
 import { Autocomplete, DialogActions, DialogContent, Stack, styled, TextField } from "@mui/material";
 import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
@@ -23,7 +23,7 @@ import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table
 import { formatKiinteistotunnusForDatabase } from "common/util/formatKiinteistotunnus";
 import { RectangleButton } from "@components/button/RectangleButton";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import { ButtonFlatWithIcon } from "@components/button/ButtonFlat";
+import { ButtonFlat, ButtonFlatWithIcon } from "@components/button/ButtonFlat";
 import HassuTable from "@components/table/HassuTable";
 import useSnackbars from "src/hooks/useSnackbars";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,6 +37,8 @@ import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import HassuDialog from "@components/HassuDialog";
 import readXlsxFile, { readSheetNames } from "read-excel-file/browser";
 import { findColumnIndices, matchExcelRowsToOmistajat, getSheetIndexToRead } from "src/util/excelImport";
+
+const SuodatusContext = createContext<string>("");
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -509,14 +511,37 @@ export const FormContents: FunctionComponent<{
     }
   }, [doSave, pendingSubmitData, withLoadingSpinner]);
 
+  const loadAllMuutRef = useRef<(() => Promise<void>) | undefined>(undefined);
+  const loadAllSuomifiRef = useRef<(() => Promise<void>) | undefined>(undefined);
+  const [suodatus, setSuodatus] = useState("");
+
+  const handleSuodata = useCallback(
+    (query: string) => {
+      if (query) {
+        withLoadingSpinner(
+          (async () => {
+            await loadAllSuomifiRef.current?.();
+            await loadAllMuutRef.current?.();
+            setSuodatus(query);
+          })()
+        );
+      } else {
+        setSuodatus("");
+      }
+    },
+    [withLoadingSpinner]
+  );
+
   const resetAndClose = useCallback(async () => {
     await router.push({ pathname: "/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat", query: { oid: projekti.oid } });
   }, [router, projekti.oid]);
 
   return (
+    <SuodatusContext.Provider value={suodatus}>
     <FormProvider {...useFormReturn}>
       <DialogForm>
         <DialogContent>
+          <SuodatusKentta onSuodata={handleSuodata} suodatusAktiivinen={!!suodatus} />
           <Section noDivider>
             <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
             <p>
@@ -529,6 +554,7 @@ export const FormContents: FunctionComponent<{
                 initialHakutulosMaara={initialSearchResponses.suomifi.hakutulosMaara}
                 columns={suomifiColumns}
                 fieldArrayName="suomifiOmistajat"
+                loadAllRef={loadAllSuomifiRef}
               />
             ) : (
               <GrayBackgroundText>
@@ -551,7 +577,8 @@ export const FormContents: FunctionComponent<{
                   initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
                   columns={muutColumns}
                   fieldArrayName="muutOmistajat"
-                  extraActions={<TuoExcelistaButton />}
+                  loadAllRef={loadAllMuutRef}
+                  extraActions={<TuoExcelistaButton loadAllRef={loadAllMuutRef} />}
                 />
               </>
             ) : (
@@ -604,6 +631,7 @@ export const FormContents: FunctionComponent<{
         </DialogActions>
       </HassuDialog>
     </FormProvider>
+    </SuodatusContext.Provider>
   );
 };
 
@@ -613,12 +641,14 @@ const PaginatedTaulukko = ({
   columns,
   fieldArrayName,
   extraActions,
+  loadAllRef,
 }: {
   oid: string;
   initialHakutulosMaara: number;
   fieldArrayName: "muutOmistajat" | "suomifiOmistajat";
   columns: ColumnDef<OmistajaRow>[];
   extraActions?: React.ReactNode;
+  loadAllRef?: React.MutableRefObject<(() => Promise<void>) | undefined>;
 }) => {
   const {
     control,
@@ -628,51 +658,74 @@ const PaginatedTaulukko = ({
   const [hakutulosMaara, setHakutulosMaara] = useState<number>(initialHakutulosMaara);
   const [sliceAt, setSliceAt] = useState(PAGE_SIZE);
   const { append: appendMuut, fields } = useFieldArray({ control, name: fieldArrayName, keyName: "fieldId" });
-  const slicedFields = useMemo(() => fields.slice(0, sliceAt), [fields, sliceAt]);
+  const suodatus = useContext(SuodatusContext);
+  const filteredFields = useMemo(() => {
+    if (!suodatus) return fields;
+    const lower = suodatus.toLowerCase();
+    return fields.filter((o) =>
+      [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa]
+        .some((val) => val?.toLowerCase().includes(lower))
+    );
+  }, [fields, suodatus]);
+  const slicedFields = useMemo(() => (suodatus ? filteredFields : filteredFields.slice(0, sliceAt)), [filteredFields, sliceAt, suodatus]);
 
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
 
-  const updateMuut = useCallback<(from: number, size: number) => void>(
-    (from, size) => {
-      withLoadingSpinner(
-        (async () => {
-          try {
-            const muutOmistajat = fieldArrayName === "muutOmistajat";
-            const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, undefined, from, size, false, true);
-            setHakutulosMaara(response.hakutulosMaara);
-            const omistajat = response.omistajat;
-            const resettableFields: (keyof OmistajaInput)[] = muutOmistajat ? ["jakeluosoite", "postinumero", "paikkakunta"] : [];
-            const toBeAdded = omistajat
-              .filter((omistaja) => !fields.some(({ id }) => id === omistaja.id))
-              .map(mapOmistajaToOmistajaRow(...resettableFields));
-            setSliceAt(Math.ceil((from + size) / PAGE_SIZE) * PAGE_SIZE);
-            appendMuut(toBeAdded);
-            if (!isDirty) {
-              reset(undefined, { keepValues: true });
-            }
-          } catch {}
-        })()
-      );
+  const updateMuut = useCallback(
+    async (from: number, size: number) => {
+      try {
+        const muutOmistajat = fieldArrayName === "muutOmistajat";
+        const response = await api.haeKiinteistonOmistajat(oid, muutOmistajat, undefined, from, size, false, true);
+        setHakutulosMaara(response.hakutulosMaara);
+        const omistajat = response.omistajat;
+        const resettableFields: (keyof OmistajaInput)[] = muutOmistajat ? ["jakeluosoite", "postinumero", "paikkakunta"] : [];
+        const toBeAdded = omistajat
+          .filter((omistaja) => !fields.some(({ id }) => id === omistaja.id))
+          .map(mapOmistajaToOmistajaRow(...resettableFields));
+        setSliceAt(Math.ceil((from + size) / PAGE_SIZE) * PAGE_SIZE);
+        appendMuut(toBeAdded);
+        if (!isDirty) {
+          reset(undefined, { keepValues: true });
+        }
+      } catch {}
     },
-    [api, appendMuut, fieldArrayName, fields, oid, withLoadingSpinner, isDirty, reset]
+    [api, appendMuut, fieldArrayName, fields, oid, isDirty, reset]
   );
+
+  if (loadAllRef) {
+    loadAllRef.current = async () => {
+      if (fields.length < hakutulosMaara) {
+        const prevSliceAt = sliceAt;
+        await updateMuut(fields.length, hakutulosMaara - fields.length);
+        setSliceAt(prevSliceAt);
+      }
+    };
+  }
 
   const showLess = useCallback(() => {
     setSliceAt((old) => old - PAGE_SIZE);
   }, []);
 
   const getNextPage = useCallback(() => {
-    updateMuut(slicedFields.length, PAGE_SIZE);
-  }, [slicedFields.length, updateMuut]);
+    if (fields.length > slicedFields.length) {
+      setSliceAt((old) => old + PAGE_SIZE);
+    } else {
+      withLoadingSpinner(updateMuut(slicedFields.length, PAGE_SIZE));
+    }
+  }, [fields.length, slicedFields.length, updateMuut, withLoadingSpinner]);
 
   const toggleShowHideAll = useCallback(() => {
     if (slicedFields.length < (hakutulosMaara ?? 0)) {
-      updateMuut(slicedFields.length, (hakutulosMaara ?? 0) - slicedFields.length);
+      if (fields.length >= hakutulosMaara) {
+        setSliceAt(hakutulosMaara);
+      } else {
+        withLoadingSpinner(updateMuut(fields.length, (hakutulosMaara ?? 0) - fields.length));
+      }
     } else {
       setSliceAt(PAGE_SIZE);
     }
-  }, [hakutulosMaara, slicedFields.length, updateMuut]);
+  }, [hakutulosMaara, slicedFields.length, fields.length, updateMuut, withLoadingSpinner]);
 
   const table = useReactTable({
     columns: columns,
@@ -681,35 +734,38 @@ const PaginatedTaulukko = ({
     enableSorting: false,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
+    meta: { virtualization: { type: "window" } },
   });
 
   return (
     <>
       <HassuTable table={table} />
-      <Stack direction="row" alignItems="flex-start">
-        <Stack alignItems="center" flex={1}>
-          {slicedFields.length > PAGE_SIZE && (
-            <RectangleButton type="button" onClick={showLess}>
-              Näytä vähemmän kiinteistönomistajia
-            </RectangleButton>
-          )}
-          {hakutulosMaara > slicedFields.length && (
-            <RectangleButton type="button" onClick={getNextPage}>
-              Näytä enemmän kiinteistönomistajia
-            </RectangleButton>
-          )}
-          {hakutulosMaara > PAGE_SIZE && (
-            <ButtonFlatWithIcon
-              type="button"
-              icon={hakutulosMaara <= slicedFields.length ? "chevron-up" : "chevron-down"}
-              onClick={toggleShowHideAll}
-            >
-              {hakutulosMaara <= slicedFields.length ? "Piilota kaikki" : "Näytä kaikki"}
-            </ButtonFlatWithIcon>
-          )}
+      {!suodatus && (
+        <Stack direction="row" alignItems="flex-start">
+          <Stack alignItems="center" flex={1}>
+            {slicedFields.length > PAGE_SIZE && (
+              <RectangleButton type="button" onClick={showLess}>
+                Näytä vähemmän kiinteistönomistajia
+              </RectangleButton>
+            )}
+            {hakutulosMaara > slicedFields.length && (
+              <RectangleButton type="button" onClick={getNextPage}>
+                Näytä enemmän kiinteistönomistajia
+              </RectangleButton>
+            )}
+            {hakutulosMaara > PAGE_SIZE && (
+              <ButtonFlatWithIcon
+                type="button"
+                icon={hakutulosMaara <= slicedFields.length ? "chevron-up" : "chevron-down"}
+                onClick={toggleShowHideAll}
+              >
+                {hakutulosMaara <= slicedFields.length ? "Piilota kaikki" : "Näytä kaikki"}
+              </ButtonFlatWithIcon>
+            )}
+          </Stack>
+          {extraActions}
         </Stack>
-        {extraActions}
-      </Stack>
+      )}
     </>
   );
 };
@@ -717,11 +773,20 @@ const PaginatedTaulukko = ({
 const LisatytTaulukko = () => {
   const { control } = useFormContext<KiinteistonOmistajatFormFields>();
   const { append, fields } = useFieldArray({ control, name: "lisatytOmistajat", keyName: "fieldId" });
+  const suodatus = useContext(SuodatusContext);
+  const filteredFields = useMemo(() => {
+    if (!suodatus) return fields;
+    const lower = suodatus.toLowerCase();
+    return fields.filter((o) =>
+      [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa]
+        .some((val) => val?.toLowerCase().includes(lower))
+    );
+  }, [fields, suodatus]);
 
   const table = useReactTable({
     columns: lisatytColumns,
     getCoreRowModel: getCoreRowModel(),
-    data: fields,
+    data: filteredFields,
     enableSorting: false,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
@@ -754,32 +819,37 @@ const LisatytTaulukko = () => {
 const DialogForm = styled("form")({ display: "contents" });
 
 // Excel column headers shared with export (tiedotettavatExcel.ts)
-const TuoExcelistaButton: FunctionComponent = () => {
+const TuoExcelistaButton: FunctionComponent<{ loadAllRef: React.MutableRefObject<(() => Promise<void>) | undefined> }> = ({ loadAllRef }) => {
   const { getValues, setValue } = useFormContext<KiinteistonOmistajatFormFields>();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
+  const { withLoadingSpinner } = useLoadingSpinner();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = useCallback(
-    async (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (!file) {
         return;
       }
-      try {
-        const sheetNames = await readSheetNames(file);
-        const sheetIndex = getSheetIndexToRead(sheetNames);
-        const rows = await readXlsxFile(file, { sheet: sheetIndex });
-        const columns = findColumnIndices(rows);
-        if (!columns || columns.kiinteistotunnus < 0 || columns.nimi < 0) {
-          showErrorMessage("Excel-tiedostosta ei löytynyt tunnistettavia otsikoita (Kiinteistötunnus, Omistajan nimi).");
-          return;
-        }
-        if (columns.postiosoite < 0 && columns.postinumero < 0 && columns.postitoimipaikka < 0) {
-          showErrorMessage("Excel-tiedostosta ei löytynyt osoitesarakkeita (Postiosoite, Postinumero, Postitoimipaikka).");
-          return;
-        }
-        const muutOmistajat = getValues("muutOmistajat");
-        const results = matchExcelRowsToOmistajat(rows, columns, muutOmistajat);
+      withLoadingSpinner(
+        (async () => {
+          try {
+            const sheetNames = await readSheetNames(file);
+            const sheetIndex = getSheetIndexToRead(sheetNames);
+            const rows = await readXlsxFile(file, { sheet: sheetIndex });
+            const columns = findColumnIndices(rows);
+            if (!columns || columns.kiinteistotunnus < 0 || columns.nimi < 0) {
+              showErrorMessage("Excel-tiedostosta ei löytynyt tunnistettavia otsikoita (Kiinteistötunnus, Omistajan nimi).");
+              return;
+            }
+            if (columns.postiosoite < 0 && columns.postinumero < 0 && columns.postitoimipaikka < 0) {
+              showErrorMessage("Excel-tiedostosta ei löytynyt osoitesarakkeita (Postiosoite, Postinumero, Postitoimipaikka).");
+              return;
+            }
+            // Load all rows from backend before matching
+            await loadAllRef.current?.();
+            const muutOmistajat = getValues("muutOmistajat");
+            const results = matchExcelRowsToOmistajat(rows, columns, muutOmistajat);
 
         let updatedCount = 0;
         for (const result of results) {
@@ -800,21 +870,23 @@ const TuoExcelistaButton: FunctionComponent = () => {
           if (changed) updatedCount++;
         }
 
-        if (updatedCount > 0) {
-          showSuccessMessage(`Osoitetiedot päivitetty ${updatedCount} kiinteistönomistajalle. Muista tallentaa muutokset.`);
-        } else {
-          showSuccessMessage("Excelistä ei löytynyt päivitettäviä osoitetietoja.");
-        }
-      } catch (e) {
-        log.error("Excel-tiedoston lukeminen epäonnistui", e);
-        showErrorMessage("Excel-tiedoston lukeminen epäonnistui.");
-      }
-      // Reset file input so same file can be selected again
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+            if (updatedCount > 0) {
+              showSuccessMessage(`Osoitetiedot päivitetty ${updatedCount} kiinteistönomistajalle. Muista tallentaa muutokset.`);
+            } else {
+              showSuccessMessage("Excelistä ei löytynyt päivitettäviä osoitetietoja.");
+            }
+          } catch (e) {
+            log.error("Excel-tiedoston lukeminen epäonnistui", e);
+            showErrorMessage("Excel-tiedoston lukeminen epäonnistui.");
+          }
+          // Reset file input so same file can be selected again
+          if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+          }
+        })()
+      );
     },
-    [getValues, setValue, showErrorMessage, showSuccessMessage]
+    [getValues, setValue, showErrorMessage, showSuccessMessage, loadAllRef, withLoadingSpinner]
   );
 
   return (
@@ -824,5 +896,41 @@ const TuoExcelistaButton: FunctionComponent = () => {
         Tuo Excelistä
       </Button>
     </>
+  );
+};
+
+const SuodatusKentta: FunctionComponent<{ onSuodata: (query: string) => void; suodatusAktiivinen: boolean }> = ({
+  onSuodata,
+  suodatusAktiivinen,
+}) => {
+  const [query, setQuery] = useState("");
+
+  const handleReset = useCallback(() => {
+    setQuery("");
+    onSuodata("");
+  }, [onSuodata]);
+
+  return (
+    <Section noDivider>
+      <Stack direction="row" alignItems="end" spacing={2}>
+        <TextField
+          sx={{ flexGrow: 1, label: { fontWeight: 700, fontSize: "1.25rem" } }}
+          label="Suodata kiinteistönomistajia"
+          autoComplete="off"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); onSuodata(query); } }}
+          size="small"
+        />
+        <Button primary type="button" onClick={() => onSuodata(query)} endIcon="search">
+          Suodata
+        </Button>
+      </Stack>
+      {suodatusAktiivinen && (
+        <ButtonFlat onClick={handleReset} type="button">
+          Nollaa suodatus
+        </ButtonFlat>
+      )}
+    </Section>
   );
 };
