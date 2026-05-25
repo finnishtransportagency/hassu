@@ -889,7 +889,7 @@ const SuodatusKentta: FunctionComponent<{ onSuodata: (query: string) => void; su
     <Section noDivider>
       <Stack direction="row" alignItems="end" spacing={2}>
         <TextField
-          sx={{ flexGrow: 1 }}
+          sx={{ flexGrow: 1, label: { fontWeight: 700, fontSize: "1.25rem" } }}
           label="Suodata kiinteistönomistajia"
           autoComplete="off"
           value={query}
