@@ -1,4 +1,5 @@
-import inquirer from "inquirer";
+// Contains code generated or recommended by Amazon Q
+import { select } from "@inquirer/prompts";
 
 /*
   Työkalu AWS_PROFILE:n ja ENVIRONMENT-muuttujan asettamiseen.
@@ -32,32 +33,27 @@ const envNames = Object.keys(EnvName)
   });
 
 // Kysy käyttäjältä, mihin ympäristöön halutaan vaihtaa
-inquirer
-  .prompt([
-    {
-      type: "list",
-      name: "ENVIRONMENT",
-      message: "Mihin ympäristöön haluat vaihtaa?",
-      choices: envNames,
-    },
-  ])
-  .then((answer) => {
-    const envConfig = Config.getEnvConfig(answer.ENVIRONMENT);
-
-    // Kirjoita .env.current-tiedostoon
-    let environmentName;
-    if (answer.ENVIRONMENT === "developer") {
-      environmentName = env.DEVELOPER;
-    } else {
-      environmentName = answer.ENVIRONMENT;
-    }
-
-    let awsProfile;
-    if (envConfig.isDevAccount) {
-      awsProfile = "hassudev";
-    } else {
-      awsProfile = "hassuprod";
-    }
-
-    fs.writeFileSync(".env.current", [`ENVIRONMENT=${environmentName}`, `AWS_PROFILE=${awsProfile}`].join("\n"));
+(async () => {
+  const answer = await select({
+    message: "Mihin ympäristöön haluat vaihtaa?",
+    choices: envNames.map((name) => ({ name, value: name })),
   });
+
+  const envConfig = Config.getEnvConfig(answer);
+
+  let environmentName;
+  if (answer === "developer") {
+    environmentName = env.DEVELOPER;
+  } else {
+    environmentName = answer;
+  }
+
+  let awsProfile;
+  if (envConfig.isDevAccount) {
+    awsProfile = "hassudev";
+  } else {
+    awsProfile = "hassuprod";
+  }
+
+  fs.writeFileSync(".env.current", [`ENVIRONMENT=${environmentName}`, `AWS_PROFILE=${awsProfile}`].join("\n"));
+})();
