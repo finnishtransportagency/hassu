@@ -31,7 +31,7 @@
     "@fortawesome/free-regular-svg-icons": "6.5.2",
     "@fortawesome/free-solid-svg-icons": "6.5.2",
     "@fortawesome/react-fontawesome": "0.2.2",
-    "@hassu/asianhallinta": "0.4.5",
+    "@hassu/asianhallinta": "0.4.8",
     "@hookform/error-message": "2.0.1",
     "@hookform/resolvers": "^2.9.11",
     "@mui/icons-material": "~5.10.6",
@@ -202,7 +202,8 @@
     "uuid": "$uuid",
     "shell-quote": "$shell-quote",
     "postcss": "$postcss",
-    "got": "12.6.1"
+    "got": "12.6.1",
+    "flatted": ">=3.4.2"
   },
   "scripts": {
     "import:dynamodb": "node importDynamodbExport.js",
