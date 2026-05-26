@@ -514,7 +514,6 @@ export const FormContents: FunctionComponent<{
   const {
     handleSubmit,
     formState: { isDirty, isSubmitting },
-    getValues,
   } = useFormReturn;
   useLeaveConfirm(!isSubmitting && isDirty);
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -528,84 +527,76 @@ export const FormContents: FunctionComponent<{
   });
   const [resetKey, setResetKey] = useState(0);
 
-  function getRemoveCount() {
-    return (
-      getValues().muutOmistajat.filter((o) => o.toBeDeleted).length +
-      getValues().suomifiOmistajat.filter((o) => o.toBeDeleted).length +
-      getValues().lisatytOmistajat.filter((o) => o.toBeDeleted && o.id).length
-    );
-  }
-  const [poistaDialogOpen, setPoistaDialogOpen] = useState(false);
+  const [vahvistusInfo, setVahvistusInfo] = useState<{ ylempaan: number; alempaan: number; poistettavat: number } | null>(null);
+  const [pendingSubmitData, setPendingSubmitData] = useState<KiinteistonOmistajatFormFields | null>(null);
 
   const doSave = useCallback(
-    async (apiData: TallennaKiinteistonOmistajatMutationVariables, data: KiinteistonOmistajatFormFields) => {
-      const ids = await api.tallennaKiinteistonOmistajat(apiData);
-      const newData: KiinteistonOmistajatFormFields = {
-        oid: data.oid,
-        suomifiOmistajat: data.suomifiOmistajat.filter((m) => !apiData.poistettavatOmistajat.includes(m.id ?? "")),
-        muutOmistajat: data.muutOmistajat.filter((m) => !apiData.poistettavatOmistajat.includes(m.id ?? "")),
-        lisatytOmistajat: data.lisatytOmistajat.filter((m) => !apiData.poistettavatOmistajat.includes(m.id ?? "")),
-      };
-      for (let i = 0; i < ids.length; i++) {
-        if (!newData.lisatytOmistajat[i].id) {
-          newData.lisatytOmistajat[i].id = ids[i];
-        }
+    async (data: KiinteistonOmistajatFormFields) => {
+      let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
+      try {
+        apiData = mapFormDataForApi(data);
+      } catch (error) {
+        log.error("Virhe kiinteistötietojen muuttamisessa tallennettavaan muotoon \n", error, data);
+        showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
+        return;
       }
-      newData.lisatytOmistajat = newData.lisatytOmistajat.filter((o) => !(!o.id && o.toBeDeleted));
-      useFormReturn.reset(newData);
+      try {
+        await api.tallennaKiinteistonOmistajat(apiData);
+        // Refetch data from backend to get updated list assignments
+        const suomifi = await api.haeKiinteistonOmistajat(projekti.oid, false, undefined, 0, PAGE_SIZE);
+        const muut = await api.haeKiinteistonOmistajat(projekti.oid, true, undefined, 0, PAGE_SIZE, false, true);
+        const lisatyt = await api.haeKiinteistonOmistajat(projekti.oid, true, undefined, 0, undefined, true);
+        useFormReturn.reset({
+          oid: projekti.oid,
+          suomifiOmistajat: suomifi.omistajat.map(mapOmistajaToOmistajaRow()),
+          muutOmistajat: muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
+          lisatytOmistajat: lisatyt.omistajat.map(
+            mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")
+          ),
+        });
+        setHakutulosMaarat({ suomifi: suomifi.hakutulosMaara, muut: muut.hakutulosMaara });
+        setResetKey((k) => k + 1);
+        showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
+      } catch (error) {
+        log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
+      }
     },
-    [api, useFormReturn]
+    [api, projekti.oid, showErrorMessage, showSuccessMessage, useFormReturn]
   );
 
   const onSubmit = useCallback<SubmitHandler<KiinteistonOmistajatFormFields>>(
     (data) => {
-      withLoadingSpinner(
-        (async () => {
-          setPoistaDialogOpen(false);
-          let apiData: TallennaKiinteistonOmistajatMutationVariables | undefined = undefined;
-          try {
-            apiData = mapFormDataForApi(data);
-          } catch (error) {
-            log.error("Virhe kiinteistötietojen muuttamisessa tallennettavaan muotoon \n", error, data);
-            showErrorMessage("Lomakkeen tietoja ei pystytty muuttamaan tallennettavaan muotoon");
-          }
-          if (apiData) {
-            try {
-              await doSave(apiData, data);
-              await api.tallennaKiinteistonOmistajat(apiData);
-              // Re-fetch lists from API so owners appear in the correct list after suomifiLahetys changes
-              const [suomifi, muut, lisatyt] = await Promise.all([
-                api.haeKiinteistonOmistajat(data.oid, false, undefined, 0, PAGE_SIZE),
-                api.haeKiinteistonOmistajat(data.oid, true, undefined, 0, PAGE_SIZE, false, true),
-                api.haeKiinteistonOmistajat(data.oid, true, undefined, 0, undefined, true),
-              ]);
-              const newData: KiinteistonOmistajatFormFields = {
-                oid: data.oid,
-                suomifiOmistajat: suomifi.omistajat.map((o) =>
-                  o.userCreated
-                    ? mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")(o)
-                    : o.osoitetiedotSaatu === false
-                      ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
-                      : mapOmistajaToOmistajaRow()(o)
-                ),
-                muutOmistajat: muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
-                lisatytOmistajat: lisatyt.omistajat.map(
-                  mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")
-                ),
-              };
-              setHakutulosMaarat({ suomifi: suomifi.hakutulosMaara, muut: muut.hakutulosMaara });
-              setResetKey((k) => k + 1);
-              useFormReturn.reset(newData);
-              showSuccessMessage("Kiinteistönomistajatiedot tallennettu");
-            } catch (error) {
-              log.error("Virhe kiinteistötietojen tallennuksessa: \n", error, apiData);
-            }
-          }
-        })()
-      );
+      // Count all changes that need confirmation
+      const siirtyvatYlempaan = [
+        ...data.muutOmistajat.filter((o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta),
+        ...data.lisatytOmistajat.filter((o) => !o.toBeDeleted && o.jakeluosoite && o.postinumero && o.paikkakunta),
+      ].length;
+      const siirtyvatAlempaan = data.suomifiOmistajat.filter(
+        (o) => !o.toBeDeleted && !(o.jakeluosoite && o.postinumero && o.paikkakunta)
+      ).length;
+      const poistettavat = [
+        ...data.muutOmistajat.filter((o) => o.toBeDeleted),
+        ...data.suomifiOmistajat.filter((o) => o.toBeDeleted),
+        ...data.lisatytOmistajat.filter((o) => o.toBeDeleted && o.id),
+      ].length;
+
+      if (siirtyvatYlempaan > 0 || siirtyvatAlempaan > 0 || poistettavat > 0) {
+        setVahvistusInfo({ ylempaan: siirtyvatYlempaan, alempaan: siirtyvatAlempaan, poistettavat });
+        setPendingSubmitData(data);
+      } else {
+        withLoadingSpinner(doSave(data));
+      }
     },
-    [doSave, showErrorMessage, showSuccessMessage, withLoadingSpinner]
+    [doSave, withLoadingSpinner]
   );
+
+  const confirmAndSave = useCallback(() => {
+    setVahvistusInfo(null);
+    if (pendingSubmitData) {
+      withLoadingSpinner(doSave(pendingSubmitData));
+      setPendingSubmitData(null);
+    }
+  }, [doSave, pendingSubmitData, withLoadingSpinner]);
 
   const loadAllMuutRef = useRef<(() => Promise<void>) | undefined>(undefined);
   const loadAllSuomifiRef = useRef<(() => Promise<void>) | undefined>(undefined);
@@ -695,23 +686,35 @@ export const FormContents: FunctionComponent<{
               <Button type="button" onClick={resetAndClose}>
                 Palaa listaukseen
               </Button>
-              <Button type="button" onClick={getRemoveCount() > 0 ? () => setPoistaDialogOpen(true) : handleSubmit(onSubmit)} primary>
+              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
                 Tallenna
               </Button>
             </Stack>
           </Section>
         </DialogContent>
       </DialogForm>
-      <HassuDialog open={poistaDialogOpen} title="Kiinteistönomistajatietojen tallentaminen" onClose={() => setPoistaDialogOpen(false)}>
+      <HassuDialog
+        open={vahvistusInfo !== null}
+        title="Kiinteistönomistajatietojen tallentaminen"
+        onClose={() => { setVahvistusInfo(null); setPendingSubmitData(null); }}
+      >
         <DialogContent>
-          <p>{`Olet poistamassa ${getRemoveCount()} määrä kiinteistönomistajia. Tallenna vahvistaaksesi.`}</p>
+          {vahvistusInfo?.poistettavat ? (
+            <p>{`Olet poistamassa ${vahvistusInfo.poistettavat} kiinteistönomistaja${vahvistusInfo.poistettavat === 1 ? "n" : "a"}.`}</p>
+          ) : null}
+          {vahvistusInfo?.ylempaan ? (
+            <p>{`${vahvistusInfo.ylempaan} kiinteistönomistaja${vahvistusInfo.ylempaan === 1 ? "" : "a"} siirtyy Suomi.fi:n kautta tiedotettavaksi.`}</p>
+          ) : null}
+          {vahvistusInfo?.alempaan ? (
+            <p>{`${vahvistusInfo.alempaan} kiinteistönomistaja${vahvistusInfo.alempaan === 1 ? "" : "a"} siirtyy kiinteistönomistajiin, joilla ei ole yhteystietoja.`}</p>
+          ) : null}
         </DialogContent>
         <DialogActions>
-          <Button type="button" onClick={() => setPoistaDialogOpen(false)}>
-            Peruuta
+          <Button type="button" onClick={confirmAndSave} primary>
+            Jatka
           </Button>
-          <Button type="button" onClick={handleSubmit(onSubmit)} primary>
-            Tallenna
+          <Button type="button" onClick={() => { setVahvistusInfo(null); setPendingSubmitData(null); }}>
+            Peruuta
           </Button>
         </DialogActions>
       </HassuDialog>
