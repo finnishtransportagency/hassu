@@ -12,9 +12,7 @@ export type ExcelColumnIndices = {
 };
 
 export function findColumnIndices(rows: unknown[][]): ExcelColumnIndices | null {
-  const headerRow = rows.find((row) =>
-    row.some((cell) => String(cell ?? "").trim() === OMISTAJA_EXCEL_HEADERS.kiinteistotunnus)
-  );
+  const headerRow = rows.find((row) => row.some((cell) => String(cell ?? "").trim() === OMISTAJA_EXCEL_HEADERS.kiinteistotunnus));
   if (!headerRow) {
     return null;
   }
@@ -77,7 +75,7 @@ export function matchExcelRowsToOmistajat(
 
 /**
  * Determines which sheet to read from an Excel file.
- * If multiple sheets, reads "Muut kiinteistönomistajat" sheet.
+ * If multiple sheets, reads "Osoitteettomat kiinteistönomistajat" sheet.
  * If single sheet, reads that one.
  * Returns 1-based sheet index.
  */

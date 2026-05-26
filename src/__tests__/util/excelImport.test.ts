@@ -7,7 +7,7 @@ describe("excelImport", () => {
       const rows = [
         ["Kuulutus suunnitelman nähtäville asettamisesta"],
         ["01.01.2024"],
-        ["Kiinteistönomistajien tiedotus muilla tavoin"],
+        ["Kiinteistönomistajat, joille ei ole yhteystietoja"],
         ["Kiinteistötunnus", "Omistajan nimi", "Postiosoite", "Postinumero", "Postitoimipaikka", "Maa", "Tiedot haettu", "Tiedotustapa"],
         ["123-456-7-8", "Matti Meikäläinen", "Testikatu 1", "00100", "Helsinki", "Suomi", "01.01.2024", "Kirjeitse"],
       ];
@@ -22,7 +22,10 @@ describe("excelImport", () => {
     });
 
     it("returns null when no header row found", () => {
-      const rows = [["foo", "bar", "baz"], ["1", "2", "3"]];
+      const rows = [
+        ["foo", "bar", "baz"],
+        ["1", "2", "3"],
+      ];
       const result = findColumnIndices(rows);
       expect(result).toBeNull();
     });
@@ -113,7 +116,13 @@ describe("excelImport", () => {
 
     it("updates existing address data", () => {
       const omistajat = [
-        { kiinteistotunnus: "123-456-7-8", nimi: "Matti Meikäläinen", jakeluosoite: "Vanha osoite", postinumero: "99999", paikkakunta: "Vanha" },
+        {
+          kiinteistotunnus: "123-456-7-8",
+          nimi: "Matti Meikäläinen",
+          jakeluosoite: "Vanha osoite",
+          postinumero: "99999",
+          paikkakunta: "Vanha",
+        },
       ];
       const results = matchExcelRowsToOmistajat(rows, columns, omistajat);
       expect(results).toHaveLength(1);
@@ -146,19 +155,19 @@ describe("excelImport", () => {
 
   describe("getSheetIndexToRead", () => {
     it("returns 1 for single sheet", () => {
-      expect(getSheetIndexToRead(["Muut kiinteistönomistajat"])).toBe(1);
+      expect(getSheetIndexToRead(["Osoitteettomat kiinteistönomistajat"])).toBe(1);
     });
 
-    it("returns 'Muut kiinteistönomistajat' sheet index for multiple sheets", () => {
-      expect(getSheetIndexToRead(["Suomi.fi kiinteistönomistajat", "Muut kiinteistönomistajat"])).toBe(2);
+    it("returns 'Osoitteettomat kiinteistönomistajat' sheet index for multiple sheets", () => {
+      expect(getSheetIndexToRead(["Suomi.fi kiinteistönomistajat", "Osoitteettomat kiinteistönomistajat"])).toBe(2);
     });
 
-    it("returns 1 as fallback if 'Muut kiinteistönomistajat' not found in multiple sheets", () => {
+    it("returns 1 as fallback if 'Osoitteettomat kiinteistönomistajat' not found in multiple sheets", () => {
       expect(getSheetIndexToRead(["Sheet1", "Sheet2"])).toBe(1);
     });
 
     it("handles sheet name in different position", () => {
-      expect(getSheetIndexToRead(["Muut kiinteistönomistajat", "Suomi.fi kiinteistönomistajat"])).toBe(1);
+      expect(getSheetIndexToRead(["Osoitteettomat kiinteistönomistajat", "Suomi.fi kiinteistönomistajat"])).toBe(1);
     });
   });
 });

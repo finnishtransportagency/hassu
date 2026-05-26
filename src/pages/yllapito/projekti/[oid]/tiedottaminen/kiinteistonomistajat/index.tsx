@@ -240,7 +240,7 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
           />
           <TiedotettavaHaitari
             oid={projekti.oid}
-            title="Kiinteistönomistajien tiedotus muilla tavoin"
+            title="Kiinteistönomistajat, joille ei ole yhteystietoja"
             instructionText="Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteen muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
             filterText="Suodata kiinteistönomistajia"
             showLessText="Näytä vähemmän kiinteistönomistajia"
