@@ -38,7 +38,13 @@ import HassuDialog from "@components/HassuDialog";
 import readXlsxFile, { readSheetNames } from "read-excel-file/browser";
 import { findColumnIndices, matchExcelRowsToOmistajat, getSheetIndexToRead } from "src/util/excelImport";
 
-const SuodatusContext = createContext<string>("");
+type SuodatusState = {
+  suomifiOmistajat?: Set<number>;
+  muutOmistajat?: Set<number>;
+  lisatytOmistajat?: Set<number>;
+} | null;
+
+const SuodatusContext = createContext<SuodatusState>(null);
 
 type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   toBeDeleted: boolean;
@@ -219,7 +225,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
-          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.kiinteistotunnus` }}
+          controllerProps={{ name: `suomifiOmistajat.${Number(context.row.id)}.kiinteistotunnus` }}
         />
       ) : (
         <>{context.getValue() || "-"}</>
@@ -235,7 +241,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
-          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.nimi` }}
+          controllerProps={{ name: `suomifiOmistajat.${Number(context.row.id)}.nimi` }}
         />
       ) : (
         <>{context.getValue() || "-"}</>
@@ -251,7 +257,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
-          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.jakeluosoite` }}
+          controllerProps={{ name: `suomifiOmistajat.${Number(context.row.id)}.jakeluosoite` }}
         />
       ) : (
         <>{context.getValue() || "-"}</>
@@ -267,7 +273,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
-          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.postinumero` }}
+          controllerProps={{ name: `suomifiOmistajat.${Number(context.row.id)}.postinumero` }}
         />
       ) : (
         <>{context.getValue() || "-"}</>
@@ -283,7 +289,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
-          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.paikkakunta` }}
+          controllerProps={{ name: `suomifiOmistajat.${Number(context.row.id)}.paikkakunta` }}
         />
       ) : (
         <>{context.getValue() || "-"}</>
@@ -296,7 +302,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     meta: getDefaultColumnMeta(),
     cell: (context) =>
       isEditable(context.row.original) ? (
-        <Maa fieldArrayName="suomifiOmistajat" index={context.row.index} />
+        <Maa fieldArrayName="suomifiOmistajat" index={Number(context.row.id)} />
       ) : (
         <>{context.getValue() || "-"}</>
       ),
@@ -327,7 +333,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `muutOmistajat.${context.row.index}.jakeluosoite` }}
+        controllerProps={{ name: `muutOmistajat.${Number(context.row.id)}.jakeluosoite` }}
       />
     ),
   },
@@ -340,7 +346,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `muutOmistajat.${context.row.index}.postinumero` }}
+        controllerProps={{ name: `muutOmistajat.${Number(context.row.id)}.postinumero` }}
       />
     ),
   },
@@ -353,7 +359,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `muutOmistajat.${context.row.index}.paikkakunta` }}
+        controllerProps={{ name: `muutOmistajat.${Number(context.row.id)}.paikkakunta` }}
       />
     ),
   },
@@ -362,7 +368,7 @@ const muutColumns: ColumnDef<OmistajaRow>[] = [
     accessorFn: ({ paikkakunta }) => paikkakunta,
     id: "maakoodi",
     meta: getDefaultColumnMeta(),
-    cell: (context) => <Maa fieldArrayName="muutOmistajat" index={context.row.index} />,
+    cell: (context) => <Maa fieldArrayName="muutOmistajat" index={Number(context.row.id)} />,
   },
   createPoistaColumn("muutOmistajat"),
 ];
@@ -376,7 +382,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `lisatytOmistajat.${context.row.index}.kiinteistotunnus` }}
+        controllerProps={{ name: `lisatytOmistajat.${Number(context.row.id)}.kiinteistotunnus` }}
       />
     ),
   },
@@ -388,7 +394,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `lisatytOmistajat.${context.row.index}.nimi` }}
+        controllerProps={{ name: `lisatytOmistajat.${Number(context.row.id)}.nimi` }}
       />
     ),
   },
@@ -401,7 +407,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `lisatytOmistajat.${context.row.index}.jakeluosoite` }}
+        controllerProps={{ name: `lisatytOmistajat.${Number(context.row.id)}.jakeluosoite` }}
       />
     ),
   },
@@ -414,7 +420,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `lisatytOmistajat.${context.row.index}.postinumero` }}
+        controllerProps={{ name: `lisatytOmistajat.${Number(context.row.id)}.postinumero` }}
       />
     ),
   },
@@ -427,7 +433,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
       <TextFieldWithController<KiinteistonOmistajatFormFields>
         autoComplete="off"
         fullWidth
-        controllerProps={{ name: `lisatytOmistajat.${context.row.index}.paikkakunta` }}
+        controllerProps={{ name: `lisatytOmistajat.${Number(context.row.id)}.paikkakunta` }}
       />
     ),
   },
@@ -436,7 +442,7 @@ const lisatytColumns: ColumnDef<OmistajaRow>[] = [
     accessorFn: ({ paikkakunta }) => paikkakunta,
     id: "maakoodi",
     meta: getDefaultColumnMeta(),
-    cell: (context) => <Maa fieldArrayName="lisatytOmistajat" index={context.row.index} />,
+    cell: (context) => <Maa fieldArrayName="lisatytOmistajat" index={Number(context.row.id)} />,
   },
   createPoistaColumn("lisatytOmistajat"),
 ];
@@ -600,7 +606,7 @@ export const FormContents: FunctionComponent<{
 
   const loadAllMuutRef = useRef<(() => Promise<void>) | undefined>(undefined);
   const loadAllSuomifiRef = useRef<(() => Promise<void>) | undefined>(undefined);
-  const [suodatus, setSuodatus] = useState("");
+  const [suodatus, setSuodatus] = useState<SuodatusState>(null);
 
   const handleSuodata = useCallback(
     (query: string) => {
@@ -609,14 +615,25 @@ export const FormContents: FunctionComponent<{
           (async () => {
             await loadAllSuomifiRef.current?.();
             await loadAllMuutRef.current?.();
-            setSuodatus(query);
+            const lower = query.toLowerCase();
+            const matchRow = (o: OmistajaRow) =>
+              [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa]
+                .some((val) => val?.toLowerCase().includes(lower));
+            const values = useFormReturn.getValues();
+            const filterIndices = (rows: OmistajaRow[]) =>
+              new Set(rows.map((o, i) => (matchRow(o) ? i : -1)).filter((i) => i >= 0));
+            setSuodatus({
+              suomifiOmistajat: filterIndices(values.suomifiOmistajat),
+              muutOmistajat: filterIndices(values.muutOmistajat),
+              lisatytOmistajat: filterIndices(values.lisatytOmistajat),
+            });
           })()
         );
       } else {
-        setSuodatus("");
+        setSuodatus(null);
       }
     },
-    [withLoadingSpinner]
+    [withLoadingSpinner, useFormReturn]
   );
 
   const resetAndClose = useCallback(async () => {
@@ -748,14 +765,17 @@ const PaginatedTaulukko = ({
   const { append: appendMuut, fields } = useFieldArray({ control, name: fieldArrayName, keyName: "fieldId" });
   const suodatus = useContext(SuodatusContext);
   const filteredFields = useMemo(() => {
-    if (!suodatus) return fields;
-    const lower = suodatus.toLowerCase();
-    return fields.filter((o) =>
-      [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa]
-        .some((val) => val?.toLowerCase().includes(lower))
-    );
-  }, [fields, suodatus]);
+    const indices = suodatus?.[fieldArrayName];
+    if (!indices) return fields;
+    return fields.filter((_, i) => indices.has(i));
+  }, [fields, suodatus, fieldArrayName]);
   const slicedFields = useMemo(() => (suodatus ? filteredFields : filteredFields.slice(0, sliceAt)), [filteredFields, sliceAt, suodatus]);
+
+  const getRowId = useCallback((_row: OmistajaRow, index: number) => {
+    if (!suodatus?.[fieldArrayName]) return String(index);
+    const indices = Array.from(suodatus[fieldArrayName]!).sort((a, b) => a - b);
+    return String(indices[index]);
+  }, [suodatus, fieldArrayName]);
 
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -823,6 +843,7 @@ const PaginatedTaulukko = ({
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
     meta: { virtualization: { type: "window" } },
+    getRowId,
   });
 
   return (
@@ -863,13 +884,16 @@ const LisatytTaulukko = () => {
   const { append, fields } = useFieldArray({ control, name: "lisatytOmistajat", keyName: "fieldId" });
   const suodatus = useContext(SuodatusContext);
   const filteredFields = useMemo(() => {
-    if (!suodatus) return fields;
-    const lower = suodatus.toLowerCase();
-    return fields.filter((o) =>
-      [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa]
-        .some((val) => val?.toLowerCase().includes(lower))
-    );
+    const indices = suodatus?.lisatytOmistajat;
+    if (!indices) return fields;
+    return fields.filter((_, i) => indices.has(i));
   }, [fields, suodatus]);
+
+  const getRowId = useCallback((_row: OmistajaRow, index: number) => {
+    if (!suodatus?.lisatytOmistajat) return String(index);
+    const indices = Array.from(suodatus.lisatytOmistajat).sort((a, b) => a - b);
+    return String(indices[index]);
+  }, [suodatus]);
 
   const table = useReactTable({
     columns: lisatytColumns,
@@ -878,6 +902,7 @@ const LisatytTaulukko = () => {
     enableSorting: false,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
+    getRowId,
   });
 
   return (
