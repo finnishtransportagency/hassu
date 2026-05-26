@@ -1595,7 +1595,7 @@ type Omistaja {
   maa: String
   osoitetiedotSaatu: Boolean
   userCreated: Boolean
-  hasHetu: Boolean
+  hasTunnus: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
   viimeisinLahetysTapa: LahetysTapa
@@ -1635,7 +1635,7 @@ type Muistuttaja {
   tiedotustapa: String
   sahkoposti: String
   paivitetty: String
-  hasHetu: Boolean
+  hasTunnus: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
   viimeisinLahetysTapa: LahetysTapa

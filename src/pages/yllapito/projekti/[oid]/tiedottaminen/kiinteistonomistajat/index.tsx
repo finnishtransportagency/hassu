@@ -229,8 +229,8 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
                 },
                 cell: (c) => {
                   const value = c.getValue() as string | null;
-                  const { viimeisinTila, hasHetu, viimeisinLahetysTapa } = c.row.original;
-                  return <PaivamaaraTila pvm={value} tila={viimeisinTila} hasHetu={hasHetu} lahetysTapa={viimeisinLahetysTapa} />;
+                  const { viimeisinTila, hasTunnus, viimeisinLahetysTapa } = c.row.original;
+                  return <PaivamaaraTila pvm={value} tila={viimeisinTila} hasTunnus={hasTunnus} lahetysTapa={viimeisinLahetysTapa} />;
                 },
               },
             ]}
