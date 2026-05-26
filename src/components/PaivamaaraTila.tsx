@@ -10,7 +10,7 @@ import { LahetysTapa, TiedotettavanLahetyksenTila } from "@services/api";
 interface TilaProps {
   pvm?: string | null;
   tila?: TiedotettavanLahetyksenTila | null;
-  hasHetu?: boolean | null;
+  hasTunnus?: boolean | null;
   lahetysTapa?: LahetysTapa | null;
 }
 
@@ -37,8 +37,8 @@ export const tilaTooltipTitles: Record<TiedotettavanLahetyksenTila, string> = {
 
 export function PaivamaaraTila(props: Readonly<TilaProps>) {
   const pvm = props.pvm ? dayjs(props.pvm).format("DD.MM.YYYY HH:mm") : undefined;
-  const hasHetuData = props.hasHetu != null;
-  const vainOsoitetiedot = props.hasHetu === false;
+  const hasTunnusData = props.hasTunnus != null;
+  const vainOsoitetiedot = props.hasTunnus === false;
 
   // Before sending
   if (!props.tila) {
@@ -49,8 +49,8 @@ export function PaivamaaraTila(props: Readonly<TilaProps>) {
   const iconColor = tilaIconColors[props.tila];
   const tooltipTitle = tilaTooltipTitles[props.tila];
 
-  // Fallback: show old simple format when hasHetu/lahetysTapa data is not yet available
-  if (!hasHetuData || !props.lahetysTapa) {
+  // Fallback: show old simple format when hasTunnus/lahetysTapa data is not yet available
+  if (!hasTunnusData || !props.lahetysTapa) {
     return (
       <>
         {pvm ?? "-"}

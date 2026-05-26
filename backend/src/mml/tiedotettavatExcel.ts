@@ -275,7 +275,7 @@ async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: 
     },
   ]);
   data[1].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
-  data[1].push([{ value: "Kiinteistönomistajien tiedotus muilla tavoin", fontWeight: "bold" }]);
+  data[1].push([{ value: "Kiinteistönomistajat, joille ei ole yhteystietoja", fontWeight: "bold" }]);
   data[1].push(lisaaOtsikko());
   for (const omistaja of omistajat.filter((o) => !o.suomifiLahetys)) {
     data[1].push(lisaaRivi(omistaja));

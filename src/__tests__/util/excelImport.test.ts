@@ -7,7 +7,7 @@ describe("excelImport", () => {
       const rows = [
         ["Kuulutus suunnitelman nähtäville asettamisesta"],
         ["01.01.2024"],
-        ["Kiinteistönomistajien tiedotus muilla tavoin"],
+        ["Kiinteistönomistajat, joille ei ole yhteystietoja"],
         ["Kiinteistötunnus", "Omistajan nimi", "Postiosoite", "Postinumero", "Postitoimipaikka", "Maa", "Tiedot haettu", "Tiedotustapa"],
         ["123-456-7-8", "Matti Meikäläinen", "Testikatu 1", "00100", "Helsinki", "Suomi", "01.01.2024", "Kirjeitse"],
       ];
@@ -22,7 +22,10 @@ describe("excelImport", () => {
     });
 
     it("returns null when no header row found", () => {
-      const rows = [["foo", "bar", "baz"], ["1", "2", "3"]];
+      const rows = [
+        ["foo", "bar", "baz"],
+        ["1", "2", "3"],
+      ];
       const result = findColumnIndices(rows);
       expect(result).toBeNull();
     });
@@ -113,7 +116,13 @@ describe("excelImport", () => {
 
     it("updates existing address data", () => {
       const omistajat = [
-        { kiinteistotunnus: "123-456-7-8", nimi: "Matti Meikäläinen", jakeluosoite: "Vanha osoite", postinumero: "99999", paikkakunta: "Vanha" },
+        {
+          kiinteistotunnus: "123-456-7-8",
+          nimi: "Matti Meikäläinen",
+          jakeluosoite: "Vanha osoite",
+          postinumero: "99999",
+          paikkakunta: "Vanha",
+        },
       ];
       const results = matchExcelRowsToOmistajat(rows, columns, omistajat);
       expect(results).toHaveLength(1);

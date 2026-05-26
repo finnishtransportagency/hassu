@@ -12,9 +12,7 @@ export type ExcelColumnIndices = {
 };
 
 export function findColumnIndices(rows: unknown[][]): ExcelColumnIndices | null {
-  const headerRow = rows.find((row) =>
-    row.some((cell) => String(cell ?? "").trim() === OMISTAJA_EXCEL_HEADERS.kiinteistotunnus)
-  );
+  const headerRow = rows.find((row) => row.some((cell) => String(cell ?? "").trim() === OMISTAJA_EXCEL_HEADERS.kiinteistotunnus));
   if (!headerRow) {
     return null;
   }
