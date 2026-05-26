@@ -107,10 +107,10 @@ const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiint
   );
   const suomifiOmistajat = data.suomifiOmistajat
     .filter((omistaja) => !omistaja.toBeDeleted && (omistaja.osoitetiedotSaatu === false || omistaja.userCreated === true))
-    .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero, maakoodi }) => ({
+    .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero, maakoodi, userCreated }) => ({
       id,
       jakeluosoite,
-      kiinteistotunnus,
+      kiinteistotunnus: userCreated ? formatKiinteistotunnusForDatabase(kiinteistotunnus) : kiinteistotunnus,
       nimi,
       paikkakunta,
       postinumero,
