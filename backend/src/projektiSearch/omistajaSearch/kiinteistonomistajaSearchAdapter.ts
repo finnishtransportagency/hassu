@@ -63,7 +63,7 @@ export function adaptOmistajaToIndex({
     suomifiLahetys,
     kaytossa,
     userCreated,
-    osoitetiedotSaatu,
+    osoitetiedotSaatu: osoitetiedotSaatu ?? !!suomifiLahetys,
     hasTunnus: !!(henkilotunnus || ytunnus),
     viimeisinLahetysaika: viimeisinLahetys?.lahetysaika ?? null,
     viimeisinTila: viimeisinLahetys?.tila ?? null,
