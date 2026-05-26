@@ -571,6 +571,7 @@ export const FormContents: FunctionComponent<{
           }
           if (apiData) {
             try {
+              await doSave(apiData, data);
               await api.tallennaKiinteistonOmistajat(apiData);
               // Re-fetch lists from API so owners appear in the correct list after suomifiLahetys changes
               const [suomifi, muut, lisatyt] = await Promise.all([
