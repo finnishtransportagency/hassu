@@ -279,6 +279,17 @@ function buildPaperMail(
 async function lahetaViesti(client: SuomiFiRestClient, options: Options, viesti: PdfViesti): Promise<LahetaViestiResponse> {
   const tunnus = viesti.hetu ?? viesti.ytunnus;
 
+  if (!viesti.lahiosoite || !viesti.postinumero || !viesti.postitoimipaikka) {
+    return {
+      LahetaViestiResult: {
+        TilaKoodi: {
+          TilaKoodi: -1,
+          TilaKoodiKuvaus: "Vastaanottajan osoitetiedot puuttuvat",
+        },
+      },
+    };
+  }
+
   const externalId = `VLS-${uuid.v4()}`;
   const printingAndEnvelopingService = getLaskutus(viesti, options);
   if (!printingAndEnvelopingService) {
@@ -308,7 +319,6 @@ async function lahetaViesti(client: SuomiFiRestClient, options: Options, viesti:
 
   const paperMail = buildPaperMail(viesti, uploadResponse.attachmentId, printingAndEnvelopingService);
 
-  // TODO: tämä on valmiina, mutta ei voi vielä toteutua, koska suomifiHandlerin isOmistajanTiedotOk estää
   if (!tunnus) {
     const message: PaperMailOnlyMessageRequest = {
       externalId,

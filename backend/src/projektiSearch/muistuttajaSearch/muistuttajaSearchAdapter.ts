@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import * as API from "hassu-common/graphql/apiModel";
 import { DBMuistuttaja } from "../../database/muistuttajaDatabase";
@@ -18,7 +19,13 @@ export type MuistuttajaDocument = Pick<
   | "suomifiLahetys"
   | "sahkoposti"
   | "kaytossa"
-> & { maa: string | null; viimeisinLahetysaika: string | null; viimeisinTila: API.TiedotettavanLahetyksenTila | null };
+> & {
+  maa: string | null;
+  hasTunnus: boolean;
+  viimeisinLahetysaika: string | null;
+  viimeisinTila: API.TiedotettavanLahetyksenTila | null;
+  viimeisinLahetysTapa: API.LahetysTapa | null;
+};
 
 export function adaptMuistuttajaToIndex({
   etunimi,
@@ -36,6 +43,7 @@ export function adaptMuistuttajaToIndex({
   suomifiLahetys,
   kaytossa,
   lahetykset,
+  henkilotunnus,
 }: DBMuistuttaja): MuistuttajaDocument {
   const viimeisinLahetys = lahetykset?.sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
   return {
@@ -52,8 +60,10 @@ export function adaptMuistuttajaToIndex({
     sahkoposti,
     suomifiLahetys,
     kaytossa,
+    hasTunnus: !!henkilotunnus,
     viimeisinLahetysaika: viimeisinLahetys?.lahetysaika ?? null,
     viimeisinTila: viimeisinLahetys?.tila ?? null,
+    viimeisinLahetysTapa: viimeisinLahetys?.lahetysTapa ?? null,
   };
 }
 
@@ -95,8 +105,10 @@ function mapHitToApiMuistuttaja(hit: MuistuttajaDocumentHit) {
     tiedotustapa: hit._source.tiedotustapa,
     paivitetty: hit._source.paivitetty,
     sahkoposti: hit._source.sahkoposti,
+    hasTunnus: hit._source.hasTunnus,
     viimeisinLahetysaika: hit._source.viimeisinLahetysaika,
     viimeisinTila: hit._source.viimeisinTila,
+    viimeisinLahetysTapa: hit._source.viimeisinLahetysTapa,
   };
   return dokumentti;
 }
