@@ -449,7 +449,16 @@ async function haeSailytettavatKiinteistonOmistajat(
   initialOmistajat: DBOmistaja[],
   poistettavatOmistajat: string[]
 ): Promise<{ omistajat: DBOmistaja[]; muutOmistajat: DBOmistaja[] }> {
-  const sailytettavat = initialOmistajat.filter((omistaja) => !poistettavatOmistajat.includes(omistaja.id));
+  const sailytettavat = initialOmistajat
+    .filter((omistaja) => !poistettavatOmistajat.includes(omistaja.id))
+    .map((omistaja) => {
+      // Backfill osoitetiedotSaatu for old records where the field is undefined
+      if (omistaja.osoitetiedotSaatu === undefined) {
+        // suomifi-listalla olevilla osoitetiedotSaatu = true, muilla false
+        return { ...omistaja, osoitetiedotSaatu: !!omistaja.suomifiLahetys };
+      }
+      return omistaja;
+    });
 
   return sailytettavat.reduce<{
     omistajat: DBOmistaja[];
