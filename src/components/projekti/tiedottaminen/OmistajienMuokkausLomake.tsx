@@ -550,7 +550,7 @@ export const FormContents: FunctionComponent<{
             )}
           </Section>
           <Section>
-            <H3>Kiinteistönomistajien tiedotus muilla tavoin</H3>
+            <H3>Kiinteistönomistajat, joille ei ole yhteystietoja</H3>
             <p>
               Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto
               kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteen
