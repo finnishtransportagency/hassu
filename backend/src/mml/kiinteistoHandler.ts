@@ -72,9 +72,13 @@ const suomiFiEiTiedotettavatYritykset = [
 ];
 
 function isSuomifiLahetys(
-  omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero">
+  omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero" | "userCreated" | "nimi" | "kiinteistotunnus">
 ): boolean {
   if (omistaja.ytunnus && suomiFiEiTiedotettavatYritykset.includes(omistaja.ytunnus)) {
+    return false;
+  }
+  // UserCreated-omistajalla vaaditaan myös nimi ja kiinteistötunnus
+  if (omistaja.userCreated && (!omistaja.nimi || !omistaja.kiinteistotunnus)) {
     return false;
   }
   // Kiinteistönomistaja päätyy Suomi.fi-listalle jos täydelliset osoitetiedot löytyvät
@@ -397,7 +401,7 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getKiinteistonomistajaTableName(), Item: dbOmistaja }));
   }
 
-  // Handle address edits for suomifi owners with osoitetiedotSaatu === false
+  // Handle address edits for suomifi owners with osoitetiedotSaatu === false or userCreated
   if (input.suomifiOmistajat) {
     for (const omistaja of input.suomifiOmistajat) {
       if (!omistaja.id) continue;
@@ -405,13 +409,17 @@ export async function tallennaKiinteistonOmistajat(input: TallennaKiinteistonOmi
       if (!dbOmistaja) {
         throw new IllegalArgumentError(`Suomifi-omistajaa id:'${omistaja.id}' ei löydy`);
       }
-      if (dbOmistaja.osoitetiedotSaatu) {
+      if (dbOmistaja.osoitetiedotSaatu && !dbOmistaja.userCreated) {
         throw new IllegalArgumentError(`Suomifi-omistajan id:'${omistaja.id}' osoitetietoja ei voi muokata`);
       }
       dbOmistaja.jakeluosoite = omistaja.jakeluosoite;
       dbOmistaja.postinumero = omistaja.postinumero;
       dbOmistaja.paikkakunta = omistaja.paikkakunta;
       dbOmistaja.maakoodi = omistaja.maakoodi;
+      if (dbOmistaja.userCreated) {
+        dbOmistaja.nimi = omistaja.nimi;
+        dbOmistaja.kiinteistotunnus = omistaja.kiinteistotunnus;
+      }
       dbOmistaja.suomifiLahetys = isSuomifiLahetys(dbOmistaja);
       dbOmistaja.paivitetty = now;
       auditLog.info("Päivitetään suomifi-omistajan osoitetiedot", { omistajaId: dbOmistaja.id });

@@ -45,6 +45,7 @@ type OmistajaRow = Omit<OmistajaInput, "maakoodi"> & {
   maakoodi: string | null;
   maa: string | null | undefined;
   osoitetiedotSaatu?: boolean | null;
+  userCreated?: boolean | null;
 };
 
 type KiinteistonOmistajatFormFields = {
@@ -58,7 +59,7 @@ const PAGE_SIZE = 25;
 
 const mapOmistajaToOmistajaRow =
   (...fieldsToSetDefaultsTo: (keyof OmistajaInput)[]) =>
-  ({ id, kiinteistotunnus, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi, osoitetiedotSaatu }: Omistaja): OmistajaRow => {
+  ({ id, kiinteistotunnus, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi, osoitetiedotSaatu, userCreated }: Omistaja): OmistajaRow => {
     const omistajaRow: OmistajaRow = {
       id,
       kiinteistotunnus,
@@ -70,6 +71,7 @@ const mapOmistajaToOmistajaRow =
       maakoodi: maakoodi ?? null,
       maa,
       osoitetiedotSaatu,
+      userCreated,
     };
     fieldsToSetDefaultsTo.forEach((key) => {
       omistajaRow[key] = omistajaRow[key] ?? "";
@@ -104,7 +106,7 @@ const mapFormDataForApi: (data: KiinteistonOmistajatFormFields) => TallennaKiint
     })
   );
   const suomifiOmistajat = data.suomifiOmistajat
-    .filter((omistaja) => !omistaja.toBeDeleted && omistaja.osoitetiedotSaatu === false)
+    .filter((omistaja) => !omistaja.toBeDeleted && (omistaja.osoitetiedotSaatu === false || omistaja.userCreated === true))
     .map<OmistajaInput>(({ id, jakeluosoite, kiinteistotunnus, nimi, paikkakunta, postinumero, maakoodi }) => ({
       id,
       jakeluosoite,
@@ -204,18 +206,40 @@ const StyledIconButton = styled("button")(({ theme }) => ({
 
 const PoistaCell = styled("span")({ minHeight: "44px", display: "flex", alignItems: "center" });
 
+const isEditable = (row: OmistajaRow) => row.osoitetiedotSaatu === false || row.userCreated === true;
+
 const suomifiColumns: ColumnDef<OmistajaRow>[] = [
   {
     header: "Kiinteistötunnus",
     id: "kiinteistotunnus",
     accessorKey: "kiinteistotunnus",
     meta: getDefaultColumnMeta(),
+    cell: (context) =>
+      context.row.original.userCreated ? (
+        <TextFieldWithController<KiinteistonOmistajatFormFields>
+          autoComplete="off"
+          fullWidth
+          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.kiinteistotunnus` }}
+        />
+      ) : (
+        <>{context.getValue() || "-"}</>
+      ),
   },
   {
     header: "Omistajan nimi",
     accessorKey: "nimi",
     id: "omistajan_nimi",
     meta: getDefaultColumnMeta(),
+    cell: (context) =>
+      context.row.original.userCreated ? (
+        <TextFieldWithController<KiinteistonOmistajatFormFields>
+          autoComplete="off"
+          fullWidth
+          controllerProps={{ name: `suomifiOmistajat.${context.row.index}.nimi` }}
+        />
+      ) : (
+        <>{context.getValue() || "-"}</>
+      ),
   },
   {
     header: "Postiosoite",
@@ -223,7 +247,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     id: "postiosoite",
     meta: getDefaultColumnMeta(),
     cell: (context) =>
-      context.row.original.osoitetiedotSaatu === false ? (
+      isEditable(context.row.original) ? (
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
@@ -239,7 +263,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     id: "postinumero",
     meta: getDefaultColumnMeta(),
     cell: (context) =>
-      context.row.original.osoitetiedotSaatu === false ? (
+      isEditable(context.row.original) ? (
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
@@ -255,7 +279,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     id: "postitoimipaikka",
     meta: getDefaultColumnMeta(),
     cell: (context) =>
-      context.row.original.osoitetiedotSaatu === false ? (
+      isEditable(context.row.original) ? (
         <TextFieldWithController<KiinteistonOmistajatFormFields>
           autoComplete="off"
           fullWidth
@@ -271,7 +295,7 @@ const suomifiColumns: ColumnDef<OmistajaRow>[] = [
     id: "maakoodi",
     meta: getDefaultColumnMeta(),
     cell: (context) =>
-      context.row.original.osoitetiedotSaatu === false ? (
+      isEditable(context.row.original) ? (
         <Maa fieldArrayName="suomifiOmistajat" index={context.row.index} />
       ) : (
         <>{context.getValue() || "-"}</>
@@ -474,9 +498,11 @@ export const FormContents: FunctionComponent<{
     getFormOptions({
       oid: projekti.oid,
       suomifiOmistajat: initialSearchResponses.suomifi.omistajat.map((o) =>
-        o.osoitetiedotSaatu === false
-          ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
-          : mapOmistajaToOmistajaRow()(o)
+        o.userCreated
+          ? mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")(o)
+          : o.osoitetiedotSaatu === false
+            ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
+            : mapOmistajaToOmistajaRow()(o)
       ),
       muutOmistajat: initialSearchResponses.muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
       lisatytOmistajat: initialSearchResponses.lisatyt.omistajat.map(
@@ -555,9 +581,11 @@ export const FormContents: FunctionComponent<{
               const newData: KiinteistonOmistajatFormFields = {
                 oid: data.oid,
                 suomifiOmistajat: suomifi.omistajat.map((o) =>
-                  o.osoitetiedotSaatu === false
-                    ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
-                    : mapOmistajaToOmistajaRow()(o)
+                  o.userCreated
+                    ? mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")(o)
+                    : o.osoitetiedotSaatu === false
+                      ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
+                      : mapOmistajaToOmistajaRow()(o)
                 ),
                 muutOmistajat: muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
                 lisatytOmistajat: lisatyt.omistajat.map(

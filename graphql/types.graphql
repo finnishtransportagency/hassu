@@ -1594,6 +1594,7 @@ type Omistaja {
   maakoodi: String
   maa: String
   osoitetiedotSaatu: Boolean
+  userCreated: Boolean
   hasHetu: Boolean
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
