@@ -155,19 +155,19 @@ describe("excelImport", () => {
 
   describe("getSheetIndexToRead", () => {
     it("returns 1 for single sheet", () => {
-      expect(getSheetIndexToRead(["Osoitteettomat kiinteistönomistajat"])).toBe(1);
+      expect(getSheetIndexToRead(["Muut kiinteistönomistajat"])).toBe(1);
     });
 
-    it("returns 'Osoitteettomat kiinteistönomistajat' sheet index for multiple sheets", () => {
-      expect(getSheetIndexToRead(["Suomi.fi kiinteistönomistajat", "Osoitteettomat kiinteistönomistajat"])).toBe(2);
+    it("returns 'Muut kiinteistönomistajat' sheet index for multiple sheets", () => {
+      expect(getSheetIndexToRead(["Suomi.fi kiinteistönomistajat", "Muut kiinteistönomistajat"])).toBe(2);
     });
 
-    it("returns 1 as fallback if 'Osoitteettomat kiinteistönomistajat' not found in multiple sheets", () => {
+    it("returns 1 as fallback if 'Muut kiinteistönomistajat' not found in multiple sheets", () => {
       expect(getSheetIndexToRead(["Sheet1", "Sheet2"])).toBe(1);
     });
 
     it("handles sheet name in different position", () => {
-      expect(getSheetIndexToRead(["Osoitteettomat kiinteistönomistajat", "Suomi.fi kiinteistönomistajat"])).toBe(1);
+      expect(getSheetIndexToRead(["Muut kiinteistönomistajat", "Suomi.fi kiinteistönomistajat"])).toBe(1);
     });
   });
 });

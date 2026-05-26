@@ -178,7 +178,7 @@ describe("tiedotettavatExcel", () => {
     fs.writeFileSync(__dirname + "/maanomistajaluettelo_nahtavillaolo.xlsx", new Uint8Array(buffer));
     let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
-    rows = await readXlsxFile(buffer, { sheet: "Osoitteettomat kiinteistönomistajat" });
+    rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon hyväksymispäätös", async () => {
@@ -186,7 +186,7 @@ describe("tiedotettavatExcel", () => {
     fs.writeFileSync(__dirname + "/maanomistajaluettelo_hyvaksymispaatos.xlsx", new Uint8Array(buffer));
     let rows = await readXlsxFile(buffer, { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
-    rows = await readXlsxFile(buffer, { sheet: "Osoitteettomat kiinteistönomistajat" });
+    rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
     rows = await readXlsxFile(buffer, { sheet: "Suomi.fi muistuttajat" });
     expect(rows).toMatchSnapshot();
@@ -200,7 +200,7 @@ describe("tiedotettavatExcel", () => {
   });
   it("tallenna kiinteistön omistajat excel tiedostoon muut", async () => {
     const buffer = await generateExcel(projekti as DBProjektiSlim, true, undefined, undefined, false);
-    const rows = await readXlsxFile(buffer, { sheet: "Osoitteettomat kiinteistönomistajat" });
+    const rows = await readXlsxFile(buffer, { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon graphql Suomi.fi", async () => {
@@ -212,7 +212,7 @@ describe("tiedotettavatExcel", () => {
   it("tallenna kiinteistön omistajat excel tiedostoon graphql muut", async () => {
     const excel = await generateExcelByQuery({ kiinteisto: true, oid: "1.2.3", suomifi: false });
     expect(excel.nimi).to.be.equal("Maanomistajaluettelo (muilla tavoin) 20240227.xlsx");
-    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Osoitteettomat kiinteistönomistajat" });
+    const rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna kiinteistön omistajat excel tiedostoon graphql kaikki", async () => {
@@ -220,7 +220,7 @@ describe("tiedotettavatExcel", () => {
     expect(excel.nimi).to.be.equal("Maanomistajaluettelo 20240227.xlsx");
     let rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Suomi.fi kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
-    rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Osoitteettomat kiinteistönomistajat" });
+    rows = await readXlsxFile(Buffer.from(excel.sisalto, "base64"), { sheet: "Muut kiinteistönomistajat" });
     expect(rows).toMatchSnapshot();
   });
   it("tallenna muistuttajat excel tiedostoon graphql Suomi.fi", async () => {

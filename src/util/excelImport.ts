@@ -75,7 +75,7 @@ export function matchExcelRowsToOmistajat(
 
 /**
  * Determines which sheet to read from an Excel file.
- * If multiple sheets, reads "Osoitteettomat kiinteistönomistajat" sheet.
+ * If multiple sheets, reads "Muut kiinteistönomistajat" sheet.
  * If single sheet, reads that one.
  * Returns 1-based sheet index.
  */

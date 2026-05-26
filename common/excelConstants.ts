@@ -23,7 +23,7 @@ export const OMISTAJA_EXCEL_HEADERS = {
 
 export const OMISTAJA_EXCEL_SHEETS = {
   suomifiKiinteistonomistajat: "Suomi.fi kiinteistönomistajat",
-  muutKiinteistonomistajat: "Osoitteettomat kiinteistönomistajat",
+  muutKiinteistonomistajat: "Muut kiinteistönomistajat",
   suomifiMuistuttajat: "Suomi.fi muistuttajat",
   muutMuistuttajat: "Muut muistuttajat",
 } as const;
