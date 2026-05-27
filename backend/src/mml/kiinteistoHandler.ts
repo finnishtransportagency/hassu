@@ -72,7 +72,10 @@ const suomiFiEiTiedotettavatYritykset = [
 ];
 
 function isSuomifiLahetys(
-  omistaja: Pick<DBOmistaja, "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero" | "userCreated" | "nimi" | "kiinteistotunnus">
+  omistaja: Pick<
+    DBOmistaja,
+    "henkilotunnus" | "ytunnus" | "jakeluosoite" | "paikkakunta" | "postinumero" | "userCreated" | "nimi" | "kiinteistotunnus"
+  >
 ): boolean {
   if (omistaja.ytunnus && suomiFiEiTiedotettavatYritykset.includes(omistaja.ytunnus)) {
     return false;
@@ -244,17 +247,21 @@ const handlerFactory = (event: SQSEvent) => async () => {
         }
         const dbOmistajat = [...omistajaMap.values()];
 
-        // Päivitä muille omistajille aiemmin tallennetut osoitetiedot
+        // Päivitä aiemmin tallennetut osoitetiedot omistajille joilla ei tullut osoitetta MML:stä
         dbOmistajat
           .filter((omistaja) => !omistaja.suomifiLahetys)
           .forEach((omistaja) => {
             const key = mapKey(omistaja);
             const oldOmistaja = oldOmistajaMap.get(key);
-            if (oldOmistaja && !oldOmistaja.suomifiLahetys && !omistaja.paikkakunta && !omistaja.postinumero && !omistaja.jakeluosoite) {
-              omistaja.jakeluosoite = oldOmistaja.jakeluosoite;
-              omistaja.paikkakunta = oldOmistaja.paikkakunta;
-              omistaja.postinumero = oldOmistaja.postinumero;
-              omistaja.maakoodi = oldOmistaja.maakoodi;
+            if (oldOmistaja && !omistaja.paikkakunta && !omistaja.postinumero && !omistaja.jakeluosoite) {
+              // Säilytä aiemmin tallennetut osoitetiedot suomifiLahetys statuksesta riippumatta
+              if (!oldOmistaja.suomifiLahetys || oldOmistaja.osoitetiedotSaatu === false) {
+                omistaja.jakeluosoite = oldOmistaja.jakeluosoite;
+                omistaja.paikkakunta = oldOmistaja.paikkakunta;
+                omistaja.postinumero = oldOmistaja.postinumero;
+                omistaja.maakoodi = oldOmistaja.maakoodi;
+                omistaja.suomifiLahetys = isSuomifiLahetys(omistaja);
+              }
             }
           });
         const oldUserCreated = [...oldOmistajaMap.values()].filter((o) => o.userCreated === true);
