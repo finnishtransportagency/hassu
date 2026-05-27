@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { useCallback, useEffect, useRef } from "react";
 import { ClickAwayListener, IconButton, Popper, styled, SvgIcon } from "@mui/material";
 import ContentSpacer from "@components/layout/ContentSpacer";
@@ -54,6 +55,8 @@ export function ViimeisinLahetysHeader() {
                 <SeliteLista>
                   <dt>-</dt>
                   <dd>Ei tiedotuksia</dd>
+                  <dt>-,</dt>
+                  <dd>vain osoitetiedot: Vastaanottajalla ei hetua, tiedotetaan paperikirjeellä</dd>
                   <dt>
                     <FontAwesomeIcon icon={faEnvelope} color="#207a43" />
                   </dt>

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { validateJwtToken } from "./validatejwttoken";
 import { config } from "../config";
@@ -96,7 +97,7 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   });
   if (response.status === 200) {
     const body = await response.json();
-    const user: SuomiFiCognitoKayttaja = {
+    return {
       "custom:hetu": body.hetu,
       "custom:lahiosoite": body.lahiosoite,
       "custom:postinumero": body.postinumero,
@@ -111,7 +112,6 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
       sub: body.sub,
       username: body.preferred_username,
     };
-    setCurrentSuomifiUserToGlobal(user);
   } else {
     log.error("Suomi.fi tietojen haku epäonnistui", {
       statusText: response.statusText,
@@ -192,7 +192,12 @@ if (process.env.USER_IDENTIFIER_FUNCTIONS) {
 }
 
 async function haeSuomifiKayttajaViestitEnabled(cognitoKayttaja: SuomiFiCognitoKayttaja): Promise<boolean> {
-  return !!(await invokeLambda("hassu-suomifi-" + config.env, true, JSON.stringify({ hetu: cognitoKayttaja["custom:hetu"] })));
+  try {
+    return !!(await invokeLambda("hassu-suomifi-" + config.env, true, JSON.stringify({ hetu: cognitoKayttaja["custom:hetu"] })));
+  } catch (e) {
+    log.error("haeSuomifiKayttajaViestitEnabled epäonnistui", { error: e });
+    return false;
+  }
 }
 
 /**

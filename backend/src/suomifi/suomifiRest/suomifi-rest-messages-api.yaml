@@ -1,0 +1,3175 @@
+openapi: 3.0.1
+info:
+  title: Suomi.fi Messages REST API
+  description: |-
+    The functionalities offered by this API are described in detail on Suomi.fi
+    for Service Developers ([fi][1] / [sv][2] / [en][3]). All endpoints require a whitelisted IP address.
+
+    All message endpoints require an auth token, which you can obtain from the
+    /v1/token endpoint. Tokens can be used multiple times but expire eventually,
+    at which time you must obtain a new one.
+
+    Sending and receiving messages happens by one message per HTTP request. In some other cases,
+    such as checking whether a recipient is using Suomi.fi Messages ( /mailboxes/active ) and
+    fetching event information ( /events ), multiple records may be handled within the same
+    request.
+
+    When your system sends a new message, it must always parse the `messageId` value
+    from the response. Your system must store it both from HTTP 200 and HTTP 409 responses.
+
+    When sending new messages `externalId` is used as an idempotency key to
+    ensure that sending a new message is only processed once, preventing
+    duplicate submissions. If the same `externalId` is used more than once, a
+    409 response is returned, containing the original `messageId`, to indicate
+    that the message has already been processed, ensuring idempotency. These
+    HTTP 409 responses should be handled equally as HTTP 200 responses.
+
+    In all other HTTP 400 series responses, there should be something to fix in the request that
+    your system has generated.
+
+    Your system should automatically retry all requests that receive a HTTP 500 series response.
+
+    New fields may be added to the JSON request and response bodies without
+    being considered a breaking change.
+
+
+    ### Markdown Formatting in Electronic Messages
+
+    New electronic messages may contain either plain text bodies or be formatted
+    using CommonMark syntax. The supported markdown features are:
+
+      * **Headings**
+      * **Lists** (ordered and unordered)
+      * **Text elements** (paragraph, bold emphasis)
+      * **External links** using HTTPS-protocol. Autolinks are not supported.
+
+    To enable markdown format set `bodyFormat` to 'Markdown'.
+
+    [1]: <https://kehittajille.suomi.fi/palvelut/viestit/toiminnallisuudet> "Suomi.fi kehittäjille"
+    [2]: <https://kehittajille.suomi.fi/tjanster/meddelanden/funktioner> "Suomi.fi för tjänsteutvecklare"
+    [3]: <https://kehittajille.suomi.fi/services/messages/functionalities> "Suomi.fi for Service Developers"
+  version: 1.0.0
+servers:
+  - url: https://api.messages.suomi.fi
+paths:
+  /v1/token:
+    post:
+      tags:
+        - auth
+      summary: Obtain an authentication token.
+      operationId: postV1Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessTokenRequestBody'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessTokenResponse'
+        "400":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+  /v1/change-password:
+    post:
+      tags:
+        - auth
+      summary: Change a  password to a new one.
+      description: |-
+        A valid password is at least 32 characters long and contains at least one lower case, upper case, number, and symbol character.
+
+        Note that there can be a delay before allowing password updates again.
+
+        As backslash "\\" is an escape character in JSON, it is best to not use it as a symbol character in your password.
+
+        Fetch a new access token after updating the password.
+      operationId: postV1ChangePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequestBody'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangePasswordResponse'
+        "400":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+  /v1/mailboxes/active:
+    post:
+      tags:
+        - mailboxes
+      summary: Use a recipient's personal identity code or business ID to check whether their electronic mailbox is active.
+      description: Note that this endpoint should only be used in the context of sending messages.
+      operationId: postV1MailboxesActive
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndUsers'
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUsersWithActiveMailbox'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/messages/id:
+    get:
+      tags:
+        - messages
+      summary: Retrieve the ID Suomi.fi Messages assigned to a message you have sent.
+      description: Mainly used when migrating from older APIs to REST.
+      operationId: getV1MessagesId
+      parameters:
+        - name: externalId
+          in: query
+          description: ID of the message in your system
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageIdResponse'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "403":
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "404":
+          description: Not found
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/messages/{id}:
+    get:
+      tags:
+        - messages
+      summary: Retrieve a message an end user has sent you.
+      deprecated: true
+      description: >-
+        The data of messages sent by end users is retrievable for 60 days.
+      operationId: getV1Messages
+      parameters:
+        - name: id
+          in: path
+          description: Message ID which was returned when the message was created or from another API
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageFromEndUserResponse'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "404":
+          description: Not found
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v2/messages/{id}:
+    get:
+      tags:
+        - messages
+      summary: Retrieve a message an end user has sent you.
+      description: >-
+        The data of messages sent by end users is retrievable for 60 days.
+      operationId: getV2Messages
+      parameters:
+        - name: id
+          in: path
+          description: messageId of the message sent by an end user to your service. Find the messageId in /events response.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageFromEndUserResponseV2'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "404":
+          description: Not found
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/attachments/{id}:
+    get:
+      tags:
+        - messages
+      summary: Retrieve an attachment an end user has included in a message they have sent you.
+      description: >-
+        The data of messages sent by end users is retrievable for 60 days.
+      operationId: getV1Attachment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/attachments:
+    post:
+      tags:
+        - messages
+      deprecated: true
+      summary: Upload an attachment that you want to include in an electronic message.
+      description: |2-
+        Uploaded attachments can be used in the endpoints immediately.
+
+        Note that the attachment is shown to the recipient with the same name you uploaded it with.
+
+        If attachments have not been used in a message within 24 hours, they will be removed.
+      operationId: postV2Attachments
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MODELca473d'
+            encoding:
+              metadata:
+                contentType: application/json
+              file:
+                contentType: image/jpeg, image/png, application/pdf, text/plain, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.oasis.opendocument.text, application/vnd.oasis.opendocument.spreadsheet, image/gif, text/csv, text/xml, application/xml, application/json, application/zip, application/rtf
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewAttachmentResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "413":
+          description: Request too large
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "HTTP content length exceeded 10485760 bytes."
+        "415":
+          description: Unsupported media type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "502":
+          description: Bad gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/events:
+    get:
+      tags:
+        - events
+      deprecated: true
+      summary: Retrieve events related to messages you have sent or received from end users.
+      description: >-
+        Returns at most 1 000 events. There are no more events at this time if
+        an empty event list is returned. You should not assume any logic based
+        on the exact amount of events, as a varying number of events can be
+        returned depending on internal API behavior.
+
+        Event data is retrievable for 60 days.
+      operationId: getV1Events
+      parameters:
+        - name: continuationToken
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Events'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "403":
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/files:
+    post:
+      tags:
+        - messages
+      deprecated: true
+      summary: Upload a PDF file that will either be attached to an electronic message or be printed and delivered via paper mail.
+      description: |2
+        Note that added files must adhere to Posti Messaging Oy's iPost specifications in order to ensure successful printing and delivery. The specifications can be found here: https://www.posti.fi/en/for-businesses/forwarding-of-invoices-and-messages/sending-messages/send-messages-electronically-and-on-paper-ipost/ipost-design-instructions-for-sending-letters
+
+        The uploaded file can be used in the endpoints immediately.
+
+        Note that if the file is delivered electronically, it is shown to the recipient with the same name you uploaded it with.
+
+        If the file has not been used in a message within 24 hours, it will be removed.
+      operationId: postV1Files
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MODEL61f3c7'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewFileResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "415":
+          description: Unsupported media type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "502":
+          description: Bad gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/messages:
+    post:
+      tags:
+        - messages
+      deprecated: true
+      summary: Send a message that will be delivered either electronically or as paper mail depending on the state of the recipient's electronic mailbox.
+      description: Since the message can be delivered either electronically or as paper mail, you must define the specifics of the message for both channels.
+      operationId: postV1MessagesController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMessageFromClientOrganisation'
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "409":
+          description: External ID already in use
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+        "502":
+          description: Bad gateway
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/messages/electronic:
+    post:
+      tags:
+        - messages
+      deprecated: true
+      summary: Send an electronic message
+      description: |2-
+        If you want to send a reply to an end user's message, use this endpoint.
+
+        Note that messages can be deleted. If you reply to a message that does not exist, your message will be sent to the recipient as if it wasn't a reply.
+      operationId: postV1MessagesElectronic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewElectronicMessageFromClientOrganisation'
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "502":
+          description: Bad gateway
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/messages/{id}/state:
+    get:
+      tags:
+        - messages
+      deprecated: true
+      operationId: getV1MessagesIdState
+      parameters:
+        - name: id
+          in: path
+          description: Message ID which was returned when the message was created or from another API
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageState'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "403":
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "404":
+          description: Not found
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v1/paper-mail-without-id:
+    post:
+      tags:
+        - messages
+      deprecated: true
+      summary: Send paper mail without using the recipient's personal identity code or business ID.
+      operationId: postV1PaperMailWithoutId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPaperMailWithoutId'
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaperMailResponse'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "401":
+          description: Unauthorized. Can result from using an expired token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "409":
+          description: External ID already in use
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+        "502":
+          description: Bad gateway
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v2/attachments:
+    post:
+      tags:
+        - messages
+      summary: Upload an attachment that will either be attached to an electronic message or be printed and delivered via paper mail.
+      description: |
+        Uploaded attachments can be used in the endpoints immediately.
+
+        Note that the attachment is shown to the recipient with the same name you uploaded it with.
+
+        If attachments have not been used in a message within 24 hours, they will be removed.
+
+        Supported content types include:
+          * application/msword
+          * application/pdf
+          * application/vnd.ms-excel
+          * application/vnd.ms-powerpoint
+          * application/vnd.oasis.opendocument.spreadsheet
+          * application/vnd.oasis.opendocument.text
+          * application/vnd.openxmlformats-officedocument.presentationml.presentation
+          * application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+          * application/vnd.openxmlformats-officedocument.wordprocessingml.document
+          * image/jpeg
+          * image/png
+          * text/plain
+      operationId: postV3Attachments
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "415":
+          description: Unsupported media type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "413":
+          description: Request too large
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "HTTP content length exceeded 10485760 bytes."
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/messages.api.rest.v2.AttachmentReference'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+        "502":
+          description: Bad gateway
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v2/events:
+    get:
+      tags:
+        - events
+      summary: Retrieve events related to messages you have sent or received from end users.
+      description: >-
+        Returns at most 1 000 events. There are no more events at this time if
+        an empty event list is returned. You should not assume any logic based
+        on the exact amount of events, as a varying number of events can be
+        returned depending on internal API behavior.
+
+
+        Event data is retrievable for 60 days.
+      operationId: getV2Events
+      parameters:
+        - name: continuationToken
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        "400":
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v2/messages:
+    post:
+      description: Since the message can be delivered either electronically or as paper mail, you must define the specifics of the message for both channels.
+      operationId: postV2MessagesController
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/messages.api.rest.v2.MultichannelMessageRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+          description: External ID already in use
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+          description: Bad gateway
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+      summary: Send a message that will be delivered either electronically or as paper mail depending on the state of the recipient's electronic mailbox.
+      tags:
+        - messages
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+  /v2/messages/electronic:
+    post:
+      description: |2
+        Sends an electronic only message to an end user that is using Suomi.fi Messages. Also, if you want to send a reply to a message from an end user, use this endpoint.
+
+        Note that messages can be deleted. If you reply to a message that does not exist, you will get an error response.
+
+        ## Error codes
+        | Code                                 | Description                                |
+        | ------------------------------------ | ------------------------------------------ |
+        | MAILBOX_NOT_IN_USE                   | Recipient mailbox is not active            |
+        | MESSAGE_BEING_REPLIED_TO_NOT_FOUND   | The message you replied to does not exist  |
+      operationId: postV2MessagesElectronic
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/messages.api.rest.v2.ElectronicMessageRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponseV1'
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "409":
+          description: External ID already in use
+          headers:
+            traceId:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+          description: Bad gateway
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+      summary: Send an electronic message.
+      tags:
+        - messages
+  /v2/paper-mail-without-id:
+    post:
+      operationId: postV2PaperMailWithoutId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/messages.api.rest.v2.PaperMailWithoutIdRequestBody'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaperMailResponse'
+          description: OK
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+          description: Bad request
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+          description: External ID already in use
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV1'
+          description: Bad gateway
+          headers:
+            traceId:
+              schema:
+                type: string
+                format: uuid
+              style: simple
+      summary: Send paper mail without using the recipient's personal identity code or business ID.
+      tags:
+        - messages
+      security:
+        - oauth2:
+            - aws.cognito.signin.user.admin
+components:
+  schemas:
+    NewPaperMailRecipient:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+    ElectronicMessageFromClientOrganizationCreatedEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/MessageEventMetadataV2'
+        type:
+          type: string
+          enum:
+            - Electronic message created
+    MessageNotifications:
+      type: object
+      properties:
+        customisedNewMessageNotification:
+          $ref: '#/components/schemas/CustomisedMessageNotification'
+        unreadMessageNotification:
+          $ref: '#/components/schemas/UnreadMessageNotification'
+        senderDetailsInNotifications:
+          $ref: '#/components/schemas/SenderDetailsInNotifications'
+    NewNormalPaperMail:
+      required:
+        - createCoverPage
+        - files
+        - printingAndEnvelopingService
+        - recipient
+        - sender
+      type: object
+      properties:
+        colorPrinting:
+          type: boolean
+        createCoverPage:
+          type: boolean
+        files:
+          maxItems: 1
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/FileReference'
+        messageServiceType:
+          type: string
+          enum:
+            - Normal
+            - Verifiable
+          default: Normal
+        printingAndEnvelopingService:
+          $ref: '#/components/schemas/PrintingAndEnvelopingService'
+        recipient:
+          $ref: '#/components/schemas/NewPaperMailRecipient'
+        sender:
+          $ref: '#/components/schemas/NewPaperMailSender'
+    VerifiableServiceMessageEventMetadataV2:
+      required:
+        - messageId
+        - receiptConfirmedBy
+        - serviceId
+      type: object
+      properties:
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        receiptConfirmedBy:
+          type: string
+        serviceId:
+          type: string
+    Address:
+      required:
+        - city
+        - countryCode
+        - name
+        - streetAddress
+        - zipCode
+      type: object
+      properties:
+        additionalName:
+          title: Second address row. Used to specify, for example, addressee company or department.
+          maxLength: 256
+          minLength: 1
+          type: string
+        city:
+          maxLength: 256
+          minLength: 1
+          type: string
+        countryCode:
+          title: ISO 3166 two-letter country code
+          type: string
+          enum:
+            - AD
+            - AE
+            - AF
+            - AG
+            - AI
+            - AL
+            - AM
+            - AO
+            - AQ
+            - AR
+            - AS
+            - AT
+            - AU
+            - AW
+            - AX
+            - AZ
+            - BA
+            - BB
+            - BD
+            - BE
+            - BF
+            - BG
+            - BH
+            - BI
+            - BJ
+            - BL
+            - BM
+            - BN
+            - BO
+            - BQ
+            - BR
+            - BS
+            - BT
+            - BV
+            - BW
+            - BY
+            - BZ
+            - CA
+            - CC
+            - CD
+            - CF
+            - CG
+            - CH
+            - CI
+            - CK
+            - CL
+            - CM
+            - CN
+            - CO
+            - CR
+            - CU
+            - CV
+            - CW
+            - CX
+            - CY
+            - CZ
+            - DE
+            - DJ
+            - DK
+            - DM
+            - DO
+            - DZ
+            - EC
+            - EE
+            - EG
+            - EH
+            - ER
+            - ES
+            - ET
+            - FI
+            - FJ
+            - FK
+            - FM
+            - FO
+            - FR
+            - GA
+            - GB
+            - GD
+            - GE
+            - GF
+            - GG
+            - GH
+            - GI
+            - GL
+            - GM
+            - GN
+            - GP
+            - GQ
+            - GR
+            - GS
+            - GT
+            - GU
+            - GW
+            - GY
+            - HK
+            - HM
+            - HN
+            - HR
+            - HT
+            - HU
+            - ID
+            - IE
+            - IL
+            - IM
+            - IN
+            - IO
+            - IQ
+            - IR
+            - IS
+            - IT
+            - JE
+            - JM
+            - JO
+            - JP
+            - KE
+            - KG
+            - KH
+            - KI
+            - KM
+            - KN
+            - KP
+            - KR
+            - KW
+            - KY
+            - KZ
+            - LA
+            - LB
+            - LC
+            - LI
+            - LK
+            - LR
+            - LS
+            - LT
+            - LU
+            - LV
+            - LY
+            - MA
+            - MC
+            - MD
+            - ME
+            - MF
+            - MG
+            - MH
+            - MK
+            - ML
+            - MM
+            - MN
+            - MO
+            - MP
+            - MQ
+            - MR
+            - MS
+            - MT
+            - MU
+            - MV
+            - MW
+            - MX
+            - MY
+            - MZ
+            - NA
+            - NC
+            - NE
+            - NF
+            - NG
+            - NI
+            - NL
+            - "NO"
+            - NP
+            - NR
+            - NU
+            - NZ
+            - OM
+            - PA
+            - PE
+            - PF
+            - PG
+            - PH
+            - PK
+            - PL
+            - PM
+            - PN
+            - PR
+            - PS
+            - PT
+            - PW
+            - PY
+            - QA
+            - RE
+            - RO
+            - RS
+            - RU
+            - RW
+            - SA
+            - SB
+            - SC
+            - SD
+            - SE
+            - SG
+            - SH
+            - SI
+            - SJ
+            - SK
+            - SL
+            - SM
+            - SN
+            - SO
+            - SR
+            - SS
+            - ST
+            - SV
+            - SX
+            - SY
+            - SZ
+            - TC
+            - TD
+            - TF
+            - TG
+            - TH
+            - TJ
+            - TK
+            - TL
+            - TM
+            - TN
+            - TO
+            - TR
+            - TT
+            - TV
+            - TW
+            - TZ
+            - UA
+            - UG
+            - UM
+            - US
+            - UY
+            - UZ
+            - VA
+            - VC
+            - VE
+            - VG
+            - VI
+            - VN
+            - VU
+            - WF
+            - WS
+            - YE
+            - YT
+            - ZA
+            - ZM
+            - ZW
+            - XK
+            - XX
+        name:
+          maxLength: 256
+          minLength: 1
+          type: string
+        streetAddress:
+          maxLength: 256
+          minLength: 1
+          type: string
+        zipCode:
+          maxLength: 64
+          minLength: 1
+          type: string
+    VerifiableServiceMessageEventMetadata:
+      required:
+        - direction
+        - messageId
+        - receiptConfirmedBy
+        - serviceId
+      type: object
+      properties:
+        direction:
+          type: string
+          enum:
+            - FROM_ORGANIZATION
+            - FROM_END_USER
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        receiptConfirmedBy:
+          type: string
+        serviceId:
+          type: string
+    SenderDetailsInNotifications:
+      type: string
+      enum:
+        - Organisation and service name
+        - None
+      default: Organisation and service name
+    CustomisedMessageNotificationTitle:
+      required:
+        - en
+        - fi
+        - sv
+      type: object
+      properties:
+        fi:
+          maxLength: 256
+          minLength: 1
+          type: string
+          description: Finnish notification title as plain text
+        sv:
+          maxLength: 256
+          minLength: 1
+          type: string
+          description: Swedish notification title as plain text
+        en:
+          maxLength: 256
+          minLength: 1
+          type: string
+          description: English notification title as plain text
+    ElectronicMessageFromClientOrganizationReadEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/MessageEventMetadataV2'
+        type:
+          type: string
+          enum:
+            - Electronic message read
+    Attachment:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+        filename:
+          type: string
+        mediaType:
+          type: string
+        sizeBytes:
+          type: integer
+          format: int64
+    MessageState:
+      required:
+        - statuses
+      type: object
+      properties:
+        electronic:
+          $ref: '#/components/schemas/ElectronicMessageState'
+        paperMail:
+          $ref: '#/components/schemas/PaperMailMessageState'
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusMessageStatusType'
+    NewElectronicOnly:
+      required:
+        - body
+        - title
+      type: object
+      properties:
+        attachments:
+          maxItems: 1
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/NewAttachment'
+        body:
+          maxLength: 40000
+          minLength: 1
+          type: string
+        inReplyToMessageId:
+          type: integer
+          format: int64
+        messageServiceType:
+          type: string
+          enum:
+            - Normal
+            - Verifiable
+          default: Normal
+        replyAllowedBy:
+          type: string
+          enum:
+            - Anyone
+            - No one
+          default: No one
+        title:
+          maxLength: 256
+          minLength: 1
+          type: string
+        notifications:
+          $ref: '#/components/schemas/MessageNotifications'
+        visibility:
+          type: string
+          enum:
+            - Normal
+            - Recipient only
+          default: Normal
+    MessageEventMetadata:
+      required:
+        - direction
+        - messageId
+        - serviceId
+      type: object
+      properties:
+        direction:
+          type: string
+          enum:
+            - FROM_ORGANIZATION
+            - FROM_END_USER
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        serviceId:
+          type: string
+    NewMessageFromClientOrganisation:
+      required:
+        - electronic
+        - externalId
+        - paperMail
+        - recipient
+        - sender
+      type: object
+      properties:
+        electronic:
+          $ref: '#/components/schemas/NewElectronicPart'
+        externalId:
+          title: ID of the message in your system
+          maxLength: 256
+          minLength: 1
+          type: string
+        paperMail:
+          $ref: '#/components/schemas/NewNormalPaperMail'
+        recipient:
+          $ref: '#/components/schemas/Recipient'
+        sender:
+          $ref: '#/components/schemas/Sender'
+    PostiMessaging:
+      required:
+        - contactDetails
+        - password
+        - username
+      type: object
+      properties:
+        contactDetails:
+          $ref: '#/components/schemas/ContactDetails'
+        password:
+          maxLength: 4
+          minLength: 4
+          type: string
+        username:
+          maxLength: 6
+          minLength: 6
+          type: string
+    StatusElectronicMessageStatus:
+      required:
+        - createdAt
+        - status
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - Created
+            - Readable
+            - Read
+            - Receipt confirmed
+    ContactDetails:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          maxLength: 256
+          minLength: 5
+          type: string
+    MessageFromEndUserResponse:
+      required:
+        - createdAt
+        - electronic
+        - messageId
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        electronic:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUser'
+        messageId:
+          type: integer
+          format: int64
+        sender:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUserSender'
+    MessageFromEndUserResponseV2:
+      required:
+        - createdAt
+        - electronic
+        - messageId
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        electronic:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUserV2'
+        messageId:
+          type: integer
+          format: int64
+        sender:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUserSender'
+    ErrorResponseV1:
+      required:
+        - reason
+      type: object
+      properties:
+        reason:
+          type: string
+    ElectronicMessageFromEndUserMetadata:
+      required:
+        - messageId
+        - serviceId
+      type: object
+      properties:
+        messageId:
+          type: integer
+          format: int64
+        serviceId:
+          type: string
+    PaperMailMessageCreatedEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/MessageEventMetadataV2'
+        type:
+          type: string
+          enum:
+            - Paper mail created
+    ValidationError:
+      required:
+        - error
+      type: object
+      properties:
+        error:
+          type: string
+        errorCode:
+          type: string
+          enum:
+            - MAILBOX_NOT_IN_USE
+            - MESSAGE_BEING_REPLIED_TO_NOT_FOUND
+    PostiReceiptConfirmedMessageEvent:
+      required:
+        - entityType
+        - eventTime
+        - eventType
+        - metadata
+      type: object
+      properties:
+        entityType:
+          type: string
+          enum:
+            - Paper mail
+        eventTime:
+          type: string
+          format: date-time
+        eventType:
+          type: string
+          enum:
+            - 'Posti: Receipt confirmed'
+        metadata:
+          $ref: '#/components/schemas/PostiReceiptConfirmedEventMetadata'
+    AccessTokenResponse:
+      required:
+        - access_token
+        - expires_in
+        - token_type
+      type: object
+      properties:
+        access_token:
+          type: string
+        expires_in:
+          type: integer
+          format: int64
+        token_type:
+          type: string
+          enum:
+            - Bearer
+    PrintingAndEnvelopingService:
+      required:
+        - postiMessaging
+      type: object
+      properties:
+        postiMessaging:
+          $ref: '#/components/schemas/PostiMessaging'
+        costPool:
+          maxLength: 15
+          minLength: 1
+          type: string
+    ElectronicMessageFromEndUserCreatedEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUserMetadata'
+        type:
+          type: string
+          enum:
+            - Electronic message from end user
+    MessageResponse:
+      required:
+        - messageId
+      type: object
+      properties:
+        messageId:
+          type: integer
+          description: ID of the message
+          format: int64
+    NewElectronicMessageFromClientOrganisation:
+      required:
+        - electronic
+        - externalId
+        - recipient
+        - sender
+      type: object
+      properties:
+        electronic:
+          $ref: '#/components/schemas/NewElectronicOnly'
+        externalId:
+          title: ID of the message in your system
+          maxLength: 256
+          minLength: 1
+          type: string
+        recipient:
+          $ref: '#/components/schemas/Recipient'
+        sender:
+          $ref: '#/components/schemas/Sender'
+    Recipient:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          maxLength: 11
+          minLength: 9
+          type: string
+          description: Personal identity code or Business Identity Code
+    EndUsers:
+      required:
+        - endUsers
+      type: object
+      properties:
+        endUsers:
+          maxItems: 10000
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/EndUserId'
+    PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/PostiReceiptConfirmedEventMetadataV2'
+        type:
+          type: string
+          enum:
+            - 'Posti: receipt confirmed'
+    PaperMailVerifiableServiceMessagePostiUnresolvedEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/PostiMetadata'
+        type:
+          type: string
+          enum:
+            - 'Posti: unresolved'
+    MessageIdResponse:
+      required:
+        - messageId
+      type: object
+      properties:
+        messageId:
+          type: integer
+          description: ID of the message
+          format: int64
+    Sender:
+      required:
+        - serviceId
+      type: object
+      properties:
+        serviceId:
+          maxLength: 64
+          minLength: 1
+          type: string
+    ElectronicMessageFromEndUser:
+      required:
+        - attachments
+        - body
+        - createdAt
+        - messageId
+        - title
+      type: object
+      properties:
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messageId:
+          type: integer
+          format: int64
+        thread:
+          $ref: '#/components/schemas/Thread'
+        title:
+          type: string
+    ElectronicMessageFromEndUserV2:
+      required:
+        - attachments
+        - body
+        - createdAt
+        - messageId
+        - title
+      type: object
+      properties:
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        body:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messageId:
+          type: integer
+          format: int64
+        thread:
+          $ref: '#/components/schemas/ThreadV2'
+        title:
+          type: string
+    ElectronicMessageState:
+      required:
+        - statuses
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusElectronicMessageStatus'
+    PaperMailMessageState:
+      required:
+        - statuses
+      type: object
+      properties:
+        statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusPaperMailMessageStatus'
+    MODEL61f3c7:
+      required:
+        - file
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    NewPaperMailSenderWithId:
+      required:
+        - address
+        - serviceId
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        serviceId:
+          maxLength: 64
+          minLength: 1
+          type: string
+    ChangePasswordResponse:
+      type: object
+      properties: {}
+    CustomisedMessageNotification:
+      required:
+        - content
+        - title
+      type: object
+      properties:
+        title:
+          $ref: '#/components/schemas/CustomisedMessageNotificationTitle'
+        content:
+          $ref: '#/components/schemas/CustomisedMessageNotificationContent'
+    NewAttachmentResponse:
+      required:
+        - attachmentId
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+    StatusPaperMailMessageStatus:
+      required:
+        - createdAt
+        - status
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - Created
+            - Sent for printing and enveloping
+    EndUsersWithActiveMailbox:
+      required:
+        - endUsersWithActiveMailbox
+      type: object
+      properties:
+        endUsersWithActiveMailbox:
+          type: array
+          items:
+            $ref: '#/components/schemas/EndUserId'
+    PostiMetadata:
+      required:
+        - messageId
+        - postiTrackingCode
+        - serviceId
+      type: object
+      properties:
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        postiTrackingCode:
+          type: string
+        serviceId:
+          type: string
+    PostiReceiptConfirmedEventMetadataV2:
+      required:
+        - messageId
+        - postiTrackingCode
+        - recipientSignature
+        - serviceId
+      type: object
+      properties:
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        postiTrackingCode:
+          type: string
+        recipientSignature:
+          type: string
+        serviceId:
+          type: string
+    ElectronicMessageFromEndUserSenderActor:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    NewFileResponse:
+      required:
+        - fileId
+      type: object
+      properties:
+        fileId:
+          type: string
+          format: uuid
+    NewAttachmentMetadata:
+      required:
+        - recipientId
+      type: object
+      properties:
+        recipientId:
+          maxLength: 11
+          minLength: 9
+          type: string
+          description: Personal identity code or Business Identity Code
+    EventMetadata:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/MessageEventMetadata'
+        - $ref: '#/components/schemas/VerifiableServiceMessageEventMetadata'
+    MessageEventMetadataV2:
+      required:
+        - messageId
+        - serviceId
+      type: object
+      properties:
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        serviceId:
+          type: string
+    ValidationErrorResponseV1:
+      required:
+        - reason
+        - validationErrors
+      type: object
+      properties:
+        reason:
+          type: string
+        validationErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    EndUserId:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          maxLength: 11
+          minLength: 9
+          type: string
+          description: Personal identity code or Business Identity Code
+    PaperMailMessageSentForPrintingAndEnvelopingEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/MessageEventMetadataV2'
+        type:
+          type: string
+          enum:
+            - Sent for printing and enveloping
+    AccessTokenRequestBody:
+      required:
+        - password
+        - username
+      type: object
+      properties:
+        password:
+          type: string
+        username:
+          type: string
+    Events:
+      required:
+        - continuationToken
+        - events
+      type: object
+      properties:
+        continuationToken:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    ElectronicMessageFromEndUserSender:
+      required:
+        - mailboxOwner
+      type: object
+      properties:
+        mailboxOwner:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUserSenderActor'
+        personSendingMessageOnBehalfOfMailboxOwner:
+          $ref: '#/components/schemas/ElectronicMessageFromEndUserSenderActor'
+    NewElectronicPart:
+      required:
+        - body
+        - files
+        - title
+      type: object
+      properties:
+        body:
+          maxLength: 40000
+          minLength: 1
+          type: string
+        files:
+          maxItems: 1
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/FileReference'
+        messageServiceType:
+          type: string
+          enum:
+            - Normal
+            - Verifiable
+          default: Normal
+        replyAllowedBy:
+          type: string
+          enum:
+            - Anyone
+            - No one
+          default: No one
+        title:
+          maxLength: 256
+          minLength: 1
+          type: string
+        notifications:
+          $ref: '#/components/schemas/MessageNotifications'
+        visibility:
+          type: string
+          enum:
+            - Normal
+            - Recipient only
+          default: Normal
+    NewAttachment:
+      required:
+        - attachmentId
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+    PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/PostiMetadata'
+        type:
+          type: string
+          enum:
+            - 'Posti: returned to sender'
+    ChangePasswordRequestBody:
+      required:
+        - accessToken
+        - currentPassword
+        - newPassword
+      type: object
+      properties:
+        accessToken:
+          type: string
+        currentPassword:
+          type: string
+        newPassword:
+          type: string
+    ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent:
+      required:
+        - eventTime
+        - metadata
+        - type
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+        metadata:
+          $ref: '#/components/schemas/VerifiableServiceMessageEventMetadataV2'
+        type:
+          type: string
+          enum:
+            - Receipt confirmed
+    NewPaperMailSender:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+    ElectronicMessageEvent:
+      required:
+        - entityType
+        - eventTime
+        - eventType
+        - metadata
+      type: object
+      properties:
+        entityType:
+          type: string
+          enum:
+            - Electronic
+        eventTime:
+          type: string
+          format: date-time
+        eventType:
+          type: string
+          enum:
+            - Created
+            - Read
+        metadata:
+          $ref: '#/components/schemas/MessageEventMetadata'
+    ElectronicVerifiableServiceMessageReceiptConfirmedEvent:
+      required:
+        - entityType
+        - eventTime
+        - eventType
+        - metadata
+      type: object
+      properties:
+        entityType:
+          type: string
+          enum:
+            - Electronic
+        eventTime:
+          type: string
+          format: date-time
+        eventType:
+          type: string
+          enum:
+            - Receipt confirmed
+        metadata:
+          $ref: '#/components/schemas/VerifiableServiceMessageEventMetadata'
+    PaperMailMessageEvent:
+      required:
+        - entityType
+        - eventTime
+        - eventType
+        - metadata
+      type: object
+      properties:
+        entityType:
+          type: string
+          enum:
+            - Paper mail
+        eventTime:
+          type: string
+          format: date-time
+        eventType:
+          type: string
+          enum:
+            - Created
+            - Sent for printing and enveloping
+            - 'Posti: Receipt confirmed'
+            - 'Posti: Delivered'
+            - 'Posti: Unresolved'
+            - 'Posti: Returned to sender'
+        metadata:
+          $ref: '#/components/schemas/MessageEventMetadata'
+    PostiReceiptConfirmedEventMetadata:
+      required:
+        - direction
+        - messageId
+        - postiTrackingCode
+        - recipientSignature
+        - serviceId
+      type: object
+      properties:
+        direction:
+          type: string
+          enum:
+            - FROM_ORGANIZATION
+            - FROM_END_USER
+        externalId:
+          type: string
+        messageId:
+          type: integer
+          format: int64
+        postiTrackingCode:
+          type: string
+        recipientSignature:
+          type: string
+        serviceId:
+          type: string
+    StatusMessageStatusType:
+      required:
+        - createdAt
+        - status
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - Created
+    CustomisedMessageNotificationContent:
+      required:
+        - en
+        - fi
+        - sv
+      type: object
+      properties:
+        fi:
+          maxLength: 1500
+          minLength: 1
+          type: string
+          description: Finnish notification content as plain text
+        sv:
+          maxLength: 1500
+          minLength: 1
+          type: string
+          description: Swedish notification content as plain text
+        en:
+          maxLength: 1500
+          minLength: 1
+          type: string
+          description: English notification content as plain text
+    Thread:
+      required:
+        - inReplyToMessageId
+        - rootMessageId
+      type: object
+      properties:
+        inReplyToMessageId:
+          type: integer
+          format: int64
+        rootMessageId:
+          type: integer
+          format: int64
+    ThreadV2:
+      required:
+        - rootMessageId
+      type: object
+      properties:
+        threadExternalId:
+          type: string
+        rootMessageId:
+          type: integer
+          format: int64
+    Response:
+      required:
+        - continuationToken
+        - events
+      type: object
+      properties:
+        continuationToken:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetV2Event'
+    MODELca473d:
+      required:
+        - file
+        - metadata
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        metadata:
+          $ref: '#/components/schemas/NewAttachmentMetadata'
+    UnreadMessageNotification:
+      required:
+        - reminder
+      type: object
+      properties:
+        reminder:
+          type: string
+          enum:
+            - Default reminder
+            - No reminders
+    Event:
+      required:
+        - entityType
+        - eventTime
+        - eventType
+      type: object
+      properties:
+        entityType:
+          type: string
+          enum:
+            - Message
+            - Paper mail
+            - Electronic
+        eventTime:
+          type: string
+          format: date-time
+        eventType:
+          type: string
+        metadata:
+          $ref: '#/components/schemas/EventMetadata'
+      oneOf:
+        - $ref: '#/components/schemas/PaperMailMessageEvent'
+        - $ref: '#/components/schemas/ElectronicMessageEvent'
+        - $ref: '#/components/schemas/ElectronicVerifiableServiceMessageReceiptConfirmedEvent'
+        - $ref: '#/components/schemas/PostiReceiptConfirmedMessageEvent'
+    MessageAlreadyExistsResponse:
+      required:
+        - messageId
+        - reason
+      type: object
+      properties:
+        messageId:
+          type: integer
+          description: Unique identifier for the created message. Store the 'messageId' for each message to enable message status tracking via 'events'-endpoint and to facilitate efficient troubleshooting.
+          format: int64
+        reason:
+          type: string
+    FileReference:
+      required:
+        - fileId
+      type: object
+      properties:
+        fileId:
+          type: string
+          format: uuid
+    PaperMailResponse:
+      required:
+        - messageId
+      type: object
+      properties:
+        messageId:
+          type: integer
+          description: Unique identifier for the created message. Store the 'messageId' for each message to enable message status tracking via 'events'-endpoint and to facilitate efficient troubleshooting.
+          format: int64
+    GetV2Event:
+      required:
+        - eventTime
+      type: object
+      properties:
+        eventTime:
+          type: string
+          format: date-time
+      discriminator:
+        mapping:
+          Electronic message created: '#/components/schemas/ElectronicMessageFromClientOrganizationCreatedEvent'
+          Electronic message from end user: '#/components/schemas/ElectronicMessageFromEndUserCreatedEvent'
+          Electronic message read: '#/components/schemas/ElectronicMessageFromClientOrganizationReadEvent'
+          Paper mail created: '#/components/schemas/PaperMailMessageCreatedEvent'
+          'Posti: receipt confirmed': '#/components/schemas/PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent'
+          'Posti: returned to sender': '#/components/schemas/PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent'
+          'Posti: unresolved': '#/components/schemas/PaperMailVerifiableServiceMessagePostiUnresolvedEvent'
+          Receipt confirmed: '#/components/schemas/ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent'
+          Sent for printing and enveloping: '#/components/schemas/PaperMailMessageSentForPrintingAndEnvelopingEvent'
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/ElectronicMessageFromClientOrganizationCreatedEvent'
+        - $ref: '#/components/schemas/ElectronicMessageFromClientOrganizationReadEvent'
+        - $ref: '#/components/schemas/ElectronicMessageFromEndUserCreatedEvent'
+        - $ref: '#/components/schemas/ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent'
+        - $ref: '#/components/schemas/PaperMailMessageCreatedEvent'
+        - $ref: '#/components/schemas/PaperMailMessageSentForPrintingAndEnvelopingEvent'
+        - $ref: '#/components/schemas/PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent'
+        - $ref: '#/components/schemas/PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent'
+        - $ref: '#/components/schemas/PaperMailVerifiableServiceMessagePostiUnresolvedEvent'
+    NewPaperMailWithoutId:
+      required:
+        - createCoverPage
+        - externalId
+        - files
+        - printingAndEnvelopingService
+        - recipient
+        - sender
+      type: object
+      properties:
+        colorPrinting:
+          type: boolean
+        createCoverPage:
+          type: boolean
+        externalId:
+          title: ID of the message in your system
+          maxLength: 256
+          minLength: 1
+          type: string
+        files:
+          maxItems: 1
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/FileReference'
+        messageServiceType:
+          type: string
+          enum:
+            - Normal
+            - Verifiable
+          default: Normal
+        printingAndEnvelopingService:
+          $ref: '#/components/schemas/PrintingAndEnvelopingService'
+        recipient:
+          $ref: '#/components/schemas/NewPaperMailRecipient'
+        sender:
+          $ref: '#/components/schemas/NewPaperMailSenderWithId'
+    messages.api.rest.v2.Address:
+      required:
+        - city
+        - countryCode
+        - name
+        - streetAddress
+        - zipCode
+      type: object
+      properties:
+        additionalName:
+          title: Second address row. Used to specify, for example, addressee company or department.
+          maxLength: 256
+          minLength: 1
+          type: string
+        city:
+          maxLength: 256
+          minLength: 1
+          type: string
+        countryCode:
+          title: ISO 3166 two-letter country code
+          type: string
+          enum:
+            - AD
+            - AE
+            - AF
+            - AG
+            - AI
+            - AL
+            - AM
+            - AO
+            - AQ
+            - AR
+            - AS
+            - AT
+            - AU
+            - AW
+            - AX
+            - AZ
+            - BA
+            - BB
+            - BD
+            - BE
+            - BF
+            - BG
+            - BH
+            - BI
+            - BJ
+            - BL
+            - BM
+            - BN
+            - BO
+            - BQ
+            - BR
+            - BS
+            - BT
+            - BV
+            - BW
+            - BY
+            - BZ
+            - CA
+            - CC
+            - CD
+            - CF
+            - CG
+            - CH
+            - CI
+            - CK
+            - CL
+            - CM
+            - CN
+            - CO
+            - CR
+            - CU
+            - CV
+            - CW
+            - CX
+            - CY
+            - CZ
+            - DE
+            - DJ
+            - DK
+            - DM
+            - DO
+            - DZ
+            - EC
+            - EE
+            - EG
+            - EH
+            - ER
+            - ES
+            - ET
+            - FI
+            - FJ
+            - FK
+            - FM
+            - FO
+            - FR
+            - GA
+            - GB
+            - GD
+            - GE
+            - GF
+            - GG
+            - GH
+            - GI
+            - GL
+            - GM
+            - GN
+            - GP
+            - GQ
+            - GR
+            - GS
+            - GT
+            - GU
+            - GW
+            - GY
+            - HK
+            - HM
+            - HN
+            - HR
+            - HT
+            - HU
+            - ID
+            - IE
+            - IL
+            - IM
+            - IN
+            - IO
+            - IQ
+            - IR
+            - IS
+            - IT
+            - JE
+            - JM
+            - JO
+            - JP
+            - KE
+            - KG
+            - KH
+            - KI
+            - KM
+            - KN
+            - KP
+            - KR
+            - KW
+            - KY
+            - KZ
+            - LA
+            - LB
+            - LC
+            - LI
+            - LK
+            - LR
+            - LS
+            - LT
+            - LU
+            - LV
+            - LY
+            - MA
+            - MC
+            - MD
+            - ME
+            - MF
+            - MG
+            - MH
+            - MK
+            - ML
+            - MM
+            - MN
+            - MO
+            - MP
+            - MQ
+            - MR
+            - MS
+            - MT
+            - MU
+            - MV
+            - MW
+            - MX
+            - MY
+            - MZ
+            - NA
+            - NC
+            - NE
+            - NF
+            - NG
+            - NI
+            - NL
+            - "NO"
+            - NP
+            - NR
+            - NU
+            - NZ
+            - OM
+            - PA
+            - PE
+            - PF
+            - PG
+            - PH
+            - PK
+            - PL
+            - PM
+            - PN
+            - PR
+            - PS
+            - PT
+            - PW
+            - PY
+            - QA
+            - RE
+            - RO
+            - RS
+            - RU
+            - RW
+            - SA
+            - SB
+            - SC
+            - SD
+            - SE
+            - SG
+            - SH
+            - SI
+            - SJ
+            - SK
+            - SL
+            - SM
+            - SN
+            - SO
+            - SR
+            - SS
+            - ST
+            - SV
+            - SX
+            - SY
+            - SZ
+            - TC
+            - TD
+            - TF
+            - TG
+            - TH
+            - TJ
+            - TK
+            - TL
+            - TM
+            - TN
+            - TO
+            - TR
+            - TT
+            - TV
+            - TW
+            - TZ
+            - UA
+            - UG
+            - UM
+            - US
+            - UY
+            - UZ
+            - VA
+            - VC
+            - VE
+            - VG
+            - VI
+            - VN
+            - VU
+            - WF
+            - WS
+            - YE
+            - YT
+            - ZA
+            - ZM
+            - ZW
+            - XK
+            - XX
+        name:
+          maxLength: 256
+          minLength: 1
+          type: string
+        streetAddress:
+          maxLength: 256
+          minLength: 1
+          type: string
+        zipCode:
+          maxLength: 64
+          minLength: 1
+          type: string
+    messages.api.rest.v2.AttachmentReference:
+      required:
+        - attachmentId
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+    messages.api.rest.v2.ContactDetails:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          maxLength: 256
+          minLength: 5
+          type: string
+    messages.api.rest.v2.CustomisedMessageNotification:
+      required:
+        - content
+        - title
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/messages.api.rest.v2.CustomisedMessageNotificationContent'
+        title:
+          $ref: '#/components/schemas/messages.api.rest.v2.CustomisedMessageNotificationTitle'
+    messages.api.rest.v2.CustomisedMessageNotificationContent:
+      required:
+        - en
+        - fi
+        - sv
+      type: object
+      properties:
+        en:
+          maxLength: 1500
+          minLength: 1
+          type: string
+        fi:
+          maxLength: 1500
+          minLength: 1
+          type: string
+        sv:
+          maxLength: 1500
+          minLength: 1
+          type: string
+    messages.api.rest.v2.CustomisedMessageNotificationTitle:
+      required:
+        - en
+        - fi
+        - sv
+      type: object
+      properties:
+        en:
+          maxLength: 256
+          minLength: 1
+          type: string
+        fi:
+          maxLength: 256
+          minLength: 1
+          type: string
+        sv:
+          maxLength: 256
+          minLength: 1
+          type: string
+    messages.api.rest.v2.ElectronicMessageRequestBody:
+      required:
+        - electronic
+        - externalId
+        - recipient
+        - sender
+      type: object
+      properties:
+        electronic:
+          $ref: '#/components/schemas/messages.api.rest.v2.ElectronicPart'
+        externalId:
+          title: ID of the message in your system
+          maxLength: 256
+          minLength: 1
+          type: string
+        recipient:
+          $ref: '#/components/schemas/messages.api.rest.v2.Recipient'
+        sender:
+          $ref: '#/components/schemas/messages.api.rest.v2.Sender'
+    messages.api.rest.v2.ElectronicPart:
+      required:
+        - attachments
+        - body
+        - bodyFormat
+        - messageServiceType
+        - notifications
+        - replyAllowedBy
+        - title
+        - visibility
+      type: object
+      properties:
+        attachments:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/messages.api.rest.v2.AttachmentReference'
+        body:
+          maxLength: 40000
+          minLength: 1
+          type: string
+        bodyFormat:
+          type: string
+          enum:
+            - Text
+            - Markdown
+        inReplyToMessageId:
+          type: integer
+          format: int64
+        messageServiceType:
+          type: string
+          enum:
+            - Normal
+            - Verifiable
+        notifications:
+          $ref: '#/components/schemas/messages.api.rest.v2.MessageNotifications'
+        replyAllowedBy:
+          type: string
+          enum:
+            - Anyone
+            - No one
+        title:
+          maxLength: 256
+          minLength: 1
+          type: string
+        visibility:
+          type: string
+          enum:
+            - Normal
+            - Recipient only
+    messages.api.rest.v2.MessageNotifications:
+      required:
+        - senderDetailsInNotifications
+        - unreadMessageNotification
+      type: object
+      properties:
+        customisedNewMessageNotification:
+          $ref: '#/components/schemas/messages.api.rest.v2.CustomisedMessageNotification'
+        senderDetailsInNotifications:
+          type: string
+          default: Organisation and service name
+          enum:
+            - Organisation and service name
+            - None
+        unreadMessageNotification:
+          $ref: '#/components/schemas/messages.api.rest.v2.UnreadMessageNotification'
+    messages.api.rest.v2.MultichannelMessageRequestBody:
+      required:
+        - electronic
+        - externalId
+        - paperMail
+        - recipient
+        - sender
+      type: object
+      properties:
+        electronic:
+          $ref: '#/components/schemas/messages.api.rest.v2.ElectronicPart'
+        externalId:
+          title: ID of the message in your system
+          maxLength: 256
+          minLength: 1
+          type: string
+        paperMail:
+          $ref: '#/components/schemas/messages.api.rest.v2.PaperMailPart'
+        recipient:
+          $ref: '#/components/schemas/messages.api.rest.v2.Recipient'
+        sender:
+          $ref: '#/components/schemas/messages.api.rest.v2.Sender'
+    messages.api.rest.v2.NewPaperMailRecipient:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/messages.api.rest.v2.Address'
+    messages.api.rest.v2.NewPaperMailSender:
+      required:
+        - address
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/messages.api.rest.v2.Address'
+    messages.api.rest.v2.PaperMailPart:
+      required:
+        - attachments
+        - colorPrinting
+        - createAddressPage
+        - messageServiceType
+        - printingAndEnvelopingService
+        - recipient
+        - rotateLandscapePages
+        - sender
+        - twoSidedPrinting
+      type: object
+      properties:
+        attachments:
+          maxItems: 1
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/messages.api.rest.v2.AttachmentReference'
+        colorPrinting:
+          type: boolean
+        createAddressPage:
+          type: boolean
+        messageServiceType:
+          type: string
+          description: 'Using ''messageServiceType: ''Verifiable'' requires extra configuration from Posti and will also incur extra costs'
+          enum:
+            - Normal
+            - Verifiable
+        printingAndEnvelopingService:
+          $ref: '#/components/schemas/messages.api.rest.v2.PrintingAndEnvelopingService'
+        recipient:
+          $ref: '#/components/schemas/messages.api.rest.v2.NewPaperMailRecipient'
+        rotateLandscapePages:
+          type: boolean
+        sender:
+          $ref: '#/components/schemas/messages.api.rest.v2.NewPaperMailSender'
+        twoSidedPrinting:
+          type: boolean
+    messages.api.rest.v2.PaperMailWithoutIdRequestBody:
+      required:
+        - externalId
+        - paperMail
+        - sender
+      type: object
+      properties:
+        externalId:
+          title: ID of the message in your system
+          maxLength: 256
+          minLength: 1
+          type: string
+        paperMail:
+          $ref: '#/components/schemas/messages.api.rest.v2.PaperMailPart'
+        sender:
+          $ref: '#/components/schemas/messages.api.rest.v2.Sender'
+    messages.api.rest.v2.PostiMessaging:
+      required:
+        - contactDetails
+        - password
+        - username
+      type: object
+      properties:
+        contactDetails:
+          $ref: '#/components/schemas/messages.api.rest.v2.ContactDetails'
+        password:
+          maxLength: 4
+          minLength: 4
+          type: string
+        username:
+          maxLength: 6
+          minLength: 6
+          type: string
+    messages.api.rest.v2.PrintingAndEnvelopingService:
+      required:
+        - postiMessaging
+      type: object
+      properties:
+        costPool:
+          maxLength: 15
+          minLength: 1
+          pattern: '[A-Z0-9]+'
+          type: string
+        postiMessaging:
+          $ref: '#/components/schemas/messages.api.rest.v2.PostiMessaging'
+    messages.api.rest.v2.Recipient:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          maxLength: 11
+          minLength: 9
+          type: string
+          description: Personal identity code or Business Identity Code
+    messages.api.rest.v2.Sender:
+      required:
+        - serviceId
+      type: object
+      properties:
+        serviceId:
+          maxLength: 64
+          minLength: 1
+          type: string
+    messages.api.rest.v2.UnreadMessageNotification:
+      required:
+        - reminder
+      type: object
+      properties:
+        reminder:
+          type: string
+          enum:
+            - Default reminder
+            - No reminders
+  securitySchemes:
+    oauth2:
+      type: apiKey
+      name: Authorization
+      in: header
