@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import writeXlsxFile from "write-excel-file/node";
 import { DBProjekti } from "../database/model";
 import dayjs from "dayjs";
@@ -18,6 +19,7 @@ import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
+import { OMISTAJA_EXCEL_HEADERS, OMISTAJA_EXCEL_SHEETS } from "hassu-common/excelConstants";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -124,31 +126,31 @@ function lisaaRivi(rivi: Rivi): Row_<ImageData> {
   ];
 }
 
-function lisaaOtsikko() {
+function lisaaOtsikko(): { value: string }[] {
   return [
     {
-      value: "Kiinteistötunnus",
+      value: OMISTAJA_EXCEL_HEADERS.kiinteistotunnus,
     },
     {
-      value: "Omistajan nimi",
+      value: OMISTAJA_EXCEL_HEADERS.nimi,
     },
     {
-      value: "Postiosoite",
+      value: OMISTAJA_EXCEL_HEADERS.postiosoite,
     },
     {
-      value: "Postinumero",
+      value: OMISTAJA_EXCEL_HEADERS.postinumero,
     },
     {
-      value: "Postitoimipaikka",
+      value: OMISTAJA_EXCEL_HEADERS.postitoimipaikka,
     },
     {
-      value: "Maa",
+      value: OMISTAJA_EXCEL_HEADERS.maa,
     },
     {
-      value: "Tiedot haettu",
+      value: OMISTAJA_EXCEL_HEADERS.tiedotHaettu,
     },
     {
-      value: "Tiedotustapa",
+      value: OMISTAJA_EXCEL_HEADERS.tiedotustapa,
     },
   ];
 }
@@ -273,7 +275,7 @@ async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: 
     },
   ]);
   data[1].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
-  data[1].push([{ value: "Kiinteistönomistajien tiedotus muilla tavoin", fontWeight: "bold" }]);
+  data[1].push([{ value: "Kiinteistönomistajat, joille ei ole yhteystietoja", fontWeight: "bold" }]);
   data[1].push(lisaaOtsikko());
   for (const omistaja of omistajat.filter((o) => !o.suomifiLahetys)) {
     data[1].push(lisaaRivi(omistaja));
@@ -322,17 +324,17 @@ export async function generateExcel(
   const sheets: string[] = [];
   const columns: Columns[] = [];
   if (vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
-    sheets.push("Suomi.fi kiinteistönomistajat", "Muut kiinteistönomistajat");
+    sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat, OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
     columns.push(getKiinteistonomistajaColumns(), getKiinteistonomistajaColumns());
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
     if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
-      sheets.push("Suomi.fi muistuttajat", "Muut muistuttajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiMuistuttajat, OMISTAJA_EXCEL_SHEETS.muutMuistuttajat);
       columns.push(getMuistuttajaColumns(), getMuistuttajaColumns());
       await lisaaMuistuttajat(data, projekti.oid, vaihe, kuulutusPaiva);
     }
   } else if (suomifi) {
     if (kiinteisto) {
-      sheets.push("Suomi.fi kiinteistönomistajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat);
       columns.push(getKiinteistonomistajaColumnsWithLahetysaika());
       data[0].push(lisaaOtsikkoWithLahetysaika());
       const rivit = await haeOmistajat(projekti.oid);
@@ -340,7 +342,7 @@ export async function generateExcel(
         data[0].push(lisaaRiviWithLahetysaika(rivi));
       }
     } else {
-      sheets.push("Suomi.fi muistuttajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiMuistuttajat);
       columns.push(getMuistuttajaColumnsWithLahetysaika());
       data[0].push(lisaaMuistuttajanOtsikkoWithLahetysaika());
       const rivit = await haeMuistuttajat(projekti.oid);
@@ -350,7 +352,7 @@ export async function generateExcel(
     }
   } else if (suomifi === false) {
     if (kiinteisto) {
-      sheets.push("Muut kiinteistönomistajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
       data[0].push(lisaaOtsikko());
       columns.push(getKiinteistonomistajaColumns());
       const rivit = await haeOmistajat(projekti.oid);
@@ -358,7 +360,7 @@ export async function generateExcel(
         data[0].push(lisaaRivi(rivi));
       }
     } else {
-      sheets.push("Muut muistuttajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.muutMuistuttajat);
       data[0].push(lisaaMuistuttajanOtsikko());
       columns.push(getMuistuttajaColumns());
       const rivit = await haeMuistuttajat(projekti.oid);
@@ -369,8 +371,8 @@ export async function generateExcel(
   } else {
     data[1] = [];
     if (kiinteisto) {
-      sheets.push("Suomi.fi kiinteistönomistajat");
-      sheets.push("Muut kiinteistönomistajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat);
+      sheets.push(OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
       data[0].push(lisaaOtsikkoWithLahetysaika());
       data[1].push(lisaaOtsikko());
       columns.push(getKiinteistonomistajaColumnsWithLahetysaika(), getKiinteistonomistajaColumns());
@@ -383,8 +385,8 @@ export async function generateExcel(
         }
       }
     } else {
-      sheets.push("Suomi.fi muistuttajat");
-      sheets.push("Muut muistuttajat");
+      sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiMuistuttajat);
+      sheets.push(OMISTAJA_EXCEL_SHEETS.muutMuistuttajat);
       data[0].push(lisaaMuistuttajanOtsikkoWithLahetysaika());
       data[1].push(lisaaMuistuttajanOtsikko());
       columns.push(getMuistuttajaColumnsWithLahetysaika(), getMuistuttajaColumns());
