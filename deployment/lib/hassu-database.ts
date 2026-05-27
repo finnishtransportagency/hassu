@@ -1,6 +1,7 @@
+// Contains code generated or recommended by Amazon Q
 import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import { PointInTimeRecoverySpecification, ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
-import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
+import { CfnOutput, CfnResource, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, BucketEncryption, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { IOriginAccessIdentity, OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
@@ -8,6 +9,12 @@ import * as backup from "aws-cdk-lib/aws-backup";
 import * as events from "aws-cdk-lib/aws-events";
 import { ArnPrincipal, Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Construct, IConstruct } from "constructs";
+import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
+import { CfnSession } from "aws-cdk-lib/aws-macie";
+import * as sns from "aws-cdk-lib/aws-sns";
+import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
+import * as targets from "aws-cdk-lib/aws-events-targets";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -32,6 +39,7 @@ export class HassuDatabaseStack extends Stack {
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
   public publicBucket!: Bucket;
+  public quarantineBucket!: Bucket;
   private config!: Config;
 
   constructor(scope: Construct, awsAccountId: string) {
@@ -75,6 +83,16 @@ export class HassuDatabaseStack extends Stack {
     this.internalBucket = this.createInternalBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
+    if (Config.env === "dev") {
+      this.quarantineBucket = this.createQuarantineBucket();
+      const alertEmail = await this.config.getParameterNow("SecurityAlertEmail");
+      const alertTopic = new sns.Topic(this, "SecurityAlertTopic", {
+        displayName: "Security Alerts",
+      });
+      alertTopic.addSubscription(new subscriptions.EmailSubscription(alertEmail));
+      await this.createMalwareProtectionForS3(this.yllapitoBucket, this.quarantineBucket, alertTopic);
+      this.createMacieSensitiveDataScanning(this.yllapitoBucket, alertTopic);
+    }
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
@@ -381,6 +399,115 @@ export class HassuDatabaseStack extends Stack {
     }
     HassuDatabaseStack.enableBackup(bucket);
     return bucket;
+  }
+
+  private createQuarantineBucket(): Bucket {
+    return new Bucket(this, "QuarantineBucket", {
+      bucketName: Config.quarantineBucketName,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      removalPolicy: RemovalPolicy.DESTROY,
+      encryption: BucketEncryption.S3_MANAGED,
+      enforceSSL: true,
+      lifecycleRules: [{ id: this.stackName + "-quarantine-delete-after-90d", expiration: Duration.days(90) }],
+    });
+  }
+
+  private async createMalwareProtectionForS3(bucket: Bucket, quarantineBucket: Bucket, alertTopic: sns.Topic) {
+    const scanRole = new Role(this, "GuardDutyMalwareScanRole", {
+      assumedBy: new ServicePrincipal("malware-protection-plan.guardduty.amazonaws.com"),
+    });
+    bucket.grantRead(scanRole);
+
+    new CfnMalwareProtectionPlan(this, "S3MalwareProtection", {
+      role: scanRole.roleArn,
+      protectedResource: {
+        s3Bucket: {
+          bucketName: bucket.bucketName,
+        },
+      },
+      actions: {
+        tagging: { status: "ENABLED" },
+      },
+    });
+
+    const quarantineLambda = new lambda.Function(this, "MalwareQuarantineLambda", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset("tools/malwareQuarantine"),
+      environment: {
+        SOURCE_BUCKET: bucket.bucketName,
+        QUARANTINE_BUCKET: quarantineBucket.bucketName,
+      },
+      timeout: Duration.seconds(30),
+    });
+    bucket.grantReadWrite(quarantineLambda);
+    bucket.grantDelete(quarantineLambda);
+    quarantineBucket.grantWrite(quarantineLambda);
+
+    new events.Rule(this, "GuardDutyMalwareScanRule", {
+      eventPattern: {
+        source: ["aws.guardduty"],
+        detailType: ["GuardDuty Malware Protection Object Scan Result"],
+        detail: {
+          scanResultDetails: {
+            scanResult: ["THREATS_FOUND"],
+          },
+        },
+      },
+      targets: [new targets.LambdaFunction(quarantineLambda), new targets.SnsTopic(alertTopic)],
+    });
+  }
+
+  private createMacieSensitiveDataScanning(bucket: Bucket, alertTopic: sns.Topic) {
+    const macieSession = new CfnSession(this, "MacieSession", {
+      status: "ENABLED",
+      findingPublishingFrequency: "FIFTEEN_MINUTES",
+    });
+
+    const classificationJob = new CfnResource(this, "MacieClassificationJob", {
+      type: "AWS::Macie::ClassificationJob",
+      properties: {
+        JobType: "SCHEDULED",
+        Name: `hassu-${Config.env}-pii-scan`,
+        Description: "Scan palautteet and muistutukset for sensitive data",
+        S3JobDefinition: {
+          BucketDefinitions: [
+            {
+              AccountId: this.account,
+              Buckets: [bucket.bucketName],
+            },
+          ],
+          Scoping: {
+            Includes: {
+              And: [
+                {
+                  SimpleScopeTerm: {
+                    Comparator: "STARTS_WITH",
+                    Key: "OBJECT_KEY",
+                    Values: ["palautteet/", "muistutukset/"],
+                  },
+                },
+              ],
+            },
+          },
+        },
+        ScheduleFrequency: {
+          WeeklySchedule: {
+            DayOfWeek: "MONDAY",
+          },
+        },
+        JobStatus: "RUNNING",
+      },
+    });
+    classificationJob.addDependency(macieSession);
+
+    new events.Rule(this, "MacieFindingsRule", {
+      eventPattern: {
+        source: ["aws.macie"],
+        detailType: ["Macie Finding"],
+      },
+      targets: [new targets.SnsTopic(alertTopic)],
+    });
   }
 
   private createBackupPlan() {

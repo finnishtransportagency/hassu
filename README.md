@@ -261,3 +261,4 @@ const Breadcrumbs = dynamic(() => import("./Breadcrumbs"), {
 | /\<env>/VelhoApiUrl                 | Velho-rajapinnan osoite                                  |
 | /\<env>/VelhoUsername               | Käyttäjätunnus Velho-integraatioon                       |
 | /\<env>/VelhoPassword               | Salasana Velho-integraatioon                             |
+| /\<env>/SecurityAlertEmail          | Sähköpostiosoite tietoturvahälytyksille (vain dev)       |
