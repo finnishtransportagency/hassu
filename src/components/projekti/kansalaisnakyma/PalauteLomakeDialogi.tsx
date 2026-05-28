@@ -1,10 +1,10 @@
-import { Checkbox, DialogActions, DialogContent, FormControlLabel, styled, useMediaQuery, useTheme } from "@mui/material";
+import { DialogActions, DialogContent, styled, useMediaQuery, useTheme } from "@mui/material";
 import React, { ReactElement, useCallback, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { Controller, FieldError, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
+import { FieldError, FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
@@ -136,9 +136,20 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
           <p style={{ fontWeight: "bold" }}>
             {t("projekti:kysymykset_ja_palautteet").replace("xx.xx.xxxx", formatDate(vuorovaikutus.kysymyksetJaPalautteetViimeistaan))}
           </p>
-          <p>
-            {t("projekti:palautelomake.kasittelemme_henkilotietoja")} <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
-          </p>
+          <p>{t("projekti:ala_kirjoita_arkaluonteista")}</p>
+          <Textarea
+            minRows={3}
+            maxRows={13}
+            className="mt-4"
+            label={`${t("projekti:palautelomake.palaute")} *`}
+            {...register("kysymysTaiPalaute")}
+            error={
+              errors?.kysymysTaiPalaute?.message
+                ? ({ message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError)
+                : undefined
+            }
+          />
+          <p>{t("projekti:voit_jattaa_yhteystietosi")}</p>
           <FormProvider {...useFormReturn}>
             <form>
               <HassuStack>
@@ -177,64 +188,11 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                     }
                   />
                 </HassuGrid>
+                <p>
+                  {t("projekti:palautelomake.kasittelemme_henkilotietoja")}{" "}
+                  <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
+                </p>
               </HassuStack>
-              <Textarea
-                minRows={3}
-                maxRows={13}
-                className="mt-4"
-                label={`${t("projekti:palautelomake.palaute")} *`}
-                {...register("kysymysTaiPalaute")}
-                error={
-                  errors?.kysymysTaiPalaute?.message
-                    ? ({ message: t(`common:virheet.${errors.kysymysTaiPalaute.message}`) } as FieldError)
-                    : undefined
-                }
-              />
-              <div>
-                <p style={{ fontWeight: "bold" }}>{t("projekti:palautelomake.toivottu_yhteydenottotapa")}</p>
-                <HassuStack rowGap={0}>
-                  <Controller<PalauteFormInput>
-                    name="yhteydenottotapaEmail"
-                    shouldUnregister
-                    render={({ field: { value, onChange, ...field } }) => (
-                      <FormControlLabel
-                        sx={{ marginLeft: "0px" }}
-                        label={t("common:sahkoposti")}
-                        control={
-                          <Checkbox
-                            checked={!!value}
-                            onChange={(event) => {
-                              const checked = event.target.checked;
-                              onChange(!!checked);
-                            }}
-                            {...field}
-                          />
-                        }
-                      />
-                    )}
-                  />
-                  <Controller<PalauteFormInput>
-                    name="yhteydenottotapaPuhelin"
-                    shouldUnregister
-                    render={({ field: { value, onChange, ...field } }) => (
-                      <FormControlLabel
-                        sx={{ marginLeft: "0px" }}
-                        label={t("projekti:palautelomake.puhelinsoitto")}
-                        control={
-                          <Checkbox
-                            checked={!!value}
-                            onChange={(event) => {
-                              const checked = event.target.checked;
-                              onChange(!!checked);
-                            }}
-                            {...field}
-                          />
-                        }
-                      />
-                    )}
-                  />
-                </HassuStack>
-              </div>
               <div className="mt-3">
                 <p style={{ fontWeight: "bold" }}>{t("common:liitteet")}</p>
                 <p>{t("projekti:palautelomake.tuetut_tiedostomuodot_ovat")}</p>
