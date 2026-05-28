@@ -465,7 +465,13 @@ export class HassuDatabaseStack extends Stack {
    * Only runs in production environment.
    */
   private createRestoreTestingPlan(backupVaultName: string, restoreRole: Role) {
-    restoreRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSBackupServiceRolePolicyForRestores"));
+    restoreRole.addManagedPolicy(
+      ManagedPolicy.fromManagedPolicyArn(
+        this,
+        "RestorePolicy",
+        "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForRestores"
+      )
+    );
 
     const restoreTestingPlanName = `RestoreTest_${Config.env}`;
     const restoreTestingPlan = new backup.CfnRestoreTestingPlan(this, "RestoreTestingPlan", {
