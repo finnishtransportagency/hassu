@@ -8,6 +8,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import { LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { ITopic, Topic } from "aws-cdk-lib/aws-sns";
+import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { CfnMaintenanceWindow, CfnMaintenanceWindowTarget, CfnMaintenanceWindowTask, StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Alarm, ComparisonOperator, Metric, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
 import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
@@ -59,7 +60,7 @@ export class HassuAccountStack extends Stack {
     this.configureOpenSearch();
     this.configureBuildImageECR();
     this.configureGitHubConnection();
-    const alarmTopic = this.configureSNSForAlarms();
+    const alarmTopic = await this.configureSNSForAlarms(config);
     const vpcName = await config.getParameterNow("HassuVpcName");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
     // Bastion host is created in both dev and prod accounts.
@@ -380,16 +381,22 @@ export class HassuAccountStack extends Stack {
     });
   }
 
-  private configureSNSForAlarms(): ITopic {
+  private async configureSNSForAlarms(config: Config): Promise<ITopic> {
     const topic = new Topic(this, "SNSForAlarms", {
       fifo: false,
-      displayName: "Email-halytykset CloudWatchista",
+      displayName: "Hassu-hälytykset",
       topicName: "hassualarms",
     });
     new StringParameter(this, "SNSForAlarmsArn", {
       parameterName: SSMParameterName.HassuAlarmsSNSArn,
       stringValue: topic.topicArn,
     });
+
+    const alarmEmails = await config.getParameterNow("AlarmEmails");
+    alarmEmails.split(",").forEach((email, index) => {
+      topic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
+    });
+
     return topic;
   }
 
