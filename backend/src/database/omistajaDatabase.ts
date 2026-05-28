@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { log } from "../logger";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -12,7 +13,7 @@ import {
   TransactWriteCommandInput,
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
-import { TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { LahetysTapa, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
 
 export type OmistajaKey = {
   oid: string;
@@ -38,7 +39,8 @@ export type DBOmistaja = {
   expires?: number;
   kaytossa: boolean;
   suomifiLahetys?: boolean;
-  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[];
+  osoitetiedotSaatu?: boolean;
+  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; lahetysTapa?: LahetysTapa }[];
   userCreated?: boolean;
 };
 
