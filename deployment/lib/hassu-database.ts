@@ -436,7 +436,7 @@ export class HassuDatabaseStack extends Stack {
    * Creates an automated restore testing plan for compliance purposes.
    *
    * The plan verifies that backups are actually restorable by performing automated
-   * restore tests semi-annually (January 1st and July 1st at 02:00 Finnish time).
+   * restore tests semi-annually (June 1st and December 1st at 02:00 Finnish time).
    *
    * What it does:
    * 1. Selects a random recovery point from the last 34 days (1 day margin to
@@ -470,7 +470,7 @@ export class HassuDatabaseStack extends Stack {
     const restoreTestingPlanName = `RestoreTest_${Config.env}`;
     const restoreTestingPlan = new backup.CfnRestoreTestingPlan(this, "RestoreTestingPlan", {
       restoreTestingPlanName,
-      scheduleExpression: "cron(0 2 1 1,7 ? *)",
+      scheduleExpression: "cron(0 2 1 6,12 ? *)",
       scheduleExpressionTimezone: "Europe/Helsinki",
       startWindowHours: 24,
       recoveryPointSelection: {
