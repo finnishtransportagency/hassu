@@ -9,6 +9,10 @@ import * as backup from "aws-cdk-lib/aws-backup";
 import * as events from "aws-cdk-lib/aws-events";
 import { ArnPrincipal, Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Construct, IConstruct } from "constructs";
+import { SSMParameterName } from "./config";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
+import * as sns from "aws-cdk-lib/aws-sns";
+import * as targets from "aws-cdk-lib/aws-events-targets";
 import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -495,6 +499,32 @@ export class HassuDatabaseStack extends Stack {
       protectedResourceConditions: {
         stringEquals: [{ key: "aws:ResourceTag/hassu-backup", value: Config.env }],
       },
+    });
+
+    const alarmTopicArn = StringParameter.valueForStringParameter(this, SSMParameterName.HassuAlarmsSNSArn);
+    const alarmTopic = sns.Topic.fromTopicArn(this, "BackupAlarmTopic", alarmTopicArn);
+
+    new events.Rule(this, "RestoreTestResultRule", {
+      eventPattern: {
+        source: ["aws.backup"],
+        detailType: ["Restore Job State Change"],
+        detail: { state: ["COMPLETED", "FAILED"] },
+      },
+      targets: [
+        new targets.SnsTopic(alarmTopic, {
+          message: events.RuleTargetInput.fromText(
+            `[${Config.env}] AWS Backup Restore Testing Plan: ${events.EventField.fromPath("$.detail.state")}
+
+Environment: ${Config.env}
+Resource type: ${events.EventField.fromPath("$.detail.resourceType")}
+Status: ${events.EventField.fromPath("$.detail.state")}
+Restored resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}
+Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}
+
+This is an automated restore test verifying that backups are restorable. Results are also visible in AWS Backup console under Restore testing.`
+          ),
+        }),
+      ],
     });
   }
 }
