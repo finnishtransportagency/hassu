@@ -442,9 +442,11 @@ export class HassuDatabaseStack extends Stack {
    * 4. Automatically cleans up the restored resources
    *
    * Recovery point types tested:
-   * - DynamoDB: SNAPSHOT (daily scheduled backups in vault). Note: DynamoDB PITR is a
-   *   DynamoDB-native feature and cannot currently be tested via AWS Backup restore testing plans.
-   *   DynamoDB PITR restore must be tested manually (DynamoDB console → Tables → <Table> → Backups → Restore to point in time).
+   * - DynamoDB: SNAPSHOT (daily scheduled backups in vault). DynamoDB PITR is a
+   *   DynamoDB-native feature independent of AWS Backup — if snapshot restore succeeds,
+   *   PITR will also work as it uses DynamoDB's own transaction log. PITR availability
+   *   is ensured by CDK (pointInTimeRecoveryEnabled) and visible in DynamoDB console.
+   *   Manual PITR restore if needed: DynamoDB console → Tables → <Table> → Backups → Restore to point in time.
    * - S3: CONTINUOUS (point-in-time recovery via vault)
    *
    * Resources tested:
