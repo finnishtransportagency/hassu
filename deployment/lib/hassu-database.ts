@@ -515,13 +515,18 @@ export class HassuDatabaseStack extends Stack {
           message: events.RuleTargetInput.fromText(
             `[${Config.env}] AWS Backup Restore Testing Plan: ${events.EventField.fromPath("$.detail.state")}
 
+Automated restore test for Hassu application backups (compliance).
+Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups
+and S3 PITR backups are restorable.
+
 Environment: ${Config.env}
 Resource type: ${events.EventField.fromPath("$.detail.resourceType")}
 Status: ${events.EventField.fromPath("$.detail.state")}
 Restored resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}
 Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}
 
-This is an automated restore test verifying that backups are restorable. Results are also visible in AWS Backup console under Restore testing.`
+Results: AWS Backup console → Restore testing
+Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()`
           ),
         }),
       ],
