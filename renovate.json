@@ -78,7 +78,6 @@
       "groupName": "build-image tools (minor/patch)",
       "groupSlug": "build-image-tools",
       "semanticCommitType": "build",
-      "schedule": ["after 9pm on sunday"],
       "prBodyNotes": [
         "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**"
       ]
@@ -88,7 +87,6 @@
       "groupName": "npm (Dockerfile + .envrc) (minor/patch)",
       "groupSlug": "npm",
       "semanticCommitType": "build",
-      "schedule": ["after 9pm on sunday"],
       "prBodyNotes": [
         "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**",
         "⚠️ **Muista päivittää npm myös seuraavissa repoissa:**",
