@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import { PointInTimeRecoverySpecification, ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
 import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
@@ -420,6 +421,78 @@ export class HassuDatabaseStack extends Stack {
         resources: [backup.BackupResource.fromTag("hassu-backup", Config.env)],
         role: backupPlanRole,
       });
+
+      if (Config.env === "dev" || Config.env === "prod") {
+        this.createRestoreTestingPlan(backupVaultName, backupPlanRole);
+      }
     }
+  }
+
+  /**
+   * Creates an automated restore testing plan for compliance purposes.
+   *
+   * The plan verifies that backups are actually restorable by performing automated
+   * restore tests semi-annually (January 1st and July 1st at 02:00 Finnish time).
+   *
+   * What it does:
+   * 1. Selects a random recovery point from the last 34 days (1 day margin to
+   *    35-day retention to avoid selecting an expiring recovery point)
+   * 2. Restores DynamoDB tables and S3 buckets tagged with "hassu-backup" into new temporary resources
+   * 3. Validates that the restore operation completed successfully
+   * 4. Automatically cleans up the restored resources
+   *
+   * Recovery point types tested:
+   * - DynamoDB: SNAPSHOT (daily scheduled backups in vault). Note: DynamoDB PITR is a
+   *   DynamoDB-native feature and cannot currently be tested via AWS Backup restore testing plans.
+   *   DynamoDB PITR restore must be tested manually (DynamoDB console → Tables → <Table> → Backups → Restore to point in time).
+   * - S3: CONTINUOUS (point-in-time recovery via vault)
+   *
+   * Resources tested:
+   * All DynamoDB tables and S3 buckets where HassuDatabaseStack.enableBackup(resource)
+   * has been called. This adds the tag "hassu-backup"=<env>, which both the backup plan
+   * and restore testing plan use to select resources.
+   *
+   * Results are visible in AWS Backup console under "Restore testing".
+   * Can also be triggered manually via console or CLI:
+   *   aws backup create-restore-testing-plan-run --restore-testing-plan-name RestoreTest_<env>
+   *
+   * Only runs in production environment.
+   */
+  private createRestoreTestingPlan(backupVaultName: string, restoreRole: Role) {
+    restoreRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName("AWSBackupServiceRolePolicyForRestores"));
+
+    const restoreTestingPlanName = `RestoreTest_${Config.env}`;
+    const restoreTestingPlan = new backup.CfnRestoreTestingPlan(this, "RestoreTestingPlan", {
+      restoreTestingPlanName,
+      scheduleExpression: "cron(0 2 1 1,7 ? *)",
+      scheduleExpressionTimezone: "Europe/Helsinki",
+      startWindowHours: 24,
+      recoveryPointSelection: {
+        algorithm: "RANDOM_WITHIN_WINDOW",
+        includeVaults: [`arn:aws:backup:eu-west-1:${this.account}:backup-vault:${backupVaultName}`],
+        recoveryPointTypes: ["CONTINUOUS", "SNAPSHOT"],
+        selectionWindowDays: 34,
+      },
+    });
+
+    new backup.CfnRestoreTestingSelection(this, "RestoreTestingSelectionDynamoDB", {
+      iamRoleArn: restoreRole.roleArn,
+      protectedResourceType: "DynamoDB",
+      restoreTestingPlanName: restoreTestingPlan.restoreTestingPlanName,
+      restoreTestingSelectionName: `DynamoDB_${Config.env}`,
+      protectedResourceConditions: {
+        stringEquals: [{ key: "aws:ResourceTag/hassu-backup", value: Config.env }],
+      },
+    });
+
+    new backup.CfnRestoreTestingSelection(this, "RestoreTestingSelectionS3", {
+      iamRoleArn: restoreRole.roleArn,
+      protectedResourceType: "S3",
+      restoreTestingPlanName: restoreTestingPlan.restoreTestingPlanName,
+      restoreTestingSelectionName: `S3_${Config.env}`,
+      protectedResourceConditions: {
+        stringEquals: [{ key: "aws:ResourceTag/hassu-backup", value: Config.env }],
+      },
+    });
   }
 }
