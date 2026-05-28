@@ -7,14 +7,25 @@ import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aw
 import * as iam from "aws-cdk-lib/aws-iam";
 import { LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
-import { Topic } from "aws-cdk-lib/aws-sns";
-import { StringParameter } from "aws-cdk-lib/aws-ssm";
-import { BastionHostLinux, InstanceInitiatedShutdownBehavior, IVpc, SubnetType, Vpc } from "aws-cdk-lib/aws-ec2";
+import { ITopic, Topic } from "aws-cdk-lib/aws-sns";
+import { CfnMaintenanceWindow, CfnMaintenanceWindowTarget, CfnMaintenanceWindowTask, StringParameter } from "aws-cdk-lib/aws-ssm";
+import { Alarm, ComparisonOperator, Metric, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
+import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
+import {
+  BastionHostLinux,
+  BlockDeviceVolume,
+  EbsDeviceVolumeType,
+  InstanceInitiatedShutdownBehavior,
+  IVpc,
+  MachineImage,
+  SubnetType,
+  Vpc,
+} from "aws-cdk-lib/aws-ec2";
 import { Code, LambdaInsightsVersion, LayerVersion, Runtime, Tracing } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
-import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import { AwsApi, LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -48,12 +59,12 @@ export class HassuAccountStack extends Stack {
     this.configureOpenSearch();
     this.configureBuildImageECR();
     this.configureGitHubConnection();
-    this.configureSNSForAlarms();
+    const alarmTopic = this.configureSNSForAlarms();
     const vpcName = await config.getParameterNow("HassuVpcName");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
-    if (Config.isDevAccount()) {
-      await this.createBastionHost(config, vpc);
-    }
+    // Bastion host is created in both dev and prod accounts.
+    // Note: prod previously had a manually created bastion — remove it after deploying this.
+    await this.createBastionHost(config, vpc, alarmTopic);
     await this.createKeycloakLambda(vpc);
     await this.configureNextJSImageECR(config);
   }
@@ -107,15 +118,198 @@ export class HassuAccountStack extends Stack {
     );
   }
 
-  private async createBastionHost(config: Config, vpc: IVpc) {
-    // Bastion host that allows connection from systems manager
+  private async createBastionHost(config: Config, vpc: IVpc, alarmTopic: ITopic) {
+    // Bastion host accessible via SSM Session Manager (no SSH/public IP needed).
+    // Security hardening:
+    //   - requireImdsv2: prevents SSRF-based credential theft via instance metadata
+    //   - encrypted EBS: data at rest encryption
+    //   - GP3: better price-performance than default GP2
     const bastionHost = new BastionHostLinux(this, "BastionHost", {
       vpc,
       subnetSelection: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
       instanceName: "vls-bastion",
+      requireImdsv2: true,
+      machineImage: MachineImage.latestAmazonLinux2023(),
+      blockDevices: [
+        {
+          deviceName: "/dev/xvda",
+          volume: BlockDeviceVolume.ebs(10, {
+            encrypted: true,
+            volumeType: EbsDeviceVolumeType.GP3,
+          }),
+        },
+      ],
     });
     bastionHost.instance.applyRemovalPolicy(RemovalPolicy.DESTROY);
     bastionHost.instance.instance.instanceInitiatedShutdownBehavior = InstanceInitiatedShutdownBehavior.STOP;
+
+    this.configureBastionPatching(bastionHost, alarmTopic);
+  }
+
+  /**
+   * Automated weekly patching for the bastion host using SSM Patch Manager.
+   *
+   * What Patch Manager handles automatically:
+   *   - OS security patches (kernel, openssl, glibc etc.)
+   *   - Bugfix updates to OS packages
+   *   - Rebooting when kernel/security patches require it
+   *   - Patch compliance reporting (SSM → Patch Manager → Compliance)
+   *
+   * What still requires manual action:
+   *   - Major OS upgrades (e.g. AL2 → AL2023) — requires CDK code change
+   *   - Instance type changes — requires CDK code change
+   *   - Investigating patching failures (alarm notifies via SNS)
+   *
+   * Timeline (every Sunday, UTC):
+   *   02:50  EventBridge starts the instance
+   *   03:00  Maintenance window opens, AWS-RunPatchBaseline installs patches
+   *   ~03:xx Instance reboots automatically if kernel/security patches require it
+   *   05:00  Maintenance window closes
+   *   05:30  EventBridge stops the instance
+   *
+   * Patch compliance results are visible in SSM → Patch Manager → Compliance.
+   */
+  private configureBastionPatching(bastionHost: BastionHostLinux, alarmTopic: ITopic) {
+    const instanceId = bastionHost.instanceId;
+
+    // Start instance 10 min before maintenance window so SSM Agent has time to register
+    const startRule = new Rule(this, "BastionStartRule", {
+      description: "Start bastion host before patching maintenance window",
+      schedule: Schedule.expression("cron(50 2 ? * SUN *)"),
+    });
+    startRule.addTarget(
+      new AwsApi({
+        service: "EC2",
+        action: "startInstances",
+        parameters: { InstanceIds: [instanceId] },
+      })
+    );
+
+    // Stop instance 30 min after maintenance window ends to allow post-patch reboot to complete
+    const stopRule = new Rule(this, "BastionStopRule", {
+      description: "Stop bastion host after patching maintenance window",
+      schedule: Schedule.expression("cron(30 5 ? * SUN *)"),
+    });
+    stopRule.addTarget(
+      new AwsApi({
+        service: "EC2",
+        action: "stopInstances",
+        parameters: { InstanceIds: [instanceId] },
+      })
+    );
+
+    const maintenanceWindow = new CfnMaintenanceWindow(this, "BastionMaintenanceWindow", {
+      name: "bastion-weekly-patching",
+      schedule: "cron(0 3 ? * SUN *)",
+      duration: 2,
+      cutoff: 0,
+      allowUnassociatedTargets: false,
+      description: "Weekly patching for bastion host",
+    });
+
+    const target = new CfnMaintenanceWindowTarget(this, "BastionPatchTarget", {
+      windowId: maintenanceWindow.ref,
+      resourceType: "INSTANCE",
+      targets: [{ key: "InstanceIds", values: [instanceId] }],
+      name: "bastion-host",
+    });
+
+    // AWS-RunPatchBaseline is the AWS-managed SSM document for OS patching.
+    // RebootIfNeeded reboots the instance only when patches require it (e.g. kernel updates).
+    const patchTask = new CfnMaintenanceWindowTask(this, "BastionPatchTask", {
+      windowId: maintenanceWindow.ref,
+      taskArn: "AWS-RunPatchBaseline",
+      taskType: "RUN_COMMAND",
+      priority: 1,
+      maxConcurrency: "1",
+      maxErrors: "1",
+      targets: [{ key: "WindowTargetIds", values: [target.ref] }],
+      taskInvocationParameters: {
+        maintenanceWindowRunCommandParameters: {
+          parameters: { Operation: ["Install"], RebootOption: ["RebootIfNeeded"] },
+          timeoutSeconds: 600,
+        },
+      },
+    });
+    patchTask.addDependency(target);
+
+    // Custom metrics for bastion patching via EventBridge rules.
+    // Maintenance Window publishes state-change events that we match by window-id.
+    const customMetricNamespace = "Custom/BastionPatching";
+
+    const patchSuccessRule = new Rule(this, "BastionPatchSuccessMetricRule", {
+      description: "Publish custom metric when bastion patching succeeds",
+      eventPattern: {
+        source: ["aws.ssm"],
+        detailType: ["Maintenance Window Task Execution State-change Notification"],
+        detail: {
+          "window-id": [maintenanceWindow.ref],
+          status: ["SUCCESS"],
+        },
+      },
+    });
+    patchSuccessRule.addTarget(
+      new AwsApi({
+        service: "CloudWatch",
+        action: "putMetricData",
+        parameters: {
+          Namespace: customMetricNamespace,
+          MetricData: [
+            {
+              MetricName: "PatchingSucceeded",
+              Value: 1,
+              Unit: "Count",
+            },
+          ],
+        },
+      })
+    );
+
+    const patchFailureRule = new Rule(this, "BastionPatchFailureMetricRule", {
+      description: "Publish custom metric when bastion patching fails",
+      eventPattern: {
+        source: ["aws.ssm"],
+        detailType: ["Maintenance Window Task Execution State-change Notification"],
+        detail: {
+          "window-id": [maintenanceWindow.ref],
+          status: ["FAILED", "TIMED_OUT"],
+        },
+      },
+    });
+    patchFailureRule.addTarget(
+      new AwsApi({
+        service: "CloudWatch",
+        action: "putMetricData",
+        parameters: {
+          Namespace: customMetricNamespace,
+          MetricData: [
+            {
+              MetricName: "PatchingFailed",
+              Value: 1,
+              Unit: "Count",
+            },
+          ],
+        },
+      })
+    );
+
+    // Alarm on the custom failure metric
+    const patchFailureMetric = new Metric({
+      namespace: customMetricNamespace,
+      metricName: "PatchingFailed",
+      statistic: "Sum",
+      period: Duration.hours(3),
+    });
+    const patchAlarm = new Alarm(this, "BastionPatchFailureAlarm", {
+      alarmName: "Bastion patching failed",
+      alarmDescription: "AWS-RunPatchBaseline failed on bastion host during weekly maintenance window",
+      metric: patchFailureMetric,
+      threshold: 1,
+      evaluationPeriods: 1,
+      comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+      treatMissingData: TreatMissingData.NOT_BREACHING,
+    });
+    patchAlarm.addAlarmAction(new SnsAction(alarmTopic));
   }
 
   private configureOpenSearch() {
@@ -186,7 +380,7 @@ export class HassuAccountStack extends Stack {
     });
   }
 
-  private configureSNSForAlarms() {
+  private configureSNSForAlarms(): ITopic {
     const topic = new Topic(this, "SNSForAlarms", {
       fifo: false,
       displayName: "Email-halytykset CloudWatchista",
@@ -196,6 +390,7 @@ export class HassuAccountStack extends Stack {
       parameterName: SSMParameterName.HassuAlarmsSNSArn,
       stringValue: topic.topicArn,
     });
+    return topic;
   }
 
   private configureGitHubConnection() {

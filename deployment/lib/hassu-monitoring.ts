@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { Construct } from "constructs";
 import { Arn, ArnFormat, aws_cloudwatch, aws_lambda, aws_logs, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
@@ -46,6 +47,10 @@ export class HassuMonitoringStack extends Stack {
     dashboard.addWidgets(...this.velhoIntegrationWidgets(backendLambda), new aws_cloudwatch.Column(...this.createSQSWidgets(queues)));
     dashboard.addWidgets(...this.createErrorLogWidgets(lambdas), ...this.createWAFWidgets("aws-waf-logs-hassu"));
     dashboard.addWidgets(...(await this.createCloudFrontWidgets()));
+    // Bastion host is account-level (one per AWS account), show widget only in dev and prod dashboards
+    if (Config.env === "dev" || Config.env === "prod") {
+      dashboard.addWidgets(...this.createBastionPatchingWidgets());
+    }
 
     new InsightsQuery(this, "byCorrelationId", {
       name: `(${env}) Find logs by correlationId`,
@@ -386,6 +391,31 @@ export class HassuMonitoringStack extends Stack {
       });
     }
     return [frontend5xxErrors, requestRateWidget];
+  }
+
+  private createBastionPatchingWidgets(): IWidget[] {
+    const customMetricNamespace = "Custom/BastionPatching";
+    const patchSuccessMetric = new Metric({
+      namespace: customMetricNamespace,
+      metricName: "PatchingSucceeded",
+      statistic: "Sum",
+      period: Duration.hours(1),
+    });
+    const patchFailedMetric = new Metric({
+      namespace: customMetricNamespace,
+      metricName: "PatchingFailed",
+      statistic: "Sum",
+      period: Duration.hours(1),
+    });
+
+    return [
+      new aws_cloudwatch.GraphWidget({
+        title: "Bastion host patching",
+        left: [patchSuccessMetric, patchFailedMetric],
+        width: 12,
+        height: 6,
+      }),
+    ];
   }
 
   private async findDistributionIdByEnvironmentTag() {
