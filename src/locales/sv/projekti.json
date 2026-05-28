@@ -137,9 +137,11 @@
     "POHJOIS_SUOMEN_EVK": "Livskraftscentralen i Norra Finland",
     "LAPIN_EVK": "Livskraftscentralen i Lappland"
   },
-  "jata_palaute_tai": "Lämna respons eller fråga",
-  "voit_jattaa_palautetta": "Du kan ge respons eller ställa en fråga om planeringsprojektet. Om du vill ha svar på din fråga eller respons, lämna dina kontaktuppgifter och ange vilket sätt du önskar bli kontaktad på.",
+  "jata_palaute_tai": "Ge respons eller fråga",
+  "voit_jattaa_palautetta": "Du kan ge respons eller ställa en fråga om planeringsprojektet.",
   "kysymykset_ja_palautteet": "Frågor och respons ska skickas in senast xx.xx.xxxx.",
+  "ala_kirjoita_arkaluonteista": "SV myös tarvitaan: Älä kirjoita tai liitä muistutukseen asiakirjoja, joissa on henkilötunnuksia, kotiosoitteita tai arkaluonteisia tietoja, kuten terveystietoja.",
+  "voit_jattaa_yhteystietosi": "SV myös tarvitaan: Voit halutessasi jättää yhteystietosi, ja olemme yhteydessä tarvittaessa.",
   "palautelomake": {
     "jata_palaute": "Lämna feedback eller fråga om planen",
     "kiitos_viestista": "Tack för meddelandet",
