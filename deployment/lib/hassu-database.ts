@@ -1,7 +1,7 @@
 // Contains code generated or recommended by Amazon Q
 import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import { PointInTimeRecoverySpecification, ProjectionType, StreamViewType } from "aws-cdk-lib/aws-dynamodb";
-import { CfnOutput, CfnResource, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
+import { CfnOutput, Duration, RemovalPolicy, Stack, Tags } from "aws-cdk-lib";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, BucketEncryption, HttpMethods } from "aws-cdk-lib/aws-s3";
 import { IOriginAccessIdentity, OriginAccessIdentity } from "aws-cdk-lib/aws-cloudfront";
@@ -83,7 +83,7 @@ export class HassuDatabaseStack extends Stack {
     this.internalBucket = this.createInternalBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
-    if (Config.env === "dev") {
+    if (Config.env === "dev" || Config.isDeveloperEnvironment()) {
       this.quarantineBucket = this.createQuarantineBucket();
       const alertEmail = await this.config.getParameterNow("SecurityAlertEmail");
       const alertTopic = new sns.Topic(this, "SecurityAlertTopic", {
@@ -417,8 +417,23 @@ export class HassuDatabaseStack extends Stack {
       assumedBy: new ServicePrincipal("malware-protection-plan.guardduty.amazonaws.com"),
     });
     bucket.grantRead(scanRole);
+    scanRole.addToPolicy(new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:PutBucketNotification", "s3:GetBucketNotification"],
+      resources: [bucket.bucketArn],
+    }));
+    scanRole.addToPolicy(new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:PutObject", "s3:GetObjectTagging", "s3:PutObjectTagging"],
+      resources: [bucket.arnForObjects("*")],
+    }));
+    scanRole.addToPolicy(new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["events:PutRule", "events:PutTargets", "events:DeleteRule", "events:RemoveTargets"],
+      resources: ["*"],
+    }));
 
-    new CfnMalwareProtectionPlan(this, "S3MalwareProtection", {
+    const malwareProtectionPlan = new CfnMalwareProtectionPlan(this, "S3MalwareProtection", {
       role: scanRole.roleArn,
       protectedResource: {
         s3Bucket: {
@@ -429,6 +444,7 @@ export class HassuDatabaseStack extends Stack {
         tagging: { status: "ENABLED" },
       },
     });
+    malwareProtectionPlan.node.addDependency(scanRole);
 
     const quarantineLambda = new lambda.Function(this, "MalwareQuarantineLambda", {
       runtime: lambda.Runtime.NODEJS_22_X,
@@ -458,48 +474,11 @@ export class HassuDatabaseStack extends Stack {
     });
   }
 
-  private createMacieSensitiveDataScanning(bucket: Bucket, alertTopic: sns.Topic) {
-    const macieSession = new CfnSession(this, "MacieSession", {
+  private createMacieSensitiveDataScanning(_bucket: Bucket, alertTopic: sns.Topic) {
+    new CfnSession(this, "MacieSession", {
       status: "ENABLED",
       findingPublishingFrequency: "FIFTEEN_MINUTES",
     });
-
-    const classificationJob = new CfnResource(this, "MacieClassificationJob", {
-      type: "AWS::Macie::ClassificationJob",
-      properties: {
-        JobType: "SCHEDULED",
-        Name: `hassu-${Config.env}-pii-scan`,
-        Description: "Scan palautteet and muistutukset for sensitive data",
-        S3JobDefinition: {
-          BucketDefinitions: [
-            {
-              AccountId: this.account,
-              Buckets: [bucket.bucketName],
-            },
-          ],
-          Scoping: {
-            Includes: {
-              And: [
-                {
-                  SimpleScopeTerm: {
-                    Comparator: "STARTS_WITH",
-                    Key: "OBJECT_KEY",
-                    Values: ["palautteet/", "muistutukset/"],
-                  },
-                },
-              ],
-            },
-          },
-        },
-        ScheduleFrequency: {
-          WeeklySchedule: {
-            DayOfWeek: "MONDAY",
-          },
-        },
-        JobStatus: "RUNNING",
-      },
-    });
-    classificationJob.addDependency(macieSession);
 
     new events.Rule(this, "MacieFindingsRule", {
       eventPattern: {
