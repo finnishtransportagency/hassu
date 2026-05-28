@@ -234,11 +234,70 @@ export class HassuAccountStack extends Stack {
     });
     patchTask.addDependency(target);
 
-    // Alarm when patching fails — sends notification to the shared alarm SNS topic
+    // Custom metrics for bastion patching via EventBridge rules.
+    // Maintenance Window publishes state-change events that we match by window-id.
+    const customMetricNamespace = "Custom/BastionPatching";
+
+    const patchSuccessRule = new Rule(this, "BastionPatchSuccessMetricRule", {
+      description: "Publish custom metric when bastion patching succeeds",
+      eventPattern: {
+        source: ["aws.ssm"],
+        detailType: ["Maintenance Window Task Execution State-change Notification"],
+        detail: {
+          "window-id": [maintenanceWindow.ref],
+          status: ["SUCCESS"],
+        },
+      },
+    });
+    patchSuccessRule.addTarget(
+      new AwsApi({
+        service: "CloudWatch",
+        action: "putMetricData",
+        parameters: {
+          Namespace: customMetricNamespace,
+          MetricData: [
+            {
+              MetricName: "PatchingSucceeded",
+              Value: 1,
+              Unit: "Count",
+            },
+          ],
+        },
+      })
+    );
+
+    const patchFailureRule = new Rule(this, "BastionPatchFailureMetricRule", {
+      description: "Publish custom metric when bastion patching fails",
+      eventPattern: {
+        source: ["aws.ssm"],
+        detailType: ["Maintenance Window Task Execution State-change Notification"],
+        detail: {
+          "window-id": [maintenanceWindow.ref],
+          status: ["FAILED", "TIMED_OUT"],
+        },
+      },
+    });
+    patchFailureRule.addTarget(
+      new AwsApi({
+        service: "CloudWatch",
+        action: "putMetricData",
+        parameters: {
+          Namespace: customMetricNamespace,
+          MetricData: [
+            {
+              MetricName: "PatchingFailed",
+              Value: 1,
+              Unit: "Count",
+            },
+          ],
+        },
+      })
+    );
+
+    // Alarm on the custom failure metric
     const patchFailureMetric = new Metric({
-      namespace: "AWS/SSM-RunCommand",
-      metricName: "CommandsFailed",
-      dimensionsMap: { DocumentName: "AWS-RunPatchBaseline" },
+      namespace: customMetricNamespace,
+      metricName: "PatchingFailed",
       statistic: "Sum",
       period: Duration.hours(3),
     });
