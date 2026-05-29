@@ -1,12 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    ":dependencyDashboard",
-    ":semanticPrefixFixDepsChoreOthers",
-    ":ignoreModulesAndTests",
-    ":autodetectPinVersions",
-    "workarounds:all"
-  ],
+  "extends": [":dependencyDashboard", ":semanticPrefixFixDepsChoreOthers", ":ignoreModulesAndTests", "workarounds:all"],
   "timezone": "Europe/Helsinki",
   "schedule": ["after 9pm on sunday"],
   "updateNotScheduled": false,
@@ -73,18 +67,14 @@
       "groupName": "build-image major updates",
       "groupSlug": "build-image-major",
       "semanticCommitType": "build",
-      "prBodyNotes": [
-        "⚠️ **Major-päivitys! Testaa huolellisesti ja päivitä `.buildimageversion` ennen yhdistämistä mainiin.**"
-      ]
+      "prBodyNotes": ["⚠️ **Major-päivitys! Testaa huolellisesti ja päivitä `.buildimageversion` ennen yhdistämistä mainiin.**"]
     },
     {
       "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli"],
       "groupName": "build-image tools (minor/patch)",
       "groupSlug": "build-image-tools",
       "semanticCommitType": "build",
-      "prBodyNotes": [
-        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**"
-      ]
+      "prBodyNotes": ["⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**"]
     },
     {
       "matchDepNames": ["npm"],
@@ -99,11 +89,18 @@
       ]
     },
     {
-      "matchPackageNames": ["**"],
-      "excludePackageNames": [
-        "/^@aws-cdk/", "/^aws-cdk/", "/^@aws-sdk/", "/^aws-sdk/",
-        "inquirer", "next", "eslint-config-next", "localstack/localstack",
-        "@types/react", "@hassu/asianhallinta"
+      "matchPackageNames": [
+        "**",
+        "!/^@aws-cdk/",
+        "!/^aws-cdk/",
+        "!/^@aws-sdk/",
+        "!/^aws-sdk/",
+        "!inquirer",
+        "!next",
+        "!eslint-config-next",
+        "!localstack/localstack",
+        "!@types/react",
+        "!@hassu/asianhallinta"
       ],
       "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies",
@@ -117,10 +114,17 @@
       "groupSlug": "ignored"
     },
     {
-      "matchPackageNames": ["**"],
-      "excludePackageNames": [
-        "/^@aws-cdk/", "/^aws-cdk/", "/^@aws-sdk/", "/^aws-sdk/",
-        "inquirer", "@hassu/asianhallinta", "next", "eslint-config-next", "localstack/localstack"
+      "matchPackageNames": [
+        "**",
+        "!/^@aws-cdk/",
+        "!/^aws-cdk/",
+        "!/^@aws-sdk/",
+        "!/^aws-sdk/",
+        "!inquirer",
+        "!@hassu/asianhallinta",
+        "!next",
+        "!eslint-config-next",
+        "!localstack/localstack"
       ],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
