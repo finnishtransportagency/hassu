@@ -394,25 +394,23 @@ export class HassuMonitoringStack extends Stack {
   }
 
   private createBastionPatchingWidgets(): IWidget[] {
-    // SSM Run Command metrics for AWS-RunPatchBaseline
+    const customMetricNamespace = "Custom/BastionPatching";
     const patchSuccessMetric = new Metric({
-      namespace: "AWS/SSM-RunCommand",
-      metricName: "CommandsSucceeded",
-      dimensionsMap: { DocumentName: "AWS-RunPatchBaseline" },
+      namespace: customMetricNamespace,
+      metricName: "PatchingSucceeded",
       statistic: "Sum",
       period: Duration.hours(1),
     });
     const patchFailedMetric = new Metric({
-      namespace: "AWS/SSM-RunCommand",
-      metricName: "CommandsFailed",
-      dimensionsMap: { DocumentName: "AWS-RunPatchBaseline" },
+      namespace: customMetricNamespace,
+      metricName: "PatchingFailed",
       statistic: "Sum",
       period: Duration.hours(1),
     });
 
     return [
       new aws_cloudwatch.GraphWidget({
-        title: "Bastion host patching (AWS-RunPatchBaseline)",
+        title: "Bastion host patching",
         left: [patchSuccessMetric, patchFailedMetric],
         width: 12,
         height: 6,

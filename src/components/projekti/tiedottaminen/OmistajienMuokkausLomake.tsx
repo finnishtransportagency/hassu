@@ -993,10 +993,15 @@ const TuoExcelistaButton: FunctionComponent<{ loadAllRef: React.MutableRefObject
             // Load all rows from backend before matching
             await loadAllRef.current?.();
             const muutOmistajat = getValues("muutOmistajat");
-            const results = matchExcelRowsToOmistajat(rows, columns, muutOmistajat);
+            const { results, errors } = matchExcelRowsToOmistajat(rows, columns, muutOmistajat);
+
+            const errorIndices = new Set(errors.map((e) => e.omistajaIndex));
 
             let updatedCount = 0;
             for (const result of results) {
+              if (errorIndices.has(result.index)) {
+                continue;
+              }
               const current = muutOmistajat[result.index];
               let changed = false;
               if (result.jakeluosoite !== (current.jakeluosoite ?? "")) {
@@ -1011,13 +1016,23 @@ const TuoExcelistaButton: FunctionComponent<{ loadAllRef: React.MutableRefObject
                 setValue(`muutOmistajat.${result.index}.paikkakunta`, result.paikkakunta, { shouldDirty: true });
                 changed = true;
               }
+              if (result.maakoodi !== null && result.maakoodi !== (current.maakoodi ?? "")) {
+                setValue(`muutOmistajat.${result.index}.maakoodi`, result.maakoodi, { shouldDirty: true });
+                changed = true;
+              }
               if (changed) updatedCount++;
             }
 
             if (updatedCount > 0) {
               showSuccessMessage(`Osoitetiedot päivitetty ${updatedCount} kiinteistönomistajalle. Muista tallentaa muutokset.`);
-            } else {
+            } else if (errors.length === 0) {
               showSuccessMessage("Excelistä ei löytynyt päivitettäviä osoitetietoja.");
+            }
+            if (errors.length > 0) {
+              const tunnistamattomat = errors.map((e) => `"${e.value}" (rivi ${e.rowIndex})`).join(", ");
+              showErrorMessage(
+                `${errors.length} ${errors.length === 1 ? "rivi" : "riviä"} ohitettu tunnistamattoman maan vuoksi: ${tunnistamattomat}`
+              );
             }
           } catch (e) {
             log.error("Excel-tiedoston lukeminen epäonnistui", e);

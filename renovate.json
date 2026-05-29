@@ -8,11 +8,12 @@
     "workarounds:all"
   ],
   "timezone": "Europe/Helsinki",
-  "schedule": "after 9pm on sunday",
+  "schedule": ["after 9pm on sunday"],
   "updateNotScheduled": false,
   "branchConcurrentLimit": 5,
   "prConcurrentLimit": 5,
-  "baseBranches": ["main"],
+  "baseBranchPatterns": ["main"],
+  "ignoreDeps": ["@hassu/asianhallinta"],
   "major": {
     "enabled": false
   },
@@ -23,13 +24,87 @@
     "enabled": false
   },
   "dockerfile": {
-    "enabled": false
+    "managerFilePatterns": ["^Dockerfile$"]
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/", "/(^|/)\\.envrc$/"],
+      "matchStrings": ["(?:ENV NPM_VERSION=|npm@)(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "npm",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": ["ENV AMPLIFY_CLI_VERSION=(?<currentValue>\\S+)"],
+      "depNameTemplate": "@aws-amplify/cli",
+      "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": ["ENV DOCKER_COMPOSE_VERSION=v(?<currentValue>\\S+)"],
+      "depNameTemplate": "docker/compose",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v(?<version>.*)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/"],
+      "matchStrings": ["ENV AWS_CLI_VERSION=(?<currentValue>\\S+)"],
+      "depNameTemplate": "aws/aws-cli",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+)$"
+    }
+  ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
-      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "inquirer"],
-      "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack", "@types/react", "@hassu/asianhallinta"],
+      "matchManagers": ["dockerfile"],
+      "groupName": "build-image base images (minor/patch)",
+      "groupSlug": "build-image-base-images",
+      "semanticCommitType": "build"
+    },
+    {
+      "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli", "npm"],
+      "matchUpdateTypes": ["major"],
+      "enabled": true,
+      "dependencyDashboardApproval": true,
+      "groupName": "build-image major updates",
+      "groupSlug": "build-image-major",
+      "semanticCommitType": "build",
+      "prBodyNotes": [
+        "⚠️ **Major-päivitys! Testaa huolellisesti ja päivitä `.buildimageversion` ennen yhdistämistä mainiin.**"
+      ]
+    },
+    {
+      "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli"],
+      "groupName": "build-image tools (minor/patch)",
+      "groupSlug": "build-image-tools",
+      "semanticCommitType": "build",
+      "prBodyNotes": [
+        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**"
+      ]
+    },
+    {
+      "matchDepNames": ["npm"],
+      "groupName": "npm (Dockerfile + .envrc) (minor/patch)",
+      "groupSlug": "npm",
+      "semanticCommitType": "build",
+      "prBodyNotes": [
+        "⚠️ **Muista päivittää `.buildimageversion` ennen yhdistämistä mainiin.**",
+        "⚠️ **Muista päivittää npm myös seuraavissa repoissa:**",
+        "- `hassu-suomifi`",
+        "- `hassu-asianhallinta`"
+      ]
+    },
+    {
+      "matchPackageNames": ["**"],
+      "excludePackageNames": [
+        "/^@aws-cdk/", "/^aws-cdk/", "/^@aws-sdk/", "/^aws-sdk/",
+        "inquirer", "next", "eslint-config-next", "localstack/localstack",
+        "@types/react", "@hassu/asianhallinta"
+      ],
       "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies",
       "groupSlug": "all-patch"
@@ -42,32 +117,34 @@
       "groupSlug": "ignored"
     },
     {
-      "matchPackagePatterns": ["*"],
-      "excludePackagePatterns": ["^@aws-cdk", "^aws-cdk", "^@aws-sdk", "^aws-sdk", "inquirer", "@hassu/asianhallinta"],
-      "excludePackageNames": ["next", "eslint-config-next", "localstack/localstack"],
+      "matchPackageNames": ["**"],
+      "excludePackageNames": [
+        "/^@aws-cdk/", "/^aws-cdk/", "/^@aws-sdk/", "/^aws-sdk/",
+        "inquirer", "@hassu/asianhallinta", "next", "eslint-config-next", "localstack/localstack"
+      ],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
       "groupName": "all minor dependencies",
       "groupSlug": "all-minor"
     },
     {
-      "matchPackagePatterns": ["^@aws-cdk", "^aws-cdk"],
+      "matchPackageNames": ["/^@aws-cdk/", "/^aws-cdk/"],
       "groupName": "AWS CDK",
       "groupSlug": "aws-cdk"
     },
     {
       "matchPackageNames": ["next", "eslint-config-next"],
-      "matchUpdateTypes": "patch",
+      "matchUpdateTypes": ["patch"],
       "groupName": "nextjs"
     },
     {
-      "matchPackagePatterns": ["^@aws-sdk", "^aws-sdk"],
+      "matchPackageNames": ["/^@aws-sdk/", "/^aws-sdk/"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "aws-sdk"
     },
     {
       "matchPackageNames": ["localstack/localstack"],
-      "allowedVersions": "1.3",
+      "allowedVersions": ">=1.3.0 <1.4.0",
       "groupName": "localstack"
     }
   ]
