@@ -54,6 +54,69 @@
   ],
   "packageRules": [
     {
+      "matchPackageNames": [
+        "**",
+        "!/^@aws-cdk/",
+        "!/^aws-cdk/",
+        "!/^@aws-sdk/",
+        "!/^aws-sdk/",
+        "!inquirer",
+        "!next",
+        "!eslint-config-next",
+        "!localstack/localstack",
+        "!@types/react",
+        "!@hassu/asianhallinta"
+      ],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "all patch dependencies",
+      "groupSlug": "all-patch"
+    },
+    {
+      "matchPackageNames": [
+        "**",
+        "!/^@aws-cdk/",
+        "!/^aws-cdk/",
+        "!/^@aws-sdk/",
+        "!/^aws-sdk/",
+        "!inquirer",
+        "!@hassu/asianhallinta",
+        "!next",
+        "!eslint-config-next",
+        "!localstack/localstack"
+      ],
+      "matchUpdateTypes": ["minor"],
+      "enabled": false,
+      "groupName": "all minor dependencies",
+      "groupSlug": "all-minor"
+    },
+    {
+      "matchPackageNames": ["@types/react"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false,
+      "groupName": "ignored",
+      "groupSlug": "ignored"
+    },
+    {
+      "matchPackageNames": ["/^@aws-cdk/", "/^aws-cdk/"],
+      "groupName": "AWS CDK",
+      "groupSlug": "aws-cdk"
+    },
+    {
+      "matchPackageNames": ["next", "eslint-config-next"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "nextjs"
+    },
+    {
+      "matchPackageNames": ["/^@aws-sdk/", "/^aws-sdk/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "aws-sdk"
+    },
+    {
+      "matchPackageNames": ["localstack/localstack"],
+      "allowedVersions": ">=2.0.0 <3.0.0",
+      "groupName": "localstack"
+    },
+    {
       "matchManagers": ["dockerfile"],
       "groupName": "build-image base images (minor/patch)",
       "groupSlug": "build-image-base-images",
@@ -87,69 +150,6 @@
         "- `hassu-suomifi`",
         "- `hassu-asianhallinta`"
       ]
-    },
-    {
-      "matchPackageNames": [
-        "**",
-        "!/^@aws-cdk/",
-        "!/^aws-cdk/",
-        "!/^@aws-sdk/",
-        "!/^aws-sdk/",
-        "!inquirer",
-        "!next",
-        "!eslint-config-next",
-        "!localstack/localstack",
-        "!@types/react",
-        "!@hassu/asianhallinta"
-      ],
-      "matchUpdateTypes": ["patch"],
-      "groupName": "all patch dependencies",
-      "groupSlug": "all-patch"
-    },
-    {
-      "matchPackageNames": ["@types/react"],
-      "matchUpdateTypes": ["patch"],
-      "enabled": false,
-      "groupName": "ignored",
-      "groupSlug": "ignored"
-    },
-    {
-      "matchPackageNames": [
-        "**",
-        "!/^@aws-cdk/",
-        "!/^aws-cdk/",
-        "!/^@aws-sdk/",
-        "!/^aws-sdk/",
-        "!inquirer",
-        "!@hassu/asianhallinta",
-        "!next",
-        "!eslint-config-next",
-        "!localstack/localstack"
-      ],
-      "matchUpdateTypes": ["minor"],
-      "enabled": false,
-      "groupName": "all minor dependencies",
-      "groupSlug": "all-minor"
-    },
-    {
-      "matchPackageNames": ["/^@aws-cdk/", "/^aws-cdk/"],
-      "groupName": "AWS CDK",
-      "groupSlug": "aws-cdk"
-    },
-    {
-      "matchPackageNames": ["next", "eslint-config-next"],
-      "matchUpdateTypes": ["patch"],
-      "groupName": "nextjs"
-    },
-    {
-      "matchPackageNames": ["/^@aws-sdk/", "/^aws-sdk/"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "aws-sdk"
-    },
-    {
-      "matchPackageNames": ["localstack/localstack"],
-      "allowedVersions": ">=1.3.0 <1.4.0",
-      "groupName": "localstack"
     }
   ]
 }
