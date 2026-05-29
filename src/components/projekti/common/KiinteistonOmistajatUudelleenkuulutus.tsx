@@ -137,9 +137,10 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                     kun kuulutus hyväksytään julkaistavaksi.
                   </p>
                   <p>
-                    Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa
-                    kirjeitse. Kirjeitse tiedotettavat löytyvät Tiedottaminen -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja
-                    Muistuttajien tiedotus muilla tavoin -listoista.
+                    Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. VLS:n
+                    kautta muistutuksen jättäneitä tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Muistutuksen muilla tavoin
+                    jättäneitä tulee tiedottaa järjestelmän ulkopuolella. Tiedot kiinteistönomistajista ja muistuttajista löytyvät
+                    Tiedottaminen sivulta.
                   </p>
                 </>
               )}

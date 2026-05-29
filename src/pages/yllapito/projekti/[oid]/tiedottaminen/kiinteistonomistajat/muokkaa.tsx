@@ -47,9 +47,9 @@ const KiinteistonOmistajienMuokkaus: FunctionComponent<{ projekti: ProjektiLisat
         </GrayBackgroundText>
         <p>
           Voit muokata, lisätä tai poistaa kiinteistönomistajatietoja. Huomaa, että muutokset tulevat voimaan vasta tallennettuasi
-          muutokset. Suomi.fi -palvelun kautta tiedotettavien kiinteistönomistajien tietoja ei voi muokata, mutta vastaanottajia voi
-          poistaa. Muulla tavalla tiedotettavien yhteystietoja on mahdollisuus muokata ja vastaanottajia poistaa, jonka lisäksi voit lisätä
-          uusia vastaanottajia.
+          muutokset. Kiinteistönomistajatietojen haun kautta tulleita kiinteistönomistajien tietoja ei voi muokata, mutta vastaanottajia voi
+          poistaa. Muille kiinteistönomistajille on mahdollista lisätä puuttuvia yhteystietoja tai on mahdollisuus muokata niitä.
+          Vastaanottajia poistaa, jonka lisäksi voit lisätä uusia vastaanottajia.
         </p>
       </Section>
       {initialSearchResponses && <FormContents projekti={projekti} initialSearchResponses={initialSearchResponses} />}

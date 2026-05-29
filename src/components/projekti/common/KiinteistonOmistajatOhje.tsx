@@ -43,8 +43,8 @@ function KiinteistotLisatty({ oid, vaihe }: Readonly<KiinteistonomistajatOhjePro
           julkaistavaksi.
         </p>
         <p>
-          Osaa kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
-          tiedotettavat löytyvät Tiedottaminen -sivun Kiinteistönomistajien tiedotus muilla tavoin -listasta.
+          Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Tiedot
+          kiinteistönomistajista löytyvät Tiedottaminen sivulta.
         </p>
       </>
     );
@@ -60,9 +60,9 @@ function KiinteistotLisatty({ oid, vaihe }: Readonly<KiinteistonomistajatOhjePro
           kuulutus hyväksytään julkaistavaksi.
         </p>
         <p>
-          Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse.
-          Kirjeitse tiedotettavat löytyvät Tiedottaminen -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja Muistuttajien tiedotus
-          muilla tavoin -listoista.
+          Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. VLS:n kautta
+          muistutuksen jättäneitä tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Muistutuksen muilla tavoin jättäneitä tulee
+          tiedottaa järjestelmän ulkopuolella. Tiedot kiinteistönomistajista ja muistuttajista löytyvät Tiedottaminen-sivulta.
         </p>
       </>
     );
@@ -116,12 +116,12 @@ export function KiinteistonOmistajatOhjeLukutila({
               julkaistavaksi.
             </p>
             <p>
-              Osaa kiinteistönomistajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa kirjeitse. Kirjeitse
-              tiedotettavat löytyvät{" "}
+              Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Tiedot
+              kiinteistönomistajista löytyvät{" "}
               <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
                 Tiedottaminen
               </StyledLink>{" "}
-              -sivun Kiinteistönomistajien tiedotus muilla tavoin -listasta.
+              -sivulta.
             </p>
           </>
         )}
@@ -141,12 +141,13 @@ export function KiinteistonOmistajatOhjeLukutila({
               kuulutus julkaistaan hyväksyttäväksi.
             </p>
             <p>
-              Osaa kiinteistönomistajia ja muistuttajia tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Loppuja tulee tiedottaa
-              kirjeitse. Kirjeitse tiedotettavat löytyvät{" "}
+              Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. VLS:n kautta
+              muistutuksen jättäneitä tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Muistutuksen muilla tavoin jättäneitä tulee
+              tiedottaa järjestelmän ulkopuolella. Tiedot kiinteistönomistajista ja muistuttajista löytyvät{" "}
               <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
                 Tiedottaminen
               </StyledLink>{" "}
-              -sivun Kiinteistönomistajien tiedotus muilla tavoin - ja Muistuttajien tiedotus muilla tavoin -listoista.
+              -sivulta.
             </p>
           </>
         )}
