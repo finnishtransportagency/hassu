@@ -203,7 +203,8 @@
     "shell-quote": "$shell-quote",
     "postcss": "$postcss",
     "got": "12.6.1",
-    "flatted": ">=3.4.2"
+    "flatted": ">=3.4.2",
+    "fast-xml-parser": "5.5.12"
   },
   "scripts": {
     "import:dynamodb": "node importDynamodbExport.js",
