@@ -681,10 +681,9 @@ export const FormContents: FunctionComponent<{
             <Section>
               <H3>Kiinteistönomistajat, joille ei ole yhteystietoja</H3>
               <p>
-                Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto
-                kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien
-                osoitteen muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse.
-                Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
+                Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Kiinteistönomistaja
+                siirtyy Suomi.fi-palvelun kautta tiedotettaviin, kun sille lisätään osoitetiedot. Kiinteistönomistajista viedään
+                vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
               </p>
               {initialSearchResponses.muut.hakutulosMaara ? (
                 <>
