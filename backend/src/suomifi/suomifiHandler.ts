@@ -12,7 +12,7 @@ import { muistutusEmailService } from "../muistutus/muistutusEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { isValidEmail } from "../email/emailUtil";
 import { createKuittausMuistuttajalleEmail } from "../email/emailTemplates";
-import { AsiakirjaTyyppi, Kieli, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, LahetysTapa, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
 import { DBProjekti, KasittelynTila, Muistutus, SuunnitteluSopimus } from "../database/model";
 import { getSQS } from "../aws/clients/getSQS";
 import { SendMessageBatchRequestEntry } from "@aws-sdk/client-sqs";
@@ -222,12 +222,13 @@ type PaivitaLahetysStatusParameters = {
   traceId?: string;
   muistuttajaIdsForLahetystilaUpdate: string[] | undefined;
   omistajaIdsForLahetystilaUpdate: string[] | undefined;
+  lahetysTapa?: LahetysTapa;
 };
 
 async function paivitaTiedotettavanLahetysStatukset(params: PaivitaLahetysStatusParameters) {
-  const { muistuttajaIdsForLahetystilaUpdate, omistajaIdsForLahetystilaUpdate, tila, id, omistaja, ...commonParams } = params;
+  const { muistuttajaIdsForLahetystilaUpdate, omistajaIdsForLahetystilaUpdate, tila, id, omistaja, lahetysTapa, ...commonParams } = params;
   const lahetysaika = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
-  await paivitaLahetysStatus({ ...commonParams, id, omistaja, lahetysaika, tila });
+  await paivitaLahetysStatus({ ...commonParams, id, omistaja, lahetysaika, tila, lahetysTapa });
   const tilaForOtherEntities =
     tila === "OK" ? TiedotettavanLahetyksenTila.OK_ERI_KIINTEISTO_MUISTUTUS : TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS;
   if (muistuttajaIdsForLahetystilaUpdate) {
@@ -239,6 +240,7 @@ async function paivitaTiedotettavanLahetysStatukset(params: PaivitaLahetysStatus
           tila: tilaForOtherEntities,
           id: muistuttajaId,
           lahetysaika,
+          lahetysTapa,
         })
       )
     );
@@ -252,6 +254,7 @@ async function paivitaTiedotettavanLahetysStatukset(params: PaivitaLahetysStatus
           tila: tilaForOtherEntities,
           id: omistajaId,
           lahetysaika,
+          lahetysTapa,
         })
       )
     );
@@ -266,9 +269,10 @@ type PaivitaLahetysStatusParameter = {
   approvalType: PublishOrExpireEventType;
   lahetysaika: string;
   traceId?: string;
+  lahetysTapa?: LahetysTapa;
 };
 
-async function paivitaLahetysStatus({ oid, id, omistaja, tila, approvalType, traceId, lahetysaika }: PaivitaLahetysStatusParameter) {
+async function paivitaLahetysStatus({ oid, id, omistaja, tila, approvalType, traceId, lahetysaika, lahetysTapa }: PaivitaLahetysStatusParameter) {
   const params = new UpdateCommand({
     TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(),
     Key: {
@@ -278,7 +282,7 @@ async function paivitaLahetysStatus({ oid, id, omistaja, tila, approvalType, tra
     UpdateExpression: "SET #l = list_append(if_not_exists(#l, :tyhjalista), :status)",
     ExpressionAttributeNames: { "#l": "lahetykset" },
     ExpressionAttributeValues: {
-      ":status": [{ tila, lahetysaika, tyyppi: approvalType, traceId }],
+      ":status": [{ tila, lahetysaika, tyyppi: approvalType, traceId, lahetysTapa }],
       ":tyhjalista": [],
     },
   });
@@ -540,6 +544,7 @@ type LahetaPdfViestiParameters = {
   tyyppi: PublishOrExpireEventType;
   muistuttajaIdsForLahetystilaUpdate: string[] | undefined;
   omistajaIdsForLahetystilaUpdate: string[] | undefined;
+  lahetysTapa: LahetysTapa;
 };
 
 async function lahetaPdfViesti({
@@ -549,6 +554,7 @@ async function lahetaPdfViesti({
   tyyppi,
   muistuttajaIdsForLahetystilaUpdate,
   omistajaIdsForLahetystilaUpdate,
+  lahetysTapa,
 }: LahetaPdfViestiParameters) {
   try {
     const pdf = await generatePdf(projektiFromDB, tyyppi, kohde);
@@ -594,6 +600,7 @@ async function lahetaPdfViesti({
         traceId,
         muistuttajaIdsForLahetystilaUpdate,
         omistajaIdsForLahetystilaUpdate,
+        lahetysTapa,
       });
     } else {
       const traceId = parseTraceId(resp.LahetaViestiResult?.TilaKoodi?.TilaKoodiKuvaus);
@@ -616,6 +623,7 @@ async function lahetaPdfViesti({
       approvalType: tyyppi,
       muistuttajaIdsForLahetystilaUpdate,
       omistajaIdsForLahetystilaUpdate,
+      lahetysTapa,
     });
     throw e;
   }
@@ -624,7 +632,6 @@ async function lahetaPdfViesti({
 // REST-rajapinta tukee pelkän paperikirjeen lähettämistä pelkällä osoitteella ilman hetua/y-tunnusta
 function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
   return (
-    (!!kohde.henkilotunnus || !!kohde.ytunnus) &&
     (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) &&
     !!kohde.jakeluosoite &&
     !!kohde.paikkakunta &&
@@ -700,6 +707,12 @@ async function handleMuistuttaja({
   if (tyyppi === undefined) {
     await lahetaViesti(muistuttaja, kohde.projekti);
   } else if (isMuistuttujanTiedotOk(muistuttaja)) {
+    const client = await getClient();
+    const asiakasResponse = await client.haeAsiakas(muistuttaja.henkilotunnus!, "SSN");
+    const asiakas = asiakasResponse.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.find(
+      (a) => a.attributes.AsiakasTunnus === muistuttaja.henkilotunnus
+    );
+    const lahetysTapa = asiakas?.Tila === 300 ? LahetysTapa.VIESTI : LahetysTapa.KIRJE;
     await lahetaPdfViesti({
       projektiFromDB: kohde.projekti,
       kohde: {
@@ -715,6 +728,7 @@ async function handleMuistuttaja({
       tyyppi,
       muistuttajaIdsForLahetystilaUpdate,
       omistajaIdsForLahetystilaUpdate,
+      lahetysTapa,
     });
   } else {
     auditLog.info("Muistuttajalta puuttuu pakollisia tietoja", { muistuttajaId: muistuttaja.id });
@@ -751,6 +765,16 @@ async function handleOmistaja({
   }
   const omistaja = kohde.kohde as DBOmistaja;
   if (isOmistajanTiedotOk(omistaja)) {
+    const tunnus = omistaja.henkilotunnus ?? omistaja.ytunnus;
+    let lahetysTapa: LahetysTapa;
+    if (tunnus) {
+      const client = await getClient();
+      const asiakasResponse = await client.haeAsiakas(tunnus, omistaja.henkilotunnus ? "SSN" : "CRN");
+      const asiakas = asiakasResponse.HaeAsiakkaitaResult?.Asiakkaat?.Asiakas?.find((a) => a.attributes.AsiakasTunnus === tunnus);
+      lahetysTapa = asiakas?.Tila === 300 ? LahetysTapa.VIESTI : LahetysTapa.KIRJE;
+    } else {
+      lahetysTapa = LahetysTapa.KIRJE;
+    }
     await lahetaPdfViesti({
       projektiFromDB: kohde.projekti,
       kohde: {
@@ -759,14 +783,15 @@ async function handleOmistaja({
         lahiosoite: omistaja.jakeluosoite!,
         postinumero: omistaja.postinumero!,
         postitoimipaikka: omistaja.paikkakunta!,
-        hetu: omistaja.henkilotunnus,
-        ytunnus: omistaja.ytunnus,
+        hetu: omistaja.henkilotunnus ?? undefined,
+        ytunnus: omistaja.ytunnus ?? undefined,
         maakoodi: omistaja.maakoodi ? omistaja.maakoodi : "FI",
       },
       omistaja: true,
       tyyppi,
       muistuttajaIdsForLahetystilaUpdate,
       omistajaIdsForLahetystilaUpdate,
+      lahetysTapa,
     });
   } else {
     auditLog.info("Omistajalta puuttuu pakollisia tietoja", { omistajaId: omistaja.id });
@@ -872,14 +897,15 @@ async function paivitaMapKiinteistonOmistajilla(projektiFromDB: DBProjekti, tied
     .filter((o) => o.suomifiLahetys)
     .forEach((omistaja) => {
       const tunnus = omistaja.henkilotunnus ?? omistaja.ytunnus;
+      // Ilman tunnusta olevat omistajat eivät voi olla duplikaatteja, joten käytetään id:tä avaimena
       if (!tunnus) {
-        log.warn("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta tiedottamiseen. Tiedotusta ei pystytä tekemään.", {
+        log.info("Suomi.fi tiedotettavalla ei ole henkilötunnusta tai y-tunnusta, lähetetään pelkkä paperikirje", {
           id: omistaja.id,
         });
-        return;
       }
+      const avain = tunnus ?? omistaja.id;
       const tiedotettavanRivit =
-        tiedotettavaMap.get(tunnus) ?? tiedotettavaMap.set(tunnus, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(tunnus)!;
+        tiedotettavaMap.get(avain) ?? tiedotettavaMap.set(avain, { kiinteistonOmistajaIds: [], muistuttajaIds: [] }).get(avain)!;
       tiedotettavanRivit.kiinteistonOmistajaIds.push(omistaja.id);
     });
 }

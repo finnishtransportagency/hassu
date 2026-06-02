@@ -66,13 +66,31 @@ export function TiedottaminenPageLayout({ children, projekti }: { children?: Rea
                 Muista aina päivittää selaimen sivu, kun haet kiinteistönomistajatietoja uudestaan, esimerkiksi karttarajauksen muokkaamisen
                 jälkeen.
               </li>
-              <li>Kiinteistönomistaja saa vain yhden viestin Suomi.fi kautta, vaikka hän omistaisi useita kiinteistöjä.</li>
               <li>
-                Muilla tavoin tiedotettavissa näkyvät Väyläviraston lisäksi ne kiinteistönomistajat, joille ei löydy henkilö- tai Y-tunnusta
-                ja/tai osoitetietoja.
+                Kiinteistönomistajien tiedottaminen tapahtuu Suomi.fi viestien kautta. Jos kiinteistönomistajalle on tiedossa sekä osoite
+                että henkilötunnus/y-tunnus, hän saa kirjeen Suomi.fi-viestinä. Jos tiedossa on pelkkä osoite, viesti ohjautuu
+                automaattisesti paperipostitukseen.
               </li>
-              <li>Voit viedä kiinteistönomistajatiedot tiedottamista varten Exceliin VIE EXCELIIN-painikkeen avulla.</li>
-              <li>Viethän järjestelmän ulkopuolella muokatun maanomistajaluettelon asianhallintaan.</li>
+              <li>
+                Tilanteissa, joissa henkilö omistaa useamman kiinteistön ja niiden rekisteritiedoissa on eroavaisuuksia, henkilö saattaa
+                saada useamman kirjeen.
+              </li>
+              <li>
+                Kiinteistö siirtyy Kiinteistönomistajat, joille ei ole yhteystietoja -osiosta Suomi.fi tiedotettaviin, kun sille lisätään
+                yhteystieto.
+              </li>
+              <li>
+                Kiinteistönomistajat, joille ei ole yhteystietoja -osiossa näkyvät Väyläviraston lisäksi ne kiinteistönomistajat, joille ei
+                löydy osoitetietoja.
+              </li>
+              <li>
+                Voit viedä kiinteistönomistajatiedot Exceliin VIE EXCELIIN-painikkeella esimerkiksi Maanmittauslaitokselle lähetettävää
+                osoitetietojen selvityspyyntöä varten.
+              </li>
+              <li>
+                Viethän järjestelmän ulkopuolella muokatun maanomistajaluettelon asianhallintaan, jos et ole tallentanut muokattuja tietoja
+                VLS:ään.
+              </li>
               <li>
                 Muistuttajat-välilehdeltä löytyy VLS:n kautta tunnistautuneena muistutuksen jättäneiden yhteystiedot. Huomaathan tarkistaa
                 kaikki muistutukset asianhallinnasta.
