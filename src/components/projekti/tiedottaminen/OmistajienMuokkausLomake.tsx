@@ -868,7 +868,7 @@ const PaginatedTaulukko = ({
     enableSorting: false,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
-    meta: { virtualization: { type: "window" } },
+
     getRowId,
   });
 
