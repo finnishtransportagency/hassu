@@ -38,7 +38,7 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
   return {
     __typename: "Excel",
     nimi: `${variables.kiinteisto ? "Maanomistajaluettelo" : "Muistuttajat"}${
-      variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muilla tavoin)" : ""
+      variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muut)" : ""
     } ${dayjs(new Date()).format("YYYYMMDD")}.xlsx`,
     sisalto: file.toString("base64"),
     tyyppi: CONTENT_TYPE_EXCEL,
