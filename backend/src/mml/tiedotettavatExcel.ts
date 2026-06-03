@@ -11,7 +11,7 @@ import {
   Vaihe,
 } from "hassu-common/graphql/apiModel";
 import { omistajaDatabase } from "../database/omistajaDatabase";
-import { Columns, Row_, SheetData } from "write-excel-file";
+import { Columns, Row, SheetData } from "write-excel-file";
 import { requirePermissionMuokkaaProjekti } from "../projekti/projektiHandler";
 import { auditLog, log } from "../logger";
 import { fileService } from "../files/fileService";
@@ -38,7 +38,7 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
   return {
     __typename: "Excel",
     nimi: `${variables.kiinteisto ? "Maanomistajaluettelo" : "Muistuttajat"}${
-      variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muilla tavoin)" : ""
+      variables.suomifi ? " (suomi.fi)" : variables.suomifi === false ? " (muut)" : ""
     } ${dayjs(new Date()).format("YYYYMMDD")}.xlsx`,
     sisalto: file.toString("base64"),
     tyyppi: CONTENT_TYPE_EXCEL,
@@ -61,11 +61,11 @@ function getKiinteistonomistajaColumnsWithLahetysaika(): Columns {
   return getKiinteistonomistajaColumns().concat({ width: 25 });
 }
 
-function lisaaMuistuttajaRiviWithLahetysaika(rivi: Rivi): Row_<ImageData> {
+function lisaaMuistuttajaRiviWithLahetysaika(rivi: Rivi): Row {
   return lisaaMuistuttajaRivi(rivi).concat({ value: rivi.lahetysaika });
 }
 
-function lisaaMuistuttajaRivi(rivi: Rivi): Row_<ImageData> {
+function lisaaMuistuttajaRivi(rivi: Rivi): Row {
   auditLog.info("Lisätään muistuttajan tiedot exceliin", { muistuttajaId: rivi.id });
   return [
     {
@@ -76,6 +76,8 @@ function lisaaMuistuttajaRivi(rivi: Rivi): Row_<ImageData> {
     },
     {
       value: rivi.postinumero,
+      type: String,
+      format: "@",
     },
     {
       value: rivi.postitoimipaikka,
@@ -92,11 +94,11 @@ function lisaaMuistuttajaRivi(rivi: Rivi): Row_<ImageData> {
   ];
 }
 
-function lisaaRiviWithLahetysaika(rivi: Rivi): Row_<ImageData> {
+function lisaaRiviWithLahetysaika(rivi: Rivi): Row {
   return lisaaRivi(rivi).concat({ value: rivi.lahetysaika });
 }
 
-function lisaaRivi(rivi: Rivi): Row_<ImageData> {
+function lisaaRivi(rivi: Rivi): Row {
   auditLog.info("Lisätään omistajan tiedot exceliin", { omistajaId: rivi.id });
   return [
     {
@@ -110,6 +112,8 @@ function lisaaRivi(rivi: Rivi): Row_<ImageData> {
     },
     {
       value: rivi.postinumero,
+      type: String,
+      format: "@",
     },
     {
       value: rivi.postitoimipaikka,
