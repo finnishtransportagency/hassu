@@ -9,6 +9,10 @@ import * as backup from "aws-cdk-lib/aws-backup";
 import * as events from "aws-cdk-lib/aws-events";
 import { ArnPrincipal, Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Construct, IConstruct } from "constructs";
+import { SSMParameterName } from "./config";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
+import * as sns from "aws-cdk-lib/aws-sns";
+import * as targets from "aws-cdk-lib/aws-events-targets";
 import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
 import { CfnSession } from "aws-cdk-lib/aws-macie";
 import * as sns from "aws-cdk-lib/aws-sns";
@@ -417,21 +421,27 @@ export class HassuDatabaseStack extends Stack {
       assumedBy: new ServicePrincipal("malware-protection-plan.guardduty.amazonaws.com"),
     });
     bucket.grantRead(scanRole);
-    scanRole.addToPolicy(new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["s3:PutBucketNotification", "s3:GetBucketNotification"],
-      resources: [bucket.bucketArn],
-    }));
-    scanRole.addToPolicy(new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["s3:PutObject", "s3:GetObjectTagging", "s3:PutObjectTagging"],
-      resources: [bucket.arnForObjects("*")],
-    }));
-    scanRole.addToPolicy(new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["events:PutRule", "events:PutTargets", "events:DeleteRule", "events:RemoveTargets"],
-      resources: ["*"],
-    }));
+    scanRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["s3:PutBucketNotification", "s3:GetBucketNotification"],
+        resources: [bucket.bucketArn],
+      })
+    );
+    scanRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["s3:PutObject", "s3:GetObjectTagging", "s3:PutObjectTagging"],
+        resources: [bucket.arnForObjects("*")],
+      })
+    );
+    scanRole.addToPolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["events:PutRule", "events:PutTargets", "events:DeleteRule", "events:RemoveTargets"],
+        resources: ["*"],
+      })
+    );
 
     const malwareProtectionPlan = new CfnMalwareProtectionPlan(this, "S3MalwareProtection", {
       role: scanRole.roleArn,
@@ -526,6 +536,133 @@ export class HassuDatabaseStack extends Stack {
         resources: [backup.BackupResource.fromTag("hassu-backup", Config.env)],
         role: backupPlanRole,
       });
+
+      if (Config.env === "dev" || Config.env === "prod") {
+        this.createRestoreTestingPlan(backupVaultName, backupPlanRole);
+      }
     }
+  }
+
+  /**
+   * Creates an automated restore testing plan for compliance purposes.
+   *
+   * The plan verifies that backups are actually restorable by performing automated
+   * restore tests semi-annually (June 1st and December 1st at 02:00 Finnish time).
+   *
+   * What it does:
+   * 1. Selects a random recovery point from the last 34 days (1 day margin to
+   *    35-day retention to avoid selecting an expiring recovery point)
+   * 2. Restores DynamoDB tables and S3 buckets tagged with "hassu-backup" into new temporary resources
+   * 3. Validates that the restore operation completed successfully
+   * 4. Automatically cleans up the restored resources
+   *
+   * Recovery point types tested:
+   * - DynamoDB: SNAPSHOT (daily scheduled backups in vault). DynamoDB PITR is a
+   *   DynamoDB-native feature independent of AWS Backup — if snapshot restore succeeds,
+   *   PITR will also work as it uses DynamoDB's own transaction log. PITR availability
+   *   is ensured by CDK (pointInTimeRecoveryEnabled) and visible in DynamoDB console.
+   *   Manual PITR restore if needed: DynamoDB console → Tables → <Table> → Backups → Restore to point in time.
+   * - S3: CONTINUOUS (point-in-time recovery via vault)
+   *
+   * Resources tested:
+   * All DynamoDB tables and S3 buckets where HassuDatabaseStack.enableBackup(resource)
+   * has been called. This adds the tag "hassu-backup"=<env>, which both the backup plan
+   * and restore testing plan use to select resources.
+   *
+   * Results are visible in AWS Backup console under "Restore testing".
+   *
+   * Note: AWS Backup Restore Testing doesn't support manual triggering via CLI or console.
+   * To test immediately, temporarily modify the scheduleExpression to a near-future time,
+   * deploy the change, wait for execution, then revert the schedule back.
+   *
+   * Only runs in dev and prod environments.
+   */
+  private createRestoreTestingPlan(backupVaultName: string, restoreRole: Role) {
+    const restoreTestingPlanName = `RestoreTest_${Config.env}`;
+    const restoreTestingPlan = new backup.CfnRestoreTestingPlan(this, "RestoreTestingPlan", {
+      restoreTestingPlanName,
+      scheduleExpression: "cron(0 2 1 6,12 ? *)",
+      scheduleExpressionTimezone: "Europe/Helsinki",
+      startWindowHours: 24,
+      recoveryPointSelection: {
+        algorithm: "RANDOM_WITHIN_WINDOW",
+        includeVaults: [`arn:aws:backup:eu-west-1:${this.account}:backup-vault:${backupVaultName}`],
+        recoveryPointTypes: ["CONTINUOUS", "SNAPSHOT"],
+        selectionWindowDays: 34,
+      },
+    });
+
+    new backup.CfnRestoreTestingSelection(this, "RestoreTestingSelectionDynamoDB", {
+      iamRoleArn: restoreRole.roleArn,
+      protectedResourceType: "DynamoDB",
+      restoreTestingPlanName: restoreTestingPlan.restoreTestingPlanName,
+      restoreTestingSelectionName: `DynamoDB_${Config.env}`,
+      protectedResourceConditions: {
+        stringEquals: [{ key: "aws:ResourceTag/hassu-backup", value: Config.env }],
+      },
+    });
+
+    new backup.CfnRestoreTestingSelection(this, "RestoreTestingSelectionS3", {
+      iamRoleArn: restoreRole.roleArn,
+      protectedResourceType: "S3",
+      restoreTestingPlanName: restoreTestingPlan.restoreTestingPlanName,
+      restoreTestingSelectionName: `S3_${Config.env}`,
+      protectedResourceConditions: {
+        stringEquals: [{ key: "aws:ResourceTag/hassu-backup", value: Config.env }],
+      },
+    });
+
+    const alarmTopicArn = StringParameter.valueForStringParameter(this, SSMParameterName.HassuAlarmsSNSArn);
+    const alarmTopic = sns.Topic.fromTopicArn(this, "BackupAlarmTopic", alarmTopicArn);
+
+    const restoreTestRule = new events.Rule(this, "RestoreTestResultRule", {
+      description: "Notify on restore testing job completion or failure",
+      eventPattern: {
+        source: ["aws.backup"],
+        detailType: ["Restore Job State Change"],
+        detail: {
+          status: ["COMPLETED", "FAILED"],
+        },
+      },
+      targets: [
+        new targets.SnsTopic(alarmTopic, {
+          message: events.RuleTargetInput.fromText(
+            [
+              `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}`,
+              "",
+              "Automated restore test for Hassu application backups (compliance).",
+              "Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups",
+              "and S3 PITR backups are restorable.",
+              "",
+              `Environment: ${Config.env}`,
+              `Resource type: ${events.EventField.fromPath("$.detail.resourceType")}`,
+              `Status: ${events.EventField.fromPath("$.detail.status")}`,
+              `Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}`,
+              `Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}`,
+              "",
+              "Results: AWS Backup console → Restore testing",
+              "Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()",
+            ].join("\n")
+          ),
+        }),
+      ],
+    });
+
+    // Grant EventBridge permission to publish to SNS topic
+    // Required because we're importing the topic via fromTopicArn, so CDK can't auto-grant permissions
+    // Condition restricts access to only this specific EventBridge rule
+    alarmTopic.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal("events.amazonaws.com")],
+        actions: ["SNS:Publish"],
+        resources: [alarmTopicArn],
+        conditions: {
+          ArnEquals: {
+            "aws:SourceArn": restoreTestRule.ruleArn,
+          },
+        },
+      })
+    );
   }
 }

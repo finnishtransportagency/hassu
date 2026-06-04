@@ -65,7 +65,18 @@ const PAGE_SIZE = 25;
 
 const mapOmistajaToOmistajaRow =
   (...fieldsToSetDefaultsTo: (keyof OmistajaInput)[]) =>
-  ({ id, kiinteistotunnus, jakeluosoite, nimi, paikkakunta, postinumero, maa, maakoodi, osoitetiedotSaatu, userCreated }: Omistaja): OmistajaRow => {
+  ({
+    id,
+    kiinteistotunnus,
+    jakeluosoite,
+    nimi,
+    paikkakunta,
+    postinumero,
+    maa,
+    maakoodi,
+    osoitetiedotSaatu,
+    userCreated,
+  }: Omistaja): OmistajaRow => {
     const omistajaRow: OmistajaRow = {
       id,
       kiinteistotunnus,
@@ -507,8 +518,8 @@ export const FormContents: FunctionComponent<{
         o.userCreated
           ? mapOmistajaToOmistajaRow("kiinteistotunnus", "nimi", "jakeluosoite", "postinumero", "paikkakunta")(o)
           : o.osoitetiedotSaatu === false
-            ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
-            : mapOmistajaToOmistajaRow()(o)
+          ? mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")(o)
+          : mapOmistajaToOmistajaRow()(o)
       ),
       muutOmistajat: initialSearchResponses.muut.omistajat.map(mapOmistajaToOmistajaRow("jakeluosoite", "postinumero", "paikkakunta")),
       lisatytOmistajat: initialSearchResponses.lisatyt.omistajat.map(
@@ -617,11 +628,11 @@ export const FormContents: FunctionComponent<{
             await loadAllMuutRef.current?.();
             const lower = query.toLowerCase();
             const matchRow = (o: OmistajaRow) =>
-              [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa]
-                .some((val) => val?.toLowerCase().includes(lower));
+              [o.nimi, o.kiinteistotunnus, o.jakeluosoite, o.postinumero, o.paikkakunta, o.maa].some((val) =>
+                val?.toLowerCase().includes(lower)
+              );
             const values = useFormReturn.getValues();
-            const filterIndices = (rows: OmistajaRow[]) =>
-              new Set(rows.map((o, i) => (matchRow(o) ? i : -1)).filter((i) => i >= 0));
+            const filterIndices = (rows: OmistajaRow[]) => new Set(rows.map((o, i) => (matchRow(o) ? i : -1)).filter((i) => i >= 0));
             setSuodatus({
               suomifiOmistajat: filterIndices(values.suomifiOmistajat),
               muutOmistajat: filterIndices(values.muutOmistajat),
@@ -642,100 +653,112 @@ export const FormContents: FunctionComponent<{
 
   return (
     <SuodatusContext.Provider value={suodatus}>
-    <FormProvider {...useFormReturn}>
-      <DialogForm>
-        <DialogContent>
-          <SuodatusKentta onSuodata={handleSuodata} suodatusAktiivinen={!!suodatus} />
-          <Section noDivider>
-            <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
-            <p>
-              Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
-              Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
-            </p>
-            {hakutulosMaarat.suomifi ? (
-              <PaginatedTaulukko
-                key={`suomifi-${resetKey}`}
-                oid={projekti.oid}
-                initialHakutulosMaara={hakutulosMaarat.suomifi}
-                columns={suomifiColumns}
-                fieldArrayName="suomifiOmistajat"
-                loadAllRef={loadAllSuomifiRef}
-              />
-            ) : (
-              <GrayBackgroundText>
-                <p>Karttarajaukseen ei osunut ainuttakaan Suomi.fi-tiedotettavaa.</p>
-              </GrayBackgroundText>
-            )}
-          </Section>
-          <Section>
-            <H3>Kiinteistönomistajat, joille ei ole yhteystietoja</H3>
-            <p>
-              Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto
-              kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteen
-              muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse.
-              Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
-            </p>
-            {initialSearchResponses.muut.hakutulosMaara ? (
-              <>
+      <FormProvider {...useFormReturn}>
+        <DialogForm>
+          <DialogContent>
+            <SuodatusKentta onSuodata={handleSuodata} suodatusAktiivinen={!!suodatus} />
+            <Section noDivider>
+              <H3>Kiinteistönomistajien tiedotus Suomi.fi -palvelulla</H3>
+              <p>
+                Ilmoitus toimitetaan alle listatuille kiinteistönomistajille järjestelmän kautta kuulutuksen julkaisupäivänä.
+                Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
+              </p>
+              {hakutulosMaarat.suomifi ? (
                 <PaginatedTaulukko
+                  key={`suomifi-${resetKey}`}
                   oid={projekti.oid}
-                  initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
-                  columns={muutColumns}
-                  fieldArrayName="muutOmistajat"
-                  loadAllRef={loadAllMuutRef}
-                  extraActions={<TuoExcelistaButton loadAllRef={loadAllMuutRef} />}
+                  initialHakutulosMaara={hakutulosMaarat.suomifi}
+                  columns={suomifiColumns}
+                  fieldArrayName="suomifiOmistajat"
+                  loadAllRef={loadAllSuomifiRef}
                 />
-              </>
-            ) : (
-              <GrayBackgroundText>
-                <p>Karttarajaukseen ei osunut ainuttakaan muilla tavoin tiedotettavaa.</p>
-              </GrayBackgroundText>
-            )}
-            <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
-            <p>
-              Tässä voit lisätä muulla tavalla tiedotettavia kiinteistönomistajia. Huomaathan, että ne lisätään
-              kiinteistönomistajalistaukseen vasta tallennuksen jälkeen.
-            </p>
-            <LisatytTaulukko />
-          </Section>
-          <Section noDivider>
-            <Stack direction="row" justifyContent="end">
-              <Button type="button" onClick={resetAndClose}>
-                Palaa listaukseen
-              </Button>
-              <Button type="button" onClick={handleSubmit(onSubmit)} primary>
-                Tallenna
-              </Button>
-            </Stack>
-          </Section>
-        </DialogContent>
-      </DialogForm>
-      <HassuDialog
-        open={vahvistusInfo !== null}
-        title="Kiinteistönomistajatietojen tallentaminen"
-        onClose={() => { setVahvistusInfo(null); setPendingSubmitData(null); }}
-      >
-        <DialogContent>
-          {vahvistusInfo?.poistettavat ? (
-            <p>{`Olet poistamassa ${vahvistusInfo.poistettavat} kiinteistönomistaja${vahvistusInfo.poistettavat === 1 ? "n" : "a"}.`}</p>
-          ) : null}
-          {vahvistusInfo?.ylempaan ? (
-            <p>{`${vahvistusInfo.ylempaan} kiinteistönomistaja${vahvistusInfo.ylempaan === 1 ? "" : "a"} siirtyy Suomi.fi:n kautta tiedotettavaksi.`}</p>
-          ) : null}
-          {vahvistusInfo?.alempaan ? (
-            <p>{`${vahvistusInfo.alempaan} kiinteistönomistaja${vahvistusInfo.alempaan === 1 ? "" : "a"} siirtyy kiinteistönomistajiin, joilla ei ole yhteystietoja.`}</p>
-          ) : null}
-        </DialogContent>
-        <DialogActions>
-          <Button type="button" onClick={confirmAndSave} primary>
-            Jatka
-          </Button>
-          <Button type="button" onClick={() => { setVahvistusInfo(null); setPendingSubmitData(null); }}>
-            Peruuta
-          </Button>
-        </DialogActions>
-      </HassuDialog>
-    </FormProvider>
+              ) : (
+                <GrayBackgroundText>
+                  <p>Karttarajaukseen ei osunut ainuttakaan Suomi.fi-tiedotettavaa.</p>
+                </GrayBackgroundText>
+              )}
+            </Section>
+            <Section>
+              <H3>Kiinteistönomistajat, joille ei ole yhteystietoja</H3>
+              <p>
+                Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Kiinteistönomistaja
+                siirtyy Suomi.fi-palvelun kautta tiedotettaviin, kun sille lisätään osoitetiedot. Kiinteistönomistajista viedään
+                vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi.
+              </p>
+              {initialSearchResponses.muut.hakutulosMaara ? (
+                <>
+                  <PaginatedTaulukko
+                    oid={projekti.oid}
+                    initialHakutulosMaara={initialSearchResponses.muut.hakutulosMaara}
+                    columns={muutColumns}
+                    fieldArrayName="muutOmistajat"
+                    loadAllRef={loadAllMuutRef}
+                    extraActions={<TuoExcelistaButton loadAllRef={loadAllMuutRef} />}
+                  />
+                </>
+              ) : (
+                <GrayBackgroundText>
+                  <p>Karttarajaukseen ei osunut ainuttakaan muilla tavoin tiedotettavaa.</p>
+                </GrayBackgroundText>
+              )}
+              <H4>Lisää muilla tavoin tiedotettava kiinteistönomistaja</H4>
+              <p>
+                Tässä voit lisätä muulla tavalla tiedotettavia kiinteistönomistajia. Huomaathan, että ne lisätään
+                kiinteistönomistajalistaukseen vasta tallennuksen jälkeen.
+              </p>
+              <LisatytTaulukko />
+            </Section>
+            <Section noDivider>
+              <Stack direction="row" justifyContent="end">
+                <Button type="button" onClick={resetAndClose}>
+                  Palaa listaukseen
+                </Button>
+                <Button type="button" onClick={handleSubmit(onSubmit)} primary>
+                  Tallenna
+                </Button>
+              </Stack>
+            </Section>
+          </DialogContent>
+        </DialogForm>
+        <HassuDialog
+          open={vahvistusInfo !== null}
+          title="Kiinteistönomistajatietojen tallentaminen"
+          onClose={() => {
+            setVahvistusInfo(null);
+            setPendingSubmitData(null);
+          }}
+        >
+          <DialogContent>
+            {vahvistusInfo?.poistettavat ? (
+              <p>{`Olet poistamassa ${vahvistusInfo.poistettavat} kiinteistönomistaja${vahvistusInfo.poistettavat === 1 ? "n" : "a"}.`}</p>
+            ) : null}
+            {vahvistusInfo?.ylempaan ? (
+              <p>{`${vahvistusInfo.ylempaan} kiinteistönomistaja${
+                vahvistusInfo.ylempaan === 1 ? "" : "a"
+              } siirtyy Suomi.fi:n kautta tiedotettavaksi.`}</p>
+            ) : null}
+            {vahvistusInfo?.alempaan ? (
+              <p>{`${vahvistusInfo.alempaan} kiinteistönomistaja${
+                vahvistusInfo.alempaan === 1 ? "" : "a"
+              } siirtyy kiinteistönomistajiin, joilla ei ole yhteystietoja.`}</p>
+            ) : null}
+          </DialogContent>
+          <DialogActions>
+            <Button type="button" onClick={confirmAndSave} primary>
+              Jatka
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setVahvistusInfo(null);
+                setPendingSubmitData(null);
+              }}
+            >
+              Peruuta
+            </Button>
+          </DialogActions>
+        </HassuDialog>
+      </FormProvider>
     </SuodatusContext.Provider>
   );
 };
@@ -771,11 +794,14 @@ const PaginatedTaulukko = ({
   }, [fields, suodatus, fieldArrayName]);
   const slicedFields = useMemo(() => (suodatus ? filteredFields : filteredFields.slice(0, sliceAt)), [filteredFields, sliceAt, suodatus]);
 
-  const getRowId = useCallback((_row: OmistajaRow, index: number) => {
-    if (!suodatus?.[fieldArrayName]) return String(index);
-    const indices = Array.from(suodatus[fieldArrayName]!).sort((a, b) => a - b);
-    return String(indices[index]);
-  }, [suodatus, fieldArrayName]);
+  const getRowId = useCallback(
+    (_row: OmistajaRow, index: number) => {
+      if (!suodatus?.[fieldArrayName]) return String(index);
+      const indices = Array.from(suodatus[fieldArrayName]!).sort((a, b) => a - b);
+      return String(indices[index]);
+    },
+    [suodatus, fieldArrayName]
+  );
 
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -842,7 +868,7 @@ const PaginatedTaulukko = ({
     enableSorting: false,
     defaultColumn: { cell: (cell) => cell.getValue() || "-" },
     state: { pagination: undefined },
-    meta: { virtualization: { type: "window" } },
+
     getRowId,
   });
 
@@ -889,11 +915,14 @@ const LisatytTaulukko = () => {
     return fields.filter((_, i) => indices.has(i));
   }, [fields, suodatus]);
 
-  const getRowId = useCallback((_row: OmistajaRow, index: number) => {
-    if (!suodatus?.lisatytOmistajat) return String(index);
-    const indices = Array.from(suodatus.lisatytOmistajat).sort((a, b) => a - b);
-    return String(indices[index]);
-  }, [suodatus]);
+  const getRowId = useCallback(
+    (_row: OmistajaRow, index: number) => {
+      if (!suodatus?.lisatytOmistajat) return String(index);
+      const indices = Array.from(suodatus.lisatytOmistajat).sort((a, b) => a - b);
+      return String(indices[index]);
+    },
+    [suodatus]
+  );
 
   const table = useReactTable({
     columns: lisatytColumns,
@@ -932,7 +961,9 @@ const LisatytTaulukko = () => {
 const DialogForm = styled("form")({ display: "contents" });
 
 // Excel column headers shared with export (tiedotettavatExcel.ts)
-const TuoExcelistaButton: FunctionComponent<{ loadAllRef: React.MutableRefObject<(() => Promise<void>) | undefined> }> = ({ loadAllRef }) => {
+const TuoExcelistaButton: FunctionComponent<{ loadAllRef: React.MutableRefObject<(() => Promise<void>) | undefined> }> = ({
+  loadAllRef,
+}) => {
   const { getValues, setValue } = useFormContext<KiinteistonOmistajatFormFields>();
   const { showErrorMessage, showSuccessMessage } = useSnackbars();
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -962,31 +993,46 @@ const TuoExcelistaButton: FunctionComponent<{ loadAllRef: React.MutableRefObject
             // Load all rows from backend before matching
             await loadAllRef.current?.();
             const muutOmistajat = getValues("muutOmistajat");
-            const results = matchExcelRowsToOmistajat(rows, columns, muutOmistajat);
+            const { results, errors } = matchExcelRowsToOmistajat(rows, columns, muutOmistajat);
 
-        let updatedCount = 0;
-        for (const result of results) {
-          const current = muutOmistajat[result.index];
-          let changed = false;
-          if (result.jakeluosoite !== (current.jakeluosoite ?? "")) {
-            setValue(`muutOmistajat.${result.index}.jakeluosoite`, result.jakeluosoite, { shouldDirty: true });
-            changed = true;
-          }
-          if (result.postinumero !== (current.postinumero ?? "")) {
-            setValue(`muutOmistajat.${result.index}.postinumero`, result.postinumero, { shouldDirty: true });
-            changed = true;
-          }
-          if (result.paikkakunta !== (current.paikkakunta ?? "")) {
-            setValue(`muutOmistajat.${result.index}.paikkakunta`, result.paikkakunta, { shouldDirty: true });
-            changed = true;
-          }
-          if (changed) updatedCount++;
-        }
+            const errorIndices = new Set(errors.map((e) => e.omistajaIndex));
+
+            let updatedCount = 0;
+            for (const result of results) {
+              if (errorIndices.has(result.index)) {
+                continue;
+              }
+              const current = muutOmistajat[result.index];
+              let changed = false;
+              if (result.jakeluosoite !== (current.jakeluosoite ?? "")) {
+                setValue(`muutOmistajat.${result.index}.jakeluosoite`, result.jakeluosoite, { shouldDirty: true });
+                changed = true;
+              }
+              if (result.postinumero !== (current.postinumero ?? "")) {
+                setValue(`muutOmistajat.${result.index}.postinumero`, result.postinumero, { shouldDirty: true });
+                changed = true;
+              }
+              if (result.paikkakunta !== (current.paikkakunta ?? "")) {
+                setValue(`muutOmistajat.${result.index}.paikkakunta`, result.paikkakunta, { shouldDirty: true });
+                changed = true;
+              }
+              if (result.maakoodi !== null && result.maakoodi !== (current.maakoodi ?? "")) {
+                setValue(`muutOmistajat.${result.index}.maakoodi`, result.maakoodi, { shouldDirty: true });
+                changed = true;
+              }
+              if (changed) updatedCount++;
+            }
 
             if (updatedCount > 0) {
               showSuccessMessage(`Osoitetiedot päivitetty ${updatedCount} kiinteistönomistajalle. Muista tallentaa muutokset.`);
-            } else {
+            } else if (errors.length === 0) {
               showSuccessMessage("Excelistä ei löytynyt päivitettäviä osoitetietoja.");
+            }
+            if (errors.length > 0) {
+              const tunnistamattomat = errors.map((e) => `"${e.value}" (rivi ${e.rowIndex})`).join(", ");
+              showErrorMessage(
+                `${errors.length} ${errors.length === 1 ? "rivi" : "riviä"} ohitettu tunnistamattoman maan vuoksi: ${tunnistamattomat}`
+              );
             }
           } catch (e) {
             log.error("Excel-tiedoston lukeminen epäonnistui", e);
@@ -1032,7 +1078,12 @@ const SuodatusKentta: FunctionComponent<{ onSuodata: (query: string) => void; su
           autoComplete="off"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); onSuodata(query); } }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              onSuodata(query);
+            }
+          }}
           size="small"
         />
         <Button primary type="button" onClick={() => onSuodata(query)} endIcon="search">

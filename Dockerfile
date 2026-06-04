@@ -3,13 +3,13 @@ FROM public.ecr.aws/lambda/nodejs:22 AS nodesource
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17-al2023
 
 # Version should match the repo's version in general
-ENV NPM_VERSION=10.9.4
+ENV NPM_VERSION=10.9.8
 # https://github.com/aws-amplify/amplify-cli/releases
 ENV AMPLIFY_CLI_VERSION=12.14.4
 # https://github.com/docker/compose/releases
-ENV DOCKER_COMPOSE_VERSION=v5.1.3
+ENV DOCKER_COMPOSE_VERSION=v5.1.4
 # https://raw.githubusercontent.com/aws/aws-cli/v2/CHANGELOG.rst
-ENV AWS_CLI_VERSION=2.34.33
+ENV AWS_CLI_VERSION=2.34.57
 
 ENV PATH="$PATH:/var/lang/bin"
 COPY --from=nodesource /var/lang /var/lang

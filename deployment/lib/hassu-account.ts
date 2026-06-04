@@ -8,6 +8,7 @@ import * as iam from "aws-cdk-lib/aws-iam";
 import { LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
 import { ITopic, Topic } from "aws-cdk-lib/aws-sns";
+import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { CfnMaintenanceWindow, CfnMaintenanceWindowTarget, CfnMaintenanceWindowTask, StringParameter } from "aws-cdk-lib/aws-ssm";
 import { Alarm, ComparisonOperator, Metric, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
 import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
@@ -59,7 +60,7 @@ export class HassuAccountStack extends Stack {
     this.configureOpenSearch();
     this.configureBuildImageECR();
     this.configureGitHubConnection();
-    const alarmTopic = this.configureSNSForAlarms();
+    const alarmTopic = await this.configureSNSForAlarms(config);
     const vpcName = await config.getParameterNow("HassuVpcName");
     const vpc = Vpc.fromLookup(this, "Vpc", { tags: { Name: vpcName } });
     // Bastion host is created in both dev and prod accounts.
@@ -97,7 +98,7 @@ export class HassuAccountStack extends Stack {
         LayerVersion.fromLayerVersionArn(
           this,
           "paramLayer",
-          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:63"
+          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:82"
         ),
       ],
       logRetention: RetentionDays.SEVEN_YEARS,
@@ -177,22 +178,26 @@ export class HassuAccountStack extends Stack {
       description: "Start bastion host before patching maintenance window",
       schedule: Schedule.expression("cron(50 2 ? * SUN *)"),
     });
-    startRule.addTarget(new AwsApi({
-      service: "EC2",
-      action: "startInstances",
-      parameters: { InstanceIds: [instanceId] },
-    }));
+    startRule.addTarget(
+      new AwsApi({
+        service: "EC2",
+        action: "startInstances",
+        parameters: { InstanceIds: [instanceId] },
+      })
+    );
 
     // Stop instance 30 min after maintenance window ends to allow post-patch reboot to complete
     const stopRule = new Rule(this, "BastionStopRule", {
       description: "Stop bastion host after patching maintenance window",
       schedule: Schedule.expression("cron(30 5 ? * SUN *)"),
     });
-    stopRule.addTarget(new AwsApi({
-      service: "EC2",
-      action: "stopInstances",
-      parameters: { InstanceIds: [instanceId] },
-    }));
+    stopRule.addTarget(
+      new AwsApi({
+        service: "EC2",
+        action: "stopInstances",
+        parameters: { InstanceIds: [instanceId] },
+      })
+    );
 
     const maintenanceWindow = new CfnMaintenanceWindow(this, "BastionMaintenanceWindow", {
       name: "bastion-weekly-patching",
@@ -229,11 +234,70 @@ export class HassuAccountStack extends Stack {
     });
     patchTask.addDependency(target);
 
-    // Alarm when patching fails — sends notification to the shared alarm SNS topic
+    // Custom metrics for bastion patching via EventBridge rules.
+    // Maintenance Window publishes state-change events that we match by window-id.
+    const customMetricNamespace = "Custom/BastionPatching";
+
+    const patchSuccessRule = new Rule(this, "BastionPatchSuccessMetricRule", {
+      description: "Publish custom metric when bastion patching succeeds",
+      eventPattern: {
+        source: ["aws.ssm"],
+        detailType: ["Maintenance Window Task Execution State-change Notification"],
+        detail: {
+          "window-id": [maintenanceWindow.ref],
+          status: ["SUCCESS"],
+        },
+      },
+    });
+    patchSuccessRule.addTarget(
+      new AwsApi({
+        service: "CloudWatch",
+        action: "putMetricData",
+        parameters: {
+          Namespace: customMetricNamespace,
+          MetricData: [
+            {
+              MetricName: "PatchingSucceeded",
+              Value: 1,
+              Unit: "Count",
+            },
+          ],
+        },
+      })
+    );
+
+    const patchFailureRule = new Rule(this, "BastionPatchFailureMetricRule", {
+      description: "Publish custom metric when bastion patching fails",
+      eventPattern: {
+        source: ["aws.ssm"],
+        detailType: ["Maintenance Window Task Execution State-change Notification"],
+        detail: {
+          "window-id": [maintenanceWindow.ref],
+          status: ["FAILED", "TIMED_OUT"],
+        },
+      },
+    });
+    patchFailureRule.addTarget(
+      new AwsApi({
+        service: "CloudWatch",
+        action: "putMetricData",
+        parameters: {
+          Namespace: customMetricNamespace,
+          MetricData: [
+            {
+              MetricName: "PatchingFailed",
+              Value: 1,
+              Unit: "Count",
+            },
+          ],
+        },
+      })
+    );
+
+    // Alarm on the custom failure metric
     const patchFailureMetric = new Metric({
-      namespace: "AWS/SSM-RunCommand",
-      metricName: "CommandsFailed",
-      dimensionsMap: { DocumentName: "AWS-RunPatchBaseline" },
+      namespace: customMetricNamespace,
+      metricName: "PatchingFailed",
       statistic: "Sum",
       period: Duration.hours(3),
     });
@@ -317,16 +381,22 @@ export class HassuAccountStack extends Stack {
     });
   }
 
-  private configureSNSForAlarms(): ITopic {
+  private async configureSNSForAlarms(config: Config): Promise<ITopic> {
     const topic = new Topic(this, "SNSForAlarms", {
       fifo: false,
-      displayName: "Email-halytykset CloudWatchista",
+      displayName: "Hassu-hälytykset",
       topicName: "hassualarms",
     });
     new StringParameter(this, "SNSForAlarmsArn", {
       parameterName: SSMParameterName.HassuAlarmsSNSArn,
       stringValue: topic.topicArn,
     });
+
+    const alarmEmails = await config.getParameterNow("AlarmEmails");
+    alarmEmails.split(",").forEach((email, index) => {
+      topic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
+    });
+
     return topic;
   }
 

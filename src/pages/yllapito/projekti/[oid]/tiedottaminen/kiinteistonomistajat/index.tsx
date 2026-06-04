@@ -175,11 +175,18 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
       <Section>
         <ContentSpacer>
           <H2>Kuulutusten tiedottaminen</H2>
+          <p>
+            Kiinteistönomistajien tiedottaminen tapahtuu Suomi.fi viestien kautta. Jos kiinteistönomistajalle on tiedossa sekä osoite että
+            henkilötunnus/y-tunnus, hän saa kirjeen Suomi.fi-viestinä. Suomi.fi-viesti toimitetaan vastaanottajalle joko sähköisenä viestinä
+            tai paperipostina. Jos tiedossa on pelkkä osoite, viesti ohjautuu automaattisesti paperipostitukseen. Jos kiinteistönomistajalle
+            ei löydy yhteystietoja, ei kiinteistönomistajaa pystytä tiedottamaan.
+          </p>
           <H3>Kiinteistönomistajien tiedot</H3>
           <p>
             Ilmoitus suunnitelman nähtäville asettamisesta ja ilmoitus hyväksymispäätöksestä toimitetaan kiinteistönomistajille järjestelmän
             kautta, kun kiinteistönomistajat on tunnistettu. Tämän sivun ilmoituksen vastaanottajalista viedään automaattisesti
-            asianhallintaan, kun kuulutus hyväksytään julkaistavaksi. Tämä koskee myös muilla tavoin tiedotettavia kiinteistönomistajia.
+            asianhallintaan, kun kuulutus hyväksytään julkaistavaksi. Tämä koskee myös niitä kiinteistönomistajia, joille ei löytynyt
+            yhteystietoja.
           </p>
         </ContentSpacer>
         <ContentSpacer>
@@ -241,7 +248,7 @@ const KiinteistonomistajatPage: FunctionComponent<{ projekti: ProjektiLisatiedol
           <TiedotettavaHaitari
             oid={projekti.oid}
             title="Kiinteistönomistajat, joille ei ole yhteystietoja"
-            instructionText="Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Tällöin tieto kuulutuksesta toimitetaan kiinteistönomistajalle järjestelmän ulkopuolella. Voit listata alle kiinteistönomistajien osoitteen muistiin. Lähetä kaikille tässä listassa oleville kiinteistönomistajille ilmoitus kuulutuksesta postitse. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
+            instructionText="Huomaathan, että kaikkien kiinteistönomistajien tietoja ei ole mahdollista löytää järjestelmän kautta. Kiinteistönomistaja siirtyy Suomi.fi-palvelun kautta tiedotettaviin, kun sille lisätään osoitetiedot. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään julkaistavaksi."
             filterText="Suodata kiinteistönomistajia"
             showLessText="Näytä vähemmän kiinteistönomistajia"
             showMoreText="Näytä enemmän kiinteistönomistajia"

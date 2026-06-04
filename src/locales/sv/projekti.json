@@ -137,9 +137,11 @@
     "POHJOIS_SUOMEN_EVK": "Livskraftscentralen i Norra Finland",
     "LAPIN_EVK": "Livskraftscentralen i Lappland"
   },
-  "jata_palaute_tai": "Lämna respons eller fråga",
-  "voit_jattaa_palautetta": "Du kan ge respons eller ställa en fråga om planeringsprojektet. Om du vill ha svar på din fråga eller respons, lämna dina kontaktuppgifter och ange vilket sätt du önskar bli kontaktad på.",
+  "jata_palaute_tai": "Ge respons eller fråga",
+  "voit_jattaa_palautetta": "Du kan ge respons eller ställa en fråga om planeringsprojektet.",
   "kysymykset_ja_palautteet": "Frågor och respons ska skickas in senast xx.xx.xxxx.",
+  "ala_kirjoita_arkaluonteista": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till responsen.",
+  "voit_jattaa_yhteystietosi": "Om du vill kan du lämna dina kontaktuppgifter, så kontaktar vi dig vid behov.",
   "palautelomake": {
     "jata_palaute": "Lämna feedback eller fråga om planen",
     "kiitos_viestista": "Tack för meddelandet",
@@ -149,7 +151,7 @@
     "tuetut_tiedostomuodot_ovat": "Filformat som stöds är pdf, jpg, png, doc, docx och txt. Den tillåtna filstorleken är högst 25 MB. Det kan vara högst fem filer.",
     "olemme_vastaanottaneet_viestisi": "Vi har tagit emot ditt meddelande.",
     "kaikki_viestit_kasitellaan": "Alla meddelanden behandlas och man strävar efter att beakta dem i planeringen. De färdiga planerna läggs senare fram för påseende.",
-    "jos_toivoit_yhteydenottoa": "Om du önskar bli kontaktad, kommer projektets planeringsteam att kontakta dig så snart som möjligt.",
+    "jos_toivoit_yhteydenottoa": " Vi tar vid behov kontakt angående den lämnade responsen.",
     "jata_muistutus": "Lämna en anmärkning om projektet",
     "kasittelemme_henkilotietoja": "Vi behandlar personuppgifter i enlighet med dataskyddsbestämmelser, annan lagstiftning och dataskyddsförklaringen. Läs mer här "
   },
