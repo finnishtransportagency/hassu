@@ -459,10 +459,12 @@ export class HassuDatabaseStack extends Stack {
    * and restore testing plan use to select resources.
    *
    * Results are visible in AWS Backup console under "Restore testing".
-   * Can also be triggered manually via console or CLI:
-   *   aws backup create-restore-testing-plan-run --restore-testing-plan-name RestoreTest_<env>
    *
-   * Only runs in production environment.
+   * Note: AWS Backup Restore Testing doesn't support manual triggering via CLI or console.
+   * To test immediately, temporarily modify the scheduleExpression to a near-future time,
+   * deploy the change, wait for execution, then revert the schedule back.
+   *
+   * Only runs in dev and prod environments.
    */
   private createRestoreTestingPlan(backupVaultName: string, restoreRole: Role) {
     const restoreTestingPlanName = `RestoreTest_${Config.env}`;
@@ -502,7 +504,7 @@ export class HassuDatabaseStack extends Stack {
     const alarmTopicArn = StringParameter.valueForStringParameter(this, SSMParameterName.HassuAlarmsSNSArn);
     const alarmTopic = sns.Topic.fromTopicArn(this, "BackupAlarmTopic", alarmTopicArn);
 
-    new events.Rule(this, "RestoreTestResultRule", {
+    const restoreTestRule = new events.Rule(this, "RestoreTestResultRule", {
       description: "Notify on restore testing job completion or failure",
       eventPattern: {
         source: ["aws.backup"],
@@ -514,23 +516,42 @@ export class HassuDatabaseStack extends Stack {
       targets: [
         new targets.SnsTopic(alarmTopic, {
           message: events.RuleTargetInput.fromText(
-            `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}
-
-Automated restore test for Hassu application backups (compliance).
-Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups
-and S3 PITR backups are restorable.
-
-Environment: ${Config.env}
-Resource type: ${events.EventField.fromPath("$.detail.resourceType")}
-Status: ${events.EventField.fromPath("$.detail.status")}
-Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}
-Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}
-
-Results: AWS Backup console → Restore testing
-Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()`
+            [
+              `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}`,
+              "",
+              "Automated restore test for Hassu application backups (compliance).",
+              "Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups",
+              "and S3 PITR backups are restorable.",
+              "",
+              `Environment: ${Config.env}`,
+              `Resource type: ${events.EventField.fromPath("$.detail.resourceType")}`,
+              `Status: ${events.EventField.fromPath("$.detail.status")}`,
+              `Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}`,
+              `Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}`,
+              "",
+              "Results: AWS Backup console → Restore testing",
+              "Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()",
+            ].join("\n")
           ),
         }),
       ],
     });
+
+    // Grant EventBridge permission to publish to SNS topic
+    // Required because we're importing the topic via fromTopicArn, so CDK can't auto-grant permissions
+    // Condition restricts access to only this specific EventBridge rule
+    alarmTopic.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal("events.amazonaws.com")],
+        actions: ["SNS:Publish"],
+        resources: [alarmTopicArn],
+        conditions: {
+          ArnEquals: {
+            "aws:SourceArn": restoreTestRule.ruleArn,
+          },
+        },
+      })
+    );
   }
 }
