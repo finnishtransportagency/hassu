@@ -459,10 +459,12 @@ export class HassuDatabaseStack extends Stack {
    * and restore testing plan use to select resources.
    *
    * Results are visible in AWS Backup console under "Restore testing".
-   * Can also be triggered manually via console or CLI:
-   *   aws backup create-restore-testing-plan-run --restore-testing-plan-name RestoreTest_<env>
    *
-   * Only runs in production environment.
+   * Note: AWS Backup Restore Testing doesn't support manual triggering via CLI or console.
+   * To test immediately, temporarily modify the scheduleExpression to a near-future time,
+   * deploy the change, wait for execution, then revert the schedule back.
+   *
+   * Only runs in dev and prod environments.
    */
   private createRestoreTestingPlan(backupVaultName: string, restoreRole: Role) {
     const restoreTestingPlanName = `RestoreTest_${Config.env}`;
