@@ -502,7 +502,7 @@ export class HassuDatabaseStack extends Stack {
     const alarmTopicArn = StringParameter.valueForStringParameter(this, SSMParameterName.HassuAlarmsSNSArn);
     const alarmTopic = sns.Topic.fromTopicArn(this, "BackupAlarmTopic", alarmTopicArn);
 
-    new events.Rule(this, "RestoreTestResultRule", {
+    const restoreTestRule = new events.Rule(this, "RestoreTestResultRule", {
       description: "Notify on restore testing job completion or failure",
       eventPattern: {
         source: ["aws.backup"],
@@ -532,5 +532,22 @@ Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()`
         }),
       ],
     });
+
+    // Grant EventBridge permission to publish to SNS topic
+    // Required because we're importing the topic via fromTopicArn, so CDK can't auto-grant permissions
+    // Condition restricts access to only this specific EventBridge rule
+    alarmTopic.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal("events.amazonaws.com")],
+        actions: ["SNS:Publish"],
+        resources: [alarmTopicArn],
+        conditions: {
+          ArnEquals: {
+            "aws:SourceArn": restoreTestRule.ruleArn,
+          },
+        },
+      })
+    );
   }
 }
