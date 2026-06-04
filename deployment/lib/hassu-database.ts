@@ -506,7 +506,7 @@ export class HassuDatabaseStack extends Stack {
 
     // EventBridge permission to publish to SNS topic is granted in hassu-account stack
     // where the topic is created (configureSNSForAlarms method).
-    new events.Rule(this, "RestoreTestResultRule", {
+    const rule = new events.Rule(this, "RestoreTestResultRule", {
       description: "Notify on restore testing job completion or failure",
       eventPattern: {
         source: ["aws.backup"],
@@ -515,28 +515,35 @@ export class HassuDatabaseStack extends Stack {
           status: ["COMPLETED", "FAILED"],
         },
       },
-      targets: [
-        new targets.SnsTopic(alarmTopic, {
-          message: events.RuleTargetInput.fromText(
-            [
-              `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}`,
-              "",
-              "Automated restore test for Hassu application backups (compliance).",
-              "Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups",
-              "and S3 PITR backups are restorable.",
-              "",
-              `Environment: ${Config.env}`,
-              `Resource type: ${events.EventField.fromPath("$.detail.resourceType")}`,
-              `Status: ${events.EventField.fromPath("$.detail.status")}`,
-              `Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}`,
-              `Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}`,
-              "",
-              "Results: AWS Backup console → Restore testing",
-              "Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()",
-            ].join("\n")
-          ),
-        }),
-      ],
+      targets: [new targets.SnsTopic(alarmTopic)],
+    });
+
+    const template = [
+      `[${Config.env}] AWS Backup Restore Testing: <status>`,
+      "",
+      "Automated restore test for Hassu application backups (compliance).",
+      "Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups",
+      "and S3 PITR backups are restorable.",
+      "",
+      `Environment: ${Config.env}`,
+      "Resource type: <resourceType>",
+      "Status: <status>",
+      "Restore job ID: <restoreJobId>",
+      "Created resource: <createdResourceArn>",
+      "",
+      "Results: AWS Backup console → Restore testing",
+      "Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()",
+    ].join("\n");
+
+    const cfnRule = rule.node.defaultChild as events.CfnRule;
+    cfnRule.addPropertyOverride("Targets.0.InputTransformer", {
+      InputPathsMap: {
+        status: "$.detail.status",
+        resourceType: "$.detail.resourceType",
+        restoreJobId: "$.detail.restoreJobId",
+        createdResourceArn: "$.detail.createdResourceArn",
+      },
+      InputTemplate: template,
     });
   }
 }
