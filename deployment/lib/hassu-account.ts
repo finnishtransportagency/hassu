@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 import { Aws, aws_codebuild, aws_codeconnections, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
-import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as iam from "aws-cdk-lib/aws-iam";
 import { LifecycleRule, RepositoryEncryption, TagStatus } from "aws-cdk-lib/aws-ecr";
 import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepository } from "aws-cdk-lib/aws-codeartifact";
@@ -396,6 +396,23 @@ export class HassuAccountStack extends Stack {
     alarmEmails.split(",").forEach((email, index) => {
       topic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
     });
+
+    // Allow EventBridge to publish to this topic from rules in this account
+    // Supports both eu-west-1 (main region) and us-east-1 (WAF, CloudFront)
+    topic.addToResourcePolicy(
+      new PolicyStatement({
+        sid: "AllowEventBridgePublish",
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal("events.amazonaws.com")],
+        actions: ["SNS:Publish"],
+        resources: [topic.topicArn],
+        conditions: {
+          ArnLike: {
+            "aws:SourceArn": [`arn:aws:events:eu-west-1:${this.account}:rule/*`, `arn:aws:events:us-east-1:${this.account}:rule/*`],
+          },
+        },
+      })
+    );
 
     return topic;
   }
