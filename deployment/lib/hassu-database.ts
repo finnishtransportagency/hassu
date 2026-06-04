@@ -12,13 +12,11 @@ import { Construct, IConstruct } from "constructs";
 import { SSMParameterName } from "./config";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import * as sns from "aws-cdk-lib/aws-sns";
-import * as targets from "aws-cdk-lib/aws-events-targets";
-import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
-import { CfnSession } from "aws-cdk-lib/aws-macie";
-import * as sns from "aws-cdk-lib/aws-sns";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
+import { CfnSession } from "aws-cdk-lib/aws-macie";
 import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
