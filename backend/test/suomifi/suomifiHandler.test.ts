@@ -1312,6 +1312,143 @@ describe("suomifiHandler", () => {
     sinon.restore();
   });
 
+  it("lähetä suomi.fi viestit aloituskuulutukselle", async () => {
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
+    const dbProjekti: Partial<DBProjektiSlim> = {
+      oid: "1",
+    };
+    mockClient(DynamoDBDocumentClient)
+      .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
+      .resolves({
+        Items: [
+          { id: "1", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "2", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "3", henkilotunnus: "DEF", suomifiLahetys: true },
+        ],
+      })
+      .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({ Items: [] });
+
+    const sqsMock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
+    await lahetaSuomiFiViestit(dbProjekti as DBProjektiSlim, PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS);
+    expect(sqsMock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
+    const input = sqsMock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
+    assert(input.Entries);
+    const ids = input.Entries.map((e) => e.Id);
+    expect(ids).to.eql(["omistaja-1", "omistaja-3"]);
+    sinon.restore();
+  });
+
+  it("omistajan pdf viesti suomi.fi aloituskuulutus", async () => {
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
+    const omistaja: DBOmistaja = {
+      id: "123",
+      expires: 0,
+      lisatty: now().toString(),
+      oid: "1",
+      henkilotunnus: "ABC",
+      etunimet: "Testi",
+      sukunimi: "Teppo",
+      jakeluosoite: "Osoite 1",
+      postinumero: "00100",
+      paikkakunta: "Helsinki",
+      kiinteistotunnus: "123",
+      suomifiLahetys: true,
+      kaytossa: true,
+    };
+    const request: SuomiFiRequest = {};
+    const client = mockSuomiFiClient(request, 300);
+    setMockSuomiFiClient(client);
+    const aloitusKuulutusJulkaisut = [{ id: 1 } as any];
+    const dbProjekti: Partial<DBProjektiSlim> = {
+      oid: "1",
+      aloitusKuulutus: { id: 1 },
+      aloitusKuulutusJulkaisut: aloitusKuulutusJulkaisut,
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      },
+    };
+    const mock = mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
+      .resolves({ Item: omistaja })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({
+        Item: dbProjekti,
+      })
+      .on(QueryCommand, { TableName: config.aloitusKuulutusJulkaisuTableName })
+      .resolves({ Items: aloitusKuulutusJulkaisut });
+    const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS };
+    const msg = { Records: [{ body: JSON.stringify(body) }] };
+    await handleEvent(msg as SQSEvent);
+    assert(request.pdfViesti);
+    request.pdfViesti.tiedosto.sisalto = Buffer.from("");
+    expect(request.pdfViesti).toMatchSnapshot();
+    expect(mock.commandCalls(UpdateCommand).length).to.equal(1);
+    const input = mock.commandCalls(UpdateCommand)[0].args[0].input;
+    assert(input.ExpressionAttributeValues);
+    expect(input.ExpressionAttributeValues[":status"][0].tila).to.equal("OK");
+    expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS);
+    assert(input.Key);
+    expect(input.Key["id"]).to.equal("123");
+    parameterStub.restore();
+    fileStub.restore();
+  });
+
+  it("lisää tiedot saman henkilön muista kiinteistöistä ja muistutuksista aloituskuulutuksessa", async () => {
+    sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
+    sinon.stub(parameters, "getSuomiFiSQSUrl").resolves("");
+    const dbProjekti: Partial<DBProjektiSlim> = {
+      oid: "1",
+    };
+    mockClient(DynamoDBDocumentClient)
+      .on(QueryCommand, { TableName: config.kiinteistonomistajaTableName })
+      .resolves({
+        Items: [
+          { id: "1", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "2", henkilotunnus: "ABC", suomifiLahetys: true },
+          { id: "3", henkilotunnus: "DEF", suomifiLahetys: true },
+          { id: "4", ytunnus: "123", suomifiLahetys: true },
+          { id: "5", ytunnus: "123", suomifiLahetys: true },
+        ],
+      })
+      .on(QueryCommand, { TableName: config.projektiMuistuttajaTableName })
+      .resolves({ Items: [] });
+
+    const sqsMock = mockClient(SQS).on(SendMessageBatchCommand).resolves({ Failed: [], Successful: [] });
+    await lahetaSuomiFiViestit(dbProjekti as DBProjektiSlim, PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS);
+    expect(sqsMock.commandCalls(SendMessageBatchCommand).length).to.equal(1);
+    const input = sqsMock.commandCalls(SendMessageBatchCommand)[0].args[0].input;
+    assert(input.Entries);
+    const entryIdsToMuistuttajaOmistaja = input.Entries.map((entry) => {
+      if (!entry.MessageBody) {
+        return undefined;
+      }
+      const msg: SuomiFiSanoma = JSON.parse(entry.MessageBody);
+      return {
+        Id: entry.Id,
+        eriOmistukset: msg.omistajaIdsForLahetystilaUpdate,
+        eriMuistutukset: msg.muistuttajaIdsForLahetystilaUpdate,
+      };
+    });
+    expect(entryIdsToMuistuttajaOmistaja).to.eql([
+      {
+        Id: "omistaja-1",
+        eriOmistukset: ["2"],
+        eriMuistutukset: [],
+      },
+      { Id: "omistaja-3", eriOmistukset: [], eriMuistutukset: [] },
+      { Id: "omistaja-4", eriOmistukset: ["5"], eriMuistutukset: [] },
+    ]);
+    sinon.restore();
+  });
+
   it("test parse elyn laskutustunnisteet", async () => {
     const tunniste = `${SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY}: 1, ${SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY}:2, ${SuunnittelustaVastaavaViranomainen.LAPIN_ELY}:1, ${SuunnittelustaVastaavaViranomainen.POHJOIS_POHJANMAAN_ELY} :32 `;
     const parsed = parseLaskutus(tunniste);

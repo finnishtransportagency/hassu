@@ -37,6 +37,8 @@ import { findAloitusKuulutusWaitingForApproval } from "../../projekti/projektiUt
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
+import { parameters } from "../../aws/parameters";
+import { log } from "../../logger";
 
 async function createAloituskuulutusPDF(
   asiakirjaTyyppi: AsiakirjaTyyppi,
@@ -141,6 +143,12 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     validateSaamePDFsExistIfRequired(projekti.kielitiedot?.toissijainenKieli, vaihe);
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
+    }
+    const suomifiViestitEnabled = await parameters.isSuomiFiIntegrationEnabled();
+    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
+      const msg = "Kiinteistönomistajia ei ole haettu ennen aloituskuulutuksen hyväksyntää";
+      log.error(msg);
+      throw new IllegalArgumentError(msg);
     }
   }
 
