@@ -33,7 +33,6 @@ import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/Ilmo
 import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import HassuStack from "@components/layout/HassuStack";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";

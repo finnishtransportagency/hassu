@@ -3,14 +3,13 @@ import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
   IlmoituksenVastaanottajat,
-  KirjaamoOsoite,
   LocalizedMap,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
   UudelleenKuulutus,
   Yhteystieto,
 } from "../../database/model";
-import { KayttajaTyyppi, Kieli, KuulutusTekstit, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
+import { KayttajaTyyppi, Kieli, KirjaamoOsoite, KuulutusTekstit, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
