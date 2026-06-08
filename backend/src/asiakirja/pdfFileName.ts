@@ -19,6 +19,10 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
     },
   },
+  ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE: {
+    TIE: { [ProjektiTyyppi.TIE]: "T412_2", [ProjektiTyyppi.YLEINEN]: "11YS" },
+    RATA: { [ProjektiTyyppi.RATA]: "11R", [ProjektiTyyppi.YLEINEN]: "11YS" },
+  },
   [AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU]: {
     TIE: { [ProjektiTyyppi.TIE]: "T413", [ProjektiTyyppi.YLEINEN]: "20YS" },
     RATA: {

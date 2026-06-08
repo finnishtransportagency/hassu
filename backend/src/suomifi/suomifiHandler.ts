@@ -317,28 +317,15 @@ async function createGenerateEvent(
   projektiFromDB: DBProjekti,
   kohde: Kohde
 ): Promise<GeneratePDFEvent | undefined> {
-  // PLACEHOLDER: Aloituskuulutukselle käytetään väliaikaisesti nähtävilläolovaiheen PDF-generointia (HASSUYP-872)
+  const kirjePaivitetty = nyt().format("DD.MM.YYYY");
   if (
-    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
     tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
     projektiFromDB.aloitusKuulutusJulkaisut
   ) {
-    const aloitusJulkaisu = projektiFromDB.aloitusKuulutusJulkaisut[projektiFromDB.aloitusKuulutusJulkaisut.length - 1];
-    // Käytetään nahtavillaoloVaiheJulkaisut dataa jos sellainen löytyy, muuten luodaan dummy-data
-    const julkaisu =
-      projektiFromDB.nahtavillaoloVaiheJulkaisut?.[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1] ??
-      ({
-        id: 1,
-        kuulutusPaiva: aloitusJulkaisu.kuulutusPaiva,
-        kuulutusVaihePaattyyPaiva: aloitusJulkaisu.kuulutusPaiva,
-        hankkeenKuvaus: { SUOMI: "Suunnittelu on aloitettu" },
-        kielitiedot: aloitusJulkaisu.kielitiedot,
-        velho: aloitusJulkaisu.velho,
-        yhteystiedot: aloitusJulkaisu.yhteystiedot,
-        tila: aloitusJulkaisu.tila,
-      } as any);
+    const julkaisu = projektiFromDB.aloitusKuulutusJulkaisut[projektiFromDB.aloitusKuulutusJulkaisut.length - 1];
     return {
-      createNahtavillaoloKuulutusPdf: {
+      createAloituskuulutusPdf: {
         asiakirjaTyyppi,
         kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
         asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
@@ -347,18 +334,17 @@ async function createGenerateEvent(
         linkkiAsianhallintaan: undefined,
         luonnos: false,
         lyhytOsoite: projektiFromDB.lyhytOsoite,
-        nahtavillaoloVaihe: julkaisu,
+        aloitusKuulutusJulkaisu: julkaisu,
         oid: projektiFromDB.oid,
-        velho: projektiFromDB.velho!,
         vahainenMenettely: projektiFromDB.vahainenMenettely,
         euRahoitusLogot: projektiFromDB.euRahoitusLogot,
-        suunnitteluSopimus: projektiFromDB.suunnitteluSopimus as SuunnitteluSopimus | undefined,
         osoite: {
           nimi: kohde.nimi,
           katuosoite: kohde.lahiosoite,
           postinumero: kohde.postinumero,
           postitoimipaikka: kohde.postitoimipaikka,
         },
+        kirjePaivitetty,
       },
     };
   } else if (
@@ -469,10 +455,8 @@ async function getFilesAndLanguages(
 }
 
 function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti): AsiakirjaTyyppi | undefined {
-  // PLACEHOLDER: Käytetään väliaikaisesti nähtävilläolovaiheen asiakirjatyyppiä
-  // kunnes aloituskuulutuksen oma PDF-generointilogiikka on valmis (HASSUYP-872)
   if (tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS && projektiFromDB.aloitusKuulutusJulkaisut) {
-    return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
+    return AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
     return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE && projektiFromDB.hyvaksymisPaatosVaiheJulkaisut) {

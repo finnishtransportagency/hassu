@@ -3,6 +3,7 @@ import {
   AloitusKuulutusJulkaisu,
   DBVaylaUser,
   IlmoituksenVastaanottajat,
+  KirjaamoOsoite,
   LocalizedMap,
   SuunnitteluSopimus,
   SuunnitteluSopimusJulkaisu,
@@ -10,7 +11,7 @@ import {
   Yhteystieto,
 } from "../../database/model";
 import { KayttajaTyyppi, Kieli, KuulutusTekstit, LaskuriTyyppi } from "hassu-common/graphql/apiModel";
-import { AsiakirjanMuoto } from "../asiakirjaTypes";
+import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { assertIsDefined } from "../../util/assertions";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -18,6 +19,7 @@ import { calculateEndDate } from "../../endDateCalculator/endDateCalculatorHandl
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { KuulutusKutsuAdapter, KuulutusKutsuAdapterProps } from "./kuulutusKutsuAdapter";
 import { log } from "../../logger";
+import { kirjaamoOsoitteetService } from "../../kirjaamoOsoitteet/kirjaamoOsoitteetService";
 
 type PropsCreatorOptions = {
   oid: string;
@@ -50,6 +52,7 @@ export async function createAloituskuulutusKutsuAdapterProps({
     alkupaiva: aloitusKuulutusJulkaisu.kuulutusPaiva,
     tyyppi: LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA,
   });
+  const kirjaamoOsoitteet = await kirjaamoOsoitteetService.listKirjaamoOsoitteet();
   return {
     oid,
     lyhytOsoite,
@@ -68,24 +71,30 @@ export async function createAloituskuulutusKutsuAdapterProps({
     asianhallintaPaalla,
     linkkiAsianhallintaan,
     kuulutettuYhdessaSuunnitelmanimi,
+    kirjaamoOsoitteet,
   };
 }
 
-export interface AloituskuulutusKutsuAdapterProps extends KuulutusKutsuAdapterProps {}
+export interface AloituskuulutusKutsuAdapterProps extends KuulutusKutsuAdapterProps {
+  osoite?: Osoite;
+  kirjaamoOsoitteet?: KirjaamoOsoite[];
+}
 
 export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<AloituskuulutusKutsuAdapterProps> {
   readonly suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | SuunnitteluSopimus | null;
   readonly ilmoituksenVastaanottajat: IlmoituksenVastaanottajat | null | undefined;
   readonly uudelleenKuulutus?: UudelleenKuulutus | null;
   readonly vahainenMenettely: boolean | null | undefined;
+  readonly kirjaamoOsoitteet?: KirjaamoOsoite[];
 
-  constructor(props: AloituskuulutusKutsuAdapterProps) {
-    super(props);
-    const { suunnitteluSopimus, ilmoituksenVastaanottajat, uudelleenKuulutus, vahainenMenettely } = props;
+  constructor(props: AloituskuulutusKutsuAdapterProps, localizationKeyPrefix?: string) {
+    super(props, localizationKeyPrefix);
+    const { suunnitteluSopimus, ilmoituksenVastaanottajat, uudelleenKuulutus, vahainenMenettely, kirjaamoOsoitteet } = props;
     this.suunnitteluSopimus = suunnitteluSopimus;
     this.ilmoituksenVastaanottajat = ilmoituksenVastaanottajat;
     this.uudelleenKuulutus = uudelleenKuulutus;
     this.vahainenMenettely = vahainenMenettely;
+    this.kirjaamoOsoitteet = kirjaamoOsoitteet;
   }
 
   get kuulutusNimiCapitalized(): string {
@@ -278,5 +287,18 @@ export class AloituskuulutusKutsuAdapter extends KuulutusKutsuAdapter<Aloituskuu
       ],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", usePlural, { extLinks: true }),
     };
+  }
+
+  get kirjaamo(): string {
+    if (!this.kirjaamoOsoitteet) {
+      return "<kirjaamon osoitetta ei ole saatavilla>";
+    }
+    const kirjaamoOsoite = this.kirjaamoOsoitteet
+      .filter((osoite) => osoite.nimi == this.velho.suunnittelustaVastaavaViranomainen?.toString())
+      .pop();
+    if (kirjaamoOsoite) {
+      return kirjaamoOsoite.sahkoposti;
+    }
+    return "<kirjaamon " + this.velho.suunnittelustaVastaavaViranomainen + " osoitetta ei löydy>";
   }
 }

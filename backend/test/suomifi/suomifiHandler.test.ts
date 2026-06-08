@@ -1380,9 +1380,7 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      })
-      .on(QueryCommand, { TableName: config.aloitusKuulutusJulkaisuTableName })
-      .resolves({ Items: aloitusKuulutusJulkaisut });
+      });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS };
     const msg = { Records: [{ body: JSON.stringify(body) }] };

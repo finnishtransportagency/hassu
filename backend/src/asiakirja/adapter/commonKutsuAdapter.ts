@@ -580,12 +580,13 @@ export class CommonKutsuAdapter {
   public substituteText(translation: string): string {
     // prettier-ignore
     return translation.replace(/{{(.+?)}}/g, (_, part) => { // NOSONAR
+      // First check template resolvers
       const textFromResolver = this.findTextFromResolver(part);
       if (textFromResolver !== undefined) {
         return textFromResolver;
       }
 
-      // Function from this class
+      // Then check this object (including getters from prototype chain)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const resolvedText: any = (this as any)[part];
       if (typeof resolvedText == "function") {
