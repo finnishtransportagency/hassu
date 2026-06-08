@@ -268,7 +268,7 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
         )}
       </Section>
-      <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} />
+      <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} omistajahakuStatus={projekti.omistajahaku?.status} />
     </>
   );
 }
