@@ -482,12 +482,41 @@ export class HassuDatabaseStack extends Stack {
     });
   }
 
-  private createMacieSensitiveDataScanning(_bucket: Bucket, alertTopic: sns.Topic) {
-    new CfnSession(this, "MacieSession", {
-      status: "ENABLED",
-      findingPublishingFrequency: "FIFTEEN_MINUTES",
+  private createMacieSensitiveDataScanning(bucket: Bucket, alertTopic: sns.Topic) {
+    // Macie Session is an account-level resource — only create it once (in dev environment)
+    if (Config.env === "dev") {
+      new CfnSession(this, "MacieSession", {
+        status: "ENABLED",
+        findingPublishingFrequency: "FIFTEEN_MINUTES",
+      });
+    }
+
+    // Weekly scheduled classification job for sensitive data scanning
+    const macieJobLambda = new lambda.Function(this, "MacieClassificationJobLambda", {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: "index.handler",
+      code: lambda.Code.fromAsset("tools/macieSensitiveData"),
+      environment: {
+        BUCKET_NAME: bucket.bucketName,
+        ACCOUNT_ID: this.account,
+      },
+      timeout: Duration.seconds(30),
+    });
+    macieJobLambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["macie2:CreateClassificationJob"],
+        resources: ["*"],
+      })
+    );
+
+    new events.Rule(this, "MacieWeeklyScanRule", {
+      description: "Triggers Macie sensitive data scan weekly on Mondays",
+      schedule: events.Schedule.cron({ minute: "0", hour: "3", weekDay: "MON" }),
+      targets: [new targets.LambdaFunction(macieJobLambda)],
     });
 
+    // Alert on findings
     new events.Rule(this, "MacieFindingsRule", {
       eventPattern: {
         source: ["aws.macie"],
