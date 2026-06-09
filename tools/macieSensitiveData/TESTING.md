@@ -5,6 +5,7 @@
 Tämä ohje kuvaa, miten Macie-arkaluontoisen datan skannausta ja sähköposti-ilmoituksia testataan dev-ympäristössä.
 
 Macie skannaa `hassu-dev-yllapito`-bucketin `palautteet/` ja `muistutukset/` -polut viikoittain maanantaisin.
+Skannaus käynnistetään EventBridge-aikataululla, joka kutsuu Lambda-funktiota (`MacieClassificationJobLambda`).
 
 ## 1. EventBridge-säännön testaus (nopein)
 
@@ -35,7 +36,13 @@ IBAN: FI21 1234 5600 0007 85
 EOF
 ```
 
-Ajoitettu skannaus tapahtuu vasta maanantaina. Voit käynnistää kertaluontoisen skannauksen heti:
+Ajoitettu skannaus tapahtuu vasta maanantaina. Voit käynnistää skannauksen heti kutsumalla Lambdaa:
+
+```bash
+aws lambda invoke --function-name <MacieClassificationJobLambda-nimi> /dev/stdout
+```
+
+Tai suoraan Macie API:lla:
 
 ```bash
 aws macie2 create-classification-job \
@@ -52,7 +59,7 @@ aws macie2 create-classification-job \
           "simpleScopeTerm": {
             "comparator": "STARTS_WITH",
             "key": "OBJECT_KEY",
-            "values": ["palautteet/macie-test"]
+            "values": ["palautteet/", "muistutukset/"]
           }
         }]
       }
@@ -74,7 +81,7 @@ aws macie2 list-classification-jobs --filter-criteria '{
   "includes": [{
     "comparator": "STARTS_WITH",
     "key": "name",
-    "values": ["hassu-dev"]
+    "values": ["hassu-sensitive-data-scan"]
   }]
 }'
 
