@@ -87,11 +87,13 @@ export class HassuDatabaseStack extends Stack {
     this.createBackupPlan();
     if (Config.env === "dev" || Config.isDeveloperEnvironment()) {
       this.quarantineBucket = this.createQuarantineBucket();
-      const alertEmail = await this.config.getParameterNow("SecurityAlertEmail");
+      const alertEmails = await this.config.getParameterNow("SecurityAlertEmail");
       const alertTopic = new sns.Topic(this, "SecurityAlertTopic", {
-        displayName: "Security Alerts",
+        displayName: "VLS Security Alerts",
       });
-      alertTopic.addSubscription(new subscriptions.EmailSubscription(alertEmail));
+      alertEmails.split(",").forEach((email) => {
+        alertTopic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
+      });
       await this.createMalwareProtectionForS3(this.yllapitoBucket, this.quarantineBucket, alertTopic);
       this.createMacieSensitiveDataScanning(this.yllapitoBucket, alertTopic);
     }
@@ -474,11 +476,29 @@ export class HassuDatabaseStack extends Stack {
         detailType: ["GuardDuty Malware Protection Object Scan Result"],
         detail: {
           scanResultDetails: {
-            scanResult: ["THREATS_FOUND"],
+            scanResultStatus: ["THREATS_FOUND"],
           },
         },
       },
-      targets: [new targets.LambdaFunction(quarantineLambda), new targets.SnsTopic(alertTopic)],
+      targets: [
+        new targets.LambdaFunction(quarantineLambda),
+        new targets.SnsTopic(alertTopic, {
+          message: events.RuleTargetInput.fromMultilineText(
+            `[${Config.env}] MALWARE DETECTED IN S3
+
+Bucket: ${events.EventField.fromPath("$.detail.s3ObjectDetails.bucketName")}
+Object: ${events.EventField.fromPath("$.detail.s3ObjectDetails.objectKey")}
+Scan result: ${events.EventField.fromPath("$.detail.scanResultDetails.scanResultStatus")}
+Threats: ${events.EventField.fromPath("$.detail.scanResultDetails.threats")}
+
+Action taken: object moved to quarantine bucket and deleted from source.
+
+Time: ${events.EventField.time}
+Account: ${events.EventField.account}
+Region: ${events.EventField.region}`
+          ),
+        }),
+      ],
     });
   }
 
