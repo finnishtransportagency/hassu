@@ -201,8 +201,8 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
   );
 
   new events.Rule(stack, "MacieWeeklyScanRule", {
-    description: "Triggers Macie sensitive data scan monthly on first Monday",
-    schedule: events.Schedule.cron({ minute: "0", hour: "3", weekDay: "MON#1" }),
+    description: "Triggers Macie sensitive data scan weekly on Monday",
+    schedule: events.Schedule.cron({ minute: "0", hour: "3", weekDay: "MON" }),
     targets: [new targets.LambdaFunction(macieJobLambda)],
   });
 
@@ -212,7 +212,12 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
       source: ["aws.macie"],
       detailType: ["Macie Finding"],
       detail: {
-        type: ["SensitiveData:S3Object/Personal", "SensitiveData:S3Object/Financial", "SensitiveData:S3Object/Credentials", "SensitiveData:S3Object/CustomIdentifier"],
+        type: [
+          "SensitiveData:S3Object/Personal",
+          "SensitiveData:S3Object/Financial",
+          "SensitiveData:S3Object/Credentials",
+          "SensitiveData:S3Object/CustomIdentifier",
+        ],
       },
     },
     targets: [
