@@ -4,8 +4,14 @@
 
 Tämä ohje kuvaa, miten Macie-arkaluontoisen datan skannausta ja sähköposti-ilmoituksia testataan dev-ympäristössä.
 
-Macie skannaa `hassu-dev-yllapito`-bucketin `palautteet/` ja `muistutukset/` -polut viikoittain maanantaisin.
+Macie skannaa `hassu-dev-yllapito`-bucketin `palautteet/` ja `muistutukset/` -polut kuukausittain (ensimmäinen maanantai klo 3:00).
 Skannaus käynnistetään EventBridge-aikataululla, joka kutsuu Lambda-funktiota (`MacieClassificationJobLambda`).
+
+**Mitä skannataan:**
+- Bucket: `hassu-dev-yllapito`
+- Prefixit: `palautteet/` ja `muistutukset/`
+- Tunnisteet: AWS built-in (Personal, Financial, Credentials) + custom identifier suomalaisille henkilötunnuksille (DDMMYY+/-A###X)
+- Löydökset julkaistaan SNS:ään 15 min välein
 
 ## 1. EventBridge-säännön testaus (nopein)
 
@@ -15,11 +21,11 @@ Testaa, että Macie Finding → EventBridge → SNS → sähköposti -ketju toim
 aws events put-events --entries '[{
   "Source": "aws.macie",
   "DetailType": "Macie Finding",
-  "Detail": "{\"severity\":{\"score\":8,\"description\":\"HIGH\"},\"type\":\"SensitiveData:S3Object/Personal\",\"description\":\"Test finding: PII detected in S3 object\",\"resourcesAffected\":{\"s3Bucket\":{\"name\":\"hassu-dev-yllapito\"},\"s3Object\":{\"key\":\"palautteet/test.txt\"}}}"
+  "Detail": "{\"severity\":{\"score\":8,\"description\":\"HIGH\"},\"type\":\"SensitiveData:S3Object/CustomIdentifier\",\"category\":\"CLASSIFICATION\",\"description\":\"Test finding: Finnish personal ID detected\",\"resourcesAffected\":{\"s3Bucket\":{\"name\":\"hassu-dev-yllapito\"},\"s3Object\":{\"key\":\"palautteet/test.txt\"}}}"
 }]'
 ```
 
-Odotettu tulos: sähköposti-ilmoitus saapuu SecurityAlertEmail-osoitteeseen.
+Odotettu tulos: sähköposti-ilmoitus saapuu SecurityAlertEmail-osoitteeseen sisältäen bucket, object, finding type ja severity.
 
 ## 2. End-to-end-testaus testidatalla
 
@@ -29,20 +35,29 @@ Lataa tiedosto, joka sisältää tunnistettavaa PII-dataa, ja käynnistä skanna
 # Luo testitiedosto, jossa on tunnistettavaa PII-dataa
 cat <<'EOF' | aws s3 cp - s3://hassu-dev-yllapito/palautteet/macie-test.txt
 Nimi: Matti Meikäläinen
-Henkilötunnus: 010180-1234
+Henkilötunnus: 010180-123A
 Sähköposti: matti.meikalainen@example.com
 Puhelinnumero: +358 40 1234567
 IBAN: FI21 1234 5600 0007 85
 EOF
 ```
 
-Ajoitettu skannaus tapahtuu vasta maanantaina. Voit käynnistää skannauksen heti kutsumalla Lambdaa:
+**Huom:** Henkilötunnus korjattu oikeaan muotoon (010180-123A käyttää validia tarkistusmerkkiä).
 
+Ajoitettu skannaus tapahtuu vasta seuraavana maanantaina klo 3:00. Voit käynnistää skannauksen välittömästi:
+
+**Vaihtoehto A: Lambda-konsolista (helpoin)**
+1. AWS Console → Lambda → MacieClassificationJobLambda
+2. Test-välilehti → Create test event (tyhjä JSON `{}`)
+3. Test → katso jobin ID responsesta
+
+**Vaihtoehto B: AWS CLI**
 ```bash
-aws lambda invoke --function-name <MacieClassificationJobLambda-nimi> /dev/stdout
+aws lambda invoke --function-name MacieClassificationJobLambda-<stack-hash> response.json
+cat response.json
 ```
 
-Tai suoraan Macie API:lla:
+**Vaihtoehto C: Macie API suoraan (bypass Lambda)**
 
 ```bash
 aws macie2 create-classification-job \

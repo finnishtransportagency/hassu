@@ -16,7 +16,7 @@ import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
-import { CfnSession } from "aws-cdk-lib/aws-macie";
+import * as macie from "aws-cdk-lib/aws-macie";
 import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -505,9 +505,49 @@ Region: ${events.EventField.region}`
   private createMacieSensitiveDataScanning(bucket: Bucket, alertTopic: sns.Topic) {
     // Macie Session is an account-level resource — only create it once (in dev environment)
     if (Config.env === "dev") {
-      new CfnSession(this, "MacieSession", {
+      new macie.CfnSession(this, "MacieSession", {
         status: "ENABLED",
         findingPublishingFrequency: "FIFTEEN_MINUTES",
+      });
+
+      // Custom identifier for Finnish personal identity codes (henkilötunnus)
+      new macie.CfnCustomDataIdentifier(this, "FinnishPersonalIdIdentifier", {
+        name: "FinnishPersonalIdentityCode",
+        regex: "\\b\\d{6}[+\\-A]\\d{3}[0-9A-FHJ-NPR-Y]\\b",
+        description: "Detects Finnish personal identity codes (henkilötunnus format: DDMMYY+/-A###X)",
+      });
+
+      // Macie findings repository bucket
+      const macieFindingsBucket = new Bucket(this, "MacieFindingsBucket", {
+        bucketName: `${Config.env}-macie-findings-${this.account}`,
+        blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+        encryption: BucketEncryption.S3_MANAGED,
+        enforceSSL: true,
+        removalPolicy: RemovalPolicy.DESTROY,
+        lifecycleRules: [{ id: "delete-old-findings", expiration: Duration.days(90) }],
+      });
+
+      macieFindingsBucket.addToResourcePolicy(
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          principals: [new ServicePrincipal("macie.amazonaws.com")],
+          actions: ["s3:PutObject"],
+          resources: [macieFindingsBucket.arnForObjects("*")],
+          conditions: {
+            StringEquals: {
+              "aws:SourceAccount": this.account,
+            },
+          },
+        })
+      );
+
+      // Note: CfnFindingsPublicationConfiguration is not available in aws-cdk-lib v2.241.0.
+      // Configure the findings repository manually:
+      // AWS Console → Amazon Macie → Settings → Repository for sensitive data discovery results
+      // → Configure now → Select bucket: dev-macie-findings-{account-id}
+      new CfnOutput(this, "MacieFindingsBucketName", {
+        value: macieFindingsBucket.bucketName,
+        description: "Bucket for Macie findings - configure in Macie console Settings",
       });
     }
 
@@ -531,18 +571,38 @@ Region: ${events.EventField.region}`
     );
 
     new events.Rule(this, "MacieWeeklyScanRule", {
-      description: "Triggers Macie sensitive data scan weekly on Mondays",
-      schedule: events.Schedule.cron({ minute: "0", hour: "3", weekDay: "MON" }),
+      description: "Triggers Macie sensitive data scan monthly on first Monday",
+      schedule: events.Schedule.cron({ minute: "0", hour: "3", weekDay: "MON#1" }),
       targets: [new targets.LambdaFunction(macieJobLambda)],
     });
 
-    // Alert on findings
+    // Alert on sensitive data findings
     new events.Rule(this, "MacieFindingsRule", {
       eventPattern: {
         source: ["aws.macie"],
         detailType: ["Macie Finding"],
+        detail: {
+          type: ["SensitiveData:S3Object/Personal", "SensitiveData:S3Object/Financial", "SensitiveData:S3Object/Credentials", "SensitiveData:S3Object/CustomIdentifier"],
+        },
       },
-      targets: [new targets.SnsTopic(alertTopic)],
+      targets: [
+        new targets.SnsTopic(alertTopic, {
+          message: events.RuleTargetInput.fromMultilineText(
+            `[${Config.env}] SENSITIVE DATA DETECTED IN S3
+
+Bucket: ${events.EventField.fromPath("$.detail.resourcesAffected.s3Bucket.name")}
+Object: ${events.EventField.fromPath("$.detail.resourcesAffected.s3Object.key")}
+Finding Type: ${events.EventField.fromPath("$.detail.type")}
+Severity: ${events.EventField.fromPath("$.detail.severity.description")}
+
+Categories: ${events.EventField.fromPath("$.detail.category")}
+
+Time: ${events.EventField.time}
+Account: ${events.EventField.account}
+Region: ${events.EventField.region}`
+          ),
+        }),
+      ],
     });
   }
 
