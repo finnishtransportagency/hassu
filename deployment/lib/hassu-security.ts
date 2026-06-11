@@ -9,6 +9,7 @@ import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
 import * as macie from "aws-cdk-lib/aws-macie";
+
 import { SSMParameterName } from "./config";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
@@ -129,11 +130,9 @@ Region: ${events.EventField.region}`
 }
 
 function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTopic: sns.ITopic) {
-  // Macie Session is an account-level resource that must already exist in the account.
-  // It cannot be created via CloudFormation if it already exists.
-  // Enable Macie manually in the AWS Console if not already active.
+  // Macie Session is created in hassu-account stack (account-level resource).
+  // It must be deployed before this stack's Macie resources can function.
   if (Config.env === "dev") {
-
     // Custom identifier for Finnish personal identity codes (henkilötunnus)
     new macie.CfnCustomDataIdentifier(stack, "FinnishPersonalIdIdentifier", {
       name: "FinnishPersonalIdentityCode",
