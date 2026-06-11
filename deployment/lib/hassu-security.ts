@@ -9,7 +9,7 @@ import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
 import * as macie from "aws-cdk-lib/aws-macie";
-
+import * as kms from "aws-cdk-lib/aws-kms";
 import { SSMParameterName } from "./config";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
@@ -140,11 +140,34 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
       description: "Detects Finnish personal identity codes (henkilötunnus format: DDMMYY+/-A###X)",
     });
 
+    // KMS key for Macie findings bucket — Macie requires KMS when configuring findings repository
+    const macieFindingsKey = new kms.Key(stack, "MacieFindingsKey", {
+      alias: `${Config.env}-macie-findings-key`,
+      description: "KMS key for Macie sensitive data discovery results",
+      enableKeyRotation: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+    macieFindingsKey.addToResourcePolicy(
+      new PolicyStatement({
+        sid: "AllowMacieToUseKey",
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal("macie.amazonaws.com")],
+        actions: ["kms:GenerateDataKey", "kms:Encrypt"],
+        resources: ["*"],
+        conditions: {
+          StringEquals: {
+            "aws:SourceAccount": stack.account,
+          },
+        },
+      })
+    );
+
     // Macie findings repository bucket
     const macieFindingsBucket = new Bucket(stack, "MacieFindingsBucket", {
       bucketName: `${Config.env}-macie-findings-${stack.account}`,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      encryption: BucketEncryption.S3_MANAGED,
+      encryption: BucketEncryption.KMS,
+      encryptionKey: macieFindingsKey,
       enforceSSL: true,
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ id: "delete-old-findings", expiration: Duration.days(90) }],
@@ -171,6 +194,11 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
     new CfnOutput(stack, "MacieFindingsBucketName", {
       value: macieFindingsBucket.bucketName,
       description: "Bucket for Macie findings - configure in Macie console Settings",
+    });
+
+    new CfnOutput(stack, "MacieFindingsKmsKeyArn", {
+      value: macieFindingsKey.keyArn,
+      description: "KMS key ARN for Macie findings - select this key in Macie console Settings",
     });
   }
 
