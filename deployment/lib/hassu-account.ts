@@ -406,7 +406,7 @@ export class HassuAccountStack extends Stack {
     });
 
     const alarmEmails = await config.getParameterNow("AlarmEmails");
-    alarmEmails.split(",").forEach((email, index) => {
+    alarmEmails.split(",").forEach((email) => {
       topic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
     });
 

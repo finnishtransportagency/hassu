@@ -434,7 +434,7 @@ export class HassuDatabaseStack extends Stack {
         role: backupPlanRole,
       });
 
-      if (Config.env === "dev" || Config.env === "prod") {
+      if (Config.env === "prod") {
         this.createRestoreTestingPlan(backupVaultName, backupPlanRole);
       }
     }
@@ -525,23 +525,19 @@ export class HassuDatabaseStack extends Stack {
       },
       targets: [
         new targets.SnsTopic(alarmTopic, {
-          message: events.RuleTargetInput.fromText(
-            [
-              `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}`,
-              "",
-              "Automated restore test for Hassu application backups (compliance).",
-              "Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups",
-              "and S3 PITR backups are restorable.",
-              "",
-              `Environment: ${Config.env}`,
-              `Resource type: ${events.EventField.fromPath("$.detail.resourceType")}`,
-              `Status: ${events.EventField.fromPath("$.detail.status")}`,
-              `Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}`,
-              `Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}`,
-              "",
-              "Results: AWS Backup console → Restore testing",
-              "Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()",
-            ].join("\n")
+          message: events.RuleTargetInput.fromMultilineText(
+            `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}
+
+Automated restore test for Hassu application backups (compliance). Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups and S3 PITR backups are restorable.
+
+Environment: ${Config.env}
+Resource type: ${events.EventField.fromPath("$.detail.resourceType")}
+Status: ${events.EventField.fromPath("$.detail.status")}
+Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}
+Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}
+
+Results: AWS Backup console → Restore testing
+Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()`
           ),
         }),
       ],
