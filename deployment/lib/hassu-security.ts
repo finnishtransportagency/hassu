@@ -158,6 +158,12 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
           StringEquals: {
             "aws:SourceAccount": stack.account,
           },
+          ArnLike: {
+            "aws:SourceArn": [
+              `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
+              `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
+            ],
+          },
         },
       })
     );
@@ -175,6 +181,27 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
 
     macieFindingsBucket.addToResourcePolicy(
       new PolicyStatement({
+        sid: "AllowMacieGetBucketLocation",
+        effect: Effect.ALLOW,
+        principals: [new ServicePrincipal("macie.amazonaws.com")],
+        actions: ["s3:GetBucketLocation"],
+        resources: [macieFindingsBucket.bucketArn],
+        conditions: {
+          StringEquals: {
+            "aws:SourceAccount": stack.account,
+          },
+          ArnLike: {
+            "aws:SourceArn": [
+              `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
+              `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
+            ],
+          },
+        },
+      })
+    );
+    macieFindingsBucket.addToResourcePolicy(
+      new PolicyStatement({
+        sid: "AllowMaciePutObject",
         effect: Effect.ALLOW,
         principals: [new ServicePrincipal("macie.amazonaws.com")],
         actions: ["s3:PutObject"],
@@ -182,6 +209,12 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
         conditions: {
           StringEquals: {
             "aws:SourceAccount": stack.account,
+          },
+          ArnLike: {
+            "aws:SourceArn": [
+              `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
+              `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
+            ],
           },
         },
       })
