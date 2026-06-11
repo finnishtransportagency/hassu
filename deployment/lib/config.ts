@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as ssm from "aws-cdk-lib/aws-ssm";
 import { SSM } from "@aws-sdk/client-ssm";
 import log from "loglevel";
@@ -81,6 +82,7 @@ export class Config extends BaseConfig {
   public static readonly uploadBucketName = `hassu-${BaseConfig.env}-upload`;
   public static readonly yllapitoBucketName = `hassu-${Config.env}-yllapito`;
   public static readonly publicBucketName = `hassu-${Config.env}-public`;
+  public static readonly quarantineBucketName = `hassu-${Config.env}-quarantine`;
   public static readonly reportBucketName = `hassu-reports`;
   public readonly dmzProxyEndpoint: string;
 

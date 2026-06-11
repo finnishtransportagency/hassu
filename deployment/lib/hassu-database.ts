@@ -13,6 +13,7 @@ import { SSMParameterName } from "./config";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as targets from "aws-cdk-lib/aws-events-targets";
+import { setupSecurityScanning } from "./hassu-security";
 import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -37,6 +38,7 @@ export class HassuDatabaseStack extends Stack {
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
   public publicBucket!: Bucket;
+  public quarantineBucket!: Bucket;
   private config!: Config;
 
   constructor(scope: Construct, awsAccountId: string) {
@@ -80,6 +82,12 @@ export class HassuDatabaseStack extends Stack {
     this.internalBucket = this.createInternalBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
+    if (Config.env === "dev" || Config.isDeveloperEnvironment()) {
+      this.quarantineBucket = await setupSecurityScanning({
+        stack: this,
+        yllapitoBucket: this.yllapitoBucket,
+      });
+    }
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
