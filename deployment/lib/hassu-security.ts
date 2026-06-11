@@ -5,16 +5,16 @@ import { BlockPublicAccess, Bucket, BucketEncryption } from "aws-cdk-lib/aws-s3"
 import * as events from "aws-cdk-lib/aws-events";
 import { Effect, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import * as sns from "aws-cdk-lib/aws-sns";
-import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { CfnMalwareProtectionPlan } from "aws-cdk-lib/aws-guardduty";
 import * as macie from "aws-cdk-lib/aws-macie";
+import { SSMParameterName } from "./config";
+import { StringParameter } from "aws-cdk-lib/aws-ssm";
 
 interface SecurityScanningProps {
   stack: Stack;
   yllapitoBucket: Bucket;
-  alertEmails: string;
 }
 
 export function createQuarantineBucket(stack: Stack): Bucket {
@@ -29,16 +29,12 @@ export function createQuarantineBucket(stack: Stack): Bucket {
 }
 
 export async function setupSecurityScanning(props: SecurityScanningProps): Promise<Bucket> {
-  const { stack, yllapitoBucket, alertEmails } = props;
+  const { stack, yllapitoBucket } = props;
 
   const quarantineBucket = createQuarantineBucket(stack);
 
-  const alertTopic = new sns.Topic(stack, "SecurityAlertTopic", {
-    displayName: "VLS Security Alerts",
-  });
-  alertEmails.split(",").forEach((email) => {
-    alertTopic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
-  });
+  const alarmTopicArn = StringParameter.valueForStringParameter(stack, SSMParameterName.HassuAlarmsSNSArn);
+  const alertTopic = sns.Topic.fromTopicArn(stack, "SecurityAlertTopic", alarmTopicArn);
 
   await createMalwareProtectionForS3(stack, yllapitoBucket, quarantineBucket, alertTopic);
   createMacieSensitiveDataScanning(stack, yllapitoBucket, alertTopic);
@@ -46,7 +42,7 @@ export async function setupSecurityScanning(props: SecurityScanningProps): Promi
   return quarantineBucket;
 }
 
-async function createMalwareProtectionForS3(stack: Stack, bucket: Bucket, quarantineBucket: Bucket, alertTopic: sns.Topic) {
+async function createMalwareProtectionForS3(stack: Stack, bucket: Bucket, quarantineBucket: Bucket, alertTopic: sns.ITopic) {
   const scanRole = new Role(stack, "GuardDutyMalwareScanRole", {
     assumedBy: new ServicePrincipal("malware-protection-plan.guardduty.amazonaws.com"),
   });
@@ -88,8 +84,8 @@ async function createMalwareProtectionForS3(stack: Stack, bucket: Bucket, quaran
 
   const quarantineLambda = new lambda.Function(stack, "MalwareQuarantineLambda", {
     runtime: lambda.Runtime.NODEJS_22_X,
-    handler: "index.handler",
-    code: lambda.Code.fromAsset("tools/malwareQuarantine"),
+    handler: "guarddutyMalwareQuarantine.handler",
+    code: lambda.Code.fromAsset("deployment/lib/lambda"),
     environment: {
       SOURCE_BUCKET: bucket.bucketName,
       QUARANTINE_BUCKET: quarantineBucket.bucketName,
@@ -132,7 +128,7 @@ Region: ${events.EventField.region}`
   });
 }
 
-function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTopic: sns.Topic) {
+function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTopic: sns.ITopic) {
   // Macie Session is an account-level resource — only create it once (in dev environment)
   if (Config.env === "dev") {
     new macie.CfnSession(stack, "MacieSession", {
@@ -184,8 +180,8 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
   // Weekly scheduled classification job for sensitive data scanning
   const macieJobLambda = new lambda.Function(stack, "MacieClassificationJobLambda", {
     runtime: lambda.Runtime.NODEJS_22_X,
-    handler: "index.handler",
-    code: lambda.Code.fromAsset("tools/macieSensitiveData"),
+    handler: "macieSensitiveData.handler",
+    code: lambda.Code.fromAsset("deployment/lib/lambda"),
     environment: {
       BUCKET_NAME: bucket.bucketName,
       ACCOUNT_ID: stack.account,

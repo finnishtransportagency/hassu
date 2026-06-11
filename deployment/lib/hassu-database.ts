@@ -83,11 +83,9 @@ export class HassuDatabaseStack extends Stack {
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
     if (Config.env === "dev" || Config.isDeveloperEnvironment()) {
-      const alertEmails = await this.config.getParameterNow("SecurityAlertEmail");
       this.quarantineBucket = await setupSecurityScanning({
         stack: this,
         yllapitoBucket: this.yllapitoBucket,
-        alertEmails,
       });
     }
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
