@@ -1,6 +1,15 @@
 // Contains code generated or recommended by Amazon Q
 import { Construct } from "constructs";
-import { Aws, aws_codebuild, aws_codeconnections, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import {
+  Aws,
+  aws_codebuild,
+  aws_codeconnections,
+  aws_ecr,
+  CfnOutput,
+  Duration,
+  RemovalPolicy,
+  Stack,
+} from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
@@ -27,6 +36,7 @@ import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { AwsApi, LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import * as macie from "aws-cdk-lib/aws-macie";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -68,6 +78,9 @@ export class HassuAccountStack extends Stack {
     await this.createBastionHost(config, vpc, alarmTopic);
     await this.createKeycloakLambda(vpc);
     await this.configureNextJSImageECR(config);
+    if (Config.isDevAccount()) {
+      this.ensureMacieSession();
+    }
   }
 
   private async createKeycloakLambda(vpc: IVpc) {
@@ -559,5 +572,17 @@ export class HassuAccountStack extends Stack {
         ],
       })
     );
+  }
+
+  /**
+   * Enables Macie session for this account.
+   * Account-level resource — deployed once, persists across environment stacks.
+   * Before first deploy: run `aws macie2 disable-macie` if session already exists outside CFN.
+   */
+  private ensureMacieSession() {
+    new macie.CfnSession(this, "MacieSession", {
+      status: "ENABLED",
+      findingPublishingFrequency: "FIFTEEN_MINUTES",
+    });
   }
 }
