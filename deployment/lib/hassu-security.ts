@@ -129,12 +129,10 @@ Region: ${events.EventField.region}`
 }
 
 function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTopic: sns.ITopic) {
-  // Macie Session is an account-level resource — only create it once (in dev environment)
+  // Macie Session is an account-level resource that must already exist in the account.
+  // It cannot be created via CloudFormation if it already exists.
+  // Enable Macie manually in the AWS Console if not already active.
   if (Config.env === "dev") {
-    new macie.CfnSession(stack, "MacieSession", {
-      status: "ENABLED",
-      findingPublishingFrequency: "FIFTEEN_MINUTES",
-    });
 
     // Custom identifier for Finnish personal identity codes (henkilötunnus)
     new macie.CfnCustomDataIdentifier(stack, "FinnishPersonalIdIdentifier", {
