@@ -136,7 +136,7 @@ export default function Lisatiedot({ index, kielitiedot, tilaisuustyyppi }: Prop
       {toissijainenKaannettavaKieli && ensisijainenKaannettavaKieli && (
         <TextInput
           label={label({
-            label: "Tiivistetty hankkeen sisällönkuvaus",
+            label: "Lisätiedot",
             inputLanguage: toissijainenKaannettavaKieli,
             kielitiedot,
           })}
