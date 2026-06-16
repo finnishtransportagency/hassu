@@ -144,6 +144,7 @@ const projektiKunSuunnitteluvaiheOnTallennettuJulkaistavaksi: DBProjekti = {
         SUOMI: {
           aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
           aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
+          aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
         },
         RUOTSI: undefined,
       },

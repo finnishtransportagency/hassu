@@ -8,7 +8,7 @@ import { IllegalArgumentError } from "hassu-common/error";
 import { DBProjekti } from "../../../src/database/model";
 import { projektiDatabase } from "../../../src/database/projektiDatabase";
 import { dateToString, nyt } from "../../../src/util/dateUtil";
-import { LadattuTiedostoTila, UudelleenkuulutusTila } from "hassu-common/graphql/apiModel";
+import { KuulutusJulkaisuTila, LadattuTiedostoTila, UudelleenkuulutusTila } from "hassu-common/graphql/apiModel";
 import { UserFixture } from "../../fixture/userFixture";
 import { userService } from "../../../src/user";
 import { S3Mock } from "../../aws/awsMock";
@@ -16,6 +16,7 @@ import { expect } from "chai";
 import { SchedulerMock } from "../../../integrationtest/api/testUtil/util";
 import { parameters } from "../../../src/aws/parameters";
 import { assertIsDefined } from "../../../src/util/assertions";
+import { fileService } from "../../../src/files/fileService";
 
 describe("aloitusKuulutusTilaManager", () => {
   let saveProjektiStub: sinon.SinonStub;
@@ -180,5 +181,31 @@ describe("aloitusKuulutusTilaManager", () => {
     await aloitusKuulutusTilaManager.uudelleenkuuluta(projekti);
     const savedProjekti: Partial<DBProjekti> = saveProjektiStub.getCall(0).firstArg;
     expect(savedProjekti.aloitusKuulutus?.aloituskuulutusSaamePDFt).to.eql(undefined);
+  });
+
+  it("should delete all PDFs including kiinteistönomistaja PDF when rejecting", async function () {
+    const deleteStub = sinon.stub(fileService, "deleteYllapitoFileFromProjekti").resolves();
+    sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "delete").resolves();
+    const oid = projekti.oid;
+    projekti.aloitusKuulutusJulkaisut = [
+      {
+        id: 1,
+        tila: KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+        aloituskuulutusPDFt: {
+          SUOMI: {
+            aloituskuulutusPDFPath: "/aloituskuulutus/1/kuulutus.pdf",
+            aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/ilmoitus.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/kiinteistonomistaja.pdf",
+          },
+        },
+      } as any,
+    ];
+    await aloitusKuulutusTilaManager.reject(projekti, "Hylkäyksen syy");
+    expect(deleteStub.callCount).to.equal(3);
+    expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/kuulutus.pdf" }))).to.be.true;
+    expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/ilmoitus.pdf" }))).to.be.true;
+    expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/kiinteistonomistaja.pdf" }))).to.be
+      .true;
+    deleteStub.restore();
   });
 });

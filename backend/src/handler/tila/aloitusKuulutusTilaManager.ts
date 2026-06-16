@@ -278,7 +278,13 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
         projekti,
         kieli
       );
-      return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath };
+      const aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath = await createAloituskuulutusPDF(
+        AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+        julkaisu,
+        projekti,
+        kieli
+      );
+      return { aloituskuulutusPDFPath, aloituskuulutusIlmoitusPDFPath, aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath };
     }
 
     julkaisuWaitingForApproval.aloituskuulutusPDFt = {};
@@ -313,6 +319,11 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
         await fileService.deleteYllapitoFileFromProjekti({
           oid,
           filePathInProjekti: pdfs.aloituskuulutusIlmoitusPDFPath,
+          reason: "Aloituskuulutus rejected",
+        });
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath,
           reason: "Aloituskuulutus rejected",
         });
       }

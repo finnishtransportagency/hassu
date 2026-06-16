@@ -54,6 +54,7 @@ export type AloitusKuulutus = {
 export type AloitusKuulutusPDF = {
   aloituskuulutusPDFPath: string;
   aloituskuulutusIlmoitusPDFPath: string;
+  aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath?: string;
 };
 
 export type KuulutusSaamePDFt = SaameLocalizedMap<KuulutusSaamePDF>;

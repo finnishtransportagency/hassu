@@ -36,6 +36,7 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
         },

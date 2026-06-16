@@ -45,7 +45,7 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
     const s3Paths = new S3Paths(aloituskuulutusPaths);
     forSuomiRuotsiDo((kieli) => {
       const aloituskuulutusPDF = julkaisu.aloituskuulutusPDFt?.[kieli];
-      s3Paths.pushYllapitoFilesIfDefined(aloituskuulutusPDF?.aloituskuulutusPDFPath, aloituskuulutusPDF?.aloituskuulutusIlmoitusPDFPath);
+      s3Paths.pushYllapitoFilesIfDefined(aloituskuulutusPDF?.aloituskuulutusPDFPath, aloituskuulutusPDF?.aloituskuulutusIlmoitusPDFPath, aloituskuulutusPDF?.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath);
     });
 
     forEverySaameDo((kieli) => {
@@ -75,7 +75,8 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
               await this.deleteFilesWhenEpaaktiivinen(
                 julkaisu.aloituskuulutusPDFt?.[kieli],
                 "aloituskuulutusPDFPath",
-                "aloituskuulutusIlmoitusPDFPath"
+                "aloituskuulutusIlmoitusPDFPath",
+                "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath"
               )
             ) {
               modifiedJulkaisut.add(julkaisu);

@@ -67,6 +67,13 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
                     {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                   </DownloadLink>
                 </div>
+                {ensisijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath && (
+                  <div>
+                    <DownloadLink href={ensisijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath}>
+                      {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath).fileName}
+                    </DownloadLink>
+                  </div>
+                )}
               </div>
             )}
 
@@ -93,6 +100,13 @@ export default function AloituskuulutusTiedostot({ aloituskuulutusjulkaisu, oid,
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                           </DownloadLink>
                         </div>
+                        {toissijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath}>
+                              {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )}
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
