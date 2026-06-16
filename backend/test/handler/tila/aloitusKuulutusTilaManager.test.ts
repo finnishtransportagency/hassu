@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 /* tslint:disable:only-arrow-functions */
 
 import { aloitusKuulutusTilaManager } from "../../../src/handler/tila/aloitusKuulutusTilaManager";
@@ -21,13 +22,13 @@ describe("aloitusKuulutusTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
-  let isSuomiFiIntegrationEnabledStub: sinon.SinonStub;
+  let isSuomiFiViestitIntegrationEnabledStub: sinon.SinonStub;
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
-    isSuomiFiIntegrationEnabledStub = sinon.stub(parameters, "isSuomiFiIntegrationEnabled").returns(Promise.resolve(false));
+    isSuomiFiViestitIntegrationEnabledStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {
@@ -114,7 +115,7 @@ describe("aloitusKuulutusTilaManager", () => {
   });
 
   it("should validate omistajahaku status when SuomiFi integration is enabled", async function () {
-    isSuomiFiIntegrationEnabledStub.returns(Promise.resolve(true));
+    isSuomiFiViestitIntegrationEnabledStub.returns(Promise.resolve(true));
     projekti.omistajahaku = undefined;
     await expect(aloitusKuulutusTilaManager.validateSendForApproval(projekti)).to.eventually.be.rejectedWith(
       IllegalArgumentError,
@@ -123,7 +124,7 @@ describe("aloitusKuulutusTilaManager", () => {
   });
 
   it("should not validate omistajahaku status when SuomiFi integration is disabled", async function () {
-    isSuomiFiIntegrationEnabledStub.returns(Promise.resolve(false));
+    isSuomiFiViestitIntegrationEnabledStub.returns(Promise.resolve(false));
     projekti.omistajahaku = undefined;
     await expect(aloitusKuulutusTilaManager.validateSendForApproval(projekti)).to.eventually.be.fulfilled;
   });
