@@ -13,6 +13,7 @@ import { SSMParameterName } from "./config";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as targets from "aws-cdk-lib/aws-events-targets";
+import { setupSecurityScanning } from "./hassu-security";
 import { createResourceGroup } from "./common";
 
 // These should correspond to CfnOutputs produced by this stack
@@ -37,6 +38,7 @@ export class HassuDatabaseStack extends Stack {
   public yllapitoBucket!: Bucket;
   public internalBucket!: Bucket;
   public publicBucket!: Bucket;
+  public quarantineBucket!: Bucket;
   private config!: Config;
 
   constructor(scope: Construct, awsAccountId: string) {
@@ -80,6 +82,12 @@ export class HassuDatabaseStack extends Stack {
     this.internalBucket = this.createInternalBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
+    if (Config.env === "dev" || Config.isDeveloperEnvironment()) {
+      this.quarantineBucket = await setupSecurityScanning({
+        stack: this,
+        yllapitoBucket: this.yllapitoBucket,
+      });
+    }
     createResourceGroup(this); // Ympäristön valitsemiseen esim. CloudWatchissa
   }
 
@@ -426,7 +434,7 @@ export class HassuDatabaseStack extends Stack {
         role: backupPlanRole,
       });
 
-      if (Config.env === "dev" || Config.env === "prod") {
+      if (Config.env === "prod") {
         this.createRestoreTestingPlan(backupVaultName, backupPlanRole);
       }
     }
@@ -517,23 +525,19 @@ export class HassuDatabaseStack extends Stack {
       },
       targets: [
         new targets.SnsTopic(alarmTopic, {
-          message: events.RuleTargetInput.fromText(
-            [
-              `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}`,
-              "",
-              "Automated restore test for Hassu application backups (compliance).",
-              "Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups",
-              "and S3 PITR backups are restorable.",
-              "",
-              `Environment: ${Config.env}`,
-              `Resource type: ${events.EventField.fromPath("$.detail.resourceType")}`,
-              `Status: ${events.EventField.fromPath("$.detail.status")}`,
-              `Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}`,
-              `Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}`,
-              "",
-              "Results: AWS Backup console → Restore testing",
-              "Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()",
-            ].join("\n")
+          message: events.RuleTargetInput.fromMultilineText(
+            `[${Config.env}] AWS Backup Restore Testing: ${events.EventField.fromPath("$.detail.status")}
+
+Automated restore test for Hassu application backups (compliance). Runs semi-annually (June 1st and December 1st) to verify that DynamoDB snapshot backups and S3 PITR backups are restorable.
+
+Environment: ${Config.env}
+Resource type: ${events.EventField.fromPath("$.detail.resourceType")}
+Status: ${events.EventField.fromPath("$.detail.status")}
+Restore job ID: ${events.EventField.fromPath("$.detail.restoreJobId")}
+Created resource: ${events.EventField.fromPath("$.detail.createdResourceArn")}
+
+Results: AWS Backup console → Restore testing
+Configuration: deployment/lib/hassu-database.ts → createRestoreTestingPlan()`
           ),
         }),
       ],

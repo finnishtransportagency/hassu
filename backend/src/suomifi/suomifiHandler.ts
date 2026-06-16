@@ -349,6 +349,49 @@ async function createGenerateEvent(
     };
   } else if (
     asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
+    projektiFromDB.aloitusKuulutusJulkaisut
+  ) {
+    const aloitusJulkaisu = projektiFromDB.aloitusKuulutusJulkaisut[projektiFromDB.aloitusKuulutusJulkaisut.length - 1];
+    // Käytetään nahtavillaoloVaiheJulkaisut dataa jos sellainen löytyy, muuten luodaan dummy-data
+    const julkaisu =
+      projektiFromDB.nahtavillaoloVaiheJulkaisut?.[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1] ??
+      ({
+        id: 1,
+        kuulutusPaiva: aloitusJulkaisu.kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: aloitusJulkaisu.kuulutusPaiva,
+        hankkeenKuvaus: { SUOMI: "Suunnittelu on aloitettu" },
+        kielitiedot: aloitusJulkaisu.kielitiedot,
+        velho: aloitusJulkaisu.velho,
+        yhteystiedot: aloitusJulkaisu.yhteystiedot,
+        tila: aloitusJulkaisu.tila,
+      } as any);
+    return {
+      createNahtavillaoloKuulutusPdf: {
+        asiakirjaTyyppi,
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
+        asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
+        kayttoOikeudet: projektiFromDB.kayttoOikeudet,
+        kieli: Kieli.SUOMI,
+        linkkiAsianhallintaan: undefined,
+        luonnos: false,
+        lyhytOsoite: projektiFromDB.lyhytOsoite,
+        nahtavillaoloVaihe: julkaisu,
+        oid: projektiFromDB.oid,
+        velho: projektiFromDB.velho!,
+        vahainenMenettely: projektiFromDB.vahainenMenettely,
+        euRahoitusLogot: projektiFromDB.euRahoitusLogot,
+        suunnitteluSopimus: projektiFromDB.suunnitteluSopimus as SuunnitteluSopimus | undefined,
+        osoite: {
+          nimi: kohde.nimi,
+          katuosoite: kohde.lahiosoite,
+          postinumero: kohde.postinumero,
+          postitoimipaikka: kohde.postitoimipaikka,
+        },
+      },
+    };
+  } else if (
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
     tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO &&
     projektiFromDB.nahtavillaoloVaiheJulkaisut
   ) {

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   AsiakirjaTyyppi,
   Kieli,
@@ -144,7 +145,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (!this.getVaiheAineisto(projekti).isReady()) {
       throw new IllegalAineistoStateError();
     }
-    const suomifiViestitEnabled = await parameters.isSuomiFiIntegrationEnabled();
+    const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
       const msg = "Kiinteistönomistajia ei ole haettu ennen aloituskuulutuksen hyväksyntää";
       log.error(msg);

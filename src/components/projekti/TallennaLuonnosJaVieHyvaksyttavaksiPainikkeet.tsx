@@ -103,7 +103,8 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             }
             if (
               data?.suomifiViestitEnabled &&
-              (tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
+              (tilasiirtymaTyyppi === TilasiirtymaTyyppi.ALOITUSKUULUTUS ||
+                tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
                 tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
               !projekti.omistajahaku?.status
             ) {
