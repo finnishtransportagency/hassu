@@ -289,8 +289,8 @@ Ystävällisin terveisin
 Väylävirasto",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
-    "kuvaus": "T412_2 Ilmoitus kiinteistönomistajille suunnittelun aloittamisesta",
-    "nimi": "T412_2 Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+    "kuvaus": "Ilmoitus kiinteistönomistajille suunnittelun aloittamisesta",
+    "nimi": "Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",

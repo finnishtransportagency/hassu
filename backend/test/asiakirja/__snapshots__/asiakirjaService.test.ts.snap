@@ -4,7 +4,7 @@ exports[`asiakirjaService should encode HTML successfully 1`] = `"Väylävirasto
 
 exports[`asiakirjaService should generate aloituskuulutus kiinteistonomistajanotifikaatio pdf successfully 1`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_T412_2 Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+  "fileName": "esikatselu_aloituskuulutus_Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
   "textContent": "Uudenmaan ELY-keskusPL 3600521 HELSINKIMatti Meikäläinenundefined00100 HELSINKIELY/1/2022
 
 
@@ -51,7 +51,7 @@ LUONNOSLUONNOS",
 
 exports[`asiakirjaService should generate aloituskuulutus kiinteistonomistajanotifikaatio pdf successfully 2`] = `
 Object {
-  "fileName": "esikatselu_aloituskuulutus_T412_2 Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta sv.pdf",
+  "fileName": "esikatselu_aloituskuulutus_Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta sv.pdf",
   "textContent": "Uudenmaan ELY-keskusPL 3600521 HELSINKIAnna Anderssonundefined00100 HELSINGFORSELY/1/2022
 
 
