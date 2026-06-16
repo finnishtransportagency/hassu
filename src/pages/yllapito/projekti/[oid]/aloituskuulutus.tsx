@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -417,7 +418,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   </ContentSpacer>
                 </Section>
                 <KuulutuksenYhteystiedot projekti={projekti} />
-                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
+                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} oid={projekti.oid} omistajahakuStatus={projekti.omistajahaku?.status} />
               </fieldset>
             </form>
           </FormProvider>
