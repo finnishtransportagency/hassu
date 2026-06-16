@@ -133,7 +133,7 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
   private tietosuojavastaavanYhteystiedot(): PDFStructureElement {
     return this.doc.struct("P", {}, () => {
       this.doc.text(this.kutsuAdapter.text("lisatietoja_antaa_tietosuojavastaava"));
-      this.doc.text(this.kutsuAdapter.kirjaamo);
+      this.doc.text(this.isVaylaTilaaja() ? "tietosuojavastaava@vayla.fi" : "tietosuoja.keha@elinvoimakeskus.fi");
     });
   }
 
