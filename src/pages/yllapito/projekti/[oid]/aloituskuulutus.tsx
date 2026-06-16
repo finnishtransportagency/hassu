@@ -30,6 +30,7 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
 import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/AloituskuulutusLukunakyma";
 import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
+import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
@@ -418,7 +419,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   </ContentSpacer>
                 </Section>
                 <KuulutuksenYhteystiedot projekti={projekti} />
-                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} oid={projekti.oid} omistajahakuStatus={projekti.omistajahaku?.status} />
+                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
+                <KiinteistonOmistajatUudelleenkuulutus
+                  oid={projekti.oid}
+                  uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
+                  vaihe={Vaihe.ALOITUSKUULUTUS}
+                />
               </fieldset>
             </form>
           </FormProvider>
