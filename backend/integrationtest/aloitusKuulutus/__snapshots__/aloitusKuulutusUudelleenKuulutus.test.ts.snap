@@ -168,6 +168,35 @@ Object {
   "mockedtime": "2020-01-01T02:00",
   "obj": Array [
     Object {
+      "nimi": "Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+      "textContent": "HASSU/123/2023
+
+
+1.1.2031
+Ilmoitus henkilötietojen käsittelystä
+Hyvä kiinteistönomistaja,
+Suomiseloste uudelleenkuulutukselle
+Nokia tekee tiesuunnitelmaa alueellesi. Lähetämme tämän tiedotteen henkilöille, jotka Maanmittauslaitoksen (MML) kiinteistötietojärjestelmän mukaan omistavat kiinteistön suunnittelualueella tai sen läheisyydessä. Suunnittelun edetessä suunnittelualue ja tieto vaikutusalueella olevista kiinteistöistä tarkentuu. Tämä kirje ei edellytä teiltä toimenpiteitä.
+
+Suunnitelman aloituskuulutus on julkaistu 1.1.2031. Suunnitelman etenemistä voi seurata verkossa osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus. Sivujen kautta voit jatkossa kysyä ja antaa palautetta suunnitelmasta ja siten osallistua suunnitteluun.
+
+Nokia käsittelee suunnittelun aikana henkilötietojanne, kuten kiinteistötunnusta ja yhteystietojanne. Näitä tietoja käytetään suunnittelun etenemisestä tiedottamiseen sekä suunnitelmasta annettujen palautteiden, muistutusten ja valitusten käsittelyyn. Nokia saa henkilötiedot Maanmittauslaitokselta.
+
+Teillä on seuraavat oikeudet tietosuojaan liittyen:
+
+	- Oikeus saada tietoa henkilötietojenne käsittelystä. Oikeus saada kopio tiedoistanne.
+	- Oikeus saada tietonne korjatuksi, jos niissä on virhe.
+	- Oikeus rajoittaa tai vastustaa tietojenne käsittelyä, jos edellytykset siihen täyttyvät.
+	- Oikeus tehdä valitus Tietosuojavaltuutetulle.
+Jos tiedoissanne on virhe, ettekä omista kiinteistöä suunnittelualueella, pyydämme ilmoittamaan siitä Väyläviraston kirjaamoon (kirjaamo@vayla.vayla). Lisäksi pyydämme ottamaan yhteyttä Maanmittauslaitokseen tietojen korjaamiseksi (https://www.maanmittauslaitos.fi/asiakaspalvelu).
+
+Nokia käyttää henkilötietojen käsittelyssä apunaan sopimuskumppaneitaan. Henkilötietoja luovutetaan esimerkiksi toisille viranomaisille osana väylähanketta ja sen suunnittelua. Nokia noudattaa toiminnassaan huolellisuutta ja varmistaa, että tietosuoja ja tietoturvallisuus toteutuvat tietoja käsiteltäessä. Henkilötietoja säilytetään vain tarpeellinen aika. Lisätietoja tietosuojakäytännöistä voitte lukea verkkosivuiltamme https://www.vayla.fi/tietosuoja.
+
+A-tunnus1 HassuProjektipäällikköCGI Suomi Oy
+Lisätietoja antaa tietosuojavastaavatietosuojavastaava@vayla.fi
+",
+    },
+    Object {
       "nimi": "T412 Aloituskuulutus.pdf",
       "textContent": "HASSU/123/2023
 
