@@ -149,7 +149,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
       const msg = "Kiinteistönomistajia ei ole haettu ennen aloituskuulutuksen hyväksyntää";
       log.error(msg);
-      throw new Error(msg);
+      throw new IllegalArgumentError(msg);
     }
   }
 

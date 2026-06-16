@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 /* tslint:disable:only-arrow-functions */
 
 import { aloitusKuulutusTilaManager } from "../../../src/handler/tila/aloitusKuulutusTilaManager";
@@ -21,11 +22,13 @@ describe("aloitusKuulutusTilaManager", () => {
   let projekti: DBProjekti;
   const userFixture = new UserFixture(userService);
   new S3Mock();
+  let isSuomiFiViestitIntegrationEnabledStub: sinon.SinonStub;
   before(() => {
     saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti");
     sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
+    isSuomiFiViestitIntegrationEnabledStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").returns(Promise.resolve(false));
   });
 
   beforeEach(() => {
@@ -109,6 +112,21 @@ describe("aloitusKuulutusTilaManager", () => {
       alkuperainenHyvaksymisPaiva: "2022-03-21",
       alkuperainenKuulutusPaiva: projekti.aloitusKuulutusJulkaisut![0].kuulutusPaiva,
     });
+  });
+
+  it("should validate omistajahaku status when SuomiFi integration is enabled", async function () {
+    isSuomiFiViestitIntegrationEnabledStub.returns(Promise.resolve(true));
+    projekti.omistajahaku = undefined;
+    await expect(aloitusKuulutusTilaManager.validateSendForApproval(projekti)).to.eventually.be.rejectedWith(
+      IllegalArgumentError,
+      "Kiinteistönomistajia ei ole haettu ennen aloituskuulutuksen hyväksyntää"
+    );
+  });
+
+  it("should not validate omistajahaku status when SuomiFi integration is disabled", async function () {
+    isSuomiFiViestitIntegrationEnabledStub.returns(Promise.resolve(false));
+    projekti.omistajahaku = undefined;
+    await expect(aloitusKuulutusTilaManager.validateSendForApproval(projekti)).to.eventually.be.fulfilled;
   });
 
   it("should remove saamePDFs from old kuulutus when making uudelleenkuulutus", async function () {

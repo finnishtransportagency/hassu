@@ -272,7 +272,16 @@ type PaivitaLahetysStatusParameter = {
   lahetysTapa?: LahetysTapa;
 };
 
-async function paivitaLahetysStatus({ oid, id, omistaja, tila, approvalType, traceId, lahetysaika, lahetysTapa }: PaivitaLahetysStatusParameter) {
+async function paivitaLahetysStatus({
+  oid,
+  id,
+  omistaja,
+  tila,
+  approvalType,
+  traceId,
+  lahetysaika,
+  lahetysTapa,
+}: PaivitaLahetysStatusParameter) {
   const params = new UpdateCommand({
     TableName: omistaja ? getKiinteistonomistajaTableName() : getMuistuttajaTableName(),
     Key: {
@@ -308,7 +317,51 @@ async function createGenerateEvent(
   projektiFromDB: DBProjekti,
   kohde: Kohde
 ): Promise<GeneratePDFEvent | undefined> {
+  // PLACEHOLDER: Aloituskuulutukselle käytetään väliaikaisesti nähtävilläolovaiheen PDF-generointia (HASSUYP-872)
   if (
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
+    projektiFromDB.aloitusKuulutusJulkaisut
+  ) {
+    const aloitusJulkaisu = projektiFromDB.aloitusKuulutusJulkaisut[projektiFromDB.aloitusKuulutusJulkaisut.length - 1];
+    // Käytetään nahtavillaoloVaiheJulkaisut dataa jos sellainen löytyy, muuten luodaan dummy-data
+    const julkaisu =
+      projektiFromDB.nahtavillaoloVaiheJulkaisut?.[projektiFromDB.nahtavillaoloVaiheJulkaisut.length - 1] ??
+      ({
+        id: 1,
+        kuulutusPaiva: aloitusJulkaisu.kuulutusPaiva,
+        kuulutusVaihePaattyyPaiva: aloitusJulkaisu.kuulutusPaiva,
+        hankkeenKuvaus: { SUOMI: "Suunnittelu on aloitettu" },
+        kielitiedot: aloitusJulkaisu.kielitiedot,
+        velho: aloitusJulkaisu.velho,
+        yhteystiedot: aloitusJulkaisu.yhteystiedot,
+        tila: aloitusJulkaisu.tila,
+      } as any);
+    return {
+      createNahtavillaoloKuulutusPdf: {
+        asiakirjaTyyppi,
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
+        asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
+        kayttoOikeudet: projektiFromDB.kayttoOikeudet,
+        kieli: Kieli.SUOMI,
+        linkkiAsianhallintaan: undefined,
+        luonnos: false,
+        lyhytOsoite: projektiFromDB.lyhytOsoite,
+        nahtavillaoloVaihe: julkaisu,
+        oid: projektiFromDB.oid,
+        velho: projektiFromDB.velho!,
+        vahainenMenettely: projektiFromDB.vahainenMenettely,
+        euRahoitusLogot: projektiFromDB.euRahoitusLogot,
+        suunnitteluSopimus: projektiFromDB.suunnitteluSopimus as SuunnitteluSopimus | undefined,
+        osoite: {
+          nimi: kohde.nimi,
+          katuosoite: kohde.lahiosoite,
+          postinumero: kohde.postinumero,
+          postitoimipaikka: kohde.postitoimipaikka,
+        },
+      },
+    };
+  } else if (
     asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
     tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO &&
     projektiFromDB.nahtavillaoloVaiheJulkaisut
@@ -416,7 +469,11 @@ async function getFilesAndLanguages(
 }
 
 function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti): AsiakirjaTyyppi | undefined {
-  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
+  // PLACEHOLDER: Käytetään väliaikaisesti nähtävilläolovaiheen asiakirjatyyppiä
+  // kunnes aloituskuulutuksen oma PDF-generointilogiikka on valmis (HASSUYP-872)
+  if (tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS && projektiFromDB.aloitusKuulutusJulkaisut) {
+    return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
+  } else if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
     return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE && projektiFromDB.hyvaksymisPaatosVaiheJulkaisut) {
     return AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE;
@@ -477,7 +534,30 @@ async function getFinnishFileAsBuffer(
 }
 
 function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti, kielet: Kieli[]) {
-  if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+  // PLACEHOLDER: Käytetään väliaikaisesti nähtävilläolovaiheen saateviestin pohjaa (HASSUYP-872)
+  if (tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
+    let sisalto = `Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman aloittamisesta. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
+    if (kielet.includes(Kieli.RUOTSI)) {
+      sisalto += `
+
+Hej,
+
+Ni har fått ett brev med information om planläggningens början. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
+
+Med vänlig hälsning
+${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.RUOTSI)}
+`;
+    }
+    return {
+      otsikko: `Ilmoitus suunnitelman aloittamisesta${kielet.includes(Kieli.RUOTSI) ? " / Meddelande om planläggningens början" : ""}`,
+      sisalto,
+    };
+  } else if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
     let sisalto = `Hei,
 
 Olette saaneet kirjeen, jossa kerrotaan suunnitelman nähtäville asettamisesta sekä mahdollisuudesta tehdä suunnitelmasta muistutus. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
@@ -631,12 +711,7 @@ async function lahetaPdfViesti({
 
 // REST-rajapinta tukee pelkän paperikirjeen lähettämistä pelkällä osoitteella ilman hetua/y-tunnusta
 function isOmistajanTiedotOk(kohde: DBOmistaja): boolean {
-  return (
-    (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) &&
-    !!kohde.jakeluosoite &&
-    !!kohde.paikkakunta &&
-    !!kohde.postinumero
-  );
+  return (!!kohde.nimi || (!!kohde.etunimet && !!kohde.sukunimi)) && !!kohde.jakeluosoite && !!kohde.paikkakunta && !!kohde.postinumero;
 }
 
 function isMuistuttujanTiedotOk(kohde: DBMuistuttaja): boolean {

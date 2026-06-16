@@ -271,6 +271,35 @@ Väylävirasto",
 }
 `;
 
+exports[`suomifiHandler omistajan pdf viesti suomi.fi aloituskuulutus 1`] = `
+Object {
+  "hetu": "ABC",
+  "kustannuspaikka": undefined,
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus suunnitelman aloittamisesta",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnitelman aloittamisesta. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin
+Väylävirasto",
+  "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+  "tiedosto": Object {
+    "kuvaus": "T415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta",
+    "nimi": "T415 Ilmoitus kiinteistonomistajille nahtaville asettamisesta.pdf",
+    "sisalto": Object {
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "ytunnus": undefined,
+}
+`;
+
 exports[`suomifiHandler omistajan pdf viesti suomi.fi hyväksymispäätös 1`] = `
 Object {
   "hetu": "ABC",
