@@ -105,7 +105,7 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     return [
       this.paragraphFromKey("kiinteistonomistaja_otsikko"),
       this.uudelleenKuulutusParagraph(),
-      this.paragraphFromKey("kiinteistonomistaja_kappale1"),
+      this.pluralParagraphFromKey("kiinteistonomistaja_kappale1"),
       this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.paragraphFromKey("kiinteistonomistaja_kappale2"),
       this.paragraphFromKey("kiinteistonomistaja_kappale3"),

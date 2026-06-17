@@ -266,7 +266,8 @@
       "jakelu2": "Erillisen jakelun mukaan",
       "jakelu3": "Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä",
       "tiedoksi1": "Tiedoksi",
-      "tiedoksi2": "{{tilaajaGenetiivi}} kirjaamo"
+      "tiedoksi2": "{{tilaajaGenetiivi}} kirjaamo",
+      "kiinteistonomistaja_kappale1_monikko": "{{kuuluttaja_pitka}} laativat {{suunnitelmaa}} {{suunnitelman_nimi}}. Saat kirjeen, koska Maanmittauslaitoksen Kiinteistötietojärjestelmästä saatujen tietojen mukaan omistat kiinteistön edellä mainitun {{suunnitelman}} suunnittelualueella tai sen lähellä. Suunnittelun aikana {{kuuluttaja_pitka}} käsittelevät henkilötietojanne, kuten kiinteistötunnusta, yhteystietoja sekä henkilötunnusta, jota käytetään suunnittelun etenemisestä tiedottamisessa."
     },
     "on_kyse_vahaisesta_menettelysta": "{{suunnitelman_isolla}} osalta kyse on {{vahainen_menettely_lakiviite}} mukaisesta vähäisestä {{tien}} parantamisesta, joka ei muuta paikallisia liikenneolosuhteita ja jonka vaikutukset ovat muutenkin vähäiset.",
     "vahainen_menettely_info": "Suunnitelma kohdistuu pienelle alueelle ja suunnitelma on vaikutuksiltaan vähäinen. Vuorovaikutus suunnitelmista käydään suoraan asianomaisen ja kunnan kanssa.",
