@@ -174,26 +174,20 @@ Object {
 
 1.1.2031
 Ilmoitus henkilötietojen käsittelystä
-Hyvä kiinteistönomistaja,
+Hyvä suunnittelualueen ja sen lähialueen kiinteistönomistaja,
 Suomiseloste uudelleenkuulutukselle
-Nokia tekee tiesuunnitelmaa alueellesi. Lähetämme tämän tiedotteen henkilöille, jotka Maanmittauslaitoksen (MML) kiinteistötietojärjestelmän mukaan omistavat kiinteistön suunnittelualueella tai sen läheisyydessä. Suunnittelun edetessä suunnittelualue ja tieto vaikutusalueella olevista kiinteistöistä tarkentuu. Tämä kirje ei edellytä teiltä toimenpiteitä.
+Nokia laatii tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1. Saat kirjeen, koska Maanmittauslaitoksen Kiinteistötietojärjestelmästä saatujen tietojen mukaan omistat kiinteistön edellä mainitun tiesuunnitelman suunnittelualueella tai sen lähellä. Suunnittelun aikana Nokia käsittelee henkilötietojanne, kuten kiinteistötunnusta, yhteystietoja sekä henkilötunnusta, jota käytetään suunnittelun etenemisestä tiedottamisessa.
+Suunnittelun edetessä suunnittelualue tarkentuu, jolloin myös kiinteistöomistajien tiedot päivitetään. Kaikille tämän kirjeen vastaanottajien kiinteistöille ei välttämättä kohdistu laadittavassa suunnitelmassa toimenpiteitä tai vaikutuksia, minkä vuoksi kaikki tämän kirjeen vastaanottajat eivät välttämättä saa jatkossa suunnitelmaa koskevia kirjeitä.
+Jos Kiinteistötietojärjestelmästä saaduissa tiedoissa on virheitä, ettekä omista kiinteistöä suunnittelualueella, teidän tulee olla yhteydessä suunnittelun projektipäällikköön sekä Maanmittauslaitokseen tietojenne korjaamiseksi.
+Suunnittelun käynnistymisestä on julkaistu aloituskuulutus 1.1.2031. Voit tutustua kuulutukseen verkossa osoitteessa https://localhost:3000/s/3c1d. Samalla sivulla voit seurata suunnittelun etenemistä. Sivulla mm. ilmoitetaan mahdollisuudesta saada tietoa suunnitelmasta sekä antaa siitä palautetta.
 
-Suunnitelman aloituskuulutus on julkaistu 1.1.2031. Suunnitelman etenemistä voi seurata verkossa osoitteessa https://localhost:3000/s/3c1d/aloituskuulutus. Sivujen kautta voit jatkossa kysyä ja antaa palautetta suunnitelmasta ja siten osallistua suunnitteluun.
-
-Nokia käsittelee suunnittelun aikana henkilötietojanne, kuten kiinteistötunnusta ja yhteystietojanne. Näitä tietoja käytetään suunnittelun etenemisestä tiedottamiseen sekä suunnitelmasta annettujen palautteiden, muistutusten ja valitusten käsittelyyn. Nokia saa henkilötiedot Maanmittauslaitokselta.
-
-Teillä on seuraavat oikeudet tietosuojaan liittyen:
-
-	- Oikeus saada tietoa henkilötietojenne käsittelystä. Oikeus saada kopio tiedoistanne.
-	- Oikeus saada tietonne korjatuksi, jos niissä on virhe.
-	- Oikeus rajoittaa tai vastustaa tietojenne käsittelyä, jos edellytykset siihen täyttyvät.
-	- Oikeus tehdä valitus Tietosuojavaltuutetulle.
-Jos tiedoissanne on virhe, ettekä omista kiinteistöä suunnittelualueella, pyydämme ilmoittamaan siitä Väyläviraston kirjaamoon (kirjaamo@vayla.vayla). Lisäksi pyydämme ottamaan yhteyttä Maanmittauslaitokseen tietojen korjaamiseksi (https://www.maanmittauslaitos.fi/asiakaspalvelu).
-
-Nokia käyttää henkilötietojen käsittelyssä apunaan sopimuskumppaneitaan. Henkilötietoja luovutetaan esimerkiksi toisille viranomaisille osana väylähanketta ja sen suunnittelua. Nokia noudattaa toiminnassaan huolellisuutta ja varmistaa, että tietosuoja ja tietoturvallisuus toteutuvat tietoja käsiteltäessä. Henkilötietoja säilytetään vain tarpeellinen aika. Lisätietoja tietosuojakäytännöistä voitte lukea verkkosivuiltamme https://www.vayla.fi/tietosuoja.
+Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
 
 A-tunnus1 HassuProjektipäällikköCGI Suomi Oy
-Lisätietoja antaa tietosuojavastaavatietosuojavastaava@vayla.fi
+Lisätietoja antaa 
+Nokia, Testi1 Hassu, puh. 029123123, mikko.haapamaki1(at)cgi.com jaKajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä
+TiedoksiVäyläviraston kirjaamo
 ",
     },
     Object {
