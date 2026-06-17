@@ -278,14 +278,14 @@ Object {
   "lahiosoite": "Osoite 1",
   "maa": "FI",
   "nimi": "Testi Teppo",
-  "otsikko": "Ilmoitus suunnitelman aloittamisesta",
+  "otsikko": "Ilmoitus henkilötietojen käsittelystä ja suunnittelun aloittamisesta",
   "postinumero": "00100",
   "postitoimipaikka": "Helsinki",
   "sisalto": "Hei,
 
-Olette saaneet kirjeen, jossa kerrotaan suunnitelman aloittamisesta. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+Olette saaneet kirjeen, jossa kerrotaan suunnittelun aloittamisesta sekä henkilötietojen käsittelystä suunnittelun yhteydessä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
-Ystävällisin terveisin
+Ystävällisin terveisin,
 Väylävirasto",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {

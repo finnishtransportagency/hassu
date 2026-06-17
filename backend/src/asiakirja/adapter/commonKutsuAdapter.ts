@@ -33,6 +33,7 @@ import {
   linkNahtavillaOlo,
   linkNahtavillaOloYllapito,
   linkSuunnitteluVaihe,
+  linkSuunnitelma,
 } from "hassu-common/links";
 import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUserToYhteystieto";
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
@@ -367,6 +368,11 @@ export class CommonKutsuAdapter {
   get aloituskuulutusUrl(): string {
     assertIsDefined(this.oid);
     return linkAloituskuulutus(this.linkableProjekti, this.kieli);
+  }
+
+  get suunnitelmaUrl(): string {
+    assertIsDefined(this.oid);
+    return linkSuunnitelma(this.linkableProjekti, this.kieli);
   }
 
   get kutsuUrl(): string {

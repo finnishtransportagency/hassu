@@ -41,7 +41,7 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     if (!aloitusKuulutusJulkaisu.kuulutusPaiva) {
       throw new Error("aloitusKuulutusJulkaisu.kuulutusPaiva ei ole määritelty");
     }
-    
+
     const kutsuAdapter = new AloituskuulutusKutsuAdapter(
       {
         oid: params.oid,
@@ -65,14 +65,14 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
       },
       "asiakirja.aloituskuulutus."
     );
-    
+
     const fileName = createPDFFileName(
       AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
       kutsuAdapter.asiakirjanMuoto,
       velho.tyyppi,
       params.kieli
     );
-    
+
     super(params.kieli, params.oid, kutsuAdapter, params.osoite, 350, toPdfPoints(21));
     const language = params.kieli;
     this.header = headers[language];
@@ -112,13 +112,19 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
       this.paragraphFromKey("kiinteistonomistaja_kappale4"),
       this.paragraphFromKey("kiinteistonomistaja_kappale5"),
       this.projektiPaallikko(),
-      this.tietosuojavastaavanYhteystiedot(),
+      this.lisatietojaAntavatParagraph(),
+      this.lisatietojaAntavatElements(),
+      this.jakeluTiedoksiText(),
     ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
   private dateElement(): PDFStructureElement {
     return this.doc.struct("P", {}, () => {
-      this.doc.fontSize(10).text(this.kirjePaivitetty || this.kuulutusPaiva).fontSize(12).moveDown();
+      this.doc
+        .fontSize(10)
+        .text(this.kirjePaivitetty || this.kuulutusPaiva)
+        .fontSize(12)
+        .moveDown();
     });
   }
 
@@ -130,14 +136,33 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     };
   }
 
-  private tietosuojavastaavanYhteystiedot(): PDFStructureElement {
-    return this.doc.struct("P", {}, () => {
-      this.doc.text(this.kutsuAdapter.text("lisatietoja_antaa_tietosuojavastaava"));
-      this.doc.text(this.isVaylaTilaaja() ? "tietosuojavastaava@vayla.fi" : "tietosuoja.keha@elinvoimakeskus.fi");
-    });
+  private jakeluTiedoksiText(): PDFKit.PDFStructureElementChild {
+    const labelIndent = 70; // Same indent used in KiinteistonOmistaja (nähtävilläolo)
+    const indentX = this.getIndention() + labelIndent;
+    return () => {
+      const jakeluY = this.doc.y;
+      this.doc.text(this.kutsuAdapter.text("jakelu1"), this.getIndention(), jakeluY);
+      this.doc.text(this.kutsuAdapter.text("jakelu2"), indentX, jakeluY);
+      this.doc.text(this.kutsuAdapter.text("jakelu3"), indentX).moveDown();
+      const tiedoksiY = this.doc.y;
+      this.doc.text(this.kutsuAdapter.text("tiedoksi1"), this.getIndention(), tiedoksiY);
+      this.doc.text(this.kutsuAdapter.text("tiedoksi2"), indentX, tiedoksiY);
+    };
   }
 
-
+  private lisatietojaAntavatElements(): PDFStructureElement {
+    const yhteystiedot = this.kutsuAdapter.yhteystiedot(this.aloitusKuulutusJulkaisu.yhteystiedot, null, false);
+    return this.doc.struct("P", {}, () => {
+      yhteystiedot.forEach(({ organisaatio, titteli, etunimi, sukunimi, puhelinnumero, sahkoposti }, index) => {
+        const noSpamSahkoposti = sahkoposti.replace(/@/g, "(at)");
+        const titteliStr = titteli ? `, ${titteli}` : "";
+        const separator = index < yhteystiedot.length - 1 ? " ja" : "";
+        const text = `${organisaatio}${titteliStr}, ${etunimi} ${sukunimi}, ${this.kutsuAdapter.localizedPuh} ${puhelinnumero}, ${noSpamSahkoposti}${separator}`;
+        this.doc.text(text);
+      });
+      this.doc.moveDown();
+    });
+  }
 
   private kuulutettuYhdessaSuunnitelmaParagraph(): PDFStructureElement | undefined {
     if (this.kuulutettuYhdessaSuunnitelmanimi) {

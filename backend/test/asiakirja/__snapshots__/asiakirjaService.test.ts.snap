@@ -20,32 +20,32 @@ Object {
 
 15.01.2025
 Ilmoitus henkilötietojen käsittelystä
-Hyvä kiinteistönomistaja,
-Nokia tekee tiesuunnitelmaa alueellesi. Lähetämme tämän tiedotteen henkilöille, jotka Maanmittauslaitoksen (MML) kiinteistötietojärjestelmän mukaan omistavat kiinteistön suunnittelualueella tai sen läheisyydessä. Suunnittelun edetessä suunnittelualue ja tieto vaikutusalueella olevista kiinteistöistä tarkentuu. Tämä kirje ei edellytä teiltä toimenpiteitä.
+Hyvä suunnittelualueen ja sen lähialueen kiinteistönomistaja,
+Nokia laatii tiesuunnitelmaa Testiprojekti 1. Saat kirjeen, koska Maanmittauslaitoksen Kiinteistötietojärjestelmästä saatujen tietojen mukaan omistat kiinteistön edellä mainitun tiesuunnitelman suunnittelualueella tai sen lähellä. Suunnittelun aikana Nokia käsittelee henkilötietojanne, kuten kiinteistötunnusta, yhteystietoja sekä henkilötunnusta, jota käytetään suunnittelun etenemisestä tiedottamisessa.
+Suunnittelun edetessä suunnittelualue tarkentuu, jolloin myös kiinteistöomistajien tiedot päivitetään. Kaikille tämän kirjeen vastaanottajien kiinteistöille ei välttämättä kohdistu laadittavassa suunnitelmassa toimenpiteitä tai vaikutuksia, minkä vuoksi kaikki tämän kirjeen vastaanottajat eivät välttämättä saa jatkossa suunnitelmaa koskevia kirjeitä.
+Jos Kiinteistötietojärjestelmästä saaduissa tiedoissa on virheitä, ettekä omista kiinteistöä suunnittelualueella, teidän tulee olla yhteydessä suunnittelun projektipäällikköön sekä Maanmittauslaitokseen tietojenne korjaamiseksi.
+Suunnittelun käynnistymisestä on julkaistu aloituskuulutus 2.1.2022. Voit tutustua kuulutukseen verkossa osoitteessa https://localhost:3000/suunnitelma/1. Samalla sivulla voit seurata suunnittelun etenemistä. Sivulla mm. ilmoitetaan mahdollisuudesta saada tietoa suunnitelmasta sekä antaa siitä palautetta.
 
-Suunnitelman aloituskuulutus on julkaistu 2.1.2022. Suunnitelman etenemistä voi seurata verkossa osoitteessa https://localhost:3000/suunnitelma/1/aloituskuulutus. Sivujen kautta voit jatkossa kysyä ja antaa palautetta suunnitelmasta ja siten osallistua suunnitteluun.
-
-Nokia käsittelee suunnittelun aikana henkilötietojanne, kuten kiinteistötunnusta ja yhteystietojanne. Näitä tietoja käytetään suunnittelun etenemisestä tiedottamiseen sekä suunnitelmasta annettujen palautteiden, muistutusten ja valitusten käsittelyyn. Nokia saa henkilötiedot Maanmittauslaitokselta.
-
-Teillä on seuraavat oikeudet tietosuojaan liittyen:
-
-	- Oikeus saada tietoa henkilötietojenne käsittelystä. Oikeus saada kopio tiedoistanne.
-	- Oikeus saada tietonne korjatuksi, jos niissä on virhe.
-	- Oikeus rajoittaa tai vastustaa tietojenne käsittelyä, jos edellytykset siihen täyttyvät.
-	- Oikeus tehdä valitus Tietosuojavaltuutetulle.
-Jos tiedoissanne on virhe, ettekä omista kiinteistöä suunnittelualueella, pyydämme ilmoittamaan siitä Uudenmaan ELY-keskuksen kirjaamoon (uudenmaan_kirjaamo@uudenmaan.ely). Lisäksi pyydämme ottamaan yhteyttä Maanmittauslaitokseen tietojen korjaamiseksi (https://www.maanmittauslaitos.fi/asiakaspalvelu).
-
-Nokia käyttää henkilötietojen käsittelyssä apunaan sopimuskumppaneitaan. Henkilötietoja luovutetaan esimerkiksi toisille viranomaisille osana väylähanketta ja sen suunnittelua. Nokia noudattaa toiminnassaan huolellisuutta ja varmistaa, että tietosuoja ja tietoturvallisuus toteutuvat tietoja käsiteltäessä. Henkilötietoja säilytetään vain tarpeellinen aika. Lisätietoja tietosuojakäytännöistä voitte lukea verkkosivuiltamme https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 Pekka ProjariProjektipäällikköVäylävirasto
+Lisätietoja antaa 
+Nokia, Kunta Kuntalainen, puh. 029123123, Kunta.Kuntalainen(at)vayla.fi jaPirkanmaan ELY-keskus, Eemil Elylainen, puh. 123456789, eemil.elylainen(at)ely.fi jaKajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com
+Jakelu
 
 
+Erillisen jakelun mukaan
 
-Lisätietoja antaa tietosuojavastaavatietosuoja.keha@elinvoimakeskus.fi
+
+Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä
+TiedoksiUudenmaan ELY-keskuksen kirjaamo
 ELY/1/2022
 
 
-LUONNOSLUONNOS",
+ELY/1/2022
+
+
+LUONNOSLUONNOSLUONNOS",
 }
 `;
 
@@ -67,32 +67,32 @@ Object {
 
 15.01.2025
 Anmälan om behandling av personuppgifter
-Bästa fastighetsägare,
-Nokia gör upp vägplanen för ditt område. Vi skickar detta meddelande till personer som enligt Lantmäteriverkets (LMV) fastighetsdatasystem äger en fastighet i planeringsområdet eller i dess närhet. När planeringen fortskrider preciseras planeringsområdet och informationen om fastigheterna i verkningsområdet. Detta brev förutsätter inga åtgärder från er sida.
+Bästa fastighetsägare inom eller i närheten av planeringsområdet,
+Nokia utarbetar vägplanen Namnet på svenska. Du får detta brev eftersom uppgifter från Lantmäteriverkets fastighetsdatasystem visar att du äger en fastighet inom eller i närheten av det planeringsområde som berörs av ovan nämnda vägplanen. Under planeringsarbetet behandlar Nokia dina personuppgifter, såsom fastighetsbeteckning, kontaktuppgifter och personbeteckning. Personuppgifterna används för att informera om hur planeringen framskrider.
+När planeringen fortskrider preciseras planeringsområdet, och då uppdateras även uppgifterna om fastighetsägarna. Alla fastigheter som tillhör mottagarna av detta brev kommer inte nödvändigtvis att beröras av åtgärder eller konsekvenser enligt den plan som utarbetas. Därför är det inte säkert att alla mottagare av detta brev kommer att få fortsatta utskick om planen.
+Om uppgifterna från fastighetsdatasystemet är felaktiga och du inte äger en fastighet inom planeringsområdet, ska du kontakta projektledaren för planeringen samt Lantmäteriverket för att få uppgifterna rättade.
+Ett kungörelsemeddelande om att planeringen har inletts publicerades den 2.1.2022. Du kan ta del av kungörelsen på webben via länken https://localhost:3000/sv/suunnitelma/1. På samma webbsida kan du följa hur planeringen framskrider. Där informeras bland annat om möjligheterna att få information om planen och att lämna synpunkter på den.
 
-Kungörelsen om planens inledande har publicerats 2.1.2022. Planens framskridande kan följas på webben på adressen https://localhost:3000/sv/suunnitelma/1/aloituskuulutus. Via sidorna kan du i fortsättningen fråga och ge respons om planen och på så sätt delta i planeringen.
+Om du vill veta mer om dataskyddspraxis inom trafikledsplanering kan du läsa dataskyddsavsnittet på webbplatsen, https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
-Nokia behandlar era personuppgifter under planeringen, såsom fastighetsbeteckning och era kontaktuppgifter. Dessa uppgifter används för att informera om planeringens framskridande samt för att behandla responsen, anmärkningarna och klagomålen som getts om planen. Nokia får personuppgifterna från Lantmäteriverket.
-
-Ni har följande rättigheter gällande dataskydd:
-
-	- Rätt att få information om behandlingen av era personuppgifter. Rätt att få en kopia av era uppgifter.
-	- Rätt att få era uppgifter korrigerade om de innehåller fel.
-	- Rätt att begränsa eller motsätta er mot behandlingen av era uppgifter om villkoren uppfylls.
-	- Rätt att lämna in klagomål till Dataombudsmannen.
-Om era uppgifter innehåller fel och ni inte äger en fastighet i planeringsområdet, ber vi er meddela om detta till NTM-centralen i Nyland registratorskontor (uudenmaan_kirjaamo@uudenmaan.ely). Dessutom ber vi er kontakta Lantmäteriverket för att korrigera uppgifterna (https://www.maanmittauslaitos.fi/asiakaspalvelu).
-
-Nokia använder sig av sina avtalspartner vid behandlingen av personuppgifter. Personuppgifter lämnas ut till exempel till andra myndigheter som en del av trafikledsprojektet och dess planering. Nokia följer omsorgsfullhet i sin verksamhet och säkerställer att dataskydd och datasäkerhet uppfylls vid behandling av uppgifter. Personuppgifter bevaras endast under nödvändig tid. Mer information om dataskyddspraxis kan ni läsa på våra webbsidor https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
-
-Pekka ProjariProjektledare
+Pekka ProjariProjektledareTrafikledsverket
+Mer information om planen 
+Nokia, Kunta Kuntalainen, tel. 029123123, Kunta.Kuntalainen(at)vayla.fi jaNTM-centralen i Birkaland, Eemil Elylainen, tel. 123456789, eemil.elylainen(at)ely.fi jaKajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com
+Distribution
 
 
-Trafikledsverket
-Mer information ges av dataskyddsombudettietosuoja.keha@elinvoimakeskus.fi
+Enligt separat distributionslista
+
+
+Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företags- och organisationsdatasystemet
+För kännedomNTM-centralen i Nyland registratur
 ELY/1/2022
 
 
-LUONNOSLUONNOS",
+ELY/1/2022
+
+
+LUONNOSLUONNOSLUONNOS",
 }
 `;
 
