@@ -70,6 +70,7 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
       dokumentit: [...s3Paths.getDokumentit(), ...s3SisainenPaths.getDokumentit()],
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
+      tiedotaAsianosaisia: julkaisu.uudelleenKuulutus?.tiedotaKiinteistonomistajia,
     };
   }
 

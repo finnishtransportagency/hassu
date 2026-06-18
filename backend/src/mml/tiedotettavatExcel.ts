@@ -426,7 +426,9 @@ function getMaanomistajaluetteloFilename(
   } else {
     prefix = "T416";
   }
-  if (vaihe === Vaihe.NAHTAVILLAOLO) {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS) {
+    return `Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
+  } else if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return `${prefix} Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
   } else {
     return `${prefix} Maanomistajaluettelo ja muistuttajat ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
