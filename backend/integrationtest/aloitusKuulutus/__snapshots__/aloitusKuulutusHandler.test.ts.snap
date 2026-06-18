@@ -207,7 +207,7 @@ Object {
     "/1/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "asiakirjaTyyppi": "ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -291,7 +291,7 @@ Object {
     "/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "asiakirjaTyyppi": "ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -506,7 +506,7 @@ Object {
     "/1/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "asiakirjaTyyppi": "ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2022-03-28T00:00:00+03:00",
     },
@@ -545,7 +545,7 @@ Object {
     "/2/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "asiakirjaTyyppi": "ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },
@@ -629,7 +629,7 @@ Object {
     "/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
       "ContentType": "application/pdf",
-      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "asiakirjaTyyppi": "ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS",
       "checksum": "ABC123",
       "publishDate": "2020-01-23T00:00:00+02:00",
     },

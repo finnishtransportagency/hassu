@@ -75,7 +75,7 @@ export class AsiakirjaService {
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         pdf = new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
         break;
-      case AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE:
+      case AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS:
         pdf = new KiinteistonOmistajaAloituskuulutus({ ...params, osoite }, aloitusKuulutusJulkaisu).pdf(luonnos);
         break;
       default:

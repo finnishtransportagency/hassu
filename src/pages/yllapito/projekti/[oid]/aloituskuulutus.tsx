@@ -468,7 +468,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, ensisijainenKaannettavaKieli)
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
+                          ensisijainenKaannettavaKieli
+                        )
                       )}
                       disabled={disableFormEdit}
                     >
@@ -515,7 +519,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, toissijainenKaannettavaKieli)
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
+                          toissijainenKaannettavaKieli
+                        )
                       )}
                       disabled={disableFormEdit}
                     >

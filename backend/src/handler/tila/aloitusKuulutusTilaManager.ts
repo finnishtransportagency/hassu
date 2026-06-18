@@ -279,7 +279,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
         kieli
       );
       const aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath = await createAloituskuulutusPDF(
-        AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+        AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
         julkaisu,
         projekti,
         kieli
