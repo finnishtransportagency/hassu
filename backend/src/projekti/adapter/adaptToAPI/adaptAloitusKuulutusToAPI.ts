@@ -134,6 +134,9 @@ function adaptJulkaisuPDFPaths(oid: string, aloitusKuulutusJulkaisu: AloitusKuul
       __typename: "AloitusKuulutusPDF",
       aloituskuulutusPDFPath: fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusPDFPath),
       aloituskuulutusIlmoitusPDFPath: fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusIlmoitusPDFPath),
+      aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: pdfs.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath
+        ? fileService.getYllapitoPathForProjektiFile(aloituskuulutusPath, pdfs.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath)
+        : undefined,
     };
   }
   return { __typename: "AloitusKuulutusPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.AloitusKuulutusPDF, ...result };

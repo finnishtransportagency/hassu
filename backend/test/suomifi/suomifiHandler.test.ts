@@ -1380,9 +1380,7 @@ describe("suomifiHandler", () => {
       .on(GetCommand, { TableName: config.projektiTableName })
       .resolves({
         Item: dbProjekti,
-      })
-      .on(QueryCommand, { TableName: config.aloitusKuulutusJulkaisuTableName })
-      .resolves({ Items: aloitusKuulutusJulkaisut });
+      });
     const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from("tiedosto"));
     const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS };
     const msg = { Records: [{ body: JSON.stringify(body) }] };
@@ -1397,6 +1395,67 @@ describe("suomifiHandler", () => {
     expect(input.ExpressionAttributeValues[":status"][0].tyyppi).to.equal(PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS);
     assert(input.Key);
     expect(input.Key["id"]).to.equal("123");
+    parameterStub.restore();
+    fileStub.restore();
+  });
+
+  it("omistajan pdf viesti suomi.fi aloituskuulutus kaksikielinen (ruotsi)", async () => {
+    const parameterStub = sinon.stub(parameters, "isSuomiFiViestitIntegrationEnabled").resolves(true);
+    const omistaja: DBOmistaja = {
+      id: "123",
+      expires: 0,
+      lisatty: now().toString(),
+      oid: "1",
+      henkilotunnus: "ABC",
+      etunimet: "Testi",
+      sukunimi: "Teppo",
+      jakeluosoite: "Osoite 1",
+      postinumero: "00100",
+      paikkakunta: "Helsinki",
+      kiinteistotunnus: "123",
+      suomifiLahetys: true,
+      kaytossa: true,
+    };
+    const request: SuomiFiRequest = {};
+    const client = mockSuomiFiClient(request, 300);
+    setMockSuomiFiClient(client);
+    const aloitusKuulutusJulkaisut = [
+      {
+        id: 1,
+        aloituskuulutusPDFt: {
+          SUOMI: { aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/ilmoitus_fi.pdf" },
+          RUOTSI: { aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/ilmoitus_sv.pdf" },
+        },
+      } as any,
+    ];
+    const dbProjekti: Partial<DBProjektiSlim> = {
+      oid: "1",
+      aloitusKuulutus: { id: 1 },
+      aloitusKuulutusJulkaisut,
+      velho: {
+        nimi: "Projektin nimi",
+        asiatunnusVayla: "vayla123",
+        asiatunnusELY: "ely123",
+        tyyppi: ProjektiTyyppi.TIE,
+        vaylamuoto: [],
+        suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
+      },
+    };
+    mockClient(DynamoDBDocumentClient)
+      .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
+      .resolves({ Item: omistaja })
+      .on(GetCommand, { TableName: config.projektiTableName })
+      .resolves({ Item: dbProjekti });
+    const fileStub = sinon.stub(fileService, "getProjektiFile").resolves(Buffer.from(testiPdf, "base64"));
+    const body: SuomiFiSanoma = { oid: "1", omistajaId: "123", tyyppi: PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS };
+    const msg = { Records: [{ body: JSON.stringify(body) }] };
+    await handleEvent(msg as SQSEvent);
+    assert(request.pdfViesti);
+    request.pdfViesti.tiedosto.sisalto = Buffer.from("");
+    expect(request.pdfViesti.otsikko).to.include("Information om behandling av personuppgifter");
+    expect(request.pdfViesti.sisalto).to.include("Hej,");
+    expect(request.pdfViesti.sisalto).to.include("Med v\u00e4nlig h\u00e4lsning,");
+    expect(request.pdfViesti).toMatchSnapshot();
     parameterStub.restore();
     fileStub.restore();
   });

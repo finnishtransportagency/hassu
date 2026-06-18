@@ -61,6 +61,7 @@ Object {
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "AloitusKuulutusPDF",
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
           "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
@@ -203,6 +204,13 @@ Object {
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 4`] = `
 Object {
   "yllapito S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
+    "/1/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -280,6 +288,13 @@ Object {
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 6`] = `
 Object {
   "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
+    "/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -329,6 +344,7 @@ Object {
       "aloituskuulutusPDFt": Object {
         "SUOMI": Object {
           "__typename": "AloitusKuulutusPDF",
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/Ilmoitus henkilotietojen kasittelysta.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
           "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/3/aloituskuulutus/2/T412 Aloituskuulutus.pdf",
         },
@@ -487,6 +503,13 @@ Object {
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 8`] = `
 Object {
   "yllapito S3 files Aloituskuulutusjulkaisun uudelleenkuulutus saamenkielisellä kuulutuksella ja ilmoituksella ylläpidossa": Object {
+    "/1/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "checksum": "ABC123",
+      "publishDate": "2022-03-28T00:00:00+03:00",
+    },
     "/1/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -518,6 +541,13 @@ Object {
       "ContentType": "image/png",
       "asiakirjaTyyppi": "ALOITUSKUULUTUS",
       "checksum": "ABC123",
+    },
+    "/2/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
     },
     "/2/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
@@ -596,6 +626,13 @@ Object {
 exports[`AloitusKuulutus suorita aloituskuulutuksen hyväksymisprosessi saamen kielellä onnistuneesti 10`] = `
 Object {
   "public S3 files Aloituskuulutusjulkaisu saamenkielisellä kuulutuksella ja ilmoituksella kansalaisille": Object {
+    "/Ilmoitus henkilotietojen kasittelysta.pdf": FileMetadata {
+      "ContentDisposition": "inline; filename*=UTF-8''Ilmoitus%20henkilotietojen%20kasittelysta.pdf",
+      "ContentType": "application/pdf",
+      "asiakirjaTyyppi": "ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE",
+      "checksum": "ABC123",
+      "publishDate": "2020-01-23T00:00:00+02:00",
+    },
     "/T412 Aloituskuulutus.pdf": FileMetadata {
       "ContentDisposition": "inline; filename*=UTF-8''T412%20Aloituskuulutus.pdf",
       "ContentType": "application/pdf",
@@ -729,10 +766,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta sv.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
@@ -939,10 +978,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta sv.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },
@@ -1101,10 +1142,12 @@ Object {
     Object {
       "aloituskuulutusPDFt": Object {
         "RUOTSI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta sv.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta sv.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus sv.pdf",
         },
         "SUOMI": Object {
+          "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta.pdf",
           "aloituskuulutusIlmoitusPDFPath": "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
           "aloituskuulutusPDFPath": "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
         },

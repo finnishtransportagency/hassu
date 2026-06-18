@@ -216,6 +216,13 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                         {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                       </DownloadLink>
                     </div>
+                    {ensisijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath && (
+                      <div>
+                        <DownloadLink href={ensisijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath}>
+                          {splitFilePath(ensisijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath).fileName}
+                        </DownloadLink>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -244,6 +251,13 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
                             {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusPDFPath).fileName}
                           </DownloadLink>
                         </div>
+                        {toissijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath}>
+                              {splitFilePath(toissijaisetPDFt.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )}
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
@@ -268,7 +282,12 @@ export default function AloituskuulutusLukunakyma({ aloituskuulutusjulkaisu, pro
           <AloituskuulutusTiedostot aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} epaaktiivinen={epaaktiivinen} />
         )}
       </Section>
-      <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} aloituskuulutusjulkaisu={aloituskuulutusjulkaisu} oid={projekti.oid} omistajahakuStatus={projekti.omistajahaku?.status} />
+      <IlmoituksenVastaanottajat
+        isLoading={isLoadingProjekti}
+        aloituskuulutusjulkaisu={aloituskuulutusjulkaisu}
+        oid={projekti.oid}
+        omistajahakuStatus={projekti.omistajahaku?.status}
+      />
     </>
   );
 }

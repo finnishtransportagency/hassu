@@ -34,7 +34,6 @@ import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/comm
 import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import HassuStack from "@components/layout/HassuStack";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -441,8 +440,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       kielitiedot,
                     })}
                   </p>
-                  <HassuStack direction={["column", "column", "row"]}>
+                  <div>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_kuulutus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -453,6 +453,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       Kuulutuksen esikatselu
                     </Button>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_ilmoitus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -462,7 +463,18 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                     >
                       Ilmoituksen esikatselu
                     </Button>
-                  </HassuStack>
+                    <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                      id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKaannettavaKieli}
+                      type="submit"
+                      onClick={handleDraftSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, ensisijainenKaannettavaKieli)
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Ilmoitus henkilötietojen käsittelystä
+                    </Button>
+                  </div>
                 </>
               )}
 
@@ -475,8 +487,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       kielitiedot,
                     })}
                   </p>
-                  <HassuStack direction={["column", "column", "row"]}>
+                  <div>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_kuulutus_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -487,6 +500,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       Kuulutuksen esikatselu
                     </Button>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_ilmoitus_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -496,7 +510,18 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                     >
                       Ilmoituksen esikatselu
                     </Button>
-                  </HassuStack>
+                    <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                      id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKaannettavaKieli}
+                      type="submit"
+                      onClick={handleDraftSubmit((formData) =>
+                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, toissijainenKaannettavaKieli)
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Ilmoitus henkilötietojen käsittelystä
+                    </Button>
+                  </div>
                 </>
               )}
               <FormProvider {...useFormReturn}>

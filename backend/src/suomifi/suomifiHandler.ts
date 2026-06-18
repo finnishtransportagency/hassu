@@ -317,8 +317,35 @@ async function createGenerateEvent(
   projektiFromDB: DBProjekti,
   kohde: Kohde
 ): Promise<GeneratePDFEvent | undefined> {
-  // PLACEHOLDER: Aloituskuulutukselle käytetään väliaikaisesti nähtävilläolovaiheen PDF-generointia (HASSUYP-872)
   if (
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
+    projektiFromDB.aloitusKuulutusJulkaisut
+  ) {
+    const julkaisu = projektiFromDB.aloitusKuulutusJulkaisut[projektiFromDB.aloitusKuulutusJulkaisut.length - 1];
+    return {
+      createAloituskuulutusPdf: {
+        asiakirjaTyyppi,
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, Kieli.SUOMI),
+        asianhallintaPaalla: !(projektiFromDB.asianhallinta?.inaktiivinen ?? true),
+        kayttoOikeudet: projektiFromDB.kayttoOikeudet,
+        kieli: Kieli.SUOMI,
+        linkkiAsianhallintaan: undefined,
+        luonnos: false,
+        lyhytOsoite: projektiFromDB.lyhytOsoite,
+        aloitusKuulutusJulkaisu: julkaisu,
+        oid: projektiFromDB.oid,
+        vahainenMenettely: projektiFromDB.vahainenMenettely,
+        euRahoitusLogot: projektiFromDB.euRahoitusLogot,
+        osoite: {
+          nimi: kohde.nimi,
+          katuosoite: kohde.lahiosoite,
+          postinumero: kohde.postinumero,
+          postitoimipaikka: kohde.postitoimipaikka,
+        },
+      },
+    };
+  } else if (
     asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
     tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
     projektiFromDB.aloitusKuulutusJulkaisut
@@ -469,10 +496,8 @@ async function getFilesAndLanguages(
 }
 
 function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti): AsiakirjaTyyppi | undefined {
-  // PLACEHOLDER: Käytetään väliaikaisesti nähtävilläolovaiheen asiakirjatyyppiä
-  // kunnes aloituskuulutuksen oma PDF-generointilogiikka on valmis (HASSUYP-872)
   if (tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS && projektiFromDB.aloitusKuulutusJulkaisut) {
-    return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
+    return AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
     return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE && projektiFromDB.hyvaksymisPaatosVaiheJulkaisut) {
@@ -483,7 +508,10 @@ function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFrom
 
 async function getSwedishFileAsBuffer(asiakirjaTyyppi: AsiakirjaTyyppi, projektiFromDB: DBProjekti): Promise<Buffer | undefined> {
   let tiedosto: string | undefined;
-  if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+  if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+    const julkaisu = projektiFromDB.aloitusKuulutusJulkaisut?.[projektiFromDB.aloitusKuulutusJulkaisut?.length - 1];
+    tiedosto = julkaisu?.aloituskuulutusPDFt?.RUOTSI?.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath;
+  } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
     const julkaisu = projektiFromDB.nahtavillaoloVaiheJulkaisut?.[projektiFromDB.nahtavillaoloVaiheJulkaisut?.length - 1];
     tiedosto = julkaisu?.nahtavillaoloPDFt?.RUOTSI?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
   } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE) {
@@ -538,23 +566,25 @@ function getSaateteksti(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProj
   if (tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
     let sisalto = `Hei,
 
-Olette saaneet kirjeen, jossa kerrotaan suunnitelman aloittamisesta. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+Olette saaneet kirjeen, jossa kerrotaan suunnittelun aloittamisesta sekä henkilötietojen käsittelystä suunnittelun yhteydessä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
 
-Ystävällisin terveisin
+Ystävällisin terveisin,
 ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.SUOMI)}`;
     if (kielet.includes(Kieli.RUOTSI)) {
       sisalto += `
 
 Hej,
 
-Ni har fått ett brev med information om planläggningens början. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
+Ni har fått ett brev med information om att planeringen inleds samt om behandlingen av personuppgifter i samband med planeringen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
 
-Med vänlig hälsning
+Med vänlig hälsning,
 ${translate("viranomainen." + projektiFromDB.velho?.suunnittelustaVastaavaViranomainen, Kieli.RUOTSI)}
 `;
     }
     return {
-      otsikko: `Ilmoitus suunnitelman aloittamisesta${kielet.includes(Kieli.RUOTSI) ? " / Meddelande om planläggningens början" : ""}`,
+      otsikko: `Ilmoitus henkilötietojen käsittelystä ja suunnittelun aloittamisesta${
+        kielet.includes(Kieli.RUOTSI) ? " / Information om behandling av personuppgifter och om att planeringen inleds" : ""
+      }`,
       sisalto,
     };
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
