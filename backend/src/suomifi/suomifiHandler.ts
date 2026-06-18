@@ -510,7 +510,10 @@ function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFrom
 
 async function getSwedishFileAsBuffer(asiakirjaTyyppi: AsiakirjaTyyppi, projektiFromDB: DBProjekti): Promise<Buffer | undefined> {
   let tiedosto: string | undefined;
-  if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+  if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+    const julkaisu = projektiFromDB.aloitusKuulutusJulkaisut?.[projektiFromDB.aloitusKuulutusJulkaisut?.length - 1];
+    tiedosto = julkaisu?.aloituskuulutusPDFt?.RUOTSI?.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath;
+  } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
     const julkaisu = projektiFromDB.nahtavillaoloVaiheJulkaisut?.[projektiFromDB.nahtavillaoloVaiheJulkaisut?.length - 1];
     tiedosto = julkaisu?.nahtavillaoloPDFt?.RUOTSI?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath;
   } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE) {
