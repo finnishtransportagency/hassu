@@ -316,10 +316,6 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                         onClose={ohjeetOnClose}
                       >
                         <li>
-                          Ennen kuulutuksen täyttämistä tarkista, että suunnitelman nimi on oikein ja sisältö- ja esitystapaohjeiden
-                          mukainen. Jos nimeä tarvitsee muuttaa, tee muutos Projektivelhoon.
-                        </li>
-                        <li>
                           Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan
                           samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
                         </li>

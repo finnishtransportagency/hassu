@@ -135,12 +135,6 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                         open={ohjeetOpen}
                       >
                         <li>
-                          Ennen kuulutuksen täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä oikea toimenpide, joka
-                          on nimeltään Valmiin suunnitelman nähtävillä olo ja lausuntojen pyytäminen. Kuulutuksen julkaisu ei ole
-                          mahdollista, jos asianhallintajärjestelmässä on väärä toimenpide auki. Katso tarkemmat ohjeet asianhallinnan
-                          ohjeistuksesta.
-                        </li>
-                        <li>
                           Lisää nähtäville asetettavat aineistot ensimmäiseltä välilehdeltä.
                           {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
                         </li>
@@ -190,8 +184,8 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                           Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
                         </li>
                         <li>
-                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu
-                          Ilmoituksen esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
+                          esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
                         </li>
                         {projekti.asianhallinta.inaktiivinen && (
                           <li>
