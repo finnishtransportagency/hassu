@@ -2,7 +2,7 @@
 import { AloitusKuulutusJulkaisu } from "../../database/model/";
 import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
-import { formatDate, toPdfPoints } from "../asiakirjaUtil";
+import { toPdfPoints } from "../asiakirjaUtil";
 import { createPDFFileName } from "../pdfFileName";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import PDFStructureElement = PDFKit.PDFStructureElement;
@@ -19,9 +19,8 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
   protected kieli: KaannettavaKieli;
   protected vahainenMenettely: boolean | undefined | null;
   private readonly kuulutettuYhdessaSuunnitelmanimi: string | undefined;
-  private readonly kirjePaivitetty: string | undefined;
 
-  constructor(params: AloituskuulutusKutsuAdapterProps, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu, kirjePaivitetty?: string) {
+  constructor(params: AloituskuulutusKutsuAdapterProps, aloitusKuulutusJulkaisu: AloitusKuulutusJulkaisu) {
     const velho = params.velho;
     if (!velho) {
       throw new Error("params.velho ei ole määritelty");
@@ -81,7 +80,6 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
 
     this.aloitusKuulutusJulkaisu = aloitusKuulutusJulkaisu;
-    this.kirjePaivitetty = kirjePaivitetty;
     this.kutsuAdapter.addTemplateResolver(this);
     this.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
@@ -92,7 +90,6 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
 
   protected addContent(): void {
     const elements: PDFKit.PDFStructureElementChild[] = [
-      this.dateElement(),
       this.headerElement(this.header, false),
       ...this.addDocumentElements(),
       this.euLogoElement(),
@@ -118,16 +115,6 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     ].filter((elem): elem is PDFStructureElement => !!elem);
   }
 
-  private dateElement(): PDFStructureElement {
-    return this.doc.struct("P", {}, () => {
-      this.doc
-        .fontSize(10)
-        .text(this.kirjePaivitetty || this.kuulutusPaiva)
-        .fontSize(12)
-        .moveDown();
-    });
-  }
-
   private projektiPaallikko(): PDFKit.PDFStructureElementChild {
     return () => {
       this.doc.text(this.kutsuAdapter.projektipaallikkoNimi);
@@ -137,16 +124,16 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
   }
 
   private jakeluTiedoksiText(): PDFKit.PDFStructureElementChild {
-    const labelIndent = 70; // Same indent used in KiinteistonOmistaja (nähtävilläolo)
-    const indentX = this.getIndention() + labelIndent;
     return () => {
-      const jakeluY = this.doc.y;
-      this.doc.text(this.kutsuAdapter.text("jakelu1"), this.getIndention(), jakeluY);
-      this.doc.text(this.kutsuAdapter.text("jakelu2"), indentX, jakeluY);
-      this.doc.text(this.kutsuAdapter.text("jakelu3"), indentX).moveDown();
-      const tiedoksiY = this.doc.y;
-      this.doc.text(this.kutsuAdapter.text("tiedoksi1"), this.getIndention(), tiedoksiY);
-      this.doc.text(this.kutsuAdapter.text("tiedoksi2"), indentX, tiedoksiY);
+      this.doc.text(this.kutsuAdapter.text("jakelu1")).moveUp();
+      this.doc.text(this.kutsuAdapter.text("jakelu2"), { indent: 70 });
+      this.doc.text(this.kutsuAdapter.text("jakelu3"), { indent: 70 });
+      if (this.kieli === Kieli.RUOTSI) {
+        this.doc.text(this.kutsuAdapter.text("jakelu4"), { indent: 70 });
+      }
+      this.doc.moveDown();
+      this.doc.text(this.kutsuAdapter.text("tiedoksi1")).moveUp();
+      this.doc.text(this.kutsuAdapter.text("tiedoksi2"), { indent: 70 });
     };
   }
 
@@ -168,10 +155,6 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     if (this.kuulutettuYhdessaSuunnitelmanimi) {
       return this.paragraphFromKey("liittyvat-suunnitelmat.kuulutettu-yhdessa-pdf");
     }
-  }
-
-  protected get kuulutusPaiva(): string {
-    return formatDate(this.aloitusKuulutusJulkaisu?.kuulutusPaiva);
   }
 
   protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {

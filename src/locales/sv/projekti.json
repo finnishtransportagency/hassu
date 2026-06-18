@@ -263,10 +263,11 @@
       "kiinteistonomistaja_kappale5": "Om du vill veta mer om dataskyddspraxis inom trafikledsplanering kan du läsa dataskyddsavsnittet på webbplatsen, {{tietosuojaurl}}.",
       "jakelu1": "Distribution",
       "jakelu2": "Enligt separat distributionslista",
-      "jakelu3": "Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företags- och organisationsdatasystemet",
+      "jakelu3": "Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och",
       "tiedoksi1": "För kännedom",
       "tiedoksi2": "{{tilaajaGenetiivi}} registratur",
-      "kiinteistonomistaja_kappale1_monikko": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{suunnitelman_nimi}}. Du får detta brev eftersom uppgifter från Lantmäteriverkets fastighetsdatasystem visar att du äger en fastighet inom eller i närheten av det planeringsområde som berörs av ovan nämnda {{suunnitelman}}. Under planeringsarbetet behandlar {{kuuluttaja_pitka}} dina personuppgifter, såsom fastighetsbeteckning, kontaktuppgifter och personbeteckning. Personuppgifterna används för att informera om hur planeringen framskrider."
+      "kiinteistonomistaja_kappale1_monikko": "{{kuuluttaja_pitka}} utarbetar {{suunnitelmaa}} {{suunnitelman_nimi}}. Du får detta brev eftersom uppgifter från Lantmäteriverkets fastighetsdatasystem visar att du äger en fastighet inom eller i närheten av det planeringsområde som berörs av ovan nämnda {{suunnitelman}}. Under planeringsarbetet behandlar {{kuuluttaja_pitka}} dina personuppgifter, såsom fastighetsbeteckning, kontaktuppgifter och personbeteckning. Personuppgifterna används för att informera om hur planeringen framskrider.",
+      "jakelu4": "företags- och organisationsdatasystemet"
     },
     "on_kyse_vahaisesta_menettelysta": "{{suunnitelman_isolla}} gäller en sådan ringa förbättring av en {{tien}} som inte nämnvärt ändrar lokala trafikförhållanden och vars verkningar också i övrigt är obetydliga och som avses i {{vahainen_menettely_lakiviite}}.",
     "vahainen_menettely_info": "Planen gäller ett litet område och dess konsekvenser är ringa. Växelverkan om planerna förs direkt med den berörda personen och kommunen.",

@@ -18,7 +18,6 @@ Object {
 
 
 
-15.01.2025
 Ilmoitus henkilötietojen käsittelystä
 Hyvä suunnittelualueen ja sen lähialueen kiinteistönomistaja,
 Nokia laatii tiesuunnitelmaa Testiprojekti 1. Saat kirjeen, koska Maanmittauslaitoksen Kiinteistötietojärjestelmästä saatujen tietojen mukaan omistat kiinteistön edellä mainitun tiesuunnitelman suunnittelualueella tai sen lähellä. Suunnittelun aikana Nokia käsittelee henkilötietojanne, kuten kiinteistötunnusta, yhteystietoja sekä henkilötunnusta, jota käytetään suunnittelun etenemisestä tiedottamisessa.
@@ -31,21 +30,15 @@ Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tut
 Pekka ProjariProjektipäällikköVäylävirasto
 Lisätietoja antaa 
 Nokia, Kunta Kuntalainen, puh. 029123123, Kunta.Kuntalainen(at)vayla.fi jaPirkanmaan ELY-keskus, Eemil Elylainen, puh. 123456789, eemil.elylainen(at)ely.fi jaKajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com
-Jakelu
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä
+Tiedoksi
 
 
-Erillisen jakelun mukaan
-
-
-Jakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä
-TiedoksiUudenmaan ELY-keskuksen kirjaamo
+Uudenmaan ELY-keskuksen kirjaamo
 ELY/1/2022
 
 
-ELY/1/2022
-
-
-LUONNOSLUONNOSLUONNOS",
+LUONNOSLUONNOS",
 }
 `;
 
@@ -65,7 +58,6 @@ Object {
 
 
 
-15.01.2025
 Anmälan om behandling av personuppgifter
 Bästa fastighetsägare inom eller i närheten av planeringsområdet,
 Nokia utarbetar vägplanen Namnet på svenska. Du får detta brev eftersom uppgifter från Lantmäteriverkets fastighetsdatasystem visar att du äger en fastighet inom eller i närheten av det planeringsområde som berörs av ovan nämnda vägplanen. Under planeringsarbetet behandlar Nokia dina personuppgifter, såsom fastighetsbeteckning, kontaktuppgifter och personbeteckning. Personuppgifterna används för att informera om hur planeringen framskrider.
@@ -78,21 +70,15 @@ Om du vill veta mer om dataskyddspraxis inom trafikledsplanering kan du läsa da
 Pekka ProjariProjektledareTrafikledsverket
 Mer information om planen 
 Nokia, Kunta Kuntalainen, tel. 029123123, Kunta.Kuntalainen(at)vayla.fi jaNTM-centralen i Birkaland, Eemil Elylainen, tel. 123456789, eemil.elylainen(at)ely.fi jaKajaani, Marko Koi, tel. 0293121213, markku.koi(at)koi.com
-Distribution
+DistributionEnligt separat distributionslistaAdressuppgifterna för distributionen har hämtats från fastighetsdatasystemet ochföretags- och organisationsdatasystemet
 
 
-Enligt separat distributionslista
 
-
-Adressuppgifterna för distributionen har hämtats från fastighetsdatasystemet och företags- och organisationsdatasystemet
 För kännedomNTM-centralen i Nyland registratur
 ELY/1/2022
 
 
-ELY/1/2022
-
-
-LUONNOSLUONNOSLUONNOS",
+LUONNOSLUONNOS",
 }
 `;
 

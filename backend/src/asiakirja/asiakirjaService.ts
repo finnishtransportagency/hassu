@@ -44,7 +44,6 @@ export class AsiakirjaService {
     vahainenMenettely,
     osoite,
     kuulutettuYhdessaSuunnitelmanimi,
-    kirjePaivitetty,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
     if (!aloitusKuulutusJulkaisu.velho.tyyppi) {
@@ -77,11 +76,7 @@ export class AsiakirjaService {
         pdf = new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
         break;
       case AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE:
-        pdf = new KiinteistonOmistajaAloituskuulutus(
-          { ...params, osoite },
-          aloitusKuulutusJulkaisu,
-          kirjePaivitetty
-        ).pdf(luonnos);
+        pdf = new KiinteistonOmistajaAloituskuulutus({ ...params, osoite }, aloitusKuulutusJulkaisu).pdf(luonnos);
         break;
       default:
         throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);

@@ -78,7 +78,6 @@ export type AloituskuulutusPdfOptions = {
   linkkiAsianhallintaan: string | undefined;
   osoite?: Osoite;
   kuulutettuYhdessaSuunnitelmanimi: string | undefined;
-  kirjePaivitetty?: string;
 };
 
 export type EnhancedPDF = PDF & { textContent: string };

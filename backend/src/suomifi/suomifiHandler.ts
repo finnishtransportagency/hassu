@@ -317,7 +317,6 @@ async function createGenerateEvent(
   projektiFromDB: DBProjekti,
   kohde: Kohde
 ): Promise<GeneratePDFEvent | undefined> {
-  const kirjePaivitetty = nyt().format("DD.MM.YYYY");
   if (
     asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
     tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
@@ -344,7 +343,6 @@ async function createGenerateEvent(
           postinumero: kohde.postinumero,
           postitoimipaikka: kohde.postitoimipaikka,
         },
-        kirjePaivitetty,
       },
     };
   } else if (

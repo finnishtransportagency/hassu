@@ -1441,7 +1441,7 @@ describe("suomifiHandler", () => {
         suunnittelustaVastaavaViranomainen: SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       },
     };
-    const mock = mockClient(DynamoDBDocumentClient)
+    mockClient(DynamoDBDocumentClient)
       .on(GetCommand, { TableName: config.kiinteistonomistajaTableName })
       .resolves({ Item: omistaja })
       .on(GetCommand, { TableName: config.projektiTableName })
