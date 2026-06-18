@@ -106,16 +106,13 @@ describe("asiakirjaService", () => {
         oid: projekti.oid,
         lyhytOsoite: projekti.lyhytOsoite,
         aloitusKuulutusJulkaisu,
-        asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+        asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
         kieli,
         luonnos: true,
         kayttoOikeudet: projekti.kayttoOikeudet,
         asianhallintaPaalla: await isProjektiAsianhallintaIntegrationEnabled(projekti),
         linkkiAsianhallintaan: await getLinkkiAsianhallintaan(projekti),
-        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(
-          aloitusKuulutusJulkaisu.projektinJakautuminen,
-          kieli
-        ),
+        kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(aloitusKuulutusJulkaisu.projektinJakautuminen, kieli),
         osoite: {
           nimi: kieli === Kieli.SUOMI ? "Matti Meikäläinen" : "Anna Andersson",
           jakeluosoite: kieli === Kieli.SUOMI ? "Esimerkkitie 1" : "Exempelvägen 1",
@@ -127,11 +124,7 @@ describe("asiakirjaService", () => {
 
       const pdf = await new AsiakirjaService().createAloituskuulutusPdf(aloituskuulutusPdfOptions);
       expect(pdf.sisalto.length).to.be.greaterThan(30000);
-      expectPDF(
-        "esikatselu_aloituskuulutus_",
-        pdf,
-        AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
-      );
+      expectPDF("esikatselu_aloituskuulutus_", pdf, AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS);
     }
   });
 

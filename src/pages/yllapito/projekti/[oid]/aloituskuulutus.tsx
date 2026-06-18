@@ -494,7 +494,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       onClick={handleDraftSubmit((formData) =>
                         esikatselePdf(
                           formData,
-                          AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                          AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
                           ensisijainenKaannettavaKieli
                         )
                       )}
@@ -545,7 +545,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       onClick={handleDraftSubmit((formData) =>
                         esikatselePdf(
                           formData,
-                          AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                          AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
                           toissijainenKaannettavaKieli
                         )
                       )}

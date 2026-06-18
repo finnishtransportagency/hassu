@@ -426,7 +426,9 @@ function getMaanomistajaluetteloFilename(
   } else {
     prefix = "T416";
   }
-  if (vaihe === Vaihe.NAHTAVILLAOLO) {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS) {
+    return `Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
+  } else if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return `${prefix} Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
   } else {
     return `${prefix} Maanomistajaluettelo ja muistuttajat ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
@@ -449,7 +451,9 @@ export async function tallennaMaanomistajaluettelo(
     contents: await generateExcel(projekti, true, vaihe, kuulutusPaiva),
     contentType: CONTENT_TYPE_EXCEL,
     asiakirjaTyyppi:
-      vaihe === Vaihe.NAHTAVILLAOLO
+      vaihe === Vaihe.ALOITUSKUULUTUS
+        ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_ALOITUSKUULUTUS
+        : vaihe === Vaihe.NAHTAVILLAOLO
         ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_NAHTAVILLAOLO
         : AsiakirjaTyyppi.MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS,
   });
