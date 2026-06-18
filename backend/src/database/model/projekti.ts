@@ -86,6 +86,7 @@ export type AloitusKuulutusJulkaisu = {
   uudelleenKuulutus?: UudelleenKuulutus | null;
   asianhallintaEventId?: string | null;
   kopioituProjektista?: string | null;
+  maanomistajaluettelo?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
 };
 

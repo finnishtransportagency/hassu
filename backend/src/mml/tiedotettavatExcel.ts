@@ -449,7 +449,9 @@ export async function tallennaMaanomistajaluettelo(
     contents: await generateExcel(projekti, true, vaihe, kuulutusPaiva),
     contentType: CONTENT_TYPE_EXCEL,
     asiakirjaTyyppi:
-      vaihe === Vaihe.NAHTAVILLAOLO
+      vaihe === Vaihe.ALOITUSKUULUTUS
+        ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_ALOITUSKUULUTUS
+        : vaihe === Vaihe.NAHTAVILLAOLO
         ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_NAHTAVILLAOLO
         : AsiakirjaTyyppi.MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS,
   });
