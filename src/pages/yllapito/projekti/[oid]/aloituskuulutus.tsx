@@ -60,6 +60,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { H2, H3 } from "../../../../components/Headings";
 import { LiittyvatSuunnitelmat } from "../../../../components/projekti/LiittyvatSuunnitelmat";
+import StyledLink from "@components/StyledLink";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -315,20 +316,47 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                         onClose={ohjeetOnClose}
                       >
                         <li>
+                          Ennen kuulutuksen täyttämistä tarkista, että suunnitelman nimi on oikein ja sisältö- ja esitystapaohjeiden
+                          mukainen. Jos nimeä tarvitsee muuttaa, tee muutos Projektivelhoon.
+                        </li>
+                        <li>
                           Anna päivämäärä, jolloin suunnittelun aloittamisesta kuulutetaan. Projekti ja sen aloituskuulutus julkaistaan
                           samana päivänä Valtion liikenneväylien suunnittelu -palvelun kansalaispuolella.
                         </li>
                         <li>Valitse / syötä kuulutuksessa esitettävät yhteystiedot.</li>
                         <li>
                           Kirjoita aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
-                          (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
-                          tasolla. Älä lisää tekstiin linkkejä. Jos projektista tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella
-                          kielellä, eikä tälle ole kenttää, tarkista Projektin tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin
-                          aloituskuulutukseen.
+                          (maantie- / rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet (ml. toista
+                          väylämuotoa koskevat toimenpiteet) pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä. Jos projektista
+                          tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella kielellä, eikä tälle ole kenttää, tarkista Projektin
+                          tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin aloituskuulutukseen.
+                        </li>
+                        <li>
+                          Hae suunnittelualueen kiinteistönomistajatiedot{" "}
+                          <StyledLink
+                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                          >
+                            Tiedottaminen
+                          </StyledLink>{" "}
+                          -sivulla.
                         </li>
                         <li>
                           Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
                           julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+                        </li>
+                        <li>
+                          Kuulutuksen julkaisupäivänä niille kiinteistönomistajille, joiden yhteystiedot ovat tiedossa lähetetään
+                          automaattisesti Suomi.fi viestit -palvelun kautta ilmoitus henkilötietojen käsittelystä sekä suunnittelun
+                          aloittamisesta.
+                        </li>
+                        <li>
+                          Katso listaukset kiinteistönomistajista{" "}
+                          <StyledLink
+                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                          >
+                            Tiedottaminen
+                          </StyledLink>{" "}
+                          -sivulta.
                         </li>
                         <li>
                           Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
@@ -468,7 +496,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, ensisijainenKaannettavaKieli)
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                          ensisijainenKaannettavaKieli
+                        )
                       )}
                       disabled={disableFormEdit}
                     >
@@ -515,7 +547,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, toissijainenKaannettavaKieli)
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                          toissijainenKaannettavaKieli
+                        )
                       )}
                       disabled={disableFormEdit}
                     >

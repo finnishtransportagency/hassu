@@ -135,6 +135,12 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                         open={ohjeetOpen}
                       >
                         <li>
+                          • Ennen kuulutuksen täyttämistä tarkista, että asialla on auki asianhallintajärjestelmässä oikea toimenpide, joka
+                          on nimeltään Valmiin suunnitelman nähtävillä olo ja lausuntojen pyytäminen. Kuulutuksen julkaisu ei ole
+                          mahdollista, jos asianhallintajärjestelmässä on väärä toimenpide auki. Katso tarkemmat ohjeet asianhallinnan
+                          ohjeistuksesta.
+                        </li>
+                        <li>
                           Lisää nähtäville asetettavat aineistot ensimmäiseltä välilehdeltä.
                           {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
                         </li>
@@ -151,19 +157,24 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                           </li>
                         )}
                         <li>
+                          Tarkista kiinteistönomistajatietojen karttarajaus ja kiinteistönomistajatiedot{" "}
+                          <StyledLink
+                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                          >
+                            Tiedottaminen
+                          </StyledLink>{" "}
+                          -sivulla.
+                        </li>
+                        <li>
                           Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi. Hyväksyntä
                           on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
                         </li>
                         <li>
-                          Kuulutuksen julkaisupäivänä osalle kiinteistönomistajista lähetetään automaattisesti ilmoitus suunnitelman
-                          nähtävilläolosta Suomi.fi viestit -palvelun kautta.
+                          Kuulutuksen julkaisupäivänä niille kiinteistönomistajille, joiden yhteystiedot ovat tiedossa lähetetään
+                          automaattisesti ilmoitus suunnitelman nähtävilläolosta Suomi.fi viestit -palvelun kautta.
                         </li>
                         <li>
-                          Huomioithan, että osaa kiinteistönomistajista tulee tiedottaa järjestelmän ulkopuolella. Hyväksynnän jälkeen
-                          löydät tältä sivulta PDF-muotoisen ilmoituksen, joka heille lähetetään.
-                        </li>
-                        <li>
-                          Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista{" "}
+                          Katso listaukset kiinteistönomistajista{" "}
                           <StyledLink
                             href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
                           >
@@ -179,8 +190,8 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                           Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
                         </li>
                         <li>
-                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
-                          esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+                          • Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu
+                          Ilmoituksen esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
                         </li>
                         {projekti.asianhallinta.inaktiivinen && (
                           <li>
