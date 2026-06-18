@@ -151,19 +151,24 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                           </li>
                         )}
                         <li>
+                          Tarkista kiinteistönomistajatietojen karttarajaus ja kiinteistönomistajatiedot{" "}
+                          <StyledLink
+                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                          >
+                            Tiedottaminen
+                          </StyledLink>{" "}
+                          -sivulla.
+                        </li>
+                        <li>
                           Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi. Hyväksyntä
                           on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
                         </li>
                         <li>
-                          Kuulutuksen julkaisupäivänä osalle kiinteistönomistajista lähetetään automaattisesti ilmoitus suunnitelman
-                          nähtävilläolosta Suomi.fi viestit -palvelun kautta.
+                          Kuulutuksen julkaisupäivänä niille kiinteistönomistajille, joiden yhteystiedot ovat tiedossa lähetetään
+                          automaattisesti ilmoitus suunnitelman nähtävilläolosta Suomi.fi viestit -palvelun kautta.
                         </li>
                         <li>
-                          Huomioithan, että osaa kiinteistönomistajista tulee tiedottaa järjestelmän ulkopuolella. Hyväksynnän jälkeen
-                          löydät tältä sivulta PDF-muotoisen ilmoituksen, joka heille lähetetään.
-                        </li>
-                        <li>
-                          Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista{" "}
+                          Katso listaukset kiinteistönomistajista{" "}
                           <StyledLink
                             href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
                           >
