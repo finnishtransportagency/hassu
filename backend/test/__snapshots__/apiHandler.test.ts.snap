@@ -847,7 +847,7 @@ Object {
     "aloituskuulutusPDFt": Object {
       "SUOMI": Object {
         "__typename": "AloitusKuulutusPDF",
-        "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+        "aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta.pdf",
         "aloituskuulutusIlmoitusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
         "aloituskuulutusPDFPath": "/yllapito/tiedostot/projekti/1/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
       },

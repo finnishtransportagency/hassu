@@ -231,12 +231,12 @@ export class DBProjektiForSpecificVaiheFixture {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
             aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-              "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+              "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
             aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta sv Marikas testprojekt.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta sv Marikas testprojekt.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
           },
         },

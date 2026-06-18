@@ -472,7 +472,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       )}
                       disabled={disableFormEdit}
                     >
-                      Ilmoitus kiinteistön omistajalle esikatselu
+                      Ilmoitus henkilötietojen käsittelystä
                     </Button>
                   </div>
                 </>
@@ -519,7 +519,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       )}
                       disabled={disableFormEdit}
                     >
-                      Ilmoitus kiinteistön omistajalle esikatselu
+                      Ilmoitus henkilötietojen käsittelystä
                     </Button>
                   </div>
                 </>

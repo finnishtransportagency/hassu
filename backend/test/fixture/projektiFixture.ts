@@ -370,7 +370,7 @@ export class ProjektiFixture {
               aloituskuulutusIlmoitusPDFPath:
                 "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
@@ -579,7 +579,7 @@ export class ProjektiFixture {
               aloituskuulutusIlmoitusPDFPath:
                 "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
@@ -819,7 +819,7 @@ export class ProjektiFixture {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
@@ -999,7 +999,7 @@ export class ProjektiFixture {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
@@ -1363,7 +1363,7 @@ export class ProjektiFixture {
               aloituskuulutusIlmoitusPDFPath:
                 "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
             RUOTSI: {
@@ -1965,7 +1965,7 @@ export class ProjektiFixture {
               aloituskuulutusIlmoitusPDFPath:
                 "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
             },
           },
@@ -2311,7 +2311,7 @@ export class ProjektiFixture {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
               aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta Marikan testiprojekti.pdf",
+                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
         },

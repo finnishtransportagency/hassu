@@ -289,8 +289,8 @@ Ystävällisin terveisin,
 Väylävirasto",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
-    "kuvaus": "Ilmoitus kiinteistönomistajille suunnittelun aloittamisesta",
-    "nimi": "Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+    "kuvaus": "Ilmoitus henkilötietojen käsittelystä",
+    "nimi": "Ilmoitus henkilotietojen kasittelysta.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",
@@ -326,8 +326,8 @@ Trafikledsverket
 ",
   "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
   "tiedosto": Object {
-    "kuvaus": "Ilmoitus kiinteistönomistajille suunnittelun aloittamisesta",
-    "nimi": "Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+    "kuvaus": "Ilmoitus henkilötietojen käsittelystä",
+    "nimi": "Ilmoitus henkilotietojen kasittelysta.pdf",
     "sisalto": Object {
       "data": Array [],
       "type": "Buffer",

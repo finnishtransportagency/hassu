@@ -216,7 +216,7 @@ describe("apiHandler", () => {
                 SUOMI: {
                   aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/T412_1 Ilmoitus aloituskuulutuksesta.pdf",
                   aloituskuulutusPDFPath: "/aloituskuulutus/1/T412 Aloituskuulutus.pdf",
-                  aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/Ilmoitus kiinteistonomistajille suunnittelun aloittamisesta.pdf",
+                  aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta.pdf",
                 },
               },
               aloituskuulutusSaamePDFt: {
