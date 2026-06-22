@@ -260,7 +260,12 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
 async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
   data[0].push([
     {
-      value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
+      value:
+        vaihe === Vaihe.ALOITUSKUULUTUS
+          ? "Kuulutus suunnittelun aloittamisesta"
+          : vaihe === Vaihe.NAHTAVILLAOLO
+          ? "Kuulutus suunnitelman nähtäville asettamisesta"
+          : "Kuulutus suunnitelman hyväksymisestä",
       fontWeight: "bold",
     },
   ]);
@@ -274,7 +279,12 @@ async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: 
   data[1] = [];
   data[1].push([
     {
-      value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
+      value:
+        vaihe === Vaihe.ALOITUSKUULUTUS
+          ? "Kuulutus suunnittelun aloittamisesta"
+          : vaihe === Vaihe.NAHTAVILLAOLO
+          ? "Kuulutus suunnitelman nähtäville asettamisesta"
+          : "Kuulutus suunnitelman hyväksymisestä",
       fontWeight: "bold",
     },
   ]);
@@ -327,7 +337,7 @@ export async function generateExcel(
   data[0] = [];
   const sheets: string[] = [];
   const columns: Columns[] = [];
-  if (vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS || vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
     sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat, OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
     columns.push(getKiinteistonomistajaColumns(), getKiinteistonomistajaColumns());
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
