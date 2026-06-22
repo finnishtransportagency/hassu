@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useCallback, useMemo, useEffect, FunctionComponent } from "react";
 import {
   JatkopaatettavaVaihe,
@@ -778,6 +779,20 @@ const asetaKasittelynTilaAutomaatiolla = (data: KasittelynTilaFormValues, defaul
   const liikenteeseenluovutusKokonaanChanged =
     (data.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null) !== defaults.kasittelynTila?.liikenteeseenluovutusKokonaan;
   if (liikenteeseenluovutusKokonaanChanged) {
+    data.kasittelynTila ??= {};
+    data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil07";
+  }
+
+  const toteutusilmoitusOsittainChanged =
+    (data.kasittelynTila?.toteutusilmoitusOsittain ?? null) !== defaults.kasittelynTila?.toteutusilmoitusOsittain;
+  if (toteutusilmoitusOsittainChanged) {
+    data.kasittelynTila ??= {};
+    data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil06";
+  }
+
+  const toteutusilmoitusKokonaanChanged =
+    (data.kasittelynTila?.toteutusilmoitusKokonaan ?? null) !== defaults.kasittelynTila?.toteutusilmoitusKokonaan;
+  if (toteutusilmoitusKokonaanChanged) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil07";
   }
