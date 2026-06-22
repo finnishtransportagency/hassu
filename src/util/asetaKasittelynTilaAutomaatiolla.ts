@@ -33,10 +33,12 @@ export const asetaKasittelynTilaAutomaatiolla = (data: KasittelynTilaFormValues,
   const osaChanged = liikenteeseenluovutusOsittainChanged || toteutusilmoitusOsittainChanged;
   const kokoChanged = liikenteeseenluovutusKokonaanChanged || toteutusilmoitusKokonaanChanged;
 
-  if (kokoChanged) {
+  const osaTaytetty = !!(data.kasittelynTila?.liikenteeseenluovutusOsittain || data.kasittelynTila?.toteutusilmoitusOsittain);
+
+  if ((kokoChanged || osaChanged) && kokoTaytetty) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil07";
-  } else if (osaChanged && !kokoTaytetty) {
+  } else if ((kokoChanged || osaChanged) && osaTaytetty) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil06";
   }

@@ -81,7 +81,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
 
-    it("ei aseta sutil06 kun osa muuttuu mutta koko on jo täytetty (liikenteeseenluovutus)", () => {
+    it("asettaa sutil07 kun osa muuttuu mutta koko on jo täytetty (liikenteeseenluovutus)", () => {
       const data = baseFormValues();
       data.kasittelynTila!.liikenteeseenluovutusOsittain = "2024-01-10";
       data.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-02-01"; // koko jo täytetty
@@ -90,10 +90,10 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
 
       asetaKasittelynTilaAutomaatiolla(data, defaults);
 
-      expect(data.kasittelynTila!.suunnitelmanTila).not.toBe("suunnitelman-tila/sutil06");
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
 
-    it("ei aseta sutil06 kun osa muuttuu mutta koko on jo täytetty (toteutusilmoitus)", () => {
+    it("asettaa sutil07 kun osa muuttuu mutta koko on jo täytetty (toteutusilmoitus)", () => {
       const data = baseFormValues();
       data.kasittelynTila!.toteutusilmoitusOsittain = "2024-01-10";
       data.kasittelynTila!.toteutusilmoitusKokonaan = "2024-02-01"; // koko jo täytetty
@@ -102,7 +102,31 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
 
       asetaKasittelynTilaAutomaatiolla(data, defaults);
 
-      expect(data.kasittelynTila!.suunnitelmanTila).not.toBe("suunnitelman-tila/sutil06");
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
+    });
+
+    it("asettaa sutil06 kun koko poistetaan ja osa on täytetty", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.liikenteeseenluovutusOsittain = "2024-01-10";
+      data.kasittelynTila!.liikenteeseenluovutusKokonaan = null; // koko poistettu
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.liikenteeseenluovutusOsittain = "2024-01-10";
+      defaults.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-02-01"; // koko oli täytetty
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil06");
+    });
+
+    it("ei muuta tilaa kun koko poistetaan eikä osa ole täytetty", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.liikenteeseenluovutusKokonaan = null; // koko poistettu
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-02-01"; // koko oli täytetty
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBeUndefined();
     });
 
     it("asettaa sutil07 kun sekä osa että koko muuttuvat samaan aikaan", () => {
