@@ -11,39 +11,34 @@ export const asetaKasittelynTilaAutomaatiolla = (data: KasittelynTilaFormValues,
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil04";
   }
 
-  const lainvoimaAlkaenChanged = (data.kasittelynTila?.lainvoimaAlkaen ?? null) !== defaults.kasittelynTila?.lainvoimaAlkaen;
-  const lainvoimaPaatyenChanged = (data.kasittelynTila?.lainvoimaPaattyen ?? null) !== defaults.kasittelynTila?.lainvoimaPaattyen;
+  const lainvoimaAlkaenChanged = (data.kasittelynTila?.lainvoimaAlkaen ?? null) !== (defaults.kasittelynTila?.lainvoimaAlkaen ?? null);
+  const lainvoimaPaatyenChanged = (data.kasittelynTila?.lainvoimaPaattyen ?? null) !== (defaults.kasittelynTila?.lainvoimaPaattyen ?? null);
   if (lainvoimaAlkaenChanged && lainvoimaPaatyenChanged) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil05";
   }
 
+  // "Osa" (sutil06) ja "Koko" (sutil07): liikenteelleluovutus ja toteutusilmoitus jakavat samat tilat.
+  // Jos koko-kenttä on täytetty, tila on aina sutil07 eikä voi olla sutil06.
   const liikenteeseenluovutusOsittainChanged =
-    (data.kasittelynTila?.liikenteeseenluovutusOsittain ?? null) !== defaults.kasittelynTila?.liikenteeseenluovutusOsittain;
-  if (liikenteeseenluovutusOsittainChanged) {
-    data.kasittelynTila ??= {};
-    data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil06";
-  }
-
+    (data.kasittelynTila?.liikenteeseenluovutusOsittain ?? null) !== (defaults.kasittelynTila?.liikenteeseenluovutusOsittain ?? null);
   const liikenteeseenluovutusKokonaanChanged =
-    (data.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null) !== defaults.kasittelynTila?.liikenteeseenluovutusKokonaan;
-  if (liikenteeseenluovutusKokonaanChanged) {
+    (data.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null) !== (defaults.kasittelynTila?.liikenteeseenluovutusKokonaan ?? null);
+  const toteutusilmoitusOsittainChanged =
+    (data.kasittelynTila?.toteutusilmoitusOsittain ?? null) !== (defaults.kasittelynTila?.toteutusilmoitusOsittain ?? null);
+  const toteutusilmoitusKokonaanChanged =
+    (data.kasittelynTila?.toteutusilmoitusKokonaan ?? null) !== (defaults.kasittelynTila?.toteutusilmoitusKokonaan ?? null);
+
+  const kokoTaytetty = !!(data.kasittelynTila?.liikenteeseenluovutusKokonaan || data.kasittelynTila?.toteutusilmoitusKokonaan);
+  const osaChanged = liikenteeseenluovutusOsittainChanged || toteutusilmoitusOsittainChanged;
+  const kokoChanged = liikenteeseenluovutusKokonaanChanged || toteutusilmoitusKokonaanChanged;
+
+  if (kokoChanged) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil07";
-  }
-
-  const toteutusilmoitusOsittainChanged =
-    (data.kasittelynTila?.toteutusilmoitusOsittain ?? null) !== defaults.kasittelynTila?.toteutusilmoitusOsittain;
-  if (toteutusilmoitusOsittainChanged) {
+  } else if (osaChanged && !kokoTaytetty) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil06";
-  }
-
-  const toteutusilmoitusKokonaanChanged =
-    (data.kasittelynTila?.toteutusilmoitusKokonaan ?? null) !== defaults.kasittelynTila?.toteutusilmoitusKokonaan;
-  if (toteutusilmoitusKokonaanChanged) {
-    data.kasittelynTila ??= {};
-    data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil07";
   }
 
   const valitustenMaaraChanged = data.kasittelynTila?.valitustenMaara !== null && defaults.kasittelynTila?.valitustenMaara === null;
@@ -52,7 +47,8 @@ export const asetaKasittelynTilaAutomaatiolla = (data: KasittelynTilaFormValues,
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil08";
   }
 
-  const toimitusKaynnistynytChanged = (data.kasittelynTila?.toimitusKaynnistynyt ?? null) !== defaults.kasittelynTila?.toimitusKaynnistynyt;
+  const toimitusKaynnistynytChanged =
+    (data.kasittelynTila?.toimitusKaynnistynyt ?? null) !== (defaults.kasittelynTila?.toimitusKaynnistynyt ?? null);
   if (toimitusKaynnistynytChanged) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil14";
