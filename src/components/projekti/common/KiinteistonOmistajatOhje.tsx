@@ -94,21 +94,31 @@ export default function KiinteistonomistajatOhje({
   uudelleenKuulutus,
 }: Readonly<KiinteistonomistajatOhjeProps>) {
   const { data } = useSuomifiUser();
-  if (!uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe) {
-    const heading = vaihe === Vaihe.HYVAKSYMISPAATOS ? "Kiinteistönomistajat ja muistuttajat" : "Kiinteistönomistajat";
-    return (
-      <SectionContent>
-        <H3>{heading}</H3>
-        {omistajahakuStatus ? (
-          <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
-        ) : (
-          <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
-        )}
-      </SectionContent>
-    );
-  } else {
+
+  if (!data?.suomifiViestitEnabled || !vaihe) {
     return <></>;
   }
+
+  // Uudelleenkuulutus: jos ei tiedoteta kiinteistönomistajia, ei näytetä varoitusta
+  if (uudelleenKuulutus) {
+    if (uudelleenKuulutus.tiedotaKiinteistonomistajia === false) {
+      return <></>;
+    }
+    // Uudelleenkuulutus: tiedotetaan, näytetään normaalisti
+  }
+
+  const heading = vaihe === Vaihe.HYVAKSYMISPAATOS ? "Kiinteistönomistajat ja muistuttajat" : "Kiinteistönomistajat";
+
+  return (
+    <SectionContent>
+      <H3>{heading}</H3>
+      {omistajahakuStatus ? (
+        <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
+      ) : (
+        <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
+      )}
+    </SectionContent>
+  );
 }
 
 export function KiinteistonOmistajatOhjeLukutila({

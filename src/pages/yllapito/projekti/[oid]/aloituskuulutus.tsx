@@ -30,7 +30,6 @@ import useSnackbars from "src/hooks/useSnackbars";
 import { aloituskuulutusSchema } from "src/schemas/aloituskuulutus";
 import AloituskuulutusLukunakyma from "@components/projekti/aloituskuulutus/AloituskuulutusLukunakyma";
 import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/IlmoituksenVastaanottajat";
-import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
@@ -418,12 +417,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   </ContentSpacer>
                 </Section>
                 <KuulutuksenYhteystiedot projekti={projekti} />
-                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
-                <KiinteistonOmistajatUudelleenkuulutus
-                  oid={projekti.oid}
-                  uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
-                  vaihe={Vaihe.ALOITUSKUULUTUS}
-                />
+                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} oid={projekti.oid} omistajahakuStatus={projekti.omistajahaku?.status} uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus} />
               </fieldset>
             </form>
           </FormProvider>
@@ -468,7 +462,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, ensisijainenKaannettavaKieli)
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                          ensisijainenKaannettavaKieli
+                        )
                       )}
                       disabled={disableFormEdit}
                     >
@@ -515,7 +513,11 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
-                        esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, toissijainenKaannettavaKieli)
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                          toissijainenKaannettavaKieli
+                        )
                       )}
                       disabled={disableFormEdit}
                     >
