@@ -54,35 +54,37 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": [
-        "**",
-        "!/^@aws-cdk/",
-        "!/^aws-cdk/",
-        "!/^@aws-sdk/",
-        "!/^aws-sdk/",
-        "!inquirer",
-        "!next",
-        "!eslint-config-next",
-        "!localstack/localstack",
-        "!@types/react",
-        "!@hassu/asianhallinta"
+      "excludePackagePatterns": [
+        "^@aws-cdk/",
+        "^aws-cdk/",
+        "^@aws-sdk/",
+        "^aws-sdk/"
+      ],
+      "excludePackageNames": [
+        "inquirer",
+        "next",
+        "eslint-config-next",
+        "localstack/localstack",
+        "@types/react",
+        "@hassu/asianhallinta"
       ],
       "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies",
       "groupSlug": "all-patch"
     },
     {
-      "matchPackageNames": [
-        "**",
-        "!/^@aws-cdk/",
-        "!/^aws-cdk/",
-        "!/^@aws-sdk/",
-        "!/^aws-sdk/",
-        "!inquirer",
-        "!@hassu/asianhallinta",
-        "!next",
-        "!eslint-config-next",
-        "!localstack/localstack"
+      "excludePackagePatterns": [
+        "^@aws-cdk/",
+        "^aws-cdk/",
+        "^@aws-sdk/",
+        "^aws-sdk/"
+      ],
+      "excludePackageNames": [
+        "inquirer",
+        "@hassu/asianhallinta",
+        "next",
+        "eslint-config-next",
+        "localstack/localstack"
       ],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
