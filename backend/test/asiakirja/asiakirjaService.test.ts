@@ -291,6 +291,52 @@ describe("asiakirjaService", () => {
     }
   });
 
+  it("should generate kuulutukset for Jatkopaatos maakuntaliitoille succesfully", async () => {
+    const projekti: DBProjekti = projektiFixture.dbProjekti2();
+    assertIsDefined(projekti.velho);
+    assertIsDefined(projekti.kasittelynTila);
+    assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+
+    projekti.velho.tyyppi = ProjektiTyyppi.RATA;
+    projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+    projekti.velho.vaylamuoto = ["rata"];
+    projekti.kasittelynTila.ensimmainenJatkopaatos = { paatoksenPvm: "2022-02-03", asianumero: "traficom-456", aktiivinen: true };
+
+    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      projekti.hyvaksymisPaatosVaihe,
+      projekti.hyvaksymisPaatosVaiheJulkaisut
+    );
+    julkaisu.viimeinenVoimassaolovuosi = "2030";
+
+    const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
+      oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
+      kayttoOikeudet: projekti.kayttoOikeudet,
+      kasittelynTila: projekti.kasittelynTila,
+      hyvaksymisPaatosVaihe: julkaisu,
+      kieli: Kieli.SUOMI,
+      luonnos: true,
+      asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+      asianhallintaPaalla: false,
+      linkkiAsianhallintaan: undefined,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
+    });
+    expect(pdf.sisalto.length).to.be.greaterThan(30000);
+    const nimi = projekti.velho.nimi;
+    assertIsDefined(nimi);
+    // Verify the header is the translation key, not the project name repeated
+    const headerText = "Hyv\u00e4ksymisp\u00e4\u00e4t\u00f6ksen voimassaoloajan pident\u00e4misest\u00e4 ilmoittaminen";
+    expect(pdf.textContent).to.include(headerText);
+    // Verify project name does not appear twice consecutively (header + title duplicate)
+    expect(pdf.textContent).to.not.include(nimi + nimi);
+    // Header text should come before the project name
+    const headerIndex = pdf.textContent.indexOf(headerText);
+    const nimiIndex = pdf.textContent.indexOf(nimi);
+    expect(headerIndex, "Header text should appear before project name").to.be.lessThan(nimiIndex);
+    expectPDF("esikatselu_jatkopaatos_maakuntaliitto_", pdf, AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE);
+  });
+
   it("should format list of words properly", () => {
     expect(formatList(["yksi"], Kieli.SUOMI)).to.eq("yksi");
     expect(formatList(["yksi", "kaksi"], Kieli.SUOMI)).to.eq("yksi ja kaksi");
