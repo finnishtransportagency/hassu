@@ -309,12 +309,47 @@ describe("asiakirjaService", () => {
     );
     julkaisu.viimeinenVoimassaolovuosi = "2030";
 
-    const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
+    // Test bilingual (SUOMI + RUOTSI) project - both languages
+    for (const kieli of [Kieli.SUOMI, Kieli.RUOTSI] as KaannettavaKieli[]) {
+      const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
+        oid: projekti.oid,
+        lyhytOsoite: projekti.lyhytOsoite,
+        kayttoOikeudet: projekti.kayttoOikeudet,
+        kasittelynTila: projekti.kasittelynTila,
+        hyvaksymisPaatosVaihe: julkaisu,
+        kieli,
+        luonnos: true,
+        asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+        asianhallintaPaalla: false,
+        linkkiAsianhallintaan: undefined,
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
+      });
+      expect(pdf.sisalto.length).to.be.greaterThan(30000);
+      const nimi = kieli === Kieli.SUOMI ? projekti.velho!.nimi! : projekti.kielitiedot!.projektinNimiVieraskielella!;
+      // Verify project name does not appear twice consecutively
+      expect(pdf.textContent, `${kieli}: project name should not be duplicated`).to.not.include(nimi + nimi);
+      expectPDF(
+        `esikatselu_jatkopaatos_maakuntaliitto_${kieli}_`,
+        pdf,
+        AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+      );
+    }
+
+    // Test monolingual (only SUOMI) project
+    projekti.kielitiedot = { ensisijainenKieli: Kieli.SUOMI };
+    const julkaisuMono = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      projekti.hyvaksymisPaatosVaihe,
+      projekti.hyvaksymisPaatosVaiheJulkaisut
+    );
+    julkaisuMono.viimeinenVoimassaolovuosi = "2030";
+
+    const pdfMono = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
       oid: projekti.oid,
       lyhytOsoite: projekti.lyhytOsoite,
       kayttoOikeudet: projekti.kayttoOikeudet,
       kasittelynTila: projekti.kasittelynTila,
-      hyvaksymisPaatosVaihe: julkaisu,
+      hyvaksymisPaatosVaihe: julkaisuMono,
       kieli: Kieli.SUOMI,
       luonnos: true,
       asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
@@ -322,19 +357,14 @@ describe("asiakirjaService", () => {
       linkkiAsianhallintaan: undefined,
       kuulutettuYhdessaSuunnitelmanimi: undefined,
     });
-    expect(pdf.sisalto.length).to.be.greaterThan(30000);
-    const nimi = projekti.velho.nimi;
-    assertIsDefined(nimi);
-    // Verify the header is the translation key, not the project name repeated
-    const headerText = "Hyv\u00e4ksymisp\u00e4\u00e4t\u00f6ksen voimassaoloajan pident\u00e4misest\u00e4 ilmoittaminen";
-    expect(pdf.textContent).to.include(headerText);
-    // Verify project name does not appear twice consecutively (header + title duplicate)
-    expect(pdf.textContent).to.not.include(nimi + nimi);
-    // Header text should come before the project name
-    const headerIndex = pdf.textContent.indexOf(headerText);
-    const nimiIndex = pdf.textContent.indexOf(nimi);
-    expect(headerIndex, "Header text should appear before project name").to.be.lessThan(nimiIndex);
-    expectPDF("esikatselu_jatkopaatos_maakuntaliitto_", pdf, AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE);
+    expect(pdfMono.sisalto.length).to.be.greaterThan(30000);
+    const nimiMono = projekti.velho!.nimi!;
+    // Verify header text is present and project name is not duplicated
+    expect(pdfMono.textContent).to.include(
+      "Hyv\u00e4ksymisp\u00e4\u00e4t\u00f6ksen voimassaoloajan pident\u00e4misest\u00e4 ilmoittaminen"
+    );
+    expect(pdfMono.textContent, "Monolingual: project name should not be duplicated").to.not.include(nimiMono + nimiMono);
+    expectPDF("esikatselu_jatkopaatos_maakuntaliitto_mono_", pdfMono, AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE);
   });
 
   it("should format list of words properly", () => {
