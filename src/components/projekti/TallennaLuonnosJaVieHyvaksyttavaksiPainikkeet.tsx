@@ -108,7 +108,12 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
                 tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
               !projekti.omistajahaku?.status
             ) {
-              puutteet.push("kiinteistönomistajat puuttuvat");
+              const tiedotaKiinteistonomistajia = formData[formDataField]?.uudelleenKuulutus?.tiedotaKiinteistonomistajia;
+              const skipKiinteistoRequirement =
+                tilasiirtymaTyyppi === TilasiirtymaTyyppi.ALOITUSKUULUTUS && tiedotaKiinteistonomistajia === false;
+              if (!skipKiinteistoRequirement) {
+                puutteet.push("kiinteistönomistajat puuttuvat");
+              }
             }
             if (isAsianhallintaVaarassaTilassa(projekti, tilaSiirtymaTyyppiToVaiheMap[tilasiirtymaTyyppi])) {
               puutteet.push("asianhallinta on väärässä tilassa");

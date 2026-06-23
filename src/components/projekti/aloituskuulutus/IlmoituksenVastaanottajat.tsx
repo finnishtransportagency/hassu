@@ -5,7 +5,15 @@ import React, { ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { AloitusKuulutusJulkaisu, IlmoitettavaViranomainen, KuulutusJulkaisuTila, KuntaVastaanottaja, Status, Vaihe } from "@services/api";
+import {
+  AloitusKuulutusJulkaisu,
+  IlmoitettavaViranomainen,
+  KuulutusJulkaisuTila,
+  KuntaVastaanottaja,
+  Status,
+  UudelleenKuulutus,
+  Vaihe,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -20,6 +28,7 @@ import { MenuItem } from "@mui/material";
 import { H2, H3, H4 } from "../../Headings";
 import { TukiEmailLink } from "../../EiOikeuksia";
 import KiinteistonomistajatOhje, { KiinteistonOmistajatOhjeLukutila } from "@components/projekti/common/KiinteistonOmistajatOhje";
+import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 
 interface HelperType {
   kunnat?: FieldError | { nimi?: FieldError | undefined; sahkoposti?: FieldError | undefined }[] | undefined;
@@ -31,6 +40,7 @@ interface Props {
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
   oid?: string;
   omistajahakuStatus?: Status | null;
+  uudelleenKuulutus?: UudelleenKuulutus | null;
 }
 
 type FormFields = {
@@ -42,7 +52,13 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusjulkaisu, oid, omistajahakuStatus }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({
+  isLoading,
+  aloituskuulutusjulkaisu,
+  oid,
+  omistajahakuStatus,
+  uudelleenKuulutus,
+}: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const isReadonly = !!aloituskuulutusjulkaisu;
   const isKuntia = !!aloituskuulutusjulkaisu?.ilmoituksenVastaanottajat?.kunnat;
@@ -232,12 +248,16 @@ export default function IlmoituksenVastaanottajat({ isLoading, aloituskuulutusju
           />
         )}
       </SectionContent>
-      {!isReadonly && oid && (
+      {!isReadonly && oid && !uudelleenKuulutus && (
         <KiinteistonomistajatOhje
           vaihe={Vaihe.ALOITUSKUULUTUS}
           oid={oid}
           omistajahakuStatus={omistajahakuStatus}
+          uudelleenKuulutus={uudelleenKuulutus}
         />
+      )}
+      {!isReadonly && oid && uudelleenKuulutus && (
+        <KiinteistonOmistajatUudelleenkuulutus oid={oid} uudelleenKuulutus={uudelleenKuulutus} vaihe={Vaihe.ALOITUSKUULUTUS} omistajahakuStatus={omistajahakuStatus} />
       )}
       {isReadonly && oid && (
         <KiinteistonOmistajatOhjeLukutila

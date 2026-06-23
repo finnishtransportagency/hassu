@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import SectionContent from "@components/layout/SectionContent";
-import { UudelleenKuulutus, Vaihe } from "@services/api";
+import { Status, UudelleenKuulutus, Vaihe } from "@services/api";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import StyledLink from "@components/StyledLink";
 import { Controller, useFormContext } from "react-hook-form";
@@ -17,6 +17,7 @@ interface KiinteistonomistajatUudelleenkuulutusProps {
   vaihe?: KiinteistonomistajatUudelleenkuulutusVaihe;
   oid: string;
   uudelleenKuulutus: UudelleenKuulutus | null | undefined;
+  omistajahakuStatus?: Status | null;
 }
 
 type FormFields = {
@@ -46,7 +47,7 @@ const FormGroupWithBoldLabel = styled(FormGroup)(() => ({
   },
 }));
 
-export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuulutus }: KiinteistonomistajatUudelleenkuulutusProps) {
+export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuulutus, omistajahakuStatus }: KiinteistonomistajatUudelleenkuulutusProps) {
   const { data } = useSuomifiUser();
   const { control } = useFormContext<FormFields>();
   if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
@@ -189,7 +190,16 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                   />
                 </FormGroupWithBoldLabel>
               )}
-              {field.value === true && (
+              {field.value === true && !omistajahakuStatus && (
+                <p className="text-red">
+                  Kiinteistönomistajien tietoja ei ole lisätty Tiedottaminen-sivun{" "}
+                  <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+                    Kiinteistönomistajat
+                  </StyledLink>{" "}
+                  -välilehdelle.
+                </p>
+              )}
+              {field.value === true && omistajahakuStatus && (
                 <p>
                   Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen -sivun{" "}
                   <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>

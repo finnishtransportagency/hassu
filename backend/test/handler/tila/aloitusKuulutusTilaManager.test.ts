@@ -130,6 +130,18 @@ describe("aloitusKuulutusTilaManager", () => {
     await expect(aloitusKuulutusTilaManager.validateSendForApproval(projekti)).to.eventually.be.fulfilled;
   });
 
+  it("should not validate omistajahaku status when uudelleenkuulutus tiedotaKiinteistonomistajia is false", async function () {
+    isSuomiFiViestitIntegrationEnabledStub.returns(Promise.resolve(true));
+    projekti.omistajahaku = undefined;
+    projekti.aloitusKuulutus!.uudelleenKuulutus = {
+      tiedotaKiinteistonomistajia: false,
+      alkuperainenHyvaksymisPaiva: "2022-03-21",
+      alkuperainenKuulutusPaiva: "2022-03-21",
+      tila: UudelleenkuulutusTila.JULKAISTU_PERUUTETTU,
+    };
+    await expect(aloitusKuulutusTilaManager.validateSendForApproval(projekti)).to.eventually.be.fulfilled;
+  });
+
   it("should remove saamePDFs from old kuulutus when making uudelleenkuulutus", async function () {
     projekti.aloitusKuulutus = {
       ...projekti.aloitusKuulutus,
@@ -204,8 +216,7 @@ describe("aloitusKuulutusTilaManager", () => {
     expect(deleteStub.callCount).to.equal(3);
     expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/kuulutus.pdf" }))).to.be.true;
     expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/ilmoitus.pdf" }))).to.be.true;
-    expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/kiinteistonomistaja.pdf" }))).to.be
-      .true;
+    expect(deleteStub.calledWith(sinon.match({ oid, filePathInProjekti: "/aloituskuulutus/1/kiinteistonomistaja.pdf" }))).to.be.true;
     deleteStub.restore();
   });
 });

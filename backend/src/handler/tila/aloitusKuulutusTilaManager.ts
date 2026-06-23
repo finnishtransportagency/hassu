@@ -147,7 +147,9 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
       throw new IllegalAineistoStateError();
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
+    // Aloituskuulutuksen uudelleenkuulutustilanteessa ei vaadita kiinteistönomistajia jos ei haluta tiedottaa ennen ko. toiminnallisuutta aloituskuulutettuja
+    const skipKiinteistoRequirement = vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false;
+    if (suomifiViestitEnabled && !projekti.omistajahaku?.status && !skipKiinteistoRequirement) {
       const msg = "Kiinteistönomistajia ei ole haettu ennen aloituskuulutuksen hyväksyntää";
       log.error(msg);
       throw new IllegalArgumentError(msg);
