@@ -24,6 +24,7 @@ import { Kayttajas } from "../src/personSearch/kayttajas";
 import { fileService } from "../src/files/fileService";
 import { emailClient } from "../src/email/email";
 import { pdfGeneratorClient } from "../src/asiakirja/lambda/pdfGeneratorClient";
+import * as tiedotettavatExcel from "../src/mml/tiedotettavatExcel";
 import { handleEvent as pdfGenerator } from "../src/asiakirja/lambda/pdfGeneratorHandler";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { projektiSchedulerService } from "../src/sqsEvents/projektiSchedulerService";
@@ -81,6 +82,7 @@ describe("apiHandler", () => {
     mockSaveProjektiToVelho(velhoStub);
 
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
+    sinon.stub(tiedotettavatExcel, "tallennaMaanomistajaluettelo").resolves("/aloituskuulutus/1/maanomistajaluettelo.xlsx");
 
     aineistoServiceStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     aineistoServiceStub.callsFake(async () => {

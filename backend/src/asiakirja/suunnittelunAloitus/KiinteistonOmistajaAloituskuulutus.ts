@@ -66,7 +66,7 @@ export class KiinteistonOmistajaAloituskuulutus extends CommonPdf<Aloituskuulutu
     );
 
     const fileName = createPDFFileName(
-      AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+      AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
       kutsuAdapter.asiakirjanMuoto,
       velho.tyyppi,
       params.kieli

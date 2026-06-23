@@ -318,7 +318,7 @@ async function createGenerateEvent(
   kohde: Kohde
 ): Promise<GeneratePDFEvent | undefined> {
   if (
-    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS &&
     tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS &&
     projektiFromDB.aloitusKuulutusJulkaisut
   ) {
@@ -497,7 +497,7 @@ async function getFilesAndLanguages(
 
 function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFromDB: DBProjekti): AsiakirjaTyyppi | undefined {
   if (tyyppi === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS && projektiFromDB.aloitusKuulutusJulkaisut) {
-    return AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
+    return AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO && projektiFromDB.nahtavillaoloVaiheJulkaisut) {
     return AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE;
   } else if (tyyppi === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE && projektiFromDB.hyvaksymisPaatosVaiheJulkaisut) {
@@ -508,7 +508,7 @@ function determineAsiakirjaTyyppi(tyyppi: PublishOrExpireEventType, projektiFrom
 
 async function getSwedishFileAsBuffer(asiakirjaTyyppi: AsiakirjaTyyppi, projektiFromDB: DBProjekti): Promise<Buffer | undefined> {
   let tiedosto: string | undefined;
-  if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_ALOITUSKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
+  if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS) {
     const julkaisu = projektiFromDB.aloitusKuulutusJulkaisut?.[projektiFromDB.aloitusKuulutusJulkaisut?.length - 1];
     tiedosto = julkaisu?.aloituskuulutusPDFt?.RUOTSI?.aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath;
   } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
