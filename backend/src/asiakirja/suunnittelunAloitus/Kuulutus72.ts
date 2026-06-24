@@ -2,7 +2,6 @@ import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { formatDate } from "../asiakirjaUtil";
-import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { createPDFFileName } from "../pdfFileName";
 import { HyvaksymisPaatosVaiheKutsuAdapter, HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
 import PDFStructureElement = PDFKit.PDFStructureElement;
@@ -82,11 +81,7 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     this.kutsuAdapter.addTemplateResolver(this);
 
     const fileName = createPDFFileName(asiakirjaTyyppi, kutsuAdapter.asiakirjanMuoto, velho.tyyppi, kieli);
-    if (kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
-    } else {
-      this.header = kutsuAdapter.title;
-    }
+    this.header = kutsuAdapter.text("asiakirja.jatkopaatoksesta_ilmoittaminen.hyvaksymispaatoksesta_ilmoittaminen");
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
