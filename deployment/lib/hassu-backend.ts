@@ -714,7 +714,13 @@ export class HassuBackendStack extends Stack {
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
 
-  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config, pdfGeneratorLambda: NodejsFunction, commonEnvironmentVariables: Record<string, string>) {
+  private createSuomiFiLambda(
+    suomiFiSQS: Queue,
+    vpc: IVpc,
+    config: Config,
+    pdfGeneratorLambda: NodejsFunction,
+    commonEnvironmentVariables: Record<string, string>
+  ) {
     const suomiFiLambda = new NodejsFunction(this, "suomifi-lambda", {
       functionName: "hassu-suomifi-" + Config.env,
       runtime: lambdaRuntime,
