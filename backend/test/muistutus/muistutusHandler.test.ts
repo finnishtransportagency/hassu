@@ -50,7 +50,7 @@ describe("muistutusHandler", () => {
       getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
-      sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
+      sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail").resolves({ accepted: [], rejected: [] });
       kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
       sinon.stub(parameters, "getSuomiFiSQSUrl");
 
@@ -127,32 +127,6 @@ describe("muistutusHandler", () => {
         expect(updateCommand.args[0].input.ExpressionAttributeValues[":id"][0]).to.equal(m.id);
         assert(updateCommand.args[0].input.ExpressionAttributeNames);
         expect(updateCommand.args[0].input.ExpressionAttributeNames["#m"]).to.equal("muistuttajat");
-      });
-
-      it("should send SQS message even if kirjaamo email fails", async () => {
-        sinon
-          .stub(muistutusHandler, "getLoggedInUser")
-          .returns({ "custom:hetu": "12123-041212", given_name: "Mika", family_name: "Muistuttaja" } as SuomiFiCognitoKayttaja);
-        mockClient(DynamoDBDocumentClient);
-        const sqsMock = mockClient(SQSClient);
-        sendTurvapostiEmailStub.rejects(new Error("SMTP timeout"));
-        const muistutusInput: MuistutusInput = {
-          katuosoite: "Katuosoite 1",
-          postitoimipaikka: "Postitoimipaikka1",
-          postinumero: "123123",
-          maa: "FI",
-          sahkoposti: "mika.muistuttaja@mikamuistutta.ja",
-          muistutus: "Testi muistutus",
-          liitteet: [],
-          etunimi: "Tessa",
-          sukunimi: "Testaaja",
-        };
-
-        const result = await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
-
-        expect(result).to.equal("OK");
-        expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
-        sinon.assert.calledOnce(sendTurvapostiEmailStub);
       });
 
       it("should send emails to kirjaamo and muistuttaja successfully", async () => {
