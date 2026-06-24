@@ -26,6 +26,7 @@ import { getPaatosTyyppi } from "../projekti/adapter/projektiAdapterJulkinen";
 import { KiinteistonOmistaja } from "./suunnittelunAloitus/KiinteistonOmistaja";
 import { parameters } from "../aws/parameters";
 import { KiinteistonOmistajaHyvaksymispaatos } from "./suunnittelunAloitus/KiinteistonOmistajaHyvaksymispaatos";
+import { KiinteistonOmistajaAloituskuulutus } from "./suunnittelunAloitus/KiinteistonOmistajaAloituskuulutus";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 
 export class AsiakirjaService {
@@ -41,6 +42,7 @@ export class AsiakirjaService {
     kayttoOikeudet,
     euRahoitusLogot,
     vahainenMenettely,
+    osoite,
     kuulutettuYhdessaSuunnitelmanimi,
   }: AloituskuulutusPdfOptions): Promise<EnhancedPDF> {
     let pdf: Promise<EnhancedPDF>;
@@ -72,6 +74,9 @@ export class AsiakirjaService {
         break;
       case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         pdf = new Ilmoitus12TR(AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA, params).pdf(luonnos);
+        break;
+      case AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS:
+        pdf = new KiinteistonOmistajaAloituskuulutus({ ...params, osoite }, aloitusKuulutusJulkaisu).pdf(luonnos);
         break;
       default:
         throw new Error(`Asiakirjatyyppi ('${asiakirjaTyyppi}') ei ole vielä tuettu`);

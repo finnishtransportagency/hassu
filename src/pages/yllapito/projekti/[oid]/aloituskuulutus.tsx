@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -32,7 +33,6 @@ import IlmoituksenVastaanottajat from "@components/projekti/aloituskuulutus/Ilmo
 import dayjs from "dayjs";
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import HassuStack from "@components/layout/HassuStack";
 import PdfPreviewForm from "@components/projekti/PdfPreviewForm";
 import useLeaveConfirm from "src/hooks/useLeaveConfirm";
 import { KeyedMutator } from "swr";
@@ -59,6 +59,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { H2, H3 } from "../../../../components/Headings";
 import { LiittyvatSuunnitelmat } from "../../../../components/projekti/LiittyvatSuunnitelmat";
+import StyledLink from "@components/StyledLink";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -320,14 +321,37 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                         <li>Valitse / syötä kuulutuksessa esitettävät yhteystiedot.</li>
                         <li>
                           Kirjoita aloituskuulutuksessa esitettävään sisällönkuvauskenttään lyhyesti suunnittelukohteen alueellinen rajaus
-                          (maantiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet pääpiirteittäin karkealla
-                          tasolla. Älä lisää tekstiin linkkejä. Jos projektista tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella
-                          kielellä, eikä tälle ole kenttää, tarkista Projektin tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin
-                          aloituskuulutukseen.
+                          (maantie- / rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet (ml. toista
+                          väylämuotoa koskevat toimenpiteet) pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä. Jos projektista
+                          tulee tehdä kuulutus ensisijaisen kielen lisäksi toisella kielellä, eikä tälle ole kenttää, tarkista Projektin
+                          tiedot -sivulta projektin kieliasetus. Teksti tulee näkyviin aloituskuulutukseen.
+                        </li>
+                        <li>
+                          Hae suunnittelualueen kiinteistönomistajatiedot{" "}
+                          <StyledLink
+                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                          >
+                            Tiedottaminen
+                          </StyledLink>{" "}
+                          -sivulla.
                         </li>
                         <li>
                           Lähetä aloituskuulutus projektipäällikölle hyväksyttäväksi. Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen
                           julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
+                        </li>
+                        <li>
+                          Kuulutuksen julkaisupäivänä niille kiinteistönomistajille, joiden yhteystiedot ovat tiedossa lähetetään
+                          automaattisesti Suomi.fi viestit -palvelun kautta ilmoitus henkilötietojen käsittelystä sekä suunnittelun
+                          aloittamisesta.
+                        </li>
+                        <li>
+                          Katso listaukset kiinteistönomistajista{" "}
+                          <StyledLink
+                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                          >
+                            Tiedottaminen
+                          </StyledLink>{" "}
+                          -sivulta.
                         </li>
                         <li>
                           Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
@@ -417,7 +441,12 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   </ContentSpacer>
                 </Section>
                 <KuulutuksenYhteystiedot projekti={projekti} />
-                <IlmoituksenVastaanottajat isLoading={isLoadingProjekti} />
+                <IlmoituksenVastaanottajat
+                  isLoading={isLoadingProjekti}
+                  oid={projekti.oid}
+                  omistajahakuStatus={projekti.omistajahaku?.status}
+                  uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
+                />
               </fieldset>
             </form>
           </FormProvider>
@@ -434,8 +463,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       kielitiedot,
                     })}
                   </p>
-                  <HassuStack direction={["column", "column", "row"]}>
+                  <div>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_kuulutus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -446,6 +476,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       Kuulutuksen esikatselu
                     </Button>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_ilmoitus_pdf_" + ensisijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -455,7 +486,22 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                     >
                       Ilmoituksen esikatselu
                     </Button>
-                  </HassuStack>
+                    <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                      id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKaannettavaKieli}
+                      type="submit"
+                      onClick={handleDraftSubmit((formData) =>
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
+                          ensisijainenKaannettavaKieli
+                        )
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Ilmoitus henkilötietojen käsittelystä
+                    </Button>
+                  </div>
                 </>
               )}
 
@@ -468,8 +514,9 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       kielitiedot,
                     })}
                   </p>
-                  <HassuStack direction={["column", "column", "row"]}>
+                  <div>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_kuulutus_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -480,6 +527,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                       Kuulutuksen esikatselu
                     </Button>
                     <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                       id={"preview_ilmoitus_pdf_" + toissijainenKaannettavaKieli}
                       type="submit"
                       onClick={handleDraftSubmit((formData) =>
@@ -489,7 +537,22 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                     >
                       Ilmoituksen esikatselu
                     </Button>
-                  </HassuStack>
+                    <Button
+                      style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                      id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKaannettavaKieli}
+                      type="submit"
+                      onClick={handleDraftSubmit((formData) =>
+                        esikatselePdf(
+                          formData,
+                          AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
+                          toissijainenKaannettavaKieli
+                        )
+                      )}
+                      disabled={disableFormEdit}
+                    >
+                      Ilmoitus henkilötietojen käsittelystä
+                    </Button>
+                  </div>
                 </>
               )}
               <FormProvider {...useFormReturn}>
