@@ -168,6 +168,28 @@ Object {
   "mockedtime": "2020-01-01T02:00",
   "obj": Array [
     Object {
+      "nimi": "Ilmoitus henkilotietojen kasittelysta.pdf",
+      "textContent": "HASSU/123/2023
+
+
+Ilmoitus henkilötietojen käsittelystä
+Hyvä suunnittelualueen ja sen lähialueen kiinteistönomistaja,
+Suomiseloste uudelleenkuulutukselle
+Nokia laatii tiesuunnitelmaa HASSU AUTOMAATTITESTIPROJEKTI1. Saat kirjeen, koska Maanmittauslaitoksen Kiinteistötietojärjestelmästä saatujen tietojen mukaan omistat kiinteistön edellä mainitun tiesuunnitelman suunnittelualueella tai sen lähellä. Suunnittelun aikana Nokia käsittelee henkilötietojanne, kuten kiinteistötunnusta, yhteystietoja sekä henkilötunnusta, jota käytetään suunnittelun etenemisestä tiedottamisessa.
+Suunnittelun edetessä suunnittelualue tarkentuu, jolloin myös kiinteistöomistajien tiedot päivitetään. Kaikille tämän kirjeen vastaanottajien kiinteistöille ei välttämättä kohdistu laadittavassa suunnitelmassa toimenpiteitä tai vaikutuksia, minkä vuoksi kaikki tämän kirjeen vastaanottajat eivät välttämättä saa jatkossa suunnitelmaa koskevia kirjeitä.
+Jos Kiinteistötietojärjestelmästä saaduissa tiedoissa on virheitä, ettekä omista kiinteistöä suunnittelualueella, teidän tulee olla yhteydessä suunnittelun projektipäällikköön sekä Maanmittauslaitokseen tietojenne korjaamiseksi.
+Suunnittelun käynnistymisestä on julkaistu aloituskuulutus 1.1.2031. Voit tutustua kuulutukseen verkossa osoitteessa https://localhost:3000/s/3c1d. Samalla sivulla voit seurata suunnittelun etenemistä. Sivulla mm. ilmoitetaan mahdollisuudesta saada tietoa suunnitelmasta sekä antaa siitä palautetta.
+
+Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+A-tunnus1 HassuProjektipäällikköCGI Suomi Oy
+Lisätietoja antaa 
+Nokia, Testi1 Hassu, puh. 029123123, mikko.haapamaki1(at)cgi.com jaKajaani, Marko Koi, puh. 0293121213, markku.koi(at)koi.com
+JakeluErillisen jakelun mukaanJakelun osoitetiedot on haettu kiinteistötietojärjestelmästä ja yritystietojärjestelmästä
+TiedoksiVäyläviraston kirjaamo
+",
+    },
+    Object {
       "nimi": "T412 Aloituskuulutus.pdf",
       "textContent": "HASSU/123/2023
 

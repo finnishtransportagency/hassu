@@ -260,7 +260,12 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
 async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
   data[0].push([
     {
-      value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
+      value:
+        vaihe === Vaihe.ALOITUSKUULUTUS
+          ? "Kuulutus suunnittelun aloittamisesta"
+          : vaihe === Vaihe.NAHTAVILLAOLO
+          ? "Kuulutus suunnitelman nähtäville asettamisesta"
+          : "Kuulutus suunnitelman hyväksymisestä",
       fontWeight: "bold",
     },
   ]);
@@ -274,7 +279,12 @@ async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: 
   data[1] = [];
   data[1].push([
     {
-      value: vaihe === Vaihe.NAHTAVILLAOLO ? "Kuulutus suunnitelman nähtäville asettamisesta" : "Kuulutus suunnitelman hyväksymisestä",
+      value:
+        vaihe === Vaihe.ALOITUSKUULUTUS
+          ? "Kuulutus suunnittelun aloittamisesta"
+          : vaihe === Vaihe.NAHTAVILLAOLO
+          ? "Kuulutus suunnitelman nähtäville asettamisesta"
+          : "Kuulutus suunnitelman hyväksymisestä",
       fontWeight: "bold",
     },
   ]);
@@ -327,7 +337,7 @@ export async function generateExcel(
   data[0] = [];
   const sheets: string[] = [];
   const columns: Columns[] = [];
-  if (vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS || vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
     sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat, OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
     columns.push(getKiinteistonomistajaColumns(), getKiinteistonomistajaColumns());
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
@@ -426,7 +436,9 @@ function getMaanomistajaluetteloFilename(
   } else {
     prefix = "T416";
   }
-  if (vaihe === Vaihe.NAHTAVILLAOLO) {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS) {
+    return `Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
+  } else if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return `${prefix} Maanomistajaluettelo ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
   } else {
     return `${prefix} Maanomistajaluettelo ja muistuttajat ${formatDate(kuulutusPaiva, "YYYYMMDD")}${id === 1 ? "" : " " + id}.xlsx`;
@@ -449,7 +461,9 @@ export async function tallennaMaanomistajaluettelo(
     contents: await generateExcel(projekti, true, vaihe, kuulutusPaiva),
     contentType: CONTENT_TYPE_EXCEL,
     asiakirjaTyyppi:
-      vaihe === Vaihe.NAHTAVILLAOLO
+      vaihe === Vaihe.ALOITUSKUULUTUS
+        ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_ALOITUSKUULUTUS
+        : vaihe === Vaihe.NAHTAVILLAOLO
         ? AsiakirjaTyyppi.MAANOMISTAJALUETTELO_NAHTAVILLAOLO
         : AsiakirjaTyyppi.MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS,
   });

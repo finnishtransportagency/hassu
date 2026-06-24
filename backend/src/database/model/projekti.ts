@@ -54,6 +54,7 @@ export type AloitusKuulutus = {
 export type AloitusKuulutusPDF = {
   aloituskuulutusPDFPath: string;
   aloituskuulutusIlmoitusPDFPath: string;
+  aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath?: string;
 };
 
 export type KuulutusSaamePDFt = SaameLocalizedMap<KuulutusSaamePDF>;
@@ -85,6 +86,7 @@ export type AloitusKuulutusJulkaisu = {
   uudelleenKuulutus?: UudelleenKuulutus | null;
   asianhallintaEventId?: string | null;
   kopioituProjektista?: string | null;
+  maanomistajaluettelo?: string | null;
   projektinJakautuminen?: ProjektinJakautuminen;
 };
 

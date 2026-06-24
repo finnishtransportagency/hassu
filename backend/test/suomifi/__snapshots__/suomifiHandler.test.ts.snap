@@ -271,6 +271,72 @@ Väylävirasto",
 }
 `;
 
+exports[`suomifiHandler omistajan pdf viesti suomi.fi aloituskuulutus 1`] = `
+Object {
+  "hetu": "ABC",
+  "kustannuspaikka": undefined,
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus henkilötietojen käsittelystä ja suunnittelun aloittamisesta",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnittelun aloittamisesta sekä henkilötietojen käsittelystä suunnittelun yhteydessä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin,
+Väylävirasto",
+  "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+  "tiedosto": Object {
+    "kuvaus": "Ilmoitus henkilötietojen käsittelystä",
+    "nimi": "Ilmoitus henkilotietojen kasittelysta.pdf",
+    "sisalto": Object {
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "ytunnus": undefined,
+}
+`;
+
+exports[`suomifiHandler omistajan pdf viesti suomi.fi aloituskuulutus kaksikielinen (ruotsi) 1`] = `
+Object {
+  "hetu": "ABC",
+  "kustannuspaikka": undefined,
+  "lahiosoite": "Osoite 1",
+  "maa": "FI",
+  "nimi": "Testi Teppo",
+  "otsikko": "Ilmoitus henkilötietojen käsittelystä ja suunnittelun aloittamisesta / Information om behandling av personuppgifter och om att planeringen inleds",
+  "postinumero": "00100",
+  "postitoimipaikka": "Helsinki",
+  "sisalto": "Hei,
+
+Olette saaneet kirjeen, jossa kerrotaan suunnittelun aloittamisesta sekä henkilötietojen käsittelystä suunnittelun yhteydessä. Kirje on tämän viestin liitteenä. Löydät kirjeestä linkin Valtion liikenneväylien suunnittelu -palveluun, missä pääsette tutustumaan suunnitelmaan tarkemmin.
+
+Ystävällisin terveisin,
+Väylävirasto
+
+Hej,
+
+Ni har fått ett brev med information om att planeringen inleds samt om behandlingen av personuppgifter i samband med planeringen. Brevet finns som bilaga till detta meddelande. I brevet hittar du en länk till tjänsten Planering av statens trafikleder, där ni kan bekanta er närmare med planen.
+
+Med vänlig hälsning,
+Trafikledsverket
+",
+  "suunnittelustaVastaavaViranomainen": "VAYLAVIRASTO",
+  "tiedosto": Object {
+    "kuvaus": "Ilmoitus henkilötietojen käsittelystä",
+    "nimi": "Ilmoitus henkilotietojen kasittelysta.pdf",
+    "sisalto": Object {
+      "data": Array [],
+      "type": "Buffer",
+    },
+  },
+  "ytunnus": undefined,
+}
+`;
+
 exports[`suomifiHandler omistajan pdf viesti suomi.fi hyväksymispäätös 1`] = `
 Object {
   "hetu": "ABC",

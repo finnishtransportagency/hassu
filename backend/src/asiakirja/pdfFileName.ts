@@ -19,6 +19,10 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_aloituskuulutus",
     },
   },
+  ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS: {
+    TIE: { [ProjektiTyyppi.TIE]: "kirje_aloituskuulutus", [ProjektiTyyppi.YLEINEN]: "kirje_aloituskuulutus" },
+    RATA: { [ProjektiTyyppi.RATA]: "kirje_aloituskuulutus", [ProjektiTyyppi.YLEINEN]: "kirje_aloituskuulutus" },
+  },
   [AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU]: {
     TIE: { [ProjektiTyyppi.TIE]: "T413", [ProjektiTyyppi.YLEINEN]: "20YS" },
     RATA: {

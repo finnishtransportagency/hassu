@@ -76,6 +76,7 @@ export type AloituskuulutusPdfOptions = {
   vahainenMenettely?: boolean | null;
   asianhallintaPaalla: boolean;
   linkkiAsianhallintaan: string | undefined;
+  osoite?: Osoite;
   kuulutettuYhdessaSuunnitelmanimi: string | undefined;
 };
 

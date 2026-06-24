@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
 import { AsiakirjaTyyppi, EsikatseleAsiakirjaPDFQueryVariables, Kieli, PDF, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
@@ -17,7 +18,10 @@ import { haeKuulutettuYhdessaSuunnitelmanimi } from "../asiakirja/haeKuulutettuY
 
 async function handleAloitusKuulutus(
   projekti: DBProjekti,
-  asiakirjaTyyppi: AsiakirjaTyyppi.ALOITUSKUULUTUS | AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA,
+  asiakirjaTyyppi:
+    | AsiakirjaTyyppi.ALOITUSKUULUTUS
+    | AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA
+    | AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS,
   kieli: KaannettavaKieli,
   muutokset: TallennaProjektiInput
 ) {
@@ -170,6 +174,7 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
       switch (asiakirjaTyyppi) {
         case AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA:
         case AsiakirjaTyyppi.ALOITUSKUULUTUS:
+        case AsiakirjaTyyppi.ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS:
           return handleAloitusKuulutus(projekti, asiakirjaTyyppi, kaytettavaKieli, muutokset);
         case AsiakirjaTyyppi.YLEISOTILAISUUS_KUTSU:
           return handleYleisotilaisuusKutsu(projekti, asiakirjaTyyppi, kaytettavaKieli, muutokset);
