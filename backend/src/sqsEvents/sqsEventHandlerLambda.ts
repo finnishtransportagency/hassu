@@ -484,6 +484,13 @@ export const handlerFactory = (event: SQSEvent) => async () => {
           projekti.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil13";
           await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, kasittelynTila: projekti.kasittelynTila });
           await velho.saveProjektiSuunnitelmanTila(projekti.oid, projekti.kasittelynTila.suunnitelmanTila);
+          // Lähetetään Suomi.fi-viestit kiinteistönomistajille
+          const julkaisu = projekti.aloitusKuulutusJulkaisut?.[projekti.aloitusKuulutusJulkaisut.length - 1];
+          if (!julkaisu?.uudelleenKuulutus || julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) {
+            await lahetaSuomiFiViestit(projekti, sqsEvent.approvalType);
+          } else {
+            log.info("Ei Suomi.fi tiedoteta kiinteistönomistajia");
+          }
         } else if (
           successfulSynchronization &&
           sqsEvent.approvalType === PublishOrExpireEventType.EXPIRE &&

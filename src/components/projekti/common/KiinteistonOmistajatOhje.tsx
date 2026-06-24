@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
 import { KuulutusJulkaisuTila, Status, UudelleenKuulutus, Vaihe } from "@services/api";
@@ -6,7 +7,7 @@ import dayjs from "dayjs";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { H3 } from "../../Headings";
 
-export type KiinteistonomistajatVaihe = Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
+export type KiinteistonomistajatVaihe = Vaihe.ALOITUSKUULUTUS | Vaihe.NAHTAVILLAOLO | Vaihe.HYVAKSYMISPAATOS;
 interface KiinteistonomistajatOhjeProps {
   vaihe?: KiinteistonomistajatVaihe;
   oid: string;
@@ -31,7 +32,24 @@ function KiinteistojaEiLisatty({ oid }: Readonly<KiinteistonomistajatOhjeProps>)
 }
 
 function KiinteistotLisatty({ oid, vaihe }: Readonly<KiinteistonomistajatOhjeProps>) {
-  if (vaihe === Vaihe.NAHTAVILLAOLO) {
+  if (vaihe === Vaihe.ALOITUSKUULUTUS) {
+    return (
+      <>
+        <p>
+          Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen-sivun{" "}
+          <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+            Kiinteistönomistajat
+          </StyledLink>{" "}
+          -välilehdeltä. Kiinteistönomistajista viedään vastaanottajalista automaattisesti asianhallintaan, kun kuulutus hyväksytään
+          julkaistavaksi.
+        </p>
+        <p>
+          Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Tiedot
+          kiinteistönomistajista löytyvät Tiedottaminen sivulta.
+        </p>
+      </>
+    );
+  } else if (vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <>
         <p>
@@ -76,20 +94,31 @@ export default function KiinteistonomistajatOhje({
   uudelleenKuulutus,
 }: Readonly<KiinteistonomistajatOhjeProps>) {
   const { data } = useSuomifiUser();
-  if (!uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe) {
-    return (
-      <SectionContent>
-        <H3>{vaihe === Vaihe.NAHTAVILLAOLO ? "Kiinteistönomistajat" : "Kiinteistönomistajat ja muistuttajat"}</H3>
-        {omistajahakuStatus ? (
-          <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
-        ) : (
-          <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
-        )}
-      </SectionContent>
-    );
-  } else {
+
+  if (!data?.suomifiViestitEnabled || !vaihe) {
     return <></>;
   }
+
+  // Uudelleenkuulutus: jos ei tiedoteta kiinteistönomistajia, ei näytetä varoitusta
+  if (uudelleenKuulutus) {
+    if (uudelleenKuulutus.tiedotaKiinteistonomistajia === false) {
+      return <></>;
+    }
+    // Uudelleenkuulutus: tiedotetaan, näytetään normaalisti
+  }
+
+  const heading = vaihe === Vaihe.HYVAKSYMISPAATOS ? "Kiinteistönomistajat ja muistuttajat" : "Kiinteistönomistajat";
+
+  return (
+    <SectionContent>
+      <H3>{heading}</H3>
+      {omistajahakuStatus ? (
+        <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
+      ) : (
+        <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
+      )}
+    </SectionContent>
+  );
 }
 
 export function KiinteistonOmistajatOhjeLukutila({
@@ -102,7 +131,27 @@ export function KiinteistonOmistajatOhjeLukutila({
   const { data } = useSuomifiUser();
   const pvm = dayjs(kuulutusPaiva, "DD.MM.YYYY").startOf("date");
   const inPast = pvm.isBefore(nyt()) && julkaisunTila !== KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
-  if (data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
+  if (data?.suomifiViestitEnabled && vaihe === Vaihe.ALOITUSKUULUTUS) {
+    return (
+      <SectionContent>
+        <H3 variant="h5">Kiinteistönomistajat</H3>
+        <>
+          <p>
+            Lista kuulutuksen ilmoituksen vastaanottaneista kiinteistönomistajista muodostuu asianhallintaan, kun kuulutus hyväksytään
+            julkaistavaksi.
+          </p>
+          <p>
+            Kiinteistönomistajia, joille on tiedossa yhteystiedot, tiedotetaan automaattisesti Suomi.fi-palvelun kautta. Tiedot
+            kiinteistönomistajista löytyvät{" "}
+            <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+              Tiedottaminen
+            </StyledLink>{" "}
+            -sivulta.
+          </p>
+        </>
+      </SectionContent>
+    );
+  } else if (data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
     return (
       <SectionContent>
         <H3 variant="h5">Kiinteistönomistajat</H3>
