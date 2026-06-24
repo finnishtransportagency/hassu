@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe } from "mocha";
 import * as sinon from "sinon";
 import { ProjektiFixture } from "../fixture/projektiFixture";
@@ -49,7 +50,7 @@ describe("muistutusHandler", () => {
       getKayttajasStub = sinon.stub(personSearch, "getKayttajas");
       loadProjektiByOidStub = sinon.stub(projektiDatabase, "loadProjektiByOid");
       sendEmailStub = sinon.stub(emailClient, "sendEmail");
-      sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail");
+      sendTurvapostiEmailStub = sinon.stub(emailClient, "sendTurvapostiEmail").resolves({ accepted: [], rejected: [] });
       kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet");
       sinon.stub(parameters, "getSuomiFiSQSUrl");
 

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DBProjekti, Muistutus } from "../database/model";
 import { emailClient } from "../email/email";
 import { createKuittausMuistuttajalleEmail, createMuistutusKirjaamolleEmail } from "../email/emailTemplates";
@@ -46,8 +47,12 @@ class MuistutusEmailService {
       );
     }
 
-    await emailClient.sendTurvapostiEmail(emailOptions);
-    log.info("Muistutuksen sisältävä sähköposti lähetetty: " + emailOptions.to);
+    const result = await emailClient.sendTurvapostiEmail(emailOptions);
+    if (result) {
+      log.info("Muistutuksen sisältävä sähköposti lähetetty: " + emailOptions.to);
+    } else {
+      throw new Error("Muistutuksen lähetys kirjaamoon epäonnistui: sähköpostin lähetys ei palauttanut onnistunutta vastausta");
+    }
   }
 }
 

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   HaeMuistuttajatQueryVariables,
   LisaaMuistutusMutationVariables,

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as nodemailer from "nodemailer";
 import { config } from "../config";
 import { log } from "../logger";
@@ -43,6 +44,9 @@ function getTransport(smtpConfig: SMTPConfig) {
       pass: smtpConfig.SMTP_SECRET,
     },
     debug: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 }
 
@@ -56,6 +60,9 @@ export function getTurvapostiTransport(turvapostiConfig: TurvapostiConfig) {
       pass: turvapostiConfig.PASSWORD,
     },
     debug: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 }
 
