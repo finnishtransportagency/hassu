@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { App, aws_scheduler, CfnOutput, Duration, Expiration, Fn, Stack } from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import {
@@ -125,7 +126,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda);
+    const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda, commonEnvironmentVariables);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -713,7 +714,7 @@ export class HassuBackendStack extends Stack {
     kiinteistoLambda.addToRolePolicy(updateSynkronointiPolicy);
   }
 
-  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config, pdfGeneratorLambda: NodejsFunction) {
+  private createSuomiFiLambda(suomiFiSQS: Queue, vpc: IVpc, config: Config, pdfGeneratorLambda: NodejsFunction, commonEnvironmentVariables: Record<string, string>) {
     const suomiFiLambda = new NodejsFunction(this, "suomifi-lambda", {
       functionName: "hassu-suomifi-" + Config.env,
       runtime: lambdaRuntime,
@@ -744,6 +745,7 @@ export class HassuBackendStack extends Stack {
         },
       },
       environment: {
+        EMAILS_ON: commonEnvironmentVariables.EMAILS_ON,
         ENVIRONMENT: Config.env,
         INFRA_ENVIRONMENT: Config.infraEnvironment,
         TZ: "Europe/Helsinki",
