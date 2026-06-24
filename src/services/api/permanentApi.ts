@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import awsExports from "../../aws-exports";
 import { createAuthLink } from "aws-appsync-auth-link";
 import { createHttpLink, FetchResult, Observable, ServerError, ApolloLink } from "@apollo/client";
@@ -6,13 +7,43 @@ import { API, ERROR_MESSAGE_NOT_AUTHENTICATED } from "@services/api/commonApi";
 import { GraphQLError } from "graphql/error/GraphQLError";
 import fetch from "cross-fetch";
 
+/**
+ * Strips basic auth credentials from a URL to prevent them from leaking into GraphQL requests.
+ *
+ * Problem: In non-production environments, basic auth is used to protect the public site.
+ * When a user navigates with credentials in the URL (e.g., https://user:pass@host),
+ * the browser sends an Authorization header with all subsequent fetch requests,
+ * which conflicts with AppSync API key authentication and causes the public side
+ * of the application to enter an infinite loading loop.
+ *
+ * In production there is no basic auth, so this function acts as a no-op —
+ * it simply converts relative paths to absolute URLs using window.location.origin,
+ * which never contains credentials.
+ */
+export const stripCredentialsFromUrl = (relativeOrAbsoluteUrl: string): string => {
+  if (typeof window === "undefined") {
+    return relativeOrAbsoluteUrl;
+  }
+  if (relativeOrAbsoluteUrl.startsWith("/")) {
+    return window.location.origin + relativeOrAbsoluteUrl;
+  }
+  try {
+    const url = new URL(relativeOrAbsoluteUrl);
+    url.username = "";
+    url.password = "";
+    return url.toString();
+  } catch {
+    return relativeOrAbsoluteUrl;
+  }
+};
+
 export type ErrorResponseHandler = (errorResponse: ErrorResponse) => void;
 type GenerateLinkArray = (graphQLAPI: string, errorHandler?: ErrorResponseHandler) => ApolloLink[];
 
 const getPublicLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => {
   return [
     createAuthLink({
-      url: graphQLAPI,
+      url: stripCredentialsFromUrl(graphQLAPI),
       region: awsExports.aws_appsync_region,
       auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
     }),
@@ -25,7 +56,7 @@ const getPublicLinks: GenerateLinkArray = (graphQLAPI: string, errorHandler) => 
       }
     }),
     createHttpLink({
-      uri: graphQLAPI,
+      uri: stripCredentialsFromUrl(graphQLAPI),
       fetch,
     }),
   ];
@@ -35,7 +66,7 @@ const getAuthenticatedLinks: GenerateLinkArray = (graphQLAPI: string, errorHandl
   const yllapitoGraphQLAPI = graphQLAPI.replace("/graphql", "/yllapito/graphql");
   return [
     createAuthLink({
-      url: yllapitoGraphQLAPI,
+      url: stripCredentialsFromUrl(yllapitoGraphQLAPI),
       region: awsExports.aws_appsync_region,
       auth: { type: "API_KEY", apiKey: awsExports.aws_appsync_apiKey || "" },
     }),
@@ -52,7 +83,7 @@ const getAuthenticatedLinks: GenerateLinkArray = (graphQLAPI: string, errorHandl
       }
     }),
     createHttpLink({
-      uri: yllapitoGraphQLAPI,
+      uri: stripCredentialsFromUrl(yllapitoGraphQLAPI),
       fetchOptions: { redirect: "manual" },
       fetch,
     }),
