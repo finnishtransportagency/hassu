@@ -322,6 +322,82 @@ describe("asiakirjaService", () => {
     }
   });
 
+  it("should generate kuulutukset for Jatkopaatos maakuntaliitoille succesfully", async () => {
+    const projekti: DBProjekti = projektiFixture.dbProjekti2();
+    assertIsDefined(projekti.velho);
+    assertIsDefined(projekti.kasittelynTila);
+    assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+
+    projekti.velho.tyyppi = ProjektiTyyppi.RATA;
+    projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO;
+    projekti.velho.vaylamuoto = ["rata"];
+    projekti.kasittelynTila.ensimmainenJatkopaatos = { paatoksenPvm: "2022-02-03", asianumero: "traficom-456", aktiivinen: true };
+
+    const julkaisu = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      projekti.hyvaksymisPaatosVaihe,
+      projekti.hyvaksymisPaatosVaiheJulkaisut
+    );
+    julkaisu.viimeinenVoimassaolovuosi = "2030";
+
+    // Test bilingual (SUOMI + RUOTSI) project - both languages
+    for (const kieli of [Kieli.SUOMI, Kieli.RUOTSI] as KaannettavaKieli[]) {
+      const pdf = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
+        oid: projekti.oid,
+        lyhytOsoite: projekti.lyhytOsoite,
+        kayttoOikeudet: projekti.kayttoOikeudet,
+        kasittelynTila: projekti.kasittelynTila,
+        hyvaksymisPaatosVaihe: julkaisu,
+        kieli,
+        luonnos: true,
+        asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+        asianhallintaPaalla: false,
+        linkkiAsianhallintaan: undefined,
+        kuulutettuYhdessaSuunnitelmanimi: undefined,
+      });
+      expect(pdf.sisalto.length).to.be.greaterThan(30000);
+      const nimi = kieli === Kieli.SUOMI ? projekti.velho!.nimi! : projekti.kielitiedot!.projektinNimiVieraskielella!;
+      // Verify project name does not appear twice consecutively
+      expect(pdf.textContent, `${kieli}: project name should not be duplicated`).to.not.include(nimi + nimi);
+      expectPDF(
+        `esikatselu_jatkopaatos_maakuntaliitto_${kieli}_`,
+        pdf,
+        AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
+      );
+    }
+
+    // Test monolingual (only SUOMI) project
+    projekti.kielitiedot = { ensisijainenKieli: Kieli.SUOMI };
+    const julkaisuMono = await asiakirjaAdapter.adaptHyvaksymisPaatosVaiheJulkaisu(
+      projekti,
+      projekti.hyvaksymisPaatosVaihe,
+      projekti.hyvaksymisPaatosVaiheJulkaisut
+    );
+    julkaisuMono.viimeinenVoimassaolovuosi = "2030";
+
+    const pdfMono = await new AsiakirjaService().createHyvaksymisPaatosKuulutusPdf({
+      oid: projekti.oid,
+      lyhytOsoite: projekti.lyhytOsoite,
+      kayttoOikeudet: projekti.kayttoOikeudet,
+      kasittelynTila: projekti.kasittelynTila,
+      hyvaksymisPaatosVaihe: julkaisuMono,
+      kieli: Kieli.SUOMI,
+      luonnos: true,
+      asiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
+      asianhallintaPaalla: false,
+      linkkiAsianhallintaan: undefined,
+      kuulutettuYhdessaSuunnitelmanimi: undefined,
+    });
+    expect(pdfMono.sisalto.length).to.be.greaterThan(30000);
+    const nimiMono = projekti.velho!.nimi!;
+    // Verify header text is present and project name is not duplicated
+    expect(pdfMono.textContent).to.include(
+      "Hyv\u00e4ksymisp\u00e4\u00e4t\u00f6ksen voimassaoloajan pident\u00e4misest\u00e4 ilmoittaminen"
+    );
+    expect(pdfMono.textContent, "Monolingual: project name should not be duplicated").to.not.include(nimiMono + nimiMono);
+    expectPDF("esikatselu_jatkopaatos_maakuntaliitto_mono_", pdfMono, AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE);
+  });
+
   it("should format list of words properly", () => {
     expect(formatList(["yksi"], Kieli.SUOMI)).to.eq("yksi");
     expect(formatList(["yksi", "kaksi"], Kieli.SUOMI)).to.eq("yksi ja kaksi");

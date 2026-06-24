@@ -652,7 +652,7 @@ Object {
 
 Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
-Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen ratasuunnitelman: Testiprojekti 2.
+Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen ratasuunnitelman: Testiprojekti 2.
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022. Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
 Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
@@ -803,7 +803,7 @@ Object {
 
 Suunnitelman hyväksymispäätöksen kuuluttaminen
 Testiprojekti 2
-Liikenne-, ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen yleissuunnitelman: Testiprojekti 2.
+Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123 hyväksynyt ratalain (110/2007) mukaisen yleissuunnitelman: Testiprojekti 2.
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022. Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
 Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
@@ -1393,6 +1393,90 @@ Matti Meikalainen (Trafikledsverket),
 tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 tel. 0293121213, markku.koi(at)koi.com 
+
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Jatkopaatos maakuntaliitoille succesfully 1`] = `
+Object {
+  "fileName": "esikatselu_jatkopaatos_maakuntaliitto_SUOMI_R443 Ilmoitus hyvaksymispaatoksen voimassaolon jatkamisesta maakuntaliitolle.pdf",
+  "textContent": "VAYLA/2/2022
+
+
+
+Hyväksymispäätöksen voimassaoloajan pidentämisestä ilmoittaminen
+Testiprojekti 2
+Väylävirasto ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-456 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden 2030 loppuun.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/jatkopaatos1.
+
+Liitteenä olevasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Jatkopaatos maakuntaliitoille succesfully 2`] = `
+Object {
+  "fileName": "esikatselu_jatkopaatos_maakuntaliitto_RUOTSI_R443 Ilmoitus hyvaksymispaatoksen voimassaolon jatkamisesta maakuntaliitolle sv.pdf",
+  "textContent": "VAYLA/2/2022
+
+
+
+Anmälan om förlängning av giltighetstiden för beslut om godkännande
+Namnet på svenska
+Trafikledsverket meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-456 har godkänt en järnvägsplan enligt banlagen : Namnet på svenska med fyra år fram till utgången av år 2030.
+Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/jatkopaatos1.
+
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Jatkopaatos maakuntaliitoille succesfully 3`] = `
+Object {
+  "fileName": "esikatselu_jatkopaatos_maakuntaliitto_mono_R443 Ilmoitus hyvaksymispaatoksen voimassaolon jatkamisesta maakuntaliitolle.pdf",
+  "textContent": "VAYLA/2/2022
+
+
+
+Hyväksymispäätöksen voimassaoloajan pidentämisestä ilmoittaminen
+Testiprojekti 2
+Väylävirasto ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-456 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2 hyväksymispäätöksen voimassaoloajan pidentämisen neljällä vuodella vuoden 2030 loppuun.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/jatkopaatos1.
+
+Liitteenä olevasta päätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
 
 LUONNOS",
 }
