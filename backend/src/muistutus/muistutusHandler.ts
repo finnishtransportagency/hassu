@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   HaeMuistuttajatQueryVariables,
   LisaaMuistutusMutationVariables,
@@ -95,12 +96,16 @@ class MuistutusHandler {
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));
     await projektiDatabase.appendMuistuttajatList(oid, [muistuttaja.id], !henkilotunnus);
-    await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
     const msg: SuomiFiSanoma = {
       oid,
       muistuttajaId: muistuttaja.id,
     };
     await getSQS().sendMessage({ QueueUrl: await parameters.getSuomiFiSQSUrl(), MessageBody: JSON.stringify(msg) });
+    try {
+      await muistutusEmailService.sendEmailToKirjaamo(projektiFromDB, muistutus);
+    } catch (e) {
+      log.error("Muistutuksen lähetys kirjaamoon epäonnistui", { muistuttajaId: muistuttaja.id, oid, e });
+    }
     return "OK";
   }
 
