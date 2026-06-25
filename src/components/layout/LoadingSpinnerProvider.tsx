@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, createContext, ReactNode, useCallback, useMemo, useState } from "react";
 import { Backdrop, CircularProgress } from "@mui/material";
 
@@ -47,9 +48,18 @@ interface SpinnerProps {
   open: boolean;
 }
 
+// Workaround for MUI issue https://github.com/mui/material-ui/issues/32286
+// MUI Backdrop uses react-transition-group Fade transition which can get stuck
+// in "exiting" state during page navigation, leaving an invisible element
+// (opacity: 0, pointer-events: auto) that blocks all user interaction.
+// Conditional rendering ensures Backdrop is removed from DOM immediately
+// when not needed, eliminating the stuck transition issue entirely.
 const HassuSpinner = (props: SpinnerProps): ReactElement => {
+  if (!props.open) {
+    return <></>;
+  }
   return (
-    <Backdrop sx={{ color: "#49C2F1", zIndex: (theme) => theme.zIndex.modal + 1 }} open={props.open}>
+    <Backdrop sx={{ color: "#49C2F1", zIndex: (theme) => theme.zIndex.modal + 1 }} open>
       <CircularProgress color="inherit" />
     </Backdrop>
   );
