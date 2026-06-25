@@ -115,8 +115,8 @@ export default function KuulutuksenHyvaksyminenDialog({
               ilmoituksien lähettämisen. Ilmoitukset lähetetään automaattisesti painikkeen klikkaamisen jälkeen.
             </p>
             <p>
-              Suunnitelman nähtäville asettamisen sekä hyväksymispäätöksen kuuluttamisen yhteydessä järjestelmä lähettää ilmoituksen osalle
-              asianosaisista Tiedottaminen -sivun mukaan. Viestit lähetetään vastaanottajille kuulutuksen julkaisupäivänä.
+              Aloituskuulutuksen, suunnitelman nähtäville asettamisen sekä hyväksymispäätöksen kuuluttamisen yhteydessä järjestelmä lähettää
+              ilmoituksen asianosaisille Tiedottaminen -sivun mukaan. Viestit lähetetään vastaanottajille kuulutuksen julkaisupäivänä.
             </p>
             <p>
               {projekti.asianhallinta.inaktiivinen
