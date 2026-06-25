@@ -103,21 +103,7 @@ export const kasittelynTilaSchema = Yup.object().shape({
         }
         return true;
       }),
-    ennakkotarkastus: paivamaara()
-      .notRequired()
-      .nullable()
-      .test((value, context) => {
-        if (value) {
-          if (!context.parent.hyvaksymisesitysTraficomiinPaiva) {
-            return context.createError({
-              message: "Hyväksymisesitys Traficomiin on annettava.",
-              path: `${context.path}`,
-              type: "custom",
-            });
-          }
-        }
-        return true;
-      }),
+    ennakkotarkastus: paivamaara().notRequired().nullable(),
     toimitusKaynnistynyt: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusOsittain: paivamaara().notRequired().nullable(),
     liikenteeseenluovutusKokonaan: paivamaara().notRequired().nullable(),
