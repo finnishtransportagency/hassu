@@ -1,4 +1,4 @@
-import { allowedFileTypesVirkamiehille } from "common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille, maxFileSize } from "common/fileValidationSettings";
 import { lataaTiedosto } from "../util/fileUtil";
 import { KunnallinenLadattuTiedostoInput, LadattuTiedostoInputNew } from "@services/api";
 import { uuid } from "common/util/uuid";
@@ -36,15 +36,19 @@ export default function useHandleUploadedFiles<F extends FieldValues>(
 
           if (files?.length) {
             const nonAllowedTypeFiles: File[] = [];
+            const tooLargeFiles: File[] = [];
             const allowedTypeFiles: File[] = [];
             const uploadedFileNamesPromises: Promise<string>[] = [];
 
             Array.from(Array(files.length).keys()).forEach((key: number) => {
-              if (allowedFileTypesVirkamiehille.find((type) => type === files[key].type)) {
-                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key], true));
-                allowedTypeFiles.push(files[key]);
+              const file = files[key];
+              if (file.size > maxFileSize) {
+                tooLargeFiles.push(file);
+              } else if (allowedFileTypesVirkamiehille.find((type) => type === file.type)) {
+                uploadedFileNamesPromises.push(lataaTiedosto(api, file, true));
+                allowedTypeFiles.push(file);
               } else {
-                nonAllowedTypeFiles.push(files[key]);
+                nonAllowedTypeFiles.push(file);
               }
             });
 
@@ -74,6 +78,12 @@ export default function useHandleUploadedFiles<F extends FieldValues>(
               shouldDirty: true,
             });
 
+            if (tooLargeFiles.length) {
+              const maxSizeMB = Math.round(maxFileSize / 1000000);
+              showErrorMessage(
+                `Tiedosto on liian suuri: ${tooLargeFiles.map((f) => f.name).join(", ")}. Suurin sallittu koko on ${maxSizeMB} Mt.`
+              );
+            }
             if (nonAllowedTypeFiles.length) {
               const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
               showErrorMessage("Väärä tiedostotyyppi: " + nonAllowedTypeFileNames + ". Sallitut tyypit JPG, PNG, PDF ja MS Word.");

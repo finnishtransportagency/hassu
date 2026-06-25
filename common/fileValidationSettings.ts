@@ -21,6 +21,6 @@ export const allowedFileTypesKansalaisille = [
 ];
 
 // 25MB
-export const maxFileSize = 25 * 1024 * 1024;
+export const maxFileSize = 25000000;
 
 export default { allowedFileTypesVirkamiehille, allowedFileTypesKansalaisille, maxFileSize };
