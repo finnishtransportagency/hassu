@@ -1,9 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import React from "react";
 import { FieldError } from "react-hook-form";
 import FormGroup from "./FormGroup";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import classNames from "classnames";
+import useSnackbars from "src/hooks/useSnackbars";
 
 type DropzoneProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -29,11 +31,27 @@ export const FileInput = ({
   noDropzone = false,
   ...otherDropzoneOptions
 }: DropzoneProps) => {
+  const { showErrorMessage } = useSnackbars();
+
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     multiple,
     noClick,
     maxSize,
     accept,
+    onDropRejected: (fileRejections) => {
+      fileRejections.forEach((rejection) => {
+        rejection.errors.forEach((err) => {
+          if (err.code === "file-too-large") {
+            const maxSizeMB = Math.round(maxSize / 1000000);
+            showErrorMessage(`Tiedoston koko ylittää sallitun ${maxSizeMB} Mt rajan`);
+          } else if (err.code === "file-invalid-type") {
+            showErrorMessage("Tiedostotyyppi ei ole sallittu");
+          } else {
+            showErrorMessage(err.message);
+          }
+        });
+      });
+    },
     ...otherDropzoneOptions,
   });
 
