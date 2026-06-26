@@ -1,16 +1,24 @@
+// Contains code generated or recommended by Amazon Q
 import { Kieli, Kielitiedot } from "@services/api";
 import * as Yup from "yup";
 import { ObjectShape } from "yup/lib/object";
 import { lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { getAineistotSchema } from "hassu-common/schema/common";
+import { parseVideoURL } from "src/util/videoParser";
 
 const maxLenght = 2000;
 
 const getLinkkiSchema = (schema: Yup.ObjectSchema<ObjectShape>) =>
   schema.shape({
     nimi: Yup.string(),
-    url: Yup.string().url("URL ei kelpaa").notRequired(),
+    url: Yup.string()
+      .url("URL ei kelpaa")
+      .test("video-url-kelvollinen", "Videolinkki ei ole kelvollinen. Tuetut videopalvelut ovat Youtube ja Vimeo.", (value) => {
+        if (!value) return true;
+        return !!parseVideoURL(value);
+      })
+      .notRequired(),
   });
 
 interface LokalisoituObjektiSchemaProps {
