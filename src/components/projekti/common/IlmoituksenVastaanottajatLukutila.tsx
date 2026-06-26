@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement } from "react";
 import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType, Status, UudelleenKuulutus } from "@services/api";
 import Section from "@components/layout/Section";
@@ -96,15 +97,7 @@ export default function IlmoituksenVastaanottajat({
     <Section>
       <SectionContent>
         <H2>Ilmoituksen vastaanottajat</H2>
-        {!epaaktiivinen && (
-          <>
-            {julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY ? (
-              <HyvaksyttyInfoText paatosTyyppi={paatosTyyppi} />
-            ) : (
-              <InfoText paatosTyyppi={paatosTyyppi} />
-            )}
-          </>
-        )}
+        {!epaaktiivinen && julkaisunTila === KuulutusJulkaisuTila.HYVAKSYTTY && <HyvaksyttyInfoText paatosTyyppi={paatosTyyppi} />}
       </SectionContent>
       <IlmoituksenVastaanottajatCommon ilmoituksenVastaanottajat={ilmoituksenVastaanottajat} />
       {vaihe && (
