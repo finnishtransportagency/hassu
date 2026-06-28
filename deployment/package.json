@@ -18,7 +18,7 @@
     "loader-utils": "1.4.2",
     "shell-quote": "1.7.3",
     "node-fetch": "$node-fetch",
-    "jsonwebtoken": "9.0.2",
+    "jsonwebtoken": "9.0.3",
     "fast-xml-parser": "5.5.12"
   },
   "engines": {
