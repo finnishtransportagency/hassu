@@ -60,3 +60,36 @@ describe("adaptLausuntoPyynnotToSave", () => {
     expect(projektiAdaptationResult["events"].some((event) => event.eventType === ProjektiEventType.ZIP_LAUSUNTOPYYNNOT)).to.be.true;
   });
 });
+
+// Contains code generated or recommended by Amazon Q
+describe("adaptLausuntoPyynnotToSave - duplikaatti uuid", () => {
+  it("should throw IllegalArgumentError if input contains duplicate uuids", () => {
+    const dummyProjekti: DBProjekti = {
+      oid: "123",
+      versio: 0,
+      kayttoOikeudet: [],
+    };
+    const projektiAdaptationResult = new ProjektiAdaptationResult(dummyProjekti);
+    const input: LausuntoPyyntoInput[] = [
+      { poistumisPaiva: "2025-01-01", uuid: "sama-uuid", lisaAineistot: [], muistiinpano: "" },
+      { poistumisPaiva: "2025-01-01", uuid: "sama-uuid", lisaAineistot: [], muistiinpano: "", poistetaan: true },
+    ];
+    expect(() => adaptLausuntoPyynnotToSave(undefined, input, projektiAdaptationResult)).to.throw(
+      "Duplikaatti uuid lausuntopyynnöissä: sama-uuid"
+    );
+  });
+
+  it("should not throw if all uuids are unique", () => {
+    const dummyProjekti: DBProjekti = {
+      oid: "123",
+      versio: 0,
+      kayttoOikeudet: [],
+    };
+    const projektiAdaptationResult = new ProjektiAdaptationResult(dummyProjekti);
+    const input: LausuntoPyyntoInput[] = [
+      { poistumisPaiva: "2025-01-01", uuid: "uuid-1", lisaAineistot: [], muistiinpano: "" },
+      { poistumisPaiva: "2025-01-01", uuid: "uuid-2", lisaAineistot: [], muistiinpano: "" },
+    ];
+    expect(() => adaptLausuntoPyynnotToSave(undefined, input, projektiAdaptationResult)).to.not.throw();
+  });
+});
