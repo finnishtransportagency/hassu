@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { GetObjectCommand, NoSuchKey, S3Client } from "@aws-sdk/client-s3";
 import { log } from "../logger";
 import { PassThrough, Readable } from "stream";
@@ -6,6 +7,14 @@ import archiver from "archiver";
 import { getS3Client } from "../aws/client";
 import { config } from "../config";
 import { joinPath } from "./paths";
+
+// Max concurrent S3 GetObject requests during zip file generation.
+// Node.js HTTP agent maxSockets=50 (configured by @smithy/node-http-handler).
+// Using 25 leaves half the socket pool available for other concurrent operations
+// (DynamoDB, SSM Parameter Store, SQS etc.) that the lambda performs during
+// the same invocation. Using 50 would monopolize all sockets and cause
+// "socket hang up" errors on other requests (observed in production 9.4.2025).
+const MAX_CONCURRENT_S3_REQUESTS = 25;
 
 function getFileName(s3Key: string, zipFolder?: string) {
   const fileName = s3Key.split("/").pop()!;
@@ -48,6 +57,27 @@ function getWritableStreamFromS3(bucket: string, zipFileS3Key: string) {
   return { passthrough, uploads };
 }
 
+async function fetchAndAppendToZip(zip: archiver.Archiver, bucket: string, zipSourceFile: ZipSourceFile): Promise<void> {
+  const s3ReadableStream = await getReadableStreamFromS3(bucket, zipSourceFile.s3Key);
+  if (s3ReadableStream) {
+    zip.append(s3ReadableStream as Readable, { name: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) });
+  }
+}
+
+async function fetchFilesWithConcurrencyLimit(zip: archiver.Archiver, bucket: string, zipSourceFiles: ZipSourceFile[]): Promise<void> {
+  let index = 0;
+
+  async function next(): Promise<void> {
+    while (index < zipSourceFiles.length) {
+      const current = index++;
+      await fetchAndAppendToZip(zip, bucket, zipSourceFiles[current]);
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(MAX_CONCURRENT_S3_REQUESTS, zipSourceFiles.length) }, () => next());
+  await Promise.all(workers);
+}
+
 export type ZipSourceFile = { s3Key: string; zipFolder?: string };
 export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFiles: ZipSourceFile[], zipFileS3Key: string) {
   try {
@@ -60,15 +90,7 @@ export async function generateAndStreamZipfileToS3(bucket: string, zipSourceFile
       passthrough.on("error", reject);
 
       zip.pipe(passthrough);
-      Promise.all(
-        zipSourceFiles.map((zipSourceFile) =>
-          getReadableStreamFromS3(bucket, zipSourceFile.s3Key).then((s3ReadableStream) => {
-            if (s3ReadableStream) {
-              zip.append(s3ReadableStream as Readable, { name: getFileName(zipSourceFile.s3Key, zipSourceFile.zipFolder) });
-            }
-          })
-        )
-      ).then(() => zip.finalize());
+      fetchFilesWithConcurrencyLimit(zip, bucket, zipSourceFiles).then(() => zip.finalize());
     }).catch((error: { code: string; message: string; data: string }) => {
       throw new Error(`${error.code} ${error.message} ${error.data}`);
     });
