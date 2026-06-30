@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as API from "hassu-common/graphql/apiModel";
 import {
   DBProjekti,
@@ -63,8 +64,8 @@ export function adaptVuorovaikutusKierroksetJulkinen(dbProjekti: DBProjekti): AP
       vuorovaikutusTilaisuudet: adaptVuorovaikutusTilaisuudet(julkaistutTilaisuudet),
       vuorovaikutusJulkaisuPaiva: viimeisinVuorovaikutusKierros.vuorovaikutusJulkaisuPaiva,
       kysymyksetJaPalautteetViimeistaan: viimeisinVuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
-      videot: videotAdaptoituna,
-      suunnittelumateriaali: adaptLokalisoidutLinkitToAPI(viimeisinVuorovaikutusKierros.suunnittelumateriaali),
+      videot: isAineistoVisible ? videotAdaptoituna : undefined,
+      suunnittelumateriaali: isAineistoVisible ? adaptLokalisoidutLinkitToAPI(viimeisinVuorovaikutusKierros.suunnittelumateriaali) : undefined,
       esittelyaineistot: isAineistoVisible
         ? adaptAineistotJulkinen(esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
         : undefined,
