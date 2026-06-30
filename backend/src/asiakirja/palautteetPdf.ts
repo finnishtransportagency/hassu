@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { Palaute } from "../database/model";
 import { EnhancedPDF } from "./asiakirjaTypes";
 
@@ -30,6 +31,7 @@ export class PalautteetPdf {
             kysymysTaiPalaute += "Kansalainen toivoo yhteydenottoa sähköpostitse: " + p.sahkoposti + "\n";
           }
         }
+        kysymysTaiPalaute = kysymysTaiPalaute.trimEnd();
         const etunimi = p.etunimi?.trim() ?? "";
         const sukunimi = p.sukunimi?.trim() ?? "";
         let nimi: string;
@@ -50,7 +52,7 @@ export class PalautteetPdf {
     return this.generatePdfDocument(doc);
   }
 
-  private async generatePdfDocument(doc: PDFKit.PDFDocument): Promise<EnhancedPDF> {
+  private async generatePdfDocument(doc: InstanceType<typeof PDFDocument>): Promise<EnhancedPDF> {
     return new Promise<EnhancedPDF>((resolve) => {
       const buffers = Array<Buffer>();
       doc.on("data", buffers.push.bind(buffers));
