@@ -6,11 +6,14 @@ Apuskriptejä debuggaukseen, selvityksiin, ylläpitoon ja muihin ad-hoc-tehtävi
 
 ## Saatavilla olevat skriptit
 
-| Skripti                     | Kuvaus                                                                                 | Käyttö                                                                                                             |
-| --------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `recreateMuistutusEmail.ts` | Luo ja tulostaa muistutussähköpostit (kirjaamo + valinnaisesti kuittaus kansalaiselle) | `npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]` |
-| `restoreAttribute.ts`       | Palauta yksittäinen attribuutti DynamoDB:hen                                           | `npm run restore:attribute -- <bucket> <export-prefix> <taulu> <partition-key> <attribuutti> --execute`            |
-| `importDynamodbExports.ts`  | Tuo DynamoDB:hen sieltä aiemmin exportattu item                                        | `npm run import:dynamodb -- <bucket> <export-prefix> <taulu> <partition-key> --execute`                            |
+| Skripti                               | Kuvaus                                                                                 | Käyttö                                                                                                                                                   |
+| ------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `recreateMuistutusEmail.ts`           | Luo ja tulostaa muistutussähköpostit (kirjaamo + valinnaisesti kuittaus kansalaiselle) | `npx ts-node --project scripts/tsconfig.json scripts/recreateMuistutusEmail/recreateMuistutusEmail.ts <oid> <muistuttajaId> [--kuittaus]`                |
+| `restoreAttribute.ts`                 | Palauta yksittäinen attribuutti DynamoDB:hen                                           | `npm run restore:attribute -- <bucket> <export-prefix> <taulu> <partition-key> <attribuutti> --execute`                                                  |
+| `importDynamodbExports.ts`            | Tuo DynamoDB:hen sieltä aiemmin exportattu item                                        | `npm run import:dynamodb -- <bucket> <export-prefix> <taulu> <partition-key> --execute`                                                                  |
+| `resendSuomiFiMessages.ts`            | Lähettää epäonnistuneet Suomi.fi-viestit uudelleen SQS-jonoon                          | `npx ts-node scripts/resendSuomiFiMessages/resendSuomiFiMessages.ts --env dev\|prod [--dry-run]`                                                         |
+| `findDuplicateLausuntoPyyntoUuids.ts` | Etsii projektit joissa lausuntoPyynnöissä tai täydennyksissä on duplikaatti-uuid:ita   | `npx ts-node --project scripts/tsconfig.json scripts/findDuplicateLausuntoPyyntoUuids/findDuplicateLausuntoPyyntoUuids.ts`                               |
+| `reproduceZipSocketIssue.ts`          | Toistaa tuotannon zip-socket-kapasiteettiongelman kehitysympäristössä                  | `npx ts-node --project scripts/tsconfig.json scripts/reproduceZipSocketIssue/reproduceZipSocketIssue.ts <oid> <nahtavillaolo-id> [--trigger\|--cleanup]` |
 
 ## Uuden skriptin lisääminen
 
