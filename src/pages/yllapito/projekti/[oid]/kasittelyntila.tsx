@@ -100,7 +100,7 @@ export default function KasittelyntilaSivu(): ReactElement {
         </Notification>
       )}
       {projekti &&
-        (!projekti?.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ? (
+        (!projekti?.nykyinenKayttaja.omaaMuokkausOikeuden ? (
           <KasittelyntilaLukutila projekti={projekti} />
         ) : (
           <KasittelyntilaPageContent projekti={projekti} projektiLoadError={projektiLoadError} reloadProjekti={reloadProjekti} />
@@ -166,7 +166,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
   const disableAdminOnlyFields = !projekti?.nykyinenKayttaja.onYllapitaja || !!projektiLoadError || isLoadingProjekti || isFormSubmitting;
 
   const hyvaksymispaatosDisabled =
-    !projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo ||
+    !projekti.nykyinenKayttaja.omaaMuokkausOikeuden ||
     !!projektiLoadError ||
     isLoadingProjekti ||
     isFormSubmitting ||
@@ -290,10 +290,15 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
 
   const onSubmit = useCallback(
     (data: KasittelynTilaFormValues) => {
-      asetaKasittelynTilaAutomaatiolla(data, defaultValues);
+      asetaKasittelynTilaAutomaatiolla(
+        data,
+        defaultValues,
+        !!projekti.nykyinenKayttaja.onYllapitaja,
+        !!projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen
+      );
       return withLoadingSpinner(save(data));
     },
-    [defaultValues, save, withLoadingSpinner]
+    [defaultValues, projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen, projekti.nykyinenKayttaja.onYllapitaja, save, withLoadingSpinner]
   );
 
   useEffect(() => {
@@ -410,7 +415,7 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
             <HassuGrid cols={{ lg: 3 }}>
               <DatePickerConditionallyInTheForm
                 label={`Päätöksen päivä ${projekti.kasittelynTila?.hyvaksymispaatos?.aktiivinen ? "*" : ""}`}
-                includeInForm={projekti.nykyinenKayttaja.onProjektipaallikkoTaiVarahenkilo}
+                includeInForm={projekti.nykyinenKayttaja.omaaMuokkausOikeuden}
                 disabled={hyvaksymispaatosDisabled}
                 controllerProps={{ control, name: "kasittelynTila.hyvaksymispaatos.paatoksenPvm" }}
                 value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm)}
