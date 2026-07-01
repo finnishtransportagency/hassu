@@ -1,12 +1,17 @@
 // Contains code generated or recommended by Amazon Q
 import { KasittelynTilaFormValues } from "@pages/yllapito/projekti/[oid]/kasittelyntila";
 
-export const asetaKasittelynTilaAutomaatiolla = (data: KasittelynTilaFormValues, defaults: KasittelynTilaFormValues) => {
+export const asetaKasittelynTilaAutomaatiolla = (
+  data: KasittelynTilaFormValues,
+  defaults: KasittelynTilaFormValues,
+  onYllapitaja: boolean,
+  hyvaksymispaatosAktiivinen: boolean
+) => {
   const asianumeroChanged =
     (data.kasittelynTila?.hyvaksymispaatos?.asianumero ?? null) !== defaults?.kasittelynTila?.hyvaksymispaatos?.asianumero;
   const hyvaksymisPvmChanged =
     (data.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm ?? null) !== defaults.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm;
-  if (asianumeroChanged && hyvaksymisPvmChanged) {
+  if (asianumeroChanged && hyvaksymisPvmChanged && (onYllapitaja || !hyvaksymispaatosAktiivinen)) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil04";
   }

@@ -24,7 +24,27 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
     data.kasittelynTila!.hyvaksymispaatos = { asianumero: "ABC-123", paatoksenPvm: "2024-01-15" };
     const defaults = baseFormValues();
 
-    asetaKasittelynTilaAutomaatiolla(data, defaults);
+    asetaKasittelynTilaAutomaatiolla(data, defaults, false, false);
+
+    expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil04");
+  });
+
+  it("ei aseta sutil04 kun hyvaksymispaatos on jo aktiivinen eika ole yllapitaja", () => {
+    const data = baseFormValues();
+    data.kasittelynTila!.hyvaksymispaatos = { asianumero: "ABC-123", paatoksenPvm: "2024-01-15" };
+    const defaults = baseFormValues();
+
+    asetaKasittelynTilaAutomaatiolla(data, defaults, false, true);
+
+    expect(data.kasittelynTila!.suunnitelmanTila).toBeUndefined();
+  });
+
+  it("asettaa sutil04 kun yllapitaja muokkaa vaikka hyvaksymispaatos on jo aktiivinen", () => {
+    const data = baseFormValues();
+    data.kasittelynTila!.hyvaksymispaatos = { asianumero: "ABC-123", paatoksenPvm: "2024-01-15" };
+    const defaults = baseFormValues();
+
+    asetaKasittelynTilaAutomaatiolla(data, defaults, true, true);
 
     expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil04");
   });
@@ -35,7 +55,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
     data.kasittelynTila!.lainvoimaPaattyen = "2028-01-15";
     const defaults = baseFormValues();
 
-    asetaKasittelynTilaAutomaatiolla(data, defaults);
+    asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
     expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil05");
   });
@@ -46,7 +66,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       data.kasittelynTila!.liikenteeseenluovutusOsittain = "2024-01-15";
       const defaults = baseFormValues();
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil06");
     });
@@ -56,7 +76,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       data.kasittelynTila!.toteutusilmoitusOsittain = "2024-01-15";
       const defaults = baseFormValues();
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil06");
     });
@@ -66,7 +86,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       data.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-01-15";
       const defaults = baseFormValues();
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
@@ -76,7 +96,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       data.kasittelynTila!.toteutusilmoitusKokonaan = "2024-01-15";
       const defaults = baseFormValues();
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
@@ -88,7 +108,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       const defaults = baseFormValues();
       defaults.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-02-01"; // koko ei muuttunut
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
@@ -100,7 +120,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       const defaults = baseFormValues();
       defaults.kasittelynTila!.toteutusilmoitusKokonaan = "2024-02-01"; // koko ei muuttunut
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
@@ -113,7 +133,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       defaults.kasittelynTila!.liikenteeseenluovutusOsittain = "2024-01-10";
       defaults.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-02-01"; // koko oli täytetty
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil06");
     });
@@ -124,7 +144,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       const defaults = baseFormValues();
       defaults.kasittelynTila!.liikenteeseenluovutusKokonaan = "2024-02-01"; // koko oli täytetty
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBeUndefined();
     });
@@ -135,7 +155,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
       data.kasittelynTila!.toteutusilmoitusKokonaan = "2024-01-15";
       const defaults = baseFormValues();
 
-      asetaKasittelynTilaAutomaatiolla(data, defaults);
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
       expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil07");
     });
@@ -146,7 +166,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
     data.kasittelynTila!.valitustenMaara = 1 as any;
     const defaults = baseFormValues();
 
-    asetaKasittelynTilaAutomaatiolla(data, defaults);
+    asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
     expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil08");
   });
@@ -156,7 +176,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
     data.kasittelynTila!.toimitusKaynnistynyt = "2024-01-15";
     const defaults = baseFormValues();
 
-    asetaKasittelynTilaAutomaatiolla(data, defaults);
+    asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
     expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil14");
   });
@@ -165,7 +185,7 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
     const data = baseFormValues();
     const defaults = baseFormValues();
 
-    asetaKasittelynTilaAutomaatiolla(data, defaults);
+    asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
 
     expect(data.kasittelynTila!.suunnitelmanTila).toBeUndefined();
   });
