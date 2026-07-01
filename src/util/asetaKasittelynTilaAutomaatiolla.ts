@@ -11,6 +11,10 @@ export const asetaKasittelynTilaAutomaatiolla = (
     (data.kasittelynTila?.hyvaksymispaatos?.asianumero ?? null) !== defaults?.kasittelynTila?.hyvaksymispaatos?.asianumero;
   const hyvaksymisPvmChanged =
     (data.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm ?? null) !== defaults.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm;
+  // Ei-adminille sutil04 asetetaan vain ensimmäisellä tallennuskerralla (aktiivinen=false),
+  // jotta automaatio ei ylikirjoita adminin mahdollisesti asettamaa isompaa tilaa.
+  // Adminille automaatio toimii aina. suunnitelmanTila-kenttä on myös disabloitu
+  // frontissa ja estetty backendissä ei-admineille.
   if (asianumeroChanged && hyvaksymisPvmChanged && (onYllapitaja || !hyvaksymispaatosAktiivinen)) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil04";
