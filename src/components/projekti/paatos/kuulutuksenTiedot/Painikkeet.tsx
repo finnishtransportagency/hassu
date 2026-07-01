@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusJulkaisuTila, MuokkausTila } from "@services/api";
 import log from "loglevel";
 import React, { useCallback } from "react";
@@ -91,6 +92,7 @@ export default function Painikkeet({ projekti, julkaisu, paatosTyyppi, julkaisem
           projekti={projekti}
           preSubmitFunction={preSubmitFunction}
           tilasiirtymaTyyppi={paatosSpecificTilasiirtymaTyyppiMap[paatosTyyppi]}
+          hasOmistajat={projekti.omistajahaku?.hasOmistajat}
         />
       )}
     </>
