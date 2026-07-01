@@ -172,6 +172,7 @@ function KuulutuksenTiedotForm({ kirjaamoOsoitteet, paatosTyyppi, projekti }: Ku
                 paatosTyyppi={paatosTyyppi}
                 oid={projekti.oid}
                 omistajahakuStatus={projekti.omistajahaku?.status}
+                hasOmistajat={projekti.omistajahaku?.hasOmistajat}
               />
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu paatosTyyppi={paatosTyyppi} esikatselePdf={pdfFormRef.current?.esikatselePdf} />

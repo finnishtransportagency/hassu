@@ -255,6 +255,7 @@ type OmistajaHaku {
   kaynnistetty: String
   kiinteistotunnusMaara: Int
   status: Status
+  hasOmistajat: Boolean
 }
 
 type ProjektinTiedottaminen {

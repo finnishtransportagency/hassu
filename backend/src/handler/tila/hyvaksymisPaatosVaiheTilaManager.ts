@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusSaamePDFt, SaameKieli } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
@@ -18,6 +19,7 @@ import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { fileService } from "../../files/fileService";
 import { log } from "../../logger";
 import { parameters } from "../../aws/parameters";
+import { omistajaDatabase } from "../../database/omistajaDatabase";
 import { isKieliSaame } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
@@ -85,10 +87,12 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new IllegalAineistoStateError();
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
-      const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
-      log.error(msg);
-      throw new Error(msg);
+    if (suomifiViestitEnabled) {
+      if (!projekti.omistajahaku?.status || !(await omistajaDatabase.hasOmistajat(projekti.oid))) {
+        const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
+        log.error(msg);
+        throw new Error(msg);
+      }
     }
   }
 

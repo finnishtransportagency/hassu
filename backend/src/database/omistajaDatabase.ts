@@ -83,6 +83,11 @@ class OmistajaDatabase {
     }
   }
 
+  async hasOmistajat(oid: string): Promise<boolean> {
+    const omistajat = await this.haeProjektinKaytossaolevatOmistajat(oid, "id");
+    return omistajat.length > 0;
+  }
+
   async haeProjektinKaytossaolevatOmistajat(oid: string, expression?: string): Promise<DBOmistaja[]> {
     let lastEvaluatedKey: Record<string, any> | undefined;
     const omistajat: DBOmistaja[] = [];

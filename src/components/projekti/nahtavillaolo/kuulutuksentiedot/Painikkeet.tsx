@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { KuulutusJulkaisuTila, MuokkausTila, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
@@ -77,6 +78,7 @@ export default function Painikkeet({ projekti }: Props) {
           projekti={projekti}
           preSubmitFunction={preSubmitFunction}
           tilasiirtymaTyyppi={TilasiirtymaTyyppi.NAHTAVILLAOLO}
+          hasOmistajat={projekti.omistajahaku?.hasOmistajat}
         />
       )}
     </>

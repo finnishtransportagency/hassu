@@ -44,6 +44,7 @@ import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhall
 import GetProjektiStatus from "../status/getProjektiStatus";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { adaptEnnakkoNeuvotteluJulkaisuToAPI, adaptEnnakkoNeuvotteluToAPI } from "../../ennakkoneuvottelu/mapper";
+import { omistajaDatabase } from "../../database/omistajaDatabase";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
@@ -179,6 +180,7 @@ export class ProjektiAdapter {
             virhe: omistajahaku.virhe,
             kaynnistetty: omistajahaku.kaynnistetty,
             kiinteistotunnusMaara: omistajahaku.kiinteistotunnusMaara,
+            hasOmistajat: omistajahaku.status ? await omistajaDatabase.hasOmistajat(oid) : false,
           }
         : undefined,
       kustannuspaikka,
