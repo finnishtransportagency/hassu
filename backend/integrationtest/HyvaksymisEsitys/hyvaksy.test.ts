@@ -38,7 +38,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
       etunimi: "Etunimi",
       sukunimi: "Sukunimi",
       email: "email@email.com",
-      kayttajatunnus: "theadminuid",
+      kayttajatunnus: "A123",
       tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
       elyOrganisaatio: API.ELY.HAME_ELY,
       puhelinnumero: "0291234567",
@@ -48,7 +48,7 @@ const getProjektiBase: () => DeepReadonly<DBProjekti> = () => ({
       etunimi: "Etunimi2",
       sukunimi: "Sukunimi2",
       email: "email2@email.com",
-      kayttajatunnus: "thevarahenkilouid",
+      kayttajatunnus: "L222",
       tyyppi: API.KayttajaTyyppi.VARAHENKILO,
       puhelinnumero: "0291213",
       organisaatio: "org2",
@@ -164,7 +164,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("päivittää muokattavan hyväksymisesityksen tilan ja palautusSyyn ja s.postin lähetystiedot ja lisää ashasynkronoinnin", async () => {
     MockDate.set("2000-01-01");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -188,7 +188,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       julkaistuHyvaksymisEsitys: {
         asianhallintaEventId: "uuid123",
         ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
-        hyvaksyja: "theadminuid",
+        hyvaksyja: "A123",
         vastaanottajat: [
           {
             lahetetty: "2000-01-01T02:00:00+02:00",
@@ -224,7 +224,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("ei onnistu, jos asha on väärässä tilassa", async () => {
     MockDate.set("2000-01-01");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -244,7 +244,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("ei onnistu, jos projektin status on liian pieni", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -273,7 +273,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       },
       response: "response",
     });
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -297,7 +297,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
     MockDate.set("2000-01-01");
     emailStubTurvaposti?.onFirstCall().resolves(undefined);
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -321,7 +321,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   it("merkitsee sähköpostin lähetystietoihin lähetysvirheen, jos sähköpostin lähettäminen epäonnistuu", async () => {
     MockDate.set("2000-01-01");
     emailStubTurvaposti?.onFirstCall().resolves(undefined);
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -355,7 +355,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       },
       response: "response",
     });
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       vastaanottajat: [
@@ -390,7 +390,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("lähettää oikeat s.postit kun tarvitaan kiireellistä käsittelyä ja asianhallinta ei ole aktiivinen", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -435,7 +435,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("lähettää oikeat s.postit kun EI tarvita kiireellistä käsittelyä ja asianhallinta on aktiivinen", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -481,7 +481,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
     const projektiBefore = {
@@ -493,7 +493,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi",
           sukunimi: "Sukunimi",
           email: "email@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "A123",
           tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
           elyOrganisaatio: API.ELY.HAME_ELY,
           puhelinnumero: "0291234567",
@@ -502,7 +502,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "thevarahenkilouid",
+          kayttajatunnus: "L222",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
           puhelinnumero: "0291234567",
         },
@@ -545,7 +545,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on Väylävirasto ja projarin organisaatio on Väylävirasto ja asianhallinta on aktiivinen", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -560,7 +560,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi",
           sukunimi: "Sukunimi",
           email: "email@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "A123",
           tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
           organisaatio: "Väylävirasto",
           puhelinnumero: "0291234567",
@@ -569,7 +569,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "thevarahenkilouid",
+          kayttajatunnus: "L222",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
           puhelinnumero: "0291234567",
           organisaatio: "Väylävirasto",
@@ -623,7 +623,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("sähköpostissa ei lue 'liitteenä hyväksymisesitys', jos hyväksymisesityksellä ei ole hyväksymisesitystiedostoa", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
 
@@ -694,7 +694,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("luo julkaistun hyväksymisesityksen muokattavan perusteella", async () => {
     MockDate.set("2000-01-01");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -711,7 +711,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(omit(projektiAfter?.julkaistuHyvaksymisEsitys, "hyvaksymisPaiva")).to.eql({
       asianhallintaEventId: "uuid123",
       ...omit(muokattavaHyvaksymisEsitys, ["tila", "palautusSyy"]),
-      hyvaksyja: "theadminuid",
+      hyvaksyja: "A123",
       vastaanottajat: [
         {
           lahetetty: "2000-01-01T02:00:00+02:00",
@@ -726,7 +726,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("tallentaa lähetetyn s.postin s3:een", async () => {
     MockDate.set("2000-01-01");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -734,7 +734,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
-      hyvaksyja: "theadminuid",
+      hyvaksyja: "A123",
       hyvaksymisPaiva: "2022-01-01",
       poistumisPaiva: "2033-01-01",
     };
@@ -762,7 +762,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("poistaa vanhat julkaistut tiedostot ja kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle", async () => {
     MockDate.set("2000-01-01");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -770,7 +770,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     };
     const julkaistuHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS2,
-      hyvaksyja: "theadminuid",
+      hyvaksyja: "A123",
       hyvaksymisPaiva: "2022-01-01",
       poistumisPaiva: "2033-01-01",
     };
@@ -813,7 +813,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("kopioi muokkaustilaisen hyväksymisesityksen tiedostot julkaisulle, kun julkaistaan ekaa kertaa", async () => {
     MockDate.set("2000-01-01");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,
@@ -885,7 +885,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys on hyväksytty-tilassa", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.HYVAKSYTTY,
@@ -904,7 +904,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("ei onnistu, jos muokattava hyväksymisesitys on muokkaustilassa", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.MUOKKAUS,
@@ -923,7 +923,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
   });
 
   it("ei onnistu, jos muokattavaa hyväksymisesitystä ei ole", async () => {
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const projektiBefore = getProjektiBase();
     const versio = projektiBefore.versio;
     await insertProjektiToDB(projektiBefore);
@@ -936,7 +936,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
 
   it("ei onnistu jos poistumisPaiva on menneisyydessa", async () => {
     MockDate.set("2023-01-02");
-    userFixture.loginAsAdmin();
+    userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = {
       ...TEST_HYVAKSYMISESITYS,
       tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA,

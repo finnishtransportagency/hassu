@@ -28,6 +28,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { vastaavanViranomaisenYTunnus } from "../util/vastaavaViranomainen/yTunnus";
 import { getLinkkiAsianhallintaan } from "../asianhallinta/getLinkkiAsianhallintaan";
 import { createEnnakkoNeuvotteluHash, createHyvaksymisEsitysHash } from "../HyvaksymisEsitys/latauslinkit/hash";
+import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 
 export function template(strs: TemplateStringsArray, ...exprs: string[]) {
   return function (obj: unknown): string {
@@ -137,6 +138,7 @@ Kehitysehdotus: ${"kehitysehdotus"}
 export function projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet: DBVaylaUser[]): string[] {
   return kayttoOikeudet
     .filter((user) => user.tyyppi == KayttajaTyyppi.PROJEKTIPAALLIKKO || user.tyyppi == KayttajaTyyppi.VARAHENKILO)
+    .filter((user) => isAorLTunnus(user.kayttajatunnus))
     .map((user) => user.email);
 }
 

@@ -87,6 +87,15 @@ export class KayttoOikeudetManager {
     }
     // Update rest of fields
     const user: DBVaylaUser = merge({}, currentUser, inputUser);
+    // Varahenkilöksi voi asettaa vain A- tai L-tunnuksisen käyttäjän.
+    // UI piilottaa varahenkilö-checkboxin ei-A/L-tunnuksilta (shouldUnregister), jolloin inputUser
+    // ei sisällä tyyppi-kenttää lainkaan. merge() säilyttää tällöin currentUser.tyyppi:n,
+    // joten virheellinen VARAHENKILO voi jäädä roikkumaan kannassa.
+    // null käytetään undefined:n sijaan koska DynamoDBDocumentClient on konfiguroitu removeUndefinedValues: true,
+    // jolloin undefined poistuisi kokonaan eikä ylikirjoittaisi vanhaa arvoa kantaan tallennettaessa.
+    if (user.tyyppi === KayttajaTyyppi.VARAHENKILO && !isAorLTunnus(user.kayttajatunnus)) {
+      user.tyyppi = null;
+    }
     return user;
   }
 

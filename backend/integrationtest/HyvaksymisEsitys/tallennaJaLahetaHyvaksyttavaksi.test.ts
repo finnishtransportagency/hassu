@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import sinon from "sinon";
 import { userService } from "../../src/user";
 import TEST_HYVAKSYMISESITYS, { TEST_HYVAKSYMISESITYS2, TEST_HYVAKSYMISESITYS_FILES } from "./TEST_HYVAKSYMISESITYS";
@@ -156,7 +157,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
           etunimi: "Etunimi",
           sukunimi: "Sukunimi",
           email: "email@email.com",
-          kayttajatunnus: "theadminuid",
+          kayttajatunnus: "A111",
           tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
           organisaatio: "Väylävirasto",
           puhelinnumero: "0291221",
@@ -165,7 +166,7 @@ describe("Hyväksymisesityksen tallentaminen ja hyväksyttäväksi lähettämine
           etunimi: "Etunimi2",
           sukunimi: "Sukunimi2",
           email: "email2@email.com",
-          kayttajatunnus: "theotheruid",
+          kayttajatunnus: "L222",
           tyyppi: API.KayttajaTyyppi.VARAHENKILO,
           organisaatio: "Väylävirasto",
           puhelinnumero: "0291221",
