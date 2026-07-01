@@ -1,6 +1,7 @@
+// Contains code generated or recommended by Amazon Q
 import { DBProjekti, KasittelynTila } from "../../database/model";
 import { KasittelyntilaInput, Projekti, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
-import { requireAdmin, requireOmistaja } from "../../user/userService";
+import { requireAdmin, requirePermissionMuokkaa } from "../../user/userService";
 import assert from "assert";
 import { IllegalArgumentError } from "hassu-common/error";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
@@ -42,8 +43,8 @@ const inputChangesHyvaksymispaatosField = (projekti: DBProjekti, input: Tallenna
 };
 
 function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput): void {
-  requireOmistaja(projekti, "Käsittelyn tilaa voi muokata vain projektipäällikkö");
-  const { hyvaksymispaatos: _inputHyvaksymispaatos, ...inputAdminOikeudetVaativatKentat } = input;
+  requirePermissionMuokkaa(projekti);
+  const { hyvaksymispaatos: _inputHyvaksymispaatos, suunnitelmanTila: _suunnitelmanTila, ...inputAdminOikeudetVaativatKentat } = input;
   if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
     requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
   }
