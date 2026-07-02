@@ -4,6 +4,7 @@ const { Macie2Client, CreateClassificationJobCommand } = require("@aws-sdk/clien
 const macie = new Macie2Client();
 const BUCKET_NAME = process.env.BUCKET_NAME;
 const ACCOUNT_ID = process.env.ACCOUNT_ID;
+const CUSTOM_DATA_IDENTIFIER_ID = process.env.CUSTOM_DATA_IDENTIFIER_ID;
 
 exports.handler = async () => {
   const jobName = `hassu-sensitive-data-scan-${Date.now()}`;
@@ -12,6 +13,7 @@ exports.handler = async () => {
   const command = new CreateClassificationJobCommand({
     jobType: "ONE_TIME",
     name: jobName,
+    customDataIdentifierIds: CUSTOM_DATA_IDENTIFIER_ID ? [CUSTOM_DATA_IDENTIFIER_ID] : [],
     s3JobDefinition: {
       bucketDefinitions: [
         {

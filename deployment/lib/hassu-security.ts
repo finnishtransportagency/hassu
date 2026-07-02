@@ -1,5 +1,5 @@
 // Contains code generated or recommended by Amazon Q
-import { CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config } from "./config";
 import { BlockPublicAccess, Bucket, BucketEncryption } from "aws-cdk-lib/aws-s3";
 import * as events from "aws-cdk-lib/aws-events";
@@ -12,6 +12,7 @@ import * as macie from "aws-cdk-lib/aws-macie";
 import * as kms from "aws-cdk-lib/aws-kms";
 import { SSMParameterName } from "./config";
 import { StringParameter } from "aws-cdk-lib/aws-ssm";
+import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from "aws-cdk-lib/custom-resources";
 
 interface SecurityScanningProps {
   stack: Stack;
@@ -130,24 +131,27 @@ Region: ${events.EventField.region}`
 }
 
 function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTopic: sns.ITopic) {
+  // Macie is only enabled on the dev account. Prod account has no Macie session.
+  if (!Config.isDevAccount()) {
+    return;
+  }
   // Macie Session is created in hassu-account stack (account-level resource).
   // It must be deployed before this stack's Macie resources can function.
-  if (Config.env === "dev") {
-    // Custom identifier for Finnish personal identity codes (henkilötunnus)
-    new macie.CfnCustomDataIdentifier(stack, "FinnishPersonalIdIdentifier", {
-      name: "FinnishPersonalIdentityCode",
-      regex: "\\b\\d{6}[+\\-A]\\d{3}[0-9A-FHJ-NPR-Y]\\b",
-      description: "Detects Finnish personal identity codes (henkilötunnus format: DDMMYY+/-A###X)",
-    });
+  // Custom identifier for Finnish personal identity codes (henkilötunnus)
+  const finnishPersonalIdIdentifier = new macie.CfnCustomDataIdentifier(stack, "FinnishPersonalIdIdentifier", {
+    name: `FinnishPersonalIdentityCode-${Config.env}`,
+    regex: "\\b\\d{6}[+\\-A]\\d{3}[0-9A-FHJ-NPR-Y]\\b",
+    description: "Detects Finnish personal identity codes (henkilötunnus format: DDMMYY+/-A###X)",
+  });
 
-    // KMS key for Macie findings bucket — Macie requires KMS when configuring findings repository
-    const macieFindingsKey = new kms.Key(stack, "MacieFindingsKey", {
+  // KMS key for Macie findings bucket — Macie requires KMS when configuring findings repository
+  const macieFindingsKey = new kms.Key(stack, "MacieFindingsKey", {
       alias: `${Config.env}-macie-findings-key`,
       description: "KMS key for Macie sensitive data discovery results",
       enableKeyRotation: true,
       removalPolicy: RemovalPolicy.DESTROY,
-    });
-    macieFindingsKey.addToResourcePolicy(
+  });
+  macieFindingsKey.addToResourcePolicy(
       new PolicyStatement({
         sid: "AllowMacieToUseKey",
         effect: Effect.ALLOW,
@@ -166,10 +170,10 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
           },
         },
       })
-    );
+  );
 
-    // Macie findings repository bucket
-    const macieFindingsBucket = new Bucket(stack, "MacieFindingsBucket", {
+  // Macie findings repository bucket
+  const macieFindingsBucket = new Bucket(stack, "MacieFindingsBucket", {
       bucketName: `${Config.env}-macie-findings-${stack.account}`,
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.KMS,
@@ -177,11 +181,11 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
       enforceSSL: true,
       removalPolicy: RemovalPolicy.DESTROY,
       lifecycleRules: [{ id: "delete-old-findings", expiration: Duration.days(90) }],
-    });
+  });
 
-    macieFindingsBucket.addToResourcePolicy(
-      new PolicyStatement({
-        sid: "AllowMacieGetBucketLocation",
+  macieFindingsBucket.addToResourcePolicy(
+    new PolicyStatement({
+      sid: "AllowMacieGetBucketLocation",
         effect: Effect.ALLOW,
         principals: [new ServicePrincipal("macie.amazonaws.com")],
         actions: ["s3:GetBucketLocation"],
@@ -198,10 +202,10 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
           },
         },
       })
-    );
-    macieFindingsBucket.addToResourcePolicy(
-      new PolicyStatement({
-        sid: "AllowMaciePutObject",
+  );
+  macieFindingsBucket.addToResourcePolicy(
+    new PolicyStatement({
+      sid: "AllowMaciePutObject",
         effect: Effect.ALLOW,
         principals: [new ServicePrincipal("macie.amazonaws.com")],
         actions: ["s3:PutObject"],
@@ -218,22 +222,27 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
           },
         },
       })
-    );
+  );
 
-    // Note: CfnFindingsPublicationConfiguration is not available in aws-cdk-lib v2.241.0.
-    // Configure the findings repository manually:
-    // AWS Console → Amazon Macie → Settings → Repository for sensitive data discovery results
-    // → Configure now → Select bucket: dev-macie-findings-{account-id}
-    new CfnOutput(stack, "MacieFindingsBucketName", {
-      value: macieFindingsBucket.bucketName,
-      description: "Bucket for Macie findings - configure in Macie console Settings",
-    });
-
-    new CfnOutput(stack, "MacieFindingsKmsKeyArn", {
-      value: macieFindingsKey.keyArn,
-      description: "KMS key ARN for Macie findings - select this key in Macie console Settings",
-    });
-  }
+  // CfnFindingsPublicationConfiguration is not available in aws-cdk-lib, so we use AwsCustomResource.
+  const configureFindingsRepo = new AwsCustomResource(stack, "MacieConfigureFindingsRepository", {
+      onUpdate: {
+        service: "Macie2",
+        action: "putClassificationExportConfiguration",
+        parameters: {
+          configuration: {
+            s3Destination: {
+              bucketName: macieFindingsBucket.bucketName,
+              kmsKeyArn: macieFindingsKey.keyArn,
+            },
+          },
+        },
+        physicalResourceId: PhysicalResourceId.of("MacieConfigureFindingsRepository"),
+      },
+      policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
+  });
+  configureFindingsRepo.node.addDependency(macieFindingsBucket);
+  configureFindingsRepo.node.addDependency(macieFindingsKey);
 
   // Weekly scheduled classification job for sensitive data scanning
   const macieJobLambda = new lambda.Function(stack, "MacieClassificationJobLambda", {
@@ -243,6 +252,7 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
     environment: {
       BUCKET_NAME: bucket.bucketName,
       ACCOUNT_ID: stack.account,
+      CUSTOM_DATA_IDENTIFIER_ID: finnishPersonalIdIdentifier.attrId,
     },
     timeout: Duration.seconds(30),
   });
@@ -260,7 +270,7 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
     targets: [new targets.LambdaFunction(macieJobLambda)],
   });
 
-  // Alert on sensitive data findings
+  // Alert on sensitive data findings — filter by this environment's bucket to avoid duplicate alerts across environments
   new events.Rule(stack, "MacieFindingsRule", {
     eventPattern: {
       source: ["aws.macie"],
@@ -272,6 +282,11 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
           "SensitiveData:S3Object/Credentials",
           "SensitiveData:S3Object/CustomIdentifier",
         ],
+        resourcesAffected: {
+          s3Bucket: {
+            name: [Config.yllapitoBucketName],
+          },
+        },
       },
     },
     targets: [
