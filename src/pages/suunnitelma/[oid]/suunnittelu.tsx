@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { FunctionComponent, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
@@ -303,7 +304,7 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <>
           {projekti?.status === Status.SUUNNITTELU && (
             <ContentSpacer>
-              <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} onClick={() => setPalauteLomakeOpen(true)} />
+              <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} tekstiIso={t("projekti:jata_palaute_tai")} onClick={() => setPalauteLomakeOpen(true)} />
               <PalauteLomakeDialogi
                 vuorovaikutus={vuorovaikutus}
                 open={palauteLomakeOpen}
