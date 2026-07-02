@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { SQSEvent, SQSHandler } from "aws-lambda/trigger/sqs";
 import { log } from "../logger";
 import { setupLambdaMonitoring, wrapXRayAsync } from "../aws/monitoring";
@@ -43,6 +44,16 @@ import { velho } from "../velho/velhoClient";
 import { linkHyvaksymisPaatos, linkJatkoPaatos1, linkJatkoPaatos2 } from "hassu-common/links";
 import { omistajaDatabase } from "../database/omistajaDatabase";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
+import { tallennaMaanomistajaluettelo } from "../mml/tiedotettavatExcel";
+import { SisainenProjektiPaths } from "../files/ProjektiPath";
+import { Vaihe } from "hassu-common/graphql/apiModel";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
+import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
+import { asianhallintaService } from "../asianhallinta/asianhallintaService";
+import { getAsiatunnus } from "../projekti/projektiUtil";
+import { isVaylaAsianhallinta } from "hassu-common/isVaylaAsianhallinta";
+import { fileService } from "../files/fileService";
+import { AsiakirjaTyyppi } from "@hassu/asianhallinta";
 
 async function handleNahtavillaoloZipping(ctx: ImportContext) {
   if (!ctx.projekti.nahtavillaoloVaihe) {
@@ -389,6 +400,110 @@ async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
   );
 }
 
+async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approvalType: PublishOrExpireEventType) {
+  const omistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projekti.oid);
+  const suomifiOmistajat = omistajat.filter((o) => o.suomifiLahetys);
+
+  let julkaisuHyvaksymisPaiva: string | null | undefined;
+  if (approvalType === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
+    julkaisuHyvaksymisPaiva = projekti.aloitusKuulutusJulkaisut?.[projekti.aloitusKuulutusJulkaisut.length - 1]?.hyvaksymisPaiva;
+  } else if (approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+    julkaisuHyvaksymisPaiva = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1]?.hyvaksymisPaiva;
+  } else if (approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+    julkaisuHyvaksymisPaiva =
+      projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1]?.hyvaksymisPaiva;
+  }
+  if (!julkaisuHyvaksymisPaiva) {
+    log.error("Julkaisun hyvaksymisPaiva puuttuu, ei generoida maanomistajaluetteloa", { approvalType });
+    return;
+  }
+
+  const allHandled = suomifiOmistajat.every((o) =>
+    o.lahetykset?.some((l) => l.tyyppi === approvalType && l.lahetysaika >= julkaisuHyvaksymisPaiva!)
+  );
+  if (!allHandled) {
+    log.info("Kaikki omistajat ei vielä käsitelty, ei generoida maanomistajaluetteloa", { approvalType });
+    return;
+  }
+
+  const asiatunnus = getAsiatunnus(projekti.velho);
+  if (!asiatunnus) {
+    log.error("Projektilla ei ole asiatunnusta, ei voida lähettää maanomistajaluetteloa asianhallintaan", { approvalType });
+    return;
+  }
+  const vaylaAsianhallinta = isVaylaAsianhallinta(projekti);
+
+  let maanomistajaluetteloPath: string | undefined;
+  let asiakirjaTyyppi: AsiakirjaTyyppi;
+  let julkaisuAsianhallintaEventId: string | null | undefined;
+  let toimenpideTyyppi: "ENSIMMAINEN_VERSIO" | "UUDELLEENKUULUTUS";
+
+  if (approvalType === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
+    const julkaisu = projekti.aloitusKuulutusJulkaisut?.[projekti.aloitusKuulutusJulkaisut.length - 1];
+    if (!julkaisu || julkaisu.maanomistajaluettelo) return;
+    const paths = new SisainenProjektiPaths(projekti.oid).aloituskuulutus(julkaisu);
+    julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+      projekti,
+      paths,
+      Vaihe.ALOITUSKUULUTUS,
+      julkaisu.kuulutusPaiva,
+      julkaisu.id
+    );
+    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisu);
+    maanomistajaluetteloPath = fileService.getYllapitoPathForProjektiFile(paths, julkaisu.maanomistajaluettelo);
+    asiakirjaTyyppi = "MAANOMISTAJALUETTELO_ALOITUSKUULUTUS";
+    julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
+    toimenpideTyyppi = julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO";
+  } else if (approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
+    const julkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
+    if (!julkaisu || julkaisu.maanomistajaluettelo) return;
+    const paths = new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(julkaisu);
+    julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+      projekti,
+      paths,
+      Vaihe.NAHTAVILLAOLO,
+      julkaisu.kuulutusPaiva,
+      julkaisu.id
+    );
+    await nahtavillaoloVaiheJulkaisuDatabase.put(julkaisu);
+    maanomistajaluetteloPath = fileService.getYllapitoPathForProjektiFile(paths, julkaisu.maanomistajaluettelo);
+    asiakirjaTyyppi = "MAANOMISTAJALUETTELO_NAHTAVILLAOLO";
+    julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
+    toimenpideTyyppi = julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO";
+  } else if (approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+    const julkaisu = projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1];
+    if (!julkaisu || julkaisu.maanomistajaluettelo) return;
+    const paths = new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu);
+    julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
+      projekti,
+      paths,
+      Vaihe.HYVAKSYMISPAATOS,
+      julkaisu.kuulutusPaiva,
+      julkaisu.id
+    );
+    await projektiEntityDatabase.put(julkaisu);
+    maanomistajaluetteloPath = fileService.getYllapitoPathForProjektiFile(paths, julkaisu.maanomistajaluettelo);
+    asiakirjaTyyppi = "MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS";
+    julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
+    toimenpideTyyppi = julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO";
+  } else {
+    return;
+  }
+
+  if (!julkaisuAsianhallintaEventId) {
+    log.error("Julkaisulla ei ole asianhallintaEventId, ei voida lähettää maanomistajaluetteloa asianhallintaan", { approvalType });
+    return;
+  }
+  await asianhallintaService.saveAndEnqueueSynchronization(projekti.oid, {
+    asianhallintaEventId: julkaisuAsianhallintaEventId + "_maanomistajaluettelo",
+    asiatunnus,
+    vaylaAsianhallinta,
+    toimenpideTyyppi,
+    dokumentit: [{ s3Path: maanomistajaluetteloPath }],
+  });
+  log.info("Maanomistajaluettelo lähetetty asianhallintaan", { approvalType, asiakirjaTyyppi });
+}
+
 export const handlerFactory = (event: SQSEvent) => async () => {
   try {
     for (const record of event.Records) {
@@ -443,6 +558,11 @@ export const handlerFactory = (event: SQSEvent) => async () => {
             break;
           case SqsEventType.ONE_MONTH_TO_INACTIVE:
             await handleOneMonthToInactive(ctx);
+            break;
+          case SqsEventType.GENERATE_MAANOMISTAJALUETTELO:
+            if (sqsEvent.approvalType) {
+              await handleGenerateMaanomistajaluettelo(projekti, sqsEvent.approvalType);
+            }
             break;
           default:
             break;

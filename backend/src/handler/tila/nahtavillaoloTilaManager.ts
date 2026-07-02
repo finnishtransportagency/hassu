@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
@@ -12,7 +13,7 @@ import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
-import { SisainenProjektiPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import assert from "assert";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
@@ -30,7 +31,6 @@ import { approvalEmailSender } from "../email/approvalEmailSender";
 import { eventSqsClient } from "../../sqsEvents/eventSqsClient";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
 import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjektiAsianhallintaIntegrationEnabled";
-import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
@@ -277,19 +277,6 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     nahtavillaoloVaiheJulkaisu.muokkaaja = muokkaaja.uid;
 
     nahtavillaoloVaiheJulkaisu.nahtavillaoloPDFt = await this.generatePDFs(projekti, nahtavillaoloVaiheJulkaisu);
-    if (
-      !nahtavillaoloVaiheJulkaisu.uudelleenKuulutus ||
-      nahtavillaoloVaiheJulkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia === undefined ||
-      nahtavillaoloVaiheJulkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia
-    ) {
-      nahtavillaoloVaiheJulkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
-        projekti,
-        new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillaoloVaiheJulkaisu),
-        this.vaihe,
-        nahtavillaoloVaiheJulkaisu.kuulutusPaiva,
-        nahtavillaoloVaiheJulkaisu.id
-      );
-    }
     await nahtavillaoloVaiheJulkaisuDatabase.put(nahtavillaoloVaiheJulkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
@@ -314,13 +301,6 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new Error("julkaisuWaitingForApproval.nahtavillaoloPDFt puuttuu");
     }
     await this.deletePDFs(projekti.oid, julkaisu.nahtavillaoloPDFt);
-    if (julkaisu.maanomistajaluettelo) {
-      await fileService.deleteYllapitoSisainenFileFromProjekti({
-        oid: projekti.oid,
-        filePathInProjekti: julkaisu.maanomistajaluettelo,
-        reason: "Nähtävilläolo rejected",
-      });
-    }
     await nahtavillaoloVaiheJulkaisuDatabase.delete(julkaisu);
     return {
       ...projekti,

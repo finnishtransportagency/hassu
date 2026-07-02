@@ -1,10 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import { Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu, KuulutusSaamePDFt, SaameKieli } from "../../database/model";
 import { asiakirjaAdapter } from "../asiakirjaAdapter";
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { IllegalArgumentError } from "hassu-common/error";
 import { AbstractHyvaksymisPaatosVaiheTilaManager } from "./abstractHyvaksymisPaatosVaiheTilaManager";
-import { SisainenProjektiPaths, PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
+import { PathTuple, ProjektiPaths } from "../../files/ProjektiPath";
 import assert from "assert";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import { ProjektiTiedostoManager, VaiheTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
@@ -14,8 +15,6 @@ import { sendHyvaksymiskuulutusApprovalMailsAndAttachments } from "../email/emai
 import { findHyvaksymisPaatosVaiheWaitingForApproval } from "../../projekti/projektiUtil";
 import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
-import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
-import { fileService } from "../../files/fileService";
 import { log } from "../../logger";
 import { parameters } from "../../aws/parameters";
 import { isKieliSaame } from "hassu-common/kaannettavatKielet";
@@ -186,20 +185,6 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       PaatosTyyppi.HYVAKSYMISPAATOS
     );
 
-    if (
-      !julkaisu.uudelleenKuulutus ||
-      julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia === undefined ||
-      julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia
-    ) {
-      julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
-        projekti,
-        new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu),
-        this.vaihe,
-        julkaisu.kuulutusPaiva,
-        julkaisu.id
-      );
-    }
-
     await projektiEntityDatabase.put(julkaisu);
     const updatedProjekti = await projektiDatabase.loadProjektiByOid(projekti.oid);
     if (!updatedProjekti) {
@@ -244,13 +229,6 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
     }
     await this.deletePDFs(projekti.oid, julkaisu.hyvaksymisPaatosVaihePDFt);
 
-    if (julkaisu.maanomistajaluettelo) {
-      await fileService.deleteYllapitoSisainenFileFromProjekti({
-        oid: projekti.oid,
-        filePathInProjekti: julkaisu.maanomistajaluettelo,
-        reason: "Hyväksymispäätösvaihe rejected",
-      });
-    }
     await projektiEntityDatabase.delete(julkaisu);
     return {
       ...projekti,
