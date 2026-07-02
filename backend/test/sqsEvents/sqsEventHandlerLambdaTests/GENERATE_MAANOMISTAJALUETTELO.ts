@@ -105,7 +105,7 @@ export const generatesAndSendsToAsianhallintaWhenAllHandled = async () => {
     } as any,
   ]);
   sinon.stub(tiedotettavatExcel, "tallennaMaanomistajaluettelo").resolves("/aloituskuulutus/1/Maanomistajaluettelo.xlsx");
-  const aloitusKuulutusJulkaisutUpdateStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update").resolves();
+  const aloitusKuulutusJulkaisutUpdateStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update").resolves(true);
   const saveAndEnqueueStub = sinon.stub(asianhallintaService, "saveAndEnqueueSynchronization").resolves();
 
   const handler = fakeEventInSqsQueueWithApprovalType({
@@ -187,7 +187,7 @@ export const setsToimenpideTyyppiUudelleenkuulutusWhenUudelleenKuulutus = async 
     } as any,
   ]);
   sinon.stub(tiedotettavatExcel, "tallennaMaanomistajaluettelo").resolves("/aloituskuulutus/1/Maanomistajaluettelo.xlsx");
-  sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update").resolves();
+  sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update").resolves(true);
   const saveAndEnqueueStub = sinon.stub(asianhallintaService, "saveAndEnqueueSynchronization").resolves();
 
   const handler = fakeEventInSqsQueueWithApprovalType({

@@ -21,7 +21,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -59,7 +59,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -97,7 +97,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -258,7 +258,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -286,11 +286,9 @@ Array [
     null,
     null,
     null,
-    null,
   ],
   Array [
     "21.02.2024",
-    null,
     null,
     null,
     null,
@@ -308,7 +306,6 @@ Array [
     null,
     null,
     null,
-    null,
   ],
   Array [
     "Kiinteistötunnus",
@@ -319,7 +316,6 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
-    "Lähetysaika",
   ],
   Array [
     "41-56-1-0",
@@ -330,7 +326,6 @@ Array [
     null,
     "22.02.2024 08:43:12+02:00",
     "Ei voida tiedottaa",
-    null,
   ],
   Array [
     "123-456-1-291",
@@ -341,7 +336,6 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Ei voida tiedottaa",
-    null,
   ],
   Array [
     "123-456-1-291",
@@ -352,7 +346,6 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Ei voida tiedottaa",
-    null,
   ],
 ]
 `;
@@ -565,7 +558,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -593,11 +586,9 @@ Array [
     null,
     null,
     null,
-    null,
   ],
   Array [
     "21.02.2024",
-    null,
     null,
     null,
     null,
@@ -615,7 +606,6 @@ Array [
     null,
     null,
     null,
-    null,
   ],
   Array [
     "Kiinteistötunnus",
@@ -626,7 +616,6 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
-    "Lähetysaika",
   ],
   Array [
     "41-56-1-0",
@@ -637,7 +626,6 @@ Array [
     null,
     "22.02.2024 08:43:12+02:00",
     "Ei voida tiedottaa",
-    null,
   ],
   Array [
     "123-456-1-291",
@@ -648,7 +636,6 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Ei voida tiedottaa",
-    null,
   ],
   Array [
     "123-456-1-291",
@@ -659,7 +646,6 @@ Array [
     "Suomi",
     "21.02.2024 10:01:12+02:00",
     "Ei voida tiedottaa",
-    null,
   ],
 ]
 `;

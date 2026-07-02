@@ -449,7 +449,16 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
       julkaisu.kuulutusPaiva,
       julkaisu.id
     );
-    await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisu);
+    const updated = await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, julkaisu, {
+      // __idx__ korvataan oikealla lista-indeksillä updateJulkaisuToList:ssa
+      // attribute_not_exists tarkistaa onko maanomistajaluettelo jo asetettu lista-elementissä
+      expression: "attribute_not_exists(#aloitusKuulutusJulkaisut[__idx__].#maanomistajaluettelo)",
+      attributeNames: { "#aloitusKuulutusJulkaisut": "aloitusKuulutusJulkaisut", "#maanomistajaluettelo": "maanomistajaluettelo" },
+    });
+    if (!updated) {
+      log.info("Maanomistajaluettelo on jo generoitu toisessa prosessissa, ohitetaan", { approvalType });
+      return;
+    }
     maanomistajaluetteloPath = fileService.getYllapitoPathForProjektiFile(paths, julkaisu.maanomistajaluettelo);
     asiakirjaTyyppi = "MAANOMISTAJALUETTELO_ALOITUSKUULUTUS";
     julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
@@ -465,7 +474,11 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
       julkaisu.kuulutusPaiva,
       julkaisu.id
     );
-    await nahtavillaoloVaiheJulkaisuDatabase.put(julkaisu);
+    const updated = await nahtavillaoloVaiheJulkaisuDatabase.put(julkaisu, undefined, "attribute_not_exists(maanomistajaluettelo)");
+    if (!updated) {
+      log.info("Maanomistajaluettelo on jo generoitu toisessa prosessissa, ohitetaan", { approvalType });
+      return;
+    }
     maanomistajaluetteloPath = fileService.getYllapitoPathForProjektiFile(paths, julkaisu.maanomistajaluettelo);
     asiakirjaTyyppi = "MAANOMISTAJALUETTELO_NAHTAVILLAOLO";
     julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
@@ -481,7 +494,11 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
       julkaisu.kuulutusPaiva,
       julkaisu.id
     );
-    await projektiEntityDatabase.put(julkaisu);
+    const updated = await projektiEntityDatabase.put(julkaisu, undefined, "attribute_not_exists(maanomistajaluettelo)");
+    if (!updated) {
+      log.info("Maanomistajaluettelo on jo generoitu toisessa prosessissa, ohitetaan", { approvalType });
+      return;
+    }
     maanomistajaluetteloPath = fileService.getYllapitoPathForProjektiFile(paths, julkaisu.maanomistajaluettelo);
     asiakirjaTyyppi = "MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS";
     julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
@@ -491,7 +508,7 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
   }
 
   if (!julkaisuAsianhallintaEventId) {
-    log.error("Julkaisulla ei ole asianhallintaEventId, ei voida lähettää maanomistajaluetteloa asianhallintaan", { approvalType });
+    log.warn("Asianhallintaintegraatio ei ole päällä, maanomistajaluetteloa ei lähetetä asianhallintaan", { approvalType });
     return;
   }
   await asianhallintaService.saveAndEnqueueSynchronization(projekti.oid, {

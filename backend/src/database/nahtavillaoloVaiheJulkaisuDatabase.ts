@@ -6,6 +6,7 @@ import {
   PutCommandOutput,
   QueryCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 import { NahtavillaoloVaiheJulkaisu } from "./model";
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -19,7 +20,7 @@ class KuulutusJulkaisuDatabase<T extends GenericKuulutusJulkaisu> {
   }
   julkaisuTableName: string;
 
-  async put(julkaisu: T, description: string | undefined = undefined): Promise<PutCommandOutput> {
+  async put(julkaisu: T, description: string | undefined = undefined, conditionExpression?: string): Promise<PutCommandOutput | false> {
     log.info(`Putting julkaisu to ${this.julkaisuTableName} table.`, {
       id: julkaisu.id,
       projektiOid: julkaisu.projektiOid,
@@ -28,8 +29,16 @@ class KuulutusJulkaisuDatabase<T extends GenericKuulutusJulkaisu> {
     const command = new PutCommand({
       TableName: this.julkaisuTableName,
       Item: julkaisu,
+      ConditionExpression: conditionExpression,
     });
-    return await getDynamoDBDocumentClient().send(command);
+    try {
+      return await getDynamoDBDocumentClient().send(command);
+    } catch (e) {
+      if (conditionExpression && e instanceof ConditionalCheckFailedException) {
+        return false;
+      }
+      throw e;
+    }
   }
 
   async putAll(

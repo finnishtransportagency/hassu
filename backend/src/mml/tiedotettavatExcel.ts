@@ -229,7 +229,7 @@ function getTiedotustapa(
   if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
     return "Lähetys epäonnistui";
   }
-  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi viesti" : "Kirjeitse";
+  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : "Suomi.fi: kirje";
 }
 
 async function haeOmistajat(oid: string): Promise<Rivi[]> {
@@ -290,9 +290,9 @@ async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: 
   data[1].push([{ value: otsikko, fontWeight: "bold" }]);
   data[1].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
   data[1].push([{ value: "Kiinteistönomistajat, joille ei ole yhteystietoja", fontWeight: "bold" }]);
-  data[1].push(lisaaOtsikkoWithLahetysaika());
+  data[1].push(lisaaOtsikko());
   for (const omistaja of omistajat.filter((o) => !o.suomifiLahetys)) {
-    data[1].push(lisaaRiviWithLahetysaika(omistaja));
+    data[1].push(lisaaRivi(omistaja));
   }
 }
 
@@ -329,7 +329,7 @@ export async function generateExcel(
   const columns: Columns[] = [];
   if (vaihe === Vaihe.ALOITUSKUULUTUS || vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
     sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat, OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
-    columns.push(getKiinteistonomistajaColumnsWithLahetysaika(), getKiinteistonomistajaColumnsWithLahetysaika());
+    columns.push(getKiinteistonomistajaColumnsWithLahetysaika(), getKiinteistonomistajaColumns());
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
     if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
       sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiMuistuttajat, OMISTAJA_EXCEL_SHEETS.muutMuistuttajat);

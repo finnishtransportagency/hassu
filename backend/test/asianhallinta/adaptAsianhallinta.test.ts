@@ -7,15 +7,16 @@ const EVENT_ID = "event-123";
 const MAANOMISTAJA_EVENT_ID = EVENT_ID + "_maanomistajaluettelo";
 
 function synkronoitu() {
-  return { dokumentit: [{ synkronointiTila: "SYNKRONOITU" as const }] };
+  // as any: aws-sdk-client-mock type incompatibility, ks. testing-and-verification.md
+  return { dokumentit: [{ synkronointiTila: "SYNKRONOITU" as const }] } as any;
 }
 
 function kesken() {
-  return { dokumentit: [{ synkronointiTila: "VALMIS_VIENTIIN" as const }] };
+  return { dokumentit: [{ synkronointiTila: "VALMIS_VIENTIIN" as const }] } as any;
 }
 
 function virhe(tila: "VIRHE" | "ASIAA_EI_LOYDY" | "ASIANHALLINTA_VAARASSA_TILASSA") {
-  return { dokumentit: [{ synkronointiTila: tila }] };
+  return { dokumentit: [{ synkronointiTila: tila }] } as any;
 }
 
 describe("getAsianhallintaSynchronizationStatus", () => {

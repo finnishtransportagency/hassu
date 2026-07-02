@@ -66,8 +66,18 @@ export class JulkaisuFunctions<
     return await this.projektiDatabase.insertJulkaisuToList(oid, julkaisu, this.julkaisutFieldName, this.description);
   }
 
-  async update(projekti: DBProjekti, julkaisu: T): Promise<void> {
-    await this.projektiDatabase.updateJulkaisuToList(projekti, julkaisu, this.julkaisutFieldName, this.description);
+  async update(
+    projekti: DBProjekti,
+    julkaisu: T,
+    conditionExpression?: { expression: string; attributeNames: Record<string, string> }
+  ): Promise<boolean> {
+    return await this.projektiDatabase.updateJulkaisuToList(
+      projekti,
+      julkaisu,
+      this.julkaisutFieldName,
+      this.description,
+      conditionExpression
+    );
   }
 
   async delete(projekti: DBProjekti, julkaisuIdToDelete: number): Promise<void> {
@@ -398,32 +408,47 @@ export class ProjektiDatabase {
     return await getDynamoDBDocumentClient().send(params);
   }
 
-  async updateJulkaisuToList(projekti: DBProjekti, julkaisu: JulkaisuWithId, listFieldName: JulkaisutFieldName, description: string) {
+  async updateJulkaisuToList(
+    projekti: DBProjekti,
+    julkaisu: JulkaisuWithId,
+    listFieldName: JulkaisutFieldName,
+    description: string,
+    conditionExpression?: { expression: string; attributeNames: Record<string, string> }
+  ): Promise<boolean> {
     const julkaisut = projekti[listFieldName];
     if (!julkaisut) {
-      return;
+      return false;
     }
     const oid = projekti.oid;
     for (let idx = 0; idx < julkaisut.length; idx++) {
       if (julkaisut[idx].id == julkaisu.id) {
+        const expressionAttributeNames: Record<string, string> = {
+          ["#" + listFieldName]: listFieldName,
+          ...conditionExpression?.attributeNames,
+        };
+        // __idx__ korvataan oikealla lista-indeksillä — lista-indeksit eivät ole expression attribute names
+        const resolvedConditionExpression = conditionExpression?.expression.replace(/__idx__/g, String(idx));
         const params = new UpdateCommand({
           TableName: this.projektiTableName,
-          Key: {
-            oid,
-          },
+          Key: { oid },
           UpdateExpression: "SET #" + listFieldName + "[" + idx + "] = :julkaisu",
-          ExpressionAttributeNames: {
-            ["#" + listFieldName]: listFieldName,
-          },
-          ExpressionAttributeValues: {
-            ":julkaisu": julkaisu,
-          },
+          ExpressionAttributeNames: expressionAttributeNames,
+          ExpressionAttributeValues: { ":julkaisu": julkaisu },
+          ConditionExpression: resolvedConditionExpression,
         });
         log.info("Updating " + description + " to projekti", { julkaisu });
-        await getDynamoDBDocumentClient().send(params);
-        break;
+        try {
+          await getDynamoDBDocumentClient().send(params);
+        } catch (e) {
+          if (e instanceof ConditionalCheckFailedException) {
+            return false;
+          }
+          throw e;
+        }
+        return true;
       }
     }
+    return false;
   }
 
   async deleteJulkaisuFromList(
