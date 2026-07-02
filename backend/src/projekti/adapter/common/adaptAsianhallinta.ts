@@ -7,22 +7,26 @@ export const getAsianhallintaSynchronizationStatus = (
   asianhallintaEventId: string | null | undefined
 ): AsianTila | undefined => {
   if (asianhallintaEventId && synkronoinnit?.[asianhallintaEventId]?.dokumentit) {
-    const synkronointi = synkronoinnit[asianhallintaEventId];
-    // Käy läpi synkronointi.dokumentit.synkronointiTila
-    // Jos synkrnonointiTila ASIANHALLINTA_VAARASSA_TILASSA, ASIAA_EI_LOYDY tai VIRHE löytyy, palauta se.
-    // Jos kaikki dokumentit on synkronoitu, palauta SYNKRONOITU
-    // Jos mikään ei löydy, palauta undefined
-
-    const tilat = synkronointi.dokumentit.map((dokumentti) => dokumentti.synkronointiTila);
-    const virheTila =
-      getTilaIfExists(tilat, "ASIANHALLINTA_VAARASSA_TILASSA") ??
-      getTilaIfExists(tilat, "ASIAA_EI_LOYDY") ??
-      getTilaIfExists(tilat, "VIRHE");
+    const virheTila = getSynkronointiVirheTila(synkronoinnit[asianhallintaEventId]);
     if (virheTila) {
       return synkronointiTilaToAsianTilaMap[virheTila];
     }
 
-    for (const dokumentti of synkronointi.dokumentit) {
+    const maanomistajaluetteloEventId = asianhallintaEventId + "_maanomistajaluettelo";
+    const maanomistajaluetteloSynkronointi = synkronoinnit[maanomistajaluetteloEventId];
+    if (maanomistajaluetteloSynkronointi?.dokumentit) {
+      const maanomistajaVirheTila = getSynkronointiVirheTila(maanomistajaluetteloSynkronointi);
+      if (maanomistajaVirheTila) {
+        return synkronointiTilaToAsianTilaMap[maanomistajaVirheTila];
+      }
+      for (const dokumentti of maanomistajaluetteloSynkronointi.dokumentit) {
+        if (dokumentti.synkronointiTila !== "SYNKRONOITU") {
+          return undefined;
+        }
+      }
+    }
+
+    for (const dokumentti of synkronoinnit[asianhallintaEventId].dokumentit) {
       if (dokumentti.synkronointiTila !== "SYNKRONOITU") {
         return undefined; // Synkronointia ei ole tehty
       }
@@ -32,6 +36,13 @@ export const getAsianhallintaSynchronizationStatus = (
   }
   return AsianTila.EI_TESTATTAVISSA;
 };
+
+function getSynkronointiVirheTila(synkronointi: AsianhallintaSynkronointi): SynkronointiTila | undefined {
+  const tilat = synkronointi.dokumentit.map((d) => d.synkronointiTila);
+  return (
+    getTilaIfExists(tilat, "ASIANHALLINTA_VAARASSA_TILASSA") ?? getTilaIfExists(tilat, "ASIAA_EI_LOYDY") ?? getTilaIfExists(tilat, "VIRHE")
+  );
+}
 
 function getTilaIfExists(tilat: (SynkronointiTila | undefined)[], tila: SynkronointiTila) {
   if (tilat.includes(tila)) {
