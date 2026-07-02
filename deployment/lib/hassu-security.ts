@@ -131,8 +131,8 @@ Region: ${events.EventField.region}`
 }
 
 function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTopic: sns.ITopic) {
-  // Macie is only enabled on the dev account. Prod account has no Macie session.
-  if (!Config.isDevAccount()) {
+  // Macie is only enabled on the dev account's dev environment.
+  if (Config.env !== "dev") {
     return;
   }
   // Macie Session is created in hassu-account stack (account-level resource).
