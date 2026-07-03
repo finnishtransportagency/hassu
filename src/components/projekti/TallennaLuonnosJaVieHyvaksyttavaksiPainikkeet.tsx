@@ -100,7 +100,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
               puutteet.push("kuntavastaanottajat puuttuvat");
             }
             const formDataField = tilasiirtymaToFormFieldMap[tilasiirtymaTyyppi];
-            if (isElyJulkaisuEstetty(projekti, formData[formDataField].kuulutusPaiva)) {
+            if (isElyJulkaisuEstetty(projekti)) {
               puutteet.push("ELY-keskuksien julkaisut on estetty");
             }
             if (

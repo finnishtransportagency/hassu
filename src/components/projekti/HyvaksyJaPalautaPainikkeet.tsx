@@ -56,7 +56,7 @@ export default function HyvaksyJaPalautaPainikkeet({ projekti, julkaisu, tilasii
     if (asianhallintaVaaraTila) {
       puutteet.push("asianhallinta on väärässä tilassa");
     }
-    if (julkaisu.kuulutusPaiva && isElyJulkaisuEstetty(projekti, julkaisu.kuulutusPaiva)) {
+    if (isElyJulkaisuEstetty(projekti)) {
       puutteet.push("ELY-keskuksien julkaisut on estetty");
     }
 

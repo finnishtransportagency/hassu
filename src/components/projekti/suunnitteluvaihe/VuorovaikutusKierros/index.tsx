@@ -291,7 +291,7 @@ function VuorovaikutusKierrosKutsu({
       if (kunnatPuuttuu) {
         puutteet.push("kuntavastaanottajat puuttuvat");
       }
-      if (julkaisupaiva && isElyJulkaisuEstetty(projekti, julkaisupaiva)) {
+      if (isElyJulkaisuEstetty(projekti)) {
         puutteet.push("ELY-keskuksien julkaisut on estetty");
       }
       if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
