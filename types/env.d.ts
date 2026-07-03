@@ -10,7 +10,6 @@ const PUBLIC_ENV_KEYS = [
   "FRONTEND_DOMAIN_NAME",
   "KEYCLOAK_CLIENT_ID",
   "KEYCLOAK_DOMAIN",
-  "EVK_ACTIVATION_DATE",
 ] as const;
 
 export type PublicEnv = {

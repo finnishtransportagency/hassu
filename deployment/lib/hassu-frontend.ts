@@ -790,7 +790,6 @@ export class HassuFrontendCoreStack extends Stack {
       FRONTEND_DOMAIN_NAME: config.frontendDomainName,
       KEYCLOAK_CLIENT_ID: ssmParameters.KeycloakClientId,
       KEYCLOAK_DOMAIN: ssmParameters.KeycloakDomain,
-      EVK_ACTIVATION_DATE: ssmParameters.EvkActivationDate,
       INFRA_ENVIRONMENT: BaseConfig.infraEnvironment,
       TABLE_PROJEKTI: Config.projektiTableName,
       TABLE_LYHYTOSOITE: Config.lyhytOsoiteTableName,

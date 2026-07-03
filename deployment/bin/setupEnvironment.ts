@@ -63,7 +63,6 @@ async function main() {
       // Tuki asianhallinnan käynnistämiseen testilinkillä [oid].dev.ts kautta. Ei tarvita kun asianhallintaintegraatio on automaattisesti käytössä.
       ASIANHALLINTA_SQS_URL: variables.AsianhallintaSQSUrl,
       VELHO_BASE_URL: environmentVariables.VELHO_BASE_URL,
-      EVK_ACTIVATION_DATE: environmentVariables.EVK_ACTIVATION_DATE,
       KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
       KEYCLOAK_DOMAIN: variables.KeycloakDomain,
       KEYCLOAK_CLIENT_SECRET: variables.KeycloakClientSecret,
@@ -100,7 +99,6 @@ async function main() {
         FRONTEND_DOMAIN_NAME: frontendStackOutputs.CloudfrontPrivateDNSName,
         KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
         KEYCLOAK_DOMAIN: variables.KeycloakDomain,
-        EVK_ACTIVATION_DATE: environmentVariables.EVK_ACTIVATION_DATE,
       });
     }
     writeEnvFile(".env.local", env);
