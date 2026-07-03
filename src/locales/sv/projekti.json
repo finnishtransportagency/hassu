@@ -143,7 +143,7 @@
   "ala_kirjoita_arkaluonteista": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till responsen.",
   "voit_jattaa_yhteystietosi": "Om du vill kan du lämna dina kontaktuppgifter, så kontaktar vi dig vid behov.",
   "palautelomake": {
-    "jata_palaute": "Lämna feedback eller fråga om planen",
+    "jata_palaute": "Fråga om planen",
     "kiitos_viestista": "Tack för meddelandet",
     "palaute": "Respons",
     "puhelinsoitto": "Telefonsamtal",
@@ -491,8 +491,5 @@
       "genetiivi": "järnvägsplanen",
       "genetiivi_isolla": "Järnvägsplanen"
     }
-  },
-  "lue_hankesivulta": "Läs mer om projektet på projektsidorna",
-  "siirry_hankesivulle": "Gå till projektsidorna",
-  "hankesivut_otsikko": "Projektsidor"
+  }
 }

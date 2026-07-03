@@ -1,11 +1,12 @@
+// Contains code generated or recommended by Amazon Q
 import React from "react";
 import { styled, experimental_sx as sx, Fab } from "@mui/material";
 import { useSetSnackbarFabAdjust } from "src/hooks/useSetSnackbarFabAdjust";
 import { useIsBelowBreakpoint } from "src/hooks/useIsSize";
-
 interface Props {
   onClick?: () => void;
   teksti: string;
+  tekstiIso?: string;
 }
 
 const JataPalautettaNappi = ({
@@ -18,11 +19,12 @@ const JataPalautettaNappi = ({
 
   return !isSmall ? (
     <TavallinenNappi id="feedback_button" {...props} onClick={onClick}>
-      {props.teksti}
+      {props.tekstiIso ?? props.teksti}
       <img src="/assets/kysymys-ikoni.svg" alt="kysymysikoni" role="presentation" />
     </TavallinenNappi>
   ) : (
-    <LeijuvaNappi disableRipple size="large" id="feedback_button_hovering" onClick={onClick} {...props}>
+    <LeijuvaNappi disableRipple variant="extended" id="feedback_button_hovering" onClick={onClick} {...props}>
+      {props.teksti}
       <img src="/assets/kysymys-ikoni.svg" alt="avaa palautteenantolomake" role="presentation" />
     </LeijuvaNappi>
   );
@@ -34,9 +36,16 @@ const LeijuvaNappi = styled(Fab)(
     bottom: "1.75rem",
     right: "1.75rem",
     backgroundColor: "#0064AF !important",
-    "&.MuiFab-sizeLarge": {
-      width: "83px",
-      height: "83px",
+    borderRadius: "21px",
+    width: "232px",
+    height: "42px",
+    color: "#FFFFFF",
+    textTransform: "uppercase",
+    fontSize: "1.25rem",
+    gap: "0.5em",
+    "& img": {
+      width: "20px",
+      height: "20px",
     },
   })
 );

@@ -143,7 +143,7 @@
   "ala_kirjoita_arkaluonteista": "Älä kirjoita tai liitä palautteeseen asiakirjoja, joissa on henkilötunnuksia, kotiosoitteita tai arkaluonteisia tietoja, kuten terveystietoja.",
   "voit_jattaa_yhteystietosi": "Voit halutessasi jättää yhteystietosi, ja olemme yhteydessä tarvittaessa.",
   "palautelomake": {
-    "jata_palaute": "Jätä palaute tai kysy suunnitelmasta",
+    "jata_palaute": "Esitä kysymys",
     "kiitos_viestista": "Kiitos viestistä",
     "palaute": "Kysymys tai palaute",
     "puhelinsoitto": "Puhelinsoitto",
@@ -490,8 +490,5 @@
       "genetiivi": "ratasuunnitelman",
       "genetiivi_isolla": "Ratasuunnitelman"
     }
-  },
-  "lue_hankesivulta": "Lue hankkeesta lisää hankesivulta",
-  "siirry_hankesivulle": "Siirry hankesivulle",
-  "hankesivut_otsikko": "Hankesivut"
+  }
 }
