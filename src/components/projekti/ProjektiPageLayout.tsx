@@ -1,8 +1,9 @@
+// Contains code generated or recommended by Amazon Q
 import Notification, { NotificationType } from "@components/notification/Notification";
-import React, { ReactElement, ReactNode, createContext, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ReactElement, ReactNode, createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import ProjektiSideNavigation from "./ProjektiSideNavigation";
-import { IconButton, Stack, SvgIcon } from "@mui/material";
+import { IconButton, Stack, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import AsianhallintaStatusNotification from "./AsianhallintaStatusNotification";
 import ContentSpacer from "@components/layout/ContentSpacer";
@@ -55,6 +56,36 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
 
   const contextValue = useMemo(() => ({ ohjeetOpen, ohjeetOnClose, ohjeetOnOpen }), [ohjeetOnClose, ohjeetOpen, ohjeetOnOpen]);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [sidebarTop, setSidebarTop] = useState(0);
+  const sidebarTopRef = useRef(sidebarTop);
+  sidebarTopRef.current = sidebarTop;
+  const initialGapRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    let rafId: number;
+    const loop = () => {
+      const header = document.querySelector("header");
+      const headerBottom = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
+      if (initialGapRef.current === null) {
+        const main = document.querySelector("main");
+        if (main && headerBottom > 0) {
+          initialGapRef.current = main.getBoundingClientRect().top - headerBottom;
+        }
+      }
+      const gap = initialGapRef.current ?? 0;
+      const next = headerBottom + gap;
+      if (next !== sidebarTopRef.current) {
+        setSidebarTop(next);
+      }
+      rafId = requestAnimationFrame(loop);
+    };
+    rafId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
   if (!projekti) {
     return <></>;
   }
@@ -63,7 +94,10 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
     <ProjektiPageLayoutContext.Provider value={contextValue}>
       <section>
         <div className="flex flex-col md:flex-row gap-8 mb-3">
-          <div style={{ minWidth: "345px" }}>
+          <div
+            data-sidebar
+            style={{ minWidth: "345px", ...(!isMobile && { position: "sticky", top: sidebarTop, alignSelf: "flex-start" }) }}
+          >
             <ProjektiSideNavigation />
           </div>
           <div className="grow min-w-0">
