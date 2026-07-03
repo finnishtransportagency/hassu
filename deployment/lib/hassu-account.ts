@@ -37,6 +37,7 @@ import { RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Rule, Schedule } from "aws-cdk-lib/aws-events";
 import { AwsApi, LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import * as macie from "aws-cdk-lib/aws-macie";
+import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from "aws-cdk-lib/custom-resources";
 
 // These should correspond to CfnOutputs produced by this stack
 export type AccountStackOutputs = {
@@ -578,11 +579,25 @@ export class HassuAccountStack extends Stack {
    * Enables Macie session for this account.
    * Account-level resource — deployed once, persists across environment stacks.
    * Before first deploy: run `aws macie2 disable-macie` if session already exists outside CFN.
+   *
+   * Automated sensitive data discovery is explicitly disabled — scanning is handled by
+   * scheduled classification jobs (macieSensitiveData.js) targeting only palautteet/ and muistutukset/ prefixes.
    */
   private ensureMacieSession() {
-    new macie.CfnSession(this, "MacieSession", {
+    const session = new macie.CfnSession(this, "MacieSession", {
       status: "ENABLED",
       findingPublishingFrequency: "FIFTEEN_MINUTES",
     });
+
+    const disableAutomatedDiscovery = new AwsCustomResource(this, "MacieDisableAutomatedDiscovery", {
+      onUpdate: {
+        service: "Macie2",
+        action: "updateAutomatedDiscoveryConfiguration",
+        parameters: { status: "DISABLED" },
+        physicalResourceId: PhysicalResourceId.of("MacieDisableAutomatedDiscovery"),
+      },
+      policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
+    });
+    disableAutomatedDiscovery.node.addDependency(session);
   }
 }

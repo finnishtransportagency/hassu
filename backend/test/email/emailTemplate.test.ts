@@ -1,7 +1,8 @@
 import { describe, it } from "mocha";
 import { KayttajaTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { config } from "../../src/config";
-import { createPerustamisEmail } from "../../src/email/emailTemplates";
+import { createPerustamisEmail, projektiPaallikkoJaVarahenkilotEmails } from "../../src/email/emailTemplates";
+import { DBVaylaUser } from "../../src/database/model";
 
 import { expect } from "chai";
 
@@ -21,7 +22,7 @@ describe("EmailTemplating", () => {
       },
       kayttoOikeudet: [
         {
-          kayttajatunnus: "ABC123",
+          kayttajatunnus: "A123",
           etunimi: "Veikko",
           sukunimi: "Väyläläinen",
           organisaatio: "Väylä",
@@ -40,5 +41,37 @@ describe("EmailTemplating", () => {
         "/yllapito/projekti/1.2.246.578.5.1.165\n\n" +
         "Sait tämän viestin, koska sinut on merkitty projektin projektipäälliköksi. Tämä on automaattinen sähköposti, johon ei voi vastata."
     );
+  });
+
+  it("should not send email to varahenkilo with non-A/L-tunnus (e.g. LX-tunnus)", () => {
+    const kayttoOikeudet: DBVaylaUser[] = [
+      {
+        kayttajatunnus: "A123",
+        tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
+        email: "pp@vayla.fi",
+        organisaatio: "Väylävirasto",
+        etunimi: "Pekka",
+        sukunimi: "Päällikkö",
+      },
+      {
+        kayttajatunnus: "LX456",
+        tyyppi: KayttajaTyyppi.VARAHENKILO,
+        email: "konsultti@konsultti.fi",
+        organisaatio: "Konsulttitoimisto",
+        etunimi: "Kalle",
+        sukunimi: "Konsultti",
+      },
+      {
+        kayttajatunnus: "L789",
+        tyyppi: KayttajaTyyppi.VARAHENKILO,
+        email: "varahenkilo@vayla.fi",
+        organisaatio: "Väylävirasto",
+        etunimi: "Ville",
+        sukunimi: "Varahenkilö",
+      },
+    ];
+    const emails = projektiPaallikkoJaVarahenkilotEmails(kayttoOikeudet);
+    expect(emails).to.eql(["pp@vayla.fi", "varahenkilo@vayla.fi"]);
+    expect(emails).to.not.include("konsultti@konsultti.fi");
   });
 });
