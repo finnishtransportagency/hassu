@@ -51,14 +51,16 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
   const router = useRouter();
   const { t } = useTranslation("etusivu");
   const containerRef = useRef<HTMLDivElement>(null);
+  const [scrollaaHakutuloksiin, setScrollaaHakutuloksiin] = useState(false);
 
   useEffect(() => {
-    if (hakutulostenMaara !== undefined && containerRef.current) {
+    if (scrollaaHakutuloksiin && hakutulostenMaara !== undefined && containerRef.current) {
       const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
       const top = containerRef.current.getBoundingClientRect().top + window.scrollY - headerHeight;
       window.scrollTo({ top, behavior: "smooth" });
+      setScrollaaHakutuloksiin(false);
     }
-  }, [hakutulostenMaara]);
+  }, [scrollaaHakutuloksiin, hakutulostenMaara]);
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = query;
   const vaylamuotoOptions = useMemo(
@@ -127,6 +129,8 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
     // Asettaa url queryparametrit, jotka myös säästävät auki/kiinni-tilan.
     // Varsinainen haku tapahtuu sivun pääkomponentissa niiden perusteella
     (data: HakulomakeFormValues) => {
+      setScrollaaHakutuloksiin(true);
+
       router.push(
         {
           pathname: router.pathname,
@@ -157,15 +161,15 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
 
   return !desktop ? (
     <div ref={containerRef}>
-    <HakulomakeMobile
-      useFormReturn={useFormReturn}
-      kuntaOptions={kuntaOptions}
-      maakuntaOptions={maakuntaOptions}
-      vaylamuotoOptions={vaylamuotoOptions}
-      haeSuunnitelmat={haeSuunnitelmat}
-      hakutulostenMaara={hakutulostenMaara}
-      nollaaHakuehdot={nollaaHakuehdot}
-    />
+      <HakulomakeMobile
+        useFormReturn={useFormReturn}
+        kuntaOptions={kuntaOptions}
+        maakuntaOptions={maakuntaOptions}
+        vaylamuotoOptions={vaylamuotoOptions}
+        haeSuunnitelmat={haeSuunnitelmat}
+        hakutulostenMaara={hakutulostenMaara}
+        nollaaHakuehdot={nollaaHakuehdot}
+      />
     </div>
   ) : (
     <div ref={containerRef} className="mb-6">
