@@ -135,6 +135,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
                 nahtavillaoloVaihe={projekti?.nahtavillaoloVaihe}
                 oid={projekti.oid}
                 omistajahakuStatus={projekti.omistajahaku?.status}
+                hasOmistajat={projekti.omistajahaku?.hasOmistajat}
               />
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />

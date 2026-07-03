@@ -17,6 +17,7 @@ import { PaatosTyyppi } from "hassu-common/hyvaksymisPaatosUtil";
 import { approvalEmailSender } from "../email/approvalEmailSender";
 import { log } from "../../logger";
 import { parameters } from "../../aws/parameters";
+import { omistajaDatabase } from "../../database/omistajaDatabase";
 import { isKieliSaame } from "hassu-common/kaannettavatKielet";
 import { assertIsDefined } from "../../util/assertions";
 import { projektiEntityDatabase } from "../../database/projektiEntityDatabase";
@@ -84,10 +85,12 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new IllegalAineistoStateError();
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
-      const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
-      log.error(msg);
-      throw new Error(msg);
+    if (suomifiViestitEnabled) {
+      if (!projekti.omistajahaku?.status || !(await omistajaDatabase.hasOmistajat(projekti.oid))) {
+        const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
+        log.error(msg);
+        throw new Error(msg);
+      }
     }
   }
 

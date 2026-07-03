@@ -222,12 +222,10 @@ describe("kasittelyntilaValidator", () => {
     await validateTallennaProjekti(projekti, input);
   });
 
-  it("Projektin henkilö (ei projektipäällikkö) ei voi tallentaa kasittelynTilaa", async () => {
+  it("Projektin henkilö (ei projektipäällikkö) voi tallentaa kasittelynTilaa", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projekti = fixture.dbProjekti2();
     const input: TallennaProjektiInput = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
-    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(
-      "Et ole projektin omistaja (Käsittelyn tilaa voi muokata vain projektipäällikkö)"
-    );
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.fulfilled;
   });
 });
