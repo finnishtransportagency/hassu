@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import React, { Fragment, ReactElement } from "react";
@@ -27,6 +28,7 @@ interface Props {
   nahtavillaoloVaihe: NahtavillaoloVaihe | null | undefined;
   oid: string;
   omistajahakuStatus: Status | null | undefined;
+  hasOmistajat?: boolean | null;
 }
 
 type FormFields = {
@@ -38,7 +40,7 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omistajahakuStatus }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omistajahakuStatus, hasOmistajat }: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -227,17 +229,23 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               </HassuGrid>
             ))}
           </SectionContent>
-          <KiinteistonomistajatOhje
-            vaihe={Vaihe.NAHTAVILLAOLO}
-            oid={oid}
-            omistajahakuStatus={omistajahakuStatus}
-            uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
-          />
-          <KiinteistonOmistajatUudelleenkuulutus
-            oid={oid}
-            uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
-            vaihe={Vaihe.NAHTAVILLAOLO}
-          />
+          {!nahtavillaoloVaihe?.uudelleenKuulutus && (
+            <KiinteistonomistajatOhje
+              vaihe={Vaihe.NAHTAVILLAOLO}
+              oid={oid}
+              omistajahakuStatus={omistajahakuStatus}
+              hasOmistajat={hasOmistajat}
+              uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
+            />
+          )}
+          {nahtavillaoloVaihe?.uudelleenKuulutus && (
+            <KiinteistonOmistajatUudelleenkuulutus
+              oid={oid}
+              uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
+              vaihe={Vaihe.NAHTAVILLAOLO}
+              hasOmistajat={hasOmistajat}
+            />
+          )}
         </Section>
       </div>
     </>
