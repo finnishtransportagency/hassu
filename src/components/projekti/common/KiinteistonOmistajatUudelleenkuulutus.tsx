@@ -18,6 +18,7 @@ interface KiinteistonomistajatUudelleenkuulutusProps {
   oid: string;
   uudelleenKuulutus: UudelleenKuulutus | null | undefined;
   omistajahakuStatus?: Status | null;
+  hasOmistajat?: boolean | null;
 }
 
 type FormFields = {
@@ -47,7 +48,12 @@ const FormGroupWithBoldLabel = styled(FormGroup)(() => ({
   },
 }));
 
-export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuulutus, omistajahakuStatus }: KiinteistonomistajatUudelleenkuulutusProps) {
+export function KiinteistonOmistajatUudelleenkuulutus({
+  vaihe,
+  oid,
+  uudelleenKuulutus,
+  hasOmistajat,
+}: KiinteistonomistajatUudelleenkuulutusProps) {
   const { data } = useSuomifiUser();
   const { control } = useFormContext<FormFields>();
   if (uudelleenKuulutus && data?.suomifiViestitEnabled && vaihe === Vaihe.NAHTAVILLAOLO) {
@@ -83,7 +89,16 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                   />
                 </FormGroupWithBoldLabel>
               )}
-              {field.value === true && (
+              {field.value === true && !hasOmistajat && (
+                <p className="text-red">
+                  Kiinteistönomistajien tietoja ei ole lisätty Tiedottaminen-sivun{" "}
+                  <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+                    Kiinteistönomistajat
+                  </StyledLink>{" "}
+                  -välilehdelle.
+                </p>
+              )}
+              {field.value === true && hasOmistajat && (
                 <p>
                   Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen -sivun{" "}
                   <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
@@ -133,14 +148,23 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                   />
                 </FormGroupWithBoldLabel>
               )}
-              {field.value === true && (
+              {field.value === true && !hasOmistajat && (
+                <p className="text-red">
+                  Kiinteistönomistajien tietoja ei ole lisätty Tiedottaminen-sivun{" "}
+                  <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
+                    Kiinteistönomistajat
+                  </StyledLink>{" "}
+                  -välilehdelle.
+                </p>
+              )}
+              {field.value === true && hasOmistajat && (
                 <>
                   <p>
                     Tarkasta kiinteistönomistajien ja muistuttajien vastaanottajalista{" "}
                     <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
                       Tiedottaminen
                     </StyledLink>{" "}
-                    -sivulta Kiinteistönomistajat- ja Muistuttajat-välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan,
+                    -sivulta Kiinteistönomistajat ja Muistuttajat-välilehdiltä. Vastaanottajalista viedään automaattisesti asianhallintaan,
                     kun kuulutus hyväksytään julkaistavaksi.
                   </p>
                   <p>
@@ -190,7 +214,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                   />
                 </FormGroupWithBoldLabel>
               )}
-              {field.value === true && !omistajahakuStatus && (
+              {field.value === true && !hasOmistajat && (
                 <p className="text-red">
                   Kiinteistönomistajien tietoja ei ole lisätty Tiedottaminen-sivun{" "}
                   <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>
@@ -199,7 +223,7 @@ export function KiinteistonOmistajatUudelleenkuulutus({ vaihe, oid, uudelleenKuu
                   -välilehdelle.
                 </p>
               )}
-              {field.value === true && omistajahakuStatus && (
+              {field.value === true && hasOmistajat && (
                 <p>
                   Tarkasta kiinteistönomistajien vastaanottajalista Tiedottaminen -sivun{" "}
                   <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid } }}>

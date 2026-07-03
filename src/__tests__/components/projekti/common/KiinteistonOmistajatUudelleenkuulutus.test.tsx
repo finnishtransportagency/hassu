@@ -2,7 +2,7 @@
 import { render, screen } from "@testing-library/react";
 import { KiinteistonOmistajatUudelleenkuulutus } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 import { UudelleenKuulutus, UudelleenkuulutusTila, Vaihe } from "@services/api";
-import { KiinteistonomistajatVaihe } from "@components/projekti/common/KiinteistonOmistajatOhje";
+import { KiinteistonomistajatUudelleenkuulutusVaihe } from "@components/projekti/common/KiinteistonOmistajatUudelleenkuulutus";
 import { FormProvider, useForm } from "react-hook-form";
 import React from "react";
 
@@ -46,9 +46,10 @@ function Wrapper({ children, defaultValues }: { children: React.ReactNode; defau
 
 function renderComponent(
   props: {
-    vaihe?: KiinteistonomistajatVaihe;
+    vaihe?: KiinteistonomistajatUudelleenkuulutusVaihe;
     oid?: string;
     uudelleenKuulutus?: UudelleenKuulutus | null;
+    hasOmistajat?: boolean | null;
   },
   defaultValues?: Record<string, unknown>
 ) {
@@ -58,6 +59,7 @@ function renderComponent(
         vaihe={props.vaihe}
         oid={props.oid ?? "test-oid"}
         uudelleenKuulutus={props.uudelleenKuulutus}
+        hasOmistajat={props.hasOmistajat}
       />
     </Wrapper>
   );
@@ -127,6 +129,7 @@ describe("KiinteistonOmistajatUudelleenkuulutus", () => {
         {
           vaihe: Vaihe.NAHTAVILLAOLO,
           uudelleenKuulutus: createUudelleenKuulutus(PAST_DATE),
+          hasOmistajat: true,
         },
         { nahtavillaoloVaihe: { uudelleenKuulutus: { tiedotaKiinteistonomistajia: true } } }
       );
@@ -187,6 +190,7 @@ describe("KiinteistonOmistajatUudelleenkuulutus", () => {
         {
           vaihe: Vaihe.HYVAKSYMISPAATOS,
           uudelleenKuulutus: createUudelleenKuulutus("2024-06-15"),
+          hasOmistajat: true,
         },
         { paatos: { uudelleenKuulutus: { tiedotaKiinteistonomistajia: true } } }
       );

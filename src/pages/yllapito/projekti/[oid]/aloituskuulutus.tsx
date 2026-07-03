@@ -445,6 +445,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   isLoading={isLoadingProjekti}
                   oid={projekti.oid}
                   omistajahakuStatus={projekti.omistajahaku?.status}
+                  hasOmistajat={projekti.omistajahaku?.hasOmistajat}
                   uudelleenKuulutus={projekti.aloitusKuulutus?.uudelleenKuulutus}
                 />
               </fieldset>
@@ -575,6 +576,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
               preSubmitFunction={preSubmitFunction}
               projekti={projekti}
               tilasiirtymaTyyppi={TilasiirtymaTyyppi.ALOITUSKUULUTUS}
+              hasOmistajat={projekti.omistajahaku?.hasOmistajat}
             />
           </FormProvider>
         </>

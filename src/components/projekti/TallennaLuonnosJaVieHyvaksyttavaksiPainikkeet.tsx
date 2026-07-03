@@ -27,6 +27,7 @@ type Props<TFieldValues extends FieldValues> = {
   preSubmitFunction: (formData: TFieldValues) => Promise<TallennaProjektiInput>;
   kuntavastaanottajat: KuntaVastaanottajaInput[] | null | undefined;
   tilasiirtymaTyyppi: Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>;
+  hasOmistajat?: boolean | null;
 };
 
 const tilasiirtymaTyyppiToStatusMap: Record<Exclude<TilasiirtymaTyyppi, TilasiirtymaTyyppi.VUOROVAIKUTUSKIERROS>, Status> = {
@@ -50,6 +51,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
   preSubmitFunction,
   kuntavastaanottajat,
   tilasiirtymaTyyppi,
+  hasOmistajat,
 }: Readonly<Props<TFieldValues>>) {
   const showTallennaProjektiMessage = useShowTallennaProjektiMessage();
   const { showSuccessMessage, showErrorMessage } = useSnackbars();
@@ -106,11 +108,10 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
               (tilasiirtymaTyyppi === TilasiirtymaTyyppi.ALOITUSKUULUTUS ||
                 tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
                 tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&
-              !projekti.omistajahaku?.status
+              (!hasOmistajat || !projekti.omistajahaku?.status)
             ) {
               const tiedotaKiinteistonomistajia = formData[formDataField]?.uudelleenKuulutus?.tiedotaKiinteistonomistajia;
-              const skipKiinteistoRequirement =
-                tilasiirtymaTyyppi === TilasiirtymaTyyppi.ALOITUSKUULUTUS && tiedotaKiinteistonomistajia === false;
+              const skipKiinteistoRequirement = tiedotaKiinteistonomistajia === false;
               if (!skipKiinteistoRequirement) {
                 puutteet.push("kiinteistönomistajat puuttuvat");
               }
@@ -153,6 +154,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
       isProjektiReadyForTilaChange,
       kuntavastaanottajat,
       data?.suomifiViestitEnabled,
+      hasOmistajat,
     ]
   );
 

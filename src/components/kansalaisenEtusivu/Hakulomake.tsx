@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+// Contains code generated or recommended by Amazon Q
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SearchSection from "@components/layout/SearchSection";
 import { HakuehtoNappi, HakutulosInfo } from "./TyylitellytKomponentit";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
@@ -49,6 +50,15 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
   const [lisaaHakuehtojaState, setLisaaHakuehtojaState] = useState<boolean>(false);
   const router = useRouter();
   const { t } = useTranslation("etusivu");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (hakutulostenMaara !== undefined && containerRef.current) {
+      const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+      const top = containerRef.current.getBoundingClientRect().top + window.scrollY - headerHeight;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  }, [hakutulostenMaara]);
 
   const { vapaasanahaku, kunta, maakunta, vaylamuoto, pienennaHaku, lisaaHakuehtoja } = query;
   const vaylamuotoOptions = useMemo(
@@ -146,6 +156,7 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
   );
 
   return !desktop ? (
+    <div ref={containerRef}>
     <HakulomakeMobile
       useFormReturn={useFormReturn}
       kuntaOptions={kuntaOptions}
@@ -155,8 +166,9 @@ function Hakulomake({ hakutulostenMaara, kuntaOptions, maakuntaOptions, query }:
       hakutulostenMaara={hakutulostenMaara}
       nollaaHakuehdot={nollaaHakuehdot}
     />
+    </div>
   ) : (
-    <div className="mb-6">
+    <div ref={containerRef} className="mb-6">
       <SearchSection noDivider>
         <H2 id="mainPageContent">{t("suunnitelmien-haku")}</H2>
         <FormProvider {...useFormReturn}>

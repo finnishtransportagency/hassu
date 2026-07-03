@@ -1,11 +1,13 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ComponentProps, useEffect, useState } from "react";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import { Kieli, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { styled } from "@mui/material";
+import { styled, useTheme } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
 import { KarttaKansalaiselle } from "../common/KarttaKansalaiselle";
@@ -13,11 +15,15 @@ import { SideCard, SideCardHeading, SideCardContent } from "./SideCard";
 import axios from "axios";
 import { DynaaminenVideoUpotus } from "./videoupotus/DynaaminenVideoUpotus";
 import { useRouter } from "next/router";
+import ExtLink from "@components/ExtLink";
+import Image from "next/image";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
   const { data: projekti } = useProjektiJulkinen();
 
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down("lg"));
   const [geoJSON, setGeoJSON] = useState<string | null>(projekti?.velho.geoJSON ?? null);
 
   useEffect(() => {
@@ -67,6 +73,9 @@ const ProjektiSideNavigation = styled((props) => {
 
   return (
     <Section noDivider {...props}>
+      {!smallScreen && projekti.velho?.linkki && (
+        <Image src="/assets/rata_ja_tie_background.jpeg" alt="kuvituskuva" width={345} height={194} />
+      )}
       <SideCard>
         <SideCardHeading>{t("suunnitteluhankkeen_yhteystiedot")}</SideCardHeading>
         <SideCardContent>
@@ -139,6 +148,17 @@ const ProjektiSideNavigation = styled((props) => {
           )}
         </SideCardContent>
       </SideCard>
+      {projekti.velho?.linkki && (
+        <SideCard>
+          <SideCardHeading>{t("hankesivut_otsikko")}</SideCardHeading>
+          <SideCardContent>
+            <p>{t("lue_hankesivulta")}</p>
+            <p>
+              <ExtLink href={projekti.velho.linkki}>{t("siirry_hankesivulle")}</ExtLink>
+            </p>
+          </SideCardContent>
+        </SideCard>
+      )}
       <SideCard>
         {geoJSON && (
           <>
