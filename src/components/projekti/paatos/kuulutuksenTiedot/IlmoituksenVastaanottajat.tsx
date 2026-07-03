@@ -35,7 +35,13 @@ interface Props {
   hasOmistajat?: boolean | null;
 }
 
-export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, oid, omistajahakuStatus, hasOmistajat }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({
+  paatosVaihe,
+  paatosTyyppi,
+  oid,
+  omistajahakuStatus,
+  hasOmistajat,
+}: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -256,19 +262,23 @@ export default function IlmoituksenVastaanottajat({ paatosVaihe, paatosTyyppi, o
           )}
           {!paatosIsJatkopaatos(paatosTyyppi) && (
             <>
-              <KiinteistonomistajatOhje
-                vaihe={Vaihe.HYVAKSYMISPAATOS}
-                oid={oid}
-                omistajahakuStatus={omistajahakuStatus}
-                hasOmistajat={hasOmistajat}
-                uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
-              />
-              <KiinteistonOmistajatUudelleenkuulutus
-                oid={oid}
-                uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
-                vaihe={Vaihe.HYVAKSYMISPAATOS}
-                hasOmistajat={hasOmistajat}
-              />
+              {!paatosVaihe?.uudelleenKuulutus && (
+                <KiinteistonomistajatOhje
+                  vaihe={Vaihe.HYVAKSYMISPAATOS}
+                  oid={oid}
+                  omistajahakuStatus={omistajahakuStatus}
+                  hasOmistajat={hasOmistajat}
+                  uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+                />
+              )}
+              {paatosVaihe?.uudelleenKuulutus && (
+                <KiinteistonOmistajatUudelleenkuulutus
+                  oid={oid}
+                  uudelleenKuulutus={paatosVaihe?.uudelleenKuulutus}
+                  vaihe={Vaihe.HYVAKSYMISPAATOS}
+                  hasOmistajat={hasOmistajat}
+                />
+              )}
             </>
           )}
         </Section>

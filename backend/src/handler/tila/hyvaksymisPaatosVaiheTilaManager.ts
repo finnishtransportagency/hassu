@@ -87,7 +87,8 @@ class HyvaksymisPaatosVaiheTilaManager extends AbstractHyvaksymisPaatosVaiheTila
       throw new IllegalAineistoStateError();
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled) {
+    const skipKiinteistoRequirement = vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false;
+    if (suomifiViestitEnabled && !skipKiinteistoRequirement) {
       if (!projekti.omistajahaku?.status || !(await omistajaDatabase.hasOmistajat(projekti.oid))) {
         const msg = "Kiinteistönomistajia ei ole haettu ennen hyväksymispäätöksen hyväksyntää";
         log.error(msg);
