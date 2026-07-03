@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
@@ -33,6 +34,7 @@ import { isProjektiAsianhallintaIntegrationEnabled } from "../../util/isProjekti
 import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { parameters } from "../../aws/parameters";
 import { log } from "../../logger";
+import { omistajaDatabase } from "../../database/omistajaDatabase";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
 import { velho } from "../../velho/velhoClient";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../../database/nahtavillaoloVaiheJulkaisuDatabase";
@@ -148,10 +150,13 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new IllegalAineistoStateError();
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    if (suomifiViestitEnabled && !projekti.omistajahaku?.status) {
-      const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
-      log.error(msg);
-      throw new Error(msg);
+    const skipKiinteistoRequirement = vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false;
+    if (suomifiViestitEnabled && !skipKiinteistoRequirement) {
+      if (!projekti.omistajahaku?.status || !(await omistajaDatabase.hasOmistajat(projekti.oid))) {
+        const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
+        log.error(msg);
+        throw new Error(msg);
+      }
     }
   }
 
