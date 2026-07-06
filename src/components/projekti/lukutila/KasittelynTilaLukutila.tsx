@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement } from "react";
 import Section from "@components/layout/Section";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
@@ -54,6 +55,15 @@ export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): R
           <p className="md:col-span-4 mb-0">
             {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva)}
           </p>
+        </div>
+      </Section>
+      <Section>
+        <h3 className="vayla-subtitle">Nähtävilläolo</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4">
+          <p className="vayla-label md:col-span-1">Nähtävilläolo alkaen</p>
+          <p className="vayla-label md:col-span-3">Nähtävilläolo päättyen</p>
+          <p className="md:col-span-1 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.nahtavillaAlku)}</p>
+          <p className="md:col-span-3 mb-0">{formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.nahtavillaLoppu)}</p>
         </div>
       </Section>
       <Section>
