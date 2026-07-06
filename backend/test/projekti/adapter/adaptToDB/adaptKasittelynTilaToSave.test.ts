@@ -9,6 +9,18 @@ import { KasittelynTila } from "../../../../src/database/model";
 import { expect } from "chai";
 
 describe("adaptKasittelynTilaToSave", () => {
+  it("should save nahtavillaAlku and nahtavillaLoppu", async () => {
+    const dbProjekti = new ProjektiFixture().dbProjekti1();
+    dbProjekti.kasittelynTila = undefined;
+    const kasittelynTilaInput: KasittelyntilaInput = {
+      nahtavillaAlku: "2024-03-01",
+      nahtavillaLoppu: "2024-03-30",
+    };
+    const result = adaptKasittelynTilaToSave(dbProjekti.kasittelynTila, kasittelynTilaInput, new ProjektiAdaptationResult(dbProjekti));
+    expect(result?.nahtavillaAlku).to.equal("2024-03-01");
+    expect(result?.nahtavillaLoppu).to.equal("2024-03-30");
+  });
+
   it("should save paatos when valipaatos is already saved", async () => {
     const dbProjekti = new ProjektiFixture().dbProjekti1();
     dbProjekti.kasittelynTila = {
