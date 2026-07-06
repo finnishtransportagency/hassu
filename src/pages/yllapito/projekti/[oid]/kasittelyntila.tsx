@@ -417,14 +417,18 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 disabled={disableAdminOnlyFields}
                 controllerProps={{ control, name: "kasittelynTila.nahtavillaAlku" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.nahtavillaAlku)}
+                value={parseValidDateOtherwiseReturnNull(
+                  projekti.kasittelynTila?.nahtavillaAlku ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva
+                )}
               />
               <DatePickerConditionallyInTheForm
                 label="Nähtävilläolo päättyen"
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 disabled={disableAdminOnlyFields}
                 controllerProps={{ control, name: "kasittelynTila.nahtavillaLoppu" }}
-                value={parseValidDateOtherwiseReturnNull(projekti.kasittelynTila?.nahtavillaLoppu)}
+                value={parseValidDateOtherwiseReturnNull(
+                  projekti.kasittelynTila?.nahtavillaLoppu ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva
+                )}
               />
             </HassuGrid>
           </SectionContent>
