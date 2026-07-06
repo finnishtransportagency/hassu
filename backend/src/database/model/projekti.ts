@@ -134,6 +134,8 @@ export type KasittelynTila = {
   suunnitelmanTila?: keyof typeof suunnitelmanTilat; // Esimerkiksi "suunnitelman-tila/sutil01"
   hyvaksymisesitysTraficomiinPaiva?: string;
   ennakkoneuvotteluPaiva?: string;
+  nahtavillaAlku?: string;
+  nahtavillaLoppu?: string;
   hyvaksymispaatos?: Hyvaksymispaatos;
   ensimmainenJatkopaatos?: Hyvaksymispaatos;
   toinenJatkopaatos?: Hyvaksymispaatos;

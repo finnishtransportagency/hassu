@@ -391,6 +391,8 @@ function adaptKasittelynTilaFromVelho(ominaisuudet: ProjektiProjektiLuontiOminai
   kasittelynTila.ennakkoneuvotteluPaiva = objectToString(ominaisuudet["ennakkoneuvottelu"]);
   kasittelynTila.hyvaksymisesitysTraficomiinPaiva = objectToString(ominaisuudet["hyvaksymisesitys"]?.lahetetty);
   kasittelynTila.ennakkotarkastus = objectToString(ominaisuudet["hyvaksymisesitys"]?.saapunut);
+  setIfDefined(ominaisuudet["nahtavilla-olo"]?.alkaen, (value) => (kasittelynTila.nahtavillaAlku = objectToString(value)));
+  setIfDefined(ominaisuudet["nahtavilla-olo"]?.paattyen, (value) => (kasittelynTila.nahtavillaLoppu = objectToString(value)));
   const hyvaksymispaatos = ominaisuudet.hyvaksymispaatos;
   if (hyvaksymispaatos) {
     kasittelynTila.hyvaksymispaatos = kasittelynTila.hyvaksymispaatos ?? {};
@@ -436,6 +438,12 @@ export function applyKasittelyntilaToVelho(projekti: ProjektiProjektiMuokkaus, p
   const ominaisuudet = projekti.ominaisuudet;
   setIfDefined(params.suunnitelmanTila, (value) => (ominaisuudet["hallinnollisen-kasittelyn-tila"] = stringToObject(value)));
   setIfDefined(params.ennakkoneuvotteluPaiva, (value) => (ominaisuudet["ennakkoneuvottelu"] = toLocalDate(value)));
+  setIfDefined(params.nahtavillaAlku, (value) => {
+    ominaisuudet["nahtavilla-olo"] = {
+      alkaen: toLocalDate(value),
+      paattyen: params.nahtavillaLoppu ? toLocalDate(params.nahtavillaLoppu) : ominaisuudet["nahtavilla-olo"]?.paattyen ?? null,
+    };
+  });
   setIfDefined(
     params.hyvaksymisesitysTraficomiinPaiva,
     (value) =>

@@ -1517,6 +1517,8 @@ type KasittelynTila {
   toinenJatkopaatos: Hyvaksymispaatos
   hyvaksymisesitysTraficomiinPaiva: String
   ennakkoneuvotteluPaiva: String
+  nahtavillaAlku: String
+  nahtavillaLoppu: String
   valitustenMaara: Int
   lainvoimaAlkaen: String
   lainvoimaPaattyen: String

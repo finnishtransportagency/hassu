@@ -558,6 +558,8 @@ input KasittelyntilaInput {
   toinenJatkopaatos: HyvaksymispaatosInput
   hyvaksymisesitysTraficomiinPaiva: String
   ennakkoneuvotteluPaiva: String
+  nahtavillaAlku: String
+  nahtavillaLoppu: String
   valitustenMaara: Int
   lainvoimaAlkaen: String
   lainvoimaPaattyen: String
