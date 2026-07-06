@@ -42,10 +42,13 @@ const inputChangesHyvaksymispaatosField = (projekti: DBProjekti, input: Tallenna
   );
 };
 
-function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput): void {
+export function validateHasAccessToEditKasittelyntilaFields(
+  projekti: DBProjekti,
+  kasittelynTila: KasittelyntilaInput | KasittelynTila
+): void {
   requirePermissionMuokkaa(projekti);
-  const { hyvaksymispaatos: _inputHyvaksymispaatos, suunnitelmanTila: _suunnitelmanTila, ...inputAdminOikeudetVaativatKentat } = input;
-  if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
+  const { hyvaksymispaatos: _hyvaksymispaatos, suunnitelmanTila: _suunnitelmanTila, ...adminOnlyFields } = kasittelynTila;
+  if (!isEmpty(adminOnlyFields)) {
     requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
   }
 }
