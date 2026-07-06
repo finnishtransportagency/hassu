@@ -64,12 +64,12 @@ export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): R
           <p className="vayla-label md:col-span-3">Nähtävilläolo päättyen</p>
           <p className="md:col-span-1 mb-0">
             {formatDateIfExistsAndValidOtherwiseDash(
-              projekti.kasittelynTila?.nahtavillaAlku ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva
+              projekti.kasittelynTila?.nahtavillaoloAlkaen ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva
             )}
           </p>
           <p className="md:col-span-3 mb-0">
             {formatDateIfExistsAndValidOtherwiseDash(
-              projekti.kasittelynTila?.nahtavillaLoppu ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva
+              projekti.kasittelynTila?.nahtavillaoloPaattyen ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva
             )}
           </p>
         </div>

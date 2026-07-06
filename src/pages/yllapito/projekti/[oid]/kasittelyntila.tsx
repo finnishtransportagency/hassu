@@ -202,9 +202,10 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
       kasittelynTila.suunnitelmanTila = projekti.kasittelynTila?.suunnitelmanTila ?? "";
       kasittelynTila.hyvaksymisesitysTraficomiinPaiva = projekti.kasittelynTila?.hyvaksymisesitysTraficomiinPaiva ?? null;
       kasittelynTila.ennakkoneuvotteluPaiva = projekti.kasittelynTila?.ennakkoneuvotteluPaiva ?? null;
-      kasittelynTila.nahtavillaAlku = projekti.kasittelynTila?.nahtavillaAlku ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva ?? null;
-      kasittelynTila.nahtavillaLoppu =
-        projekti.kasittelynTila?.nahtavillaLoppu ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva ?? null;
+      kasittelynTila.nahtavillaoloAlkaen =
+        projekti.kasittelynTila?.nahtavillaoloAlkaen ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva ?? null;
+      kasittelynTila.nahtavillaoloPaattyen =
+        projekti.kasittelynTila?.nahtavillaoloPaattyen ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva ?? null;
       kasittelynTila.valitustenMaara = projekti.kasittelynTila?.valitustenMaara ?? null;
       kasittelynTila.lainvoimaAlkaen = projekti.kasittelynTila?.lainvoimaAlkaen ?? null;
       kasittelynTila.lainvoimaPaattyen = projekti.kasittelynTila?.lainvoimaPaattyen ?? null;
@@ -416,18 +417,18 @@ function KasittelyntilaPageContent({ projekti, projektiLoadError, reloadProjekti
                 label="Nähtävilläolo alkaen"
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 disabled={disableAdminOnlyFields}
-                controllerProps={{ control, name: "kasittelynTila.nahtavillaAlku" }}
+                controllerProps={{ control, name: "kasittelynTila.nahtavillaoloAlkaen" }}
                 value={parseValidDateOtherwiseReturnNull(
-                  projekti.kasittelynTila?.nahtavillaAlku ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva
+                  projekti.kasittelynTila?.nahtavillaoloAlkaen ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusPaiva
                 )}
               />
               <DatePickerConditionallyInTheForm
                 label="Nähtävilläolo päättyen"
                 includeInForm={projekti.nykyinenKayttaja.onYllapitaja}
                 disabled={disableAdminOnlyFields}
-                controllerProps={{ control, name: "kasittelynTila.nahtavillaLoppu" }}
+                controllerProps={{ control, name: "kasittelynTila.nahtavillaoloPaattyen" }}
                 value={parseValidDateOtherwiseReturnNull(
-                  projekti.kasittelynTila?.nahtavillaLoppu ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva
+                  projekti.kasittelynTila?.nahtavillaoloPaattyen ?? projekti.nahtavillaoloVaiheJulkaisu?.kuulutusVaihePaattyyPaiva
                 )}
               />
             </HassuGrid>

@@ -170,8 +170,9 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         versio: projekti.versio,
         kasittelynTila: {
           ...projekti.kasittelynTila,
-          nahtavillaAlku: nahtavillaoloJulkaisuWaitingForApproval.kuulutusPaiva,
-          nahtavillaLoppu: nahtavillaoloJulkaisuWaitingForApproval.kuulutusVaihePaattyyPaiva ?? projekti.kasittelynTila?.nahtavillaLoppu,
+          nahtavillaoloAlkaen: nahtavillaoloJulkaisuWaitingForApproval.kuulutusPaiva,
+          nahtavillaoloPaattyen:
+            nahtavillaoloJulkaisuWaitingForApproval.kuulutusVaihePaattyyPaiva ?? projekti.kasittelynTila?.nahtavillaoloPaattyen,
         },
       });
     }

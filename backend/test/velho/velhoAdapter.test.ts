@@ -55,33 +55,33 @@ describe("VelhoAdapter", () => {
     expect(differencies).toMatchSnapshot();
   });
 
-  it("should write nahtavillaAlku and nahtavillaLoppu to Velho nahtavilla-olo field", () => {
+  it("should write nahtavillaoloAlkaen and nahtavillaoloPaattyen to Velho nahtavilla-olo field", () => {
     const projekti = { ominaisuudet: {} } as unknown as ProjektiProjektiMuokkaus;
-    applyKasittelyntilaToVelho(projekti, { nahtavillaAlku: "2024-03-01", nahtavillaLoppu: "2024-03-30" });
+    applyKasittelyntilaToVelho(projekti, { nahtavillaoloAlkaen: "2024-03-01", nahtavillaoloPaattyen: "2024-03-30" });
     const nahtavillaOlo = projekti.ominaisuudet["nahtavilla-olo"] as { alkaen: unknown; paattyen: unknown };
     expect(nahtavillaOlo).to.exist;
     expect(nahtavillaOlo.alkaen).to.exist;
     expect(nahtavillaOlo.paattyen).to.exist;
   });
 
-  it("should not overwrite existing nahtavilla-olo paattyen when nahtavillaLoppu is not given", () => {
+  it("should not overwrite existing nahtavilla-olo paattyen when nahtavillaoloPaattyen is not given", () => {
     const existingPaattyen = {} as unknown;
     const projekti = {
       ominaisuudet: { "nahtavilla-olo": { alkaen: {}, paattyen: existingPaattyen } },
     } as unknown as ProjektiProjektiMuokkaus;
-    applyKasittelyntilaToVelho(projekti, { nahtavillaAlku: "2024-03-01" });
+    applyKasittelyntilaToVelho(projekti, { nahtavillaoloAlkaen: "2024-03-01" });
     const nahtavillaOlo = projekti.ominaisuudet["nahtavilla-olo"] as { alkaen: unknown; paattyen: unknown };
     expect(nahtavillaOlo.paattyen).to.equal(existingPaattyen);
   });
 
-  it("should adapt nahtavillaAlku and nahtavillaLoppu from Velho nahtavilla-olo field", async () => {
+  it("should adapt nahtavillaoloAlkaen and nahtavillaoloPaattyen from Velho nahtavilla-olo field", async () => {
     const velhoData = cloneDeep(velhoTieProjecti.data as unknown as ProjektiProjekti);
     velhoData.ominaisuudet["nahtavilla-olo"] = {
       alkaen: "2024-03-01T00:00:00+02:00" as unknown as object,
       paattyen: "2024-03-30T00:00:00+02:00" as unknown as object,
     };
     const result = await adaptProjekti(velhoData);
-    expect(result.kasittelynTila?.nahtavillaAlku).to.exist;
-    expect(result.kasittelynTila?.nahtavillaLoppu).to.exist;
+    expect(result.kasittelynTila?.nahtavillaoloAlkaen).to.exist;
+    expect(result.kasittelynTila?.nahtavillaoloPaattyen).to.exist;
   });
 });
