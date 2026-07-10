@@ -7,6 +7,7 @@ import { personSearch } from "../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../src/projekti/validator/projektiValidator";
+import { validateHasAccessToEditKasittelyntilaFields } from "../../../src/projekti/validator/validateKasittelyntila";
 import { projektiAdapter } from "../../../src/projekti/adapter/projektiAdapter";
 import { Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 
@@ -222,12 +223,26 @@ describe("kasittelyntilaValidator", () => {
     await validateTallennaProjekti(projekti, input);
   });
 
-  it("Projektin henkilö (ei projektipäällikkö) ei voi tallentaa kasittelynTilaa", async () => {
+  it("Projektin henkilö (ei projektipäällikkö) voi tallentaa kasittelynTilaa", async () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const projekti = fixture.dbProjekti2();
     const input: TallennaProjektiInput = { oid: projekti.oid, versio: projekti.versio, kasittelynTila: {} };
-    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(
-      "Et ole projektin omistaja (Käsittelyn tilaa voi muokata vain projektipäällikkö)"
+    await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.fulfilled;
+  });
+
+  it("validateHasAccessToEditKasittelyntilaFields: projektin henkilö voi tallentaa hyvaksymispaatos-kentän KasittelynTila-tyypillä", () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projekti = fixture.dbProjekti4();
+    expect(() =>
+      validateHasAccessToEditKasittelyntilaFields(projekti, { hyvaksymispaatos: { paatoksenPvm: "2022-04-04", asianumero: "123" } })
+    ).to.not.throw();
+  });
+
+  it("validateHasAccessToEditKasittelyntilaFields: projektin henkilö ei voi tallentaa admin-only kenttää KasittelynTila-tyypillä", () => {
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const projekti = fixture.dbProjekti4();
+    expect(() => validateHasAccessToEditKasittelyntilaFields(projekti, { lainvoimaAlkaen: "2022-01-01" })).to.throw(
+      "Sinulla ei ole admin-oikeuksia"
     );
   });
 });

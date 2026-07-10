@@ -40,6 +40,7 @@ interface Props {
   aloituskuulutusjulkaisu?: AloitusKuulutusJulkaisu | null;
   oid?: string;
   omistajahakuStatus?: Status | null;
+  hasOmistajat?: boolean | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
 }
 
@@ -57,6 +58,7 @@ export default function IlmoituksenVastaanottajat({
   aloituskuulutusjulkaisu,
   oid,
   omistajahakuStatus,
+  hasOmistajat,
   uudelleenKuulutus,
 }: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
@@ -253,11 +255,12 @@ export default function IlmoituksenVastaanottajat({
           vaihe={Vaihe.ALOITUSKUULUTUS}
           oid={oid}
           omistajahakuStatus={omistajahakuStatus}
+          hasOmistajat={hasOmistajat}
           uudelleenKuulutus={uudelleenKuulutus}
         />
       )}
       {!isReadonly && oid && uudelleenKuulutus && (
-        <KiinteistonOmistajatUudelleenkuulutus oid={oid} uudelleenKuulutus={uudelleenKuulutus} vaihe={Vaihe.ALOITUSKUULUTUS} omistajahakuStatus={omistajahakuStatus} />
+        <KiinteistonOmistajatUudelleenkuulutus oid={oid} uudelleenKuulutus={uudelleenKuulutus} vaihe={Vaihe.ALOITUSKUULUTUS} hasOmistajat={hasOmistajat} />
       )}
       {isReadonly && oid && (
         <KiinteistonOmistajatOhjeLukutila

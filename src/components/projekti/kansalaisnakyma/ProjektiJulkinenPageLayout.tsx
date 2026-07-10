@@ -10,8 +10,6 @@ import ProjektiJulkinenStepper from "./ProjektiJulkinenStepper";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import useTranslation from "next-translate/useTranslation";
 import { H1, H2 } from "@components/Headings";
-import HassuWidget from "@components/layout/HassuWidget";
-import ExtLink from "@components/ExtLink";
 import { ProjektinJakotietoJulkinen } from "@components/kansalainen/ProjektinJakotietoJulkinen";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Trans from "next-translate/Trans";
@@ -51,14 +49,6 @@ export default function ProjektiPageLayout({
       <div className="flex flex-col md:flex-row gap-8 mb-3">
         {!smallScreen && (
           <div>
-            {velho?.linkki && (
-              <HassuWidget title={t("hankesivut_otsikko")}>
-                <p>{t("lue_hankesivulta")}</p>
-                <p>
-                  <ExtLink href={velho.linkki}>{t("siirry_hankesivulle")}</ExtLink>
-                </p>
-              </HassuWidget>
-            )}
             <ProjektiJulkinenSideBar sx={{ width: { md: "345px" } }} />
           </div>
         )}
@@ -114,14 +104,6 @@ export default function ProjektiPageLayout({
                   </ContentSpacer>
                 </Notification>
               )}
-            {smallScreen && velho?.linkki && (
-              <HassuWidget smallScreen>
-                <p>{t("lue_hankesivulta")}</p>
-                <p>
-                  <ExtLink href={velho.linkki}>{t("siirry_hankesivulle")}</ExtLink>
-                </p>
-              </HassuWidget>
-            )}
             {children}
           </Section>
         </div>

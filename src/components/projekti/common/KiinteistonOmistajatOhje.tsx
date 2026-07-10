@@ -12,6 +12,7 @@ interface KiinteistonomistajatOhjeProps {
   vaihe?: KiinteistonomistajatVaihe;
   oid: string;
   omistajahakuStatus: Status | null | undefined;
+  hasOmistajat?: boolean | null;
   uudelleenKuulutus?: UudelleenKuulutus | null;
   kuulutusPaiva?: string | null;
   julkaisunTila?: KuulutusJulkaisuTila | null;
@@ -91,6 +92,7 @@ export default function KiinteistonomistajatOhje({
   vaihe,
   oid,
   omistajahakuStatus,
+  hasOmistajat,
   uudelleenKuulutus,
 }: Readonly<KiinteistonomistajatOhjeProps>) {
   const { data } = useSuomifiUser();
@@ -112,7 +114,7 @@ export default function KiinteistonomistajatOhje({
   return (
     <SectionContent>
       <H3>{heading}</H3>
-      {omistajahakuStatus ? (
+      {hasOmistajat ? (
         <KiinteistotLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />
       ) : (
         <KiinteistojaEiLisatty oid={oid} vaihe={vaihe} omistajahakuStatus={omistajahakuStatus} />

@@ -1,12 +1,21 @@
 // Contains code generated or recommended by Amazon Q
 import { KasittelynTilaFormValues } from "@pages/yllapito/projekti/[oid]/kasittelyntila";
 
-export const asetaKasittelynTilaAutomaatiolla = (data: KasittelynTilaFormValues, defaults: KasittelynTilaFormValues) => {
+export const asetaKasittelynTilaAutomaatiolla = (
+  data: KasittelynTilaFormValues,
+  defaults: KasittelynTilaFormValues,
+  onYllapitaja: boolean,
+  hyvaksymispaatosAktiivinen: boolean
+) => {
   const asianumeroChanged =
     (data.kasittelynTila?.hyvaksymispaatos?.asianumero ?? null) !== defaults?.kasittelynTila?.hyvaksymispaatos?.asianumero;
   const hyvaksymisPvmChanged =
     (data.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm ?? null) !== defaults.kasittelynTila?.hyvaksymispaatos?.paatoksenPvm;
-  if (asianumeroChanged && hyvaksymisPvmChanged) {
+  // Ei-adminille sutil04 asetetaan vain ensimmäisellä tallennuskerralla (aktiivinen=false),
+  // jotta automaatio ei ylikirjoita adminin mahdollisesti asettamaa isompaa tilaa.
+  // Adminille automaatio toimii aina. suunnitelmanTila-kenttä on myös disabloitu
+  // frontissa ja estetty backendissä ei-admineille.
+  if (asianumeroChanged && hyvaksymisPvmChanged && (onYllapitaja || !hyvaksymispaatosAktiivinen)) {
     data.kasittelynTila ??= {};
     data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil04";
   }

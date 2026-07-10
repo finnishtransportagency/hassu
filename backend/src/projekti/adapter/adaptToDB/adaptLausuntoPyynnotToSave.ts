@@ -1,9 +1,21 @@
+// Contains code generated or recommended by Amazon Q
 import * as API from "hassu-common/graphql/apiModel";
 import { LausuntoPyynnonTaydennys, LausuntoPyynto } from "../../../database/model";
 import { ProjektiAdaptationResult } from "../projektiAdaptationResult";
 import mergeWith from "lodash/mergeWith";
 import { LausuntoPyynnotDB, adaptTiedostotToSave } from "./common";
 import { log } from "../../../logger";
+import { IllegalArgumentError } from "hassu-common/error";
+
+function assertNoDuplicateUuids<T extends { uuid: string }>(items: T[]): void {
+  const seen = new Set<string>();
+  for (const item of items) {
+    if (seen.has(item.uuid)) {
+      throw new IllegalArgumentError(`Duplikaatti uuid lausuntopyynnöissä: ${item.uuid}`);
+    }
+    seen.add(item.uuid);
+  }
+}
 
 export function adaptLausuntoPyynnotToSave(
   dbLausuntoPyynnot: LausuntoPyynto[] | undefined | null,
@@ -13,6 +25,7 @@ export function adaptLausuntoPyynnotToSave(
   if (!lausuntoPyyntoInput) {
     return undefined;
   }
+  assertNoDuplicateUuids(lausuntoPyyntoInput);
   return lausuntoPyyntoInput
     .map(
       (lausuntoPyynto) =>
@@ -33,6 +46,7 @@ export function adaptLausuntoPyynnonTaydennyksetToSave(
   if (!lausuntoPyynnonTaydennysInput) {
     return undefined;
   }
+  assertNoDuplicateUuids(lausuntoPyynnonTaydennysInput);
   return lausuntoPyynnonTaydennysInput.map(
     (lausuntoPyynto) =>
       adaptLausuntoPyynnonTaydennysToSave(
