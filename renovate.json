@@ -54,46 +54,42 @@
   ],
   "packageRules": [
     {
-      "excludePackagePatterns": [
-        "^@aws-cdk/",
-        "^aws-cdk/",
-        "^@aws-sdk/",
-        "^aws-sdk/"
-      ],
-      "excludePackageNames": [
-        "inquirer",
-        "next",
-        "eslint-config-next",
-        "localstack/localstack",
-        "@types/react",
-        "@hassu/asianhallinta"
-      ],
       "matchUpdateTypes": ["patch"],
       "groupName": "all patch dependencies",
-      "groupSlug": "all-patch"
+      "groupSlug": "all-patch",
+      "matchPackageNames": [
+        "!/^@aws-cdk//",
+        "!/^aws-cdk//",
+        "!/^@aws-sdk//",
+        "!/^aws-sdk//",
+        "!inquirer",
+        "!next",
+        "!eslint-config-next",
+        "!localstack/localstack",
+        "!@types/react",
+        "!@hassu/asianhallinta"
+      ]
     },
     {
-      "excludePackagePatterns": [
-        "^@aws-cdk/",
-        "^aws-cdk/",
-        "^@aws-sdk/",
-        "^aws-sdk/"
-      ],
-      "excludePackageNames": [
-        "inquirer",
-        "@hassu/asianhallinta",
-        "next",
-        "eslint-config-next",
-        "localstack/localstack",
-        "@aws-amplify/cli",
-        "docker/compose",
-        "aws/aws-cli",
-        "npm"
-      ],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
       "groupName": "all minor dependencies",
-      "groupSlug": "all-minor"
+      "groupSlug": "all-minor",
+      "matchPackageNames": [
+        "!/^@aws-cdk//",
+        "!/^aws-cdk//",
+        "!/^@aws-sdk//",
+        "!/^aws-sdk//",
+        "!inquirer",
+        "!@hassu/asianhallinta",
+        "!next",
+        "!eslint-config-next",
+        "!localstack/localstack",
+        "!@aws-amplify/cli",
+        "!docker/compose",
+        "!aws/aws-cli",
+        "!npm"
+      ]
     },
     {
       "matchPackageNames": ["@types/react"],
