@@ -224,7 +224,7 @@
     "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",
     "tiedostotyyppi_ei_tuettu": "Tiedostotyyppi ei ole tuettu",
     "tiedostoja_liikaa": "Tiedostoja voi olla maksimissaan viisi",
-    "anna_kiinteistotunnus_esitysmuodossa": "Anna kiinteistötunnus muodossa 740-555-2-0"
+    "anna_kiinteistotunnus_esitysmuodossa": "Tarkista kiinteistötunnuksen muoto, esim. 740-555-2-0"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Tallennus onnistui",
