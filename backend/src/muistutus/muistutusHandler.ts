@@ -92,6 +92,7 @@ class MuistutusHandler {
       liitteet: muistutus.liitteet,
       puhelinnumero: muistutus.puhelinnumero,
       kaytossa: true,
+      kiinteistotunnus: muistutus.kiinteistotunnus,
     };
     auditLog.info("Tallennetaan muistuttajan tiedot", { muistuttajaId: muistuttaja.id });
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: getMuistuttajaTableName(), Item: muistuttaja }));

@@ -38,6 +38,7 @@ export type DBMuistuttaja = {
   maakoodi?: string | null;
   suomifiLahetys?: boolean;
   kaytossa?: boolean;
+  kiinteistotunnus?: string | null;
 };
 
 export type MuistuttajaKey = {

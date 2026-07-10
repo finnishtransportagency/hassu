@@ -19,6 +19,7 @@ export type MuistuttajaDocument = Pick<
   | "suomifiLahetys"
   | "sahkoposti"
   | "kaytossa"
+  | "kiinteistotunnus"
 > & {
   maa: string | null;
   hasTunnus: boolean;
@@ -44,6 +45,7 @@ export function adaptMuistuttajaToIndex({
   kaytossa,
   lahetykset,
   henkilotunnus,
+  kiinteistotunnus,
 }: DBMuistuttaja): MuistuttajaDocument {
   const viimeisinLahetys = lahetykset?.sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
   return {
@@ -64,6 +66,7 @@ export function adaptMuistuttajaToIndex({
     viimeisinLahetysaika: viimeisinLahetys?.lahetysaika ?? null,
     viimeisinTila: viimeisinLahetys?.tila ?? null,
     viimeisinLahetysTapa: viimeisinLahetys?.lahetysTapa ?? null,
+    kiinteistotunnus,
   };
 }
 
@@ -109,6 +112,7 @@ function mapHitToApiMuistuttaja(hit: MuistuttajaDocumentHit) {
     viimeisinLahetysaika: hit._source.viimeisinLahetysaika,
     viimeisinTila: hit._source.viimeisinTila,
     viimeisinLahetysTapa: hit._source.viimeisinLahetysTapa,
+    kiinteistotunnus: hit._source.kiinteistotunnus,
   };
   return dokumentti;
 }
