@@ -28,6 +28,15 @@ export default function Muistuttajat() {
 
 const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
   {
+    header: "Kiinteistötunnus",
+    accessorKey: "kiinteistotunnus",
+    id: "kiinteistotunnus_suomifi",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
+  {
     header: "Nimi",
     accessorKey: "nimi",
     id: "muistuttajan_nimi",
@@ -75,6 +84,15 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
 ];
 
 const columnsMuut: ColumnDef<Muistuttaja>[] = [
+  {
+    header: "Kiinteistötunnus",
+    accessorKey: "kiinteistotunnus",
+    id: "kiinteistotunnus_muut",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
   {
     header: "Nimi",
     accessorKey: "nimi",
