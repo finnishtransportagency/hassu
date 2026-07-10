@@ -84,7 +84,11 @@
         "@hassu/asianhallinta",
         "next",
         "eslint-config-next",
-        "localstack/localstack"
+        "localstack/localstack",
+        "@aws-amplify/cli",
+        "docker/compose",
+        "aws/aws-cli",
+        "npm"
       ],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
@@ -136,7 +140,6 @@
     },
     {
       "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli"],
-      "enabled": true,
       "groupName": "build-image tools (minor/patch)",
       "groupSlug": "build-image-tools",
       "semanticCommitType": "build",
@@ -144,7 +147,6 @@
     },
     {
       "matchDepNames": ["npm"],
-      "enabled": true,
       "groupName": "npm (Dockerfile + .envrc) (minor/patch)",
       "groupSlug": "npm",
       "semanticCommitType": "build",
