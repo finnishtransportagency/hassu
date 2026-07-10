@@ -9,9 +9,10 @@
  *
  * If these change, both export and import will stay in sync.
  */
-export const OMISTAJA_EXCEL_HEADERS = {
+export const TIEDOTETTAVA_EXCEL_HEADERS = {
   kiinteistotunnus: "Kiinteistötunnus",
-  nimi: "Omistajan nimi",
+  nimiOmistaja: "Omistajan nimi",
+  nimiMuistuttaja: "Muistuttajan nimi",
   postiosoite: "Postiosoite",
   postinumero: "Postinumero",
   postitoimipaikka: "Postitoimipaikka",
@@ -20,6 +21,9 @@ export const OMISTAJA_EXCEL_HEADERS = {
   tiedotustapa: "Tiedotustapa",
   lahetysaika: "Lähetysaika",
 } as const;
+
+/** @deprecated use TIEDOTETTAVA_EXCEL_HEADERS */
+export const OMISTAJA_EXCEL_HEADERS = TIEDOTETTAVA_EXCEL_HEADERS;
 
 export const OMISTAJA_EXCEL_SHEETS = {
   suomifiKiinteistonomistajat: "Suomi.fi kiinteistönomistajat",
