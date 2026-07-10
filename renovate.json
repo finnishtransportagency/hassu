@@ -84,7 +84,11 @@
         "@hassu/asianhallinta",
         "next",
         "eslint-config-next",
-        "localstack/localstack"
+        "localstack/localstack",
+        "@aws-amplify/cli",
+        "docker/compose",
+        "aws/aws-cli",
+        "npm"
       ],
       "matchUpdateTypes": ["minor"],
       "enabled": false,
