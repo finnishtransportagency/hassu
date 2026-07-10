@@ -22,9 +22,6 @@ export const TIEDOTETTAVA_EXCEL_HEADERS = {
   lahetysaika: "Lähetysaika",
 } as const;
 
-/** @deprecated use TIEDOTETTAVA_EXCEL_HEADERS */
-export const OMISTAJA_EXCEL_HEADERS = TIEDOTETTAVA_EXCEL_HEADERS;
-
 export const OMISTAJA_EXCEL_SHEETS = {
   suomifiKiinteistonomistajat: "Suomi.fi kiinteistönomistajat",
   muutKiinteistonomistajat: "Muut kiinteistönomistajat",
