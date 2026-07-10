@@ -101,7 +101,7 @@ export class HassuAccountStack extends Stack {
       vpc,
       tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.fromInsightVersionArn(
-        "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
+        "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:66"
       ),
       layers: [
         new LayerVersion(this, "BaseLayer-" + Config.env, {
