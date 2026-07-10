@@ -11,6 +11,7 @@ import { config } from "../config";
 import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
+import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import {
   findHyvaksymisPaatosVaiheWaitingForApproval,
   findJatkoPaatos1VaiheWaitingForApproval,
@@ -495,6 +496,8 @@ Sähköposti
 ${muistutus.sahkoposti ?? ""}
 Puhelinnumero
 ${muistutus.puhelinnumero ?? ""}
+Kiinteistötunnus
+${formatKiinteistotunnusForDisplay(muistutus.kiinteistotunnus)}
 Muistutus
 ${muistutus.muistutus}
 ${muistutusLiiteTeksti ? muistutusLiiteTeksti + "\n" : ""}

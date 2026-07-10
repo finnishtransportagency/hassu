@@ -229,7 +229,8 @@
     "kerro_kayttokokemuksestasi": "Kerro käyttökokemuksestasi",
     "kerro_kayttokokemuksestasi_vastaa_kyselyyn": "Vastaa lyhyeen kyselyyn Valtion liikenneväylien suunnittelu -palvelusta.",
     "kerro_kayttokokemuksestasi_saatu_palaute": "Saatu palaute auttaa kehittämään palvelua.",
-    "kerro_kayttokokemuksestasi_linkki": "KYSELYYN"
+    "kerro_kayttokokemuksestasi_linkki": "KYSELYYN",
+    "kiinteistotunnus": "Kiinteistötunnus"
   },
   "asiakirja": {
     "aloituskuulutus": {
