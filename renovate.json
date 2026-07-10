@@ -136,6 +136,7 @@
     },
     {
       "matchDepNames": ["@aws-amplify/cli", "docker/compose", "aws/aws-cli"],
+      "enabled": true,
       "groupName": "build-image tools (minor/patch)",
       "groupSlug": "build-image-tools",
       "semanticCommitType": "build",
