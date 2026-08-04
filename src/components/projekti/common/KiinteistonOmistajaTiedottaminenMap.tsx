@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { styled } from "@mui/system";
 import { DetailedHTMLProps, HTMLAttributes, useRef, useEffect, useMemo, useState, useCallback } from "react";
 import * as ReactDOMServer from "react-dom/server";
@@ -681,7 +682,6 @@ export function getControls({
         }
         return false;
       });
-      source.clear();
       source.addFeatures(suodatetut);
       zoomToExtent(view, source.getExtent());
       const unsupportedGeometryError = errors.some((error) => error instanceof UnsupportedGeometryTypeError);

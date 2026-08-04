@@ -1,4 +1,3 @@
-// Contains code generated or recommended by Amazon Q
 import Textarea from "@components/form/Textarea";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -459,7 +458,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                 <>
                   <p>
                     {label({
-                      label: "Esikatsele tiedostot.",
+                      label: "Esikatsele tiedostot",
                       inputLanguage: ensisijainenKaannettavaKieli,
                       kielitiedot,
                     })}
@@ -510,7 +509,7 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                 <>
                   <p>
                     {label({
-                      label: "Esikatsele tiedostot.",
+                      label: "Esikatsele tiedostot",
                       inputLanguage: toissijainenKaannettavaKieli,
                       kielitiedot,
                     })}
