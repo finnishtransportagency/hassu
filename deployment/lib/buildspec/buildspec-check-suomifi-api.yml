@@ -1,0 +1,33 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    GITHUB_TOKEN: github-token
+
+phases:
+  install:
+    commands:
+      - npm ci --ignore-scripts
+  build:
+    commands:
+      - |
+        CURRENT=$(cat backend/src/suomifi/suomifiRest/suomifi-rest-messages-api.yaml)
+        FETCHED=$(curl -sf https://api.messages.suomi.fi/docs/messages-api.yaml)
+        if [ "$CURRENT" = "$FETCHED" ]; then
+          echo "Suomi.fi API spec is up to date, no changes needed."
+          exit 0
+        fi
+        echo "Suomi.fi API spec has changed, creating a PR."
+        echo "$FETCHED" > backend/src/suomifi/suomifiRest/suomifi-rest-messages-api.yaml
+        git config user.email "hassu-bot@example.com"
+        git config user.name "hassu-bot"
+        BRANCH="chore/update-suomifi-api-$(date +%Y%m%d)"
+        git checkout -b "$BRANCH"
+        git add backend/src/suomifi/suomifiRest/suomifi-rest-messages-api.yaml
+        git commit -m "chore: update suomifi-rest-messages-api.yaml"
+        git push "https://x-access-token:${GITHUB_TOKEN}@github.com/finnishtransportagency/hassu.git" "$BRANCH"
+        curl -sf -X POST \
+          -H "Authorization: token ${GITHUB_TOKEN}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/finnishtransportagency/hassu/pulls \
+          -d "{\"title\":\"chore: update suomifi-rest-messages-api.yaml\",\"head\":\"${BRANCH}\",\"base\":\"main\",\"body\":\"Suomi.fi Messages REST API -kuvaus on päivittynyt. Tarkista muutokset ennen yhdistämistä.\"}"
