@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import * as cdk from "aws-cdk-lib";
-import { aws_codebuild, aws_ecr, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { aws_codebuild, aws_ecr, aws_events, aws_events_targets, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { Construct } from "constructs";
 import * as codebuild from "aws-cdk-lib/aws-codebuild";
@@ -148,6 +148,9 @@ export class HassuPipelineStack extends Stack {
     }
 
     this.createImageBuilderProject();
+    if (isDevAccount) {
+      this.createSuomifiApiCheckerProject();
+    }
 
     const buildImage = LinuxBuildImage.fromEcrRepository(
       aws_ecr.Repository.fromRepositoryName(this, "buildImageRepository", Config.buildImageRepositoryName),
@@ -334,6 +337,35 @@ export class HassuPipelineStack extends Stack {
         );
       }
     }
+  }
+
+  private createSuomifiApiCheckerProject() {
+    const project = new aws_codebuild.Project(this, "hassu-check-suomifi-api", {
+      projectName: "Hassu-check-suomifi-api",
+      buildSpec: BuildSpec.fromSourceFilename("./deployment/lib/buildspec/buildspec-check-suomifi-api.yml"),
+      source: codebuild.Source.gitHub({
+        owner: "finnishtransportagency",
+        repo: "hassu",
+        branchOrRef: "main",
+        webhook: false,
+      }),
+      environment: {
+        buildImage: LinuxBuildImage.STANDARD_7_0,
+        computeType: ComputeType.SMALL,
+      },
+    });
+    project.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["secretsmanager:GetSecretValue"],
+        resources: ["*"],
+      })
+    );
+    this.grantCodeConnectionAccess(project);
+    new aws_events.Rule(this, "SuomifiApiCheckerSchedule", {
+      schedule: aws_events.Schedule.cron({ weekDay: "MON", hour: "6", minute: "0" }),
+      targets: [new aws_events_targets.CodeBuildProject(project)],
+    });
   }
 
   private createImageBuilderProject() {

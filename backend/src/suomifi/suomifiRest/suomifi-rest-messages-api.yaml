@@ -33,6 +33,15 @@ info:
     being considered a breaking change.
 
 
+    ### Managing the REST API password
+
+    Please ensure that you implement regular password rotation. Details of the password
+    policy are listed on Suomi.fi for Service Developers ([fi][4] / [sv][5] / [en][6]).
+
+    To test a new password, you can fetch a new token with it, and invoke the /events endpoint.
+    If /events returns a HTTP 200 response, the new password works.
+
+
     ### Markdown Formatting in Electronic Messages
 
     New electronic messages may contain either plain text bodies or be formatted
@@ -48,6 +57,9 @@ info:
     [1]: <https://kehittajille.suomi.fi/palvelut/viestit/toiminnallisuudet> "Suomi.fi kehittäjille"
     [2]: <https://kehittajille.suomi.fi/tjanster/meddelanden/funktioner> "Suomi.fi för tjänsteutvecklare"
     [3]: <https://kehittajille.suomi.fi/services/messages/functionalities> "Suomi.fi for Service Developers"
+    [4]: <https://kehittajille.suomi.fi/palvelut/viestit/yllapito/tekninen-yllapito> "Suomi.fi kehittäjille"
+    [5]: <https://kehittajille.suomi.fi/tjanster/meddelanden/underhall/tekniskt-underhall> "Suomi.fi för tjänsteutvecklare"
+    [6]: <https://kehittajille.suomi.fi/services/messages/maintenance/technical-maintenance> "Suomi.fi for Service Developers"
   version: 1.0.0
 servers:
   - url: https://api.messages.suomi.fi
@@ -1563,12 +1575,6 @@ components:
           type: string
         notifications:
           $ref: '#/components/schemas/MessageNotifications'
-        visibility:
-          type: string
-          enum:
-            - Normal
-            - Recipient only
-          default: Normal
     MessageEventMetadata:
       required:
         - direction
@@ -2212,12 +2218,6 @@ components:
           type: string
         notifications:
           $ref: '#/components/schemas/MessageNotifications'
-        visibility:
-          type: string
-          enum:
-            - Normal
-            - Recipient only
-          default: Normal
     NewAttachment:
       required:
         - attachmentId
@@ -2961,7 +2961,6 @@ components:
         - notifications
         - replyAllowedBy
         - title
-        - visibility
       type: object
       properties:
         attachments:
@@ -2998,11 +2997,6 @@ components:
           maxLength: 256
           minLength: 1
           type: string
-        visibility:
-          type: string
-          enum:
-            - Normal
-            - Recipient only
     messages.api.rest.v2.MessageNotifications:
       required:
         - senderDetailsInNotifications
@@ -3080,7 +3074,9 @@ components:
           type: boolean
         messageServiceType:
           type: string
-          description: 'Using ''messageServiceType: ''Verifiable'' requires extra configuration from Posti and will also incur extra costs'
+          description: 'Using ''messageServiceType: ''Verifiable'' requires extra configuration from Posti (see link below) and will also incur extra costs'
+          externalDocs:
+            url: https://kehittajille.suomi.fi/palvelut/viestit/toiminnallisuudet/paperipostin-lahettaminen/todisteellinen-tiedoksianto-paperipostilla
           enum:
             - Normal
             - Verifiable
