@@ -15,6 +15,7 @@ Apuskriptejä debuggaukseen, selvityksiin, ylläpitoon ja muihin ad-hoc-tehtävi
 | `fixInvalidVarahenkilot.ts`           | Etsii ja korjaa projektit joissa on VARAHENKILO-tyyppinen käyttäjä ilman A/L-tunnusta  | `npx ts-node --project scripts/tsconfig.json scripts/fixInvalidVarahenkilot/fixInvalidVarahenkilot.ts [--dry-run\|--run]` |
 | `findDuplicateLausuntoPyyntoUuids.ts` | Etsii projektit joissa lausuntoPyynnöissä tai täydennyksissä on duplikaatti-uuid:ita   | `npx ts-node --project scripts/tsconfig.json scripts/findDuplicateLausuntoPyyntoUuids/findDuplicateLausuntoPyyntoUuids.ts`                               |
 | `reproduceZipSocketIssue.ts`          | Toistaa tuotannon zip-socket-kapasiteettiongelman kehitysympäristössä                  | `npx ts-node --project scripts/tsconfig.json scripts/reproduceZipSocketIssue/reproduceZipSocketIssue.ts <oid> <nahtavillaolo-id> [--trigger\|--cleanup]` |
+| `updateSuomifiApi.ts`                 | Hakee ajantasaisen Suomi.fi Messages REST API -kuvauksen ja tallentaa sen YAML-tiedostoon | `npm run update:suomifi-api`                                                                                                                             |
 
 ## Uuden skriptin lisääminen
 

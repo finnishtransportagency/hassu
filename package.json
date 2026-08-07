@@ -287,6 +287,7 @@
     "upgradeDatabase-old": "ts-node --project=backend/tsconfig.json ./backend/bin/upgradeDatabase.ts",
     "db:tool": "ts-node --project=backend/tsconfig.json ./backend/bin/dbTool.ts",
     "suomifi:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/suomifiTest.ts",
+    "update:suomifi-api": "ts-node --project scripts/tsconfig.json scripts/updateSuomifiApi/updateSuomifiApi.ts",
     "pdf:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/pdfTest.ts",
     "turvaposti:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/turvapostiTest.ts",
     "prh:test": "DOTENV_CONFIG_PATH=.env.test ts-node --project=backend/tsconfig.json -r dotenv/config ./backend/bin/prhTest.ts",
