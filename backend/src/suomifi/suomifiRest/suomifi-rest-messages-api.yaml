@@ -2,6 +2,8 @@ openapi: 3.0.1
 info:
   title: Suomi.fi Messages REST API
   description: |-
+    testimuutos
+
     The functionalities offered by this API are described in detail on Suomi.fi
     for Service Developers ([fi][1] / [sv][2] / [en][3]). All endpoints require a whitelisted IP address.
 
@@ -74,7 +76,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccessTokenRequestBody'
+              $ref: "#/components/schemas/AccessTokenRequestBody"
         required: true
       responses:
         "200":
@@ -82,13 +84,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessTokenResponse'
+                $ref: "#/components/schemas/AccessTokenResponse"
         "400":
           description: Authentication failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
   /v1/change-password:
     post:
       tags:
@@ -107,7 +109,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangePasswordRequestBody'
+              $ref: "#/components/schemas/ChangePasswordRequestBody"
         required: true
       responses:
         "200":
@@ -115,13 +117,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChangePasswordResponse'
+                $ref: "#/components/schemas/ChangePasswordResponse"
         "400":
           description: Authentication failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
   /v1/mailboxes/active:
     post:
       tags:
@@ -133,7 +135,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/EndUsers'
+              $ref: "#/components/schemas/EndUsers"
         required: true
       responses:
         "200":
@@ -145,7 +147,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EndUsersWithActiveMailbox'
+                $ref: "#/components/schemas/EndUsersWithActiveMailbox"
         "400":
           description: Bad request
           headers:
@@ -155,13 +157,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -185,7 +187,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageIdResponse'
+                $ref: "#/components/schemas/MessageIdResponse"
         "400":
           description: Bad request
           headers:
@@ -195,19 +197,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "403":
           description: Access denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "404":
           description: Not found
           headers:
@@ -217,7 +219,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -243,7 +245,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageFromEndUserResponse'
+                $ref: "#/components/schemas/MessageFromEndUserResponse"
         "400":
           description: Bad request
           headers:
@@ -253,13 +255,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "404":
           description: Not found
           headers:
@@ -269,7 +271,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -294,7 +296,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageFromEndUserResponseV2'
+                $ref: "#/components/schemas/MessageFromEndUserResponseV2"
         "400":
           description: Bad request
           headers:
@@ -304,13 +306,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "404":
           description: Not found
           headers:
@@ -320,7 +322,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -347,19 +349,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "404":
           description: Not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -380,7 +382,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MODELca473d'
+              $ref: "#/components/schemas/MODELca473d"
             encoding:
               metadata:
                 contentType: application/json
@@ -393,19 +395,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewAttachmentResponse'
+                $ref: "#/components/schemas/NewAttachmentResponse"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "413":
           description: Request too large
           content:
@@ -418,13 +420,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "502":
           description: Bad gateway
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -453,7 +455,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Events'
+                $ref: "#/components/schemas/Events"
         "400":
           description: Bad request
           headers:
@@ -463,19 +465,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "403":
           description: Access denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -498,7 +500,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MODEL61f3c7'
+              $ref: "#/components/schemas/MODEL61f3c7"
         required: true
       responses:
         "201":
@@ -506,31 +508,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewFileResponse'
+                $ref: "#/components/schemas/NewFileResponse"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "415":
           description: Unsupported media type
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "502":
           description: Bad gateway
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -546,7 +548,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewMessageFromClientOrganisation'
+              $ref: "#/components/schemas/NewMessageFromClientOrganisation"
         required: true
       responses:
         "200":
@@ -558,7 +560,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                $ref: "#/components/schemas/MessageResponse"
         "400":
           description: Bad request
           headers:
@@ -568,13 +570,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "409":
           description: External ID already in use
           headers:
@@ -584,7 +586,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+                $ref: "#/components/schemas/MessageAlreadyExistsResponse"
         "502":
           description: Bad gateway
           headers:
@@ -594,7 +596,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -613,7 +615,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewElectronicMessageFromClientOrganisation'
+              $ref: "#/components/schemas/NewElectronicMessageFromClientOrganisation"
         required: true
       responses:
         "200":
@@ -625,19 +627,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                $ref: "#/components/schemas/MessageResponse"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "502":
           description: Bad gateway
           headers:
@@ -647,7 +649,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -670,7 +672,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageState'
+                $ref: "#/components/schemas/MessageState"
         "400":
           description: Bad request
           headers:
@@ -680,19 +682,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "403":
           description: Access denied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "404":
           description: Not found
           headers:
@@ -702,7 +704,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -717,7 +719,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NewPaperMailWithoutId'
+              $ref: "#/components/schemas/NewPaperMailWithoutId"
         required: true
       responses:
         "200":
@@ -729,7 +731,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaperMailResponse'
+                $ref: "#/components/schemas/PaperMailResponse"
         "400":
           description: Bad request
           headers:
@@ -739,13 +741,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "401":
           description: Unauthorized. Can result from using an expired token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "409":
           description: External ID already in use
           headers:
@@ -755,7 +757,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+                $ref: "#/components/schemas/MessageAlreadyExistsResponse"
         "502":
           description: Bad gateway
           headers:
@@ -765,7 +767,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -812,7 +814,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "413":
           description: Request too large
           content:
@@ -825,19 +827,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/messages.api.rest.v2.AttachmentReference'
+                $ref: "#/components/schemas/messages.api.rest.v2.AttachmentReference"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
         "502":
           description: Bad gateway
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -866,7 +868,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
+                $ref: "#/components/schemas/Response"
         "400":
           description: Bad request
           headers:
@@ -876,7 +878,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
       security:
         - oauth2:
             - aws.cognito.signin.user.admin
@@ -888,14 +890,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/messages.api.rest.v2.MultichannelMessageRequestBody'
+              $ref: "#/components/schemas/messages.api.rest.v2.MultichannelMessageRequestBody"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                $ref: "#/components/schemas/MessageResponse"
           description: OK
           headers:
             traceId:
@@ -907,7 +909,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
           description: Bad request
           headers:
             traceId:
@@ -919,7 +921,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+                $ref: "#/components/schemas/MessageAlreadyExistsResponse"
           description: External ID already in use
           headers:
             traceId:
@@ -931,7 +933,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
           description: Bad gateway
           headers:
             traceId:
@@ -962,14 +964,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/messages.api.rest.v2.ElectronicMessageRequestBody'
+              $ref: "#/components/schemas/messages.api.rest.v2.ElectronicMessageRequestBody"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageResponse'
+                $ref: "#/components/schemas/MessageResponse"
           description: OK
           headers:
             traceId:
@@ -981,7 +983,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrorResponseV1'
+                $ref: "#/components/schemas/ValidationErrorResponseV1"
           description: Bad request
           headers:
             traceId:
@@ -998,12 +1000,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MessageAlreadyExistsResponse'
+                $ref: "#/components/schemas/MessageAlreadyExistsResponse"
         "502":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
           description: Bad gateway
           headers:
             traceId:
@@ -1024,14 +1026,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/messages.api.rest.v2.PaperMailWithoutIdRequestBody'
+              $ref: "#/components/schemas/messages.api.rest.v2.PaperMailWithoutIdRequestBody"
         required: true
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaperMailResponse'
+                $ref: "#/components/schemas/PaperMailResponse"
           description: OK
           headers:
             traceId:
@@ -1043,7 +1045,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
           description: Bad request
           headers:
             traceId:
@@ -1055,7 +1057,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
           description: External ID already in use
           headers:
             traceId:
@@ -1067,7 +1069,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponseV1'
+                $ref: "#/components/schemas/ErrorResponseV1"
           description: Bad gateway
           headers:
             traceId:
@@ -1089,7 +1091,7 @@ components:
       type: object
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
     ElectronicMessageFromClientOrganizationCreatedEvent:
       required:
         - eventTime
@@ -1101,7 +1103,7 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/MessageEventMetadataV2'
+          $ref: "#/components/schemas/MessageEventMetadataV2"
         type:
           type: string
           enum:
@@ -1110,11 +1112,11 @@ components:
       type: object
       properties:
         customisedNewMessageNotification:
-          $ref: '#/components/schemas/CustomisedMessageNotification'
+          $ref: "#/components/schemas/CustomisedMessageNotification"
         unreadMessageNotification:
-          $ref: '#/components/schemas/UnreadMessageNotification'
+          $ref: "#/components/schemas/UnreadMessageNotification"
         senderDetailsInNotifications:
-          $ref: '#/components/schemas/SenderDetailsInNotifications'
+          $ref: "#/components/schemas/SenderDetailsInNotifications"
     NewNormalPaperMail:
       required:
         - createCoverPage
@@ -1133,7 +1135,7 @@ components:
           minItems: 1
           type: array
           items:
-            $ref: '#/components/schemas/FileReference'
+            $ref: "#/components/schemas/FileReference"
         messageServiceType:
           type: string
           enum:
@@ -1141,11 +1143,11 @@ components:
             - Verifiable
           default: Normal
         printingAndEnvelopingService:
-          $ref: '#/components/schemas/PrintingAndEnvelopingService'
+          $ref: "#/components/schemas/PrintingAndEnvelopingService"
         recipient:
-          $ref: '#/components/schemas/NewPaperMailRecipient'
+          $ref: "#/components/schemas/NewPaperMailRecipient"
         sender:
-          $ref: '#/components/schemas/NewPaperMailSender'
+          $ref: "#/components/schemas/NewPaperMailSender"
     VerifiableServiceMessageEventMetadataV2:
       required:
         - messageId
@@ -1508,7 +1510,7 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/MessageEventMetadataV2'
+          $ref: "#/components/schemas/MessageEventMetadataV2"
         type:
           type: string
           enum:
@@ -1531,13 +1533,13 @@ components:
       type: object
       properties:
         electronic:
-          $ref: '#/components/schemas/ElectronicMessageState'
+          $ref: "#/components/schemas/ElectronicMessageState"
         paperMail:
-          $ref: '#/components/schemas/PaperMailMessageState'
+          $ref: "#/components/schemas/PaperMailMessageState"
         statuses:
           type: array
           items:
-            $ref: '#/components/schemas/StatusMessageStatusType'
+            $ref: "#/components/schemas/StatusMessageStatusType"
     NewElectronicOnly:
       required:
         - body
@@ -1549,7 +1551,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: '#/components/schemas/NewAttachment'
+            $ref: "#/components/schemas/NewAttachment"
         body:
           maxLength: 40000
           minLength: 1
@@ -1574,7 +1576,7 @@ components:
           minLength: 1
           type: string
         notifications:
-          $ref: '#/components/schemas/MessageNotifications'
+          $ref: "#/components/schemas/MessageNotifications"
     MessageEventMetadata:
       required:
         - direction
@@ -1604,18 +1606,18 @@ components:
       type: object
       properties:
         electronic:
-          $ref: '#/components/schemas/NewElectronicPart'
+          $ref: "#/components/schemas/NewElectronicPart"
         externalId:
           title: ID of the message in your system
           maxLength: 256
           minLength: 1
           type: string
         paperMail:
-          $ref: '#/components/schemas/NewNormalPaperMail'
+          $ref: "#/components/schemas/NewNormalPaperMail"
         recipient:
-          $ref: '#/components/schemas/Recipient'
+          $ref: "#/components/schemas/Recipient"
         sender:
-          $ref: '#/components/schemas/Sender'
+          $ref: "#/components/schemas/Sender"
     PostiMessaging:
       required:
         - contactDetails
@@ -1624,7 +1626,7 @@ components:
       type: object
       properties:
         contactDetails:
-          $ref: '#/components/schemas/ContactDetails'
+          $ref: "#/components/schemas/ContactDetails"
         password:
           maxLength: 4
           minLength: 4
@@ -1669,12 +1671,12 @@ components:
           type: string
           format: date-time
         electronic:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUser'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUser"
         messageId:
           type: integer
           format: int64
         sender:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUserSender'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUserSender"
     MessageFromEndUserResponseV2:
       required:
         - createdAt
@@ -1686,12 +1688,12 @@ components:
           type: string
           format: date-time
         electronic:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUserV2'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUserV2"
         messageId:
           type: integer
           format: int64
         sender:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUserSender'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUserSender"
     ErrorResponseV1:
       required:
         - reason
@@ -1721,7 +1723,7 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/MessageEventMetadataV2'
+          $ref: "#/components/schemas/MessageEventMetadataV2"
         type:
           type: string
           enum:
@@ -1756,9 +1758,9 @@ components:
         eventType:
           type: string
           enum:
-            - 'Posti: Receipt confirmed'
+            - "Posti: Receipt confirmed"
         metadata:
-          $ref: '#/components/schemas/PostiReceiptConfirmedEventMetadata'
+          $ref: "#/components/schemas/PostiReceiptConfirmedEventMetadata"
     AccessTokenResponse:
       required:
         - access_token
@@ -1781,7 +1783,7 @@ components:
       type: object
       properties:
         postiMessaging:
-          $ref: '#/components/schemas/PostiMessaging'
+          $ref: "#/components/schemas/PostiMessaging"
         costPool:
           maxLength: 15
           minLength: 1
@@ -1797,7 +1799,7 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUserMetadata'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUserMetadata"
         type:
           type: string
           enum:
@@ -1820,16 +1822,16 @@ components:
       type: object
       properties:
         electronic:
-          $ref: '#/components/schemas/NewElectronicOnly'
+          $ref: "#/components/schemas/NewElectronicOnly"
         externalId:
           title: ID of the message in your system
           maxLength: 256
           minLength: 1
           type: string
         recipient:
-          $ref: '#/components/schemas/Recipient'
+          $ref: "#/components/schemas/Recipient"
         sender:
-          $ref: '#/components/schemas/Sender'
+          $ref: "#/components/schemas/Sender"
     Recipient:
       required:
         - id
@@ -1850,7 +1852,7 @@ components:
           minItems: 1
           type: array
           items:
-            $ref: '#/components/schemas/EndUserId'
+            $ref: "#/components/schemas/EndUserId"
     PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent:
       required:
         - eventTime
@@ -1862,11 +1864,11 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/PostiReceiptConfirmedEventMetadataV2'
+          $ref: "#/components/schemas/PostiReceiptConfirmedEventMetadataV2"
         type:
           type: string
           enum:
-            - 'Posti: receipt confirmed'
+            - "Posti: receipt confirmed"
     PaperMailVerifiableServiceMessagePostiUnresolvedEvent:
       required:
         - eventTime
@@ -1878,11 +1880,11 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/PostiMetadata'
+          $ref: "#/components/schemas/PostiMetadata"
         type:
           type: string
           enum:
-            - 'Posti: unresolved'
+            - "Posti: unresolved"
     MessageIdResponse:
       required:
         - messageId
@@ -1913,7 +1915,7 @@ components:
         attachments:
           type: array
           items:
-            $ref: '#/components/schemas/Attachment'
+            $ref: "#/components/schemas/Attachment"
         body:
           type: string
         createdAt:
@@ -1923,7 +1925,7 @@ components:
           type: integer
           format: int64
         thread:
-          $ref: '#/components/schemas/Thread'
+          $ref: "#/components/schemas/Thread"
         title:
           type: string
     ElectronicMessageFromEndUserV2:
@@ -1938,7 +1940,7 @@ components:
         attachments:
           type: array
           items:
-            $ref: '#/components/schemas/Attachment'
+            $ref: "#/components/schemas/Attachment"
         body:
           type: string
         createdAt:
@@ -1948,7 +1950,7 @@ components:
           type: integer
           format: int64
         thread:
-          $ref: '#/components/schemas/ThreadV2'
+          $ref: "#/components/schemas/ThreadV2"
         title:
           type: string
     ElectronicMessageState:
@@ -1959,7 +1961,7 @@ components:
         statuses:
           type: array
           items:
-            $ref: '#/components/schemas/StatusElectronicMessageStatus'
+            $ref: "#/components/schemas/StatusElectronicMessageStatus"
     PaperMailMessageState:
       required:
         - statuses
@@ -1968,7 +1970,7 @@ components:
         statuses:
           type: array
           items:
-            $ref: '#/components/schemas/StatusPaperMailMessageStatus'
+            $ref: "#/components/schemas/StatusPaperMailMessageStatus"
     MODEL61f3c7:
       required:
         - file
@@ -1984,7 +1986,7 @@ components:
       type: object
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         serviceId:
           maxLength: 64
           minLength: 1
@@ -1999,9 +2001,9 @@ components:
       type: object
       properties:
         title:
-          $ref: '#/components/schemas/CustomisedMessageNotificationTitle'
+          $ref: "#/components/schemas/CustomisedMessageNotificationTitle"
         content:
-          $ref: '#/components/schemas/CustomisedMessageNotificationContent'
+          $ref: "#/components/schemas/CustomisedMessageNotificationContent"
     NewAttachmentResponse:
       required:
         - attachmentId
@@ -2032,7 +2034,7 @@ components:
         endUsersWithActiveMailbox:
           type: array
           items:
-            $ref: '#/components/schemas/EndUserId'
+            $ref: "#/components/schemas/EndUserId"
     PostiMetadata:
       required:
         - messageId
@@ -2099,8 +2101,8 @@ components:
     EventMetadata:
       type: object
       oneOf:
-        - $ref: '#/components/schemas/MessageEventMetadata'
-        - $ref: '#/components/schemas/VerifiableServiceMessageEventMetadata'
+        - $ref: "#/components/schemas/MessageEventMetadata"
+        - $ref: "#/components/schemas/VerifiableServiceMessageEventMetadata"
     MessageEventMetadataV2:
       required:
         - messageId
@@ -2125,7 +2127,7 @@ components:
         validationErrors:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: "#/components/schemas/ValidationError"
     EndUserId:
       required:
         - id
@@ -2147,7 +2149,7 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/MessageEventMetadataV2'
+          $ref: "#/components/schemas/MessageEventMetadataV2"
         type:
           type: string
           enum:
@@ -2173,16 +2175,16 @@ components:
         events:
           type: array
           items:
-            $ref: '#/components/schemas/Event'
+            $ref: "#/components/schemas/Event"
     ElectronicMessageFromEndUserSender:
       required:
         - mailboxOwner
       type: object
       properties:
         mailboxOwner:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUserSenderActor'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUserSenderActor"
         personSendingMessageOnBehalfOfMailboxOwner:
-          $ref: '#/components/schemas/ElectronicMessageFromEndUserSenderActor'
+          $ref: "#/components/schemas/ElectronicMessageFromEndUserSenderActor"
     NewElectronicPart:
       required:
         - body
@@ -2199,7 +2201,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: '#/components/schemas/FileReference'
+            $ref: "#/components/schemas/FileReference"
         messageServiceType:
           type: string
           enum:
@@ -2217,7 +2219,7 @@ components:
           minLength: 1
           type: string
         notifications:
-          $ref: '#/components/schemas/MessageNotifications'
+          $ref: "#/components/schemas/MessageNotifications"
     NewAttachment:
       required:
         - attachmentId
@@ -2237,11 +2239,11 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/PostiMetadata'
+          $ref: "#/components/schemas/PostiMetadata"
         type:
           type: string
           enum:
-            - 'Posti: returned to sender'
+            - "Posti: returned to sender"
     ChangePasswordRequestBody:
       required:
         - accessToken
@@ -2266,7 +2268,7 @@ components:
           type: string
           format: date-time
         metadata:
-          $ref: '#/components/schemas/VerifiableServiceMessageEventMetadataV2'
+          $ref: "#/components/schemas/VerifiableServiceMessageEventMetadataV2"
         type:
           type: string
           enum:
@@ -2277,7 +2279,7 @@ components:
       type: object
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
     ElectronicMessageEvent:
       required:
         - entityType
@@ -2299,7 +2301,7 @@ components:
             - Created
             - Read
         metadata:
-          $ref: '#/components/schemas/MessageEventMetadata'
+          $ref: "#/components/schemas/MessageEventMetadata"
     ElectronicVerifiableServiceMessageReceiptConfirmedEvent:
       required:
         - entityType
@@ -2320,7 +2322,7 @@ components:
           enum:
             - Receipt confirmed
         metadata:
-          $ref: '#/components/schemas/VerifiableServiceMessageEventMetadata'
+          $ref: "#/components/schemas/VerifiableServiceMessageEventMetadata"
     PaperMailMessageEvent:
       required:
         - entityType
@@ -2341,12 +2343,12 @@ components:
           enum:
             - Created
             - Sent for printing and enveloping
-            - 'Posti: Receipt confirmed'
-            - 'Posti: Delivered'
-            - 'Posti: Unresolved'
-            - 'Posti: Returned to sender'
+            - "Posti: Receipt confirmed"
+            - "Posti: Delivered"
+            - "Posti: Unresolved"
+            - "Posti: Returned to sender"
         metadata:
-          $ref: '#/components/schemas/MessageEventMetadata'
+          $ref: "#/components/schemas/MessageEventMetadata"
     PostiReceiptConfirmedEventMetadata:
       required:
         - direction
@@ -2440,7 +2442,7 @@ components:
         events:
           type: array
           items:
-            $ref: '#/components/schemas/GetV2Event'
+            $ref: "#/components/schemas/GetV2Event"
     MODELca473d:
       required:
         - file
@@ -2451,7 +2453,7 @@ components:
           type: string
           format: binary
         metadata:
-          $ref: '#/components/schemas/NewAttachmentMetadata'
+          $ref: "#/components/schemas/NewAttachmentMetadata"
     UnreadMessageNotification:
       required:
         - reminder
@@ -2481,12 +2483,12 @@ components:
         eventType:
           type: string
         metadata:
-          $ref: '#/components/schemas/EventMetadata'
+          $ref: "#/components/schemas/EventMetadata"
       oneOf:
-        - $ref: '#/components/schemas/PaperMailMessageEvent'
-        - $ref: '#/components/schemas/ElectronicMessageEvent'
-        - $ref: '#/components/schemas/ElectronicVerifiableServiceMessageReceiptConfirmedEvent'
-        - $ref: '#/components/schemas/PostiReceiptConfirmedMessageEvent'
+        - $ref: "#/components/schemas/PaperMailMessageEvent"
+        - $ref: "#/components/schemas/ElectronicMessageEvent"
+        - $ref: "#/components/schemas/ElectronicVerifiableServiceMessageReceiptConfirmedEvent"
+        - $ref: "#/components/schemas/PostiReceiptConfirmedMessageEvent"
     MessageAlreadyExistsResponse:
       required:
         - messageId
@@ -2526,26 +2528,26 @@ components:
           format: date-time
       discriminator:
         mapping:
-          Electronic message created: '#/components/schemas/ElectronicMessageFromClientOrganizationCreatedEvent'
-          Electronic message from end user: '#/components/schemas/ElectronicMessageFromEndUserCreatedEvent'
-          Electronic message read: '#/components/schemas/ElectronicMessageFromClientOrganizationReadEvent'
-          Paper mail created: '#/components/schemas/PaperMailMessageCreatedEvent'
-          'Posti: receipt confirmed': '#/components/schemas/PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent'
-          'Posti: returned to sender': '#/components/schemas/PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent'
-          'Posti: unresolved': '#/components/schemas/PaperMailVerifiableServiceMessagePostiUnresolvedEvent'
-          Receipt confirmed: '#/components/schemas/ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent'
-          Sent for printing and enveloping: '#/components/schemas/PaperMailMessageSentForPrintingAndEnvelopingEvent'
+          Electronic message created: "#/components/schemas/ElectronicMessageFromClientOrganizationCreatedEvent"
+          Electronic message from end user: "#/components/schemas/ElectronicMessageFromEndUserCreatedEvent"
+          Electronic message read: "#/components/schemas/ElectronicMessageFromClientOrganizationReadEvent"
+          Paper mail created: "#/components/schemas/PaperMailMessageCreatedEvent"
+          "Posti: receipt confirmed": "#/components/schemas/PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent"
+          "Posti: returned to sender": "#/components/schemas/PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent"
+          "Posti: unresolved": "#/components/schemas/PaperMailVerifiableServiceMessagePostiUnresolvedEvent"
+          Receipt confirmed: "#/components/schemas/ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent"
+          Sent for printing and enveloping: "#/components/schemas/PaperMailMessageSentForPrintingAndEnvelopingEvent"
         propertyName: type
       oneOf:
-        - $ref: '#/components/schemas/ElectronicMessageFromClientOrganizationCreatedEvent'
-        - $ref: '#/components/schemas/ElectronicMessageFromClientOrganizationReadEvent'
-        - $ref: '#/components/schemas/ElectronicMessageFromEndUserCreatedEvent'
-        - $ref: '#/components/schemas/ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent'
-        - $ref: '#/components/schemas/PaperMailMessageCreatedEvent'
-        - $ref: '#/components/schemas/PaperMailMessageSentForPrintingAndEnvelopingEvent'
-        - $ref: '#/components/schemas/PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent'
-        - $ref: '#/components/schemas/PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent'
-        - $ref: '#/components/schemas/PaperMailVerifiableServiceMessagePostiUnresolvedEvent'
+        - $ref: "#/components/schemas/ElectronicMessageFromClientOrganizationCreatedEvent"
+        - $ref: "#/components/schemas/ElectronicMessageFromClientOrganizationReadEvent"
+        - $ref: "#/components/schemas/ElectronicMessageFromEndUserCreatedEvent"
+        - $ref: "#/components/schemas/ElectronicVerifiableServiceMessageFromClientOrganizationReceiptConfirmedEvent"
+        - $ref: "#/components/schemas/PaperMailMessageCreatedEvent"
+        - $ref: "#/components/schemas/PaperMailMessageSentForPrintingAndEnvelopingEvent"
+        - $ref: "#/components/schemas/PaperMailVerifiableServiceMessagePostiReceiptConfirmedEvent"
+        - $ref: "#/components/schemas/PaperMailVerifiableServiceMessagePostiReturnedToSenderEvent"
+        - $ref: "#/components/schemas/PaperMailVerifiableServiceMessagePostiUnresolvedEvent"
     NewPaperMailWithoutId:
       required:
         - createCoverPage
@@ -2570,7 +2572,7 @@ components:
           minItems: 1
           type: array
           items:
-            $ref: '#/components/schemas/FileReference'
+            $ref: "#/components/schemas/FileReference"
         messageServiceType:
           type: string
           enum:
@@ -2578,11 +2580,11 @@ components:
             - Verifiable
           default: Normal
         printingAndEnvelopingService:
-          $ref: '#/components/schemas/PrintingAndEnvelopingService'
+          $ref: "#/components/schemas/PrintingAndEnvelopingService"
         recipient:
-          $ref: '#/components/schemas/NewPaperMailRecipient'
+          $ref: "#/components/schemas/NewPaperMailRecipient"
         sender:
-          $ref: '#/components/schemas/NewPaperMailSenderWithId'
+          $ref: "#/components/schemas/NewPaperMailSenderWithId"
     messages.api.rest.v2.Address:
       required:
         - city
@@ -2892,9 +2894,9 @@ components:
       type: object
       properties:
         content:
-          $ref: '#/components/schemas/messages.api.rest.v2.CustomisedMessageNotificationContent'
+          $ref: "#/components/schemas/messages.api.rest.v2.CustomisedMessageNotificationContent"
         title:
-          $ref: '#/components/schemas/messages.api.rest.v2.CustomisedMessageNotificationTitle'
+          $ref: "#/components/schemas/messages.api.rest.v2.CustomisedMessageNotificationTitle"
     messages.api.rest.v2.CustomisedMessageNotificationContent:
       required:
         - en
@@ -2942,16 +2944,16 @@ components:
       type: object
       properties:
         electronic:
-          $ref: '#/components/schemas/messages.api.rest.v2.ElectronicPart'
+          $ref: "#/components/schemas/messages.api.rest.v2.ElectronicPart"
         externalId:
           title: ID of the message in your system
           maxLength: 256
           minLength: 1
           type: string
         recipient:
-          $ref: '#/components/schemas/messages.api.rest.v2.Recipient'
+          $ref: "#/components/schemas/messages.api.rest.v2.Recipient"
         sender:
-          $ref: '#/components/schemas/messages.api.rest.v2.Sender'
+          $ref: "#/components/schemas/messages.api.rest.v2.Sender"
     messages.api.rest.v2.ElectronicPart:
       required:
         - attachments
@@ -2968,7 +2970,7 @@ components:
           minItems: 0
           type: array
           items:
-            $ref: '#/components/schemas/messages.api.rest.v2.AttachmentReference'
+            $ref: "#/components/schemas/messages.api.rest.v2.AttachmentReference"
         body:
           maxLength: 40000
           minLength: 1
@@ -2987,7 +2989,7 @@ components:
             - Normal
             - Verifiable
         notifications:
-          $ref: '#/components/schemas/messages.api.rest.v2.MessageNotifications'
+          $ref: "#/components/schemas/messages.api.rest.v2.MessageNotifications"
         replyAllowedBy:
           type: string
           enum:
@@ -3004,7 +3006,7 @@ components:
       type: object
       properties:
         customisedNewMessageNotification:
-          $ref: '#/components/schemas/messages.api.rest.v2.CustomisedMessageNotification'
+          $ref: "#/components/schemas/messages.api.rest.v2.CustomisedMessageNotification"
         senderDetailsInNotifications:
           type: string
           default: Organisation and service name
@@ -3012,7 +3014,7 @@ components:
             - Organisation and service name
             - None
         unreadMessageNotification:
-          $ref: '#/components/schemas/messages.api.rest.v2.UnreadMessageNotification'
+          $ref: "#/components/schemas/messages.api.rest.v2.UnreadMessageNotification"
     messages.api.rest.v2.MultichannelMessageRequestBody:
       required:
         - electronic
@@ -3023,32 +3025,32 @@ components:
       type: object
       properties:
         electronic:
-          $ref: '#/components/schemas/messages.api.rest.v2.ElectronicPart'
+          $ref: "#/components/schemas/messages.api.rest.v2.ElectronicPart"
         externalId:
           title: ID of the message in your system
           maxLength: 256
           minLength: 1
           type: string
         paperMail:
-          $ref: '#/components/schemas/messages.api.rest.v2.PaperMailPart'
+          $ref: "#/components/schemas/messages.api.rest.v2.PaperMailPart"
         recipient:
-          $ref: '#/components/schemas/messages.api.rest.v2.Recipient'
+          $ref: "#/components/schemas/messages.api.rest.v2.Recipient"
         sender:
-          $ref: '#/components/schemas/messages.api.rest.v2.Sender'
+          $ref: "#/components/schemas/messages.api.rest.v2.Sender"
     messages.api.rest.v2.NewPaperMailRecipient:
       required:
         - address
       type: object
       properties:
         address:
-          $ref: '#/components/schemas/messages.api.rest.v2.Address'
+          $ref: "#/components/schemas/messages.api.rest.v2.Address"
     messages.api.rest.v2.NewPaperMailSender:
       required:
         - address
       type: object
       properties:
         address:
-          $ref: '#/components/schemas/messages.api.rest.v2.Address'
+          $ref: "#/components/schemas/messages.api.rest.v2.Address"
     messages.api.rest.v2.PaperMailPart:
       required:
         - attachments
@@ -3067,27 +3069,27 @@ components:
           minItems: 1
           type: array
           items:
-            $ref: '#/components/schemas/messages.api.rest.v2.AttachmentReference'
+            $ref: "#/components/schemas/messages.api.rest.v2.AttachmentReference"
         colorPrinting:
           type: boolean
         createAddressPage:
           type: boolean
         messageServiceType:
           type: string
-          description: 'Using ''messageServiceType: ''Verifiable'' requires extra configuration from Posti (see link below) and will also incur extra costs'
+          description: "Using 'messageServiceType: 'Verifiable' requires extra configuration from Posti (see link below) and will also incur extra costs"
           externalDocs:
             url: https://kehittajille.suomi.fi/palvelut/viestit/toiminnallisuudet/paperipostin-lahettaminen/todisteellinen-tiedoksianto-paperipostilla
           enum:
             - Normal
             - Verifiable
         printingAndEnvelopingService:
-          $ref: '#/components/schemas/messages.api.rest.v2.PrintingAndEnvelopingService'
+          $ref: "#/components/schemas/messages.api.rest.v2.PrintingAndEnvelopingService"
         recipient:
-          $ref: '#/components/schemas/messages.api.rest.v2.NewPaperMailRecipient'
+          $ref: "#/components/schemas/messages.api.rest.v2.NewPaperMailRecipient"
         rotateLandscapePages:
           type: boolean
         sender:
-          $ref: '#/components/schemas/messages.api.rest.v2.NewPaperMailSender'
+          $ref: "#/components/schemas/messages.api.rest.v2.NewPaperMailSender"
         twoSidedPrinting:
           type: boolean
     messages.api.rest.v2.PaperMailWithoutIdRequestBody:
@@ -3103,9 +3105,9 @@ components:
           minLength: 1
           type: string
         paperMail:
-          $ref: '#/components/schemas/messages.api.rest.v2.PaperMailPart'
+          $ref: "#/components/schemas/messages.api.rest.v2.PaperMailPart"
         sender:
-          $ref: '#/components/schemas/messages.api.rest.v2.Sender'
+          $ref: "#/components/schemas/messages.api.rest.v2.Sender"
     messages.api.rest.v2.PostiMessaging:
       required:
         - contactDetails
@@ -3114,7 +3116,7 @@ components:
       type: object
       properties:
         contactDetails:
-          $ref: '#/components/schemas/messages.api.rest.v2.ContactDetails'
+          $ref: "#/components/schemas/messages.api.rest.v2.ContactDetails"
         password:
           maxLength: 4
           minLength: 4
@@ -3131,10 +3133,10 @@ components:
         costPool:
           maxLength: 15
           minLength: 1
-          pattern: '[A-Z0-9]+'
+          pattern: "[A-Z0-9]+"
           type: string
         postiMessaging:
-          $ref: '#/components/schemas/messages.api.rest.v2.PostiMessaging'
+          $ref: "#/components/schemas/messages.api.rest.v2.PostiMessaging"
     messages.api.rest.v2.Recipient:
       required:
         - id
