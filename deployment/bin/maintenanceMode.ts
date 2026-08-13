@@ -1,5 +1,4 @@
 import assert from "assert";
-import fetch from "node-fetch";
 import { Config } from "../lib/config";
 import { RegexPatternSetSummary, UpdateRegexPatternSetRequest, WAFV2 } from "@aws-sdk/client-wafv2";
 import { ParameterNotFound, SSM } from "@aws-sdk/client-ssm";
