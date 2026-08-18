@@ -2,7 +2,6 @@ openapi: 3.0.1
 info:
   title: Suomi.fi Messages REST API
   description: |-
-    testimuutos
 
     The functionalities offered by this API are described in detail on Suomi.fi
     for Service Developers ([fi][1] / [sv][2] / [en][3]). All endpoints require a whitelisted IP address.
