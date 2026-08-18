@@ -96,9 +96,24 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
         <div className="flex flex-col md:flex-row gap-8 mb-3">
           <div
             data-sidebar
-            style={{ minWidth: "345px", ...(!isMobile && { position: "sticky", top: sidebarTop, alignSelf: "flex-start" }) }}
+            style={{
+              minWidth: "345px",
+              ...(!isMobile && {
+                position: "sticky",
+                top: sidebarTop,
+                alignSelf: "flex-start",
+              }),
+            }}
           >
-            <ProjektiSideNavigation />
+            <div
+              style={
+                !isMobile
+                  ? { maxHeight: `calc(100vh - ${sidebarTop}px)`, overflowY: "auto" }
+                  : undefined
+              }
+            >
+              <ProjektiSideNavigation />
+            </div>
           </div>
           <div className="grow min-w-0">
             <Stack

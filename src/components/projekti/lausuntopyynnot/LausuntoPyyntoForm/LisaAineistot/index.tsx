@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
@@ -9,7 +10,7 @@ import { LausuntoPyynnotFormValues } from "../../types";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
-import { allowedFileTypesVirkamiehille } from "hassu-common/fileValidationSettings";
+import { allowedFileTypesVirkamiehille, maxFileSize } from "hassu-common/fileValidationSettings";
 import useSnackbars from "../../../../../hooks/useSnackbars";
 
 export default function LisaAineistot({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
@@ -37,15 +38,19 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
 
           if (files?.length) {
             const nonAllowedTypeFiles: File[] = [];
+            const tooLargeFiles: File[] = [];
             const allowedTypeFiles: File[] = [];
             const uploadedFileNamesPromises: Promise<string>[] = [];
 
             Array.from(Array(files.length).keys()).forEach((key: number) => {
-              if (allowedFileTypesVirkamiehille.find((type) => type === files[key].type)) {
-                uploadedFileNamesPromises.push(lataaTiedosto(api, files[key], true));
-                allowedTypeFiles.push(files[key]);
+              const file = files[key];
+              if (file.size > maxFileSize) {
+                tooLargeFiles.push(file);
+              } else if (allowedFileTypesVirkamiehille.find((type) => type === file.type)) {
+                uploadedFileNamesPromises.push(lataaTiedosto(api, file, true));
+                allowedTypeFiles.push(file);
               } else {
-                nonAllowedTypeFiles.push(files[key]);
+                nonAllowedTypeFiles.push(file);
               }
             });
 
@@ -60,6 +65,12 @@ export default function LisaAineistot({ index, projekti }: Readonly<{ index: num
 
             setValue(`lausuntoPyynnot.${index}.lisaAineistot`, (lisaAineistot ?? []).concat(tiedostoInputs), { shouldDirty: true });
 
+            if (tooLargeFiles.length) {
+              const maxSizeMB = Math.round(maxFileSize / 1000000);
+              showErrorMessage(
+                `Tiedosto on liian suuri: ${tooLargeFiles.map((f) => f.name).join(", ")}. Suurin sallittu koko on ${maxSizeMB} Mt.`
+              );
+            }
             if (nonAllowedTypeFiles.length) {
               const nonAllowedTypeFileNames = nonAllowedTypeFiles.map((f) => f.name);
               showErrorMessage("Väärä tiedostotyyppi: " + nonAllowedTypeFileNames + ". Sallitut tyypit JPG, PNG, PDF ja MS Word.");

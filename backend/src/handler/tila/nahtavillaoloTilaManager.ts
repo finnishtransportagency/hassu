@@ -163,6 +163,19 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
   async approve(projekti: DBProjekti, hyvaksyja: NykyinenKayttaja): Promise<void> {
     // super.approve muuttaa tilan, joten haetaan odottavan julkaisun tiedot talteen Velhoa varten
     const nahtavillaoloJulkaisuWaitingForApproval = this.getKuulutusWaitingForApproval(projekti);
+    // Päivitetään kasittelynTila julkaisun uusilla päivämäärillä jotta käsittelyn tila pysyy synkassa
+    if (nahtavillaoloJulkaisuWaitingForApproval?.kuulutusPaiva) {
+      await projektiDatabase.saveProjekti({
+        oid: projekti.oid,
+        versio: projekti.versio,
+        kasittelynTila: {
+          ...projekti.kasittelynTila,
+          nahtavillaoloAlkaen: nahtavillaoloJulkaisuWaitingForApproval.kuulutusPaiva,
+          nahtavillaoloPaattyen:
+            nahtavillaoloJulkaisuWaitingForApproval.kuulutusVaihePaattyyPaiva ?? projekti.kasittelynTila?.nahtavillaoloPaattyen,
+        },
+      });
+    }
     await super.approve(projekti, hyvaksyja);
     if (nahtavillaoloJulkaisuWaitingForApproval) {
       await velho.saveJulkaisupvm(projekti.oid, nahtavillaoloJulkaisuWaitingForApproval);
