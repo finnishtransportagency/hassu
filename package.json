@@ -201,8 +201,7 @@
     "postcss": "$postcss",
     "got": "12.6.1",
     "flatted": ">=3.4.2",
-    "fast-uri": "3.1.5",
-    "fast-xml-parser": "5.7.0"
+    "fast-uri": "3.1.5"
   },
   "scripts": {
     "import:dynamodb": "node importDynamodbExport.js",
