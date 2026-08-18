@@ -9,8 +9,6 @@ phases:
   install:
     runtime-versions:
       nodejs: 22.22.1
-    commands:
-      - npm ci --ignore-scripts
   build:
     commands:
       - |
