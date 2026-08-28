@@ -42,5 +42,5 @@
     "incremental": true
   },
   "exclude": ["node_modules", "**/backend/**", "deployment"],
-  "include": ["src", "types", "common", "tools", "jest.setup.ts"]
+  "include": ["src", "types", "common", "jest.setup.ts"]
 }
