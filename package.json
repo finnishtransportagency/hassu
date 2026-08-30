@@ -2,7 +2,7 @@
   "name": "hassu",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.9.8",
+  "packageManager": "npm@10.9.9",
   "dependencies": {
     "@apollo/client": "^3.14.1",
     "@aws-sdk/client-cloudformation": "3.1045.0",
