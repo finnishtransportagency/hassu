@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DBVaylaUser } from "../database/model";
 import { Kayttaja, KayttajaTyyppi, ProjektiKayttajaInput } from "hassu-common/graphql/apiModel";
 import { SearchMode } from "../personSearch/personSearchClient";
@@ -7,7 +8,7 @@ import remove from "lodash/remove";
 import { mergeKayttaja, mergeKayttajas } from "../personSearch/personAdapter";
 import { Kayttajas } from "../personSearch/kayttajas";
 import merge from "lodash/merge";
-import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 import { EmailComparator } from "../personSearch/emailComparator";
 
@@ -77,10 +78,6 @@ export class KayttoOikeudetManager {
       // Tyyppiä ei voi vaihtaa projektipäälliköksi
       delete inputUser.tyyppi;
     }
-    if (!organisaatioIsEly(currentUser.organisaatio)) {
-      // Käyttäjälle ei voi asettaa elyOrganisaatiota
-      delete inputUser.elyOrganisaatio;
-    }
     if (!organisaatioIsEvk(currentUser.organisaatio)) {
       // Käyttäjälle ei voi asettaa evkOrganisaatiota
       delete inputUser.evkOrganisaatio;
@@ -100,14 +97,11 @@ export class KayttoOikeudetManager {
   }
 
   private mergeProjektiPaallikkoUser(currentUser: DBVaylaUser, inputUser: ProjektiKayttajaInput) {
-    const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
-      organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
     const evkOrganisaatio: DBVaylaUser["evkOrganisaatio"] =
       organisaatioIsEvk(currentUser.organisaatio) && inputUser.evkOrganisaatio ? inputUser.evkOrganisaatio : undefined;
     // Update only puhelinnumero if projektipaallikko
     const user: DBVaylaUser = {
       ...currentUser,
-      elyOrganisaatio,
       evkOrganisaatio,
       yleinenYhteystieto: true,
       puhelinnumero: inputUser.puhelinnumero,
@@ -117,13 +111,10 @@ export class KayttoOikeudetManager {
 
   private mergeNonEditableUser(currentUser: DBVaylaUser, inputUser: ProjektiKayttajaInput) {
     // Update only puhelinnumero and yleinenYhteystieto if varahenkilö from Projektivelho
-    const elyOrganisaatio: DBVaylaUser["elyOrganisaatio"] =
-      organisaatioIsEly(currentUser.organisaatio) && inputUser.elyOrganisaatio ? inputUser.elyOrganisaatio : undefined;
     const evkOrganisaatio: DBVaylaUser["evkOrganisaatio"] =
       organisaatioIsEvk(currentUser.organisaatio) && inputUser.evkOrganisaatio ? inputUser.evkOrganisaatio : undefined;
     const user: DBVaylaUser = {
       ...currentUser,
-      elyOrganisaatio,
       evkOrganisaatio,
       yleinenYhteystieto: !!inputUser.yleinenYhteystieto,
       puhelinnumero: inputUser.puhelinnumero,
@@ -141,7 +132,6 @@ export class KayttoOikeudetManager {
         tyyppi:
           isAorLTunnus(newUser.kayttajatunnus) && newUser.tyyppi === KayttajaTyyppi.VARAHENKILO ? KayttajaTyyppi.VARAHENKILO : undefined,
         yleinenYhteystieto: newUser.yleinenYhteystieto ?? undefined,
-        elyOrganisaatio: newUser.elyOrganisaatio ?? undefined,
         evkOrganisaatio: newUser.evkOrganisaatio ?? undefined,
       };
       try {

@@ -232,11 +232,8 @@ export abstract class AbstractPdf {
 
   iPostLogo(): string {
     const isVaylaTilaaja = this.isVaylaTilaaja();
-    const isElyTilaaja = this.isElyTilaaja();
     if (isVaylaTilaaja) {
       return this.fileBasePath + "/files/vaylaipost.png";
-    } else if (isElyTilaaja) {
-      return this.fileBasePath + "/files/elyipost.png";
     } else {
       return this.fileBasePath + "/files/evkipost_fi.png";
     }
@@ -251,11 +248,8 @@ export abstract class AbstractPdf {
 
   async loadLogo(): Promise<string | Buffer> {
     const isVaylaTilaaja = this.isVaylaTilaaja();
-    const isElyTilaaja = this.isElyTilaaja();
     if (isVaylaTilaaja) {
       return this.fileBasePath + "/files/vayla.png";
-    } else if (isElyTilaaja) {
-      return this.fileBasePath + "/files/ely.png";
     } else {
       return this.fileBasePath + "/files/evk.png";
     }
@@ -392,8 +386,6 @@ export abstract class AbstractPdf {
   }
 
   abstract isVaylaTilaaja(): boolean;
-
-  abstract isElyTilaaja(): boolean;
 
   abstract asiatunnus(): string;
 }

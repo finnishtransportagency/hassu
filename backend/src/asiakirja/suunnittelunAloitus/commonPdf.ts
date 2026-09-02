@@ -50,10 +50,6 @@ export abstract class CommonPdf<T extends CommonKutsuAdapter> extends AbstractPd
     return this.kutsuAdapter.isUseitaOsapuolia();
   }
 
-  isElyTilaaja(): boolean {
-    return this.kutsuAdapter.isElyTilaaja();
-  }
-
   protected lisatietojaAntavatParagraph(): PDFStructureElement {
     return this.paragraphBold(this.kutsuAdapter.text("asiakirja.lisatietoja_antavat"), { spacingAfter: 1 });
   }

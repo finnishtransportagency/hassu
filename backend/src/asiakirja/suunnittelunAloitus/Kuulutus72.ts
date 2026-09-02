@@ -122,11 +122,7 @@ export class Kuulutus72 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   }
 
   kuulutusosoite(): string {
-    return this.isVaylaTilaaja()
-      ? "https://www.vayla.fi/kuulutukset"
-      : this.isElyTilaaja()
-      ? "https://www.ely-keskus.fi/kuulutukset"
-      : "https://www.elinvoimakeskus.fi/kuulutukset";
+    return this.isVaylaTilaaja() ? "https://www.vayla.fi/kuulutukset" : "https://www.elinvoimakeskus.fi/kuulutukset";
   }
 
   protected uudelleenKuulutusParagraph(): PDFStructureElement | undefined {

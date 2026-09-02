@@ -969,7 +969,6 @@ type Yhteystieto {
   etunimi: String!
   sukunimi: String!
   organisaatio: String
-  elyOrganisaatio: ELY
   evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   puhelinnumero: String!
@@ -1247,7 +1246,6 @@ type ProjektiKayttaja {
   puhelinnumero: String
   email: String!
   organisaatio: String
-  elyOrganisaatio: ELY
   evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   etunimi: String!
@@ -1260,7 +1258,6 @@ type ProjektiKayttajaJulkinen {
   puhelinnumero: String
   email: String!
   organisaatio: String
-  elyOrganisaatio: ELY
   evkOrganisaatio: Elinvoimakeskus
   kunta: Int
   etunimi: String!
