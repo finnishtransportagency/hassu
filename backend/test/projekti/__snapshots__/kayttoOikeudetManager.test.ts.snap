@@ -17,7 +17,7 @@ Array [
     "etunimi": "EtunimiA2",
     "kayttajatunnus": "A2",
     "muokattavissa": false,
-    "organisaatio": "ELY",
+    "organisaatio": "Elinvoimakeskus",
     "sukunimi": "SukunimiA2",
     "tyyppi": "VARAHENKILO",
   },
@@ -45,7 +45,6 @@ Array [
 exports[`KayttoOikeudetManager manages users correcly should handle adds and edits 2`] = `
 Array [
   Object {
-    "elyOrganisaatio": undefined,
     "email": "a1@vayla.fi",
     "etunimi": "EtunimiA1",
     "evkOrganisaatio": undefined,
@@ -58,13 +57,12 @@ Array [
     "yleinenYhteystieto": true,
   },
   Object {
-    "elyOrganisaatio": undefined,
     "email": "a2@organisaatio.fi",
     "etunimi": "EtunimiA2",
     "evkOrganisaatio": undefined,
     "kayttajatunnus": "A2",
     "muokattavissa": false,
-    "organisaatio": "ELY",
+    "organisaatio": "Elinvoimakeskus",
     "puhelinnumero": "123456789",
     "sukunimi": "SukunimiA2",
     "tyyppi": "VARAHENKILO",
@@ -90,13 +88,12 @@ Array [
     "tyyppi": null,
   },
   Object {
-    "elyOrganisaatio": undefined,
     "email": "a4@organisaatio.fi",
     "etunimi": "EtunimiA4",
     "evkOrganisaatio": undefined,
     "kayttajatunnus": "A4",
     "muokattavissa": true,
-    "organisaatio": "ELY",
+    "organisaatio": "Elinvoimakeskus",
     "puhelinnumero": "123456789",
     "sukunimi": "SukunimiA4",
     "tyyppi": undefined,
