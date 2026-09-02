@@ -224,7 +224,7 @@
     "tiedosto_on_liian_suuri": "Filen är för stor",
     "tiedostotyyppi_ei_tuettu": "Filtypen stöds inte",
     "tiedostoja_liikaa": "Det kan vara högst fem filer",
-    "anna_kiinteistotunnus_esitysmuodossa": "Fastighetsbeteckningen har fel format, t.ex. 740-555-2-0"
+    "anna_kiinteistotunnus_esitysmuodossa": "Kontrollera fastighetsbeteckningens format, t.ex. 740-555-2-0"
   },
   "ilmoitukset": {
     "tallennus_onnistui": "Sparningen lyckades",
