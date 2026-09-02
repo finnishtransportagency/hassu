@@ -10,7 +10,6 @@ export function adaptProjektiKayttajaJulkinen(kayttoOikeus: DBVaylaUser): API.Pr
     puhelinnumero: kayttoOikeus.puhelinnumero,
     organisaatio: kayttoOikeus.organisaatio,
     projektiPaallikko: kayttoOikeus.tyyppi === API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-    elyOrganisaatio: kayttoOikeus.elyOrganisaatio,
     evkOrganisaatio: kayttoOikeus.evkOrganisaatio,
   };
 }

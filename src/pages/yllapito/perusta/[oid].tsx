@@ -179,10 +179,9 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({
             oid: formData.oid,
             versio: formData.versio,
             kayttoOikeudet: formData.kayttoOikeudet.map(
-              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+              ({ kayttajatunnus, puhelinnumero, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
                 kayttajatunnus,
                 puhelinnumero,
-                elyOrganisaatio,
                 evkOrganisaatio,
                 tyyppi,
                 yleinenYhteystieto,
