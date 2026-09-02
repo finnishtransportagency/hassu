@@ -41,8 +41,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
     sukunimi: "Projari",
     muokattavissa: false,
     yleinenYhteystieto: true,
-    elyOrganisaatio: API.ELY.LAPIN_ELY,
-    evkOrganisaatio: undefined,
+    evkOrganisaatio: API.Elinvoimakeskus.SISA_SUOMEN_EVK,
   };
   const projektiInDB = {
     ...TEST_PROJEKTI,
@@ -277,8 +276,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         puhelinnumero: "01234567",
         organisaatio: "Väylävirasto",
         projektiPaallikko: true,
-        elyOrganisaatio: "LAPIN_ELY",
-        evkOrganisaatio: undefined,
+        evkOrganisaatio: API.Elinvoimakeskus.SISA_SUOMEN_EVK,
       },
     });
   });
@@ -314,8 +312,7 @@ describe("Hyväksymisesityksen tiedostojen listaaminen (aineistolinkin katselu)"
         puhelinnumero: "01234567",
         organisaatio: "Väylävirasto",
         projektiPaallikko: true,
-        elyOrganisaatio: "LAPIN_ELY",
-        evkOrganisaatio: undefined,
+        evkOrganisaatio: API.Elinvoimakeskus.SISA_SUOMEN_EVK,
       },
     });
   });
