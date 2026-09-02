@@ -1,15 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import { Construct } from "constructs";
-import {
-  Aws,
-  aws_codebuild,
-  aws_codeconnections,
-  aws_ecr,
-  CfnOutput,
-  Duration,
-  RemovalPolicy,
-  Stack,
-} from "aws-cdk-lib";
+import { Aws, aws_codebuild, aws_codeconnections, aws_ecr, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import { Config, SSMParameterName } from "./config";
 import { CfnDomain, Domain, EngineVersion, TLSSecurityPolicy } from "aws-cdk-lib/aws-opensearchservice";
 import { AccountRootPrincipal, Effect, ManagedPolicy, PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
@@ -101,7 +92,7 @@ export class HassuAccountStack extends Stack {
       vpc,
       tracing: Tracing.ACTIVE,
       insightsVersion: LambdaInsightsVersion.fromInsightVersionArn(
-        "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
+        "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:66"
       ),
       layers: [
         new LayerVersion(this, "BaseLayer-" + Config.env, {
@@ -112,7 +103,7 @@ export class HassuAccountStack extends Stack {
         LayerVersion.fromLayerVersionArn(
           this,
           "paramLayer",
-          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:82"
+          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:101"
         ),
       ],
       logRetention: RetentionDays.SEVEN_YEARS,

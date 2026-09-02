@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -144,6 +145,12 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                 >
                   Mallipohja muille lausunnonantajille 42T
                 </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-40T"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/899ce7fe-2cce-4326-8f85-49df786ed437/40T%20Lausuntopyynt%c3%b6%20LVVlle%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja LVV:lle 40T
+                </DownloadButtonLink>
               </div>
             )}
             {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && (
@@ -165,6 +172,12 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af305e18-5ccc-46ca-aff4-1c648d022ee4/42R%20Lausuntopyynt%c3%b6%20sidosryhmille%20xx%20xxS.docx?a=true"
                 >
                   Mallipohja muille lausunnonantajille 42R
+                </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-40R"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/0456fd88-c0f7-478f-8efa-cd3ef3022379/40R%20Lausuntopyynt%c3%b6%20LVVlle%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja LVV:lle 40R
                 </DownloadButtonLink>
               </div>
             )}

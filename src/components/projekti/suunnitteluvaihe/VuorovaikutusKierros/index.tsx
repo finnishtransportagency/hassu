@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
@@ -370,7 +371,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot.",
+                          label: "Esikatsele tiedostot",
                           inputLanguage: ensisijainenKieli,
                           kielitiedot,
                         })}
@@ -392,7 +393,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot.",
+                          label: "Esikatsele tiedostot",
                           inputLanguage: toissijainenKieli,
                           kielitiedot,
                         })}

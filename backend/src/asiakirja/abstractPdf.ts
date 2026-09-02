@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import PDFDocument from "pdfkit";
 import { EnhancedPDF } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
@@ -279,6 +280,9 @@ export abstract class AbstractPdf {
 
   protected sopimusLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
+      const hasLogo = (this.osapuoltenLogot && this.osapuoltenLogot.length > 0) || !!this.sopimusLogo;
+      if (!hasLogo) return;
+
       const bottomMargin = 50;
       const maxLogoHeight = 50;
       const verticalPadding = 20;

@@ -42,7 +42,7 @@ const inputChangesHyvaksymispaatosField = (projekti: DBProjekti, input: Tallenna
   );
 };
 
-function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput): void {
+export function validateHasAccessToEditKasittelyntilaFields(projekti: DBProjekti, input: KasittelyntilaInput): void {
   requirePermissionMuokkaa(projekti);
   const { hyvaksymispaatos: _inputHyvaksymispaatos, suunnitelmanTila: _suunnitelmanTila, ...inputAdminOikeudetVaativatKentat } = input;
   if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
