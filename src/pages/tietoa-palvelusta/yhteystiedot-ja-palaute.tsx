@@ -5,7 +5,6 @@ import TietoaPalvelustaPageLayout from "@components/kansalainen/tietoaPalvelusta
 import ContentSpacer from "@components/layout/ContentSpacer";
 import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import { styled } from "@mui/system";
-import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import Trans from "next-translate/Trans";
 import useTranslation from "next-translate/useTranslation";
 import React, { useCallback, useState } from "react";
@@ -28,11 +27,11 @@ export default function TietoaPalvelustaSivu() {
       <ContentSpacer as={"section"} gap={8}>
         <h1 id="mainPageContent">{t("paaotsikko")}</h1>
         <ContentSpacer gap={4}>
-          <p>{t(`kappale1${isEvkAktivoitu() ? "" : "_ely"}`)}</p>
+          <p>{t(`kappale1`)}</p>
           <ExternalLinkkiLista
             linkkiTiedot={[
               { href: t("linkki1.href"), teksti: t("linkki1.teksti") },
-              { href: t(`linkki2${isEvkAktivoitu() ? "" : "_ely"}.href`), teksti: t(`linkki2${isEvkAktivoitu() ? "" : "_ely"}.teksti`) },
+              { href: t(`linkki2.href`), teksti: t(`linkki2.teksti`) },
             ]}
           />
         </ContentSpacer>

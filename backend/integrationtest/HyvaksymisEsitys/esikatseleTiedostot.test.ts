@@ -223,7 +223,6 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     expect(tiedot.perustiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO);
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
-      elyOrganisaatio: undefined,
       evkOrganisaatio: undefined,
       email: "email@email.com",
       etunimi: "Etunimi",
@@ -267,7 +266,6 @@ describe("Hyväksymisesityksen tiedostojen esikatselu", () => {
     expect(tiedot.perustiedot.vastuuorganisaatio).to.eql(API.SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY);
     expect(tiedot.projektipaallikonYhteystiedot).to.eql({
       __typename: "ProjektiKayttajaJulkinen",
-      elyOrganisaatio: undefined,
       evkOrganisaatio: undefined,
       email: "email@email.com",
       etunimi: "Etunimi",

@@ -2,7 +2,7 @@ import { CommonKutsuAdapter, CommonKutsuAdapterProps } from "./commonKutsuAdapte
 import { IlmoituksenVastaanottajat, UudelleenKuulutus, Yhteystieto } from "../../database/model";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import { formatNimi } from "../../util/userUtil";
-import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 import { translate } from "../../util/localization";
 import { formatDate } from "../asiakirjaUtil";
 import { Kieli } from "hassu-common/graphql/apiModel";
@@ -146,11 +146,6 @@ export abstract class KuulutusKutsuAdapter<T extends KuulutusKutsuAdapterProps> 
       let organisaatio = y.organisaatio;
       if (y.kunta) {
         organisaatio = kuntametadata.nameForKuntaId(y.kunta, this.kieli);
-      } else if (organisaatioIsEly(y.organisaatio) && y.elyOrganisaatio) {
-        const kaannos = translate(`viranomainen.${y.elyOrganisaatio}`, this.kieli);
-        if (kaannos) {
-          organisaatio = kaannos;
-        }
       } else if (organisaatioIsEvk(y.organisaatio) && y.evkOrganisaatio) {
         const kaannos = translate(`viranomainen.${y.evkOrganisaatio}`, this.kieli);
         if (kaannos) {

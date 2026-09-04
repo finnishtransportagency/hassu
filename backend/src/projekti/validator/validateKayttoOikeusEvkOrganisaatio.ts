@@ -1,7 +1,7 @@
 import { TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError } from "hassu-common/error";
 import { personSearch } from "../../personSearch/personSearchClient";
-import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 import { DBProjekti } from "../../database/model";
 
 export async function validateKayttoOikeusEvkOrganisaatio(projekti: DBProjekti, input: TallennaProjektiInput) {

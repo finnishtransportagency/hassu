@@ -8,14 +8,7 @@ import {
   Velho,
   Yhteystieto,
 } from "../../database/model";
-import {
-  ELY,
-  Elinvoimakeskus,
-  KayttajaTyyppi,
-  Kieli,
-  ProjektiTyyppi,
-  SuunnittelustaVastaavaViranomainen,
-} from "hassu-common/graphql/apiModel";
+import { Elinvoimakeskus, KayttajaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -39,7 +32,7 @@ import { vaylaUserToYhteystieto, yhteystietoPlusKunta } from "../../util/vaylaUs
 import { formatProperNoun } from "hassu-common/util/formatProperNoun";
 import { getAsiatunnus } from "../../projekti/projektiUtil";
 import { formatDate, linkExtractRegEx } from "../asiakirjaUtil";
-import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 import { formatNimi } from "../../util/userUtil";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
 import { getLinkkiAsianhallintaan } from "../../asianhallinta/getLinkkiAsianhallintaan";
@@ -179,10 +172,6 @@ export class CommonKutsuAdapter {
     return (this.suunnitteluSopimus?.osapuolet?.length ?? 0) > 1;
   }
 
-  isElyTilaaja(): boolean {
-    return this.velho.suunnittelustaVastaavaViranomainen?.toString().endsWith("ELY") ?? false;
-  }
-
   get osapuoli(): string {
     const suunnitteluSopimus = this.suunnitteluSopimus;
     if (suunnitteluSopimus) {
@@ -270,12 +259,7 @@ export class CommonKutsuAdapter {
       throw new Error(`Projektipäällikkö tai sen organisaatiotieto puuttuu`);
     }
 
-    return this.getLocalizedOrganization(
-      projektiPaallikko.organisaatio,
-      projektiPaallikko.elyOrganisaatio,
-      projektiPaallikko.evkOrganisaatio,
-      undefined
-    );
+    return this.getLocalizedOrganization(projektiPaallikko.organisaatio, projektiPaallikko.evkOrganisaatio, undefined);
   }
 
   static tilaajaOrganisaatioForViranomainen(viranomainen: SuunnittelustaVastaavaViranomainen | null, kieli: KaannettavaKieli): string {
@@ -423,11 +407,6 @@ export class CommonKutsuAdapter {
   get tietosuojaurl(): string {
     if (this.isVaylaTilaaja()) {
       return this.selectText("https://www.vayla.fi/tietosuoja", "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy");
-    } else if (this.isElyTilaaja()) {
-      return this.selectText(
-        "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely",
-        "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
-      );
     } else {
       return this.selectText(
         "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely",
@@ -652,13 +631,12 @@ export class CommonKutsuAdapter {
     puhelinnumero,
     sahkoposti,
     titteli,
-    elyOrganisaatio,
     evkOrganisaatio,
   }: Yhteystieto): LokalisoituYhteystieto {
     return {
       etunimi: formatProperNoun(etunimi),
       sukunimi: formatProperNoun(sukunimi),
-      organisaatio: this.getLocalizedOrganization(organisaatio, elyOrganisaatio, evkOrganisaatio, kunta),
+      organisaatio: this.getLocalizedOrganization(organisaatio, evkOrganisaatio, kunta),
       puhelinnumero,
       sahkoposti,
       titteli,
@@ -667,19 +645,12 @@ export class CommonKutsuAdapter {
 
   private getLocalizedOrganization(
     organisaatio: string | undefined,
-    elyOrganisaatio: ELY | undefined,
     evkOrganisaatio: Elinvoimakeskus | undefined,
     kunta: number | null | undefined
   ) {
     let organisaatioTeksti = organisaatio ?? "";
     if (kunta) {
       organisaatioTeksti = kuntametadata.nameForKuntaId(kunta, this.kieli);
-    } else if (organisaatioIsEly(organisaatio)) {
-      const elyTranslateKey = elyOrganisaatio ? `viranomainen.${elyOrganisaatio}` : "ely-keskus";
-      const kaannos = translate(elyTranslateKey, this.kieli);
-      if (kaannos) {
-        organisaatioTeksti = kaannos;
-      }
     } else if (organisaatioIsEvk(organisaatio)) {
       const evkTranslateKey = evkOrganisaatio ? `viranomainen.${evkOrganisaatio}` : "elinvoimakeskus";
       const kaannos = translate(evkTranslateKey, this.kieli);
