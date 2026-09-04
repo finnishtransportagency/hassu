@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { Elinvoimakeskus, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
+import { ELY, Elinvoimakeskus, KayttajaTyyppi, ProjektiKayttajaInput } from "../../common/graphql/apiModel";
 import { addAgencyNumberTests, puhelinNumeroSchema } from "hassu-common/schema/puhelinNumero";
 import { isAorLTunnus } from "hassu-common/util/isAorLTunnus";
 import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
@@ -19,6 +19,7 @@ export const kayttoOikeudetSchema = Yup.array().of(
         .notRequired()
         .nullable(true),
       yleinenYhteystieto: Yup.boolean().notRequired(),
+      elyOrganisaatio: Yup.mixed().oneOf([...Object.values(ELY), undefined, null]).notRequired().nullable(true),
       evkOrganisaatio: Yup.mixed()
         .oneOf([...Object.values(Elinvoimakeskus), undefined, null])
         .when("organisaatio", {

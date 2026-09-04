@@ -119,12 +119,11 @@ const defaultFormValues: (kayttoOikeudet: ProjektiKayttaja[], oid: string, versi
   versio: versio,
   kayttoOikeudet:
     kayttoOikeudet?.map(
-      ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, evkOrganisaatio, organisaatio }) => ({
+      ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, evkOrganisaatio, organisaatio }) => ({
         kayttajatunnus,
         puhelinnumero: puhelinnumero || "",
         tyyppi,
         yleinenYhteystieto: !!yleinenYhteystieto,
-        elyOrganisaatio: elyOrganisaatio || null,
         evkOrganisaatio: evkOrganisaatio || null,
         organisaatio: organisaatio || "",
       })
