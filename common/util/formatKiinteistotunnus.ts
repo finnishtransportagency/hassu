@@ -12,7 +12,7 @@ export function formatKiinteistotunnusForDatabase(tunnus?: string | null): strin
   }
   const osienPituudet = [3, 3, 4, 4];
   const tunnusosat = tunnus.split("-");
-  if (tunnusosat.length !== osienPituudet.length && tunnusosat.every((osa) => !isNaN(+osa))) {
+  if (tunnusosat.length !== osienPituudet.length || !tunnusosat.every((osa) => !isNaN(+osa))) {
     throw Error("Virheellinen kiinteistötunnus");
   }
   return osienPituudet.map<string>((osanPituus, index) => tunnusosat[index].padStart(osanPituus, "0")).join("");

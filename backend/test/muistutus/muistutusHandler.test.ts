@@ -129,6 +129,31 @@ describe("muistutusHandler", () => {
         expect(updateCommand.args[0].input.ExpressionAttributeNames["#m"]).to.equal("muistuttajat");
       });
 
+      it("should save kiinteistotunnus to database and include it in email", async () => {
+        sinon
+          .stub(muistutusHandler, "getLoggedInUser")
+          .returns({ "custom:hetu": "12123-041212", given_name: "Mika", family_name: "Muistuttaja" } as SuomiFiCognitoKayttaja);
+        const dbMockClient = mockClient(DynamoDBDocumentClient);
+        mockClient(SQSClient);
+        const muistutusInput: MuistutusInput = {
+          katuosoite: "Muistojentie 1 a",
+          postitoimipaikka: "Helsinki",
+          postinumero: "00100",
+          maa: "FI",
+          sahkoposti: "test@test.fi",
+          muistutus: "Testiteksti",
+          liitteet: [],
+          kiinteistotunnus: "091-123-0001-0001",
+        };
+        MockDate.set("2024-04-09T03:00");
+        await muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput });
+
+        const m = dbMockClient.commandCalls(PutCommand)[0].args[0].input.Item as DBMuistuttaja;
+        expect(m.kiinteistotunnus).to.equal("09112300010001");
+        const emailText: string = sendTurvapostiEmailStub.getCalls()[0].args[0].text;
+        expect(emailText).to.include("Kiinteistötunnus\n91-123-1-1");
+      });
+
       it("should send emails to kirjaamo and muistuttaja successfully", async () => {
         mockClient(DynamoDBDocumentClient);
         const sqsMock = mockClient(SQSClient);

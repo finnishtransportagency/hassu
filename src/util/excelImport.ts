@@ -1,5 +1,5 @@
 // Contains code generated or recommended by Amazon Q
-import { OMISTAJA_EXCEL_HEADERS } from "common/excelConstants";
+import { TIEDOTETTAVA_EXCEL_HEADERS } from "common/excelConstants";
 import { OMISTAJA_EXCEL_SHEETS } from "common/excelConstants";
 import lookup from "country-code-lookup";
 
@@ -14,18 +14,18 @@ export type ExcelColumnIndices = {
 };
 
 export function findColumnIndices(rows: unknown[][]): ExcelColumnIndices | null {
-  const headerRow = rows.find((row) => row.some((cell) => String(cell ?? "").trim() === OMISTAJA_EXCEL_HEADERS.kiinteistotunnus));
+  const headerRow = rows.find((row) => row.some((cell) => String(cell ?? "").trim() === TIEDOTETTAVA_EXCEL_HEADERS.kiinteistotunnus));
   if (!headerRow) {
     return null;
   }
   const indexOf = (header: string) => headerRow.findIndex((cell) => String(cell ?? "").trim() === header);
   return {
-    kiinteistotunnus: indexOf(OMISTAJA_EXCEL_HEADERS.kiinteistotunnus),
-    nimi: indexOf(OMISTAJA_EXCEL_HEADERS.nimi),
-    postiosoite: indexOf(OMISTAJA_EXCEL_HEADERS.postiosoite),
-    postinumero: indexOf(OMISTAJA_EXCEL_HEADERS.postinumero),
-    postitoimipaikka: indexOf(OMISTAJA_EXCEL_HEADERS.postitoimipaikka),
-    maa: indexOf(OMISTAJA_EXCEL_HEADERS.maa),
+    kiinteistotunnus: indexOf(TIEDOTETTAVA_EXCEL_HEADERS.kiinteistotunnus),
+    nimi: indexOf(TIEDOTETTAVA_EXCEL_HEADERS.nimiOmistaja),
+    postiosoite: indexOf(TIEDOTETTAVA_EXCEL_HEADERS.postiosoite),
+    postinumero: indexOf(TIEDOTETTAVA_EXCEL_HEADERS.postinumero),
+    postitoimipaikka: indexOf(TIEDOTETTAVA_EXCEL_HEADERS.postitoimipaikka),
+    maa: indexOf(TIEDOTETTAVA_EXCEL_HEADERS.maa),
     headerRowIndex: rows.indexOf(headerRow),
   };
 }

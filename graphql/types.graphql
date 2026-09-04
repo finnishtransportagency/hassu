@@ -1645,6 +1645,7 @@ type Muistuttaja {
   viimeisinLahetysaika: String
   viimeisinTila: TiedotettavanLahetyksenTila
   viimeisinLahetysTapa: LahetysTapa
+  kiinteistotunnus: String
 }
 
 type Muistuttajat {

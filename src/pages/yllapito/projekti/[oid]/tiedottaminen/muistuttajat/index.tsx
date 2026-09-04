@@ -8,6 +8,7 @@ import { H2 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Stack } from "@mui/system";
 import { GrayBackgroundText } from "@components/projekti/GrayBackgroundText";
+import { formatKiinteistotunnusForDisplay } from "common/util/formatKiinteistotunnus";
 import { useProjektinTiedottaminen } from "src/hooks/useProjektinTiedottaminen";
 import TiedotettavaHaitari, { GetTiedotettavaFunc } from "@components/projekti/tiedottaminen/TiedotettavaHaitari";
 import { Muistuttaja } from "@services/api";
@@ -27,6 +28,15 @@ export default function Muistuttajat() {
 }
 
 const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
+  {
+    header: "Kiinteistötunnus",
+    accessorFn: (row) => formatKiinteistotunnusForDisplay(row.kiinteistotunnus),
+    id: "kiinteistotunnus_suomifi",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
   {
     header: "Nimi",
     accessorKey: "nimi",
@@ -75,6 +85,15 @@ const columnsSuomifi: ColumnDef<Muistuttaja>[] = [
 ];
 
 const columnsMuut: ColumnDef<Muistuttaja>[] = [
+  {
+    header: "Kiinteistötunnus",
+    accessorFn: (row) => formatKiinteistotunnusForDisplay(row.kiinteistotunnus),
+    id: "kiinteistotunnus_muut",
+    meta: {
+      widthFractions: 2,
+      minWidth: 140,
+    },
+  },
   {
     header: "Nimi",
     accessorKey: "nimi",

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { Autocomplete, DialogActions, DialogContent, styled, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React, { ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
@@ -66,6 +67,7 @@ const getDefaultFormValues: (kayttaja: SuomifiKayttaja | undefined) => Muistutus
     liitteet: [],
     sahkoposti: kayttaja?.email ?? "",
     puhelinnumero: "",
+    kiinteistotunnus: "",
   };
 };
 
@@ -286,6 +288,10 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
               <TextFieldWithController
                 controllerProps={{ control, name: "puhelinnumero", constructErrorMessage }}
                 label={t("common:puhelinnumero")}
+              />
+              <TextFieldWithController
+                controllerProps={{ control, name: "kiinteistotunnus", constructErrorMessage }}
+                label={t("projekti:muistutuslomake.kiinteistotunnus")}
               />
             </HassuGrid>
           </HassuStack>

@@ -80,4 +80,5 @@ export type Muistutus = {
   liitteet?: string[] | null;
   maakoodi?: string | null;
   puhelinnumero?: string | null;
+  kiinteistotunnus?: string | null;
 };
