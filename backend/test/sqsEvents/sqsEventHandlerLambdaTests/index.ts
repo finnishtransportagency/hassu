@@ -23,3 +23,5 @@ export * from "./ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET_doesNotZipNotReadyFiles";
 export * from "./ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET_zipsAllEvenWithNoFiles";
 
 export * from "./ZIP_NAHTAVILLAOLO_zipReadyNahtavillaoloFiles";
+
+export * from "./GENERATE_MAANOMISTAJALUETTELO";

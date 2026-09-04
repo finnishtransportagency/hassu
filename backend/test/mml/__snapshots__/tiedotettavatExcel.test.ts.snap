@@ -21,7 +21,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -32,7 +32,7 @@ Array [
     "Vantaa",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Lähetys epäonnistui",
     "Lähetys ei onnistunut",
   ],
 ]
@@ -59,7 +59,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -70,7 +70,7 @@ Array [
     "Vantaa",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Lähetys epäonnistui",
     "Lähetys ei onnistunut",
   ],
 ]
@@ -97,7 +97,7 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Suomi.fi: kirje",
     "04.11.2024 10:00:00+02:00",
   ],
   Array [
@@ -108,7 +108,7 @@ Array [
     "Vantaa",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Lähetys epäonnistui",
     "Lähetys ei onnistunut",
   ],
 ]
@@ -134,7 +134,7 @@ Array [
     null,
     null,
     "22.02.2024 08:43:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -144,7 +144,7 @@ Array [
     "Espoo",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -154,7 +154,7 @@ Array [
     "Rovaniemi",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
 ]
 `;
@@ -179,7 +179,7 @@ Array [
     null,
     null,
     "22.02.2024 08:43:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -189,7 +189,7 @@ Array [
     "Espoo",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -199,7 +199,7 @@ Array [
     "Rovaniemi",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
 ]
 `;
@@ -208,6 +208,7 @@ exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon hyv
 Array [
   Array [
     "Kuulutus suunnitelman hyväksymisestä",
+    null,
     null,
     null,
     null,
@@ -225,9 +226,11 @@ Array [
     null,
     null,
     null,
+    null,
   ],
   Array [
     "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla",
+    null,
     null,
     null,
     null,
@@ -245,6 +248,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "123-456-1-291",
@@ -254,7 +258,8 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Suomi.fi: kirje",
+    "04.11.2024 10:00:00+02:00",
   ],
   Array [
     "123-456-1-291",
@@ -264,7 +269,8 @@ Array [
     "Vantaa",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Lähetys epäonnistui",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
@@ -319,7 +325,7 @@ Array [
     null,
     null,
     "22.02.2024 08:43:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -329,7 +335,7 @@ Array [
     "Espoo",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -339,7 +345,7 @@ Array [
     "Rovaniemi",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
 ]
 `;
@@ -473,7 +479,7 @@ Array [
     null,
     null,
     "22.02.2024 08:43:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -483,7 +489,7 @@ Array [
     "Espoo",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -493,7 +499,7 @@ Array [
     "Rovaniemi",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
 ]
 `;
@@ -502,6 +508,7 @@ exports[`tiedotettavatExcel tallenna kiinteistön omistajat excel tiedostoon nä
 Array [
   Array [
     "Kuulutus suunnitelman nähtäville asettamisesta",
+    null,
     null,
     null,
     null,
@@ -519,9 +526,11 @@ Array [
     null,
     null,
     null,
+    null,
   ],
   Array [
     "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla",
+    null,
     null,
     null,
     null,
@@ -539,6 +548,7 @@ Array [
     "Maa",
     "Tiedot haettu",
     "Tiedotustapa",
+    "Lähetysaika",
   ],
   Array [
     "123-456-1-291",
@@ -548,7 +558,8 @@ Array [
     "Helsinki",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Suomi.fi: kirje",
+    "04.11.2024 10:00:00+02:00",
   ],
   Array [
     "123-456-1-291",
@@ -558,7 +569,8 @@ Array [
     "Vantaa",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Suomi.fi",
+    "Lähetys epäonnistui",
+    "Lähetys ei onnistunut",
   ],
 ]
 `;
@@ -613,7 +625,7 @@ Array [
     null,
     null,
     "22.02.2024 08:43:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -623,7 +635,7 @@ Array [
     "Espoo",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
   Array [
     "123-456-1-291",
@@ -633,7 +645,7 @@ Array [
     "Rovaniemi",
     "Suomi",
     "21.02.2024 10:01:12+02:00",
-    "Kirjeitse",
+    "Ei voida tiedottaa",
   ],
 ]
 `;

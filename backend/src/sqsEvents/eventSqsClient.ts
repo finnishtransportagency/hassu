@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { SqsEvent, SqsEventType } from "./sqsEvent";
 import { getSQS } from "../aws/clients/getSQS";
 import { config } from "../config";
@@ -36,6 +37,10 @@ class EventSqsClient {
 
   async synchronizeAineisto(oid: string, approvalType?: PublishOrExpireEventType, reason?: string) {
     await this.addEventToSqsQueue({ type: SqsEventType.SYNCHRONIZE, oid, approvalType, reason });
+  }
+
+  async generateMaanomistajaluettelo(oid: string, approvalType: PublishOrExpireEventType) {
+    await this.addEventToSqsQueue({ type: SqsEventType.GENERATE_MAANOMISTAJALUETTELO, oid, approvalType });
   }
 
   async addEventToSqsQueue(params: SqsEvent) {

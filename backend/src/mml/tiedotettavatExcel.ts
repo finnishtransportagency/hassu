@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import {
   AsiakirjaTyyppi,
   Excel,
+  LahetysTapa,
   LataaTiedotettavatExcelQueryVariables,
   ProjektiTyyppi,
   TiedotettavanLahetyksenTila,
@@ -208,7 +209,7 @@ type Rivi = {
 };
 
 function getLahetysaika(lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[]) {
-  if (!lahetykset) {
+  if (!lahetykset?.length) {
     return "";
   }
   const lahetys = [...lahetykset].sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
@@ -216,6 +217,19 @@ function getLahetysaika(lahetykset?: { tila: TiedotettavanLahetyksenTila; lahety
     return "Lähetys ei onnistunut";
   }
   return formatDate(lahetys.lahetysaika);
+}
+
+function getTiedotustapa(
+  suomifiLahetys: boolean | undefined,
+  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; lahetysTapa?: LahetysTapa }[]
+): string {
+  if (suomifiLahetys === false) return "Ei voida tiedottaa";
+  if (!lahetykset?.length) return "Ei vielä tiedotettu";
+  const lahetys = [...lahetykset].sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
+  if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
+    return "Lähetys epäonnistui";
+  }
+  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : "Suomi.fi: kirje";
 }
 
 async function haeOmistajat(oid: string): Promise<Rivi[]> {
@@ -230,7 +244,7 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
         postitoimipaikka: o.paikkakunta ?? "",
         maa: o.maakoodi ? getLocalizedCountryName("fi", o.maakoodi) : "",
         haettu: o.paivitetty ?? o.lisatty,
-        tiedotustapa: o.suomifiLahetys ? "Suomi.fi" : "Kirjeitse",
+        tiedotustapa: getTiedotustapa(o.suomifiLahetys, o.lahetykset),
         suomifiLahetys: o.suomifiLahetys,
         lahetysaika: getLahetysaika(o.lahetykset),
       };
@@ -258,36 +272,22 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
 }
 
 async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
-  data[0].push([
-    {
-      value:
-        vaihe === Vaihe.ALOITUSKUULUTUS
-          ? "Kuulutus suunnittelun aloittamisesta"
-          : vaihe === Vaihe.NAHTAVILLAOLO
-          ? "Kuulutus suunnitelman nähtäville asettamisesta"
-          : "Kuulutus suunnitelman hyväksymisestä",
-      fontWeight: "bold",
-    },
-  ]);
+  const otsikko =
+    vaihe === Vaihe.ALOITUSKUULUTUS
+      ? "Kuulutus suunnittelun aloittamisesta"
+      : vaihe === Vaihe.NAHTAVILLAOLO
+      ? "Kuulutus suunnitelman nähtäville asettamisesta"
+      : "Kuulutus suunnitelman hyväksymisestä";
+  data[0].push([{ value: otsikko, fontWeight: "bold" }]);
   data[0].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
   data[0].push([{ value: "Kiinteistönomistajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
-  data[0].push(lisaaOtsikko());
+  data[0].push(lisaaOtsikkoWithLahetysaika());
   const omistajat = await haeOmistajat(oid);
   for (const omistaja of omistajat.filter((o) => o.suomifiLahetys)) {
-    data[0].push(lisaaRivi(omistaja));
+    data[0].push(lisaaRiviWithLahetysaika(omistaja));
   }
   data[1] = [];
-  data[1].push([
-    {
-      value:
-        vaihe === Vaihe.ALOITUSKUULUTUS
-          ? "Kuulutus suunnittelun aloittamisesta"
-          : vaihe === Vaihe.NAHTAVILLAOLO
-          ? "Kuulutus suunnitelman nähtäville asettamisesta"
-          : "Kuulutus suunnitelman hyväksymisestä",
-      fontWeight: "bold",
-    },
-  ]);
+  data[1].push([{ value: otsikko, fontWeight: "bold" }]);
   data[1].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
   data[1].push([{ value: "Kiinteistönomistajat, joille ei ole yhteystietoja", fontWeight: "bold" }]);
   data[1].push(lisaaOtsikko());
@@ -298,12 +298,7 @@ async function lisaaKiinteistonOmistajat(data: SheetData[], oid: string, vaihe: 
 
 async function lisaaMuistuttajat(data: SheetData[], oid: string, vaihe: Vaihe, kuulutusPaiva: string | undefined | null) {
   data[2] = [];
-  data[2].push([
-    {
-      value: "Kuulutus suunnitelman hyväksymisestä",
-      fontWeight: "bold",
-    },
-  ]);
+  data[2].push([{ value: "Kuulutus suunnitelman hyväksymisestä", fontWeight: "bold" }]);
   data[2].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
   data[2].push([{ value: "Muistuttajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
   data[2].push(lisaaMuistuttajanOtsikko());
@@ -312,12 +307,7 @@ async function lisaaMuistuttajat(data: SheetData[], oid: string, vaihe: Vaihe, k
     data[2].push(lisaaMuistuttajaRivi(muistuttaja));
   }
   data[3] = [];
-  data[3].push([
-    {
-      value: "Kuulutus suunnitelman hyväksymisestä",
-      fontWeight: "bold",
-    },
-  ]);
+  data[3].push([{ value: "Kuulutus suunnitelman hyväksymisestä", fontWeight: "bold" }]);
   data[3].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
   data[3].push([{ value: "Muistuttajien tiedotus muilla tavoin", fontWeight: "bold" }]);
   data[3].push(lisaaMuistuttajanOtsikko());
@@ -339,7 +329,7 @@ export async function generateExcel(
   const columns: Columns[] = [];
   if (vaihe === Vaihe.ALOITUSKUULUTUS || vaihe === Vaihe.NAHTAVILLAOLO || vaihe === Vaihe.HYVAKSYMISPAATOS) {
     sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiKiinteistonomistajat, OMISTAJA_EXCEL_SHEETS.muutKiinteistonomistajat);
-    columns.push(getKiinteistonomistajaColumns(), getKiinteistonomistajaColumns());
+    columns.push(getKiinteistonomistajaColumnsWithLahetysaika(), getKiinteistonomistajaColumns());
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
     if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
       sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiMuistuttajat, OMISTAJA_EXCEL_SHEETS.muutMuistuttajat);
