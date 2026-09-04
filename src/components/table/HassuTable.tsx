@@ -419,7 +419,7 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
       <ConditionalWrapper
         condition={!!href}
         wrapper={(children) => (
-          <Link legacyBehavior href={href as string} passHref>
+          <Link href={href as string}>
             {children}
           </Link>
         )}
@@ -432,7 +432,6 @@ function BasicRowWithoutStyles<T>({ row, table, gridTemplateColumns, index }: Ro
           sx={!additionalStyles ? bodyTrWrapperStyles : { ...bodyTrWrapperStyles, ...additionalStyles }}
           data-index={index}
           onClick={onClick}
-          as={href ? "a" : undefined}
         >
           <BodyTr
             sx={{
