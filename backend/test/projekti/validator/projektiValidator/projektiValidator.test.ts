@@ -7,7 +7,7 @@ import { personSearch } from "../../../../src/personSearch/personSearchClient";
 import { PersonSearchFixture } from "../../../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../../src/projekti/validator/projektiValidator";
-import { AineistoTila, ELY, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import { AineistoTila, Elinvoimakeskus, KayttajaTyyppi, ProjektiKayttajaInput, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import assert from "assert";
 import { kategorisoimattomatId } from "hassu-common/aineistoKategoriat";
 import { Aineisto } from "../../../../src/database/model";
@@ -16,7 +16,7 @@ import { assertIsDefined } from "../../../../src/util/assertions";
 import { expect } from "chai";
 import { parameters } from "../../../../src/aws/parameters";
 
-const ELY_UID = "A1";
+const EVK_UID = "A1";
 const VAYLA_UID = "A2";
 
 describe("projektiValidator", () => {
@@ -25,12 +25,12 @@ describe("projektiValidator", () => {
 
   beforeEach(() => {
     const personSearchFixture = new PersonSearchFixture();
-    const elyUser = personSearchFixture.createKayttaja(ELY_UID, "ELY");
+    const evkUser = personSearchFixture.createKayttaja(EVK_UID, "Elinvoimakeskus");
     const vaylaUser = personSearchFixture.createKayttaja(VAYLA_UID);
     const kayttaja1 = personSearchFixture.createKayttaja("A123");
     const kayttaja2 = personSearchFixture.createKayttaja("A000111");
     const kayttaja3 = personSearchFixture.createKayttaja("A000123");
-    sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([elyUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
+    sinon.stub(personSearch, "getKayttajas").resolves(Kayttajas.fromKayttajaList([evkUser, vaylaUser, kayttaja1, kayttaja2, kayttaja3]));
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
 
@@ -239,27 +239,27 @@ describe("projektiValidator", () => {
     await validateTallennaProjekti(projekti, inputWithKuulutusData);
   });
 
-  it("elyOrganisaatio tiedon voi tallettaa kayttajalle, jolla organisaatio on asetettu 'ELY':ksi", async () => {
+  it("evkOrganisaatio tiedon voi tallettaa kayttajalle, jolla organisaatio on asetettu 'Elinvoimakeskus':ksi", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kayttoOikeudet: [{ kayttajatunnus: ELY_UID, puhelinnumero: "0441231234", elyOrganisaatio: ELY.HAME_ELY }],
+      kayttoOikeudet: [{ kayttajatunnus: EVK_UID, puhelinnumero: "0441231234", evkOrganisaatio: Elinvoimakeskus.SISA_SUOMEN_EVK }],
     };
-    // Tallennus on OK kun tallennettavan käyttäjän organisaatio on 'ELY'
+    // Tallennus on OK kun tallennettavan käyttäjän organisaatio on 'EVK'
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.fulfilled;
   });
 
-  it("elyOrganisaatio tietoa ei voi tallettaa kayttajalle, jolla organisaatio ei ole 'ELY'", async () => {
+  it("evkOrganisaatio tietoa ei voi tallettaa kayttajalle, jolla organisaatio ei ole 'Elinvoimakeskus'", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const projekti = fixture.dbProjektiHyvaksymisMenettelyssa();
     const input: TallennaProjektiInput = {
       oid: projekti.oid,
       versio: projekti.versio,
-      kayttoOikeudet: [{ kayttajatunnus: VAYLA_UID, puhelinnumero: "0441231234", elyOrganisaatio: ELY.HAME_ELY }],
+      kayttoOikeudet: [{ kayttajatunnus: VAYLA_UID, puhelinnumero: "0441231234", evkOrganisaatio: Elinvoimakeskus.SISA_SUOMEN_EVK }],
     };
-    // Tallennus epäonnistuu kun tallennettavan käyttäjän organisaatio ei ole 'ELY'
+    // Tallennus epäonnistuu kun tallennettavan käyttäjän organisaatio ei ole 'Elinvoimakeskus'
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.be.rejectedWith(IllegalArgumentError);
   });
 });

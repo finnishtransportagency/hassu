@@ -2,9 +2,9 @@ import { describe, it } from "mocha";
 import { KayttoOikeudetManager } from "../../src/projekti/kayttoOikeudetManager";
 import { PersonSearchFixture } from "../personSearch/lambda/personSearchFixture";
 import { Kayttajas } from "../../src/personSearch/kayttajas";
-import { ELY, Kayttaja, KayttajaTyyppi, ProjektiKayttajaInput } from "hassu-common/graphql/apiModel";
+import { Elinvoimakeskus, Kayttaja, KayttajaTyyppi, ProjektiKayttajaInput } from "hassu-common/graphql/apiModel";
 import { DBVaylaUser } from "../../src/database/model";
-import { organisaatioIsEly } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 
 import { expect } from "chai";
 
@@ -21,9 +21,9 @@ describe("KayttoOikeudetManager", () => {
   describe("manages users correcly", () => {
     const personSearchFixture: PersonSearchFixture = new PersonSearchFixture();
     const vaylaKayttajaA1 = personSearchFixture.createKayttaja("A1");
-    const elyKayttajaA2 = personSearchFixture.createKayttaja("A2", "ELY");
+    const evkKayttajaA2 = personSearchFixture.createKayttaja("A2", "Elinvoimakeskus");
     const vaylaKayttajaA3 = personSearchFixture.createKayttaja("A3");
-    const elyKayttajaA4 = personSearchFixture.createKayttaja("A4", "ELY");
+    const evkKayttajaA4 = personSearchFixture.createKayttaja("A4", "Elinvoimakeskus");
     const konsulttiKayttajaLX5 = personSearchFixture.createKayttaja("LX5", "ramboll");
 
     let kayttajas: Kayttajas;
@@ -51,7 +51,7 @@ describe("KayttoOikeudetManager", () => {
     }
 
     beforeEach(() => {
-      kayttajas = Kayttajas.fromKayttajaList([vaylaKayttajaA1, elyKayttajaA2, vaylaKayttajaA3, elyKayttajaA4, konsulttiKayttajaLX5]);
+      kayttajas = Kayttajas.fromKayttajaList([vaylaKayttajaA1, evkKayttajaA2, vaylaKayttajaA3, evkKayttajaA4, konsulttiKayttajaLX5]);
       users = [
         {
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
@@ -65,12 +65,12 @@ describe("KayttoOikeudetManager", () => {
         },
         {
           tyyppi: KayttajaTyyppi.VARAHENKILO,
-          kayttajatunnus: elyKayttajaA2.uid as string,
-          email: elyKayttajaA2.email as string,
-          etunimi: elyKayttajaA2.etunimi as string,
-          sukunimi: elyKayttajaA2.sukunimi as string,
-          organisaatio: elyKayttajaA2.organisaatio as string,
-          puhelinnumero: elyKayttajaA2.puhelinnumero as string,
+          kayttajatunnus: evkKayttajaA2.uid as string,
+          email: evkKayttajaA2.email as string,
+          etunimi: evkKayttajaA2.etunimi as string,
+          sukunimi: evkKayttajaA2.sukunimi as string,
+          organisaatio: evkKayttajaA2.organisaatio as string,
+          puhelinnumero: evkKayttajaA2.puhelinnumero as string,
           muokattavissa: false,
         },
         {
@@ -94,7 +94,7 @@ describe("KayttoOikeudetManager", () => {
       expectProjektiPaallikko(manager, "A1");
 
       // Lisää varahenkilö Velhosta
-      manager.addVarahenkiloFromEmail(elyKayttajaA2.email);
+      manager.addVarahenkiloFromEmail(evkKayttajaA2.email);
       expectProjektiPaallikko(manager, "A1");
       expectVarahenkilo(manager, "A2", false);
 
@@ -116,24 +116,24 @@ describe("KayttoOikeudetManager", () => {
           puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA2.uid!,
-          puhelinnumero: elyKayttajaA2.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA2.uid!,
+          puhelinnumero: evkKayttajaA2.puhelinnumero!,
         },
         {
           kayttajatunnus: vaylaKayttajaA3.uid!,
           puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA4.uid!,
-          puhelinnumero: elyKayttajaA4.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA4.uid!,
+          puhelinnumero: evkKayttajaA4.puhelinnumero!,
           yleinenYhteystieto: true,
         },
       ]);
 
       expectKayttaja(manager, "A1", { puhelinnumero: vaylaKayttajaA1.puhelinnumero! });
-      expectKayttaja(manager, "A2", { puhelinnumero: elyKayttajaA2.puhelinnumero! });
+      expectKayttaja(manager, "A2", { puhelinnumero: evkKayttajaA2.puhelinnumero! });
       expectKayttaja(manager, "A3", { puhelinnumero: vaylaKayttajaA3.puhelinnumero! });
-      expectKayttaja(manager, "A4", { puhelinnumero: elyKayttajaA4.puhelinnumero! });
+      expectKayttaja(manager, "A4", { puhelinnumero: evkKayttajaA4.puhelinnumero! });
       expect(manager.getKayttoOikeudet()).to.have.length(5);
       expect(manager.getKayttoOikeudet()).toMatchSnapshot();
 
@@ -144,16 +144,16 @@ describe("KayttoOikeudetManager", () => {
           puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA2.uid!,
-          puhelinnumero: elyKayttajaA2.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA2.uid!,
+          puhelinnumero: evkKayttajaA2.puhelinnumero!,
         },
         {
           kayttajatunnus: vaylaKayttajaA3.uid!,
           puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA4.uid!,
-          puhelinnumero: elyKayttajaA4.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA4.uid!,
+          puhelinnumero: evkKayttajaA4.puhelinnumero!,
           tyyppi: KayttajaTyyppi.VARAHENKILO,
         },
       ]);
@@ -169,16 +169,16 @@ describe("KayttoOikeudetManager", () => {
           puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA2.uid!,
-          puhelinnumero: elyKayttajaA2.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA2.uid!,
+          puhelinnumero: evkKayttajaA2.puhelinnumero!,
         },
         {
           kayttajatunnus: vaylaKayttajaA3.uid!,
           puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA4.uid!,
-          puhelinnumero: elyKayttajaA4.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA4.uid!,
+          puhelinnumero: evkKayttajaA4.puhelinnumero!,
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
         },
       ]);
@@ -194,8 +194,8 @@ describe("KayttoOikeudetManager", () => {
           puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
         },
         {
-          kayttajatunnus: elyKayttajaA4.uid!,
-          puhelinnumero: elyKayttajaA4.puhelinnumero!,
+          kayttajatunnus: evkKayttajaA4.uid!,
+          puhelinnumero: evkKayttajaA4.puhelinnumero!,
           tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
         },
       ]);
@@ -255,8 +255,8 @@ describe("KayttoOikeudetManager", () => {
           puhelinnumero: vaylaKayttajaA1.puhelinnumero as string,
         },
         {
-          kayttajatunnus: elyKayttajaA2.uid as string,
-          puhelinnumero: elyKayttajaA2.puhelinnumero as string,
+          kayttajatunnus: evkKayttajaA2.uid as string,
+          puhelinnumero: evkKayttajaA2.puhelinnumero as string,
         },
       ]);
       const kayttoOikeudet = manager.getKayttoOikeudet();
@@ -265,33 +265,48 @@ describe("KayttoOikeudetManager", () => {
 
     it("should not allow kunnanEdustaja to be removed when doing addProjektiPaallikkoFromEmail", async () => {
       const manager = new KayttoOikeudetManager(users, kayttajas, vaylaKayttajaA1.uid || undefined);
-      manager.addProjektiPaallikkoFromEmail(elyKayttajaA4.email);
+      manager.addProjektiPaallikkoFromEmail(evkKayttajaA4.email);
       const kayttoOikeudet = manager.getKayttoOikeudet();
       expect(kayttoOikeudet.length).eql(4);
     });
 
     it("should not allow kunnanEdustaja to be removed when doing addVarahenkiloFromEmail", async () => {
-      const manager = new KayttoOikeudetManager(users, kayttajas, elyKayttajaA2.uid || undefined);
-      manager.addVarahenkiloFromEmail(elyKayttajaA4.email);
+      const manager = new KayttoOikeudetManager(users, kayttajas, evkKayttajaA2.uid || undefined);
+      manager.addVarahenkiloFromEmail(evkKayttajaA4.email);
       const kayttoOikeudet = manager.getKayttoOikeudet();
       expect(kayttoOikeudet.length).eql(4);
     });
 
-    it("should modify elyOrganisaatio only for users in organisation 'ELY'", async () => {
+    it("should modify evkOrganisaatio only for users in organisation 'EVK'", async () => {
       const manager = new KayttoOikeudetManager(users, kayttajas);
-      const muutoksetElyorganisaatioilla: ProjektiKayttajaInput[] = [
-        { kayttajatunnus: vaylaKayttajaA1.uid!, puhelinnumero: vaylaKayttajaA1.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
-        { kayttajatunnus: elyKayttajaA2.uid!, puhelinnumero: elyKayttajaA2.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
-        { kayttajatunnus: vaylaKayttajaA3.uid!, puhelinnumero: vaylaKayttajaA3.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
-        { kayttajatunnus: elyKayttajaA4.uid!, puhelinnumero: elyKayttajaA4.puhelinnumero!, elyOrganisaatio: ELY.HAME_ELY },
+      const muutoksetEvkorganisaatioilla: ProjektiKayttajaInput[] = [
+        {
+          kayttajatunnus: vaylaKayttajaA1.uid!,
+          puhelinnumero: vaylaKayttajaA1.puhelinnumero!,
+        },
+        {
+          kayttajatunnus: evkKayttajaA2.uid!,
+          puhelinnumero: evkKayttajaA2.puhelinnumero!,
+          evkOrganisaatio: Elinvoimakeskus.SISA_SUOMEN_EVK,
+        },
+        {
+          kayttajatunnus: vaylaKayttajaA3.uid!,
+          puhelinnumero: vaylaKayttajaA3.puhelinnumero!,
+        },
+        {
+          kayttajatunnus: evkKayttajaA4.uid!,
+          puhelinnumero: evkKayttajaA4.puhelinnumero!,
+          evkOrganisaatio: Elinvoimakeskus.SISA_SUOMEN_EVK,
+        },
       ];
-      manager.applyChanges(muutoksetElyorganisaatioilla);
+
+      manager.applyChanges(muutoksetEvkorganisaatioilla);
       const kayttoOikeudet = manager.getKayttoOikeudet();
       kayttoOikeudet.forEach((kayttaja) => {
-        if (organisaatioIsEly(kayttaja.organisaatio)) {
-          expect(kayttaja.elyOrganisaatio).eql(ELY.HAME_ELY);
+        if (organisaatioIsEvk(kayttaja.organisaatio)) {
+          expect(kayttaja.evkOrganisaatio).eql(Elinvoimakeskus.SISA_SUOMEN_EVK);
         } else {
-          expect(kayttaja.elyOrganisaatio).eql(undefined);
+          expect(kayttaja.evkOrganisaatio).to.be.undefined;
         }
       });
     });
@@ -333,29 +348,29 @@ describe("KayttoOikeudetManager", () => {
     const tessaDB: DBVaylaUser = {
       tyyppi: KayttajaTyyppi.PROJEKTIPAALLIKKO,
       kayttajatunnus: tessaId,
-      email: "tessa.testila@ely.fi",
+      email: "tessa.testila@elinvoimakeskus.fi",
       etunimi: "Tessa",
       sukunimi: "Testilä",
-      organisaatio: "ELY",
+      organisaatio: "Elinvoimakeskus",
       puhelinnumero: "029987987987",
       muokattavissa: false,
     };
     const karriDB: DBVaylaUser = {
       tyyppi: KayttajaTyyppi.VARAHENKILO,
       kayttajatunnus: karriId,
-      email: "karri.koestus@ely.fi",
+      email: "karri.koestus@elinvoimakeskus.fi",
       etunimi: "Karri",
       sukunimi: "Koestus",
-      organisaatio: "ELY",
+      organisaatio: "Elinvoimakeskus",
       puhelinnumero: "029876876876",
       muokattavissa: false,
     };
     const mauriMaunoDB: DBVaylaUser = {
       kayttajatunnus: maurimaunoId,
-      email: "mauno.malli@ely.fi",
+      email: "mauno.malli@elinvoimakeskus.fi",
       etunimi: "Mauno",
       sukunimi: "Malli",
-      organisaatio: "ELY",
+      organisaatio: "Elinvoimakeskus",
       puhelinnumero: "029444555666",
       muokattavissa: true,
     };

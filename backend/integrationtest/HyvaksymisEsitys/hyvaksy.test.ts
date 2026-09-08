@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import sinon from "sinon";
 import * as API from "hassu-common/graphql/apiModel";
 import { DBProjekti, DBVaylaUser } from "../../src/database/model";
@@ -480,7 +481,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(ilmoitusVastaanottajille?.firstArg.attachments[0].filename).to.eql("hyvaksymisEsitys_aoa_.png");
   });
 
-  it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on ELY-keskus ja projarin organisaatio on ELY", async () => {
+  it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on EVK ja projarin organisaatio on EVK", async () => {
     userFixture.loginAs(UserFixture.pekkaProjari);
     const muokattavaHyvaksymisEsitys = { ...TEST_HYVAKSYMISESITYS, tila: API.HyvaksymisTila.ODOTTAA_HYVAKSYNTAA, palautusSyy: "Virheitä" };
     const versio = 2;
@@ -495,7 +496,8 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
           email: "email@email.com",
           kayttajatunnus: "A123",
           tyyppi: API.KayttajaTyyppi.PROJEKTIPAALLIKKO,
-          elyOrganisaatio: API.ELY.HAME_ELY,
+          organisaatio: "Elinvoimakeskus",
+          evkOrganisaatio: API.Elinvoimakeskus.SISA_SUOMEN_EVK,
           puhelinnumero: "0291234567",
         },
         {
@@ -523,7 +525,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       velho: {
         nimi: "Projektin nimi",
         asiatunnusELY: "asiatunnusELY",
-        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_ELY,
+        suunnittelustaVastaavaViranomainen: API.SuunnittelustaVastaavaViranomainen.LAPIN_EVK,
         kunnat: [91, 92],
       },
       salt: "suola",
@@ -538,10 +540,10 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
       return Array.isArray(to) && to.includes("vastaanottaja@sahkoposti.fi");
     });
     expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Asiatunnus\n\nasiatunnusELY")).to.be.true;
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Vastuuorganisaatio\n\nLapin ELY-keskus")).to.be
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Vastuuorganisaatio\n\nLapin elinvoimakeskus")).to.be
       .true;
     expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Y-tunnus\n\n2296962-1")).to.be.true;
-    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Etunimi Sukunimi Hämeen ELY-keskus")).to.be.true;
+    expect(((ilmoitusVastaanottajille?.firstArg as EmailOptions).text as string).includes("Etunimi Sukunimi Sisä-Suomen elinvoimakeskus")).to.be.true;
   });
 
   it("näyttää oikeat tiedot s.postissa, kun vastaava viranomainen on Väylävirasto ja projarin organisaatio on Väylävirasto ja asianhallinta on aktiivinen", async () => {
