@@ -13,7 +13,6 @@ import SectionContent from "@components/layout/SectionContent";
 import { H3, H4 } from "../../Headings";
 import axios from "axios";
 import useSnackbars from "src/hooks/useSnackbars";
-import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 export interface PerusosioProps {
   projekti: ProjektiLisatiedolla;
@@ -57,8 +56,6 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
     }
   }, [projekti, showErrorMessage]);
 
-  const isEvkActive = isEvkAktivoitu();
-
   return (
     <>
       <Section>
@@ -77,9 +74,9 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
           <H3>Projektin viitetieto</H3>
           <p>
             Tämä tieto on Suomi.fi-viestien tulostus-, kuoritus- ja jakelupalvelun laskutusta varten. Väylän projektissa projektikohtainen
-            maksuerätunnus/VSK-koodi. {isEvkActive ? "Elinvoimakeskuksen" : "ELYn"} projektissa käytetään oman ohjeistuksen mukaista
-            viitetietoa. Viitetiedon maksimipituus on 15 merkkiä ja se voi sisältää vain isoja kirjaimia ja numeroita. HUOM!
-            Hyväksymisesityksen mukana Traficomiin toimitettavat laskutustiedot annetaan sivulla Hyväksymisesitys.
+            maksuerätunnus/VSK-koodi. Elinvoimakeskuksen projektissa käytetään oman ohjeistuksen mukaista viitetietoa. Viitetiedon
+            maksimipituus on 15 merkkiä ja se voi sisältää vain isoja kirjaimia ja numeroita. HUOM! Hyväksymisesityksen mukana Traficomiin
+            toimitettavat laskutustiedot annetaan sivulla Hyväksymisesitys.
           </p>
           <TextInput
             label="Projektin viitetieto *"

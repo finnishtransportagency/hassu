@@ -3,9 +3,6 @@ import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../util/assertions";
 import { translate } from "../util/localization";
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
-import { isEvkAktivoitu } from "../../../common/util/isEvkAktivoitu";
-
-const isEvkAktiivinen = isEvkAktivoitu();
 
 const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Partial<Record<ProjektiTyyppi, string>>>>> = {
   ALOITUSKUULUTUS: {
@@ -64,8 +61,8 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     RATA: { [ProjektiTyyppi.RATA]: "63R", [ProjektiTyyppi.YLEINEN]: "63YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_1", [ProjektiTyyppi.YLEINEN]: isEvkAktiivinen ? "61YS" : "61YS_ely" },
-    RATA: { [ProjektiTyyppi.RATA]: "61R", [ProjektiTyyppi.YLEINEN]: isEvkAktiivinen ? "61YS" : "61YS_ely" },
+    TIE: { [ProjektiTyyppi.TIE]: "T431_1", [ProjektiTyyppi.YLEINEN]: "61YS" },
+    RATA: { [ProjektiTyyppi.RATA]: "61R", [ProjektiTyyppi.YLEINEN]: "61YS" },
   },
   HYVAKSYMISPAATOSKUULUTUS: {
     TIE: { [ProjektiTyyppi.TIE]: "T431", [ProjektiTyyppi.YLEINEN]: "60YS" },
