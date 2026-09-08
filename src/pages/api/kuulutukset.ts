@@ -11,6 +11,16 @@ function getSingleParamValue(req: NextApiRequest, paramName: string) {
   return values instanceof Array ? values[0] : values;
 }
 
+function getMultiParamValues(req: NextApiRequest, paramName: string): string[] | undefined {
+  const values = req.query[paramName];
+
+  if (!values) {
+    return undefined;
+  }
+
+  return values instanceof Array ? values : [values];
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   setupLambdaMonitoring();
   return await wrapXRayAsync("handler", async () => {
@@ -33,9 +43,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const lely = getSingleParamValue(req, "lely");
     const maakunta = getSingleParamValue(req, "maakunta");
     const elinvoimakeskus = getSingleParamValue(req, "elinvoimakeskus");
+    const projektiOids = getMultiParamValues(req, "projektiOid");
 
     try {
-      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as KaannettavaKieli, ely, lely, elinvoimakeskus, maakunta);
+      const xml = await ilmoitustauluSyoteHandler.getFeed(kieli as KaannettavaKieli, ely, lely, elinvoimakeskus, maakunta, projektiOids);
       res.setHeader("Content-Type", "application/rss+xml; charset=UTF-8");
       res.send(xml);
     } catch (e) {

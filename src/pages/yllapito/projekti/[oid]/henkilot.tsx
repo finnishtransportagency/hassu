@@ -22,7 +22,7 @@ import useApi from "src/hooks/useApi";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
 import { Kayttaja, ProjektiKayttaja, TallennaProjektiInput } from "@services/api";
-import { organisaatioIsEly, organisaatioIsEvk } from "common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 
 // Extend TallennaProjektiInput by making fields other than muistiinpano nonnullable and required
 type RequiredFields = Pick<TallennaProjektiInput, "oid" | "kayttoOikeudet" | "versio">;
@@ -142,17 +142,14 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti, initialKayttaja
       oid: projekti.oid,
       versio: projekti.versio,
       kayttoOikeudet:
-        kayttoOikeudet?.map(
-          ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, elyOrganisaatio, evkOrganisaatio, organisaatio }) => ({
-            kayttajatunnus,
-            puhelinnumero: puhelinnumero || "",
-            tyyppi,
-            yleinenYhteystieto: !!yleinenYhteystieto,
-            elyOrganisaatio: elyOrganisaatio && organisaatioIsEly(organisaatio) ? elyOrganisaatio : null,
-            evkOrganisaatio: evkOrganisaatio && organisaatioIsEvk(organisaatio) ? evkOrganisaatio : null,
-            organisaatio: organisaatio || "",
-          })
-        ) || [],
+        kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, evkOrganisaatio, organisaatio }) => ({
+          kayttajatunnus,
+          puhelinnumero: puhelinnumero || "",
+          tyyppi,
+          yleinenYhteystieto: !!yleinenYhteystieto,
+          evkOrganisaatio: evkOrganisaatio && organisaatioIsEvk(organisaatio) ? evkOrganisaatio : null,
+          organisaatio: organisaatio || "",
+        })) || [],
     }),
     [kayttoOikeudet, projekti.oid, projekti.versio]
   );
@@ -191,10 +188,9 @@ function Henkilot({ projekti, projektiLoadError, reloadProjekti, initialKayttaja
             oid: formData.oid,
             versio: formData.versio,
             kayttoOikeudet: formData.kayttoOikeudet.map(
-              ({ kayttajatunnus, puhelinnumero, elyOrganisaatio, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
+              ({ kayttajatunnus, puhelinnumero, evkOrganisaatio, tyyppi, yleinenYhteystieto }) => ({
                 kayttajatunnus,
                 puhelinnumero,
-                elyOrganisaatio,
                 evkOrganisaatio,
                 tyyppi,
                 yleinenYhteystieto,

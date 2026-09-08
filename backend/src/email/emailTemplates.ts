@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import get from "lodash/get";
 import {
   Kayttaja,
@@ -335,9 +336,7 @@ ${projekti.muokattavaHyvaksymisEsitys?.laskutustiedot?.viitetieto}
 Lisätietoja suunnitelmasta antaa 
 
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
-      projektiPaallikko?.elyOrganisaatio
-        ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
-        : projektiPaallikko?.evkOrganisaatio
+      projektiPaallikko?.evkOrganisaatio
         ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 
@@ -648,9 +647,7 @@ ${ennakkoNeuvotteluJulkaisu.lisatiedot}
 Lisätietoja suunnitelmasta antaa 
 
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
-      projektiPaallikko?.elyOrganisaatio
-        ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
-        : projektiPaallikko?.evkOrganisaatio
+      projektiPaallikko?.evkOrganisaatio
         ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 

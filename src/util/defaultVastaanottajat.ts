@@ -11,7 +11,6 @@ import {
   MaakuntaVastaanottajaInput,
 } from "@services/api";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
-import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 import { kuntametadata } from "hassu-common/kuntametadata";
 import uniqBy from "lodash/uniqBy";
 
@@ -90,7 +89,7 @@ function buildViranomaisetRecipients(
 
   // If Väylä is the responsible authority, add ELYs / kunnat
   if (vastuu === "VAYLAVIRASTO") {
-    const isEvk = isEvkAktivoitu();
+    const isEvk = true;
     const viranomaiset =
       projekti?.velho?.kunnat?.map((kuntaId) => {
         const ely = isEvk ? kuntametadata.viranomainenForKuntaId(kuntaId) : kuntametadata.elyViranomainenForKuntaId(kuntaId);

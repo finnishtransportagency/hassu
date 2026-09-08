@@ -115,7 +115,6 @@ export type HassuSSMParameters = {
   KeycloakDomain: string;
   KeycloakClientSecret: string;
   PalauteKyselyTiedot: string;
-  EvkActivationDate: string;
 };
 
 export async function readParametersByPath(path: string, region: Region): Promise<Record<string, string>> {
@@ -188,8 +187,6 @@ export async function getEnvironmentVariablesFromSSM(variables?: HassuSSMParamet
     EMAILS_TO: variables.EmailsTo,
 
     AJANSIIRTO_SALLITTU: variables.AjansiirtoSallittu,
-
-    EVK_ACTIVATION_DATE: variables.EvkActivationDate,
 
     KEYCLOAK_CLIENT_ID: variables.KeycloakClientId,
     KEYCLOAK_DOMAIN: variables.KeycloakDomain,
