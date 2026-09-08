@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SectionContent from "@components/layout/SectionContent";
@@ -291,7 +292,7 @@ function VuorovaikutusKierrosKutsu({
       if (kunnatPuuttuu) {
         puutteet.push("kuntavastaanottajat puuttuvat");
       }
-      if (julkaisupaiva && isElyJulkaisuEstetty(projekti, julkaisupaiva)) {
+      if (isElyJulkaisuEstetty(projekti)) {
         puutteet.push("ELY-keskuksien julkaisut on estetty");
       }
       if (isAsianhallintaVaarassaTilassa(projekti, vaihe)) {
@@ -370,7 +371,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot.",
+                          label: "Esikatsele tiedostot",
                           inputLanguage: ensisijainenKieli,
                           kielitiedot,
                         })}
@@ -392,7 +393,7 @@ function VuorovaikutusKierrosKutsu({
                     <>
                       <p>
                         {label({
-                          label: "Esikatsele tiedostot.",
+                          label: "Esikatsele tiedostot",
                           inputLanguage: toissijainenKieli,
                           kielitiedot,
                         })}

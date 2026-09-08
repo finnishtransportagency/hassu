@@ -16,7 +16,7 @@
     "cross-env": "^7.0.3",
     "hassu": "file:..",
     "read-excel-file": "^7.0.3",
-    "yargs": "^17.7.2"
+    "yargs": "^17.7.3"
   },
   "engines": {
     "node": ">=22.22.1",

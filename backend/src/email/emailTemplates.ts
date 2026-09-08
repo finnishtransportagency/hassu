@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import get from "lodash/get";
 import {
   Kayttaja,
@@ -11,6 +12,7 @@ import { config } from "../config";
 import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
 import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
+import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import {
   findHyvaksymisPaatosVaiheWaitingForApproval,
   findJatkoPaatos1VaiheWaitingForApproval,
@@ -334,9 +336,7 @@ ${projekti.muokattavaHyvaksymisEsitys?.laskutustiedot?.viitetieto}
 Lisätietoja suunnitelmasta antaa 
 
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
-      projektiPaallikko?.elyOrganisaatio
-        ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
-        : projektiPaallikko?.evkOrganisaatio
+      projektiPaallikko?.evkOrganisaatio
         ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 
@@ -495,6 +495,8 @@ Sähköposti
 ${muistutus.sahkoposti ?? ""}
 Puhelinnumero
 ${muistutus.puhelinnumero ?? ""}
+Kiinteistötunnus
+${formatKiinteistotunnusForDisplay(muistutus.kiinteistotunnus)}
 Muistutus
 ${muistutus.muistutus}
 ${muistutusLiiteTeksti ? muistutusLiiteTeksti + "\n" : ""}
@@ -645,9 +647,7 @@ ${ennakkoNeuvotteluJulkaisu.lisatiedot}
 Lisätietoja suunnitelmasta antaa 
 
 ${projektiPaallikko?.etunimi} ${projektiPaallikko?.sukunimi} ${
-      projektiPaallikko?.elyOrganisaatio
-        ? translate("viranomainen." + projektiPaallikko.elyOrganisaatio, API.Kieli.SUOMI)
-        : projektiPaallikko?.evkOrganisaatio
+      projektiPaallikko?.evkOrganisaatio
         ? translate("viranomainen." + projektiPaallikko.evkOrganisaatio, API.Kieli.SUOMI)
         : projektiPaallikko?.organisaatio
     }, 

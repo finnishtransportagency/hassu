@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import PDFDocument from "pdfkit";
 import { EnhancedPDF } from "./asiakirjaTypes";
 import { assertIsDefined } from "../util/assertions";
@@ -232,11 +233,8 @@ export abstract class AbstractPdf {
 
   iPostLogo(): string {
     const isVaylaTilaaja = this.isVaylaTilaaja();
-    const isElyTilaaja = this.isElyTilaaja();
     if (isVaylaTilaaja) {
       return this.fileBasePath + "/files/vaylaipost.png";
-    } else if (isElyTilaaja) {
-      return this.fileBasePath + "/files/elyipost.png";
     } else {
       return this.fileBasePath + "/files/evkipost_fi.png";
     }
@@ -251,11 +249,8 @@ export abstract class AbstractPdf {
 
   async loadLogo(): Promise<string | Buffer> {
     const isVaylaTilaaja = this.isVaylaTilaaja();
-    const isElyTilaaja = this.isElyTilaaja();
     if (isVaylaTilaaja) {
       return this.fileBasePath + "/files/vayla.png";
-    } else if (isElyTilaaja) {
-      return this.fileBasePath + "/files/ely.png";
     } else {
       return this.fileBasePath + "/files/evk.png";
     }
@@ -285,6 +280,9 @@ export abstract class AbstractPdf {
 
   protected sopimusLogoElement(): PDFKit.PDFStructureElement {
     return this.doc.struct("DIV", {}, () => {
+      const hasLogo = (this.osapuoltenLogot && this.osapuoltenLogot.length > 0) || !!this.sopimusLogo;
+      if (!hasLogo) return;
+
       const bottomMargin = 50;
       const maxLogoHeight = 50;
       const verticalPadding = 20;
@@ -392,8 +390,6 @@ export abstract class AbstractPdf {
   }
 
   abstract isVaylaTilaaja(): boolean;
-
-  abstract isElyTilaaja(): boolean;
 
   abstract asiatunnus(): string;
 }

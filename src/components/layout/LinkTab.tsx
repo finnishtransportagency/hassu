@@ -5,7 +5,7 @@ import React, { FunctionComponent } from "react";
 export type LinkTabProps = TabProps & { linkProps: LinkProps };
 
 export const LinkTab: FunctionComponent<LinkTabProps> = ({ linkProps, ...tabProps }) => (
-  <Link {...linkProps} passHref>
+  <Link {...linkProps}>
     <Tab {...tabProps} />
   </Link>
 );

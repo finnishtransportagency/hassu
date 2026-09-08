@@ -120,6 +120,7 @@ const muistuttaja1: DBMuistuttaja = {
   postinumero: "02600",
   postitoimipaikka: "Espoo",
   maakoodi: "FI",
+  kiinteistotunnus: "09112300010001",
   suomifiLahetys: true,
   lahetykset: [
     { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 09:00:00+02:00" },
@@ -156,6 +157,7 @@ const muistuttaja3: DBMuistuttaja = {
   postinumero: "00100",
   postitoimipaikka: "Helsinki",
   maakoodi: "FI",
+  kiinteistotunnus: "74055500020000",
   tiedotustapa: "Eikös se sähköpostilla",
 };
 describe("tiedotettavatExcel", () => {

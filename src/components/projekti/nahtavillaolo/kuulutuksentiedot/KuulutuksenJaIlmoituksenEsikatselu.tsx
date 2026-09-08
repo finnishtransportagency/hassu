@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Section from "@components/layout/Section";
 import { Kieli, AsiakirjaTyyppi } from "@services/api";
 import React from "react";
@@ -36,7 +37,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
           <div>
             <p className="mb-10">
               {label({
-                label: "Esikatsele tiedostot.",
+                label: "Esikatsele tiedostot",
                 inputLanguage: ensisijainenKieli,
                 kielitiedot,
               })}
@@ -80,7 +81,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
             <p className="mb-10">
               {" "}
               {label({
-                label: "Esikatsele tiedostot.",
+                label: "Esikatsele tiedostot",
                 inputLanguage: toissijainenKieli,
                 kielitiedot,
               })}

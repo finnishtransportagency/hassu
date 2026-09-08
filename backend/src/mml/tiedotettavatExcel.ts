@@ -20,7 +20,7 @@ import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
-import { OMISTAJA_EXCEL_HEADERS, OMISTAJA_EXCEL_SHEETS } from "hassu-common/excelConstants";
+import { TIEDOTETTAVA_EXCEL_HEADERS, OMISTAJA_EXCEL_SHEETS } from "hassu-common/excelConstants";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -47,7 +47,7 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
 }
 
 function getMuistuttajaColumns(): Columns {
-  return [{ width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
+  return [{ width: 20 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
 }
 
 function getMuistuttajaColumnsWithLahetysaika(): Columns {
@@ -69,6 +69,9 @@ function lisaaMuistuttajaRiviWithLahetysaika(rivi: Rivi): Row {
 function lisaaMuistuttajaRivi(rivi: Rivi): Row {
   auditLog.info("Lisätään muistuttajan tiedot exceliin", { muistuttajaId: rivi.id });
   return [
+    {
+      value: formatKiinteistotunnusForDisplay(rivi.kiinteistotunnus),
+    },
     {
       value: rivi.nimi,
     },
@@ -134,28 +137,28 @@ function lisaaRivi(rivi: Rivi): Row {
 function lisaaOtsikko(): { value: string }[] {
   return [
     {
-      value: OMISTAJA_EXCEL_HEADERS.kiinteistotunnus,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.kiinteistotunnus,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.nimi,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.nimiOmistaja,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.postiosoite,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.postiosoite,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.postinumero,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.postinumero,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.postitoimipaikka,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.postitoimipaikka,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.maa,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.maa,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.tiedotHaettu,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.tiedotHaettu,
     },
     {
-      value: OMISTAJA_EXCEL_HEADERS.tiedotustapa,
+      value: TIEDOTETTAVA_EXCEL_HEADERS.tiedotustapa,
     },
   ];
 }
@@ -164,28 +167,31 @@ function lisaaOtsikkoWithLahetysaika() {
   return lisaaOtsikko().concat({ value: "Lähetysaika" });
 }
 
-function lisaaMuistuttajanOtsikko() {
+function lisaaMuistuttajanOtsikko(): { value: string }[] {
   return [
     {
-      value: "Muistuttajan nimi",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.kiinteistotunnus,
     },
     {
-      value: "Postiosoite",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.nimiMuistuttaja,
     },
     {
-      value: "Postinumero",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.postiosoite,
     },
     {
-      value: "Postitoimipaikka",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.postinumero,
     },
     {
-      value: "Maa",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.postitoimipaikka,
     },
     {
-      value: "Tiedot haettu",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.maa,
     },
     {
-      value: "Tiedotustapa",
+      value: TIEDOTETTAVA_EXCEL_HEADERS.tiedotHaettu,
+    },
+    {
+      value: TIEDOTETTAVA_EXCEL_HEADERS.tiedotustapa,
     },
   ];
 }
@@ -196,7 +202,7 @@ function lisaaMuistuttajanOtsikkoWithLahetysaika() {
 
 type Rivi = {
   id: string;
-  kiinteistotunnus?: string;
+  kiinteistotunnus?: string | null;
   nimi: string;
   postiosoite: string;
   postinumero: string;
@@ -257,6 +263,7 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
     .map((m) => {
       return {
         id: m.id,
+        kiinteistotunnus: m.kiinteistotunnus,
         nimi: m.nimi ? m.nimi : [m.etunimi, m.sukunimi].filter((n) => !!n).join(" "),
         postiosoite: m.lahiosoite ?? "",
         postinumero: m.postinumero ?? "",

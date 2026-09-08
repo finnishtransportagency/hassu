@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useEffect, useMemo } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -19,7 +20,6 @@ import { reduceToLisatytJaPoistetut } from "src/util/reduceToLisatytJaPoistetut"
 import dayjs from "dayjs";
 import DownloadButtonLink from "@components/button/DownloadButtonLink";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { isEvkAktivoitu } from "common/util/isEvkAktivoitu";
 
 export default function LausuntoPyynnotWrapper() {
   const { data: projekti } = useProjekti({ revalidateOnMount: true });
@@ -103,8 +103,6 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
     name: `lausuntoPyynnot`,
   });
 
-  const isEvkActive = isEvkAktivoitu();
-
   return (
     <LausuntopyynnotPageLayout>
       <FormProvider {...useFormReturn}>
@@ -147,6 +145,12 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                 >
                   Mallipohja muille lausunnonantajille 42T
                 </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-40T"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/899ce7fe-2cce-4326-8f85-49df786ed437/40T%20Lausuntopyynt%c3%b6%20LVVlle%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja LVV:lle 40T
+                </DownloadButtonLink>
               </div>
             )}
             {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && (
@@ -161,13 +165,19 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                   id="mallipohja-41R"
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/caf740ad-86e6-4a22-b575-c86ce6ffd1c2/41R%20Lausuntopyynt%c3%b6%20ELYlle%20xx%20xxS.docx?a=true"
                 >
-                  {isEvkActive ? "Mallipohja elinvoimakeskukselle 41R" : "Mallipohja ELY:lle 41R"}
+                  Mallipohja elinvoimakeskukselle 41R
                 </DownloadButtonLink>
                 <DownloadButtonLink
                   id="mallipohja-42R"
                   href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af305e18-5ccc-46ca-aff4-1c648d022ee4/42R%20Lausuntopyynt%c3%b6%20sidosryhmille%20xx%20xxS.docx?a=true"
                 >
                   Mallipohja muille lausunnonantajille 42R
+                </DownloadButtonLink>
+                <DownloadButtonLink
+                  id="mallipohja-40R"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/0456fd88-c0f7-478f-8efa-cd3ef3022379/40R%20Lausuntopyynt%c3%b6%20LVVlle%20xx%20xxS.docx?a=true"
+                >
+                  Mallipohja LVV:lle 40R
                 </DownloadButtonLink>
               </div>
             )}

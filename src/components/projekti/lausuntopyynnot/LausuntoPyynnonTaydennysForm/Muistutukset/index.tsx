@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { useFormContext } from "react-hook-form";
 import SectionContent from "@components/layout/SectionContent";
 import Button from "@components/button/Button";
@@ -10,6 +11,8 @@ import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { ProjektiLisatiedolla } from "common/ProjektiValidationContext";
 import { uuid } from "common/util/uuid";
 import { H3 } from "../../../../Headings";
+import { allowedFileTypesVirkamiehille, maxFileSize } from "hassu-common/fileValidationSettings";
+import useSnackbars from "../../../../../hooks/useSnackbars";
 
 export default function MuuAineisto({ index, projekti }: Readonly<{ index: number; projekti: ProjektiLisatiedolla }>) {
   const { watch, setValue } = useFormContext<LausuntoPyynnonTaydennysFormValues>();
@@ -22,6 +25,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
     }
   };
   const { withLoadingSpinner } = useLoadingSpinner();
+  const { showErrorMessage } = useSnackbars();
 
   const handleUploadedFiles = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -29,11 +33,26 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
         (async () => {
           const files: FileList | null = event.target.files;
           if (files?.length) {
-            const uploadedFiles: string[] = await Promise.all(
-              Array.from(Array(files.length).keys()).map((key: number) => lataaTiedosto(api, files[key], true))
-            );
-            const tiedostoInputs: LadattuTiedostoInput[] = uploadedFiles.map((filename, index) => ({
-              nimi: files[index].name,
+            const nonAllowedTypeFiles: File[] = [];
+            const tooLargeFiles: File[] = [];
+            const allowedTypeFiles: File[] = [];
+            const uploadedFileNamesPromises: Promise<string>[] = [];
+
+            Array.from(Array(files.length).keys()).forEach((key: number) => {
+              const file = files[key];
+              if (file.size > maxFileSize) {
+                tooLargeFiles.push(file);
+              } else if (allowedFileTypesVirkamiehille.find((type) => type === file.type)) {
+                uploadedFileNamesPromises.push(lataaTiedosto(api, file, true));
+                allowedTypeFiles.push(file);
+              } else {
+                nonAllowedTypeFiles.push(file);
+              }
+            });
+
+            const uploadedFileNames: string[] = await Promise.all(uploadedFileNamesPromises);
+            const tiedostoInputs: LadattuTiedostoInput[] = uploadedFileNames.map((filename, index) => ({
+              nimi: allowedTypeFiles[index].name,
               tila: LadattuTiedostoTila.ODOTTAA_PERSISTOINTIA,
               tiedosto: filename,
               uuid: uuid.v4(),
@@ -41,11 +60,23 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
             setValue(`lausuntoPyynnonTaydennykset.${index}.muistutukset`, (muistutukset ?? []).concat(tiedostoInputs), {
               shouldDirty: true,
             });
+
+            if (tooLargeFiles.length) {
+              const maxSizeMB = Math.round(maxFileSize / 1000000);
+              showErrorMessage(
+                `Tiedosto on liian suuri: ${tooLargeFiles.map((f) => f.name).join(", ")}. Suurin sallittu koko on ${maxSizeMB} Mt.`
+              );
+            }
+            if (nonAllowedTypeFiles.length) {
+              showErrorMessage(
+                "Väärä tiedostotyyppi: " + nonAllowedTypeFiles.map((f) => f.name) + ". Sallitut tyypit JPG, PNG, PDF ja MS Word."
+              );
+            }
             event.target.value = "";
           }
         })()
       ),
-    [index, muistutukset, setValue, withLoadingSpinner]
+    [index, muistutukset, setValue, showErrorMessage, withLoadingSpinner]
   );
   return (
     <SectionContent className="mt-16">
@@ -57,7 +88,7 @@ export default function MuuAineisto({ index, projekti }: Readonly<{ index: numbe
       <input
         type="file"
         multiple
-        accept="*/*"
+        accept={allowedFileTypesVirkamiehille.join(", ")}
         style={{ display: "none" }}
         id={`muistutukset-${index}-input`}
         onChange={handleUploadedFiles}

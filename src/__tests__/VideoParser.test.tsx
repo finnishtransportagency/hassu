@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 /**
  * @jest-environment jsdom
  */
@@ -11,10 +12,10 @@ describe("VideoParser", () => {
     expect(embeddedURL).toMatchSnapshot();
   });
 
-  it("accepts youtube urls with v query parameters only", () => {
-    const url = "https://youtu.be/dQw4w9WgXcQ";
+  it("accepts youtube short urls (youtu.be)", () => {
+    const url = "https://youtu.be/jNQXAC9IVRw?si=1EAXh4PILmvrGXXS";
     const embeddedURL = parseVideoURL(url);
-    expect(embeddedURL).toBeUndefined();
+    expect(embeddedURL).toMatchSnapshot();
   });
 
   it("returns embedded vimeo urls correctly", () => {

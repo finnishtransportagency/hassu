@@ -60,6 +60,8 @@ export async function testHyvaksymisPaatosVaihe(oid: string, userFixture: UserFi
     versio,
     kasittelynTila: {
       hyvaksymispaatos: { asianumero: "asianro123", paatoksenPvm: "2022-06-09" },
+      nahtavillaoloAlkaen: "2022-03-01",
+      nahtavillaoloPaattyen: "2022-03-30",
     },
   });
 

@@ -181,6 +181,80 @@ describe("asetaKasittelynTilaAutomaatiolla", () => {
     expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil14");
   });
 
+  describe("Ennakkotarkastus/Ennakkoneuvottelu (sutil02)", () => {
+    it("asettaa sutil02 kun ennakkotarkastus muuttuu ja tila on sutil01", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.ennakkotarkastus = "2024-03-01";
+      data.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil01";
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil01";
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil02");
+    });
+
+    it("asettaa sutil02 kun ennakkoneuvottelu muuttuu ja tila on sutil13", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.ennakkoneuvotteluPaiva = "2024-03-01";
+      data.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil13";
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil13";
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil02");
+    });
+
+    it("asettaa sutil02 kun tila on null (ei asetettu)", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.ennakkotarkastus = "2024-03-01";
+      const defaults = baseFormValues();
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil02");
+    });
+
+    it("ei muuta tilaa kun ennakkotarkastus muuttuu mutta tila on jokin muu (esim. sutil04)", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.ennakkotarkastus = "2024-03-01";
+      data.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil04";
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil04";
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil04");
+    });
+
+    it("ei muuta tilaa kun päivämäärä ei muutu", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.ennakkotarkastus = "2024-03-01";
+      data.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil01";
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.ennakkotarkastus = "2024-03-01";
+      defaults.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil01";
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil01");
+    });
+
+    it("ei muuta tilaa kun päivämäärä muuttuu mutta kenttä on tyhjä", () => {
+      const data = baseFormValues();
+      data.kasittelynTila!.ennakkotarkastus = null;
+      data.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil01";
+      const defaults = baseFormValues();
+      defaults.kasittelynTila!.ennakkotarkastus = "2024-03-01";
+      defaults.kasittelynTila!.suunnitelmanTila = "suunnitelman-tila/sutil01";
+
+      asetaKasittelynTilaAutomaatiolla(data, defaults, true, false);
+
+      expect(data.kasittelynTila!.suunnitelmanTila).toBe("suunnitelman-tila/sutil01");
+    });
+  });
+
   it("ei muuta tilaa kun mitään ei muuteta", () => {
     const data = baseFormValues();
     const defaults = baseFormValues();

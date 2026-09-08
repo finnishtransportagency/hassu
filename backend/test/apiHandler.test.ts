@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import * as sinon from "sinon";
 import { projektiDatabase } from "../src/database/projektiDatabase";
@@ -37,6 +38,7 @@ import { S3Mock } from "./aws/awsMock";
 import { mockSaveProjektiToVelho, VelhoStub } from "../integrationtest/api/testUtil/util";
 import chai from "chai";
 import { assertIsDefined } from "../src/util/assertions";
+import { kirjaamoOsoitteetService } from "../src/kirjaamoOsoitteet/kirjaamoOsoitteetService";
 import { asetaAika } from "../integrationtest/api/testUtil/tests";
 import { preventArrayMergingCustomizer } from "../src/util/preventArrayMergingCustomizer";
 
@@ -84,6 +86,7 @@ describe("apiHandler", () => {
     pdfGeneratorLambdaStub = sinon.stub(pdfGeneratorClient, "generatePDF");
     sinon.stub(tiedotettavatExcel, "tallennaMaanomistajaluettelo").resolves("/aloituskuulutus/1/maanomistajaluettelo.xlsx");
 
+    sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet").resolves([]);
     aineistoServiceStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     aineistoServiceStub.callsFake(async () => {
       console.log("Synkataan aineisto");

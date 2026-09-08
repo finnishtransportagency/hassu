@@ -7,6 +7,22 @@ export const asetaKasittelynTilaAutomaatiolla = (
   onYllapitaja: boolean,
   hyvaksymispaatosAktiivinen: boolean
 ) => {
+  const SUTIL02_ELIGIBLE = new Set(["suunnitelman-tila/sutil01", "suunnitelman-tila/sutil13"]);
+  const currentTila = data.kasittelynTila?.suunnitelmanTila ?? null;
+  const ennakkotarkastusChanged =
+    (data.kasittelynTila?.ennakkotarkastus ?? null) !== (defaults.kasittelynTila?.ennakkotarkastus ?? null);
+  const ennakkoneuvotteluChanged =
+    (data.kasittelynTila?.ennakkoneuvotteluPaiva ?? null) !== (defaults.kasittelynTila?.ennakkoneuvotteluPaiva ?? null);
+  const ennakkoPvmTaytetty = !!(data.kasittelynTila?.ennakkotarkastus || data.kasittelynTila?.ennakkoneuvotteluPaiva);
+  if (
+    (ennakkotarkastusChanged || ennakkoneuvotteluChanged) &&
+    ennakkoPvmTaytetty &&
+    (!currentTila || SUTIL02_ELIGIBLE.has(currentTila))
+  ) {
+    data.kasittelynTila ??= {};
+    data.kasittelynTila.suunnitelmanTila = "suunnitelman-tila/sutil02";
+  }
+
   const asianumeroChanged =
     (data.kasittelynTila?.hyvaksymispaatos?.asianumero ?? null) !== defaults?.kasittelynTila?.hyvaksymispaatos?.asianumero;
   const hyvaksymisPvmChanged =

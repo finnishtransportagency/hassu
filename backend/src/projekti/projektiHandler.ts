@@ -37,8 +37,6 @@ import { ProjektiTiedostoManager } from "../tiedostot/ProjektiTiedostoManager";
 import { assertIsDefined } from "../util/assertions";
 import { lyhytOsoiteDatabase } from "../database/lyhytOsoiteDatabase";
 import { PathTuple, ProjektiPaths } from "../files/ProjektiPath";
-import { requireOmistaja } from "../user/userService";
-import { isEmpty } from "lodash";
 import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 import { preventArrayMergingCustomizer } from "../util/preventArrayMergingCustomizer";
 import { TallennaJaSiirraTilaaMutationVariables } from "hassu-common/graphql/apiModel";
@@ -781,17 +779,13 @@ async function handleFilesAfterAdaptToSave(dbProjekti: DBProjekti) {
 }
 
 async function saveProjektiToVelho(projekti: DBProjekti) {
-  const kasittelynTila = projekti.kasittelynTila;
-  const suunnitteluSopimus = projekti.suunnitteluSopimus;
-  if (kasittelynTila) {
-    const { hyvaksymispaatos: _inputHyvaksymispaatos, ...inputAdminOikeudetVaativatKentat } = kasittelynTila;
-    if (!isEmpty(inputAdminOikeudetVaativatKentat)) {
-      requireOmistaja(projekti, "Käsittelyn tilaa voi muokata vain projektipäällikkö");
-    } else {
-      requireAdmin("Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja");
-    }
-  }
-  await velhoClient.saveKasittelynTila(projekti.oid, kasittelynTila, suunnitteluSopimus);
+  // Kenttäkohtaista oikeustarkistusta ei tehdä tässä tarkoituksella.
+  // Funktio saa tietokannan datan (ei käyttäjän inputia), joten siitä ei voi päätellä mitä käyttäjä muutti.
+  // Käsittelyn tila -kenttien oikeustarkistus tehdään aiemmin kutsuketjussa:
+  // createOrUpdateProjekti -> validateTallennaProjekti -> validateKasittelynTila -> validateHasAccessToEditKasittelyntilaFields
+  // Tähän funktioon saavuttaessa data on jo validoitu ja tallennettu tietokantaan.
+  requirePermissionMuokkaa(projekti);
+  await velhoClient.saveKasittelynTila(projekti.oid, projekti.kasittelynTila, projekti.suunnitteluSopimus);
 }
 
 export async function handleEvents(projektiAdaptationResult: ProjektiAdaptationResult): Promise<API.TallennaProjektiStatus | undefined> {

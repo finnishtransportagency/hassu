@@ -15,13 +15,14 @@ class IlmoitustauluSyoteHandler {
     ely: string | undefined,
     lely: string | undefined,
     elinvoimakeskus: string | undefined,
-    maakunta: string | undefined
+    maakunta: string | undefined,
+    projektiOids: string[] | undefined
   ): Promise<string> {
     const siteUrl = process.env.FRONTEND_DOMAIN_NAME ?? "";
     const feed_url = siteUrl + "/api/kuulutukset";
     const feed = new RSS({ feed_url, site_url: siteUrl, title: "Kuulutukset" });
 
-    const hits = await this.searchProjects(kieli, ely, lely, elinvoimakeskus, maakunta);
+    const hits = await this.searchProjects(kieli, ely, lely, elinvoimakeskus, maakunta, projektiOids);
 
     if (hits) {
       for (const item of hits) {
@@ -42,7 +43,8 @@ class IlmoitustauluSyoteHandler {
     ely: string | undefined,
     lely: string | undefined,
     elinvoimakeskus: string | undefined,
-    maakunta: string | undefined
+    maakunta: string | undefined,
+    projektiOids: string[] | undefined
   ): Promise<ProjektiDocumentHit[] | undefined> {
     const terms: unknown[] =
       kieli === Kieli.SUOMI
@@ -100,6 +102,13 @@ class IlmoitustauluSyoteHandler {
         throw new NotFoundError("Maakunta " + maakunta + " on tuntematon");
       }
     }
+
+    if (projektiOids?.length) {
+      terms.push({
+        terms: { "oid.keyword": projektiOids },
+      });
+    }
+
     const searchResult = await openSearchClientIlmoitustauluSyote.query({
       query: {
         bool: {

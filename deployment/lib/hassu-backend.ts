@@ -35,7 +35,7 @@ import { RetentionDays } from "aws-cdk-lib/aws-logs";
 
 const lambdaRuntime = lambda.Runtime.NODEJS_22_X;
 const insightsVersion = LambdaInsightsVersion.fromInsightVersionArn(
-  "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:64"
+  "arn:aws:lambda:eu-west-1:580247275435:layer:LambdaInsightsExtension:66"
 );
 // layers/lambda-base valmiiksi asennetut kirjastot
 const externalModules = ["aws-xray-sdk-core", "nodemailer", "@aws-sdk/*"];
@@ -97,7 +97,7 @@ export class HassuBackendStack extends Stack {
       LayerVersion.fromLayerVersionArn(
         this,
         "paramLayer",
-        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:82"
+        "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:101"
       ),
     ];
   }

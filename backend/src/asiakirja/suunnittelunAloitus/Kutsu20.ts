@@ -15,7 +15,7 @@ import { ASIAKIRJA_KUTSU_PREFIX, SuunnitteluVaiheKutsuAdapter } from "../adapter
 import { assertIsDefined } from "../../util/assertions";
 import { createPDFFileName } from "../pdfFileName";
 import { kuntametadata } from "hassu-common/kuntametadata";
-import { organisaatioIsEly, organisaatioIsEvk } from "hassu-common/util/organisaatioIsEly";
+import { organisaatioIsEvk } from "hassu-common/util/organisaatioIsElinvoimakeskus";
 import { translate } from "../../util/localization";
 import PDFStructureElement = PDFKit.PDFStructureElement;
 import { KaannettavaKieli } from "hassu-common/kaannettavatKielet";
@@ -300,9 +300,6 @@ export class Kutsu20 extends CommonPdf<SuunnitteluVaiheKutsuAdapter> {
           let organisaatio = "";
           if (kunta) {
             organisaatio = ` (${kuntametadata.nameForKuntaId(kunta, this.kieli)})`;
-          } else if (organisaatioIsEly(yhteystieto.organisaatio) && yhteystieto.elyOrganisaatio) {
-            const kaannos = translate(`viranomainen.${yhteystieto.elyOrganisaatio}`, this.kieli);
-            organisaatio = ` (${kaannos ?? yhteystieto.organisaatio})`;
           } else if (organisaatioIsEvk(yhteystieto.organisaatio) && yhteystieto.evkOrganisaatio) {
             const kaannos = translate(`viranomainen.${yhteystieto.evkOrganisaatio}`, this.kieli);
             organisaatio = ` (${kaannos ?? yhteystieto.organisaatio})`;

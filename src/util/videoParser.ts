@@ -1,23 +1,31 @@
+// Contains code generated or recommended by Amazon Q
 const youtubeBaseURL = "https://www.youtube.com/embed/";
 const vimeoBaseURL = "https://player.vimeo.com/video/";
+
+const YOUTUBE_HOSTNAMES = new Set(["www.youtube.com", "youtube.com", "m.youtube.com", "youtu.be"]);
+const VIMEO_HOSTNAMES = new Set(["vimeo.com", "www.vimeo.com"]);
+
 export const parseVideoURL = (url: string): string | undefined => {
-  if (!url) {
+  if (!url) return undefined;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
     return undefined;
   }
-  if (url.includes("youtube")) {
-    const youtubeID = url.split("v=")?.[1];
-    return youtubeID ? youtubeBaseURL.concat(youtubeID) : undefined;
-  } else if (url.includes("vimeo")) {
-    const lastIndex = url.lastIndexOf("/");
-    if (lastIndex < 0) {
-      return undefined;
-    }
-    const vimeoID = url.substring(lastIndex + 1);
-    if (isNaN(Number(vimeoID))) {
-      return undefined;
-    }
-    return vimeoBaseURL.concat(vimeoID);
+
+  const { hostname, pathname, searchParams } = parsed;
+
+  if (YOUTUBE_HOSTNAMES.has(hostname)) {
+    const videoId = hostname === "youtu.be" ? pathname.slice(1).split("?")[0] : (searchParams.get("v") ?? undefined);
+    return videoId ? youtubeBaseURL + videoId : undefined;
   }
-  // not supported yet
+
+  if (VIMEO_HOSTNAMES.has(hostname)) {
+    const lastSegment = pathname.split("/").filter(Boolean).pop();
+    return lastSegment && !isNaN(Number(lastSegment)) ? vimeoBaseURL + lastSegment : undefined;
+  }
+
   return undefined;
 };

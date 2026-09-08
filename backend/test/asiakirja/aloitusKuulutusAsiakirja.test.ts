@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { AloituskuulutusPdfOptions } from "../../src/asiakirja/asiakirjaTypes";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
@@ -6,7 +7,7 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { AloitusKuulutusJulkaisu, DBVaylaUser } from "../../src/database/model";
 import * as sinon from "sinon";
 import { AsiakirjaService } from "../../src/asiakirja/asiakirjaService";
-import { expectPDF } from "./asiakirjaTestUtil";
+import { expectPDF, mockKirjaamoOsoitteet } from "./asiakirjaTestUtil";
 import { assertIsDefined } from "../../src/util/assertions";
 import { defaultUnitTestMocks } from "../mocks";
 import { S3Mock } from "../aws/awsMock";
@@ -20,6 +21,7 @@ const projektiFixture = new ProjektiFixture();
 
 describe("aloitusKuulutusAsiakirja", () => {
   defaultUnitTestMocks();
+  mockKirjaamoOsoitteet();
 
   new S3Mock(true);
 
