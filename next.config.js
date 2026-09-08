@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const nextTranslate = require("next-translate-plugin");
 const { BaseConfig } = require("./common/BaseConfig");
@@ -104,6 +105,8 @@ module.exports = (phase) => {
     // .dev.ts, .dev.tsx", .dev.js, and .dev.jsx are always bundled but 404 is shown in prod
     pageExtensions: ["ts", "tsx", "js", "jsx"].map((ext) => [`dev.${ext}`, ext]).flat(),
     output: "standalone",
+    // Määritellään workspace root eksplisiittisesti välttääksemme varoituksen useista lockfileista
+    outputFileTracingRoot: __dirname,
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config);
