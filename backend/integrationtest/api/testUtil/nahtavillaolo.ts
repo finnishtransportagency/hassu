@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { api } from "../apiClient";
 import { apiTestFixture } from "../apiTestFixture";
 import {
@@ -146,6 +147,7 @@ export async function testLisaaMuistutusIncrement(
     sahkoposti: "etunimi.sukunimi@org.fi",
     maa: "FI",
     liitteet: [],
+    kiinteistotunnus: "091-1234-0001-0001",
   });
   userFixture.loginAsProjektiKayttaja(projektiPaallikko);
   projekti = await loadProjektiFromDatabase(oid, Status.NAHTAVILLAOLO);

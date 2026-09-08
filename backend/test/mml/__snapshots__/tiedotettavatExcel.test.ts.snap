@@ -354,9 +354,11 @@ Array [
     null,
     null,
     null,
+    null,
   ],
   Array [
     "21.02.2024",
+    null,
     null,
     null,
     null,
@@ -372,8 +374,10 @@ Array [
     null,
     null,
     null,
+    null,
   ],
   Array [
+    "Kiinteistötunnus",
     "Muistuttajan nimi",
     "Postiosoite",
     "Postinumero",
@@ -383,6 +387,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "91-123-1-1",
     "Tytti Testaaja",
     "Osoite 456",
     "02600",
@@ -392,6 +397,7 @@ Array [
     "Suomi.fi",
   ],
   Array [
+    null,
     "Matti Testaaja",
     "Osoite 123",
     "01600",
@@ -413,9 +419,11 @@ Array [
     null,
     null,
     null,
+    null,
   ],
   Array [
     "21.02.2024",
+    null,
     null,
     null,
     null,
@@ -431,8 +439,10 @@ Array [
     null,
     null,
     null,
+    null,
   ],
   Array [
+    "Kiinteistötunnus",
     "Muistuttajan nimi",
     "Postiosoite",
     "Postinumero",
@@ -442,6 +452,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "740-555-2-0",
     "Teppo Muistuttaja",
     "Muistuttajan osoite",
     "00100",
@@ -641,6 +652,7 @@ Array [
 exports[`tiedotettavatExcel tallenna muistuttajat  excel tiedostoon graphql muut 1`] = `
 Array [
   Array [
+    "Kiinteistötunnus",
     "Muistuttajan nimi",
     "Postiosoite",
     "Postinumero",
@@ -650,6 +662,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "740-555-2-0",
     "Teppo Muistuttaja",
     "Muistuttajan osoite",
     "00100",
@@ -664,6 +677,7 @@ Array [
 exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql Suomi.fi 1`] = `
 Array [
   Array [
+    "Kiinteistötunnus",
     "Muistuttajan nimi",
     "Postiosoite",
     "Postinumero",
@@ -674,6 +688,7 @@ Array [
     "Lähetysaika",
   ],
   Array [
+    "91-123-1-1",
     "Tytti Testaaja",
     "Osoite 456",
     "02600",
@@ -684,6 +699,7 @@ Array [
     "04.11.2024 11:00:00+02:00",
   ],
   Array [
+    null,
     "Matti Testaaja",
     "Osoite 123",
     "01600",
@@ -699,6 +715,7 @@ Array [
 exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql kaikki 1`] = `
 Array [
   Array [
+    "Kiinteistötunnus",
     "Muistuttajan nimi",
     "Postiosoite",
     "Postinumero",
@@ -709,6 +726,7 @@ Array [
     "Lähetysaika",
   ],
   Array [
+    "91-123-1-1",
     "Tytti Testaaja",
     "Osoite 456",
     "02600",
@@ -719,6 +737,7 @@ Array [
     "04.11.2024 11:00:00+02:00",
   ],
   Array [
+    null,
     "Matti Testaaja",
     "Osoite 123",
     "01600",
@@ -734,6 +753,7 @@ Array [
 exports[`tiedotettavatExcel tallenna muistuttajat excel tiedostoon graphql kaikki 2`] = `
 Array [
   Array [
+    "Kiinteistötunnus",
     "Muistuttajan nimi",
     "Postiosoite",
     "Postinumero",
@@ -743,6 +763,7 @@ Array [
     "Tiedotustapa",
   ],
   Array [
+    "740-555-2-0",
     "Teppo Muistuttaja",
     "Muistuttajan osoite",
     "00100",

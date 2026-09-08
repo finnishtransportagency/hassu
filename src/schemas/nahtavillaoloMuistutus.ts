@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { allowedFileTypesKansalaisille, maxFileSize } from "common/fileValidationSettings";
 import * as Yup from "yup";
 import { phoneNumberRegex } from "hassu-common/schema/puhelinNumero";
@@ -18,4 +19,10 @@ export const muistutusSchema = Yup.object().shape({
     })
   ),
   puhelinnumero: Yup.string().notRequired().matches(new RegExp(phoneNumberRegex), "puh_vain_numerot").max(20, "puh_max_20").nullable(),
+  kiinteistotunnus: Yup.string()
+    .notRequired()
+    .nullable()
+    .test("is-valid-kiinteistotunnus", "anna_kiinteistotunnus_esitysmuodossa", (value) =>
+      !value ? true : /^\d{1,3}-\d{1,3}-\d{1,4}-\d{1,4}$/.test(value)
+    ),
 });

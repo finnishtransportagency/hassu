@@ -528,6 +528,7 @@ input MuistutusInput {
   maa: String!
   liitteet: [String!]!
   puhelinnumero: String
+  kiinteistotunnus: String
 }
 
 input ListaaLisaAineistoInput {

@@ -1,6 +1,7 @@
 import { MuistutusInput } from "hassu-common/graphql/apiModel";
 import { Muistutus } from "../database/model";
 import { SuomiFiCognitoKayttaja } from "../user/suomiFiCognitoKayttaja";
+import { formatKiinteistotunnusForDatabase } from "hassu-common/util/formatKiinteistotunnus";
 
 type AdaptMuistutusInputOptions = {
   aikaleima: string;
@@ -33,5 +34,6 @@ export function adaptMuistutusInput({
     postitoimipaikka: muistutusInput.postitoimipaikka,
     sahkoposti: muistutusInput.sahkoposti,
     puhelinnumero: muistutusInput.puhelinnumero,
+    kiinteistotunnus: formatKiinteistotunnusForDatabase(muistutusInput.kiinteistotunnus),
   };
 }
