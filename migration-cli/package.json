@@ -18,6 +18,10 @@
     "read-excel-file": "^7.0.3",
     "yargs": "^17.7.3"
   },
+  "overrides": {
+    "@xmldom/xmldom": "0.8.15",
+    "fflate": "0.8.3"
+  },
   "engines": {
     "node": ">=22.22.1",
     "npm": ">=10.9.8"
