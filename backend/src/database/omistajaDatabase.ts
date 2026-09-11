@@ -14,6 +14,7 @@ import {
 } from "@aws-sdk/lib-dynamodb";
 import { chunkArray } from "./chunkArray";
 import { LahetysTapa, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 
 export type OmistajaKey = {
   oid: string;
@@ -40,7 +41,7 @@ export type DBOmistaja = {
   kaytossa: boolean;
   suomifiLahetys?: boolean;
   osoitetiedotSaatu?: boolean;
-  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; lahetysTapa?: LahetysTapa }[];
+  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; tyyppi?: PublishOrExpireEventType; lahetysTapa?: LahetysTapa }[];
   userCreated?: boolean;
 };
 

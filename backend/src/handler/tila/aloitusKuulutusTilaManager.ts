@@ -23,11 +23,10 @@ import { fileService } from "../../files/fileService";
 import { parseDate } from "../../util/dateUtil";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import { pdfGeneratorClient } from "../../asiakirja/lambda/pdfGeneratorClient";
-import { tallennaMaanomistajaluettelo } from "../../mml/tiedotettavatExcel";
 import { IllegalAineistoStateError, IllegalArgumentError } from "hassu-common/error";
 import { projektiAdapter } from "../../projekti/adapter/projektiAdapter";
 import assert from "assert";
-import { ProjektiPaths, SisainenProjektiPaths } from "../../files/ProjektiPath";
+import { ProjektiPaths } from "../../files/ProjektiPath";
 import { ProjektiTiedostoManager } from "../../tiedostot/ProjektiTiedostoManager";
 import { requireAdmin, requireOmistaja, requirePermissionMuokkaa } from "../../user/userService";
 import { sendAloitusKuulutusApprovalMailsAndAttachments } from "../email/emailHandler";
@@ -250,19 +249,6 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     aloitusKuulutusJulkaisu.muokkaaja = muokkaaja.uid;
 
     await this.generatePDFs(projekti, aloitusKuulutusJulkaisu);
-    if (
-      !aloitusKuulutusJulkaisu.uudelleenKuulutus ||
-      aloitusKuulutusJulkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia === undefined ||
-      aloitusKuulutusJulkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia
-    ) {
-      aloitusKuulutusJulkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
-        projekti,
-        new SisainenProjektiPaths(projekti.oid).aloituskuulutus(aloitusKuulutusJulkaisu),
-        this.vaihe,
-        aloitusKuulutusJulkaisu.kuulutusPaiva,
-        aloitusKuulutusJulkaisu.id
-      );
-    }
     await projektiDatabase.aloitusKuulutusJulkaisut.insert(projekti.oid, aloitusKuulutusJulkaisu);
     await approvalEmailSender.sendEmails(projekti, tilasiirtymaTyyppi);
   }
@@ -277,13 +263,6 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     aloitusKuulutus.palautusSyy = syy;
     if (julkaisuWaitingForApproval.aloituskuulutusPDFt) {
       await this.deletePDFs(projekti.oid, julkaisuWaitingForApproval.aloituskuulutusPDFt);
-    }
-    if (julkaisuWaitingForApproval.maanomistajaluettelo) {
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid: projekti.oid,
-        filePathInProjekti: julkaisuWaitingForApproval.maanomistajaluettelo,
-        reason: "Aloituskuulutus rejected",
-      });
     }
     await projektiDatabase.saveProjekti({ oid: projekti.oid, versio: projekti.versio, aloitusKuulutus });
     await projektiDatabase.aloitusKuulutusJulkaisut.delete(projekti, julkaisuWaitingForApproval.id);

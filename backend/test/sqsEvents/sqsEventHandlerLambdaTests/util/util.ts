@@ -15,6 +15,38 @@ import * as zipFiles from "../../../../src/tiedostot/zipFiles";
 import { velho } from "../../../../src/velho/velhoClient";
 import contentDisposition from "content-disposition";
 
+export function fakeEventInSqsQueueWithApprovalType({
+  eventType,
+  projektiOid,
+  approvalType,
+}: {
+  eventType: SqsEventType;
+  projektiOid: string;
+  approvalType: SqsEvent["approvalType"];
+}): () => Promise<void> {
+  const event: SqsEvent = { oid: projektiOid, type: eventType, approvalType };
+  const sqsRecord: SQSRecord = {
+    body: JSON.stringify(event),
+    messageId: "",
+    receiptHandle: "",
+    attributes: {
+      ApproximateReceiveCount: "",
+      SentTimestamp: "",
+      SenderId: "",
+      ApproximateFirstReceiveTimestamp: "",
+    },
+    messageAttributes: {},
+    md5OfBody: "",
+    eventSource: "",
+    eventSourceARN: "",
+    awsRegion: "",
+  };
+  const awsSqsEvent: SQSEvent = {
+    Records: [sqsRecord],
+  };
+  return handlerFactory(awsSqsEvent);
+}
+
 export function fakeEventInSqsQueue({
   eventType,
   projektiOid,

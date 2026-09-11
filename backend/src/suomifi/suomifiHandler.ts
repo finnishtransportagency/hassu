@@ -34,6 +34,7 @@ import { Asiakas1 } from "./viranomaispalvelutwsinterface";
 import { Readable } from "stream";
 import { streamToBuffer } from "../util/streamUtil";
 import { haeKuulutettuYhdessaSuunnitelmanimi } from "../asiakirja/haeKuulutettuYhdessaSuunnitelmanimi";
+import { eventSqsClient } from "../sqsEvents/eventSqsClient";
 
 export type SuomiFiSanoma = {
   oid: string;
@@ -910,6 +911,7 @@ async function handleOmistaja({
       omistajaIdsForLahetystilaUpdate,
     });
   }
+  await eventSqsClient.generateMaanomistajaluettelo(oid, tyyppi);
 }
 
 const handlerFactory = (event: SuomifiEvent) => async () => {

@@ -8,6 +8,7 @@ import {
   QueryCommandInput,
   QueryCommandOutput,
 } from "@aws-sdk/lib-dynamodb";
+import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
 
 import { config } from "../config";
 import { getDynamoDBDocumentClient } from "../aws/client";
@@ -20,7 +21,11 @@ const BATCH_WRITE_MAX_ITEMS = 25;
 class ProjektiEntityDatabase {
   tableName = config.projektiDataTableName;
 
-  async put(item: AnyProjektiDataItem, description: string | undefined = undefined): Promise<PutCommandOutput> {
+  async put(
+    item: AnyProjektiDataItem,
+    description: string | undefined = undefined,
+    conditionExpression?: string
+  ): Promise<PutCommandOutput | false> {
     log.info(`Putting projekti data to ${this.tableName} table.`, {
       sortKey: item.sortKey,
       projektiOid: item.projektiOid,
@@ -29,8 +34,16 @@ class ProjektiEntityDatabase {
     const command = new PutCommand({
       TableName: this.tableName,
       Item: item,
+      ConditionExpression: conditionExpression,
     });
-    return await getDynamoDBDocumentClient().send(command);
+    try {
+      return await getDynamoDBDocumentClient().send(command);
+    } catch (e) {
+      if (conditionExpression && e instanceof ConditionalCheckFailedException) {
+        return false;
+      }
+      throw e;
+    }
   }
 
   async putAll(julkaisut: AnyProjektiDataItem[] | null | undefined, description: string | undefined = undefined): Promise<void> {
