@@ -203,7 +203,9 @@
     "uuid": "$uuid",
     "postcss": "$postcss",
     "fast-uri": "3.1.6",
-    "js-yaml": "4.3.2"
+    "js-yaml": "4.3.2",
+    "@xmldom/xmldom": "0.8.15",
+    "fflate": "0.8.3"
   },
   "scripts": {
     "import:dynamodb": "node importDynamodbExport.js",
