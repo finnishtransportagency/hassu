@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Hakupalvelu API v2
- * Hakupalvelu API v2
+ * null
  *
  * The version of the OpenAPI document: v2
  * 

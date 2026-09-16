@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Projektirekisteri API v2
- * Projektirekisteri API v2  Palvelu vastaa seuraavista kohdeluokista:  - Projekti (tekninen nimi: projekti/projekti, oid-prefix: 1.2.246.578.5.1)  - Projektijoukko (tekninen nimi: projekti/projektijoukko, oid-prefix: 1.2.246.578.5.3)  - Toimeksianto (tekninen nimi: projekti/toimeksianto, oid-prefix: 1.2.246.578.5.2)
+ *   Palvelu vastaa seuraavista kohdeluokista:  | Nimi | Tekninen nimi | OID-prefix | Versioitu | Schema | Sijaintityyppi | Sijaintitarkenne | | :--- | :--- | :--- | :---: | :---: | :---: | :---: | | Projekti | projekti/projekti | 1.2.246.578.5.1 | ⬜ | 9 | valisijaintikokoelma | - | | Projektijoukko | projekti/projektijoukko | 1.2.246.578.5.3 | ⬜ | 5 | - | - | | Toimeksianto | projekti/toimeksianto | 1.2.246.578.5.2 | ⬜ | 6 | - | - |
  *
  * The version of the OpenAPI document: v2
  * 

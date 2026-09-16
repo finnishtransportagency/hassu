@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Hakupalvelu API v2
- * Hakupalvelu API v2
+ * null
  *
  * The version of the OpenAPI document: v2
  * 
@@ -23,67 +23,90 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-export interface HakulausekeAsetukset {
-    'aggregaatiot'?: Array<object>;
-    'liitoshaku'?: boolean;
-    'oid-haku'?: boolean;
-    'palautettavat-kentat'?: Array<Array<string>>;
-    'pilko-tiekohdehaun-lisarajauksilla?'?: boolean;
-    'arvojarjestys?'?: boolean;
-    'koko'?: number;
-    'pilkkovat-polut'?: Array<Array<string>>;
-    'alkaen'?: number;
-    'poistettavat-kentat'?: Array<Array<string>>;
-    'samalla-kaistalla'?: boolean;
-    'geometriat'?: Array<HakulausekeAsetuksetGeometriatEnum>;
-    'poista-duplikaatit?'?: boolean;
-    'tilannepaivamaara'?: string;
-    'tyyppi'?: HakulausekeAsetuksetTyyppiEnum;
-    'jarjesta'?: Array<Array<object>>;
+export interface HakulausekeJaksotus {
+    'tyyppi'?: HakulausekeJaksotusTyyppiEnum;
+    'pituus'?: number;
 }
 
-export const HakulausekeAsetuksetGeometriatEnum = {
-    keskilinjageometria_wgs84: 'keskilinjageometria-wgs84',
-    keskilinjageometria: 'keskilinjageometria',
-    keskilinjageometria2: 'keskilinjageometria',
-    keskilinjageometria_wgs842: 'keskilinjageometria-wgs84'
+export const HakulausekeJaksotusTyyppiEnum = {
+    tieosittain: 'tieosittain',
+    teittain: 'teittain',
+    teittain2: 'teittain',
+    tieosittain2: 'tieosittain'
 } as const;
 
-export type HakulausekeAsetuksetGeometriatEnum = typeof HakulausekeAsetuksetGeometriatEnum[keyof typeof HakulausekeAsetuksetGeometriatEnum];
-export const HakulausekeAsetuksetTyyppiEnum = {
-    tieosuushaku: 'tieosuushaku',
-    kohdeluokkahaku: 'kohdeluokkahaku',
-    kohdeluokkahaku2: 'kohdeluokkahaku',
-    tieosuushaku2: 'tieosuushaku'
-} as const;
+export type HakulausekeJaksotusTyyppiEnum = typeof HakulausekeJaksotusTyyppiEnum[keyof typeof HakulausekeJaksotusTyyppiEnum];
 
-export type HakulausekeAsetuksetTyyppiEnum = typeof HakulausekeAsetuksetTyyppiEnum[keyof typeof HakulausekeAsetuksetTyyppiEnum];
-
-export interface HakulausekeKysely {
+export interface HakulausekeKohdeluokkahakuSuorahaku {
     'kohdeluokat': Array<string>;
-    'asetukset': HakulausekeAsetukset;
+    'asetukset': KohdeluokkahakuAsetukset;
     'lauseke'?: object;
+}
+export interface HakulausekeKohdeluokkahakuTaustahaku {
+    'kohdeluokat': Array<string>;
+    'asetukset': KohdeluokkahakuAsetukset;
+    'lauseke'?: object;
+    'lisarajaukset'?: HakulausekeLisarajaukset;
 }
 export interface HakulausekeLisarajaukset {
     'kohdeluokat': Array<string>;
     'lauseke': object;
     'palautettavat-kentat'?: Array<Array<string>>;
 }
-export interface HakulausekeLisarajausKysely {
+export interface HakulausekeTieosuushaku {
     'kohdeluokat': Array<string>;
-    'asetukset': HakulausekeAsetukset;
+    'asetukset': TieosuushakuAsetukset;
     'lauseke'?: object;
     'lisarajaukset'?: HakulausekeLisarajaukset;
 }
+export interface HakupalveluSpecHakuspecPaivitaHakuV2 {
+    'nimi'?: string;
+    'selite'?: string | null;
+    'suosikki'?: boolean;
+    'julkinen'?: boolean;
+    'haku'?: object;
+}
+export interface HakupalveluSpecHakuspecTallennaHakuV2Body {
+    'nimi': string;
+    'haku': object;
+    'selite'?: string | null;
+    'suosikki'?: boolean;
+    'julkinen'?: boolean;
+}
+export interface HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody {
+    'operaatio': HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum;
+    'kohdeluokka': string;
+    'rekisteri': string;
+    'operaation_tulos': HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaationTulos;
+}
+
+export const HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum = {
+    lakkautus: 'lakkautus',
+    uusi_kohde: 'uusi-kohde',
+    paivitys: 'paivitys',
+    korjaus: 'korjaus'
+} as const;
+
+export type HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum = typeof HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum[keyof typeof HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum];
+
+export interface HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaationTulos {
+    'luodut'?: Array<string>;
+    'lakkautetut'?: Array<string>;
+    'poistetut'?: Array<string>;
+    'kokonaisina-lakkautetut-kohteet'?: Array<string>;
+    'lisatyt-uudet-pilkotut-kohteet'?: Array<string>;
+    'poistetut-kohteet'?: Array<string>;
+}
 export interface HakupalveluSpecHakuspecTaustahakuTila {
-    'hakutunniste': string;
-    'tila': string;
+    'hakutunniste-voimassa': number;
     'alkuaika': string;
     'muokkausaika': string;
-    'hakutunniste-voimassa': number;
-    'metrit'?: number | null;
-    'tagi'?: string;
+    'tila': string;
+    'sijaintitarkenteet'?: object;
+    'hakutunniste': string;
     'osumia'?: number;
+    'tagi'?: string;
+    'metrit'?: number | null;
 }
 export interface HakupalveluSpecHakuspecVientiListaa {
     'tunniste'?: string;
@@ -94,20 +117,721 @@ export interface HakupalveluSpecHakuspecVientiNouda {
 export interface HakupalveluSpecHakuspecVientiVie {
     'hakulauseke': HakupalveluSpecHakuspecVientiVieHakulauseke;
     'tiedostonimi': string;
-    'tiedostomuoto': string;
+    'tiedostomuoto': HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum;
 }
+
+export const HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum = {
+    xlsx: '.xlsx',
+    csv: '.csv',
+    geojson: '.geojson'
+} as const;
+
+export type HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum = typeof HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum[keyof typeof HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum];
+
 export interface HakupalveluSpecHakuspecVientiVie1 {
     'hakutunniste': string;
     'tiedostonimi': string;
-    'tiedostomuoto': string;
+    'tiedostomuoto': HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum;
     'geometriat': Array<string>;
+    'nimikkeistoarvomuoto': HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum;
     'taulukon-sarakkeet': Array<string>;
 }
+
+export const HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum = {
+    xlsx: '.xlsx',
+    csv: '.csv',
+    geojson: '.geojson'
+} as const;
+
+export type HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum = typeof HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum[keyof typeof HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum];
+export const HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum = {
+    molemmat: 'molemmat',
+    selkokieliset_nimet: 'selkokieliset-nimet',
+    velhokoodit: 'velhokoodit'
+} as const;
+
+export type HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum = typeof HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum[keyof typeof HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum];
+
 export interface HakupalveluSpecHakuspecVientiVieHakulauseke {
     'kohdeluokat': Array<string>;
-    'asetukset': HakulausekeAsetukset;
+    'asetukset': KohdeluokkahakuAsetukset;
     'lauseke'?: object;
+    'lisarajaukset'?: HakulausekeLisarajaukset;
 }
+export interface KohdeluokkahakuAsetukset {
+    'aggregaatiot'?: Array<object>;
+    'oid-haku'?: boolean;
+    'palautettavat-kentat'?: Array<Array<string>>;
+    'pilko-tiekohdehaun-lisarajauksilla?'?: boolean;
+    'arvojarjestys?'?: boolean;
+    'koko'?: number;
+    'alkaen'?: number;
+    'poistettavat-kentat'?: Array<Array<string>>;
+    'geometriat'?: Array<KohdeluokkahakuAsetuksetGeometriatEnum>;
+    'poista-duplikaatit?'?: boolean;
+    'tilannepaivamaara'?: string;
+    'jarjesta'?: Array<Array<object>>;
+}
+
+export const KohdeluokkahakuAsetuksetGeometriatEnum = {
+    keskilinjageometria_wgs84: 'keskilinjageometria-wgs84',
+    keskilinjageometria: 'keskilinjageometria',
+    keskilinjageometria2: 'keskilinjageometria',
+    keskilinjageometria_wgs842: 'keskilinjageometria-wgs84'
+} as const;
+
+export type KohdeluokkahakuAsetuksetGeometriatEnum = typeof KohdeluokkahakuAsetuksetGeometriatEnum[keyof typeof KohdeluokkahakuAsetuksetGeometriatEnum];
+
+export interface PtmHakulausekeAsetukset {
+    'palautettavat-kentat'?: Array<Array<string>>;
+    'poistettavat-kentat'?: Array<Array<string>>;
+    'jarjesta'?: Array<Array<object>>;
+    'alkaen'?: object;
+    'koko'?: number;
+    'tilannepaivamaara'?: string;
+    'oid-haku'?: boolean;
+}
+export interface PtmHakulausekeKysely {
+    'kohdeluokat': Array<string>;
+    'asetukset': PtmHakulausekeAsetukset;
+    'lauseke'?: object;
+    'lisarajaukset'?: HakulausekeLisarajaukset;
+}
+export interface TieosuushakuAsetukset {
+    'palautettavat-kentat'?: Array<Array<string>>;
+    'tilannepaivamaara'?: string;
+    'tieosuushaun-taso'?: TieosuushakuAsetuksetTieosuushaunTasoEnum;
+    'jaksotus'?: HakulausekeJaksotus;
+}
+
+export const TieosuushakuAsetuksetTieosuushaunTasoEnum = {
+    ajoratataso: 'ajoratataso',
+    tietaso: 'tietaso',
+    ajoratataso2: 'ajoratataso',
+    tietaso2: 'tietaso'
+} as const;
+
+export type TieosuushakuAsetuksetTieosuushaunTasoEnum = typeof TieosuushakuAsetuksetTieosuushaunTasoEnum[keyof typeof TieosuushakuAsetuksetTieosuushaunTasoEnum];
+
+
+/**
+ * DefaultApi - axios parameter creator
+ */
+export const DefaultApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {boolean} [omat] 
+         * @param {boolean} [julkiset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautGet: async (omat?: boolean, julkiset?: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (omat !== undefined) {
+                localVarQueryParameter['omat'] = omat;
+            }
+
+            if (julkiset !== undefined) {
+                localVarQueryParameter['julkiset'] = julkiset;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {HakupalveluSpecHakuspecTallennaHakuV2Body} hakupalveluSpecHakuspecTallennaHakuV2Body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautPost: async (hakupalveluSpecHakuspecTallennaHakuV2Body: HakupalveluSpecHakuspecTallennaHakuV2Body, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakupalveluSpecHakuspecTallennaHakuV2Body' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaHautPost', 'hakupalveluSpecHakuspecTallennaHakuV2Body', hakupalveluSpecHakuspecTallennaHakuV2Body)
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(hakupalveluSpecHakuspecTallennaHakuV2Body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautTunnisteDelete: async (tunniste: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tunniste' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaHautTunnisteDelete', 'tunniste', tunniste)
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut/{tunniste}`
+                .replace(`{${"tunniste"}}`, encodeURIComponent(String(tunniste)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautTunnisteGet: async (tunniste: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tunniste' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaHautTunnisteGet', 'tunniste', tunniste)
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut/{tunniste}`
+                .replace(`{${"tunniste"}}`, encodeURIComponent(String(tunniste)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {HakupalveluSpecHakuspecPaivitaHakuV2} hakupalveluSpecHakuspecPaivitaHakuV2 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautTunnistePatch: async (tunniste: string, hakupalveluSpecHakuspecPaivitaHakuV2: HakupalveluSpecHakuspecPaivitaHakuV2, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'tunniste' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaHautTunnistePatch', 'tunniste', tunniste)
+            // verify required parameter 'hakupalveluSpecHakuspecPaivitaHakuV2' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaHautTunnistePatch', 'hakupalveluSpecHakuspecPaivitaHakuV2', hakupalveluSpecHakuspecPaivitaHakuV2)
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut/{tunniste}`
+                .replace(`{${"tunniste"}}`, encodeURIComponent(String(tunniste)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(hakupalveluSpecHakuspecPaivitaHakuV2, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaOperaatiohistoriaGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/operaatiohistoria`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody} hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaOperaatiohistoriaPost: async (hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody: HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaOperaatiohistoriaPost', 'hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody', hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody)
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/operaatiohistoria`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaSarakkeetGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/sarakkeet`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {object} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaSarakkeetPost: async (body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('hakupalveluApiV2TilanhallintaSarakkeetPost', 'body', body)
+            const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/sarakkeet`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * DefaultApi - functional programming interface
+ */
+export const DefaultApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = DefaultApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {boolean} [omat] 
+         * @param {boolean} [julkiset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaHautGet(omat?: boolean, julkiset?: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaHautGet(omat, julkiset, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaHautGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {HakupalveluSpecHakuspecTallennaHakuV2Body} hakupalveluSpecHakuspecTallennaHakuV2Body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaHautPost(hakupalveluSpecHakuspecTallennaHakuV2Body: HakupalveluSpecHakuspecTallennaHakuV2Body, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaHautPost(hakupalveluSpecHakuspecTallennaHakuV2Body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaHautPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaHautTunnisteDelete(tunniste: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaHautTunnisteDelete(tunniste, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaHautTunnisteDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaHautTunnisteGet(tunniste: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaHautTunnisteGet(tunniste, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaHautTunnisteGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {HakupalveluSpecHakuspecPaivitaHakuV2} hakupalveluSpecHakuspecPaivitaHakuV2 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaHautTunnistePatch(tunniste: string, hakupalveluSpecHakuspecPaivitaHakuV2: HakupalveluSpecHakuspecPaivitaHakuV2, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaHautTunnistePatch(tunniste, hakupalveluSpecHakuspecPaivitaHakuV2, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaHautTunnistePatch']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaOperaatiohistoriaGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaOperaatiohistoriaGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaOperaatiohistoriaGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody} hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaOperaatiohistoriaPost(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody: HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaOperaatiohistoriaPost(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaOperaatiohistoriaPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaSarakkeetGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaSarakkeetGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaSarakkeetGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {object} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TilanhallintaSarakkeetPost(body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TilanhallintaSarakkeetPost(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.hakupalveluApiV2TilanhallintaSarakkeetPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * DefaultApi - factory interface
+ */
+export const DefaultApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = DefaultApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {boolean} [omat] 
+         * @param {boolean} [julkiset] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautGet(omat?: boolean, julkiset?: boolean, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaHautGet(omat, julkiset, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HakupalveluSpecHakuspecTallennaHakuV2Body} hakupalveluSpecHakuspecTallennaHakuV2Body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautPost(hakupalveluSpecHakuspecTallennaHakuV2Body: HakupalveluSpecHakuspecTallennaHakuV2Body, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaHautPost(hakupalveluSpecHakuspecTallennaHakuV2Body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautTunnisteDelete(tunniste: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaHautTunnisteDelete(tunniste, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautTunnisteGet(tunniste: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaHautTunnisteGet(tunniste, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} tunniste 
+         * @param {HakupalveluSpecHakuspecPaivitaHakuV2} hakupalveluSpecHakuspecPaivitaHakuV2 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaHautTunnistePatch(tunniste: string, hakupalveluSpecHakuspecPaivitaHakuV2: HakupalveluSpecHakuspecPaivitaHakuV2, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaHautTunnistePatch(tunniste, hakupalveluSpecHakuspecPaivitaHakuV2, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaOperaatiohistoriaGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaOperaatiohistoriaGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody} hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaOperaatiohistoriaPost(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody: HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaOperaatiohistoriaPost(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaSarakkeetGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaSarakkeetGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {object} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TilanhallintaSarakkeetPost(body: object, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.hakupalveluApiV2TilanhallintaSarakkeetPost(body, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * DefaultApi - object-oriented interface
+ */
+export class DefaultApi extends BaseAPI {
+    /**
+     * 
+     * @param {boolean} [omat] 
+     * @param {boolean} [julkiset] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaHautGet(omat?: boolean, julkiset?: boolean, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaHautGet(omat, julkiset, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HakupalveluSpecHakuspecTallennaHakuV2Body} hakupalveluSpecHakuspecTallennaHakuV2Body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaHautPost(hakupalveluSpecHakuspecTallennaHakuV2Body: HakupalveluSpecHakuspecTallennaHakuV2Body, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaHautPost(hakupalveluSpecHakuspecTallennaHakuV2Body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} tunniste 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaHautTunnisteDelete(tunniste: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaHautTunnisteDelete(tunniste, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} tunniste 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaHautTunnisteGet(tunniste: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaHautTunnisteGet(tunniste, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} tunniste 
+     * @param {HakupalveluSpecHakuspecPaivitaHakuV2} hakupalveluSpecHakuspecPaivitaHakuV2 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaHautTunnistePatch(tunniste: string, hakupalveluSpecHakuspecPaivitaHakuV2: HakupalveluSpecHakuspecPaivitaHakuV2, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaHautTunnistePatch(tunniste, hakupalveluSpecHakuspecPaivitaHakuV2, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaOperaatiohistoriaGet(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaOperaatiohistoriaGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody} hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaOperaatiohistoriaPost(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody: HakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaOperaatiohistoriaPost(hakupalveluSpecHakuspecTallennaOperaatiohistoriaBody, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaSarakkeetGet(options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaSarakkeetGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {object} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TilanhallintaSarakkeetPost(body: object, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).hakupalveluApiV2TilanhallintaSarakkeetPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * HakuApi - axios parameter creator
@@ -117,13 +841,13 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Hae ehdot täyttävien kohdeluokkien lukumäärä
-         * @param {HakulausekeKysely} hakulausekeKysely 
+         * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2HakuKohdeluokatLukumaaraPost: async (hakulausekeKysely: HakulausekeKysely, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hakulausekeKysely' is not null or undefined
-            assertParamExists('hakupalveluApiV2HakuKohdeluokatLukumaaraPost', 'hakulausekeKysely', hakulausekeKysely)
+        hakupalveluApiV2HakuKohdeluokatLukumaaraPost: async (hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakulausekeKohdeluokkahakuSuorahaku' is not null or undefined
+            assertParamExists('hakupalveluApiV2HakuKohdeluokatLukumaaraPost', 'hakulausekeKohdeluokkahakuSuorahaku', hakulausekeKohdeluokkahakuSuorahaku)
             const localVarPath = `/hakupalvelu/api/v2/haku/kohdeluokat/lukumaara`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -143,7 +867,7 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeKysely, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeKohdeluokkahakuSuorahaku, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -153,13 +877,13 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * 
          * @summary Hae ehdot täyttäviä kohdeluokkia
-         * @param {HakulausekeKysely} hakulausekeKysely 
+         * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2HakuKohdeluokatPost: async (hakulausekeKysely: HakulausekeKysely, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hakulausekeKysely' is not null or undefined
-            assertParamExists('hakupalveluApiV2HakuKohdeluokatPost', 'hakulausekeKysely', hakulausekeKysely)
+        hakupalveluApiV2HakuKohdeluokatPost: async (hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakulausekeKohdeluokkahakuSuorahaku' is not null or undefined
+            assertParamExists('hakupalveluApiV2HakuKohdeluokatPost', 'hakulausekeKohdeluokkahakuSuorahaku', hakulausekeKohdeluokkahakuSuorahaku)
             const localVarPath = `/hakupalvelu/api/v2/haku/kohdeluokat`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -179,7 +903,43 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeKysely, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeKohdeluokkahakuSuorahaku, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Hae ehdot täyttäviä kohdeluokkia
+         * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2HakuKohdeluokatPtmPost: async (ptmHakulausekeKysely: PtmHakulausekeKysely, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ptmHakulausekeKysely' is not null or undefined
+            assertParamExists('hakupalveluApiV2HakuKohdeluokatPtmPost', 'ptmHakulausekeKysely', ptmHakulausekeKysely)
+            const localVarPath = `/hakupalvelu/api/v2/haku/kohdeluokat/ptm`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ptmHakulausekeKysely, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -332,14 +1092,14 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @summary Hae ehdot täyttäviä tieosuuksia CLJ toteutus
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @summary Hae ehdot täyttäviä tieosuuksia
+         * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2HakuTieosuudetPost: async (hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hakulausekeLisarajausKysely' is not null or undefined
-            assertParamExists('hakupalveluApiV2HakuTieosuudetPost', 'hakulausekeLisarajausKysely', hakulausekeLisarajausKysely)
+        hakupalveluApiV2HakuTieosuudetPost: async (hakulausekeTieosuushaku: HakulausekeTieosuushaku, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakulausekeTieosuushaku' is not null or undefined
+            assertParamExists('hakupalveluApiV2HakuTieosuudetPost', 'hakulausekeTieosuushaku', hakulausekeTieosuushaku)
             const localVarPath = `/hakupalvelu/api/v2/haku/tieosuudet`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -359,7 +1119,48 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeLisarajausKysely, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeTieosuushaku, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
+         * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+         * @param {any} [tagi] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TaustahakuKohdeluokatPtmPost: async (ptmHakulausekeKysely: PtmHakulausekeKysely, tagi?: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'ptmHakulausekeKysely' is not null or undefined
+            assertParamExists('hakupalveluApiV2TaustahakuKohdeluokatPtmPost', 'ptmHakulausekeKysely', ptmHakulausekeKysely)
+            const localVarPath = `/hakupalvelu/api/v2/taustahaku/kohdeluokat/ptm`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (tagi !== undefined) {
+                localVarQueryParameter['tagi'] = tagi;
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(ptmHakulausekeKysely, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -378,12 +1179,12 @@ export const HakuApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Hae ehdot täyttävien kohdeluokkien lukumäärä
-         * @param {HakulausekeKysely} hakulausekeKysely 
+         * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKysely: HakulausekeKysely, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKysely, options);
+        async hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKohdeluokkahakuSuorahaku, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HakuApi.hakupalveluApiV2HakuKohdeluokatLukumaaraPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -391,14 +1192,27 @@ export const HakuApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Hae ehdot täyttäviä kohdeluokkia
-         * @param {HakulausekeKysely} hakulausekeKysely 
+         * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely: HakulausekeKysely, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely, options);
+        async hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKohdeluokkahakuSuorahaku, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HakuApi.hakupalveluApiV2HakuKohdeluokatPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Hae ehdot täyttäviä kohdeluokkia
+         * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2HakuKohdeluokatPtmPost(ptmHakulausekeKysely: PtmHakulausekeKysely, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuKohdeluokatPtmPost(ptmHakulausekeKysely, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HakuApi.hakupalveluApiV2HakuKohdeluokatPtmPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -455,15 +1269,29 @@ export const HakuApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Hae ehdot täyttäviä tieosuuksia CLJ toteutus
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @summary Hae ehdot täyttäviä tieosuuksia
+         * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async hakupalveluApiV2HakuTieosuudetPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuTieosuudetPost(hakulausekeLisarajausKysely, options);
+        async hakupalveluApiV2HakuTieosuudetPost(hakulausekeTieosuushaku: HakulausekeTieosuushaku, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2HakuTieosuudetPost(hakulausekeTieosuushaku, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HakuApi.hakupalveluApiV2HakuTieosuudetPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
+         * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+         * @param {any} [tagi] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hakupalveluApiV2TaustahakuKohdeluokatPtmPost(ptmHakulausekeKysely: PtmHakulausekeKysely, tagi?: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TaustahakuKohdeluokatPtmPost(ptmHakulausekeKysely, tagi, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HakuApi.hakupalveluApiV2TaustahakuKohdeluokatPtmPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -478,22 +1306,32 @@ export const HakuApiFactory = function (configuration?: Configuration, basePath?
         /**
          * 
          * @summary Hae ehdot täyttävien kohdeluokkien lukumäärä
-         * @param {HakulausekeKysely} hakulausekeKysely 
+         * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKysely: HakulausekeKysely, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKysely, options).then((request) => request(axios, basePath));
+        hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKohdeluokkahakuSuorahaku, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Hae ehdot täyttäviä kohdeluokkia
-         * @param {HakulausekeKysely} hakulausekeKysely 
+         * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely: HakulausekeKysely, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely, options).then((request) => request(axios, basePath));
+        hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKohdeluokkahakuSuorahaku, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Hae ehdot täyttäviä kohdeluokkia
+         * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2HakuKohdeluokatPtmPost(ptmHakulausekeKysely: PtmHakulausekeKysely, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.hakupalveluApiV2HakuKohdeluokatPtmPost(ptmHakulausekeKysely, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -537,13 +1375,24 @@ export const HakuApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
-         * @summary Hae ehdot täyttäviä tieosuuksia CLJ toteutus
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @summary Hae ehdot täyttäviä tieosuuksia
+         * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2HakuTieosuudetPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.hakupalveluApiV2HakuTieosuudetPost(hakulausekeLisarajausKysely, options).then((request) => request(axios, basePath));
+        hakupalveluApiV2HakuTieosuudetPost(hakulausekeTieosuushaku: HakulausekeTieosuushaku, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.hakupalveluApiV2HakuTieosuudetPost(hakulausekeTieosuushaku, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
+         * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+         * @param {any} [tagi] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hakupalveluApiV2TaustahakuKohdeluokatPtmPost(ptmHakulausekeKysely: PtmHakulausekeKysely, tagi?: any, options?: RawAxiosRequestConfig): AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila> {
+            return localVarFp.hakupalveluApiV2TaustahakuKohdeluokatPtmPost(ptmHakulausekeKysely, tagi, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -555,23 +1404,34 @@ export class HakuApi extends BaseAPI {
     /**
      * 
      * @summary Hae ehdot täyttävien kohdeluokkien lukumäärä
-     * @param {HakulausekeKysely} hakulausekeKysely 
+     * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKysely: HakulausekeKysely, options?: RawAxiosRequestConfig) {
-        return HakuApiFp(this.configuration).hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKysely, options).then((request) => request(this.axios, this.basePath));
+    public hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options?: RawAxiosRequestConfig) {
+        return HakuApiFp(this.configuration).hakupalveluApiV2HakuKohdeluokatLukumaaraPost(hakulausekeKohdeluokkahakuSuorahaku, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Hae ehdot täyttäviä kohdeluokkia
-     * @param {HakulausekeKysely} hakulausekeKysely 
+     * @param {HakulausekeKohdeluokkahakuSuorahaku} hakulausekeKohdeluokkahakuSuorahaku 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely: HakulausekeKysely, options?: RawAxiosRequestConfig) {
-        return HakuApiFp(this.configuration).hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKysely, options).then((request) => request(this.axios, this.basePath));
+    public hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKohdeluokkahakuSuorahaku: HakulausekeKohdeluokkahakuSuorahaku, options?: RawAxiosRequestConfig) {
+        return HakuApiFp(this.configuration).hakupalveluApiV2HakuKohdeluokatPost(hakulausekeKohdeluokkahakuSuorahaku, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Hae ehdot täyttäviä kohdeluokkia
+     * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2HakuKohdeluokatPtmPost(ptmHakulausekeKysely: PtmHakulausekeKysely, options?: RawAxiosRequestConfig) {
+        return HakuApiFp(this.configuration).hakupalveluApiV2HakuKohdeluokatPtmPost(ptmHakulausekeKysely, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -620,13 +1480,25 @@ export class HakuApi extends BaseAPI {
 
     /**
      * 
-     * @summary Hae ehdot täyttäviä tieosuuksia CLJ toteutus
-     * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+     * @summary Hae ehdot täyttäviä tieosuuksia
+     * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public hakupalveluApiV2HakuTieosuudetPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, options?: RawAxiosRequestConfig) {
-        return HakuApiFp(this.configuration).hakupalveluApiV2HakuTieosuudetPost(hakulausekeLisarajausKysely, options).then((request) => request(this.axios, this.basePath));
+    public hakupalveluApiV2HakuTieosuudetPost(hakulausekeTieosuushaku: HakulausekeTieosuushaku, options?: RawAxiosRequestConfig) {
+        return HakuApiFp(this.configuration).hakupalveluApiV2HakuTieosuudetPost(hakulausekeTieosuushaku, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
+     * @param {PtmHakulausekeKysely} ptmHakulausekeKysely 
+     * @param {any} [tagi] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public hakupalveluApiV2TaustahakuKohdeluokatPtmPost(ptmHakulausekeKysely: PtmHakulausekeKysely, tagi?: any, options?: RawAxiosRequestConfig) {
+        return HakuApiFp(this.configuration).hakupalveluApiV2TaustahakuKohdeluokatPtmPost(ptmHakulausekeKysely, tagi, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -640,14 +1512,14 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
         /**
          * 
          * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @param {HakulausekeKohdeluokkahakuTaustahaku} hakulausekeKohdeluokkahakuTaustahaku 
          * @param {any} [tagi] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2TaustahakuKohdeluokatPost: async (hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hakulausekeLisarajausKysely' is not null or undefined
-            assertParamExists('hakupalveluApiV2TaustahakuKohdeluokatPost', 'hakulausekeLisarajausKysely', hakulausekeLisarajausKysely)
+        hakupalveluApiV2TaustahakuKohdeluokatPost: async (hakulausekeKohdeluokkahakuTaustahaku: HakulausekeKohdeluokkahakuTaustahaku, tagi?: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakulausekeKohdeluokkahakuTaustahaku' is not null or undefined
+            assertParamExists('hakupalveluApiV2TaustahakuKohdeluokatPost', 'hakulausekeKohdeluokkahakuTaustahaku', hakulausekeKohdeluokkahakuTaustahaku)
             const localVarPath = `/hakupalvelu/api/v2/taustahaku/kohdeluokat`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -671,7 +1543,7 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeLisarajausKysely, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeKohdeluokkahakuTaustahaku, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -680,15 +1552,15 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
-         * @summary Hae ehdot täyttäviä tieosia taustahakuna
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @summary Hae ehdot täyttäviä tieosuuksia taustahakuna
+         * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
          * @param {any} [tagi] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2TaustahakuTieosuudetPost: async (hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hakulausekeLisarajausKysely' is not null or undefined
-            assertParamExists('hakupalveluApiV2TaustahakuTieosuudetPost', 'hakulausekeLisarajausKysely', hakulausekeLisarajausKysely)
+        hakupalveluApiV2TaustahakuTieosuudetPost: async (hakulausekeTieosuushaku: HakulausekeTieosuushaku, tagi?: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hakulausekeTieosuushaku' is not null or undefined
+            assertParamExists('hakupalveluApiV2TaustahakuTieosuudetPost', 'hakulausekeTieosuushaku', hakulausekeTieosuushaku)
             const localVarPath = `/hakupalvelu/api/v2/taustahaku/tieosuudet`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -712,7 +1584,7 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeLisarajausKysely, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(hakulausekeTieosuushaku, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -849,27 +1721,27 @@ export const TaustahakuApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @param {HakulausekeKohdeluokkahakuTaustahaku} hakulausekeKohdeluokkahakuTaustahaku 
          * @param {any} [tagi] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeLisarajausKysely, tagi, options);
+        async hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeKohdeluokkahakuTaustahaku: HakulausekeKohdeluokkahakuTaustahaku, tagi?: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeKohdeluokkahakuTaustahaku, tagi, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TaustahakuApi.hakupalveluApiV2TaustahakuKohdeluokatPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @summary Hae ehdot täyttäviä tieosia taustahakuna
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @summary Hae ehdot täyttäviä tieosuuksia taustahakuna
+         * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
          * @param {any} [tagi] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeLisarajausKysely, tagi, options);
+        async hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeTieosuushaku: HakulausekeTieosuushaku, tagi?: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeTieosuushaku, tagi, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TaustahakuApi.hakupalveluApiV2TaustahakuTieosuudetPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -928,24 +1800,24 @@ export const TaustahakuApiFactory = function (configuration?: Configuration, bas
         /**
          * 
          * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @param {HakulausekeKohdeluokkahakuTaustahaku} hakulausekeKohdeluokkahakuTaustahaku 
          * @param {any} [tagi] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options?: RawAxiosRequestConfig): AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila> {
-            return localVarFp.hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeLisarajausKysely, tagi, options).then((request) => request(axios, basePath));
+        hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeKohdeluokkahakuTaustahaku: HakulausekeKohdeluokkahakuTaustahaku, tagi?: any, options?: RawAxiosRequestConfig): AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila> {
+            return localVarFp.hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeKohdeluokkahakuTaustahaku, tagi, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Hae ehdot täyttäviä tieosia taustahakuna
-         * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+         * @summary Hae ehdot täyttäviä tieosuuksia taustahakuna
+         * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
          * @param {any} [tagi] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options?: RawAxiosRequestConfig): AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila> {
-            return localVarFp.hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeLisarajausKysely, tagi, options).then((request) => request(axios, basePath));
+        hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeTieosuushaku: HakulausekeTieosuushaku, tagi?: any, options?: RawAxiosRequestConfig): AxiosPromise<HakupalveluSpecHakuspecTaustahakuTila> {
+            return localVarFp.hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeTieosuushaku, tagi, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -990,25 +1862,25 @@ export class TaustahakuApi extends BaseAPI {
     /**
      * 
      * @summary Hae ehdot täyttäviä kohdeluokkia taustahakuna
-     * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+     * @param {HakulausekeKohdeluokkahakuTaustahaku} hakulausekeKohdeluokkahakuTaustahaku 
      * @param {any} [tagi] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options?: RawAxiosRequestConfig) {
-        return TaustahakuApiFp(this.configuration).hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeLisarajausKysely, tagi, options).then((request) => request(this.axios, this.basePath));
+    public hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeKohdeluokkahakuTaustahaku: HakulausekeKohdeluokkahakuTaustahaku, tagi?: any, options?: RawAxiosRequestConfig) {
+        return TaustahakuApiFp(this.configuration).hakupalveluApiV2TaustahakuKohdeluokatPost(hakulausekeKohdeluokkahakuTaustahaku, tagi, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Hae ehdot täyttäviä tieosia taustahakuna
-     * @param {HakulausekeLisarajausKysely} hakulausekeLisarajausKysely 
+     * @summary Hae ehdot täyttäviä tieosuuksia taustahakuna
+     * @param {HakulausekeTieosuushaku} hakulausekeTieosuushaku 
      * @param {any} [tagi] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeLisarajausKysely: HakulausekeLisarajausKysely, tagi?: any, options?: RawAxiosRequestConfig) {
-        return TaustahakuApiFp(this.configuration).hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeLisarajausKysely, tagi, options).then((request) => request(this.axios, this.basePath));
+    public hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeTieosuushaku: HakulausekeTieosuushaku, tagi?: any, options?: RawAxiosRequestConfig) {
+        return TaustahakuApiFp(this.configuration).hakupalveluApiV2TaustahakuTieosuudetPost(hakulausekeTieosuushaku, tagi, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
