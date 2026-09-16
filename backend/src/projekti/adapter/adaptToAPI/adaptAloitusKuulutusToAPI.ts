@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti, DBVaylaUser } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { KuulutusJulkaisuTila, MuokkausTila } from "hassu-common/graphql/apiModel";
@@ -109,7 +110,11 @@ export function adaptAloitusKuulutusJulkaisuToAPI(
         false
       ),
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
-      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(
+        projekti.synkronoinnit,
+        asianhallintaEventId,
+        !uudelleenKuulutus || uudelleenKuulutus.tiedotaKiinteistonomistajia !== false
+      ),
       julkaisuOnKopio: !!kopioituProjektista,
     };
     return apiJulkaisu;

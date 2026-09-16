@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   DBProjekti,
   DBVaylaUser,
@@ -153,7 +154,11 @@ export function adaptHyvaksymisPaatosVaiheJulkaisuToAPI(
     tila,
     uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
     aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
-    asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(projekti.synkronoinnit, asianhallintaEventId),
+    asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(
+      projekti.synkronoinnit,
+      asianhallintaEventId,
+      !uudelleenKuulutus || uudelleenKuulutus.tiedotaKiinteistonomistajia !== false
+    ),
     julkaisuOnKopio: !!kopioituProjektista,
   };
   return apiJulkaisu;

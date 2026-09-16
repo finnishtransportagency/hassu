@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { fileService } from "../../../files/fileService";
@@ -129,7 +130,11 @@ export function adaptNahtavillaoloVaiheJulkaisuToAPI(
       velho: adaptVelhoToAPI(velho),
       uudelleenKuulutus: adaptUudelleenKuulutusToAPI(uudelleenKuulutus),
       aineistoMuokkaus: adaptAineistoMuokkausToAPI(aineistoMuokkaus),
-      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(dbProjekti.synkronoinnit, asianhallintaEventId),
+      asianhallintaSynkronointiTila: getAsianhallintaSynchronizationStatus(
+        dbProjekti.synkronoinnit,
+        asianhallintaEventId,
+        !uudelleenKuulutus || uudelleenKuulutus.tiedotaKiinteistonomistajia !== false
+      ),
       julkaisuOnKopio: !!kopioituProjektista,
     };
 
