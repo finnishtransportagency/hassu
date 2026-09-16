@@ -437,10 +437,12 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
   let asiakirjaTyyppi: AsiakirjaTyyppi;
   let julkaisuAsianhallintaEventId: string | null | undefined;
   let toimenpideTyyppi: "ENSIMMAINEN_VERSIO" | "UUDELLEENKUULUTUS";
+  let julkaisuHyvaksyja: string | null | undefined;
 
   if (approvalType === PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS) {
     const julkaisu = projekti.aloitusKuulutusJulkaisut?.[projekti.aloitusKuulutusJulkaisut.length - 1];
     if (!julkaisu || julkaisu.maanomistajaluettelo) return;
+    if (julkaisu.uudelleenKuulutus && !julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) return;
     const paths = new SisainenProjektiPaths(projekti.oid).aloituskuulutus(julkaisu);
     julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
       projekti,
@@ -463,9 +465,11 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
     asiakirjaTyyppi = "MAANOMISTAJALUETTELO_ALOITUSKUULUTUS";
     julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
     toimenpideTyyppi = julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO";
+    julkaisuHyvaksyja = julkaisu.hyvaksyja;
   } else if (approvalType === PublishOrExpireEventType.PUBLISH_NAHTAVILLAOLO) {
     const julkaisu = projekti.nahtavillaoloVaiheJulkaisut?.[projekti.nahtavillaoloVaiheJulkaisut.length - 1];
     if (!julkaisu || julkaisu.maanomistajaluettelo) return;
+    if (julkaisu.uudelleenKuulutus && !julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) return;
     const paths = new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(julkaisu);
     julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
       projekti,
@@ -483,9 +487,11 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
     asiakirjaTyyppi = "MAANOMISTAJALUETTELO_NAHTAVILLAOLO";
     julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
     toimenpideTyyppi = julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO";
+    julkaisuHyvaksyja = julkaisu.hyvaksyja;
   } else if (approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
     const julkaisu = projekti.hyvaksymisPaatosVaiheJulkaisut?.[projekti.hyvaksymisPaatosVaiheJulkaisut.length - 1];
     if (!julkaisu || julkaisu.maanomistajaluettelo) return;
+    if (julkaisu.uudelleenKuulutus && !julkaisu.uudelleenKuulutus.tiedotaKiinteistonomistajia) return;
     const paths = new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu);
     julkaisu.maanomistajaluettelo = await tallennaMaanomistajaluettelo(
       projekti,
@@ -503,6 +509,7 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
     asiakirjaTyyppi = "MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS";
     julkaisuAsianhallintaEventId = julkaisu.asianhallintaEventId;
     toimenpideTyyppi = julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO";
+    julkaisuHyvaksyja = julkaisu.hyvaksyja;
   } else {
     return;
   }
@@ -511,14 +518,24 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
     log.warn("Asianhallintaintegraatio ei ole päällä, maanomistajaluetteloa ei lähetetä asianhallintaan", { approvalType });
     return;
   }
+
+  let hyvaksyjaOverride: { hyvaksyja?: string; hyvaksyjanNimi?: string } | undefined;
+  if (julkaisuHyvaksyja) {
+    const hyvaksyjaUser = projekti.kayttoOikeudet?.find((u) => u.kayttajatunnus === julkaisuHyvaksyja);
+    hyvaksyjaOverride = {
+      hyvaksyja: julkaisuHyvaksyja,
+      hyvaksyjanNimi: hyvaksyjaUser?.sukunimi ? `${hyvaksyjaUser.sukunimi} ${hyvaksyjaUser.etunimi}` : undefined,
+    };
+  }
+
   await asianhallintaService.saveAndEnqueueSynchronization(projekti.oid, {
     asianhallintaEventId: julkaisuAsianhallintaEventId + "_maanomistajaluettelo",
     asiatunnus,
     vaylaAsianhallinta,
     toimenpideTyyppi,
     dokumentit: [{ s3Path: maanomistajaluetteloPath }],
-  });
-  log.info("Maanomistajaluettelo lähetetty asianhallintaan", { approvalType, asiakirjaTyyppi });
+  }, hyvaksyjaOverride);
+  log.info("Maanomistajaluettelo välitetty asianhallintaan", { oid: projekti.oid, approvalType, asiakirjaTyyppi, maanomistajaluetteloPath });
 }
 
 export const handlerFactory = (event: SQSEvent) => async () => {
