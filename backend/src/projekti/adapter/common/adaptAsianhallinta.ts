@@ -1,10 +1,12 @@
+// Contains code generated or recommended by Amazon Q
 import { AsianhallintaSynkronointi, SynkronointiTila } from "@hassu/asianhallinta";
 import { AsianTila } from "hassu-common/graphql/apiModel";
 import { synkronointiTilaToAsianTilaMap } from "../../../asianhallinta/synkronointiTilaToAsianTilaMap";
 
 export const getAsianhallintaSynchronizationStatus = (
   synkronoinnit: Record<string, AsianhallintaSynkronointi> | undefined,
-  asianhallintaEventId: string | null | undefined
+  asianhallintaEventId: string | null | undefined,
+  odotaMaanomistajaluetteloa = true
 ): AsianTila | undefined => {
   if (asianhallintaEventId && synkronoinnit?.[asianhallintaEventId]?.dokumentit) {
     const virheTila = getSynkronointiVirheTila(synkronoinnit[asianhallintaEventId]);
@@ -12,9 +14,12 @@ export const getAsianhallintaSynchronizationStatus = (
       return synkronointiTilaToAsianTilaMap[virheTila];
     }
 
-    const maanomistajaluetteloEventId = asianhallintaEventId + "_maanomistajaluettelo";
-    const maanomistajaluetteloSynkronointi = synkronoinnit[maanomistajaluetteloEventId];
-    if (maanomistajaluetteloSynkronointi?.dokumentit) {
+    if (odotaMaanomistajaluetteloa) {
+      const maanomistajaluetteloEventId = asianhallintaEventId + "_maanomistajaluettelo";
+      const maanomistajaluetteloSynkronointi = synkronoinnit[maanomistajaluetteloEventId];
+      if (!maanomistajaluetteloSynkronointi?.dokumentit) {
+        return undefined; // maanomistajaluetteloa ei ole vielä lähetetty
+      }
       const maanomistajaVirheTila = getSynkronointiVirheTila(maanomistajaluetteloSynkronointi);
       if (maanomistajaVirheTila) {
         return synkronointiTilaToAsianTilaMap[maanomistajaVirheTila];
