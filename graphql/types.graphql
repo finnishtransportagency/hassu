@@ -1293,8 +1293,9 @@ type VelhoAineisto {
   tiedosto: String!
   dokumenttiTyyppi: String!
   muokattu: String!
-  kuvaus: String!
+  kuvaus: String
   koko: Float
+  polku: String!
 }
 
 type NykyinenKayttaja {
