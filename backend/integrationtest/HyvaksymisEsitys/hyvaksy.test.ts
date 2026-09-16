@@ -220,7 +220,7 @@ describe("Hyväksymisesityksen hyväksyminen", () => {
     expect(projektiAfter?.julkaistuHyvaksymisEsitys?.hyvaksymisPaiva).to.exist;
 
     expect(ashaStub?.calledOnce).to.be.true;
-    expect(ashaStub?.firstCall.args).to.eql(["Testi1", "uuid123"]);
+    expect(ashaStub?.firstCall.args).to.eql(["Testi1", "uuid123", undefined]);
   });
 
   it("ei onnistu, jos asha on väärässä tilassa", async () => {

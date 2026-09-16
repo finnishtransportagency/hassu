@@ -28,8 +28,12 @@ describe("getAsianhallintaSynchronizationStatus", () => {
     expect(getAsianhallintaSynchronizationStatus({}, undefined)).to.eql(AsianTila.EI_TESTATTAVISSA);
   });
 
-  it("palauttaa SYNKRONOITU kun päädokumentit synkronoitu eikä maanomistajaluetteloa", () => {
-    expect(getAsianhallintaSynchronizationStatus({ [EVENT_ID]: synkronoitu() }, EVENT_ID)).to.eql(AsianTila.SYNKRONOITU);
+  it("palauttaa undefined kun päädokumentit synkronoitu mutta maanomistajaluetteloa odotetaan eikä sitä ole", () => {
+    expect(getAsianhallintaSynchronizationStatus({ [EVENT_ID]: synkronoitu() }, EVENT_ID)).to.be.undefined;
+  });
+
+  it("palauttaa SYNKRONOITU kun päädokumentit synkronoitu eikä maanomistajaluetteloa odoteta", () => {
+    expect(getAsianhallintaSynchronizationStatus({ [EVENT_ID]: synkronoitu() }, EVENT_ID, false)).to.eql(AsianTila.SYNKRONOITU);
   });
 
   it("palauttaa undefined kun päädokumentit ei vielä synkronoitu", () => {
@@ -61,8 +65,7 @@ describe("getAsianhallintaSynchronizationStatus", () => {
     );
   });
 
-  it("ei tarkista maanomistajaluetteloa jos sitä ei ole synkronoitu lainkaan", () => {
-    // maanomistajaluettelo-eventtiä ei ole olemassa → SYNKRONOITU pelkillä päädokumenteilla
-    expect(getAsianhallintaSynchronizationStatus({ [EVENT_ID]: synkronoitu() }, EVENT_ID)).to.eql(AsianTila.SYNKRONOITU);
+  it("ei tarkista maanomistajaluetteloa jos odotaMaanomistajaluetteloa=false", () => {
+    expect(getAsianhallintaSynchronizationStatus({ [EVENT_ID]: synkronoitu() }, EVENT_ID, false)).to.eql(AsianTila.SYNKRONOITU);
   });
 });

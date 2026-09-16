@@ -201,6 +201,31 @@ export const setsToimenpideTyyppiUudelleenkuulutusWhenUudelleenKuulutus = async 
   expect(saveAndEnqueueStub.firstCall.args[1].toimenpideTyyppi).to.eql("UUDELLEENKUULUTUS");
 };
 
+export const doesNotGenerateWhenTiedotaKiinteistonomistajiaFalse = async () => {
+  const projekti: DBProjekti = {
+    ...baseProjekti(),
+    aloitusKuulutusJulkaisut: [
+      aloitusKuulutusJulkaisu({
+        uudelleenKuulutus: { tiedotaKiinteistonomistajia: false },
+      }),
+    ],
+  };
+  stubBasics({ loadProjektiByOidReturnValue: projekti, applyProjektiStatusSetStatus: API.Status.ALOITUSKUULUTUS });
+  sinon.stub(omistajaDatabase, "haeProjektinKaytossaolevatOmistajat").resolves([]);
+  const tallennaMaanomistajaluetteloStub = sinon.stub(tiedotettavatExcel, "tallennaMaanomistajaluettelo");
+  const saveAndEnqueueStub = sinon.stub(asianhallintaService, "saveAndEnqueueSynchronization");
+
+  const handler = fakeEventInSqsQueueWithApprovalType({
+    eventType: SqsEventType.GENERATE_MAANOMISTAJALUETTELO,
+    projektiOid: OID,
+    approvalType: PublishOrExpireEventType.PUBLISH_ALOITUSKUULUTUS,
+  });
+  await handler();
+
+  expect(tallennaMaanomistajaluetteloStub.callCount).to.eql(0);
+  expect(saveAndEnqueueStub.callCount).to.eql(0);
+};
+
 export const doesNotGenerateWhenHyvaksymisPaivaMissing = async () => {
   const projekti: DBProjekti = {
     ...baseProjekti(),

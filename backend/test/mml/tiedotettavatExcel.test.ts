@@ -1,4 +1,4 @@
-import { ProjektiTyyppi, TiedotettavanLahetyksenTila, Vaihe } from "hassu-common/graphql/apiModel";
+import { LahetysTapa, ProjektiTyyppi, TiedotettavanLahetyksenTila, Vaihe } from "hassu-common/graphql/apiModel";
 import { DBProjektiSlim, DBVaylaUser } from "../../src/database/model";
 import { generateExcel, generateExcelByQuery, tallennaMaanomistajaluettelo } from "../../src/mml/tiedotettavatExcel";
 import { mockClient } from "aws-sdk-client-mock";
@@ -54,7 +54,7 @@ const omistaja1: DBOmistaja = {
   suomifiLahetys: true,
   lahetykset: [
     { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 09:09:00+02:00" },
-    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 10:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 10:00:00+02:00", lahetysTapa: LahetysTapa.KIRJE },
   ],
 };
 const omistaja2: DBOmistaja = {
@@ -124,7 +124,7 @@ const muistuttaja1: DBMuistuttaja = {
   suomifiLahetys: true,
   lahetykset: [
     { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 09:00:00+02:00" },
-    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 11:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 11:00:00+02:00", lahetysTapa: LahetysTapa.KIRJE },
   ],
 };
 const muistuttaja2: DBMuistuttaja = {
@@ -142,7 +142,7 @@ const muistuttaja2: DBMuistuttaja = {
   suomifiLahetys: true,
   lahetykset: [
     { tila: TiedotettavanLahetyksenTila.VIRHE, lahetysaika: "2024-11-04 11:00:01+02:00" },
-    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 11:00:00+02:00" },
+    { tila: TiedotettavanLahetyksenTila.OK, lahetysaika: "2024-11-04 11:00:00+02:00", lahetysTapa: LahetysTapa.VIESTI },
   ],
 };
 const muistuttaja3: DBMuistuttaja = {
