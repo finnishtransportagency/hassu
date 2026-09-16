@@ -235,7 +235,7 @@ function getTiedotustapa(
   if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
     return "Lähetys epäonnistui";
   }
-  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : "Suomi.fi: kirje";
+  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : lahetys.lahetysTapa === LahetysTapa.KIRJE ? "Suomi.fi: kirje" : "Suomi.fi: tuntematon";
 }
 
 async function haeOmistajat(oid: string): Promise<Rivi[]> {
