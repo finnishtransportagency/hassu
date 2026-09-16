@@ -165,7 +165,7 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS, asianhallintaSQS);
     const hyvaksymisEsitysAineistoHandlerLambda = await this.createHyvaksymisEsitysAineistoLambda(
       commonEnvironmentVariables,
       hyvaksymisEsitysSQS
@@ -955,7 +955,8 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     eventSQS: Queue,
     aineistoSQS: Queue,
-    suomifiSQS: Queue
+    suomifiSQS: Queue,
+    asianhallintaSQS: Queue
   ): Promise<NodejsFunction> {
     const frontendStackOutputs = await readFrontendStackOutputs();
     const concurrency = 10;
@@ -1011,6 +1012,7 @@ export class HassuBackendStack extends Stack {
     importer.addEventSource(new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency }));
     eventSQS.grantSendMessages(importer);
     suomifiSQS.grantSendMessages(importer);
+    asianhallintaSQS.grantSendMessages(importer);
     return importer;
   }
 
