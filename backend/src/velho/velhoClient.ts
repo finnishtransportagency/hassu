@@ -95,7 +95,6 @@ export class VelhoClient {
             ["projekti/projekti", "ominaisuudet", "asiatunnus-traficom"],
             ["projekti/projekti", "ominaisuudet", "tilaajaorganisaatio"],
           ],
-          tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.kohdeluokkahaku,
           jarjesta: [[["projekti/projekti", "ominaisuudet", "nimi"], "nouseva" as unknown as object]],
         },
         lauseke: [
@@ -141,9 +140,9 @@ export class VelhoClient {
     return typeof dokumenttityyppi === "string" ? dokumenttityyppi : null;
   }
 
-  private getAineistoKuvaus(aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">): string | null | undefined {
-    const kuvaus = aineisto.ominaisuudet?.kuvaus;
-    return typeof kuvaus === "string" ? kuvaus : null;
+  private getAineistoPolku(aineisto: PartiallyMandatory<AineistoPalvelu.AineistoAineisto, "tuorein-versio">): string | null | undefined {
+    const polku = aineisto.ominaisuudet?.polku;
+    return typeof polku === "string" ? polku : null;
   }
 
   public async loadProjektiAineistot(oid: string): Promise<VelhoToimeksianto[]> {
@@ -168,7 +167,7 @@ export class VelhoClient {
                 __typename: "VelhoAineisto",
                 oid: aineisto.oid,
                 tiedosto: tiedostoNimi,
-                kuvaus: this.getAineistoKuvaus(aineisto) ?? "",
+                polku: this.getAineistoPolku(aineisto) ?? "",
                 dokumenttiTyyppi,
                 muokattu: dayjs(muokattu).format(),
                 koko,
@@ -188,9 +187,8 @@ export class VelhoClient {
     toimeksianto: ProjektiToimeksiannotInner
   ): Promise<Pick<AineistoPalvelu.AineistoAineisto, "oid" | "tuorein-versio" | "ominaisuudet">[]> {
     try {
-      const hakulausekeKysely: HakuPalvelu.HakulausekeKysely = {
+      const hakulausekeKysely: HakuPalvelu.HakulausekeKohdeluokkahakuSuorahaku = {
         asetukset: {
-          tyyppi: HakuPalvelu.HakulausekeAsetuksetTyyppiEnum.kohdeluokkahaku,
           jarjesta: [[["aineisto/aineisto", "ominaisuudet", "nimi"], "nouseva" as unknown as object]],
           "palautettavat-kentat": [
             ["aineisto/aineisto", "oid"],

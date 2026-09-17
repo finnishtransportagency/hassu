@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Aineistopalvelu API v1
- * Aineistopalvelu API v1  Palvelu vastaa seuraavista kohdeluokista:  - Aineisto (tekninen nimi: aineisto/aineisto, oid-prefix: 1.2.246.578.5.100)  - Dokumentti (tekninen nimi: aineisto/dokumentti, oid-prefix: 1.2.246.578.5.199)  - Ladattava paketti (tekninen nimi: aineisto/ladattava-paketti, oid-prefix: 1.2.246.578.5.102)  - Pakattu kansio (tekninen nimi: aineisto/pakattu-kansio, oid-prefix: 1.2.246.578.5.101)  - Viittaus (tekninen nimi: aineisto/viittaus, oid-prefix: 1.2.246.578.5.103)
+ *   Palvelu vastaa seuraavista kohdeluokista:  | Nimi | Tekninen nimi | OID-prefix | Versioitu | Schema | Sijaintityyppi | Sijaintitarkenne | | :--- | :--- | :--- | :---: | :---: | :---: | :---: | | Aineisto | aineisto/aineisto | 1.2.246.578.5.100 | ⬜ | 7 | - | - | | Dokumentti | aineisto/dokumentti | 1.2.246.578.5.199 | ⬜ | 2 | - | - | | Ladattava paketti | aineisto/ladattava-paketti | 1.2.246.578.5.102 | ⬜ | 1 | - | - | | Pakattu kansio | aineisto/pakattu-kansio | 1.2.246.578.5.101 | ⬜ | 1 | - | - | | Viittaus | aineisto/viittaus | 1.2.246.578.5.103 | ⬜ | 2 | - | - |
  *
  * The version of the OpenAPI document: v1
  * 
@@ -40,7 +40,7 @@ export interface AineistoAineisto {
     'muokkaaja': AineistoAineistoLuoja | null;
     'versiot'?: Array<AineistoAineistoVersiotInner>;
     'luotu': string;
-    'luontikohdeluokan-oid'?: string | null;
+    'luontikohdeluokan-oid': string;
     'lahdejarjestelman-id': string | null;
     'tuorein-versio'?: AineistoAineistoTuoreinVersio | null;
 }
@@ -50,7 +50,7 @@ export interface AineistoAineistoLuoja {
     'client_id'?: string | null;
 }
 export interface AineistoAineistoOminaisuudet {
-    'polku'?: string | null;
+    'polku': string;
     'kuvaus'?: string | null;
     'rakennusosa'?: object | null;
     'tila': object;
@@ -85,24 +85,13 @@ export interface AineistoAineistoVersiotInnerLuoja {
     'kayttajanimi': string | null;
 }
 export interface AineistoLisaystiedot {
+    'luontikohdeluokan-oid': string;
     'ominaisuudet': AineistoLisaystiedotOminaisuudet;
     'schemaversio': number;
     'linkit': Array<string | null>;
-    'luontikohdeluokan-oid'?: string | null;
-}
-export interface AineistoLisaystiedot1 {
-    'muokattu': string | null;
-    'ominaisuudet': AineistoLisaystiedotOminaisuudet;
-    'oid': string;
-    'luoja': AineistoAineistoLuoja | null;
-    'linkit': Array<string | null>;
-    'schemaversio': number;
-    'muokkaaja': AineistoAineistoLuoja | null;
-    'luotu': string;
-    'luontikohdeluokan-oid'?: string | null;
 }
 export interface AineistoLisaystiedotOminaisuudet {
-    'polku'?: string | null;
+    'polku': string;
     'kuvaus'?: string | null;
     'rakennusosa'?: AineistoLisaystiedotOminaisuudetRakennusosaEnum | null;
     'tila': AineistoLisaystiedotOminaisuudetTilaEnum;
@@ -750,34 +739,13 @@ export const AineistoLisaystiedotOminaisuudetRyhmaEnum = {
 
 export type AineistoLisaystiedotOminaisuudetRyhmaEnum = typeof AineistoLisaystiedotOminaisuudetRyhmaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRyhmaEnum];
 
-export interface AineistoOperaatioOperaatio {
-    'tila': AineistoOperaatioOperaatioTilaEnum;
-    'tilan-tiedot'?: { [key: string]: object; };
-    'aloitettu'?: string;
-    'paattynyt'?: string;
-    'selite'?: string;
-    'aineistot'?: Array<string>;
-}
-
-export const AineistoOperaatioOperaatioTilaEnum = {
-    pakkaus_kaynnissa: 'pakkaus-kaynnissa',
-    purku_kaynnissa: 'purku-kaynnissa',
-    virhe: 'virhe',
-    purku_valmis: 'purku-valmis',
-    valmis: 'valmis',
-    kaynnissa: 'kaynnissa',
-    pakkaus_valmis: 'pakkaus-valmis'
-} as const;
-
-export type AineistoOperaatioOperaatioTilaEnum = typeof AineistoOperaatioOperaatioTilaEnum[keyof typeof AineistoOperaatioOperaatioTilaEnum];
-
 export interface AineistoPaivitystiedot {
+    'luontikohdeluokan-oid': string;
     'ominaisuudet': AineistoLisaystiedotOminaisuudet;
     'schemaversio': number;
     'linkit': Array<string | null>;
     'muutoksen-lahde-id'?: string | null;
     'vektor'?: AineistoAineistoVektor;
-    'luontikohdeluokan-oid'?: string | null;
 }
 export interface AineistoViittaus {
     'muokattu': string | null;
@@ -817,12 +785,80 @@ export interface AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot 
 export interface AineistopalveluApiV1AineistoMassapoistoPostRequest {
     'oidit': Set<string>;
 }
+export interface AineistopalveluApiV1AineistoOidVektorlinkkiGet200Response {
+    'vektorlinkki': string | null;
+}
 export interface AineistopalveluApiV1LatauspakettiPost200Response {
     'paketti-oid': string;
 }
 export interface AineistopalveluApiV1MassakloonausAineistoPostRequest {
     'kohdetoimeksiannon-oid': string;
     'lahdeaineistojen-oidit': Set<string>;
+}
+export interface AineistopalveluApiV1ProjektiportaaliFoldersPostRequest {
+    'project-id': number;
+    'folder-id'?: number | null;
+    'taso'?: number;
+}
+export interface AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest {
+    'project-id': number;
+    'toimeksianto-oid': string;
+    'projektipankki-nimi': string;
+    'autosync': boolean;
+    'folder-selections'?: Array<number>;
+    'since'?: string;
+}
+export interface AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest {
+    'toimeksianto-oidit': Array<string>;
+}
+export interface AineistopalveluSpecProjektiportaaliAineistoVastausInner {
+    'AIVersionDescription'?: string | null;
+    'AIDocTypes'?: Array<string> | null;
+    'RevisionDateSpecified': boolean;
+    'RevisionDate'?: string | null;
+    'FolderIDSpecified': boolean;
+    'EndDate'?: string | null;
+    'Title': string;
+    'VersionAddedDateSpecified': boolean;
+    'VersionAddedDate': string;
+    'Status': string | null;
+    'Key': string;
+    'VersionFileSize': number;
+    'DocType'?: string | null;
+    'DocumentDescription'?: string | null;
+    'Revision'?: string | null;
+    'ID': number;
+    'VersionFileName': string;
+    'FolderID': number;
+    'Classification': string;
+    'VersionFileSizeSpecified': boolean;
+    'VersionNumberSpecified': boolean;
+    'VersionDescription'?: string | null;
+    'VersionNumber': number;
+    'IDSpecified': boolean;
+    'AIDocDescription'?: string | null;
+    'EndDateSpecified': boolean;
+}
+export interface AineistopalveluSpecProjektiportaaliKansioVastausInner {
+    'ParentIDSpecified': boolean;
+    'AddedDate'?: string | null;
+    'ParentTypeSpecified': boolean;
+    'ParentType'?: string | null;
+    'ID': number;
+    'Description'?: string | null;
+    'TemplateFolderId'?: number | null;
+    'AddedDateSpecified': boolean;
+    'TemplateFolderIDSpecified': boolean;
+    'Name': string;
+    'IsTemplateSpecified': boolean;
+    'IDSpecified': boolean;
+    'ParentID'?: number | null;
+    'IsTemplate'?: boolean | null;
+}
+export interface AineistopalveluSpecProjektiportaaliProjektitVastausInner {
+    'ID': number;
+    'Name': string;
+    'Number': string | null;
 }
 export interface ViittausLisaystiedot {
     'ominaisuudet': ViittausLisaystiedotOminaisuudet;
@@ -1024,7 +1060,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Päivittää aineiston metatiedot.                       Palauttaa aineiston (kaikki) tiedot.
+         * @summary Päivittää aineiston metatiedot.                           Palauttaa aineiston (kaikki) tiedot.
          * @param {string} oid 
          * @param {AineistoPaivitystiedot} aineistoPaivitystiedot 
          * @param {*} [options] Override http request option.
@@ -1064,7 +1100,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Luo uuden aineiston annetuilla metatiedoilla.                        Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
+         * @summary Luo uuden aineiston annetuilla metatiedoilla.                           Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
          * @param {AineistoLisaystiedot} aineistoLisaystiedot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1210,7 +1246,7 @@ export const AineistoApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Päivittää aineiston metatiedot.                       Palauttaa aineiston (kaikki) tiedot.
+         * @summary Päivittää aineiston metatiedot.                           Palauttaa aineiston (kaikki) tiedot.
          * @param {string} oid 
          * @param {AineistoPaivitystiedot} aineistoPaivitystiedot 
          * @param {*} [options] Override http request option.
@@ -1224,12 +1260,12 @@ export const AineistoApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Luo uuden aineiston annetuilla metatiedoilla.                        Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
+         * @summary Luo uuden aineiston annetuilla metatiedoilla.                           Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
          * @param {AineistoLisaystiedot} aineistoLisaystiedot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistoLisaystiedot1>> {
+        async aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1AineistoPost']?.[localVarOperationServerIndex]?.url;
@@ -1242,7 +1278,7 @@ export const AineistoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AineistoAineisto>>> {
+        async aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1MassakloonausAineistoPost(body, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AineistoApi.aineistopalveluApiV1MassakloonausAineistoPost']?.[localVarOperationServerIndex]?.url;
@@ -1309,7 +1345,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Päivittää aineiston metatiedot.                       Palauttaa aineiston (kaikki) tiedot.
+         * @summary Päivittää aineiston metatiedot.                           Palauttaa aineiston (kaikki) tiedot.
          * @param {string} oid 
          * @param {AineistoPaivitystiedot} aineistoPaivitystiedot 
          * @param {*} [options] Override http request option.
@@ -1320,12 +1356,12 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Luo uuden aineiston annetuilla metatiedoilla.                        Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
+         * @summary Luo uuden aineiston annetuilla metatiedoilla.                           Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
          * @param {AineistoLisaystiedot} aineistoLisaystiedot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig): AxiosPromise<AineistoLisaystiedot1> {
+        aineistopalveluApiV1AineistoPost(aineistoLisaystiedot: AineistoLisaystiedot, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1AineistoPost(aineistoLisaystiedot, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1335,7 +1371,7 @@ export const AineistoApiFactory = function (configuration?: Configuration, baseP
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<Array<AineistoAineisto>> {
+        aineistopalveluApiV1MassakloonausAineistoPost(body: AineistopalveluApiV1MassakloonausAineistoPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1MassakloonausAineistoPost(body, options).then((request) => request(axios, basePath));
         },
     };
@@ -1402,7 +1438,7 @@ export class AineistoApi extends BaseAPI {
 
     /**
      * 
-     * @summary Päivittää aineiston metatiedot.                       Palauttaa aineiston (kaikki) tiedot.
+     * @summary Päivittää aineiston metatiedot.                           Palauttaa aineiston (kaikki) tiedot.
      * @param {string} oid 
      * @param {AineistoPaivitystiedot} aineistoPaivitystiedot 
      * @param {*} [options] Override http request option.
@@ -1414,7 +1450,7 @@ export class AineistoApi extends BaseAPI {
 
     /**
      * 
-     * @summary Luo uuden aineiston annetuilla metatiedoilla.                        Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
+     * @summary Luo uuden aineiston annetuilla metatiedoilla.                           Palauttaa aineiston (kaikki) tiedot sisältäen sille generoidun OIDin.
      * @param {AineistoLisaystiedot} aineistoLisaystiedot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1482,7 +1518,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
         },
         /**
          * 
-         * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                   Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                   Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                   nimen tulee vastata tälle kutsulle annettua parametria.                   Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                           Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                           nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
          * @param {string} oid 
          * @param {string} tiedosto 
          * @param {*} [options] Override http request option.
@@ -1638,6 +1674,40 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Palauttaa käyttäjäkohtaisen linkin aineistolle Vektor vieweriin.
+         * @param {string} oid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidVektorlinkkiGet: async (oid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidVektorlinkkiGet', 'oid', oid)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/vektorlinkki`
+                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1663,7 +1733,7 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                   Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                   Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                   nimen tulee vastata tälle kutsulle annettua parametria.                   Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                           Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                           nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
          * @param {string} oid 
          * @param {string} tiedosto 
          * @param {*} [options] Override http request option.
@@ -1718,6 +1788,19 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidLinkitKohdeOidPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @summary Palauttaa käyttäjäkohtaisen linkin aineistolle Vektor vieweriin.
+         * @param {string} oid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoOidVektorlinkkiGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AineistopalveluApiV1AineistoOidVektorlinkkiGet200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidVektorlinkkiGet(oid, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidVektorlinkkiGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -1740,7 +1823,7 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
         },
         /**
          * 
-         * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                   Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                   Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                   nimen tulee vastata tälle kutsulle annettua parametria.                   Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                           Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                           nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
          * @param {string} oid 
          * @param {string} tiedosto 
          * @param {*} [options] Override http request option.
@@ -1783,6 +1866,16 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
         aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistoAineisto> {
             return localVarFp.aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid, kohdeOid, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Palauttaa käyttäjäkohtaisen linkin aineistolle Vektor vieweriin.
+         * @param {string} oid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidVektorlinkkiGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<AineistopalveluApiV1AineistoOidVektorlinkkiGet200Response> {
+            return localVarFp.aineistopalveluApiV1AineistoOidVektorlinkkiGet(oid, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -1804,7 +1897,7 @@ export class DokumenttiApi extends BaseAPI {
 
     /**
      * 
-     * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                   Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                   Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                   nimen tulee vastata tälle kutsulle annettua parametria.                   Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+     * @summary Palauttaa olemassaolevan dokumentin sisällön päivittämiseen tarvittavat tiedot (S3 upload form).                           Valinnaiset dokumenttikohtaiset metatiedot annetaan query-parametreinä (?kuvaus=foobar&...), ks. /dokumentin-metatietokuvaus.                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle, ja ladattavan tiedoston                           nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
      * @param {string} oid 
      * @param {string} tiedosto 
      * @param {*} [options] Override http request option.
@@ -1849,6 +1942,17 @@ export class DokumenttiApi extends BaseAPI {
      */
     public aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid: string, kohdeOid: string, options?: RawAxiosRequestConfig) {
         return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidLinkitKohdeOidPost(oid, kohdeOid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa käyttäjäkohtaisen linkin aineistolle Vektor vieweriin.
+     * @param {string} oid 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1AineistoOidVektorlinkkiGet(oid: string, options?: RawAxiosRequestConfig) {
+        return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidVektorlinkkiGet(oid, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1895,7 +1999,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                         Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                         ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                         Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                          Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                          ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                          Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
          * @param {string} oid 
          * @param {string} tiedosto 
          * @param {*} [options] Override http request option.
@@ -1933,7 +2037,49 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                         valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
+         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                           ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {object | null} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost: async (oid: string, tiedosto: string, body?: object | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost', 'tiedosto', tiedosto)
+            const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-lahetystiedot/{tiedosto}`
+                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
+                .replace(`{${"tiedosto"}}`, encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                          valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
          * @param {string} oid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2129,7 +2275,7 @@ export const KohdeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                         Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                         ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                         Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                          Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                          ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                          Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
          * @param {string} oid 
          * @param {string} tiedosto 
          * @param {*} [options] Override http request option.
@@ -2143,12 +2289,27 @@ export const KohdeApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                         valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
+         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                           ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {object | null} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                          valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
          * @param {string} oid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: AineistoOperaatioOperaatio; }>> {
+        async aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: object; }>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet']?.[localVarOperationServerIndex]?.url;
@@ -2220,7 +2381,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
-         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                         Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                         ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                         Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                          Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                          ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                          Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
          * @param {string} oid 
          * @param {string} tiedosto 
          * @param {*} [options] Override http request option.
@@ -2231,12 +2392,24 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
-         * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                         valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
+         * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                           ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {object | null} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                          valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
          * @param {string} oid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: AineistoOperaatioOperaatio; }> {
+        aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid: string, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: object; }> {
             return localVarFp.aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet(oid, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2295,7 +2468,7 @@ export class KohdeApi extends BaseAPI {
 
     /**
      * 
-     * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                         Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                         ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                         Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+     * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                          Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                          ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                          Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
      * @param {string} oid 
      * @param {string} tiedosto 
      * @param {*} [options] Override http request option.
@@ -2307,7 +2480,20 @@ export class KohdeApi extends BaseAPI {
 
     /**
      * 
-     * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                         valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
+     * @summary Palauttaa pakatun kansion lähettämiseen tarvittavat tiedot (S3 upload form).                           Formiin tulee lisätä viimeisenä file-niminen input-kenttä varsinaiselle tiedostolle,                           ja ladattavan tiedoston nimen tulee vastata tälle kutsulle annettua parametria.                           Generoidut parametrit ovat voimassa :voimassa-asti -avaimen mukaisen ajan.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {object | null} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig) {
+        return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa annettuun kohteeseen liittyvät käynnissä olevat tai hiljattain                          valmistuneet/keskeytyneet massaoperaatiot (paketin purku tms.)
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2530,18 +2716,126 @@ export class LatauspakettiApi extends BaseAPI {
 
 
 /**
- * TarkistusApi - axios parameter creator
+ * ProjektiportaaliApi - axios parameter creator
  */
-export const TarkistusApiAxiosParamCreator = function (configuration?: Configuration) {
+export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+         * @summary Palauttaa kansiorakenteen seuraavan tason annetun projektin ja/tai kansion perusteella
+         * @param {AineistopalveluApiV1ProjektiportaaliFoldersPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1HallintaTarkistusAineistoGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/aineistopalvelu/api/v1/hallinta/tarkistus/aineisto`;
+        aineistopalveluApiV1ProjektiportaaliFoldersPost: async (body: AineistopalveluApiV1ProjektiportaaliFoldersPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliFoldersPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/folders`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa projektit Projektiportaalista
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliProjectsGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/projects`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa täydellisen kansiopuun projektin perusteella
+         * @param {number} projectId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet: async (projectId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectId' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet', 'projectId', projectId)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/projects/{project-id}/folderlist`
+                .replace(`{${"project-id"}}`, encodeURIComponent(String(projectId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa kansion dokumentit Projektiportaalista
+         * @param {number} projectId 
+         * @param {number} folderId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet: async (projectId: number, folderId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'projectId' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet', 'projectId', projectId)
+            // verify required parameter 'folderId' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet', 'folderId', folderId)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/projects/{project-id}/folders/{folder-id}/documents`
+                .replace(`{${"project-id"}}`, encodeURIComponent(String(projectId)))
+                .replace(`{${"folder-id"}}`, encodeURIComponent(String(folderId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2568,56 +2862,639 @@ export const TarkistusApiAxiosParamCreator = function (configuration?: Configura
 };
 
 /**
- * TarkistusApi - functional programming interface
+ * ProjektiportaaliApi - functional programming interface
  */
-export const TarkistusApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = TarkistusApiAxiosParamCreator(configuration)
+export const ProjektiportaaliApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ProjektiportaaliApiAxiosParamCreator(configuration)
     return {
         /**
          * 
-         * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+         * @summary Palauttaa kansiorakenteen seuraavan tason annetun projektin ja/tai kansion perusteella
+         * @param {AineistopalveluApiV1ProjektiportaaliFoldersPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1HallintaTarkistusAineistoGet(options);
+        async aineistopalveluApiV1ProjektiportaaliFoldersPost(body: AineistopalveluApiV1ProjektiportaaliFoldersPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AineistopalveluSpecProjektiportaaliKansioVastausInner>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliFoldersPost(body, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TarkistusApi.aineistopalveluApiV1HallintaTarkistusAineistoGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliApi.aineistopalveluApiV1ProjektiportaaliFoldersPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa projektit Projektiportaalista
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliProjectsGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AineistopalveluSpecProjektiportaaliProjektitVastausInner>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliProjectsGet(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliApi.aineistopalveluApiV1ProjektiportaaliProjectsGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa täydellisen kansiopuun projektin perusteella
+         * @param {number} projectId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet(projectId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet(projectId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliApi.aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa kansion dokumentit Projektiportaalista
+         * @param {number} projectId 
+         * @param {number} folderId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet(projectId: number, folderId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AineistopalveluSpecProjektiportaaliAineistoVastausInner>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet(projectId, folderId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliApi.aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * TarkistusApi - factory interface
+ * ProjektiportaaliApi - factory interface
  */
-export const TarkistusApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = TarkistusApiFp(configuration)
+export const ProjektiportaaliApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ProjektiportaaliApiFp(configuration)
     return {
         /**
          * 
-         * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+         * @summary Palauttaa kansiorakenteen seuraavan tason annetun projektin ja/tai kansion perusteella
+         * @param {AineistopalveluApiV1ProjektiportaaliFoldersPostRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.aineistopalveluApiV1HallintaTarkistusAineistoGet(options).then((request) => request(axios, basePath));
+        aineistopalveluApiV1ProjektiportaaliFoldersPost(body: AineistopalveluApiV1ProjektiportaaliFoldersPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<Array<AineistopalveluSpecProjektiportaaliKansioVastausInner>> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliFoldersPost(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa projektit Projektiportaalista
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliProjectsGet(options?: RawAxiosRequestConfig): AxiosPromise<Array<AineistopalveluSpecProjektiportaaliProjektitVastausInner>> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliProjectsGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa täydellisen kansiopuun projektin perusteella
+         * @param {number} projectId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet(projectId: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<object>> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet(projectId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa kansion dokumentit Projektiportaalista
+         * @param {number} projectId 
+         * @param {number} folderId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet(projectId: number, folderId: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<AineistopalveluSpecProjektiportaaliAineistoVastausInner>> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet(projectId, folderId, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * TarkistusApi - object-oriented interface
+ * ProjektiportaaliApi - object-oriented interface
  */
-export class TarkistusApi extends BaseAPI {
+export class ProjektiportaaliApi extends BaseAPI {
     /**
      * 
-     * @summary Validoi aineistopalvelun tietojen ja S3-tiedostojen tilan oikeellisuuden.
+     * @summary Palauttaa kansiorakenteen seuraavan tason annetun projektin ja/tai kansion perusteella
+     * @param {AineistopalveluApiV1ProjektiportaaliFoldersPostRequest} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public aineistopalveluApiV1HallintaTarkistusAineistoGet(options?: RawAxiosRequestConfig) {
-        return TarkistusApiFp(this.configuration).aineistopalveluApiV1HallintaTarkistusAineistoGet(options).then((request) => request(this.axios, this.basePath));
+    public aineistopalveluApiV1ProjektiportaaliFoldersPost(body: AineistopalveluApiV1ProjektiportaaliFoldersPostRequest, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliFoldersPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa projektit Projektiportaalista
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliProjectsGet(options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliProjectsGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa täydellisen kansiopuun projektin perusteella
+     * @param {number} projectId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet(projectId: number, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet(projectId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa kansion dokumentit Projektiportaalista
+     * @param {number} projectId 
+     * @param {number} folderId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet(projectId: number, folderId: number, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet(projectId, folderId, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * ProjektiportaaliIntegraatioApi - axios parameter creator
+ */
+export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Käynnistää projektipankin yhdistämisen toimeksiantoon Step Functionilla.                            Parametrit:                            - autosync: true = jatkuva synkronointi, false = kertasynkronointi                            - folder-selections: tyhjä/puuttuu = kaikki kansiot, lista = valitut kansiot
+         * @param {AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost: async (body: AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/integraatio/aloita`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Poistaa integraation
+         * @param {number} integraatioId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete: async (integraatioId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'integraatioId' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete', 'integraatioId', integraatioId)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/integraatio/{integraatio-id}`
+                .replace(`{${"integraatio-id"}}`, encodeURIComponent(String(integraatioId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Hakee integraatioiden tilat usealle toimeksiannolle
+         * @param {AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost: async (body: AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/toimeksiannot/integraatiot`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa integraation tiedot toimeksiannolle
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet: async (toimeksiantoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'toimeksiantoOid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet', 'toimeksiantoOid', toimeksiantoOid)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/toimeksianto/{toimeksianto-oid}/integraatio`
+                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Käynnistää epäonnistuneiden projektiportaali-latausten uudelleenyrityksen
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost: async (toimeksiantoOid: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'toimeksiantoOid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost', 'toimeksiantoOid', toimeksiantoOid)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/toimeksianto/{toimeksianto-oid}/retry`
+                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ProjektiportaaliIntegraatioApi - functional programming interface
+ */
+export const ProjektiportaaliIntegraatioApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ProjektiportaaliIntegraatioApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Käynnistää projektipankin yhdistämisen toimeksiantoon Step Functionilla.                            Parametrit:                            - autosync: true = jatkuva synkronointi, false = kertasynkronointi                            - folder-selections: tyhjä/puuttuu = kaikki kansiot, lista = valitut kansiot
+         * @param {AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost(body: AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliIntegraatioApi.aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Poistaa integraation
+         * @param {number} integraatioId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete(integraatioId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete(integraatioId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliIntegraatioApi.aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Hakee integraatioiden tilat usealle toimeksiannolle
+         * @param {AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost(body: AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliIntegraatioApi.aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa integraation tiedot toimeksiannolle
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet(toimeksiantoOid, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliIntegraatioApi.aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Käynnistää epäonnistuneiden projektiportaali-latausten uudelleenyrityksen
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost(toimeksiantoOid: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost(toimeksiantoOid, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliIntegraatioApi.aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ProjektiportaaliIntegraatioApi - factory interface
+ */
+export const ProjektiportaaliIntegraatioApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ProjektiportaaliIntegraatioApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Käynnistää projektipankin yhdistämisen toimeksiantoon Step Functionilla.                            Parametrit:                            - autosync: true = jatkuva synkronointi, false = kertasynkronointi                            - folder-selections: tyhjä/puuttuu = kaikki kansiot, lista = valitut kansiot
+         * @param {AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost(body: AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Poistaa integraation
+         * @param {number} integraatioId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete(integraatioId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete(integraatioId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Hakee integraatioiden tilat usealle toimeksiannolle
+         * @param {AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost(body: AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa integraation tiedot toimeksiannolle
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet(toimeksiantoOid, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Käynnistää epäonnistuneiden projektiportaali-latausten uudelleenyrityksen
+         * @param {string} toimeksiantoOid 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost(toimeksiantoOid: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost(toimeksiantoOid, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ProjektiportaaliIntegraatioApi - object-oriented interface
+ */
+export class ProjektiportaaliIntegraatioApi extends BaseAPI {
+    /**
+     * 
+     * @summary Käynnistää projektipankin yhdistämisen toimeksiantoon Step Functionilla.                            Parametrit:                            - autosync: true = jatkuva synkronointi, false = kertasynkronointi                            - folder-selections: tyhjä/puuttuu = kaikki kansiot, lista = valitut kansiot
+     * @param {AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost(body: AineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPostRequest, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliIntegraatioApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliIntegraatioAloitaPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Poistaa integraation
+     * @param {number} integraatioId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete(integraatioId: number, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliIntegraatioApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete(integraatioId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Hakee integraatioiden tilat usealle toimeksiannolle
+     * @param {AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost(body: AineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPostRequest, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliIntegraatioApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliToimeksiannotIntegraatiotPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa integraation tiedot toimeksiannolle
+     * @param {string} toimeksiantoOid 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet(toimeksiantoOid: string, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliIntegraatioApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet(toimeksiantoOid, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Käynnistää epäonnistuneiden projektiportaali-latausten uudelleenyrityksen
+     * @param {string} toimeksiantoOid 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost(toimeksiantoOid: string, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliIntegraatioApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost(toimeksiantoOid, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * ProjektiportaaliSynkronointiApi - axios parameter creator
+ */
+export const ProjektiportaaliSynkronointiApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Palauttaa synkronoinnin edistymisen.
+         * @param {string} suoritusId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet: async (suoritusId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'suoritusId' is not null or undefined
+            assertParamExists('aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet', 'suoritusId', suoritusId)
+            const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/synkronointi/suoritus/{suoritus-id}/edistyminen`
+                .replace(`{${"suoritus-id"}}`, encodeURIComponent(String(suoritusId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ProjektiportaaliSynkronointiApi - functional programming interface
+ */
+export const ProjektiportaaliSynkronointiApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ProjektiportaaliSynkronointiApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Palauttaa synkronoinnin edistymisen.
+         * @param {string} suoritusId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet(suoritusId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet(suoritusId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ProjektiportaaliSynkronointiApi.aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ProjektiportaaliSynkronointiApi - factory interface
+ */
+export const ProjektiportaaliSynkronointiApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ProjektiportaaliSynkronointiApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Palauttaa synkronoinnin edistymisen.
+         * @param {string} suoritusId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet(suoritusId: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet(suoritusId, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ProjektiportaaliSynkronointiApi - object-oriented interface
+ */
+export class ProjektiportaaliSynkronointiApi extends BaseAPI {
+    /**
+     * 
+     * @summary Palauttaa synkronoinnin edistymisen.
+     * @param {string} suoritusId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet(suoritusId: string, options?: RawAxiosRequestConfig) {
+        return ProjektiportaaliSynkronointiApiFp(this.configuration).aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet(suoritusId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2804,7 +3681,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Päivittää viittauksen metatiedot.                       Palauttaa viittauksen (kaikki) tiedot.
+         * @summary Päivittää viittauksen metatiedot.                           Palauttaa viittauksen (kaikki) tiedot.
          * @param {string} oid 
          * @param {ViittausPaivitystiedot} viittausPaivitystiedot 
          * @param {*} [options] Override http request option.
@@ -2844,7 +3721,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
         },
         /**
          * 
-         * @summary Luo uuden viittauksen annetuilla metatiedoilla.                        Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                        HUOM! Anna vain toinen sijainneista
+         * @summary Luo uuden viittauksen annetuilla metatiedoilla.                           Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                           HUOM! Anna vain toinen sijainneista
          * @param {ViittausLisaystiedot} viittausLisaystiedot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2955,7 +3832,7 @@ export const ViittausApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Päivittää viittauksen metatiedot.                       Palauttaa viittauksen (kaikki) tiedot.
+         * @summary Päivittää viittauksen metatiedot.                           Palauttaa viittauksen (kaikki) tiedot.
          * @param {string} oid 
          * @param {ViittausPaivitystiedot} viittausPaivitystiedot 
          * @param {*} [options] Override http request option.
@@ -2969,7 +3846,7 @@ export const ViittausApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Luo uuden viittauksen annetuilla metatiedoilla.                        Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                        HUOM! Anna vain toinen sijainneista
+         * @summary Luo uuden viittauksen annetuilla metatiedoilla.                           Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                           HUOM! Anna vain toinen sijainneista
          * @param {ViittausLisaystiedot} viittausLisaystiedot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3042,7 +3919,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Päivittää viittauksen metatiedot.                       Palauttaa viittauksen (kaikki) tiedot.
+         * @summary Päivittää viittauksen metatiedot.                           Palauttaa viittauksen (kaikki) tiedot.
          * @param {string} oid 
          * @param {ViittausPaivitystiedot} viittausPaivitystiedot 
          * @param {*} [options] Override http request option.
@@ -3053,7 +3930,7 @@ export const ViittausApiFactory = function (configuration?: Configuration, baseP
         },
         /**
          * 
-         * @summary Luo uuden viittauksen annetuilla metatiedoilla.                        Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                        HUOM! Anna vain toinen sijainneista
+         * @summary Luo uuden viittauksen annetuilla metatiedoilla.                           Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                           HUOM! Anna vain toinen sijainneista
          * @param {ViittausLisaystiedot} viittausLisaystiedot 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -3126,7 +4003,7 @@ export class ViittausApi extends BaseAPI {
 
     /**
      * 
-     * @summary Päivittää viittauksen metatiedot.                       Palauttaa viittauksen (kaikki) tiedot.
+     * @summary Päivittää viittauksen metatiedot.                           Palauttaa viittauksen (kaikki) tiedot.
      * @param {string} oid 
      * @param {ViittausPaivitystiedot} viittausPaivitystiedot 
      * @param {*} [options] Override http request option.
@@ -3138,7 +4015,7 @@ export class ViittausApi extends BaseAPI {
 
     /**
      * 
-     * @summary Luo uuden viittauksen annetuilla metatiedoilla.                        Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                        HUOM! Anna vain toinen sijainneista
+     * @summary Luo uuden viittauksen annetuilla metatiedoilla.                           Palauttaa viittauksen (kaikki) tiedot sisältäen sille generoidun OIDin.                           HUOM! Anna vain toinen sijainneista
      * @param {ViittausLisaystiedot} viittausLisaystiedot 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
