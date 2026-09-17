@@ -20,7 +20,7 @@ import { PathTuple } from "../files/ProjektiPath";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
-import { TIEDOTETTAVA_EXCEL_HEADERS, OMISTAJA_EXCEL_SHEETS } from "hassu-common/excelConstants";
+import { TIEDOTETTAVA_EXCEL_HEADERS, OMISTAJA_EXCEL_SHEETS, TIEDOTUSTAPA_TEKSTIT } from "hassu-common/excelConstants";
 
 const CONTENT_TYPE_EXCEL = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
@@ -164,7 +164,7 @@ function lisaaOtsikko(): { value: string }[] {
 }
 
 function lisaaOtsikkoWithLahetysaika() {
-  return lisaaOtsikko().concat({ value: "Lähetysaika" });
+  return lisaaOtsikko().concat({ value: TIEDOTETTAVA_EXCEL_HEADERS.lahetysaika });
 }
 
 function lisaaMuistuttajanOtsikko(): { value: string }[] {
@@ -197,7 +197,7 @@ function lisaaMuistuttajanOtsikko(): { value: string }[] {
 }
 
 function lisaaMuistuttajanOtsikkoWithLahetysaika() {
-  return lisaaMuistuttajanOtsikko().concat({ value: "Lähetysaika" });
+  return lisaaMuistuttajanOtsikko().concat({ value: TIEDOTETTAVA_EXCEL_HEADERS.lahetysaika });
 }
 
 type Rivi = {
@@ -220,7 +220,7 @@ function getLahetysaika(lahetykset?: { tila: TiedotettavanLahetyksenTila; lahety
   }
   const lahetys = [...lahetykset].sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
   if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
-    return "Lähetys ei onnistunut";
+    return TIEDOTUSTAPA_TEKSTIT.lahetysEiOnnistunut;
   }
   return formatDate(lahetys.lahetysaika);
 }
@@ -229,13 +229,13 @@ function getTiedotustapa(
   suomifiLahetys: boolean | undefined,
   lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; lahetysTapa?: LahetysTapa }[]
 ): string {
-  if (suomifiLahetys === false) return "Ei voida tiedottaa";
-  if (!lahetykset?.length) return "Ei vielä tiedotettu";
+  if (suomifiLahetys === false) return TIEDOTUSTAPA_TEKSTIT.eiVoidaTiedottaa;
+  if (!lahetykset?.length) return TIEDOTUSTAPA_TEKSTIT.eiVielaTiedotettu;
   const lahetys = [...lahetykset].sort((a, b) => b.lahetysaika.localeCompare(a.lahetysaika))[0];
   if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
-    return "Lähetys epäonnistui";
+    return TIEDOTUSTAPA_TEKSTIT.lahetysEpaonnistui;
   }
-  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? "Suomi.fi: viesti" : lahetys.lahetysTapa === LahetysTapa.KIRJE ? "Suomi.fi: kirje" : "Suomi.fi: tuntematon";
+  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? TIEDOTUSTAPA_TEKSTIT.suomifiViesti : lahetys.lahetysTapa === LahetysTapa.KIRJE ? TIEDOTUSTAPA_TEKSTIT.suomifiKirje : TIEDOTUSTAPA_TEKSTIT.suomifiTuntematon;
 }
 
 async function haeOmistajat(oid: string): Promise<Rivi[]> {
