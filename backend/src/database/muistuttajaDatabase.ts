@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { getDynamoDBDocumentClient } from "../aws/client";
 import {
   QueryCommand,
@@ -12,6 +13,7 @@ import { log } from "../logger";
 import { config } from "../config";
 import { chunkArray } from "./chunkArray";
 import { LahetysTapa, TiedotettavanLahetyksenTila } from "hassu-common/graphql/apiModel";
+import { PublishOrExpireEventType } from "../sqsEvents/projektiScheduleManager";
 import { uuid } from "hassu-common/util/uuid";
 
 export type DBMuistuttaja = {
@@ -33,7 +35,7 @@ export type DBMuistuttaja = {
   vastaanotettu?: string | null;
   muistutus?: string | null;
   oid: string;
-  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; lahetysTapa?: LahetysTapa }[];
+  lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string; tyyppi?: PublishOrExpireEventType; lahetysTapa?: LahetysTapa }[];
   liitteet?: string[] | null;
   maakoodi?: string | null;
   suomifiLahetys?: boolean;

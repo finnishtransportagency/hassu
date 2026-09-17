@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { KuulutusJulkaisuTila, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AbstractPaatosVaiheTiedostoManager, AineistoPathsPair, S3Paths, getKuulutusSaamePDFt } from ".";
 import { DBProjekti, HyvaksymisPaatosVaihe, HyvaksymisPaatosVaiheJulkaisu } from "../../database/model";
@@ -9,7 +10,6 @@ import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
 import { Dayjs } from "dayjs";
-import { SisainenProjektiPaths } from "../../files/ProjektiPath";
 
 export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractPaatosVaiheTiedostoManager<HyvaksymisPaatosVaiheJulkaisu> {
   getAineistot(vaihe: HyvaksymisPaatosVaihe): AineistoPathsPair[] {
@@ -74,15 +74,12 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractPaatosVaiheTie
 
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
 
-    const s3SisainenPaths = new S3Paths(new SisainenProjektiPaths(projekti.oid).hyvaksymisPaatosVaihe(julkaisu));
-    s3SisainenPaths.pushYllapitoFilesIfDefined(julkaisu.maanomistajaluettelo);
-
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
       toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      dokumentit: [...s3Paths.getDokumentit(), ...s3SisainenPaths.getDokumentit()],
+      dokumentit: [...s3Paths.getDokumentit()],
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
       tiedotaAsianosaisia: julkaisu.uudelleenKuulutus?.tiedotaKiinteistonomistajia,

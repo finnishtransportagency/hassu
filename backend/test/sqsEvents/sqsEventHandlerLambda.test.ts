@@ -20,6 +20,12 @@ import {
   aineistoAndFilesChangesHandlesCorrectlyLPTs,
   filesChangedPersistsLausuntoPyyntoFiles,
   filesChangedHandlesOdottaaPoistoaAndOdottaaTuontiaForTheSameFile,
+  doesNotGenerateWhenNotAllHandled,
+  generatesAndSendsToAsianhallintaWhenAllHandled,
+  doesNotGenerateWhenMaanomistajaluetteloAlreadyExists,
+  setsToimenpideTyyppiUudelleenkuulutusWhenUudelleenKuulutus,
+  doesNotGenerateWhenHyvaksymisPaivaMissing,
+  doesNotSendToAsianhallintaWhenAsiatunnusMissing,
 } from "./sqsEventHandlerLambdaTests";
 
 describe("sqsEventHandlerLambda handles event", () => {
@@ -114,4 +120,27 @@ describe("sqsEventHandlerLambda handles event", () => {
   );
 
   it("AINEISTO_AND_FILES_CHANGED by handling correctly lausuntoPyynnonTaydennykset", aineistoAndFilesChangesHandlesCorrectlyLPTs);
+
+  // GENERATE_MAANOMISTAJALUETTELO tests
+
+  it("GENERATE_MAANOMISTAJALUETTELO does not generate when not all suomifi omistajat are handled", doesNotGenerateWhenNotAllHandled);
+
+  it("GENERATE_MAANOMISTAJALUETTELO generates and sends to asianhallinta when all handled", generatesAndSendsToAsianhallintaWhenAllHandled);
+
+  it(
+    "GENERATE_MAANOMISTAJALUETTELO does not generate when maanomistajaluettelo already exists",
+    doesNotGenerateWhenMaanomistajaluetteloAlreadyExists
+  );
+
+  it(
+    "GENERATE_MAANOMISTAJALUETTELO sets toimenpideTyyppi UUDELLEENKUULUTUS when uudelleenKuulutus",
+    setsToimenpideTyyppiUudelleenkuulutusWhenUudelleenKuulutus
+  );
+
+  it("GENERATE_MAANOMISTAJALUETTELO does not generate when hyvaksymisPaiva is missing", doesNotGenerateWhenHyvaksymisPaivaMissing);
+
+  it(
+    "GENERATE_MAANOMISTAJALUETTELO does not send to asianhallinta when asiatunnus is missing",
+    doesNotSendToAsianhallintaWhenAsiatunnusMissing
+  );
 });

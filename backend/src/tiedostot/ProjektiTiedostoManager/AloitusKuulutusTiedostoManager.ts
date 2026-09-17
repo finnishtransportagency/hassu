@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
 import { AloitusKuulutus, AloitusKuulutusJulkaisu, DBProjekti } from "../../database/model";
@@ -6,7 +7,6 @@ import { synchronizeFilesToPublic } from "../synchronizeFilesToPublic";
 import { nyt, parseOptionalDate } from "../../util/dateUtil";
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
-import { SisainenProjektiPaths } from "../../files/ProjektiPath";
 import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../projekti/adapter/common";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
@@ -60,14 +60,11 @@ export class AloitusKuulutusTiedostoManager extends VaiheTiedostoManager<Aloitus
 
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
 
-    const s3SisainenPaths = new S3Paths(new SisainenProjektiPaths(projekti.oid).aloituskuulutus(julkaisu));
-    s3SisainenPaths.pushYllapitoFilesIfDefined(julkaisu.maanomistajaluettelo);
-
     return {
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
       toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
-      dokumentit: [...s3Paths.getDokumentit(), ...s3SisainenPaths.getDokumentit()],
+      dokumentit: [...s3Paths.getDokumentit()],
       vaylaAsianhallinta: julkaisu.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
       tiedotaAsianosaisia: julkaisu.uudelleenKuulutus?.tiedotaKiinteistonomistajia,

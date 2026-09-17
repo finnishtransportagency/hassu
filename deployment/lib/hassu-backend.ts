@@ -126,7 +126,7 @@ export class HassuBackendStack extends Stack {
     const kiinteistoSQS = this.createKiinteistoQueue();
     this.createKiinteistoLambda(kiinteistoSQS, vpc);
     const suomiFiSQS = this.createSuomiFiQueue();
-    const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, vpc, config, pdfGeneratorLambda, commonEnvironmentVariables);
+    const suomifiLambda = this.createSuomiFiLambda(suomiFiSQS, eventSQS, vpc, config, pdfGeneratorLambda, commonEnvironmentVariables);
     const yllapitoBackendLambda = await this.createBackendLambda(
       commonEnvironmentVariables,
       personSearchUpdaterLambda,
@@ -165,7 +165,7 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS, asianhallintaSQS);
     const hyvaksymisEsitysAineistoHandlerLambda = await this.createHyvaksymisEsitysAineistoLambda(
       commonEnvironmentVariables,
       hyvaksymisEsitysSQS
@@ -716,6 +716,7 @@ export class HassuBackendStack extends Stack {
 
   private createSuomiFiLambda(
     suomiFiSQS: Queue,
+    eventSQS: Queue,
     vpc: IVpc,
     config: Config,
     pdfGeneratorLambda: NodejsFunction,
@@ -764,6 +765,7 @@ export class HassuBackendStack extends Stack {
         FRONTEND_DOMAIN_NAME: config.frontendDomainName,
         LOG_LEVEL: Config.isDeveloperEnvironment() ? process.env.LAMBDA_LOG_LEVEL ?? "info" : "info",
         PDF_GENERATOR_LAMBDA_ARN: pdfGeneratorLambda.functionArn,
+        EVENT_SQS_URL: eventSQS.queueUrl,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -780,6 +782,7 @@ export class HassuBackendStack extends Stack {
       })
     );
     suomiFiSQS.grantConsumeMessages(suomiFiLambda);
+    eventSQS.grantSendMessages(suomiFiLambda);
     suomiFiLambda.addEventSource(new SqsEventSource(suomiFiSQS, { maxConcurrency: 5, batchSize: 1 }));
     this.props.kiinteistonomistajaTable.grantReadWriteData(suomiFiLambda);
     this.props.projektiMuistuttajaTable.grantReadWriteData(suomiFiLambda);
@@ -952,7 +955,8 @@ export class HassuBackendStack extends Stack {
     commonEnvironmentVariables: Record<string, string>,
     eventSQS: Queue,
     aineistoSQS: Queue,
-    suomifiSQS: Queue
+    suomifiSQS: Queue,
+    asianhallintaSQS: Queue
   ): Promise<NodejsFunction> {
     const frontendStackOutputs = await readFrontendStackOutputs();
     const concurrency = 10;
@@ -1008,6 +1012,7 @@ export class HassuBackendStack extends Stack {
     importer.addEventSource(new SqsEventSource(aineistoSQS, { batchSize: 1, maxConcurrency: concurrency }));
     eventSQS.grantSendMessages(importer);
     suomifiSQS.grantSendMessages(importer);
+    asianhallintaSQS.grantSendMessages(importer);
     return importer;
   }
 

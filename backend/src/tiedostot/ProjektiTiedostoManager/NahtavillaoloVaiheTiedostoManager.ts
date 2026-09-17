@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { KuulutusJulkaisuTila, Status, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import { AineistoPathsPair, S3Paths, VaiheTiedostoManager, getKuulutusSaamePDFt } from ".";
 import { DBProjekti, NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu } from "../../database/model";
@@ -10,7 +11,6 @@ import { forEverySaameDo, forSuomiRuotsiDo, forSuomiRuotsiDoAsync } from "../../
 import { AsianhallintaSynkronointi } from "@hassu/asianhallinta";
 import { assertIsDefined } from "../../util/assertions";
 import { LadattuTiedostoPathsPair } from "./LadattuTiedostoPathsPair";
-import { SisainenProjektiPaths } from "../../files/ProjektiPath";
 
 export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<NahtavillaoloVaihe, NahtavillaoloVaiheJulkaisu> {
   getAineistot(vaihe: NahtavillaoloVaihe | NahtavillaoloVaiheJulkaisu): AineistoPathsPair[] {
@@ -77,10 +77,6 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
         if (julkaisu.aineistopaketti) {
           this.deleteAineistoZip(julkaisu.aineistopaketti);
         }
-        if (julkaisu.maanomistajaluettelo) {
-          await this.deleteSisainenTiedosto(julkaisu.maanomistajaluettelo);
-          modifiedJulkaisut.add(julkaisu);
-        }
 
         return modifiedJulkaisut;
       },
@@ -122,15 +118,12 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
 
     s3Paths.pushYllapitoFilesIfDefined(julkaisu.lahetekirje?.tiedosto);
 
-    const s3SisainenPaths = new S3Paths(new SisainenProjektiPaths(projekti.oid).nahtavillaoloVaihe(julkaisu));
-    s3SisainenPaths.pushYllapitoFilesIfDefined(julkaisu.maanomistajaluettelo);
-
     assertIsDefined(projekti.velho?.suunnittelustaVastaavaViranomainen);
     return {
       toimenpideTyyppi: julkaisu.uudelleenKuulutus ? "UUDELLEENKUULUTUS" : "ENSIMMAINEN_VERSIO",
       asianhallintaEventId: julkaisu.asianhallintaEventId,
       asiatunnus,
-      dokumentit: [...s3Paths.getDokumentit(), ...s3SisainenPaths.getDokumentit()],
+      dokumentit: [...s3Paths.getDokumentit()],
       vaylaAsianhallinta: projekti.velho.suunnittelustaVastaavaViranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO,
       ilmoituksenVastaanottajat: this.getIlmoituksenVastaanottajat(julkaisu.ilmoituksenVastaanottajat),
       tiedotaAsianosaisia: julkaisu.uudelleenKuulutus?.tiedotaKiinteistonomistajia,

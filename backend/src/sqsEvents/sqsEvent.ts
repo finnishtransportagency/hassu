@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { PublishOrExpireEventType } from "./projektiScheduleManager";
 
 export enum SqsEventType {
@@ -14,6 +15,7 @@ export enum SqsEventType {
   ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET = "ZIP_LAUSUNTOPYYNNON_TAYDENNYKSET",
   ZIP_LAUSUNTOPYYNTO = "ZIP_LAUSUNTOPYYNTO",
   ONE_MONTH_TO_INACTIVE = "ONE_MONTH_TO_INACTIVE",
+  GENERATE_MAANOMISTAJALUETTELO = "GENERATE_MAANOMISTAJALUETTELO",
 }
 
 export type SqsEvent = {

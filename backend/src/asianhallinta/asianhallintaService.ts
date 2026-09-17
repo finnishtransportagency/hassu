@@ -28,20 +28,20 @@ import { getVaylaUser } from "../user";
 
 //prettier-ignore
 class AsianhallintaService { //NOSONAR
-  async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi): Promise<void> {
+  async saveAndEnqueueSynchronization(oid: string, synkronointi: AsianhallintaSynkronointi, hyvaksyjaOverride?: { hyvaksyja?: string; hyvaksyjanNimi?: string }): Promise<void> {
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) { 
       return;
     }
     await projektiDatabase.setAsianhallintaSynkronointi(oid, synkronointi);
-    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId); //NOSONAR
+    await this.enqueueSynchronization(oid, synkronointi.asianhallintaEventId, hyvaksyjaOverride); //NOSONAR
   }
 
   /**
    * Jonotus on erillisenä metodina, jotta sitä voidaan kutsua testiympäristössä haluttaessa. Lopullisessa toteutuksessa kutsu tulee aina
    * saveAndEnqueueSynchronization-metodin kautta.
    */
-  async enqueueSynchronization(oid: string, asianhallintaEventId: string) { //NOSONAR
+  async enqueueSynchronization(oid: string, asianhallintaEventId: string, hyvaksyjaOverride?: { hyvaksyja?: string; hyvaksyjanNimi?: string }) { //NOSONAR
     const projekti = await this.haeProjekti(oid);
     if (!(await isProjektiAsianhallintaIntegrationEnabled(projekti))) {
       return;
@@ -55,8 +55,8 @@ class AsianhallintaService { //NOSONAR
       oid,
       asianhallintaEventId, //NOSONAR
       correlationId: getCorrelationId() ?? uuid.v4(),
-      hyvaksyja: getVaylaUser()?.uid ?? undefined,
-      hyvaksyjanNimi: getVaylaUser()?.etunimi ? `${getVaylaUser()?.sukunimi} ${getVaylaUser()?.etunimi}` : undefined,
+      hyvaksyja: hyvaksyjaOverride?.hyvaksyja ?? getVaylaUser()?.uid ?? undefined,
+      hyvaksyjanNimi: hyvaksyjaOverride?.hyvaksyjanNimi ?? (getVaylaUser()?.etunimi ? `${getVaylaUser()?.sukunimi} ${getVaylaUser()?.etunimi}` : undefined),
       asianNimi: projekti.velho?.nimi,
     };
     const messageParams: SendMessageRequest = {

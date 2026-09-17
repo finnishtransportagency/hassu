@@ -9,6 +9,16 @@
  *
  * If these change, both export and import will stay in sync.
  */
+export const TIEDOTUSTAPA_TEKSTIT = {
+  eiVoidaTiedottaa: "Ei voida tiedottaa",
+  eiVielaTiedotettu: "Ei vielä tiedotettu",
+  lahetysEpaonnistui: "Lähetys epäonnistui",
+  lahetysEiOnnistunut: "Lähetys ei onnistunut",
+  suomifiViesti: "Suomi.fi: viesti",
+  suomifiKirje: "Suomi.fi: kirje",
+  suomifiTuntematon: "Suomi.fi: tuntematon",
+} as const;
+
 export const TIEDOTETTAVA_EXCEL_HEADERS = {
   kiinteistotunnus: "Kiinteistötunnus",
   nimiOmistaja: "Omistajan nimi",
