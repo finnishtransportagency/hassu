@@ -63,7 +63,7 @@ export function findKategoriaForVelhoAineisto(
   return valitutVelhoAineistot.map<FormAineisto>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
-    kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
+    kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.polku, velhoAineisto.tiedosto)?.id,
     tila: null,
     uuid: uuid.v4(),
   }));
@@ -76,7 +76,7 @@ export function findKategoriaForVelhoAineistoNew(
   return valitutVelhoAineistot.map<FormAineistoNew>((velhoAineisto) => ({
     dokumenttiOid: velhoAineisto.oid,
     nimi: velhoAineisto.tiedosto,
-    kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.kuvaus, velhoAineisto.tiedosto)?.id,
+    kategoriaId: aineistoKategoriat.findKategoria(velhoAineisto.polku, velhoAineisto.tiedosto)?.id,
     uuid: uuid.v4(),
     tuotu: undefined,
     tiedosto: undefined,

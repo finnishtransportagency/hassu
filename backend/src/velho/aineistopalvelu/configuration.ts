@@ -1,7 +1,7 @@
 /* tslint:disable */
 /**
  * Aineistopalvelu API v1
- * Aineistopalvelu API v1  Palvelu vastaa seuraavista kohdeluokista:  - Aineisto (tekninen nimi: aineisto/aineisto, oid-prefix: 1.2.246.578.5.100)  - Dokumentti (tekninen nimi: aineisto/dokumentti, oid-prefix: 1.2.246.578.5.199)  - Ladattava paketti (tekninen nimi: aineisto/ladattava-paketti, oid-prefix: 1.2.246.578.5.102)  - Pakattu kansio (tekninen nimi: aineisto/pakattu-kansio, oid-prefix: 1.2.246.578.5.101)  - Viittaus (tekninen nimi: aineisto/viittaus, oid-prefix: 1.2.246.578.5.103)
+ *   Palvelu vastaa seuraavista kohdeluokista:  | Nimi | Tekninen nimi | OID-prefix | Versioitu | Schema | Sijaintityyppi | Sijaintitarkenne | | :--- | :--- | :--- | :---: | :---: | :---: | :---: | | Aineisto | aineisto/aineisto | 1.2.246.578.5.100 | ⬜ | 7 | - | - | | Dokumentti | aineisto/dokumentti | 1.2.246.578.5.199 | ⬜ | 2 | - | - | | Ladattava paketti | aineisto/ladattava-paketti | 1.2.246.578.5.102 | ⬜ | 1 | - | - | | Pakattu kansio | aineisto/pakattu-kansio | 1.2.246.578.5.101 | ⬜ | 1 | - | - | | Viittaus | aineisto/viittaus | 1.2.246.578.5.103 | ⬜ | 2 | - | - |
  *
  * The version of the OpenAPI document: v1
  * 
