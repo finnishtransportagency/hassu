@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { log, setLogContextOid } from "../logger";
 import {
   AloitusKuulutusJulkaisu,
@@ -625,6 +626,7 @@ export class ProjektiDatabase {
     };
     try {
       await getDynamoDBDocumentClient().send(new UpdateCommand(paatosInput));
+      log.info("aktivoiProjektiJatkopaatettavaksi: kasittelynTila already exists, updated directly", { oid, vaiheAvain });
       return;
     } catch (e) {
       if (!(e instanceof ConditionalCheckFailedException)) {
