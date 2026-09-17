@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * Projektirekisteri API v2
- * Projektirekisteri API v2  Palvelu vastaa seuraavista kohdeluokista:  - Projekti (tekninen nimi: projekti/projekti, oid-prefix: 1.2.246.578.5.1)  - Projektijoukko (tekninen nimi: projekti/projektijoukko, oid-prefix: 1.2.246.578.5.3)  - Toimeksianto (tekninen nimi: projekti/toimeksianto, oid-prefix: 1.2.246.578.5.2)
+ *   Palvelu vastaa seuraavista kohdeluokista:  | Nimi | Tekninen nimi | OID-prefix | Versioitu | Schema | Sijaintityyppi | Sijaintitarkenne | | :--- | :--- | :--- | :---: | :---: | :---: | :---: | | Projekti | projekti/projekti | 1.2.246.578.5.1 | ⬜ | 9 | valisijaintikokoelma | - | | Projektijoukko | projekti/projektijoukko | 1.2.246.578.5.3 | ⬜ | 5 | - | - | | Toimeksianto | projekti/toimeksianto | 1.2.246.578.5.2 | ⬜ | 6 | - | - |
  *
  * The version of the OpenAPI document: v2
  * 
@@ -362,7 +362,7 @@ export interface ProjektiProjektijoukkoOminaisuudet {
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     'muu-liittyva-organisaatio'?: string;
     'kuvaus': string | null;
-    'vaylamuoto': Set<ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum>;
+    'vaylamuoto'?: Set<ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum> | null;
     'kunta': Set<object> | null;
     'tila'?: object;
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
@@ -445,6 +445,7 @@ export const ProjektiProjektijoukotInnerLahdejarjestelmaEnum = {
     lahdejarjestelma_lj18: 'lahdejarjestelma/lj18',
     lahdejarjestelma_lj17: 'lahdejarjestelma/lj17',
     lahdejarjestelma_lj20: 'lahdejarjestelma/lj20',
+    lahdejarjestelma_lj22: 'lahdejarjestelma/lj22',
     lahdejarjestelma_lj16: 'lahdejarjestelma/lj16',
     lahdejarjestelma_lj01: 'lahdejarjestelma/lj01',
     lahdejarjestelma_lj19: 'lahdejarjestelma/lj19',
@@ -463,7 +464,7 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
     'muu-liittyva-organisaatio'?: string;
     'kuvaus': string | null;
-    'vaylamuoto': Set<ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum>;
+    'vaylamuoto'?: Set<ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum> | null;
     'kunta': Set<ProjektiProjektijoukotInnerOminaisuudetKuntaEnum> | null;
     'tila'?: ProjektiProjektijoukotInnerOminaisuudetTilaEnum;
     'vastuuhenkilo': ProjektiProjektijoukotInnerOminaisuudetVastuuhenkilo;
@@ -1116,6 +1117,7 @@ export const ProjektiToimeksiannotInnerLahdejarjestelmaEnum = {
     lahdejarjestelma_lj18: 'lahdejarjestelma/lj18',
     lahdejarjestelma_lj17: 'lahdejarjestelma/lj17',
     lahdejarjestelma_lj20: 'lahdejarjestelma/lj20',
+    lahdejarjestelma_lj22: 'lahdejarjestelma/lj22',
     lahdejarjestelma_lj16: 'lahdejarjestelma/lj16',
     lahdejarjestelma_lj01: 'lahdejarjestelma/lj01',
     lahdejarjestelma_lj19: 'lahdejarjestelma/lj19',
@@ -1729,7 +1731,7 @@ export interface ProjektiToimeksiannotInnerOminaisuudetRataosoitteetInner {
     'alku-m': number;
 }
 export interface ProjektiToimeksiannotInnerOminaisuudetTieosoitteetInner {
-    'ajorata': number;
+    'ajorata': number | null;
     'aosa': number;
     'let': number | null;
     'losa': number | null;
@@ -1805,7 +1807,23 @@ export interface ProjektirekisteriApiV2ProjektiProjektiOidLinkitPutRequestInner 
     'tyyppi': string;
 }
 export interface ProjektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet200Response {
-    'vektorlinkki': string;
+    'vektorlinkki': string | null;
+}
+export interface ProjektirekisteriApiV2RataosoiteValidointiPost200Response {
+    'validi': boolean;
+    'geometria': object | null;
+    'virhe': string | null;
+}
+export interface ProjektirekisteriApiV2RataosoiteValidointiPost400Response {
+    'virhe': string;
+}
+export interface RataRataosoite {
+    'ratanumero': string;
+    'alku-km': number;
+    'alku-m': number;
+    'loppu-km': number;
+    'loppu-m': number;
+    'geometria-oid'?: string;
 }
 
 /**
@@ -2196,22 +2214,18 @@ export class KohdeApi extends BaseAPI {
 
 
 /**
- * MassatransformaatioApi - axios parameter creator
+ * KyttjApi - axios parameter creator
  */
-export const MassatransformaatioApiAxiosParamCreator = function (configuration?: Configuration) {
+export const KyttjApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
-         * @param {any} kohdeluokka 
+         * @summary Palauttaa käyttäjän ominaisuudet.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet: async (kohdeluokka: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'kohdeluokka' is not null or undefined
-            assertParamExists('projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet', 'kohdeluokka', kohdeluokka)
-            const localVarPath = `/projektirekisteri/api/v2/massatransformaatio/kaynnista/{kohdeluokka}`
-                .replace(`{${"kohdeluokka"}}`, encodeURIComponent(String(kohdeluokka)));
+        projektirekisteriApiV2KayttajaOminaisuudetGet: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/projektirekisteri/api/v2/kayttaja/ominaisuudet`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2234,63 +2248,130 @@ export const MassatransformaatioApiAxiosParamCreator = function (configuration?:
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @summary Päivittää käyttäjän ominaisuudet (jsonb-kenttä) määritellylle sovellukselle Vaatii sovellusavaimen.
+         * @param {object} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2KayttajaOminaisuudetPut: async (body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('projektirekisteriApiV2KayttajaOminaisuudetPut', 'body', body)
+            const localVarPath = `/projektirekisteri/api/v2/kayttaja/ominaisuudet`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
 /**
- * MassatransformaatioApi - functional programming interface
+ * KyttjApi - functional programming interface
  */
-export const MassatransformaatioApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MassatransformaatioApiAxiosParamCreator(configuration)
+export const KyttjApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = KyttjApiAxiosParamCreator(configuration)
     return {
         /**
          * 
-         * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
-         * @param {any} kohdeluokka 
+         * @summary Palauttaa käyttäjän ominaisuudet.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options);
+        async projektirekisteriApiV2KayttajaOminaisuudetGet(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2KayttajaOminaisuudetGet(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['MassatransformaatioApi.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['KyttjApi.projektirekisteriApiV2KayttajaOminaisuudetGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Päivittää käyttäjän ominaisuudet (jsonb-kenttä) määritellylle sovellukselle Vaatii sovellusavaimen.
+         * @param {object} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projektirekisteriApiV2KayttajaOminaisuudetPut(body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2KayttajaOminaisuudetPut(body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KyttjApi.projektirekisteriApiV2KayttajaOminaisuudetPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * MassatransformaatioApi - factory interface
+ * KyttjApi - factory interface
  */
-export const MassatransformaatioApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MassatransformaatioApiFp(configuration)
+export const KyttjApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = KyttjApiFp(configuration)
     return {
         /**
          * 
-         * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
-         * @param {any} kohdeluokka 
+         * @summary Palauttaa käyttäjän ominaisuudet.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options).then((request) => request(axios, basePath));
+        projektirekisteriApiV2KayttajaOminaisuudetGet(options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.projektirekisteriApiV2KayttajaOminaisuudetGet(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Päivittää käyttäjän ominaisuudet (jsonb-kenttä) määritellylle sovellukselle Vaatii sovellusavaimen.
+         * @param {object} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2KayttajaOminaisuudetPut(body: object, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+            return localVarFp.projektirekisteriApiV2KayttajaOminaisuudetPut(body, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * MassatransformaatioApi - object-oriented interface
+ * KyttjApi - object-oriented interface
  */
-export class MassatransformaatioApi extends BaseAPI {
+export class KyttjApi extends BaseAPI {
     /**
      * 
-     * @summary Käynnistää annetun kohdeluokan massatransformaation uusimpaan skeemaversioon.
-     * @param {any} kohdeluokka 
+     * @summary Palauttaa käyttäjän ominaisuudet.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka: any, options?: RawAxiosRequestConfig) {
-        return MassatransformaatioApiFp(this.configuration).projektirekisteriApiV2MassatransformaatioKaynnistaKohdeluokkaGet(kohdeluokka, options).then((request) => request(this.axios, this.basePath));
+    public projektirekisteriApiV2KayttajaOminaisuudetGet(options?: RawAxiosRequestConfig) {
+        return KyttjApiFp(this.configuration).projektirekisteriApiV2KayttajaOminaisuudetGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Päivittää käyttäjän ominaisuudet (jsonb-kenttä) määritellylle sovellukselle Vaatii sovellusavaimen.
+     * @param {object} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public projektirekisteriApiV2KayttajaOminaisuudetPut(body: object, options?: RawAxiosRequestConfig) {
+        return KyttjApiFp(this.configuration).projektirekisteriApiV2KayttajaOminaisuudetPut(body, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3722,6 +3803,109 @@ export class ProjektijoukkoApi extends BaseAPI {
      */
     public projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid: string, options?: RawAxiosRequestConfig) {
         return ProjektijoukkoApiFp(this.configuration).projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet(projektijoukkoOid, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * RataosoiteApi - axios parameter creator
+ */
+export const RataosoiteApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Validoi syötetyn rataosoitteen Geoviite API:n avulla
+         * @param {RataRataosoite} rataRataosoite 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2RataosoiteValidointiPost: async (rataRataosoite: RataRataosoite, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'rataRataosoite' is not null or undefined
+            assertParamExists('projektirekisteriApiV2RataosoiteValidointiPost', 'rataRataosoite', rataRataosoite)
+            const localVarPath = `/projektirekisteri/api/v2/rataosoite/validointi`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(rataRataosoite, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * RataosoiteApi - functional programming interface
+ */
+export const RataosoiteApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RataosoiteApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Validoi syötetyn rataosoitteen Geoviite API:n avulla
+         * @param {RataRataosoite} rataRataosoite 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async projektirekisteriApiV2RataosoiteValidointiPost(rataRataosoite: RataRataosoite, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProjektirekisteriApiV2RataosoiteValidointiPost200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.projektirekisteriApiV2RataosoiteValidointiPost(rataRataosoite, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RataosoiteApi.projektirekisteriApiV2RataosoiteValidointiPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * RataosoiteApi - factory interface
+ */
+export const RataosoiteApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RataosoiteApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Validoi syötetyn rataosoitteen Geoviite API:n avulla
+         * @param {RataRataosoite} rataRataosoite 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        projektirekisteriApiV2RataosoiteValidointiPost(rataRataosoite: RataRataosoite, options?: RawAxiosRequestConfig): AxiosPromise<ProjektirekisteriApiV2RataosoiteValidointiPost200Response> {
+            return localVarFp.projektirekisteriApiV2RataosoiteValidointiPost(rataRataosoite, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * RataosoiteApi - object-oriented interface
+ */
+export class RataosoiteApi extends BaseAPI {
+    /**
+     * 
+     * @summary Validoi syötetyn rataosoitteen Geoviite API:n avulla
+     * @param {RataRataosoite} rataRataosoite 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public projektirekisteriApiV2RataosoiteValidointiPost(rataRataosoite: RataRataosoite, options?: RawAxiosRequestConfig) {
+        return RataosoiteApiFp(this.configuration).projektirekisteriApiV2RataosoiteValidointiPost(rataRataosoite, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
