@@ -418,12 +418,24 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
     return;
   }
 
-  const allHandled = suomifiOmistajat.every((o) =>
+  const allOmistajatHandled = suomifiOmistajat.every((o) =>
     o.lahetykset?.some((l) => l.tyyppi === approvalType && l.lahetysaika >= julkaisuHyvaksymisPaiva!)
   );
-  if (!allHandled) {
+  if (!allOmistajatHandled) {
     log.info("Kaikki omistajat ei vielä käsitelty, ei generoida maanomistajaluetteloa", { approvalType });
     return;
+  }
+
+  if (approvalType === PublishOrExpireEventType.PUBLISH_HYVAKSYMISPAATOSVAIHE) {
+    const muistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projekti.oid);
+    const suomifiMuistuttajat = muistuttajat.filter((m) => m.suomifiLahetys);
+    const allMuistuttajatHandled = suomifiMuistuttajat.every((m) =>
+      m.lahetykset?.some((l) => l.tyyppi === approvalType && l.lahetysaika >= julkaisuHyvaksymisPaiva!)
+    );
+    if (!allMuistuttajatHandled) {
+      log.info("Kaikki muistuttajat ei vielä käsitelty, ei generoida maanomistajaluetteloa", { approvalType });
+      return;
+    }
   }
 
   const asiatunnus = getAsiatunnus(projekti.velho);

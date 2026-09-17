@@ -848,6 +848,9 @@ async function handleMuistuttaja({
       omistajaIdsForLahetystilaUpdate,
     });
   }
+  if (tyyppi !== undefined) {
+    await eventSqsClient.generateMaanomistajaluettelo(oid, tyyppi);
+  }
 }
 
 type HandleOmistajaParams = {
