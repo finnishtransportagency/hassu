@@ -1096,9 +1096,14 @@ export async function lahetaSuomiFiViestit(projektiFromDB: DBProjekti, tyyppi: P
         });
       }
     } else {
-      log.info("Projektilla ei ole Suomi.fi tiedotettavia omistajia tai muistuttajia");
+      // Ei Suomi.fi-tiedotettavia omistajia/muistuttajia — lähetetään GENERATE_MAANOMISTAJALUETTELO suoraan,
+      // koska handleOmistaja/handleMuistuttaja ei koskaan aja eikä triggeröi sitä.
+      log.info("Projektilla ei ole Suomi.fi tiedotettavia omistajia tai muistuttajia, lähetetään GENERATE_MAANOMISTAJALUETTELO suoraan");
+      await eventSqsClient.generateMaanomistajaluettelo(projektiFromDB.oid, tyyppi);
     }
   } else {
+    // Suomi.fi-integraatio ei ole päällä — lähetetään GENERATE_MAANOMISTAJALUETTELO suoraan.
     log.info("Suomi.fi integraatio ei ole päällä, ei tiedoteta kiinteistön omistajia ja muistuttajia");
+    await eventSqsClient.generateMaanomistajaluettelo(projektiFromDB.oid, tyyppi);
   }
 }
