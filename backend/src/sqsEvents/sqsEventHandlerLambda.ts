@@ -10,6 +10,7 @@ import * as API from "hassu-common/graphql/apiModel";
 import { synchronizeFilesToPublic } from "../tiedostot/synchronizeFilesToPublic";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import dayjs from "dayjs";
+import { parseDate } from "../util/dateUtil";
 import { eventSqsClient } from "./eventSqsClient";
 import { ImportContext } from "../tiedostot/importContext";
 import { aineistoDeleterService } from "../tiedostot/aineistoDeleterService";
@@ -419,10 +420,11 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
   }
 
   const allOmistajatHandled = suomifiOmistajat.every((o) =>
-    o.lahetykset?.some((l) => l.tyyppi === approvalType && l.lahetysaika >= julkaisuHyvaksymisPaiva!)
+    o.lahetykset?.some((l) => l.tyyppi === approvalType && !parseDate(l.lahetysaika).isBefore(parseDate(julkaisuHyvaksymisPaiva!)))
   );
   if (!allOmistajatHandled) {
     log.info("Kaikki omistajat ei vielä käsitelty, ei generoida maanomistajaluetteloa", { approvalType });
+    await eventSqsClient.generateMaanomistajaluettelo(projekti.oid, approvalType);
     return;
   }
 
@@ -430,10 +432,11 @@ async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approval
     const muistuttajat = await muistuttajaDatabase.haeProjektinKaytossaolevatMuistuttajat(projekti.oid);
     const suomifiMuistuttajat = muistuttajat.filter((m) => m.suomifiLahetys);
     const allMuistuttajatHandled = suomifiMuistuttajat.every((m) =>
-      m.lahetykset?.some((l) => l.tyyppi === approvalType && l.lahetysaika >= julkaisuHyvaksymisPaiva!)
+      m.lahetykset?.some((l) => l.tyyppi === approvalType && !parseDate(l.lahetysaika).isBefore(parseDate(julkaisuHyvaksymisPaiva!)))
     );
     if (!allMuistuttajatHandled) {
       log.info("Kaikki muistuttajat ei vielä käsitelty, ei generoida maanomistajaluetteloa", { approvalType });
+      await eventSqsClient.generateMaanomistajaluettelo(projekti.oid, approvalType);
       return;
     }
   }
