@@ -6,6 +6,7 @@ import FormGroup from "./FormGroup";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import classNames from "classnames";
 import useSnackbars from "src/hooks/useSnackbars";
+import { maxFileSize } from "common/fileValidationSettings";
 
 type DropzoneProps = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
@@ -25,7 +26,7 @@ export const FileInput = ({
   hideErrorMessage,
   multiple = false,
   noClick = true,
-  maxSize = 25000000,
+  maxSize = maxFileSize,
   buttonText = "Valitse tiedosto",
   accept = "image/jpeg, image/png",
   noDropzone = false,
