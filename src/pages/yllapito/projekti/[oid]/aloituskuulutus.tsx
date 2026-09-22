@@ -405,9 +405,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                   <ContentSpacer>
                     <H3>Hankkeen sisällönkuvaus</H3>
                     <p>
-                      Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää esimerkiksi tieto suunnittelukohteen
-                      alueellista rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet
-                      pääpiirteittäin karkealla tasolla. Älä lisää tekstiin linkkejä.
+                      Kirjoita tiivistetty sisällönkuvaus hankkeesta. Kuvauksen on hyvä sisältää tieto suunnittelukohteen alueellisesta
+                      rajauksesta (maantie- /rautatiealue ja vaikutusalue), suunnittelun tavoitteet, vaikutukset ja toimenpiteet
+                      pääpiirteittäin karkealla tasolla. Lisäksi kuvauksessa pitää käydä ilmi mahdolliset toiseen väylämuotoon kohdistuvat
+                      toimenpiteet. Älä lisää tekstiin linkkejä.
                     </p>
                     {ensisijainenKaannettavaKieli && (
                       <Textarea
