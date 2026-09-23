@@ -30,6 +30,7 @@ export const TIEDOTETTAVA_EXCEL_HEADERS = {
   tiedotHaettu: "Tiedot haettu",
   tiedotustapa: "Tiedotustapa",
   lahetysaika: "Lähetysaika",
+  sahkoposti: "Sähköpostiosoite",
 } as const;
 
 export const OMISTAJA_EXCEL_SHEETS = {
