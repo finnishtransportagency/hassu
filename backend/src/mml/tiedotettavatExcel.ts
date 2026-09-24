@@ -47,7 +47,7 @@ export async function generateExcelByQuery(variables: LataaTiedotettavatExcelQue
 }
 
 function getMuistuttajaColumns(): Columns {
-  return [{ width: 20 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
+  return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
 }
 
 function getMuistuttajaColumnsWithLahetysaika(): Columns {
@@ -74,6 +74,9 @@ function lisaaMuistuttajaRivi(rivi: Rivi): Row {
     },
     {
       value: rivi.nimi,
+    },
+    {
+      value: rivi.sahkoposti ?? "",
     },
     {
       value: rivi.postiosoite,
@@ -176,6 +179,9 @@ function lisaaMuistuttajanOtsikko(): { value: string }[] {
       value: TIEDOTETTAVA_EXCEL_HEADERS.nimiMuistuttaja,
     },
     {
+      value: TIEDOTETTAVA_EXCEL_HEADERS.sahkoposti,
+    },
+    {
       value: TIEDOTETTAVA_EXCEL_HEADERS.postiosoite,
     },
     {
@@ -212,6 +218,7 @@ type Rivi = {
   tiedotustapa: string;
   suomifiLahetys: boolean | undefined;
   lahetysaika: string;
+  sahkoposti?: string;
 };
 
 function getLahetysaika(lahetykset?: { tila: TiedotettavanLahetyksenTila; lahetysaika: string }[]) {
@@ -235,7 +242,11 @@ function getTiedotustapa(
   if (lahetys.tila === TiedotettavanLahetyksenTila.VIRHE || lahetys.tila === TiedotettavanLahetyksenTila.VIRHE_ERI_KIINTEISTO_MUISTUTUS) {
     return TIEDOTUSTAPA_TEKSTIT.lahetysEpaonnistui;
   }
-  return lahetys.lahetysTapa === LahetysTapa.VIESTI ? TIEDOTUSTAPA_TEKSTIT.suomifiViesti : lahetys.lahetysTapa === LahetysTapa.KIRJE ? TIEDOTUSTAPA_TEKSTIT.suomifiKirje : TIEDOTUSTAPA_TEKSTIT.suomifiTuntematon;
+  return lahetys.lahetysTapa === LahetysTapa.VIESTI
+    ? TIEDOTUSTAPA_TEKSTIT.suomifiViesti
+    : lahetys.lahetysTapa === LahetysTapa.KIRJE
+    ? TIEDOTUSTAPA_TEKSTIT.suomifiKirje
+    : TIEDOTUSTAPA_TEKSTIT.suomifiTuntematon;
 }
 
 async function haeOmistajat(oid: string): Promise<Rivi[]> {
@@ -270,9 +281,10 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
         postitoimipaikka: m.postitoimipaikka ?? "",
         maa: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
         haettu: m.paivitetty ?? m.lisatty,
-        tiedotustapa: (m.suomifiLahetys ? "Suomi.fi" : m.tiedotustapa) ?? "",
+        tiedotustapa: getTiedotustapa(m.suomifiLahetys, m.lahetykset),
         suomifiLahetys: !!m.henkilotunnus,
         lahetysaika: getLahetysaika(m.lahetykset),
+        sahkoposti: m.sahkoposti ?? undefined,
       };
     })
     .sort((a, b) => a.tiedotustapa.localeCompare(b.tiedotustapa));
@@ -308,10 +320,10 @@ async function lisaaMuistuttajat(data: SheetData[], oid: string, vaihe: Vaihe, k
   data[2].push([{ value: "Kuulutus suunnitelman hyväksymisestä", fontWeight: "bold" }]);
   data[2].push([{ value: formatDate(kuulutusPaiva, "DD.MM.YYYY") }]);
   data[2].push([{ value: "Muistuttajien tiedotus Suomi.fi -palvelulla", fontWeight: "bold" }]);
-  data[2].push(lisaaMuistuttajanOtsikko());
+  data[2].push(lisaaMuistuttajanOtsikkoWithLahetysaika());
   const muistuttajat = await haeMuistuttajat(oid);
   for (const muistuttaja of muistuttajat.filter((o) => o.suomifiLahetys)) {
-    data[2].push(lisaaMuistuttajaRivi(muistuttaja));
+    data[2].push(lisaaMuistuttajaRiviWithLahetysaika(muistuttaja));
   }
   data[3] = [];
   data[3].push([{ value: "Kuulutus suunnitelman hyväksymisestä", fontWeight: "bold" }]);
@@ -340,7 +352,7 @@ export async function generateExcel(
     await lisaaKiinteistonOmistajat(data, projekti.oid, vaihe, kuulutusPaiva);
     if (vaihe === Vaihe.HYVAKSYMISPAATOS) {
       sheets.push(OMISTAJA_EXCEL_SHEETS.suomifiMuistuttajat, OMISTAJA_EXCEL_SHEETS.muutMuistuttajat);
-      columns.push(getMuistuttajaColumns(), getMuistuttajaColumns());
+      columns.push(getMuistuttajaColumnsWithLahetysaika(), getMuistuttajaColumns());
       await lisaaMuistuttajat(data, projekti.oid, vaihe, kuulutusPaiva);
     }
   } else if (suomifi) {
