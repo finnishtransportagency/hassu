@@ -20,7 +20,7 @@ export const allowedFileTypesKansalaisille = [
   "text/plain",
 ];
 
-// 25MB
-export const maxFileSize = 25000000;
+// 100MB
+export const maxFileSize = 100000000;
 
 export default { allowedFileTypesVirkamiehille, allowedFileTypesKansalaisille, maxFileSize };
