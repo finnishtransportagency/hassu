@@ -305,15 +305,15 @@ export class HassuAccountStack extends Stack {
     );
 
     // Alarm: red when patching fails, self-heals when next run succeeds
-    const failedMetric = new Metric({ namespace: customMetricNamespace, metricName: "PatchingFailed", statistic: "Sum", period: Duration.days(8) });
-    const succeededMetric = new Metric({ namespace: customMetricNamespace, metricName: "PatchingSucceeded", statistic: "Sum", period: Duration.days(8) });
+    const failedMetric = new Metric({ namespace: customMetricNamespace, metricName: "PatchingFailed", statistic: "Sum", period: Duration.days(7) });
+    const succeededMetric = new Metric({ namespace: customMetricNamespace, metricName: "PatchingSucceeded", statistic: "Sum", period: Duration.days(7) });
     const patchAlarm = new Alarm(this, "BastionPatchFailureAlarm", {
       alarmName: "Bastion patching failed",
       alarmDescription: "AWS-RunPatchBaseline failed on bastion host during weekly maintenance window",
       metric: new MathExpression({
         expression: "failed - succeeded",
         usingMetrics: { failed: failedMetric, succeeded: succeededMetric },
-        period: Duration.days(8),
+        period: Duration.days(7),
       }),
       threshold: 1,
       evaluationPeriods: 1,
