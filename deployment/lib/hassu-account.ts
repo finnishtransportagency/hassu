@@ -16,7 +16,10 @@ import {
   BastionHostLinux,
   BlockDeviceVolume,
   EbsDeviceVolumeType,
+  InstanceClass,
   InstanceInitiatedShutdownBehavior,
+  InstanceSize,
+  InstanceType,
   IVpc,
   MachineImage,
   SubnetType,
@@ -135,6 +138,8 @@ export class HassuAccountStack extends Stack {
       subnetSelection: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
       instanceName: "vls-bastion",
       requireImdsv2: true,
+      // t3.micro (1 GB RAM) required — t3.nano (512 MB) causes OOM when dnf downloads AL2023 repo metadata during patching
+      instanceType: InstanceType.of(InstanceClass.T3, InstanceSize.MICRO),
       machineImage: MachineImage.latestAmazonLinux2023(),
       blockDevices: [
         {
