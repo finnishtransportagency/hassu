@@ -10,7 +10,7 @@ import { CfnDomain as CodeartifactDomain, CfnRepository as CodeartifactRepositor
 import { ITopic, Topic } from "aws-cdk-lib/aws-sns";
 import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import { CfnMaintenanceWindow, CfnMaintenanceWindowTarget, CfnMaintenanceWindowTask, StringParameter } from "aws-cdk-lib/aws-ssm";
-import { Alarm, ComparisonOperator, Metric, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
+import { Alarm, ComparisonOperator, MathExpression, Metric, TreatMissingData } from "aws-cdk-lib/aws-cloudwatch";
 import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
 import {
   BastionHostLinux,
@@ -304,21 +304,21 @@ export class HassuAccountStack extends Stack {
       })
     );
 
-    // Alarm on the custom failure metric
-    const patchFailureMetric = new Metric({
-      namespace: customMetricNamespace,
-      metricName: "PatchingFailed",
-      statistic: "Sum",
-      period: Duration.hours(3),
-    });
+    // Alarm: red when patching fails, self-heals when next run succeeds
+    const failedMetric = new Metric({ namespace: customMetricNamespace, metricName: "PatchingFailed", statistic: "Sum", period: Duration.days(8) });
+    const succeededMetric = new Metric({ namespace: customMetricNamespace, metricName: "PatchingSucceeded", statistic: "Sum", period: Duration.days(8) });
     const patchAlarm = new Alarm(this, "BastionPatchFailureAlarm", {
       alarmName: "Bastion patching failed",
       alarmDescription: "AWS-RunPatchBaseline failed on bastion host during weekly maintenance window",
-      metric: patchFailureMetric,
+      metric: new MathExpression({
+        expression: "failed - succeeded",
+        usingMetrics: { failed: failedMetric, succeeded: succeededMetric },
+        period: Duration.days(8),
+      }),
       threshold: 1,
       evaluationPeriods: 1,
       comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
-      treatMissingData: TreatMissingData.NOT_BREACHING,
+      treatMissingData: TreatMissingData.IGNORE,
     });
     patchAlarm.addAlarmAction(new SnsAction(alarmTopic));
   }
@@ -407,13 +407,13 @@ export class HassuAccountStack extends Stack {
       topic.addSubscription(new subscriptions.EmailSubscription(email.trim()));
     });
 
-    // Allow EventBridge to publish to this topic from rules in this account
+    // Allow EventBridge and CloudWatch to publish to this topic from rules in this account
     // Supports both eu-west-1 (main region) and us-east-1 (WAF, CloudFront)
     topic.addToResourcePolicy(
       new PolicyStatement({
         sid: "AllowEventBridgePublish",
         effect: Effect.ALLOW,
-        principals: [new ServicePrincipal("events.amazonaws.com")],
+        principals: [new ServicePrincipal("events.amazonaws.com"), new ServicePrincipal("cloudwatch.amazonaws.com")],
         actions: ["SNS:Publish"],
         resources: [topic.topicArn],
         conditions: {
