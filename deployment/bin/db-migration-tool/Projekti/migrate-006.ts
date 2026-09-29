@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { ScanCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
 import { PagedMigrationRunPlan } from "../types";
@@ -8,6 +9,7 @@ const migrate006: PagedMigrationRunPlan = async (options) => {
     new ScanCommand({
       TableName: options.tableName,
       ExclusiveStartKey: options.startKey,
+      Limit: 25,
       ProjectionExpression: "#oid, #hyv, #jatko1, #jatko2",
       FilterExpression: "attribute_exists(#hyv) OR attribute_exists(#jatko1) OR attribute_exists(#jatko2)",
       ExpressionAttributeNames: {
