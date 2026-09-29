@@ -2,54 +2,46 @@
   "paaotsikko": "Saavutettavuusseloste",
   "kappale1": "<p>Väylävirasto pyrkii takaamaan verkkosivustonsa saavutettavuuden <a>Lain digitaalisten palvelujen tarjoamisesta 306/2019</a> mukaisesti.</p>",
   "kappale1-href": "https://www.finlex.fi/fi/laki/alkup/2019/20190306",
-  "kappale2": "Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa. Selosteeseen eivät kuulu seuraavat osiot, joiden saavutettavuutta ei ole arvioitu:",
-  "arvioimattomat": {
-    "arvioimaton1": "Kuulutus- ja Kutsu vuorovaikutukseen -pdf -tiedostot"
-  },
+  "kappale2": "Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa.",
   "saavutettavuuden-tila": {
     "otsikko": "Saavutettavuuden tila",
-    "kappale1": "Valtion liikenneväylien suunnittelu.fi täyttää Verkkosisällön saavutettavuusohjeiden (WCAG) 2.1 tason AA vaatimukset osittain. Vaatimusten noudattamatta jättämiset ja vaatimuksiin sovellettavat poikkeukset mainitaan jäljempänä."
+    "kappale1": "Valtion liikenneväylien suunnittelu.fi täyttää WCAG 2.1-ohjeistuksen A- ja AA-tason saavutettavuusvaatimukset osittain. Vaatimusten noudattamatta jättämiset ja mahdolliset poikkeukset mainitaan jäljempänä."
   },
   "ei-saavutettavaa-sisaltoa": {
     "otsikko": "Ei-saavutettavaa sisältöä",
-    "kappale1": "Jäljempänä mainittu Muu sisältö ei ole saavutettavissa seuraavista syistä: Kohtuuton rasite",
-    "kappale2": "Seuraava sisältö ei ole saavutettavaa Digitaalisten palvelujen tarjoamista koskevan lain 306/2019 mukaan:",
-    "ei-saavutettava-asia1": {
-      "otsikko": "Kuvat ja videot:",
-      "selite1": "Joillain videoilla ääniraita ei kata videon sisältöä (WCAG 1.2.5)",
-      "selite2": "Selite",
-      "selite3": "Selite",
-      "selite4": "Selite",
-      "selite5": "Selite"
-    },
-    "ei-saavutettava-asia2": {
-      "otsikko": "Valikot ja linkit:",
-      "selite1": "Leipätekstissä olevat linkit on erotettu pelkällä värillä (WCAG 1.4.1)",
-      "selite2": "Osa sivustolla olevista linkeistä eivät ole selkeästi tunnistettavissa. (WCAG 1.4.1)",
-      "selite3": "Osa sivuston ulkopuolelle vievistä tai tiedoston avaavista linkeistä on merkitty puutteellisesti. (WCAG 1.3.1, 2.4.4)"
-    },
-    "ei-saavutettava-asia3": {
-      "otsikko": "Kartat",
-      "selite1": "Sivustolla on karttoja, joiden saavutettavuutta ei ole varmistettu [VV2]."
-    },
-    "ei-saavutettava-asia4": {
-      "otsikko": "Muu sisältö",
-      "selite1": "PDF-tiedostot eivät ole täysin saavutettavia"
-    }
+    "kappale1": "Seuraava sisältö ei täytä digitaalisten palvelujen tarjoamisesta annetun lain (306/2019) saavutettavuusvaatimuksia:"
+  },
+  "navigointi-ja-kayttoliittyma": {
+      "otsikko": "Navigointi ja käyttöliittymä",
+      "kohta1": "Sivuston kielivalintojen sijoittelussa ja toteutuksessa on epäjohdonmukaisuuksia eri kieliversioiden välillä. (WCAG 3.2.3, 3.2.4)",
+      "kohta2": "Sivuston mobiilivalikkoa ei voi kaikissa tilanteissa käyttää kokonaan näppäimistöllä. Avattua valikkoa ei voi sulkea Esc-näppäimellä. (WCAG 2.1.1)",
+      "kohta3": "Sivuston navigoinnissa ja sisällön asettelussa on puutteita suurella suurennoksella. Valikon avaaminen voi vaikeuttaa sivulla liikkumista ja käyttöliittymän elementit voivat peittää muuta sisältöä. (WCAG 1.4.10)",
+      "kohta4": "Joidenkin valikoiden teknisessä toteutuksessa on puutteita, minkä vuoksi niiden rooli tai tila ei välity oikein apuvälineille. (WCAG 4.1.2)",
+      "kohta5": "Sivuston fokusjärjestyksessä on puutteita. Näppäimistöllä liikuttaessa fokus voi siirtyä kartta- ja videosisältöihin ennen sivun keskeistä sisältöä, ja kartan toimintojen fokusjärjestys voi poiketa niiden visuaalisesta järjestyksestä. (WCAG 1.3.2, 2.4.3)"
+  },
+  "kuvat": {
+      "otsikko": "Kuvat",
+      "kohta1": "Joillakin koristekuvilla on tarpeettomia tekstivastineita, minkä vuoksi ruudunlukija voi lukea käyttäjälle tarpeetonta sisältöä. (WCAG 1.1.1)"
+  },
+  "sisallon-suurentaminen": {
+      "otsikko": "Sisällön suurentaminen",
+      "kohta1": "Suurella suurennoksella sivun palautepainike voi peittää muuta sisältöä ja vaikeuttaa sisällön lukemista. (WCAG 1.4.10)",
+      "kohta2": "Suurella suurennoksella palautepainikkeen tekstikuvaus ei ole näkyvissä, jolloin painikkeen tarkoitus voi jäädä epäselväksi. (WCAG 3.3.2, 4.1.2)"
   },
   "sovellettava-lainsaadanto-ei-kata-seuraavaa-sisaltoa": {
-    "otsikko": "Sovellettava lainsäädäntö ei kata seuraavaa sisältöä:",
-    "kappale1": "Tiettyjä sivuston toiminnallisuuksia ei ole saavutettavuusarvioitu. Sivuston ruotsinkielistä kieliversiota ei ole saavutettavuusarvioitu."
+      "otsikko": "Sovellettava lainsäädäntö ei kata seuraavaa sisältöä",
+      "kohta1": "Sivustolla on karttasisältöjä. Kartat, karttapalvelut ja karttasovellukset eivät kuulu digitaalisten palvelujen saavutettavuusvaatimusten piiriin. Jos karttaa käytetään navigointiin tai opastamiseen, käyttäjän tarvitsema olennainen tieto tarjotaan myös saavutettavassa muodossa, esimerkiksi tekstinä.",
+      "kohta2": "Palvelussa eri organisaatioiden käyttäjät voivat julkaista projektien yhteyteen kolmannen osapuolen sisältöä, kuten YouTube-videoita. Digitaalisten palvelujen saavutettavuusvaatimukset eivät koske sellaista kolmannen osapuolen tuottamaa sisältöä, jota Väylävirasto ei rahoita, kehitä tai valvo."
   },
   "taman-saavutettavuusselosteen-laatiminen": {
     "otsikko": "Tämän saavutettavuusselosteen laatiminen",
-    "kappale1": "Tämä seloste on laadittu 28.02.2023.<br/>Selostetta on päivitetty viimeksi 1.3.2024.",
-    "kappale2": "Seloste perustuu kolmannen osapuolen tekemään arviointiin siitä, täyttääkö verkkosivusto direktiivin (EU) 2016/2102 vaatimukset."
+    "kappale1": "Tämä seloste on laadittu 28.02.2023.<br/>Selostetta on päivitetty viimeksi 1.9.2026.",
+    "kappale2": "Seloste perustuu ulkopuolisen asiantuntijan huhtikuussa 2026 tekemään saavutettavuusarviointiin sekä aiemmissa arvioinneissa todettuihin, edelleen voimassa oleviin saavutettavuuspuutteisiin. Vuoden 2026 arviointi tehtiin WCAG 2.2 -ohjeistuksen A- ja AA-tason onnistumiskriteerien perusteella. Vuoden 2026 arviointi ei kattanut sivuston ruotsinkielistä kieliversiota, sivustolle upotettuja videoita, PDF-tiedostoja eikä muita ladattavia dokumentteja."
   },
   "palaute-ja-yhteystiedot": {
     "otsikko": "Palaute ja yhteystiedot",
     "kappale1": "Otamme mielellämme vastaan palautetta tämän sivuston saavutettavuudesta.",
-    "kappale2": "Voit pyytää tietoja tai palvelun saavutettavassa muodossa niiltä osin kuin saavutettavuuden vaatimukset jäävät täyttymättä pyytämällä näitä tämän palauteprosessin kautta.",
+    "kappale2": "Jos tarvitsemasi sisältö ei ole saavutettavassa muodossa, voit pyytää sitä saavutettavassa muodossa ottamalla meihin yhteyttä alla olevien yhteystietojen kautta.",
     "kappale3": "Voit ottaa Väylävirastoon yhteyttä seuraavilla tavoilla:",
     "kappale4": "<p>Puhelin: 0295 34 3000 (arkisin klo 8-16.15)<br/>Sähköposti: <a>{{email}}</a></p>",
     "kappale4-email": "kirjaamo@vayla.fi",
@@ -57,7 +49,7 @@
   },
   "taytantoonpanomenettely": {
     "otsikko": "Täytäntöönpanomenettely",
-    "kappale1": "Jos huomaat sivustolla saavutettavuusongelmia, anna ensin palautetta sivuston ylläpitäjälle. Vastauksessa voi mennä 14 päivää. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta lainkaan kahden viikon aikana, voit antaa palautteen Etelä-Suomen aluehallintovirastoon."
+    "kappale1": "Jos huomaat sivustolla saavutettavuusongelmia, anna ensin palautetta sivuston ylläpitäjälle. Vastaamme palautteeseen 14 päivän kuluessa. Jos et ole tyytyväinen saamaasi vastaukseen tai et saa vastausta kahden viikon kuluessa, voit tehdä Liikenne- ja viestintävirasto Traficomille saavutettavuuskantelun tai pyytää saavutettavuusselvitystä."
   },
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "Valvontaviranomaisen yhteystiedot",
@@ -68,6 +60,6 @@
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Puutteiden korjaaminen",
-    "kappale1": "Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan teknisiltä osilta vuoden 2025 loppuun mennessä."
+    "kappale1": "Sivuston saavutettavuudessa olevat puutteet pyritään korjaamaan vuoden 2027 aikana."
   }
 }

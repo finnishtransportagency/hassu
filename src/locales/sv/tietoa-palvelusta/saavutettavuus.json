@@ -2,53 +2,46 @@
   "paaotsikko": "Tillgänglighetsutlåtande",
   "kappale1": "<p>Trafikledsverket strävar efter att garantera sin webbplats tillgänglighet enligt <a>Lagen om tillhandahållande av digitala tjänster 306/2019</a>.</p>",
   "kappale1-href": "https://www.finlex.fi/sv/laki/alkup/2019/20190306",
-  "kappale2": "Detta tillgänglighetsutlåtande gäller webbplatsen Planering av statens trafikleder.fi. Följande delar ingår inte i beskrivningen och deras tillgänglighet har inte bedömts:",
-  "arvioimattomat": {
-    "arvioimaton1": "Webbplatsens innehåll är inte begränsat till endast en viss skärmställning, såsom vertikalt eller horisontellt (WCAG 1.3.4)"
-  },
+  "kappale2": "Detta tillgänglighetsutlåtande gäller webbplatsen Planering av statens trafikleder.fi.",
   "saavutettavuuden-tila": {
     "otsikko": "Tillgänglighetsstatus",
-    "kappale1": "När det gäller innehållet uppfyller webbplatsen Planering av statens trafikleder.fi. delvis kriterierna på nivå AA i riktlinjerna för tillgängligt webbinnehåll (WCAG) 2.1. Avvikelse och undantag som tillämpas på kraven nämns nedan."
+    "kappale1": "Planering av statens trafikleder.fi uppfyller delvis tillgänglighetskraven på nivå A och AA i anvisningarna WCAG 2.1. Underlåtenhet att iaktta kraven och eventuella undantag nämns nedan."
   },
   "ei-saavutettavaa-sisaltoa": {
     "otsikko": "Icke-tillgängligt innehåll",
-    "kappale1": "Följande innehåll är inte tillgängligt av följande skäl: Orimlig belastning",
-    "kappale2": "Följande innehåll är inte tillgängligt enligt Lagen om tillhandahållande av digitala tjänster 306/2019:",
-    "ei-saavutettava-asia1": {
-      "otsikko": "Bilder och videor:",
-      "selite1": "På en del videor presenterar ljudspåret inte videons hela innehåll (WCAG 1.2.5)",
-      "selite2": "SV Selite",
-      "selite3": "SV Selite",
-      "selite4": "SV Selite",
-      "selite5": "SV Selite"
-    },
-    "ei-saavutettava-asia2": {
-      "otsikko": "Menyer och länkar:",
-      "selite1": "Länkarna i brödtexten har separerats endast med färg (WCAG 1.4.1)",
-      "selite2": "En del av länkarna på webbplatsen är inte lätta att identifiera. (WCAG 1.4.1)"
-    },
-    "ei-saavutettava-asia3": {
-      "otsikko": "Kartor:",
-      "selite1": "Det finns kartor på webbplatsen som inte har verifierats med avseende på tillgängligheten [VV2]."
-    },
-    "ei-saavutettava-asia4": {
-      "otsikko": "Annat innehåll",
-      "selite1": "PDF-filerna är inte fullt tillgängliga"
-    }
+    "kappale1": "Följande innehåll uppfyller inte tillgänglighetskraven enligt Lagen om tillhandahållande av digitala tjänster (306/2019):"
+  },
+  "navigointi-ja-kayttoliittyma": {
+      "otsikko": "Navigering och användargränssnitt",
+      "kohta1": "Placeringen och genomförandet av webbplatsens språkval är inkonsekvent mellan olika språkversioner. (WCAG 3.2.3, 3.2.4)",
+      "kohta2": "Det går inte att helt använda tangentbordet i webbplatsens mobilmeny i alla situationer. Det går inte att stänga en öppnad meny med Esc-tangenten. (WCAG 2.1.1)",
+      "kohta3": "Det finns brister i webbplatsens navigering och layout med stor förstoring. Att öppna menyn gör det svårare att röra sig på sidan och användargränssnittets element täcker det övriga innehållet. (WCAG 1.4.10)",
+      "kohta4": "Det finns brister i det tekniska genomförandet av vissa menyer och deras roll eller status förmedlas inte till korrekt hjälpmedel. (WCAG 4.1.2)",
+      "kohta5": "Det finns brister i webbplatsens fokusordning. När man rör sig med tangentbordet flyttas fokus till kart- och videoinnehåll innan det centrala innehållet på sidan, och kartfunktionernas fokusordning kan avvika från deras visuella ordning. (WCAG 1.3.2, 2.4.3)"
+  },
+  "kuvat": {
+      "otsikko": "Bilder",
+      "kohta1": "Vissa dekorbilder har onödiga textmotsvarigheter och därför läser skärmläsaren in onödigt innehåll för användaren. (WCAG 1.1.1)"
+  },
+  "sisallon-suurentaminen": {
+      "otsikko": "Förstoring av innehåll",
+      "kohta1": "Med stor förstoring döljer sidans responsknapp det övriga innehållet och försvårar läsningen av innehållet. (WCAG 1.4.10)",
+      "kohta2": "Med stor förstoring syns inte responsknappens textbeskrivning och därför förblir knappens syfte oklart. (WCAG 3.3.2, 4.1.2)"
   },
   "sovellettava-lainsaadanto-ei-kata-seuraavaa-sisaltoa": {
-    "otsikko": "Tillämplig lagstiftning omfattar inte följande innehåll:",
-    "kappale1": "Vissa funktioner på webbplatsen har inte tillgänglighetsbedömts. Webbplatsens svenskspråkiga språkversion har inte tillgänglighetsbedömts."
+      "otsikko": "Tillämplig lagstiftning omfattar inte följande innehåll",
+      "kohta1": "Webbplatsen omfattar kartinnehåll. Kartor, karttjänster och kartapplikationer omfattas inte av tillgänglighetskraven för digitala tjänster. Om man använder kartan för navigering och handledning, ges den väsentliga information som användaren behöver också i tillgängligt format, till exempel som text.",
+      "kohta2": "Användare från olika organisationer kan publicera innehåll från tredje part i tjänsten, såsom YouTube-videor, i samband med projekt. Tillgänglighetskraven för digitala tjänster gäller inte sådant innehåll som produceras av en tredje part och som Trafikledsverket inte finansierar, utvecklar eller övervakar."
   },
   "taman-saavutettavuusselosteen-laatiminen": {
-    "otsikko": "Upprättande av denna tillgänglighetsbeskrivning",
-    "kappale1": "Denna beskrivning upprättades den 28 februari 2023.<br/>Utlåtandet uppdaterades senast den 1.3.2024.",
-    "kappale2": "Beskrivningen baserar sig på en utvärdering av tredje part om ifall webbplatsen uppfyller kraven i direktivet (EU) 2016/2102."
+    "otsikko": "Utarbetande av detta tillgänglighetsutlåtande",
+    "kappale1": "Denna beskrivning upprättades den 28 februari 2023.<br/>Utlåtandet uppdaterades senast den 1 september 2026.",
+    "kappale2": "Utlåtandet grundar sig på en tillgänglighetsbedömning av en utomstående sakkunnig i april 2026 samt på de brister i tillgängligheten som tidigare konstaterats i utvärderingar och som fortfarande är i kraft. Utvärderingen 2026 gjordes utifrån framgångkriterierna på nivå A och AA i anvisningarna WCAG 2.2. Utvärderingen 2026 omfattade inte webbplatsens svenskspråkiga språkversion, videor inbäddade på webbplatsen, PDF-filer eller andra nedladdningsbara dokument."
   },
   "palaute-ja-yhteystiedot": {
     "otsikko": "Respons och kontaktuppgifter",
     "kappale1": "Vi tar gärna emot respons om tillgängligheten på denna webbplats.",
-    "kappale2": "Du kan begära information eller tjänster i tillgängligt format till den del tillgänglighetskraven inte uppfylls via den här responsprocessen.",
+    "kappale2": "Om det innehåll du behöver inte är tillgängligt kan du begära det i ett tillgängligt format genom att kontakta oss via kontaktuppgifterna nedan.",
     "kappale3": "Du kan kontakta Trafikledsverket på följande sätt:",
     "kappale4": "<p>Telefon: 0295 34 3000 (vardagar kl. 8–16.15)<br/>E-post: <a>{{email}}</a></p>",
     "kappale4-email": "kirjaamo@vayla.fi",
@@ -56,7 +49,7 @@
   },
   "taytantoonpanomenettely": {
     "otsikko": "Genomförandeförfarande",
-    "kappale1": "Om du märker tillgänglighetsproblem på webbplatsen ska du först alltid ge respons till den instans som uppdaterar webbplatsen. Det kan ta 14 dagar att få svar. Om du inte är nöjd med svaret eller om du inte får något svar alls inom två veckor, kan du ge respons till regionförvaltningsverket i Södra Finland."
+    "kappale1": "Om du märker tillgänglighetsproblem på webbplatsen ska du först alltid ge respons till den instans som uppdaterar webbplatsen. Vi svarar på responsen inom 14 dagar. Om du inte är nöjd med det svar du får eller om du inte får svar inom två veckor kan du lämna in en tillgänglighetsklagan till Transport- och kommunikationsverket Traficom eller begära en tillgänglighetsutredning."
   },
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "Tillsynsmyndighetens kontaktuppgifter",
@@ -67,6 +60,6 @@
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Åtgärdande av brister",
-    "kappale1": "Vi strävar efter att korrigera bristerna i webbplatsens tillgänglighet vad gäller det tekniska innan utgången av 2025."
+    "kappale1": "Vi strävar efter att korrigera bristerna i webbplatsens tillgänglighet under 2027."
   }
 }
