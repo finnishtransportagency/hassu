@@ -5,7 +5,7 @@
   "kappale2": "Tämä saavutettavuusseloste koskee Valtion liikenneväylien suunnittelu.fi -sivustoa.",
   "saavutettavuuden-tila": {
     "otsikko": "Saavutettavuuden tila",
-    "kappale1": "Valtion liikenneväylien suunnittelu.fi täyttää WCAG 2.1-ohjeistuksen A- ja AA-tason saavutettavuusvaatimukset osittain. Vaatimusten noudattamatta jättämiset ja mahdolliset poikkeukset mainitaan jäljempänä."
+    "kappale1": "Valtion liikenneväylien suunnittelu.fi täyttää WCAG 2.1 -ohjeistuksen A- ja AA-tason saavutettavuusvaatimukset osittain. Vaatimusten noudattamatta jättämiset ja mahdolliset poikkeukset mainitaan jäljempänä."
   },
   "ei-saavutettavaa-sisaltoa": {
     "otsikko": "Ei-saavutettavaa sisältöä",
@@ -43,7 +43,7 @@
     "kappale1": "Otamme mielellämme vastaan palautetta tämän sivuston saavutettavuudesta.",
     "kappale2": "Jos tarvitsemasi sisältö ei ole saavutettavassa muodossa, voit pyytää sitä saavutettavassa muodossa ottamalla meihin yhteyttä alla olevien yhteystietojen kautta.",
     "kappale3": "Voit ottaa Väylävirastoon yhteyttä seuraavilla tavoilla:",
-    "kappale4": "<p>Puhelin: 0295 34 3000 (arkisin klo 8-16.15)<br/>Sähköposti: <a>{{email}}</a></p>",
+    "kappale4": "<p>Puhelin: 0295 34 3000 (arkisin klo 8–16.15)<br/>Sähköposti: <a>{{email}}</a></p>",
     "kappale4-email": "kirjaamo@vayla.fi",
     "kappale5": "Pyrimme vastaamaan palautteisiin viivytyksettä, viimeistään kahden viikon kuluessa yhteydenotosta."
   },
@@ -53,7 +53,7 @@
   },
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "Valvontaviranomaisen yhteystiedot",
-    "kappale1": "<p>Liikenne- ja viestintävirasto Traficom<br/>Digitaalisen esteettömyyden ja saavutettavuuden valvontayksikkö</p>",
+    "kappale1": "<p>Liikenne- ja viestintävirasto Traficom<br/>Saavutettavuusvalvonta</p>",
     "linkki1": { "teksti": "Saavutettavuusvaatimukset.fi-sivusto", "href": "https://www.saavutettavuusvaatimukset.fi" },
     "email": "saavutettavuus@traficom.fi",
     "puhelin": "puhelinnumero vaihde 029 534 5000"

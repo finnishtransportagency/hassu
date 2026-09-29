@@ -53,10 +53,10 @@
   },
   "valvontaviranomaisen-yhteystiedot": {
     "otsikko": "Tillsynsmyndighetens kontaktuppgifter",
-    "kappale1": "<p>Transport- och kommunikationsverket Traficom<br/>Enheten för tillsyn över digital tillgänglighet</p>",
-    "linkki1": { "teksti": "Tillganglighetskrav.fi-sidan", "href": "https://www.tillganglighetskrav.fi/" },
-    "email": "tillganglighet@traficom.fi",
-    "puhelin": "telefonnummer växeln 029 534 5000"
+    "kappale1": "<p>Transport- och kommunikationsverket Traficom<br/>Tillgänglighetstillsyn</p>",
+    "linkki1": { "teksti": "www.saavutettavuusvaatimukset.fi/sv", "href": "https://www.saavutettavuusvaatimukset.fi/sv" },
+    "email": "saavutettavuus@traficom.fi",
+    "puhelin": "telefonnummer växel 029 534 5000"
   },
   "puutteiden-korjaaminen": {
     "otsikko": "Åtgärdande av brister",
