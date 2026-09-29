@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { CfnLoggingConfiguration, CfnRegexPatternSet, CfnWebACL, CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
 import { Config, EnvName } from "./config";
 import { Construct } from "constructs";
@@ -196,6 +197,33 @@ const managedRules: CfnWebACL.RuleProperty[] = [
     },
   },
   {
+    name: "Rajoita-cookie-header-kokoa",
+    priority: 2,
+    statement: {
+      sizeConstraintStatement: {
+        fieldToMatch: {
+          singleHeader: { Name: "cookie" },
+        },
+        comparisonOperator: "GT",
+        size: 11000,
+        textTransformations: [
+          {
+            priority: 0,
+            type: "NONE",
+          },
+        ],
+      },
+    },
+    action: {
+      block: {},
+    },
+    visibilityConfig: {
+      sampledRequestsEnabled: true,
+      cloudWatchMetricsEnabled: true,
+      metricName: "Rajoita-cookie-header-kokoa",
+    },
+  },
+  {
     name: "AWS-AWSManagedRulesCommonRuleSet",
     priority: 3,
     statement: {
@@ -211,6 +239,12 @@ const managedRules: CfnWebACL.RuleProperty[] = [
           },
           {
             name: "CrossSiteScripting_COOKIE",
+            actionToUse: {
+              allow: {},
+            },
+          },
+          {
+            name: "SizeRestrictions_Cookie_HEADER",
             actionToUse: {
               allow: {},
             },
