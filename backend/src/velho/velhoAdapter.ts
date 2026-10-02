@@ -605,12 +605,10 @@ export function applyNahtavillaoloajankohtaToVelho(
 }
 
 function toLocalDate(date: string) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return parseDate(date).startOf("day").format() as unknown as object;
 }
 
 function stringToObject(s: string) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return s as unknown as object;
 }
 
@@ -618,7 +616,6 @@ function objectToString<T>(s: unknown): T | undefined {
   if (s == undefined) {
     return undefined;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return s as unknown as T;
 }
 
