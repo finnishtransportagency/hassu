@@ -12,6 +12,7 @@
 export const TIEDOTUSTAPA_TEKSTIT = {
   eiVoidaTiedottaa: "Ei voida tiedottaa",
   eiVielaTiedotettu: "Ei vielä tiedotettu",
+  eiTiedossa: "Ei tiedossa",
   lahetysEpaonnistui: "Lähetys epäonnistui",
   lahetysEiOnnistunut: "Lähetys ei onnistunut",
   suomifiViesti: "Suomi.fi: viesti",

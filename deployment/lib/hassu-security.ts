@@ -146,100 +146,100 @@ function createMacieSensitiveDataScanning(stack: Stack, bucket: Bucket, alertTop
 
   // KMS key for Macie findings bucket — Macie requires KMS when configuring findings repository
   const macieFindingsKey = new kms.Key(stack, "MacieFindingsKey", {
-      alias: `${Config.env}-macie-findings-key`,
-      description: "KMS key for Macie sensitive data discovery results",
-      enableKeyRotation: true,
-      removalPolicy: RemovalPolicy.DESTROY,
+    alias: `${Config.env}-macie-findings-key`,
+    description: "KMS key for Macie sensitive data discovery results",
+    enableKeyRotation: true,
+    removalPolicy: RemovalPolicy.DESTROY,
   });
   macieFindingsKey.addToResourcePolicy(
-      new PolicyStatement({
-        sid: "AllowMacieToUseKey",
-        effect: Effect.ALLOW,
-        principals: [new ServicePrincipal("macie.amazonaws.com")],
-        actions: ["kms:GenerateDataKey", "kms:Encrypt"],
-        resources: ["*"],
-        conditions: {
-          StringEquals: {
-            "aws:SourceAccount": stack.account,
-          },
-          ArnLike: {
-            "aws:SourceArn": [
-              `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
-              `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
-            ],
-          },
+    new PolicyStatement({
+      sid: "AllowMacieToUseKey",
+      effect: Effect.ALLOW,
+      principals: [new ServicePrincipal("macie.amazonaws.com")],
+      actions: ["kms:GenerateDataKey", "kms:Encrypt"],
+      resources: ["*"],
+      conditions: {
+        StringEquals: {
+          "aws:SourceAccount": stack.account,
         },
-      })
+        ArnLike: {
+          "aws:SourceArn": [
+            `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
+            `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
+          ],
+        },
+      },
+    })
   );
 
   // Macie findings repository bucket
   const macieFindingsBucket = new Bucket(stack, "MacieFindingsBucket", {
-      bucketName: `${Config.env}-macie-findings-${stack.account}`,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      encryption: BucketEncryption.KMS,
-      encryptionKey: macieFindingsKey,
-      enforceSSL: true,
-      removalPolicy: RemovalPolicy.DESTROY,
-      lifecycleRules: [{ id: "delete-old-findings", expiration: Duration.days(90) }],
+    bucketName: `${Config.env}-macie-findings-${stack.account}`,
+    blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    encryption: BucketEncryption.KMS,
+    encryptionKey: macieFindingsKey,
+    enforceSSL: true,
+    removalPolicy: RemovalPolicy.DESTROY,
+    lifecycleRules: [{ id: "delete-old-findings", expiration: Duration.days(90) }],
   });
 
   macieFindingsBucket.addToResourcePolicy(
     new PolicyStatement({
       sid: "AllowMacieGetBucketLocation",
-        effect: Effect.ALLOW,
-        principals: [new ServicePrincipal("macie.amazonaws.com")],
-        actions: ["s3:GetBucketLocation"],
-        resources: [macieFindingsBucket.bucketArn],
-        conditions: {
-          StringEquals: {
-            "aws:SourceAccount": stack.account,
-          },
-          ArnLike: {
-            "aws:SourceArn": [
-              `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
-              `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
-            ],
-          },
+      effect: Effect.ALLOW,
+      principals: [new ServicePrincipal("macie.amazonaws.com")],
+      actions: ["s3:GetBucketLocation"],
+      resources: [macieFindingsBucket.bucketArn],
+      conditions: {
+        StringEquals: {
+          "aws:SourceAccount": stack.account,
         },
-      })
+        ArnLike: {
+          "aws:SourceArn": [
+            `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
+            `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
+          ],
+        },
+      },
+    })
   );
   macieFindingsBucket.addToResourcePolicy(
     new PolicyStatement({
       sid: "AllowMaciePutObject",
-        effect: Effect.ALLOW,
-        principals: [new ServicePrincipal("macie.amazonaws.com")],
-        actions: ["s3:PutObject"],
-        resources: [macieFindingsBucket.arnForObjects("*")],
-        conditions: {
-          StringEquals: {
-            "aws:SourceAccount": stack.account,
-          },
-          ArnLike: {
-            "aws:SourceArn": [
-              `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
-              `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
-            ],
-          },
+      effect: Effect.ALLOW,
+      principals: [new ServicePrincipal("macie.amazonaws.com")],
+      actions: ["s3:PutObject"],
+      resources: [macieFindingsBucket.arnForObjects("*")],
+      conditions: {
+        StringEquals: {
+          "aws:SourceAccount": stack.account,
         },
-      })
+        ArnLike: {
+          "aws:SourceArn": [
+            `arn:aws:macie2:${stack.region}:${stack.account}:export-configuration:*`,
+            `arn:aws:macie2:${stack.region}:${stack.account}:classification-job/*`,
+          ],
+        },
+      },
+    })
   );
 
   // CfnFindingsPublicationConfiguration is not available in aws-cdk-lib, so we use AwsCustomResource.
   const configureFindingsRepo = new AwsCustomResource(stack, "MacieConfigureFindingsRepository", {
-      onUpdate: {
-        service: "Macie2",
-        action: "putClassificationExportConfiguration",
-        parameters: {
-          configuration: {
-            s3Destination: {
-              bucketName: macieFindingsBucket.bucketName,
-              kmsKeyArn: macieFindingsKey.keyArn,
-            },
+    onUpdate: {
+      service: "Macie2",
+      action: "putClassificationExportConfiguration",
+      parameters: {
+        configuration: {
+          s3Destination: {
+            bucketName: macieFindingsBucket.bucketName,
+            kmsKeyArn: macieFindingsKey.keyArn,
           },
         },
-        physicalResourceId: PhysicalResourceId.of("MacieConfigureFindingsRepository"),
       },
-      policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
+      physicalResourceId: PhysicalResourceId.of("MacieConfigureFindingsRepository"),
+    },
+    policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
   });
   configureFindingsRepo.node.addDependency(macieFindingsBucket);
   configureFindingsRepo.node.addDependency(macieFindingsKey);

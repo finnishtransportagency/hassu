@@ -165,7 +165,13 @@ export class HassuBackendStack extends Stack {
     const projektiSearchIndexer = this.createProjektiSearchIndexer(commonEnvironmentVariables);
     this.attachDatabaseToLambda(projektiSearchIndexer, true);
 
-    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(commonEnvironmentVariables, eventSQS, aineistoSQS, suomiFiSQS, asianhallintaSQS);
+    const sqsEventHandlerLambda = await this.createSqsEventHandlerLambda(
+      commonEnvironmentVariables,
+      eventSQS,
+      aineistoSQS,
+      suomiFiSQS,
+      asianhallintaSQS
+    );
     const hyvaksymisEsitysAineistoHandlerLambda = await this.createHyvaksymisEsitysAineistoLambda(
       commonEnvironmentVariables,
       hyvaksymisEsitysSQS
