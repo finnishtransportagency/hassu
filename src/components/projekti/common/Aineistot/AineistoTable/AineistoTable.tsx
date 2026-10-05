@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import HassuTable from "@components/table/HassuTable";
 import { Aineisto, AineistoTila } from "@services/api";
 import { ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
@@ -56,6 +57,9 @@ export function AineistoTable(props: Readonly<AineistoTableProps>) {
         header: "Tuotu",
         id: "tuotu",
         accessorFn: (aineisto) => {
+          if (aineisto.tila === AineistoTila.EI_LOYDY) {
+            return <span className="text-red">Ei löydy Velhosta</span>;
+          }
           if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
             return "Ladataan...";
           }

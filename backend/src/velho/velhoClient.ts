@@ -362,8 +362,12 @@ export class VelhoClient {
           statusText: response.statusText,
           status: response.status,
           problems: (response.data as BadRequestResponse)?.problems,
+          message: (response.data as BadRequestResponse)?.message,
+          viesti: (response.data as BadRequestResponse)?.viesti,
+          data: response.data,
         });
-        return new VelhoError(response.status, response.statusText);
+        const velhoMessage = (response.data as BadRequestResponse)?.viesti ?? (response.data as BadRequestResponse)?.message;
+        return new VelhoError(response.status, response.statusText, velhoMessage);
       }
     }
     return e;
@@ -373,6 +377,8 @@ export class VelhoClient {
 type BadRequestResponse = {
   problems: object;
   value: object;
+  viesti: string;
+  message: string;
 };
 
 export const velho = new VelhoClient();
