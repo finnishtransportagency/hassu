@@ -281,7 +281,7 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
         postitoimipaikka: m.postitoimipaikka ?? "",
         maa: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
         haettu: m.paivitetty ?? m.lisatty,
-        tiedotustapa: getTiedotustapa(m.suomifiLahetys, m.lahetykset),
+        tiedotustapa: m.suomifiLahetys ? getTiedotustapa(m.suomifiLahetys, m.lahetykset) : (m.tiedotustapa || TIEDOTUSTAPA_TEKSTIT.eiTiedossa),
         suomifiLahetys: !!m.henkilotunnus,
         lahetysaika: getLahetysaika(m.lahetykset),
         sahkoposti: m.sahkoposti ?? undefined,
