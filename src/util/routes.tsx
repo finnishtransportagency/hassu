@@ -1,4 +1,5 @@
-import { Status } from "@services/api";
+// Contains code generated or recommended by Amazon Q
+import { ProjektiTyyppi, Status } from "@services/api";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { isStatusGreaterOrEqualTo } from "../../common/statusOrder";
 
@@ -50,6 +51,7 @@ export const ALOITUSKUULUTUS_ROUTE: Route = {
   id: "aloituskuulutus",
   requiredStatus: Status.ALOITUSKUULUTUS,
   pathname: `/yllapito/projekti/[oid]/aloituskuulutus`,
+  visible: (projekti) => projekti?.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN,
 };
 
 export const SUUNNITTELU_ROUTE: Route = {
@@ -57,7 +59,7 @@ export const SUUNNITTELU_ROUTE: Route = {
   id: "suunnittelu",
   requiredStatus: Status.SUUNNITTELU,
   pathname: `/yllapito/projekti/[oid]/suunnittelu`,
-  visible: (projekti) => !projekti?.vahainenMenettely,
+  visible: (projekti) => !projekti?.vahainenMenettely && projekti?.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN,
 };
 
 export const NAHTAVILLAOLO_ROUTE: Route = {
