@@ -190,8 +190,8 @@ export const TOINEN_JATKAMINEN_AINEISTO_ROUTE: Route = {
 };
 
 export const TOINEN_JATKAMINEN_KUULUTUS_ROUTE: Route = {
-  title: "1. jatkaminen kuulutus",
-  id: "1_jatkopaatos_kuulutus",
+  title: "2. jatkaminen kuulutus",
+  id: "2_jatkopaatos_kuulutus",
   pathname: `/yllapito/projekti/[oid]/jatkaminen2/kuulutus`,
   requiredStatus: Status.JATKOPAATOS_2,
   visible: false,
