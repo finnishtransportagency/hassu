@@ -302,7 +302,7 @@ const VirkamiesHomePage = () => {
             sivunumero={sivunumero}
             jarjestysKasvava={jarjestysKasvava}
             jarjestysSarake={jarjestysSarake}
-            tuloksienMaara={tuloksienMaarat[aktiivinenTabi]}
+            tuloksienMaara={tuloksienMaarat[aktiivinenTabi] ?? 0}
             openUnauthorizedDialog={openUnauthorizedDialog}
           />
         ) : (
