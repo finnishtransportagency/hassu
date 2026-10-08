@@ -1272,6 +1272,7 @@ enum ProjektiTyyppi {
   YLEINEN
   TIE
   RATA
+  TOIMINNALLINEN
 }
 
 type VelhoHakuTulos {
