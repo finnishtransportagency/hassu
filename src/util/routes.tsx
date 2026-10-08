@@ -44,6 +44,7 @@ export const TIEDOTTAMINEN_ROUTE: Route = {
   requiredStatus: Status.ALOITUSKUULUTUS, // Avataan samaa aikaa kuin KASITTELYN_TILA_ROUTE
   pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`,
   pathnameForMatching: "/yllapito/projekti/[oid]/tiedottaminen",
+  visible: (projekti) => projekti?.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN,
 };
 
 export const ALOITUSKUULUTUS_ROUTE: Route = {
