@@ -302,6 +302,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         (async () => {
           const { suunnittelusopimusprojekti, kielitiedot, ...persistentData } = data;
           try {
+            if (projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+              persistentData.kustannuspaikka = undefined;
+            }
             if (suunnittelusopimusprojekti === "false") {
               persistentData.suunnitteluSopimus = null;
             } else if (suunnittelusopimusprojekti === "true") {
@@ -441,10 +444,16 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   useEffect(() => {
     // Detect status change
     if (statusBeforeSave && projekti.status) {
-      log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
-      if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
+      const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS && !isToiminnallinen) {
         const siirtymaTimer = setTimeout(() => {
           router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
+        }, 1500);
+        return () => clearTimeout(siirtymaTimer);
+      }
+      if (statusBeforeSave && projekti.status === Status.NAHTAVILLAOLO_AINEISTOT && isToiminnallinen) {
+        const siirtymaTimer = setTimeout(() => {
+          router.push(`/yllapito/projekti/${projekti?.oid}/nahtavillaolo`);
         }, 1500);
         return () => clearTimeout(siirtymaTimer);
       }
@@ -534,7 +543,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <Section noDivider>
             <HassuStack alignItems="flex-end">
               <Button id="save" primary disabled={disableFormEdit}>
-                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
+                {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && !isKuulutusPublic(projekti.nahtavillaoloVaiheJulkaisu)
+                  ? "Tallenna ja siirry nähtävilläoloon"
+                  : projekti?.status !== Status.EI_JULKAISTU
+                  ? "Tallenna"
+                  : "Tallenna ja siirry aloituskuulutukseen"}
               </Button>
             </HassuStack>
           </Section>
