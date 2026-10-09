@@ -12,6 +12,7 @@
     "RATA": "Spårplan",
     "TIE": "Vägplan",
     "YLEINEN": "Översiktsplan",
+    "TOIMINNALLINEN": "SV PUUTTUU: Maantien toiminnallisen luokan muutos",
     "null": "Okänt"
   },
   "projekti-vaiheet": {

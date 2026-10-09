@@ -1,10 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import { useRouter } from "next/router";
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import log from "loglevel";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
-import { Kieli, KielitiedotInput, LokalisoituTekstiInputEiPakollinen, Status, TallennaProjektiInput } from "@services/api";
+import { Kieli, KielitiedotInput, LokalisoituTekstiInputEiPakollinen, ProjektiTyyppi, Status, TallennaProjektiInput } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import Button from "@components/button/Button";
@@ -109,7 +110,7 @@ function ContentAsideTitle({
   if (epaaktiivinen) {
     return <></>;
   }
-  if (projekti.nykyinenKayttaja.onYllapitaja && projekti.projektinVoiJakaa) {
+  if (projekti.nykyinenKayttaja.onYllapitaja && projekti.projektinVoiJakaa && projekti.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN) {
     return <YllapitajaMenu versio={projekti.versio} projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
   }
   return <PaivitaVelhoTiedotButton projektiOid={projekti.oid} reloadProjekti={reloadProjekti} />;
@@ -301,6 +302,9 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
         (async () => {
           const { suunnittelusopimusprojekti, kielitiedot, ...persistentData } = data;
           try {
+            if (projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+              persistentData.kustannuspaikka = undefined;
+            }
             if (suunnittelusopimusprojekti === "false") {
               persistentData.suunnitteluSopimus = null;
             } else if (suunnittelusopimusprojekti === "true") {
@@ -440,10 +444,16 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
   useEffect(() => {
     // Detect status change
     if (statusBeforeSave && projekti.status) {
-      log.info("previous state:" + statusBeforeSave + ", current state:" + projekti.status);
-      if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS) {
+      const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      if (statusBeforeSave === Status.EI_JULKAISTU && projekti.status === Status.ALOITUSKUULUTUS && !isToiminnallinen) {
         const siirtymaTimer = setTimeout(() => {
           router.push(`/yllapito/projekti/${projekti?.oid}/aloituskuulutus`);
+        }, 1500);
+        return () => clearTimeout(siirtymaTimer);
+      }
+      if (statusBeforeSave && projekti.status === Status.NAHTAVILLAOLO_AINEISTOT && isToiminnallinen) {
+        const siirtymaTimer = setTimeout(() => {
+          router.push(`/yllapito/projekti/${projekti?.oid}/nahtavillaolo`);
         }, 1500);
         return () => clearTimeout(siirtymaTimer);
       }
@@ -459,34 +469,60 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <input type="hidden" {...register("oid")} />
           <ContentSpacer gap={8} sx={{ marginTop: 8 }}>
             {!isLoadingProjekti && <ProjektiErrorNotification projekti={projekti} validationSchema={loadedProjektiValidationSchema} />}
-            {!isKuulutusPublic(projekti.aloitusKuulutusJulkaisu) && (
+            {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN ? (
               <Notification type={NotificationType.INFO_GRAY}>
-                Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
+                <p>Projekti on merkitty toiminnallisen luokan muutokseksi.</p>
+                {!isKuulutusPublic(projekti.nahtavillaoloVaiheJulkaisu) && (
+                  <p>
+                    <br></br>Projektista ei ole julkaistu nähtävilläolokuulutusta eikä se siten vielä näy palvelun julkisella puolella.
+                  </p>
+                )}
               </Notification>
+            ) : (
+              !isKuulutusPublic(projekti.aloitusKuulutusJulkaisu) && (
+                <Notification type={NotificationType.INFO_GRAY}>
+                  Projektista ei ole julkaistu aloituskuulutusta eikä se siten vielä näy palvelun julkisella puolella.
+                </Notification>
+              )
             )}
 
-            <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
-              <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
-              <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
-              <li>
-                Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
-                vaiheisiin.
-              </li>
-              <li>
-                Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
-                aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa kunnan
-                edustajaa on mahdollista vaihtaa prosessin aikana.
-              </li>
-            </OhjelistaNotification>
+            {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN ? (
+              <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+                <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
+                <li>Puuttuvat tiedot pitää olla täytettynä ennen nähtävilläolokuulutuksen tekemistä.</li>
+                <li>
+                  Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                  vaiheisiin.
+                </li>
+              </OhjelistaNotification>
+            ) : (
+              <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
+                <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
+                <li>Puuttuvat tiedot pitää olla täytettynä ennen aloituskuulutuksen tekemistä.</li>
+                <li>
+                  Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
+                  vaiheisiin.
+                </li>
+                <li>
+                  Huomaathan, että Projektin kuulutusten kielet-, Suunnittelusopimus- ja EU-rahoitus -valintaan voi vaikuttaa
+                  aloituskuulutuksen hyväksymiseen saakka, jonka jälkeen valinta lukittuu. Suunnittelusopimuksellisissa suunnitelmissa
+                  kunnan edustajaa on mahdollista vaihtaa prosessin aikana.
+                </li>
+              </OhjelistaNotification>
+            )}
           </ContentSpacer>
 
           <ProjektinPerusosio projekti={projekti} register={register} formState={useFormReturn.formState} />
-          <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
           <ProjektiKuulutuskielet projekti={projekti} />
-          <LinkitetytProjektit projekti={projekti} />
-          {!!projekti.suunnitelmaJaettu && <SuunnitelmaJaettuOsiin jakotieto={projekti.suunnitelmaJaettu} />}
-          <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
-          <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
+          {projekti.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
+            <>
+              <VahainenMenettelyOsio formDisabled={disableFormEdit} projekti={projekti} />
+              <LinkitetytProjektit projekti={projekti} />
+              {!!projekti.suunnitelmaJaettu && <SuunnitelmaJaettuOsiin jakotieto={projekti.suunnitelmaJaettu} />}
+              <ProjektiSuunnittelusopimusTiedot formDisabled={disableFormEdit} projekti={projekti} />
+              <ProjektiEuRahoitusTiedot projekti={projekti} formDisabled={disableFormEdit} />
+            </>
+          )}
           {nykyinenKayttaja?.features?.asianhallintaIntegraatio && (
             <AsianhallintaIntegraatioYhteys projekti={projekti} formDisabled={disableFormEdit} />
           )}
@@ -507,7 +543,11 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
           <Section noDivider>
             <HassuStack alignItems="flex-end">
               <Button id="save" primary disabled={disableFormEdit}>
-                {projekti?.status !== Status.EI_JULKAISTU ? "Tallenna" : "Tallenna ja siirry aloituskuulutukseen"}
+                {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && !isKuulutusPublic(projekti.nahtavillaoloVaiheJulkaisu)
+                  ? "Tallenna ja siirry nähtävilläoloon"
+                  : projekti?.status !== Status.EI_JULKAISTU
+                  ? "Tallenna"
+                  : "Tallenna ja siirry aloituskuulutukseen"}
               </Button>
             </HassuStack>
           </Section>
