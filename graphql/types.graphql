@@ -1272,6 +1272,7 @@ enum ProjektiTyyppi {
   YLEINEN
   TIE
   RATA
+  TOIMINNALLINEN
 }
 
 type VelhoHakuTulos {
@@ -1382,6 +1383,7 @@ type ProjektiHakutulos implements IProjektiHakutulos {
   tiesuunnitelmatMaara: Int
   ratasuunnitelmatMaara: Int
   yleissuunnitelmatMaara: Int
+  toiminnallisetMaara: Int
   epaaktiivisetMaara: Int
   hakutulosProjektiTyyppi: ProjektiTyyppi
   tulokset: [ProjektiHakutulosDokumentti!]

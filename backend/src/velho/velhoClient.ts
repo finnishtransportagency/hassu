@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { auditLog, log, recordVelhoLatencyDecorator, VelhoApiName } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
@@ -99,7 +100,7 @@ export class VelhoClient {
         },
         lauseke: [
           "ja",
-          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"]],
+          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12", "vaihe/vaihe25"]],
           ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
           ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term],
         ],

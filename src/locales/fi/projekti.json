@@ -12,6 +12,7 @@
     "RATA": "Ratasuunnitelma",
     "TIE": "Tiesuunnitelma",
     "YLEINEN": "Yleissuunnitelma",
+    "TOIMINNALLINEN": "Maantien toiminnallisen luokan muutos",
     "null": "Ei tiedossa"
   },
   "projekti-vaiheet": {

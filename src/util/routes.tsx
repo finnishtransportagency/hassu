@@ -1,4 +1,5 @@
-import { Status } from "@services/api";
+// Contains code generated or recommended by Amazon Q
+import { ProjektiTyyppi, Status } from "@services/api";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { isStatusGreaterOrEqualTo } from "../../common/statusOrder";
 
@@ -43,6 +44,7 @@ export const TIEDOTTAMINEN_ROUTE: Route = {
   requiredStatus: Status.ALOITUSKUULUTUS, // Avataan samaa aikaa kuin KASITTELYN_TILA_ROUTE
   pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`,
   pathnameForMatching: "/yllapito/projekti/[oid]/tiedottaminen",
+  visible: (projekti) => projekti?.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN,
 };
 
 export const ALOITUSKUULUTUS_ROUTE: Route = {
@@ -50,6 +52,7 @@ export const ALOITUSKUULUTUS_ROUTE: Route = {
   id: "aloituskuulutus",
   requiredStatus: Status.ALOITUSKUULUTUS,
   pathname: `/yllapito/projekti/[oid]/aloituskuulutus`,
+  visible: (projekti) => projekti?.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN,
 };
 
 export const SUUNNITTELU_ROUTE: Route = {
@@ -57,7 +60,7 @@ export const SUUNNITTELU_ROUTE: Route = {
   id: "suunnittelu",
   requiredStatus: Status.SUUNNITTELU,
   pathname: `/yllapito/projekti/[oid]/suunnittelu`,
-  visible: (projekti) => !projekti?.vahainenMenettely,
+  visible: (projekti) => !projekti?.vahainenMenettely && projekti?.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN,
 };
 
 export const NAHTAVILLAOLO_ROUTE: Route = {
@@ -188,8 +191,8 @@ export const TOINEN_JATKAMINEN_AINEISTO_ROUTE: Route = {
 };
 
 export const TOINEN_JATKAMINEN_KUULUTUS_ROUTE: Route = {
-  title: "1. jatkaminen kuulutus",
-  id: "1_jatkopaatos_kuulutus",
+  title: "2. jatkaminen kuulutus",
+  id: "2_jatkopaatos_kuulutus",
   pathname: `/yllapito/projekti/[oid]/jatkaminen2/kuulutus`,
   requiredStatus: Status.JATKOPAATOS_2,
   visible: false,

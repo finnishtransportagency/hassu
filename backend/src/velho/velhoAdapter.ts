@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import {
   DBProjekti,
@@ -77,7 +78,7 @@ export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
   > & { vaihe: ProjektiVaihe };
 };
 
-type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
+type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12" | "vaihe/vaihe25";
 type Organisaatio =
   | "organisaatio/org01"
   | "organisaatio/org02"
@@ -109,6 +110,7 @@ const projektiVaiheToTyyppi: ProjektiVaiheToTyyppi = {
   "vaihe/vaihe04": ProjektiTyyppi.YLEINEN,
   "vaihe/vaihe10": ProjektiTyyppi.TIE,
   "vaihe/vaihe12": ProjektiTyyppi.RATA,
+  "vaihe/vaihe25": ProjektiTyyppi.TOIMINNALLINEN,
 } as const;
 
 function getProjektiTyyppi(vaihe: ProjektiVaihe) {
