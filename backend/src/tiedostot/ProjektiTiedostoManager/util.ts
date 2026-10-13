@@ -1,9 +1,12 @@
+// Contains code generated or recommended by Amazon Q
 import { AineistoTila, Kieli, LadattuTiedostoTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { Aineisto, KuulutusSaamePDFt, LadattuTiedosto } from "../../database/model";
 import { PathTuple } from "../../files/ProjektiPath";
 import { forEverySaameDo } from "../../projekti/adapter/common";
 import { fileService } from "../../files/fileService";
 import { velho } from "../../velho/velhoClient";
+import { log } from "../../logger";
+import { VelhoError } from "hassu-common/error";
 import * as mime from "mime-types";
 import contentDisposition from "content-disposition";
 import { FILE_PATH_DELETED_PREFIX } from "hassu-common/links";
@@ -131,7 +134,18 @@ export async function handleTiedostot(oid: string, tiedostot: LadattuTiedosto[] 
 }
 
 export async function importAineisto(aineisto: Aineisto, oid: string, path: PathTuple) {
-  const { disposition, contents } = await velho.getAineisto(aineisto.dokumenttiOid);
+  let disposition: string;
+  let contents: Buffer;
+  try {
+    ({ disposition, contents } = await velho.getAineisto(aineisto.dokumenttiOid));
+  } catch (e) {
+    log.error("Aineiston haku Velhosta epäonnistui", { projektinOid: oid, dokumenttiOid: aineisto.dokumenttiOid });
+    if (e instanceof VelhoError && e.status === 404) {
+      aineisto.tila = AineistoTila.EI_LOYDY;
+      return;
+    }
+    throw e;
+  }
   const fileName = contentDisposition.parse(disposition).parameters.filename;
   if (!fileName) {
     throw new Error("Tiedoston nimeä ei pystytty päättelemään: '" + disposition + "'");

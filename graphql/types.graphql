@@ -769,6 +769,10 @@ enum AineistoTila {
   Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
   """
   POISTETTU
+  """
+  Aineistoa ei loydy, esim. se on poistettu Velhosta ennen kuin se ehdittiin tuoda
+  """
+  EI_LOYDY
 }
 
 enum LadattuTiedostoTila {
