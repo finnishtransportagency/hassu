@@ -2,7 +2,8 @@
 import * as nodemailer from "nodemailer";
 import { config } from "../config";
 import { log } from "../logger";
-import SMTPTransport, { MailOptions } from "nodemailer/lib/smtp-transport";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
+type MailOptions = SMTPTransport.MailOptions;
 import cloneDeep from "lodash/cloneDeep";
 import isArray from "lodash/isArray";
 import { parameters } from "../aws/parameters";
@@ -96,7 +97,7 @@ class EmailClient {
       const { attachments, ...restOptions } = options;
       log.info("Sähköpostin lähetys kytketty pois päältä", {
         emailOptions: restOptions,
-        attachments: attachments?.map((att) => {
+        attachments: attachments?.map((att: nodemailer.Attachment) => {
           const a = cloneDeep(att);
           a.content = "***test***";
           return a;
@@ -135,9 +136,9 @@ class EmailClient {
       // Testiympäristössä kaikki postit ohjataan config.emailsTo osoittamaan osoitteeseen. Jotta koodi osaisi tulkita postit lähteneiksi, pitää lähetysraporttia huijata lisäämällä oikeat osoitteet sinne
       if (config.emailsTo) {
         if (isArray(options.to)) {
-          messageInfo.accepted.push(...options.to);
+          messageInfo.accepted.push(...(options.to as string[]));
         } else if (options.to) {
-          messageInfo.accepted.push(options.to);
+          messageInfo.accepted.push(options.to as string);
         }
       }
 
