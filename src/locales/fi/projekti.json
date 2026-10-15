@@ -194,12 +194,20 @@
     "30YS": "Y414 Kuulutus suunnitelman nähtävilläolo",
     "31YS": "Y415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta",
     "12YS_nahtavillaolo": "Y414-1 Ilmoitus suunnitelman nähtävilläolo",
+    "30TO": "TO414 Kuulutus suunnitelman nähtävilläolo",
+    "31TO": "TO415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta",
+    "12TO_nahtavillaolo": "TO414-1 Ilmoitus suunnitelman nähtävilläolo",
     "60YS": "Y431 Kuulutus hyväksymispäätöksen nähtävilläolo",
     "61YS_ely": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle",
     "61YS": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja elinvoimakeskukselle",
     "62YS": "Y431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille",
     "63YS": "Y431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille",
     "12YS_hyvaksymispaatos": "Y431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta",
+    "60TO": "TO431 Kuulutus hyväksymispäätöksen nähtävilläolo",
+    "61TO": "TO431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja toiselle viranomaiselle",
+    "62TO": "TO431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille",
+    "63TO": "TO431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille",
+    "12TO_hyvaksymispaatos": "TO431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta",
     "12YS_jatkopaatos": "Y441-2 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisen kuulutuksesta",
     "70YS": "Y441 Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta",
     "71YS": "Y441-1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
@@ -479,6 +487,12 @@
       "partitiivi": "yleissuunnitelmaa",
       "genetiivi": "yleissuunnitelman",
       "genetiivi_isolla": "Yleissuunnitelman"
+    },
+    "TOIMINNALLINEN": {
+      "perusmuoto": "toiminnallisen luokan muutos",
+      "partitiivi": "toiminnallisen luokan muutosta",
+      "genetiivi": "toiminnallisen luokan muutoksen",
+      "genetiivi_isolla": "Toiminnallisen luokan muutoksen"
     },
     "TIE": {
       "perusmuoto": "tiesuunnitelma",

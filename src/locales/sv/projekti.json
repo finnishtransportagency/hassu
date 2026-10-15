@@ -194,12 +194,20 @@
     "30YS": "Y414 Kuulutus suunnitelman nähtävilläolo sv",
     "31YS": "Y415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta sv",
     "12YS_nahtavillaolo": "Y414-1 Ilmoitus suunnitelman nähtävilläolo sv",
+    "30TO": "TO414 Kuulutus suunnitelman nähtävilläolo sv",
+    "31TO": "TO415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta sv",
+    "12TO_nahtavillaolo": "TO414-1 Ilmoitus suunnitelman nähtävilläolo sv",
     "60YS": "Y431 Kuulutus hyväksymispäätöksen nähtävilläolo sv",
     "61YS_ely": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle sv",
     "61YS": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja elinvoimakeskukselle sv",
     "62YS": "Y431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille sv",
     "63YS": "Y431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille sv",
     "12YS_hyvaksymispaatos": "Y431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta sv",
+    "60TO": "TO431 Kuulutus hyväksymispäätöksen nähtävilläolo sv",
+    "61TO": "TO431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja toiselle viranomaiselle sv",
+    "62TO": "TO431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille sv",
+    "63TO": "TO431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille sv",
+    "12TO_hyvaksymispaatos": "TO431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta sv",
     "12YS_jatkopaatos": "Y441-2 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisen kuulutuksesta sv",
     "70YS": "Y441 Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta sv",
     "71YS": "Y441-1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle sv",
@@ -480,6 +488,12 @@
       "partitiivi": "utredningsplanen",
       "genetiivi": "utredningsplanen",
       "genetiivi_isolla": "Utredningsplanen"
+    },
+    "TOIMINNALLINEN": {
+      "perusmuoto": "vägplan",
+      "partitiivi": "vägplanen",
+      "genetiivi": "vägplanen",
+      "genetiivi_isolla": "Vägplanen"
     },
     "TIE": {
       "perusmuoto": "vägplan",
