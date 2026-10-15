@@ -107,6 +107,8 @@ export function determineAsiakirjaMuoto(
     return AsiakirjanMuoto.TIE;
   } else if (tyyppi === ProjektiTyyppi.RATA || (tyyppi === ProjektiTyyppi.YLEINEN && vaylamuoto?.includes("rata"))) {
     return AsiakirjanMuoto.RATA;
+  } else if (tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+    return AsiakirjanMuoto.TIE;
   }
   throw new Error("Asiakirjan muotoa ei voitu päätellä");
 }

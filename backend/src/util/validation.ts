@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as API from "hassu-common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloVaiheJulkaisu, VuorovaikutusKierros, VuorovaikutusKierrosJulkaisu } from "../database/model";
 import { getLastJulkaistuVuorovaikutusDateTime, ProjektiVuorovaikutuksilla } from "./vuorovaikutus";
@@ -27,7 +28,8 @@ export function isOkToMakeNewVuorovaikutusKierros(dbProjekti: {
 
 export function isOkToSendNahtavillaoloToApproval(dbProjekti: DBProjekti): boolean {
   const muokattavanaOlevaKierros = dbProjekti.vuorovaikutusKierros?.vuorovaikutusNumero;
-  const viimeisinJulkaistuKierros = dbProjekti.vuorovaikutusKierrosJulkaisut?.[dbProjekti.vuorovaikutusKierrosJulkaisut.length - 1].id;
+  const julkaisut = dbProjekti.vuorovaikutusKierrosJulkaisut;
+  const viimeisinJulkaistuKierros = julkaisut?.length ? julkaisut[julkaisut.length - 1].id : undefined;
   if (
     muokattavanaOlevaKierros !== undefined &&
     viimeisinJulkaistuKierros !== undefined &&
