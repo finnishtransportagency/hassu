@@ -20,9 +20,8 @@
     "@aws-sdk/util-dynamodb": "3.996.9",
     "@smithy/protocol-http": "4.1.8",
     "@types/node": "22.19.17",
-    "@types/nodemailer": "6.4.14",
     "aws-xray-sdk-core": "3.10.1",
-    "nodemailer": "9.1.1"
+    "nodemailer": "10.0.16"
   },
   "engines": {
     "node": ">=22.22.1",
