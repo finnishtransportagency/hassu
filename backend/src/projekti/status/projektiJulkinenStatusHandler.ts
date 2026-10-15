@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as API from "hassu-common/graphql/apiModel";
 import { KuulutusJulkaisuTila, Status } from "hassu-common/graphql/apiModel";
 import { isDateTimeInThePast } from "../../util/dateUtil";
@@ -22,7 +23,15 @@ abstract class KuulutusStatusHandler extends StatusHandler<API.ProjektiJulkinen>
     this.vaiheAvain = vaiheAvain;
   }
 
+  protected shouldSkip(_p: API.ProjektiJulkinen): boolean {
+    return false;
+  }
+
   handle(p: API.ProjektiJulkinen) {
+    if (this.shouldSkip(p)) {
+      super.handle(p);
+      return;
+    }
     const kuulutus = p[this.vaiheAvain];
     if (kuulutus?.tila === KuulutusJulkaisuTila.MIGROITU || kuulutus?.julkaisuOnKopio) {
       super.handle(p); // Continue evaluating next rules
@@ -34,10 +43,23 @@ abstract class KuulutusStatusHandler extends StatusHandler<API.ProjektiJulkinen>
 }
 
 export function applyProjektiJulkinenStatus(projekti: API.ProjektiJulkinen): void {
-  const aloituskuulutus = new (class extends KuulutusStatusHandler {})(API.Status.ALOITUSKUULUTUS, "aloitusKuulutusJulkaisu");
+  const aloituskuulutus = new (class extends KuulutusStatusHandler {
+    protected shouldSkip(p: API.ProjektiJulkinen): boolean {
+      return p.velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN; // TOIMINNALLINEN projects have no aloituskuulutus
+    }
+  })(API.Status.ALOITUSKUULUTUS, "aloitusKuulutusJulkaisu");
 
   const suunnittelu = new (class extends StatusHandler<API.ProjektiJulkinen> {
     handle(p: API.ProjektiJulkinen) {
+      if (p.velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN) {
+        // TOIMINNALLINEN projects have no aloituskuulutus or suunnittelu phase.
+        // Only show publicly when nahtavillaolo has been approved.
+        if (p.nahtavillaoloVaihe?.tila === API.KuulutusJulkaisuTila.HYVAKSYTTY) {
+          p.status = API.Status.NAHTAVILLAOLO;
+          super.handle(p);
+        }
+        return;
+      }
       if (projekti.vuorovaikutukset) {
         const tila = projekti.vuorovaikutukset.tila;
         if (tila === API.VuorovaikutusKierrosTila.JULKINEN && !projekti.vuorovaikutukset?.julkaisuOnKopio) {
