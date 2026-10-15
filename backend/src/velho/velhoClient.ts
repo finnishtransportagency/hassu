@@ -359,10 +359,12 @@ export class VelhoClient {
         return new VelhoUnavailableError(response.status, response.statusText);
       }
       if (response.status >= 400) {
+        const badRequest = response.data as BadRequestResponse;
         log.error("Virhe Velho-rajapinnan kutsussa", {
           statusText: response.statusText,
           status: response.status,
-          problems: (response.data as BadRequestResponse)?.problems,
+          problems: JSON.stringify(badRequest?.problems),
+          value: JSON.stringify(badRequest?.value),
         });
         return new VelhoError(response.status, response.statusText);
       }
