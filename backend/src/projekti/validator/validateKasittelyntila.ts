@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import { DBProjekti, KasittelynTila } from "../../database/model";
-import { KasittelyntilaInput, Projekti, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import { KasittelyntilaInput, Projekti, ProjektiTyyppi, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 import { requireAdmin, requirePermissionMuokkaa } from "../../user/userService";
 import assert from "assert";
 import { IllegalArgumentError } from "hassu-common/error";
@@ -60,6 +60,9 @@ function validateKasittelyntilaHyvaksymispaatos(projekti: DBProjekti, apiProjekt
 
 function validateKasittelyntilaEnsimmainenJatkopaatos(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (inputChangesKasittelynTilaField(projekti, input, "ensimmainenJatkopaatos")) {
+    if (projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+      throw new IllegalArgumentError("Ensimmäistä jatkopäätöstä ei voi lisätä Toiminnallisen luokan projektille");
+    }
     if (!projekti.kasittelynTila?.hyvaksymispaatos) {
       throw new IllegalArgumentError("Ensimmäistä jatkopäätöstä voi muokata vasta kun projektilla on hyväksymispäätös");
     }
@@ -74,6 +77,9 @@ function validateKasittelyntilaEnsimmainenJatkopaatos(projekti: DBProjekti, apiP
 
 function validateKasittelyntilaToinenJatkopaatos(projekti: DBProjekti, apiProjekti: Projekti, input: TallennaProjektiInput) {
   if (inputChangesKasittelynTilaField(projekti, input, "toinenJatkopaatos")) {
+    if (projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+      throw new IllegalArgumentError("Toista jatkopäätöstä ei voi lisätä Toiminnallisen luokan projektille");
+    }
     if (!projekti.kasittelynTila?.hyvaksymispaatos || !projekti.kasittelynTila?.ensimmainenJatkopaatos) {
       throw new IllegalArgumentError(
         "Toista jatkopäätöstä voi muokata vasta kun projektilla on hyväksymispäätös ja ensimmäinen jatkopäätös."
