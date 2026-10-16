@@ -103,7 +103,7 @@ class ProjektiAdapterJulkinen {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
       lyhytOsoite: dbProjekti.lyhytOsoite,
-      kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot),
+      kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot, isToiminnallinen),
       velho: adaptVelhoJulkinen(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
       euRahoitusLogot,
