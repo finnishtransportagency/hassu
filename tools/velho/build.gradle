@@ -4,7 +4,7 @@ import vayla.DownloadMetaDataTask
 plugins {
   id 'java'
   id 'groovy'
-  id "org.openapi.generator" version "7.17.0"
+  id "org.openapi.generator" version "7.26.0"
   id "de.undercouch.download" version "5.6.0"
 }
 repositories {
@@ -70,8 +70,8 @@ apiDefinitions.each { apiDefinition ->
   def apiName = apiDefinition[0]
   def generateApiTask = tasks.register("generate${apiName.capitalize()}", org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     generatorName = "typescript-axios"
-    inputSpec = "${buildDir}/${apiName}.json".toString()
-    outputDir = "${buildDir}/../../../backend/src/velho/${apiName}"
+    inputSpec = layout.buildDirectory.file("${apiName}.json")
+    outputDir = layout.buildDirectory.dir("../../../backend/src/velho/${apiName}")
     validateSpec = false
     skipOverwrite = false
     globalProperties = [
