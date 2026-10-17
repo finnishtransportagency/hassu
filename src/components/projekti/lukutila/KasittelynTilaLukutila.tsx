@@ -148,25 +148,27 @@ export default function KasittelynTilaLukutila({ projekti }: Readonly<Props>): R
           </div>
         </Section>
       )}
-      <Section>
-        <h3 className="vayla-subtitle">Jatkopäätös</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-1">1. jatkopäätöksen päivä</p>
-          <p className="vayla-label md:col-span-3">Asiatunnus</p>
-          <p className="md:col-span-1 mb-0">
-            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm)}
-          </p>
-          <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "-"}</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4">
-          <p className="vayla-label md:col-span-1">2. jatkopäätöksen päivä</p>
-          <p className="vayla-label md:col-span-3">Asiatunnus</p>
-          <p className="md:col-span-1 mb-0">
-            {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm)}
-          </p>
-          <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || "-"}</p>
-        </div>
-      </Section>
+      {projekti.velho.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
+        <Section>
+          <h3 className="vayla-subtitle">Jatkopäätös</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-1">1. jatkopäätöksen päivä</p>
+            <p className="vayla-label md:col-span-3">Asiatunnus</p>
+            <p className="md:col-span-1 mb-0">
+              {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.ensimmainenJatkopaatos?.paatoksenPvm)}
+            </p>
+            <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.ensimmainenJatkopaatos?.asianumero || "-"}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4">
+            <p className="vayla-label md:col-span-1">2. jatkopäätöksen päivä</p>
+            <p className="vayla-label md:col-span-3">Asiatunnus</p>
+            <p className="md:col-span-1 mb-0">
+              {formatDateIfExistsAndValidOtherwiseDash(projekti.kasittelynTila?.toinenJatkopaatos?.paatoksenPvm)}
+            </p>
+            <p className="md:col-span-3 mb-0">{projekti.kasittelynTila?.toinenJatkopaatos?.asianumero || "-"}</p>
+          </div>
+        </Section>
+      )}
       <Section>
         <h3 className="vayla-subtitle">Hallinto-oikeus</h3>
         <ContentSpacer>
