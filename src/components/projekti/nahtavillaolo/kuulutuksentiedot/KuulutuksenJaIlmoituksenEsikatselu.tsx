@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import Section from "@components/layout/Section";
-import { Kieli, AsiakirjaTyyppi } from "@services/api";
+import { Kieli, AsiakirjaTyyppi, ProjektiTyyppi } from "@services/api";
 import React from "react";
 import Button from "@components/button/Button";
 import { Box } from "@mui/material";
@@ -28,6 +28,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
 
   const ensisijainenKieli = kielitiedot.ensisijainenKieli;
   const toissijainenKieli = kielitiedot.toissijainenKieli;
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
 
   return (
     <Section>
@@ -63,16 +64,22 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
               >
                 Ilmoituksen esikatselu
               </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, ensisijainenKieli)
-                )}
-              >
-                Ilmoitus kiinteistön omistajalle esikatselu
-              </Button>
+              {!isToiminnallinen && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + ensisijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      formData,
+                      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                      ensisijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus kiinteistön omistajalle esikatselu
+                </Button>
+              )}
             </Box>
           </div>
         )}
@@ -105,16 +112,22 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
               >
                 Ilmoituksen esikatselu
               </Button>
-              <Button
-                style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
-                id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKieli}
-                type="button"
-                onClick={handleSubmit((formData) =>
-                  esikatselePdf(formData, AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE, toissijainenKieli)
-                )}
-              >
-                Ilmoitus kiinteistön omistajalle esikatselu
-              </Button>
+              {!isToiminnallinen && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_kiinteiston_omistajalle_pdf_" + toissijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      formData,
+                      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+                      toissijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus kiinteistön omistajalle esikatselu
+                </Button>
+              )}
             </Box>
           </div>
         )}
