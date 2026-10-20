@@ -346,6 +346,11 @@ export const apiConfig: ApiConfig = {
     operationType: OperationType.Mutation,
     graphql: mutations.lisaaMuistutus,
   },
+  lisaaMielipide: {
+    name: "lisaaMielipide",
+    operationType: OperationType.Mutation,
+    graphql: mutations.lisaaMielipide,
+  },
   listaaLisaAineisto: {
     name: "listaaLisaAineisto",
     operationType: OperationType.Query,
