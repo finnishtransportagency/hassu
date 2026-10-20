@@ -1,5 +1,5 @@
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { getMielipideTableName } from "../util/environment";
 
 export type DBMielipide = {
@@ -23,6 +23,10 @@ class MielipideDatabase {
 
   constructor(tableName: string) {
     this.tableName = tableName;
+  }
+
+  async tallennaMielipide(mielipide: DBMielipide): Promise<void> {
+    await getDynamoDBDocumentClient().send(new PutCommand({ TableName: this.tableName, Item: mielipide }));
   }
 
   async haeMielipideMaara(oid: string): Promise<number> {
