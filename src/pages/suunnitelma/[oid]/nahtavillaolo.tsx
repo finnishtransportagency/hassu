@@ -177,6 +177,9 @@ export default function Nahtavillaolo(): ReactElement {
       {isProjektiInNahtavillaoloVaihe && velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && (
         <ContentSpacer>
           <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.mielipiteen_jattaminen`)}</H3>
+          <p>
+            <strong>{t("mielipidelomake.jata_mielipide_mennessa")}</strong>
+          </p>
           <MielipideLomake projekti={projekti} />
         </ContentSpacer>
       )}

@@ -216,6 +216,7 @@
   },
   "mielipidelomake": {
     "jata_mielipide": "Jätä mielipide",
+    "jata_mielipide_mennessa": "Mielipide suunnitelmasta tulee jättää xx.xx.xxxx mennessä.",
     "mielipide_info": "Voit jättää mielipiteesi suunnitelmasta täyttämällä alla olevan lomakkeen.",
     "lisatietoja_henkilotietojesi": "<p>Lisätietoja henkilötietojesi käsittelystä löydät <a>tietosuojaselosteesta</a>.</p>",
     "mielipiteen_lahettajan_tiedot": "Mielipiteen lähettäjän tiedot",

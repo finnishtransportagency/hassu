@@ -21,7 +21,7 @@ import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import { H3 } from "@components/Headings";
+import { H2, H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
 import { allowedFileTypesKansalaisille } from "common/fileValidationSettings";
@@ -107,6 +107,7 @@ export default function MielipideLomake({ projekti }: Readonly<Props>): ReactEle
 
   return (
     <Section noDivider>
+      <H2>{t("projekti:mielipidelomake.jata_mielipide")}</H2>
       <ContentSpacer
         sx={{
           backgroundColor: "#F8F8F8",

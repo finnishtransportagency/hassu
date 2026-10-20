@@ -216,6 +216,7 @@
   },
   "mielipidelomake": {
     "jata_mielipide": "Lämna en åsikt",
+    "jata_mielipide_mennessa": "Åsikten om planen ska lämnas senast xx.xx.xxxx.",
     "mielipide_info": "Du kan lämna din åsikt om planen genom att fylla i blanketten nedan.",
     "lisatietoja_henkilotietojesi": "<p>Mer information om behandlingen av dina personuppgifter finns i <a>dataskyddsbeskrivningen</a>.</p>",
     "mielipiteen_lahettajan_tiedot": "Uppgifter om avsändaren av åsikten",
