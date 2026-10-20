@@ -174,7 +174,12 @@ export default function Nahtavillaolo(): ReactElement {
         </ContentSpacer>
         <EuLogo projekti={projekti} />
       </Section>
-      {isProjektiInNahtavillaoloVaihe && velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && <MielipideLomake projekti={projekti} />}
+      {isProjektiInNahtavillaoloVaihe && velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && (
+        <ContentSpacer>
+          <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.mielipiteen_jattaminen`)}</H3>
+          <MielipideLomake projekti={projekti} />
+        </ContentSpacer>
+      )}
       {isProjektiInNahtavillaoloVaihe && velho.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
         <ContentSpacer>
           <H3 variant="h4">

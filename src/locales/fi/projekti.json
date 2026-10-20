@@ -108,6 +108,7 @@
       "asianosaisen_oikeudet": "Asianosaisen oikeudet",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto",
       "muistutuksen_jattaminen": "Muistutuksen jättäminen",
+      "mielipiteen_jattaminen": "Mielipiteen jättäminen",
       "yhteystiedot": "Yhteystiedot"
     },
     "paatos_nahtavilla_oleva_aineisto": "Päätöksen liitteenä olevat aineistot",
@@ -216,6 +217,7 @@
   "mielipidelomake": {
     "jata_mielipide": "Jätä mielipide",
     "mielipide_info": "Voit jättää mielipiteesi suunnitelmasta täyttämällä alla olevan lomakkeen.",
+    "lisatietoja_henkilotietojesi": "<p>Lisätietoja henkilötietojesi käsittelystä löydät <a>tietosuojaselosteesta</a>.</p>",
     "mielipiteen_lahettajan_tiedot": "Mielipiteen lähettäjän tiedot",
     "mielipide": "Mielipide",
     "ala_kirjoita": "Älä kirjoita tai liitä mielipiteeseen asiakirjoja, joissa on henkilötunnuksia, kotiosoitteita tai arkaluonteisia tietoja, kuten terveystietoja.",

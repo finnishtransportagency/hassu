@@ -9,6 +9,9 @@ import { useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
 import { MielipideInput, ProjektiJulkinen } from "@services/api";
+import Trans from "next-translate/Trans";
+import ExtLink from "@components/ExtLink";
+import { getTietosuojaUrl } from "src/util/tietosuojaUtil";
 import IconButton from "@components/button/IconButton";
 import { ErrorSpan } from "@components/form/FormGroup";
 import useSnackbars from "src/hooks/useSnackbars";
@@ -18,7 +21,7 @@ import useApi from "src/hooks/useApi";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
-import { H2, H3 } from "@components/Headings";
+import { H3 } from "@components/Headings";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
 import { allowedFileTypesKansalaisille } from "common/fileValidationSettings";
@@ -47,7 +50,7 @@ const defaultFormValues: MielipideInputForm = {
 export default function MielipideLomake({ projekti }: Readonly<Props>): ReactElement {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [kiitosDialogiOpen, setKiitosDialogiOpen] = useState(false);
   const [epaonnistuiDialogiOpen, setEpaonnistuiDialogiOpen] = useState(false);
 
@@ -104,7 +107,6 @@ export default function MielipideLomake({ projekti }: Readonly<Props>): ReactEle
 
   return (
     <Section noDivider>
-      <H2>{t("projekti:mielipidelomake.jata_mielipide")}</H2>
       <ContentSpacer
         sx={{
           backgroundColor: "#F8F8F8",
@@ -117,6 +119,10 @@ export default function MielipideLomake({ projekti }: Readonly<Props>): ReactEle
       >
         <ContentSpacer>
           <p>{t("projekti:mielipidelomake.mielipide_info")}</p>
+          <Trans
+            i18nKey="projekti:mielipidelomake.lisatietoja_henkilotietojesi"
+            components={{ p: <p />, a: <ExtLink href={getTietosuojaUrl(projekti.velho.suunnittelustaVastaavaViranomainen, lang)} /> }}
+          />
         </ContentSpacer>
         <H3>{t("projekti:mielipidelomake.mielipiteen_lahettajan_tiedot")}</H3>
         <ContentSpacer gap={8} as="form">

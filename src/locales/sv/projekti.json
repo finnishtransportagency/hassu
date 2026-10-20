@@ -108,6 +108,7 @@
       "asianosaisen_oikeudet": "Partens rättigheter",
       "nahtavilla_oleva_aineisto": "Material till påseende",
       "muistutuksen_jattaminen": "Inlämnande av anmärkning",
+      "mielipiteen_jattaminen": "Inlämnande av åsikt",
       "yhteystiedot": "Kontaktuppgifter"
     },
     "paatos_nahtavilla_oleva_aineisto": "Materialet bifogat beslutet",
@@ -216,6 +217,7 @@
   "mielipidelomake": {
     "jata_mielipide": "Lämna en åsikt",
     "mielipide_info": "Du kan lämna din åsikt om planen genom att fylla i blanketten nedan.",
+    "lisatietoja_henkilotietojesi": "<p>Mer information om behandlingen av dina personuppgifter finns i <a>dataskyddsbeskrivningen</a>.</p>",
     "mielipiteen_lahettajan_tiedot": "Uppgifter om avsändaren av åsikten",
     "mielipide": "Åsikt",
     "ala_kirjoita": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till åsikten.",
