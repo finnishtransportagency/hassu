@@ -30,6 +30,7 @@ export class HassuDatabaseStack extends Stack {
   public feedbackTable!: ddb.Table;
   public kiinteistonOmistajaTable!: ddb.Table;
   public projektiMuistuttajaTable!: ddb.Table;
+  public projektiMielipideTable!: ddb.Table;
   public tiedoteTable!: ddb.Table;
   public schemaMetaTable!: ddb.Table;
   public nahtavillaoloVaiheJulkaisuTable!: ddb.Table;
@@ -62,6 +63,7 @@ export class HassuDatabaseStack extends Stack {
     this.feedbackTable = this.createFeedbackTable();
     this.kiinteistonOmistajaTable = this.createKiinteistonomistajaTable();
     this.projektiMuistuttajaTable = this.createProjektiMuistuttajaTable();
+    this.projektiMielipideTable = this.createProjektiMielipideTable();
     this.tiedoteTable = this.createTiedoteTable();
     this.nahtavillaoloVaiheJulkaisuTable = this.createNahtavillaoloVaiheJulkaisuTable();
     this.projektiDataTable = this.createProjektiDataTable();
@@ -222,6 +224,35 @@ export class HassuDatabaseStack extends Stack {
     if (Config.isPermanentEnvironment()) {
       table.applyRemovalPolicy(RemovalPolicy.RETAIN);
     }
+    return table;
+  }
+
+  private createProjektiMielipideTable() {
+    const table = new ddb.Table(this, "ProjektiMielipide", {
+      billingMode: ddb.BillingMode.PAY_PER_REQUEST,
+      tableName: Config.projektiMielipideTableName,
+      partitionKey: {
+        name: "oid",
+        type: ddb.AttributeType.STRING,
+      },
+      sortKey: {
+        name: "id",
+        type: ddb.AttributeType.STRING,
+      },
+      pointInTimeRecoverySpecification: { pointInTimeRecoveryEnabled: !!Config.getEnvConfig().pointInTimeRecovery },
+      timeToLiveAttribute: "expires",
+    });
+    HassuDatabaseStack.enableBackup(table);
+
+    if (Config.isPermanentEnvironment()) {
+      table.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    }
+
+    new StringParameter(this, "ProjektiMielipideTableNameParameter", {
+      parameterName: "/" + Config.env + "/outputs/ProjektiMielipideTableName",
+      stringValue: table.tableName,
+    });
+
     return table;
   }
 
