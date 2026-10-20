@@ -12,6 +12,7 @@ import {
 import * as appsync from "aws-cdk-lib/aws-appsync";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
+import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 import { Config } from "./config";
 import { ApiConfig, apiConfig, OperationConfig, OperationType } from "../../common/abstractApi";
@@ -1077,6 +1078,8 @@ export class HassuBackendStack extends Stack {
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
     const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
+    const mielipideTableName = ssm.StringParameter.valueForStringParameter(this, "/" + Config.env + "/outputs/ProjektiMielipideTableName");
+    const mielipideTable = ddb.Table.fromTableName(this, "ProjektiMielipideTable", mielipideTableName);
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
       projektiDataTable.grantFullAccess(backendFn);
@@ -1088,13 +1091,16 @@ export class HassuBackendStack extends Stack {
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
       this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);
       nahtavillaoloVaiheJulkaisuTable.grantFullAccess(backendFn);
+      mielipideTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
       projektiDataTable.grantReadData(backendFn);
       nahtavillaoloVaiheJulkaisuTable.grantReadData(backendFn);
       this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
+      mielipideTable.grantWriteData(backendFn);
     }
     backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
+    backendFn.addEnvironment("TABLE_PROJEKTI_MIELIPIDE", mielipideTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI_DATA", projektiDataTable.tableName);
     backendFn.addEnvironment("TABLE_NAHTAVILLAOLOVAIHEJULKAISU", nahtavillaoloVaiheJulkaisuTable.tableName);
