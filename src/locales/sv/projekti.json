@@ -213,6 +213,20 @@
     "71YS": "Y441-1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle sv",
     "72YS": "Y441-3 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle sv"
   },
+  "mielipidelomake": {
+    "jata_mielipide": "Lämna en åsikt",
+    "mielipide_info": "Du kan lämna din åsikt om planen genom att fylla i blanketten nedan.",
+    "mielipiteen_lahettajan_tiedot": "Uppgifter om avsändaren av åsikten",
+    "mielipide": "Åsikt",
+    "ala_kirjoita": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till åsikten.",
+    "mielipiteen_liitteet": "Bilagor till åsikten",
+    "tuetut_tiedostomuodot_ovat": "Filformat som stöds är pdf, jpg, png, doc, docx och txt. Den största tillåtna storleken på en fil är 25 MB.",
+    "kiitos_mielipiteesta": "Tack för din åsikt",
+    "olemme_vastaanottaneet_mielipiteesi": "Vi har mottagit din åsikt.",
+    "voit_antaa_mielipiteita": "Du kan lämna åsikter om planeringsprojektet fram till {{pvm}}.",
+    "epaonnistui": "Det gick inte att skicka åsikten",
+    "epaonnistui_viesti": "Du kan försöka skicka åsikten igen."
+  },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} behöver dina personuppgifter för att behandla anmärkningen. Vi får dina personuppgifter från Myndigheten för digitalisering och befolkningsdata. Vi lämnar ut dina uppgifter till Transport- och kommunikationsverket, vars uppgift är att godkänna planen.",
     "saat_tekemastasi_muistutuksesta_suomifi": "Du får en kopia av anmärkningen som ett Suomi.fi-meddelande. När Transport- och kommunikationsverket har godkänt planen skickar vi information om beslut om godkännande till dig som ett Suomi.fi-meddelande. Kontrollera att dina uppgifter inte innehåller fel och korrigera dem vid behov.",

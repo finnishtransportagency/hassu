@@ -213,6 +213,20 @@
     "71YS": "Y441-1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
     "72YS": "Y441-3 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle"
   },
+  "mielipidelomake": {
+    "jata_mielipide": "Jätä mielipide",
+    "mielipide_info": "Voit jättää mielipiteesi suunnitelmasta täyttämällä alla olevan lomakkeen.",
+    "mielipiteen_lahettajan_tiedot": "Mielipiteen lähettäjän tiedot",
+    "mielipide": "Mielipide",
+    "ala_kirjoita": "Älä kirjoita tai liitä mielipiteeseen asiakirjoja, joissa on henkilötunnuksia, kotiosoitteita tai arkaluonteisia tietoja, kuten terveystietoja.",
+    "mielipiteen_liitteet": "Mielipiteen liitteet",
+    "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat pdf, jpg, png, doc, docx ja txt. Yhden tiedoston suurin sallittu koko on 25 Mt.",
+    "kiitos_mielipiteesta": "Kiitos mielipiteestä",
+    "olemme_vastaanottaneet_mielipiteesi": "Olemme vastaanottaneet mielipiteesi onnistuneesti.",
+    "voit_antaa_mielipiteita": "Voit antaa mielipiteitä suunnitteluhankkeesta {{pvm}} asti.",
+    "epaonnistui": "Mielipiteen jättäminen epäonnistui",
+    "epaonnistui_viesti": "Voit kokeilla lähettää mielipiteen uudelleen."
+  },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} tarvitsee henkilötietojasi muistutuksen käsittelyä varten. Saamme henkilötietosi Digi- ja väestötietovirastolta.  Luovutamme tietosi Liikenne- ja viestintävirastolle, jonka tehtävä on hyväksyä suunnitelma.",
     "saat_tekemastasi_muistutuksesta_suomifi": "Saat tekemästäsi muistutuksesta kopion Suomi.fi -viestinä.  Kun Liikenne- ja viestintävirasto on hyväksynyt suunnitelman, lähetämme sinulle tiedon hyväksymispäätöksestä Suomi.fi -viestinä. Tarkistathan, että tiedoissasi ei ole virheitä ja korjaat ne tarvittaessa.",
