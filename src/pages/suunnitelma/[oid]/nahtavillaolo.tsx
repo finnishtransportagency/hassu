@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useEffect, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
@@ -6,10 +7,11 @@ import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import { formatDate } from "hassu-common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { Kieli, KuulutusJulkaisuTila, Status } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomake from "@components/projekti/kansalaisnakyma/MuistutusLomake";
+import MielipideLomake from "@components/projekti/kansalaisnakyma/MielipideLomake";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
 import { kuntametadata } from "hassu-common/kuntametadata";
@@ -172,7 +174,8 @@ export default function Nahtavillaolo(): ReactElement {
         </ContentSpacer>
         <EuLogo projekti={projekti} />
       </Section>
-      {isProjektiInNahtavillaoloVaihe && (
+      {isProjektiInNahtavillaoloVaihe && velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && <MielipideLomake projekti={projekti} />}
+      {isProjektiInNahtavillaoloVaihe && velho.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
         <ContentSpacer>
           <H3 variant="h4">
             {t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}{" "}
