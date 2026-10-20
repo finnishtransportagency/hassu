@@ -1,5 +1,5 @@
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { getMielipideTableName } from "../util/environment";
 
 export type DBMielipide = {
@@ -27,6 +27,15 @@ class MielipideDatabase {
 
   async tallennaMielipide(mielipide: DBMielipide): Promise<void> {
     await getDynamoDBDocumentClient().send(new PutCommand({ TableName: this.tableName, Item: mielipide }));
+  }
+
+  async haeMielipide(oid: string, id: string): Promise<DBMielipide | undefined> {
+    const command = new GetCommand({
+      TableName: this.tableName,
+      Key: { oid, id },
+    });
+    const result = await getDynamoDBDocumentClient().send(command);
+    return result.Item as DBMielipide | undefined;
   }
 
   async haeMielipideMaara(oid: string): Promise<number> {

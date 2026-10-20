@@ -142,7 +142,8 @@ export class HassuBackendStack extends Stack {
       pdfGeneratorLambda,
       true,
       suomifiLambda,
-      vpc
+      vpc,
+      emailSQS
     );
     yllapitoBackendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
@@ -161,7 +162,8 @@ export class HassuBackendStack extends Stack {
       pdfGeneratorLambda,
       false,
       suomifiLambda,
-      vpc
+      vpc,
+      emailSQS
     );
     this.attachDatabaseToLambda(julkinenBackendLambda, false);
     HassuBackendStack.mapApiResolversToLambda(api, julkinenBackendLambda, false);
@@ -491,7 +493,8 @@ export class HassuBackendStack extends Stack {
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean,
     suomifiLambda: NodejsFunction,
-    vpc: IVpc
+    vpc: IVpc,
+    emailSQS: Queue
   ) {
     let define;
     if (Config.isDeveloperEnvironment() && isYllapitoBackend) {
@@ -580,6 +583,7 @@ export class HassuBackendStack extends Stack {
       hyvaksymisEsitysSQS.grantSendMessages(backendLambda);
       asianhallintaSQS.grantSendMessages(backendLambda);
       kiinteistoSQS.grantSendMessages(backendLambda);
+      emailSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantReadWrite(backendLambda);
       this.grantInternalBucket(backendLambda);
       this.props.publicBucket.grantReadWrite(backendLambda);
@@ -610,6 +614,7 @@ export class HassuBackendStack extends Stack {
 
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
+      emailSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantRead(backendLambda, "*/aloituskuulutus/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/suunnitteluvaihe/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/hyvaksymisesitys/*"); // Hyväksymisesitystä varten lukuoikeus
@@ -624,6 +629,7 @@ export class HassuBackendStack extends Stack {
     this.props.uploadBucket.grantReadWrite(backendLambda);
     suomifiSQS.grantSendMessages(backendLambda);
     suomifiLambda.grantInvoke(backendLambda);
+    backendLambda.addEnvironment("EMAIL_SQS_URL", emailSQS.queueUrl);
     return backendLambda;
   }
 
