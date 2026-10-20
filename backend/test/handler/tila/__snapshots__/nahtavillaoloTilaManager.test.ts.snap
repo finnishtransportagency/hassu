@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nahtavillaoloTilaManager should create ZIP_LAUSUNTOPYYNNOT event on nahtavillaolo approve 1`] = `
+Object {
+  "velho.saveJulkaisupvm": Array [
+    Array [
+      "3",
+      Object {
+        "aineistoNahtavilla": Array [],
+        "hankkeenKuvaus": Object {
+          "RUOTSI": "Syftet med fasen är att på ett naturligt sätt koppla nuvarande och framtida markanvändning till Tavastehusvägen, att ta hänsyn till områdets bullerskydd, att förbättra flödet och säkerheten för passagerare och kollektivtrafik samt att göra gång- och cykelförbindelserna smidiga. och säker. Att förbättra flödet av tung trafik och förutsägbarheten i restid är också ett av målen.",
+          "SUOMI": "Nähtävilläolovaiheen tavoitteena on nykyisen ja tulevan maankäytön liittäminen luontevasti Hämeenlinnanväylään, huomioida alueen melunsuojaus, parantaa henkilöautoliikenteen ja joukkoliikenteen sujuvuutta ja turvallisuutta sekä tehdä jalankulun ja pyöräilyn yhteydet sujuviksi ja turvallisiksi. Raskaan liikenteen sujuvuuden ja matka-ajan ennustettavuuden parantaminen on myös yksi tavoitteista.",
+        },
+        "hyvaksyja": undefined,
+        "hyvaksymisPaiva": "2026-10-20T15:02:47+03:00",
+        "id": 1,
+        "ilmoituksenVastaanottajat": Object {
+          "kunnat": Array [
+            Object {
+              "id": 245,
+              "sahkoposti": "email@email.email",
+            },
+          ],
+          "viranomaiset": Array [
+            Object {
+              "nimi": "VAYLAVIRASTO",
+              "sahkoposti": "kirjaamo@vayla.fi",
+            },
+          ],
+        },
+        "kielitiedot": Object {
+          "ensisijainenKieli": "RUOTSI",
+          "projektinNimiVieraskielella": "sv",
+          "toissijainenKieli": "SUOMI",
+        },
+        "kuulutusPaiva": "2022-06-20T11:54",
+        "kuulutusVaihePaattyyPaiva": "2042-07-21T11:54",
+        "kuulutusYhteystiedot": Object {
+          "yhteysHenkilot": Array [],
+          "yhteysTiedot": Array [
+            Object {
+              "etunimi": "Ulla",
+              "organisaatio": "Ramboll",
+              "puhelinnumero": "029123123",
+              "sahkoposti": "ulla.uusi@rambo.ll",
+              "sukunimi": "Uusi",
+              "titteli": "DI",
+            },
+            Object {
+              "etunimi": "Pekka",
+              "organisaatio": "Väylävirasto",
+              "puhelinnumero": "123456789",
+              "sahkoposti": "pekka.projari@vayla.fi",
+              "sukunimi": "Pojari",
+            },
+            Object {
+              "etunimi": "Matti",
+              "organisaatio": "Väylävirasto",
+              "puhelinnumero": "123456789",
+              "sahkoposti": "Matti.Meikalainen@vayla.fi",
+              "sukunimi": "Meikäläinen",
+            },
+          ],
+        },
+        "muistutusoikeusPaattyyPaiva": "2042-07-21T11:54",
+        "muokkaaja": "A000111",
+        "nahtavillaoloPDFt": Object {
+          "SUOMI": Object {
+            "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath": "/nahtavillaolo/1/3.pdf",
+            "nahtavillaoloIlmoitusPDFPath": "/nahtavillaolo/1/1.pdf",
+            "nahtavillaoloPDFPath": "/nahtavillaolo/1/2.pdf",
+          },
+        },
+        "projektiOid": "3",
+        "tila": "HYVAKSYTTY",
+        "velho": Object {
+          "kunnat": Array [
+            245,
+          ],
+          "linkki": null,
+          "maakunnat": Array [
+            1,
+            6,
+          ],
+          "nimi": "Mt 140 parantaminen Kaskelantien kohdalla, tiesuunnitelma, Kerava",
+          "tyyppi": "TIE",
+          "vastuuhenkilonEmail": "hanna.reuterhorn@ely-keskus.fi",
+          "vaylamuoto": Array [
+            "tie",
+          ],
+        },
+        "yhteystiedot": Array [
+          Object {
+            "etunimi": "Ulla",
+            "organisaatio": "Ramboll",
+            "puhelinnumero": "029123123",
+            "sahkoposti": "ulla.uusi@rambo.ll",
+            "sukunimi": "Uusi",
+            "titteli": "DI",
+          },
+          Object {
+            "etunimi": "Pekka",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "pekka.projari@vayla.fi",
+            "sukunimi": "Pojari",
+          },
+          Object {
+            "etunimi": "Matti",
+            "organisaatio": "Väylävirasto",
+            "puhelinnumero": "123456789",
+            "sahkoposti": "Matti.Meikalainen@vayla.fi",
+            "sukunimi": "Meikäläinen",
+          },
+        ],
+      },
+    ],
+  ],
+}
+`;
