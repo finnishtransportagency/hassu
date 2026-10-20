@@ -72,6 +72,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
   private readonly layers: lambda.ILayerVersion[];
+  private readonly mielipideTable: ddb.ITable;
   public eventQueue: Queue;
   public asianhallintaQueue: Queue;
   private config: Config;
@@ -88,6 +89,8 @@ export class HassuBackendStack extends Stack {
       tags: Config.tags,
     });
     this.props = props;
+    const mielipideTableName = ssm.StringParameter.valueForStringParameter(this, "/" + Config.env + "/outputs/ProjektiMielipideTableName");
+    this.mielipideTable = ddb.Table.fromTableName(this, "ProjektiMielipideTable", mielipideTableName);
 
     this.layers = [
       new lambda.LayerVersion(this, "BaseLayer-" + Config.env, {
@@ -1078,8 +1081,7 @@ export class HassuBackendStack extends Stack {
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
     const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
-    const mielipideTableName = ssm.StringParameter.valueForStringParameter(this, "/" + Config.env + "/outputs/ProjektiMielipideTableName");
-    const mielipideTable = ddb.Table.fromTableName(this, "ProjektiMielipideTable", mielipideTableName);
+    const mielipideTable = this.mielipideTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
       projektiDataTable.grantFullAccess(backendFn);
