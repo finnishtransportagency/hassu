@@ -1,7 +1,7 @@
 // Contains code generated or recommended by Amazon Q
 import StyledLink from "@components/StyledLink";
 import SectionContent from "@components/layout/SectionContent";
-import { KuulutusJulkaisuTila, Status, UudelleenKuulutus, Vaihe } from "@services/api";
+import { KuulutusJulkaisuTila, ProjektiTyyppi, Status, UudelleenKuulutus, Vaihe } from "@services/api";
 import { nyt } from "backend/src/util/dateUtil";
 import dayjs from "dayjs";
 import useSuomifiUser from "src/hooks/useSuomifiUser";
@@ -16,6 +16,7 @@ interface KiinteistonomistajatOhjeProps {
   uudelleenKuulutus?: UudelleenKuulutus | null;
   kuulutusPaiva?: string | null;
   julkaisunTila?: KuulutusJulkaisuTila | null;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 function KiinteistojaEiLisatty({ oid }: Readonly<KiinteistonomistajatOhjeProps>) {
@@ -129,10 +130,14 @@ export function KiinteistonOmistajatOhjeLukutila({
   uudelleenKuulutus,
   kuulutusPaiva,
   julkaisunTila,
+  projektiTyyppi,
 }: Readonly<KiinteistonomistajatOhjeProps>) {
   const { data } = useSuomifiUser();
   const pvm = dayjs(kuulutusPaiva, "DD.MM.YYYY").startOf("date");
   const inPast = pvm.isBefore(nyt()) && julkaisunTila !== KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA;
+  if (projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+    return <></>;
+  }
   if (data?.suomifiViestitEnabled && vaihe === Vaihe.ALOITUSKUULUTUS) {
     return (
       <SectionContent>

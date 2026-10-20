@@ -129,7 +129,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
         </Section>
       )}
       <div style={julkinen ? { display: "none" } : {}}>
-        <Section>
+        <Section noDivider={projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN}>
           <H2>Ilmoituksen vastaanottajat</H2>
           <SectionContent>
             <p>
@@ -239,7 +239,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
             />
           )}
-          {nahtavillaoloVaihe?.uudelleenKuulutus && (
+          {nahtavillaoloVaihe?.uudelleenKuulutus && projektiTyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
             <KiinteistonOmistajatUudelleenkuulutus
               oid={oid}
               uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
