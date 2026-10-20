@@ -1,9 +1,16 @@
 // Contains code generated or recommended by Amazon Q
 import { projektiDatabase } from "../database/projektiDatabase";
 import { requirePermissionLuku } from "../user";
-import { AsiakirjaTyyppi, EsikatseleAsiakirjaPDFQueryVariables, Kieli, PDF, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  EsikatseleAsiakirjaPDFQueryVariables,
+  Kieli,
+  PDF,
+  ProjektiTyyppi,
+  TallennaProjektiInput,
+} from "hassu-common/graphql/apiModel";
 import { log } from "../logger";
-import { NotFoundError } from "hassu-common/error";
+import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
 import { projektiAdapter } from "../projekti/adapter/projektiAdapter";
 import { asiakirjaAdapter } from "./asiakirjaAdapter";
 import { DBProjekti, PaatosVaiheJulkaisu } from "../database/model";
@@ -87,6 +94,12 @@ async function handleNahtavillaoloKuulutus(
   muutokset: TallennaProjektiInput,
   asiakirjaTyyppi: NahtavillaoloKuulutusAsiakirjaTyyppi
 ) {
+  if (
+    asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE &&
+    projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN
+  ) {
+    throw new IllegalArgumentError("Toiminnallisen luokan projektille ei generoida kiinteistönomistaja-ilmoitusta");
+  }
   // Previewing projekti with unsaved changes. adaptProjektiToPreview combines database content with the user provided changes
   const projektiWithChanges = await projektiAdapter.adaptProjektiToPreview(projekti, muutokset);
   const velho = projekti.velho;
