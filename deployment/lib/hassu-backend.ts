@@ -613,6 +613,7 @@ export class HassuBackendStack extends Stack {
       backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
 
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
+      this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/mielipiteet/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
       emailSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantRead(backendLambda, "*/aloituskuulutus/*"); // Hyväksymisesitystä varten lukuoikeus
@@ -1055,6 +1056,10 @@ export class HassuBackendStack extends Stack {
       logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
+    importer.addToRolePolicy(
+      new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })
+    );
+    this.props.yllapitoBucket.grantRead(importer, "*/mielipiteet/*");
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
     importer.addEventSource(eventSource);
