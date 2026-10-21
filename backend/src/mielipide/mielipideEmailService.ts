@@ -39,7 +39,9 @@ class MielipideEmailService {
     if (result) {
       log.info("Mielipiteen sisältävä sähköposti lähetetty", { mielipideId: mielipide.id, to: emailOptions.to });
     } else {
-      throw new Error(`Mielipiteen lähetys kirjaamoon epäonnistui (mielipideId: ${mielipide.id}): sähköpostin lähetys ei palauttanut onnistunutta vastausta`);
+      throw new Error(
+        `Mielipiteen lähetys kirjaamoon epäonnistui (mielipideId: ${mielipide.id}): sähköpostin lähetys ei palauttanut onnistunutta vastausta`
+      );
     }
   }
 }
