@@ -1,11 +1,11 @@
 // Contains code generated or recommended by Amazon Q
 import { DialogActions, DialogContent, styled, Typography, useMediaQuery, useTheme } from "@mui/material";
-import React, { ReactElement, useCallback, useRef, useState } from "react";
+import React, { ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import Button from "@components/button/Button";
 import HassuStack from "@components/layout/HassuStack";
 import HassuDialog from "@components/HassuDialog";
 import HassuGrid from "@components/HassuGrid";
-import { useFieldArray, useForm, UseFormProps } from "react-hook-form";
+import { useController, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
 import { MielipideInput, ProjektiJulkinen } from "@services/api";
@@ -26,6 +26,9 @@ import ContentSpacer from "@components/layout/ContentSpacer";
 import { ErrorMessage } from "@hookform/error-message";
 import { allowedFileTypesKansalaisille } from "common/fileValidationSettings";
 import { joinStringArray } from "hassu-common/util/joinStringArray";
+import { Autocomplete, TextField } from "@mui/material";
+import lookup from "country-code-lookup";
+import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 interface Props {
   projekti: ProjektiJulkinen;
@@ -35,6 +38,8 @@ type MielipideInputForm = Omit<MielipideInput, "liitteet"> & {
   liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[];
 };
 
+const countryCodes = lookup.countries.map((country) => country.iso2);
+
 const defaultFormValues: MielipideInputForm = {
   mielipide: "",
   etunimi: "",
@@ -42,6 +47,7 @@ const defaultFormValues: MielipideInputForm = {
   lahiosoite: "",
   postinumero: "",
   postitoimipaikka: "",
+  maa: "FI",
   sahkoposti: "",
   puhelinnumero: "",
   liitteet: [],
@@ -68,6 +74,22 @@ export default function MielipideLomake({ projekti }: Readonly<Props>): ReactEle
 
   const liitteetFieldArray = useFieldArray({ name: "liitteet", control });
   const liitteetWatch = watch("liitteet");
+
+  const {
+    field: { ref, onChange: onMaaChange, onBlur: onMaaBlur, name: maaName, value: maaValue },
+    fieldState: maaFieldState,
+  } = useController({ name: "maa", control });
+  const [maaInputValue, setMaaInputValue] = React.useState("");
+
+  const countryCodesSorted = useMemo(
+    () =>
+      countryCodes.sort((codeA, codeB) => {
+        const nameA = getLocalizedCountryName(lang, codeA);
+        const nameB = getLocalizedCountryName(lang, codeB);
+        return nameA.localeCompare(nameB);
+      }),
+    [lang]
+  );
 
   const api = useApi();
   const { withLoadingSpinner } = useLoadingSpinner();
@@ -145,6 +167,30 @@ export default function MielipideLomake({ projekti }: Readonly<Props>): ReactEle
               <TextFieldWithController
                 controllerProps={{ control, name: "postitoimipaikka", constructErrorMessage }}
                 label={t("common:postitoimipaikka")}
+              />
+              <Autocomplete
+                options={countryCodesSorted}
+                renderInput={({ inputProps = {}, ...params }) => (
+                  <TextField
+                    {...params}
+                    name={maaName}
+                    label={t("common:maa")}
+                    inputProps={{ ref, ...inputProps }}
+                    error={!!maaFieldState.error?.message}
+                    helperText={maaFieldState.error?.message ? constructErrorMessage(maaFieldState.error.message) : undefined}
+                  />
+                )}
+                getOptionLabel={(code) => getLocalizedCountryName(lang, code)}
+                value={maaValue}
+                inputValue={maaInputValue}
+                renderOption={(props, code) => (
+                  <li {...props} key={code}>
+                    {getLocalizedCountryName(lang, code)}
+                  </li>
+                )}
+                onInputChange={(_event, newInputValue) => setMaaInputValue(newInputValue)}
+                onChange={(_event, newValue) => onMaaChange(newValue)}
+                onBlur={onMaaBlur}
               />
               <TextFieldWithController
                 controllerProps={{ control, name: "sahkoposti", constructErrorMessage }}

@@ -476,6 +476,7 @@ export function createMielipideKirjaamolleEmail(projekti: DBProjekti, mielipide:
         .map((liite) => liite.substring((liite.lastIndexOf("/") ?? -1) + 1))
         .join("\n")}`
     : "";
+  const maaTeksti = mielipide.maakoodi ? `${getLocalizedCountryName("fi", mielipide.maakoodi)}\n` : "";
   const text = `Mielipide (VLS) ${nimiTeksti} ${asiatunnus}
 
 Vahvistus mielipiteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
@@ -494,6 +495,7 @@ ${nimiTeksti}
 Osoite
 ${mielipide.lahiosoite ?? ""}
 ${mielipide.postinumero ?? ""} ${mielipide.postitoimipaikka ?? ""}
+${maaTeksti}
 Sähköposti
 ${mielipide.sahkoposti ?? ""}
 Puhelinnumero

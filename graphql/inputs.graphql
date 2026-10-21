@@ -539,6 +539,7 @@ input MielipideInput {
   lahiosoite: String
   postinumero: String
   postitoimipaikka: String
+  maa: String
   sahkoposti: String
   puhelinnumero: String
 }

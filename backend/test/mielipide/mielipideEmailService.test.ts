@@ -24,7 +24,7 @@ describe("mielipideEmailService", () => {
       accepted: ["kirjaamo.uusimaa@ely-keskus.fi"],
       rejected: [],
     } as any); // aws-sdk-client-mock type incompatibility with @smithy/types
-    kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet").resolves(kirjaamot);
+    kirjaamoOsoitteetStub = sinon.stub(kirjaamoOsoitteetService, "listKirjaamoOsoitteet").resolves(kirjaamot as any); // KirjaamoOsoite __typename not needed in tests
     MockDate.set("2024-04-09T03:00:00+03:00");
   });
 
@@ -54,6 +54,7 @@ describe("mielipideEmailService", () => {
     sinon.assert.calledOnce(sendTurvapostiEmailStub);
     const emailOptions = sendTurvapostiEmailStub.firstCall.args[0];
 
+    expect(emailOptions).toMatchSnapshot();
     expect(emailOptions.to).to.equal("kirjaamo.uusimaa@ely-keskus.fi");
     expect(emailOptions.subject).to.include("Tessa Testaaja");
     expect(emailOptions.text).to.include("Tessa Testaaja");
@@ -81,6 +82,40 @@ describe("mielipideEmailService", () => {
     const emailOptions = sendTurvapostiEmailStub.firstCall.args[0];
     expect(emailOptions.to).to.equal("kirjaamo.uusimaa@ely-keskus.fi");
     expect(emailOptions.text).to.include("Minimaalinen mielipide");
+  });
+
+  it("should include country name in email when maakoodi is set", async () => {
+    const mielipide: DBMielipide = {
+      oid: fixture.PROJEKTI3_OID,
+      id: "test-id-789",
+      expires: 9999999999,
+      lisatty: "2024-04-09T03:00:00+03:00",
+      mielipide: "Testi ulkomailta",
+      lahiosoite: "Test Street 1",
+      postinumero: "12345",
+      postitoimipaikka: "Stockholm",
+      maakoodi: "SE",
+    };
+
+    await mielipideEmailService.sendEmailToKirjaamo(fixture.dbProjekti3, mielipide);
+
+    const emailOptions = sendTurvapostiEmailStub.firstCall.args[0];
+    expect(emailOptions.text).to.include("Ruotsi");
+  });
+
+  it("should not include country line in email when maakoodi is not set (Finland default)", async () => {
+    const mielipide: DBMielipide = {
+      oid: fixture.PROJEKTI3_OID,
+      id: "test-id-101",
+      expires: 9999999999,
+      lisatty: "2024-04-09T03:00:00+03:00",
+      mielipide: "Testi suomalaiselta",
+    };
+
+    await mielipideEmailService.sendEmailToKirjaamo(fixture.dbProjekti3, mielipide);
+
+    const emailOptions = sendTurvapostiEmailStub.firstCall.args[0];
+    expect(emailOptions.text).to.not.include("Suomi");
   });
 
   it("should throw when kirjaamo address is not found for viranomainen", async () => {

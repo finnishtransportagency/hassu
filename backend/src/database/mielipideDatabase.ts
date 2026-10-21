@@ -14,6 +14,7 @@ export type DBMielipide = {
   lahiosoite?: string | null;
   postinumero?: string | null;
   postitoimipaikka?: string | null;
+  maakoodi?: string | null;
   sahkoposti?: string | null;
   puhelinnumero?: string | null;
 };

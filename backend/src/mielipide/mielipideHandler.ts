@@ -38,6 +38,8 @@ class MielipideHandler {
     const mielipideId = uuid.v4();
     const liitteet = await this.persistLiitteet(mielipideInput.liitteet, oid, mielipideId);
 
+    const maakoodi = mielipideInput.maa !== "FI" ? mielipideInput.maa : undefined;
+
     const mielipide: DBMielipide = {
       oid,
       id: mielipideId,
@@ -50,6 +52,7 @@ class MielipideHandler {
       lahiosoite: mielipideInput.lahiosoite,
       postinumero: mielipideInput.postinumero,
       postitoimipaikka: mielipideInput.postitoimipaikka,
+      maakoodi,
       sahkoposti: mielipideInput.sahkoposti,
       puhelinnumero: mielipideInput.puhelinnumero,
     };
