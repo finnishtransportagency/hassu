@@ -37,9 +37,9 @@ class MielipideEmailService {
 
     const result = await emailClient.sendTurvapostiEmail(emailOptions);
     if (result) {
-      log.info("Mielipiteen sisältävä sähköposti lähetetty: " + emailOptions.to);
+      log.info("Mielipiteen sisältävä sähköposti lähetetty", { mielipideId: mielipide.id, to: emailOptions.to });
     } else {
-      throw new Error("Mielipiteen lähetys kirjaamoon epäonnistui: sähköpostin lähetys ei palauttanut onnistunutta vastausta");
+      throw new Error(`Mielipiteen lähetys kirjaamoon epäonnistui (mielipideId: ${mielipide.id}): sähköpostin lähetys ei palauttanut onnistunutta vastausta`);
     }
   }
 }
