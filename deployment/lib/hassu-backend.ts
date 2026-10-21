@@ -523,6 +523,9 @@ export class HassuBackendStack extends Stack {
     } else {
       backendName = "-julkinen";
       entry = `${__dirname}/../../backend/src/apiHandlerJulkinen.ts`;
+      backendEnvironmentVariables = {
+        EMAIL_SQS_URL: emailSQS.queueUrl,
+      };
     }
     const backendLambda = new NodejsFunction(this, "API" + backendName, {
       functionName: "hassu-backend" + backendName + "-" + Config.env,
@@ -583,7 +586,6 @@ export class HassuBackendStack extends Stack {
       hyvaksymisEsitysSQS.grantSendMessages(backendLambda);
       asianhallintaSQS.grantSendMessages(backendLambda);
       kiinteistoSQS.grantSendMessages(backendLambda);
-      emailSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantReadWrite(backendLambda);
       this.grantInternalBucket(backendLambda);
       this.props.publicBucket.grantReadWrite(backendLambda);
@@ -615,7 +617,6 @@ export class HassuBackendStack extends Stack {
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/mielipiteet/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
-      emailSQS.grantSendMessages(backendLambda);
       this.props.yllapitoBucket.grantRead(backendLambda, "*/aloituskuulutus/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/suunnitteluvaihe/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/hyvaksymisesitys/*"); // Hyväksymisesitystä varten lukuoikeus
@@ -625,12 +626,12 @@ export class HassuBackendStack extends Stack {
       this.props.yllapitoBucket.grantRead(backendLambda, "*/lausuntopyynnon_taydennys/*"); // Lausuntopyynnön täydennyksiä varten lukuoikeus
       this.props.publicBucket.grantRead(backendLambda);
       this.grantInternalBucket(backendLambda, "cache/bankHolidays.json");
+      emailSQS.grantSendMessages(backendLambda);
     }
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
     suomifiSQS.grantSendMessages(backendLambda);
     suomifiLambda.grantInvoke(backendLambda);
-    backendLambda.addEnvironment("EMAIL_SQS_URL", emailSQS.queueUrl);
     return backendLambda;
   }
 
@@ -1056,9 +1057,7 @@ export class HassuBackendStack extends Stack {
       logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
-    importer.addToRolePolicy(
-      new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] })
-    );
+    importer.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
     this.props.yllapitoBucket.grantRead(importer, "*/mielipiteet/*");
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
