@@ -51,6 +51,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const velho = projekti?.velho;
   const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(false);
+  const [mielipideInfoOpen, setMielipideInfoOpen] = useState(false);
 
   const kieli = useKansalaiskieli();
   const { data: kayttaja } = useSuomifiUser();
@@ -176,10 +177,34 @@ export default function Nahtavillaolo(): ReactElement {
       </Section>
       {isProjektiInNahtavillaoloVaihe && velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && (
         <ContentSpacer>
-          <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.mielipiteen_jattaminen`)}</H3>
+          <H3 variant="h4">
+            {t(`ui-otsikot.nahtavillaolo.mielipiteen_jattaminen`)}{" "}
+            {!mielipideInfoOpen && (
+              <FontAwesomeIcon
+                color="rgb(0, 100, 175)"
+                size="lg"
+                icon="info-circle"
+                type={NotificationType.INFO_GRAY}
+                cursor="pointer"
+                onClick={() => setMielipideInfoOpen(true)}
+                aria-label={t("muistutuslomake.lue_lisaa")}
+              />
+            )}
+          </H3>
           <p>
             <strong>{t("mielipidelomake.jata_mielipide_mennessa")}</strong>
           </p>
+          <Notification
+            type={NotificationType.INFO_GRAY}
+            className="mt-4"
+            open={mielipideInfoOpen}
+            onClose={() => setMielipideInfoOpen(false)}
+            closable
+          >
+            <p>{t("muistutuslomake.muistutus_info_1")}</p>
+            <br />
+            <p>{t("muistutuslomake.muistutus_info_2")}</p>
+          </Notification>
           <MielipideLomake projekti={projekti} />
         </ContentSpacer>
       )}
