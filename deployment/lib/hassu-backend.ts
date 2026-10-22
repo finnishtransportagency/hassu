@@ -1040,9 +1040,9 @@ export class HassuBackendStack extends Stack {
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/email/emailSQSHandler.ts`,
       handler: "handleEvent",
-      memorySize: 512,
+      memorySize: 1024, // Nodemailer puskuroi liitteet muistiin MIME-muodossa ennen lähetystä, useille 25 MB liitteille otettu varmuudeksi 2 * 512
       reservedConcurrentExecutions: 1,
-      timeout: Duration.seconds(60),
+      timeout: Duration.minutes(5), // Useita 25 MB liitteitä sisältävän viestin lähetys turvapostiin voi kestää useita minuutteja
       bundling: {
         minify: true,
         sourceMap: true,
