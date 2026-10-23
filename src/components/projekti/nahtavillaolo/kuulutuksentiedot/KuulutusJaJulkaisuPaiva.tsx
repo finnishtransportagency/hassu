@@ -16,10 +16,11 @@ type FormFields = {
     kuulutusPaiva: string | null;
     kuulutusVaihePaattyyPaiva: string | null;
     muistutusoikeusPaattyyPaiva: string | null;
+    mielipideoikeusPaattyyPaiva: string | null;
   };
 };
 
-export default function KuulutusJaJulkaisuPaiva() {
+export default function KuulutusJaJulkaisuPaiva({ isToiminnallinen }: { isToiminnallinen: boolean }) {
   const { setValue } = useFormContext<FormFields>();
 
   const { showErrorMessage } = useSnackbars();
@@ -38,17 +39,20 @@ export default function KuulutusJaJulkaisuPaiva() {
         log.error("Nähtävilläolon päättymispäivän laskennassa virhe", error);
       }
       try {
-        const muistutuspaiva = await api.laskePaattymisPaiva(
+        const paiva = await api.laskePaattymisPaiva(
           value,
           LaskuriTyyppi.KUULUTUKSEN_PAATTYMISPAIVA //LaskuriTyyppi.MUISTUTUSTEN_PAATTYMISPAIVA
         );
-        setValue("nahtavillaoloVaihe.muistutusoikeusPaattyyPaiva", muistutuspaiva);
+        setValue(
+          isToiminnallinen ? "nahtavillaoloVaihe.mielipideoikeusPaattyyPaiva" : "nahtavillaoloVaihe.muistutusoikeusPaattyyPaiva",
+          paiva
+        );
       } catch (error) {
         showErrorMessage("Muistutuspäivän laskennassa tapahtui virhe");
         log.error("Muistutuspäivän laskennassa virhe", error);
       }
     },
-    [api, setValue, showErrorMessage]
+    [api, isToiminnallinen, setValue, showErrorMessage]
   );
 
   return (
@@ -78,23 +82,43 @@ export default function KuulutusJaJulkaisuPaiva() {
           />
         </HassuGrid>
       </ContentSpacer>
-      <ContentSpacer>
-        <H3>Muistutusten antaminen</H3>
-        <p>
-          Kansalaisten tulee muistuttaa suunnitelmista järjestelmän kautta viimeistään alla olevana päivämääränä. Muistutusten päivämäärä
-          määräytyy kuulutuksen nähtävilläoloajan mukaan ja sitä ei voi muokata.
-        </p>
-        <div>
-          <HassuDatePickerWithController
-            label="Muistutusoikeus päättyy"
-            controllerProps={{
-              name: "nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva",
-            }}
-            minDate={today()}
-            disabled
-          />
-        </div>
-      </ContentSpacer>
+      {isToiminnallinen ? (
+        <ContentSpacer>
+          <H3>Mielipiteiden antaminen</H3>
+          <p>
+            Kansalaisten tulee antaa mielipiteensä suunnitelmasta järjestelmän kautta viimeistään alla olevana päivämääränä. Mielipiteiden
+            päivämäärä määräytyy kuulutuksen nähtävilläoloajan mukaan ja sitä ei voi muokata.
+          </p>
+          <div>
+            <HassuDatePickerWithController
+              label="Mielipiteiden antaminen päättyy"
+              controllerProps={{
+                name: "nahtavillaoloVaihe.mielipideoikeusPaattyyPaiva",
+              }}
+              minDate={today()}
+              disabled
+            />
+          </div>
+        </ContentSpacer>
+      ) : (
+        <ContentSpacer>
+          <H3>Muistutusten antaminen</H3>
+          <p>
+            Kansalaisten tulee muistuttaa suunnitelmista järjestelmän kautta viimeistään alla olevana päivämääränä. Muistutusten päivämäärä
+            määräytyy kuulutuksen nähtävilläoloajan mukaan ja sitä ei voi muokata.
+          </p>
+          <div>
+            <HassuDatePickerWithController
+              label="Muistutusoikeus päättyy"
+              controllerProps={{
+                name: "nahtavillaoloVaihe.kuulutusVaihePaattyyPaiva",
+              }}
+              minDate={today()}
+              disabled
+            />
+          </div>
+        </ContentSpacer>
+      )}
     </Section>
   );
 }
