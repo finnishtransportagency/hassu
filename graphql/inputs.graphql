@@ -531,6 +531,19 @@ input MuistutusInput {
   kiinteistotunnus: String
 }
 
+input MielipideInput {
+  mielipide: String!
+  liitteet: [String!]
+  etunimi: String
+  sukunimi: String
+  lahiosoite: String
+  postinumero: String
+  postitoimipaikka: String
+  maa: String
+  sahkoposti: String
+  puhelinnumero: String
+}
+
 input ListaaLisaAineistoInput {
   nahtavillaoloVaiheId: Int!
   poistumisPaiva: String!
