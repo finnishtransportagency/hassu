@@ -216,7 +216,7 @@
   },
   "mielipidelomake": {
     "jata_mielipide": "Jätä mielipide",
-    "jata_mielipide_mennessa": "Mielipide suunnitelmasta tulee jättää xx.xx.xxxx mennessä.",
+    "jata_mielipide_mennessa": "Mielipide suunnitelmasta tulee jättää {{pvm}} mennessä.",
     "mielipide_info": "Voit jättää mielipiteesi suunnitelmasta täyttämällä alla olevan lomakkeen.",
     "lisatietoja_henkilotietojesi": "<p>Lisätietoja henkilötietojesi käsittelystä löydät <a>tietosuojaselosteesta</a>.</p>",
     "mielipiteen_lahettajan_tiedot": "Mielipiteen lähettäjän tiedot",
@@ -228,7 +228,7 @@
     "olemme_vastaanottaneet_mielipiteesi": "Olemme vastaanottaneet mielipiteesi onnistuneesti.",
     "voit_antaa_mielipiteita": "Voit antaa mielipiteitä suunnitteluhankkeesta {{pvm}} asti.",
     "epaonnistui": "Mielipiteen jättäminen epäonnistui",
-    "epaonnistui_viesti": "Voit kokeilla lähettää mielipiteen uudelleen."
+    "epaonnistui_viesti": "Voit kokeilla lähettää mielipiteen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon."
   },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} tarvitsee henkilötietojasi muistutuksen käsittelyä varten. Saamme henkilötietosi Digi- ja väestötietovirastolta.  Luovutamme tietosi Liikenne- ja viestintävirastolle, jonka tehtävä on hyväksyä suunnitelma.",

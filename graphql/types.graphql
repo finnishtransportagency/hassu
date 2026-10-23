@@ -394,7 +394,14 @@ type NahtavillaoloVaihe {
   aineistopaketti: String
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -430,7 +437,14 @@ type NahtavillaoloVaiheJulkaisu {
   aineistopaketti: String
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTeksti
   velho: Velho!
   kielitiedot: Kielitiedot
@@ -604,7 +618,14 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTeksti
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
