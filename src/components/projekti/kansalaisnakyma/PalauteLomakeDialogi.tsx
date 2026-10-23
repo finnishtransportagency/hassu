@@ -8,7 +8,7 @@ import { FieldError, FormProvider, useFieldArray, useForm, UseFormProps } from "
 import { palauteSchema } from "src/schemas/vuorovaikutus";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { PalauteInput, ProjektiJulkinen, SuunnittelustaVastaavaViranomainen, VuorovaikutusJulkinen } from "@services/api";
+import { PalauteInput, ProjektiJulkinen, VuorovaikutusJulkinen } from "@services/api";
 import { formatDate } from "hassu-common/util/dateUtils";
 import TextInput from "@components/form/TextInput";
 import Textarea from "@components/form/Textarea";
@@ -20,6 +20,7 @@ import useApi from "src/hooks/useApi";
 import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
+import { getTietosuojaUrl } from "src/util/tietosuojaUtil";
 import { allowedFileTypesKansalaisille } from "common/fileValidationSettings";
 import { joinStringArray } from "common/util/joinStringArray";
 import ContentSpacer from "@components/layout/ContentSpacer";
@@ -68,20 +69,6 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
   const { register, handleSubmit, control, formState, reset, watch } = useFormReturn;
   const { errors } = formState;
   const api = useApi();
-
-  const getTietosuojaUrl = useCallback(() => {
-    if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
-      return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
-    } else if (projekti.velho.suunnittelustaVastaavaViranomainen?.endsWith("ELY")) {
-      return lang == "sv"
-        ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
-        : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
-    } else {
-      return lang == "sv"
-        ? "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
-        : "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
-    }
-  }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
   const talletaTiedosto = useCallback(async (tiedosto: File) => lataaTiedosto(api, tiedosto, false), [api]);
 
@@ -190,7 +177,9 @@ export default function PalauteLomakeDialogi({ open, onClose, projektiOid, vuoro
                 </HassuGrid>
                 <p>
                   {t("projekti:palautelomake.kasittelemme_henkilotietoja")}{" "}
-                  <ExtLink href={getTietosuojaUrl()}>{getTietosuojaUrl()}</ExtLink>
+                  <ExtLink href={getTietosuojaUrl(projekti.velho.suunnittelustaVastaavaViranomainen, lang)}>
+                    {getTietosuojaUrl(projekti.velho.suunnittelustaVastaavaViranomainen, lang)}
+                  </ExtLink>
                 </p>
               </HassuStack>
               <div className="mt-3">

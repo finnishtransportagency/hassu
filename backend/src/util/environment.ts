@@ -25,3 +25,10 @@ export function getTiedoteTableName() {
   }
   throw new Error("Ympäristömuuttujaa TABLE_TIEDOTE ei löydy");
 }
+
+export function getMielipideTableName() {
+  if (process.env.TABLE_PROJEKTI_MIELIPIDE) {
+    return process.env.TABLE_PROJEKTI_MIELIPIDE;
+  }
+  throw new Error("Ympäristömuuttujaa TABLE_PROJEKTI_MIELIPIDE ei löydy");
+}

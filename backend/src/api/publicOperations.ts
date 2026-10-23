@@ -1,6 +1,7 @@
 import {
   AnnaPalautettaPalvelustaMutationVariables,
   LataaProjektiJulkinenQueryVariables,
+  LisaaMielipideMutationVariables,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaLausuntoPyynnonTiedostotQueryVariables,
@@ -15,6 +16,7 @@ import { AppSyncResolverEvent } from "aws-lambda/trigger/appsync-resolver";
 import { apiConfig, OperationName } from "hassu-common/abstractApi";
 import { createUploadURLForFileJulkinen } from "../handler/fileHandler";
 import { lisaAineistoHandler } from "../handler/lisaAineistoHandler";
+import { mielipideHandler } from "../mielipide/mielipideHandler";
 import { muistutusHandler } from "../muistutus/muistutusHandler";
 import { loadProjektiJulkinen } from "../projekti/projektiHandlerJulkinen";
 import { projektiSearchService } from "../projektiSearch/projektiSearchService";
@@ -42,6 +44,8 @@ export async function executePublicOperation(event: AppSyncResolverEvent<unknown
       return await createUploadURLForFileJulkinen(event.arguments as ValmisteleTiedostonLatausQueryVariables);
     case apiConfig.lisaaPalaute.name:
       return await palauteHandlerJulkinen.lisaaPalaute(event.arguments as LisaaPalauteMutationVariables);
+    case apiConfig.lisaaMielipide.name:
+      return await mielipideHandler.kasitteleMielipide(event.arguments as LisaaMielipideMutationVariables);
     case apiConfig.lisaaMuistutus.name:
       return await muistutusHandler.kasitteleMuistutus(event.arguments as LisaaMuistutusMutationVariables);
     case apiConfig.listaaLisaAineisto.name:

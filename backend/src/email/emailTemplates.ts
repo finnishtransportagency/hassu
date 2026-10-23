@@ -10,6 +10,7 @@ import {
 } from "hassu-common/graphql/apiModel";
 import { config } from "../config";
 import { DBEnnakkoNeuvotteluJulkaisu, DBProjekti, DBVaylaUser, Muistutus } from "../database/model";
+import { DBMielipide } from "../database/mielipideDatabase";
 import { linkNahtavillaOlo, linkSuunnitteluVaiheYllapito } from "hassu-common/links";
 import { getLocalizedCountryName } from "hassu-common/getLocalizedCountryName";
 import { formatKiinteistotunnusForDisplay } from "hassu-common/util/formatKiinteistotunnus";
@@ -463,6 +464,50 @@ export function createNewFeedbackAvailableEmail(projekti: DBProjekti, to: string
     subject,
     text: uusiaPalautteita > 1 ? pluralText : singularText,
     to,
+  };
+}
+
+export function createMielipideKirjaamolleEmail(projekti: DBProjekti, mielipide: DBMielipide, sahkoposti: string): EmailOptions {
+  const asiatunnus = getAsiatunnus(projekti.velho) ?? "";
+  const vastaanotettu = Date.parse(mielipide.lisatty);
+  const nimiTeksti = [mielipide.etunimi, mielipide.sukunimi].filter(Boolean).join(" ");
+  const liiteTeksti = mielipide.liitteet?.length
+    ? `Mielipiteen mukana toimitettu seuraavannimiset liitteet:\n${mielipide.liitteet
+        .map((liite) => liite.substring((liite.lastIndexOf("/") ?? -1) + 1))
+        .join("\n")}`
+    : "";
+  const maaTeksti = mielipide.maakoodi ? `${getLocalizedCountryName("fi", mielipide.maakoodi)}\n` : "";
+  const text = `Mielipide (VLS) ${nimiTeksti} ${asiatunnus}
+
+Vahvistus mielipiteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
+Aihe:
+Mielipide on vastaanotettu
+${dayjs(vastaanotettu).format("DD.MM.YYYY")} klo ${dayjs(vastaanotettu).format("HH:mm")}
+Suunnitelman nimi
+${projekti.velho?.nimi}
+Suunnitelman asiatunnus
+${asiatunnus}
+
+Mielipiteen lähettäjän tiedot
+Nimi
+${nimiTeksti}
+
+Osoite
+${mielipide.lahiosoite ?? ""}
+${mielipide.postinumero ?? ""} ${mielipide.postitoimipaikka ?? ""}
+${maaTeksti}
+Sähköposti
+${mielipide.sahkoposti ?? ""}
+Puhelinnumero
+${mielipide.puhelinnumero ?? ""}
+Mielipide
+${mielipide.mielipide}
+${liiteTeksti ? liiteTeksti + "\n" : ""}
+Suunnitelman tietoihin pääset tästä linkistä: ${linkNahtavillaOlo(projekti, Kieli.SUOMI)}`;
+  return {
+    subject: `Mielipide (VLS) ${nimiTeksti} ${asiatunnus}`,
+    text,
+    to: sahkoposti,
   };
 }
 

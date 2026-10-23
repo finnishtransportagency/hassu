@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mielipideEmailService should send email to correct kirjaamo with correct content 1`] = `
+Object {
+  "subject": "Mielipide (VLS) Tessa Testaaja ELY/3/2022",
+  "text": "Mielipide (VLS) Tessa Testaaja ELY/3/2022
+
+Vahvistus mielipiteen jättämisestä Valtion liikenneväylien suunnittelu -järjestelmän kautta
+Aihe:
+Mielipide on vastaanotettu
+09.04.2024 klo 03:00
+Suunnitelman nimi
+Testiprojekti 3
+Suunnitelman asiatunnus
+ELY/3/2022
+
+Mielipiteen lähettäjän tiedot
+Nimi
+Tessa Testaaja
+
+Osoite
+Testikatu 1
+00100 Helsinki
+
+Sähköposti
+tessa@test.fi
+Puhelinnumero
+0501234567
+Mielipide
+Haluaisin, että tien linjaus kulkisi kauempana talostani
+
+Suunnitelman tietoihin pääset tästä linkistä: https://localhost:3000/suunnitelma/3/nahtavillaolo",
+  "to": "kirjaamo.uusimaa@ely-keskus.fi",
+}
+`;
