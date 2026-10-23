@@ -18,7 +18,7 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
@@ -32,7 +32,7 @@ export const HakulausekeJaksotusTyyppiEnum = {
     tieosittain: 'tieosittain',
     teittain: 'teittain',
     teittain2: 'teittain',
-    tieosittain2: 'tieosittain'
+    tieosittain2: 'tieosittain',
 } as const;
 
 export type HakulausekeJaksotusTyyppiEnum = typeof HakulausekeJaksotusTyyppiEnum[keyof typeof HakulausekeJaksotusTyyppiEnum];
@@ -84,7 +84,7 @@ export const HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum =
     lakkautus: 'lakkautus',
     uusi_kohde: 'uusi-kohde',
     paivitys: 'paivitys',
-    korjaus: 'korjaus'
+    korjaus: 'korjaus',
 } as const;
 
 export type HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum = typeof HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum[keyof typeof HakupalveluSpecHakuspecTallennaOperaatiohistoriaBodyOperaatioEnum];
@@ -123,7 +123,7 @@ export interface HakupalveluSpecHakuspecVientiVie {
 export const HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum = {
     xlsx: '.xlsx',
     csv: '.csv',
-    geojson: '.geojson'
+    geojson: '.geojson',
 } as const;
 
 export type HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum = typeof HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum[keyof typeof HakupalveluSpecHakuspecVientiVieTiedostomuotoEnum];
@@ -140,14 +140,14 @@ export interface HakupalveluSpecHakuspecVientiVie1 {
 export const HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum = {
     xlsx: '.xlsx',
     csv: '.csv',
-    geojson: '.geojson'
+    geojson: '.geojson',
 } as const;
 
 export type HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum = typeof HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum[keyof typeof HakupalveluSpecHakuspecVientiVie1TiedostomuotoEnum];
 export const HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum = {
     molemmat: 'molemmat',
     selkokieliset_nimet: 'selkokieliset-nimet',
-    velhokoodit: 'velhokoodit'
+    velhokoodit: 'velhokoodit',
 } as const;
 
 export type HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum = typeof HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum[keyof typeof HakupalveluSpecHakuspecVientiVie1NimikkeistoarvomuotoEnum];
@@ -177,7 +177,7 @@ export const KohdeluokkahakuAsetuksetGeometriatEnum = {
     keskilinjageometria_wgs84: 'keskilinjageometria-wgs84',
     keskilinjageometria: 'keskilinjageometria',
     keskilinjageometria2: 'keskilinjageometria',
-    keskilinjageometria_wgs842: 'keskilinjageometria-wgs84'
+    keskilinjageometria_wgs842: 'keskilinjageometria-wgs84',
 } as const;
 
 export type KohdeluokkahakuAsetuksetGeometriatEnum = typeof KohdeluokkahakuAsetuksetGeometriatEnum[keyof typeof KohdeluokkahakuAsetuksetGeometriatEnum];
@@ -208,7 +208,7 @@ export const TieosuushakuAsetuksetTieosuushaunTasoEnum = {
     ajoratataso: 'ajoratataso',
     tietaso: 'tietaso',
     ajoratataso2: 'ajoratataso',
-    tietaso2: 'tietaso'
+    tietaso2: 'tietaso',
 } as const;
 
 export type TieosuushakuAsetuksetTieosuushaunTasoEnum = typeof TieosuushakuAsetuksetTieosuushaunTasoEnum[keyof typeof TieosuushakuAsetuksetTieosuushaunTasoEnum];
@@ -248,7 +248,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             }
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -279,8 +278,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -303,7 +300,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'tunniste' is not null or undefined
             assertParamExists('hakupalveluApiV2TilanhallintaHautTunnisteDelete', 'tunniste', tunniste)
             const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut/{tunniste}`
-                .replace(`{${"tunniste"}}`, encodeURIComponent(String(tunniste)));
+                .replace('{tunniste}', encodeURIComponent(String(tunniste)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -316,7 +313,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -336,7 +332,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'tunniste' is not null or undefined
             assertParamExists('hakupalveluApiV2TilanhallintaHautTunnisteGet', 'tunniste', tunniste)
             const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut/{tunniste}`
-                .replace(`{${"tunniste"}}`, encodeURIComponent(String(tunniste)));
+                .replace('{tunniste}', encodeURIComponent(String(tunniste)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -349,7 +345,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -372,7 +367,7 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             // verify required parameter 'hakupalveluSpecHakuspecPaivitaHakuV2' is not null or undefined
             assertParamExists('hakupalveluApiV2TilanhallintaHautTunnistePatch', 'hakupalveluSpecHakuspecPaivitaHakuV2', hakupalveluSpecHakuspecPaivitaHakuV2)
             const localVarPath = `/hakupalvelu/api/v2/tilanhallinta/haut/{tunniste}`
-                .replace(`{${"tunniste"}}`, encodeURIComponent(String(tunniste)));
+                .replace('{tunniste}', encodeURIComponent(String(tunniste)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -384,8 +379,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -417,7 +410,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -448,8 +440,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -481,7 +471,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -512,8 +501,6 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -860,9 +847,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -896,9 +882,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -932,9 +917,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -968,9 +952,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1004,9 +987,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1040,9 +1022,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1076,9 +1057,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1112,9 +1092,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1153,9 +1132,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
                 localVarQueryParameter['tagi'] = tagi;
             }
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1536,9 +1514,8 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
                 localVarQueryParameter['tagi'] = tagi;
             }
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1577,9 +1554,8 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
                 localVarQueryParameter['tagi'] = tagi;
             }
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1615,8 +1591,8 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
                 localVarQueryParameter['tagit'] = tagit;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1637,7 +1613,7 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'hakutunniste' is not null or undefined
             assertParamExists('hakupalveluApiV2TaustahakuTilaHakutunnisteGet', 'hakutunniste', hakutunniste)
             const localVarPath = `/hakupalvelu/api/v2/taustahaku/tila/{hakutunniste}`
-                .replace(`{${"hakutunniste"}}`, encodeURIComponent(String(hakutunniste)));
+                .replace('{hakutunniste}', encodeURIComponent(String(hakutunniste)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1649,8 +1625,8 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1674,7 +1650,7 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'hakutunniste' is not null or undefined
             assertParamExists('hakupalveluApiV2TaustahakuTuloksetHakutunnisteGet', 'hakutunniste', hakutunniste)
             const localVarPath = `/hakupalvelu/api/v2/taustahaku/tulokset/{hakutunniste}`
-                .replace(`{${"hakutunniste"}}`, encodeURIComponent(String(hakutunniste)));
+                .replace('{hakutunniste}', encodeURIComponent(String(hakutunniste)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1698,8 +1674,8 @@ export const TaustahakuApiAxiosParamCreator = function (configuration?: Configur
                 localVarQueryParameter['ei-geometrioita?'] = eiGeometrioita;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};

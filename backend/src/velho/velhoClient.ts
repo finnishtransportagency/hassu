@@ -100,7 +100,11 @@ export class VelhoClient {
         },
         lauseke: [
           "ja",
-          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12", "vaihe/vaihe25"]],
+          [
+            "joukossa",
+            ["projekti/projekti", "ominaisuudet", "vaihe"],
+            ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12", "vaihe/vaihe25"],
+          ],
           ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
           ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term],
         ],
