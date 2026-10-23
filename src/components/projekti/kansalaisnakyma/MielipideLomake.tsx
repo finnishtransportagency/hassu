@@ -8,7 +8,9 @@ import HassuGrid from "@components/HassuGrid";
 import { useController, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useTranslation from "next-translate/useTranslation";
-import { MielipideInput, ProjektiJulkinen } from "@services/api";
+import { MielipideInput, ProjektiJulkinen, SuunnittelustaVastaavaViranomainen } from "@services/api";
+import { formatDateTime } from "hassu-common/util/dateUtils";
+import dayjs from "dayjs";
 import Trans from "next-translate/Trans";
 import ExtLink from "@components/ExtLink";
 import { getTietosuojaUrl } from "src/util/tietosuojaUtil";
@@ -32,6 +34,7 @@ import { getLocalizedCountryName } from "common/getLocalizedCountryName";
 
 interface Props {
   projekti: ProjektiJulkinen;
+  mielipideoikeusPaattyyPaiva?: string | null;
 }
 
 type MielipideInputForm = Omit<MielipideInput, "liitteet"> & {
@@ -53,7 +56,7 @@ const defaultFormValues: MielipideInputForm = {
   liitteet: [],
 };
 
-export default function MielipideLomake({ projekti }: Readonly<Props>): ReactElement {
+export default function MielipideLomake({ projekti, mielipideoikeusPaattyyPaiva }: Readonly<Props>): ReactElement {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { t, lang } = useTranslation();
@@ -311,8 +314,13 @@ export default function MielipideLomake({ projekti }: Readonly<Props>): ReactEle
           </Button>
         </ContentSpacer>
       </ContentSpacer>
-      <KiitosDialogi open={kiitosDialogiOpen} onClose={close} isMobile={isMobile} />
-      <EpaonnistuiDialogi open={epaonnistuiDialogiOpen} onClose={closeEpaonnistui} isMobile={isMobile} />
+      <KiitosDialogi
+        open={kiitosDialogiOpen}
+        onClose={close}
+        isMobile={isMobile}
+        mielipideoikeusPaattyyPaiva={mielipideoikeusPaattyyPaiva}
+      />
+      <EpaonnistuiDialogi open={epaonnistuiDialogiOpen} onClose={closeEpaonnistui} isMobile={isMobile} projekti={projekti} />
     </Section>
   );
 }
@@ -323,10 +331,12 @@ interface KiitosDialogiProps {
   open: boolean;
   onClose: () => void;
   isMobile: boolean;
+  mielipideoikeusPaattyyPaiva?: string | null;
 }
 
-function KiitosDialogi({ open, onClose, isMobile }: Readonly<KiitosDialogiProps>): ReactElement {
+function KiitosDialogi({ open, onClose, isMobile, mielipideoikeusPaattyyPaiva }: Readonly<KiitosDialogiProps>): ReactElement {
   const { t } = useTranslation();
+  const paattyyPvm = mielipideoikeusPaattyyPaiva ? dayjs(mielipideoikeusPaattyyPaiva).endOf("date") : null;
   return (
     <HassuDialog
       PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
@@ -339,6 +349,13 @@ function KiitosDialogi({ open, onClose, isMobile }: Readonly<KiitosDialogiProps>
     >
       <DialogContent>
         <p>{t("projekti:mielipidelomake.olemme_vastaanottaneet_mielipiteesi")}</p>
+        {paattyyPvm && (
+          <p>
+            {t("projekti:mielipidelomake.voit_antaa_mielipiteita", {
+              pvm: formatDateTime(paattyyPvm),
+            })}
+          </p>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} id="close_kiitos_mielipiteesta">
@@ -353,10 +370,22 @@ interface EpaonnistuiDialogiProps {
   open: boolean;
   onClose: () => void;
   isMobile: boolean;
+  projekti: ProjektiJulkinen;
 }
 
-function EpaonnistuiDialogi({ open, onClose, isMobile }: Readonly<EpaonnistuiDialogiProps>): ReactElement {
+function EpaonnistuiDialogi({ open, onClose, isMobile, projekti }: Readonly<EpaonnistuiDialogiProps>): ReactElement {
   const { t } = useTranslation();
+  const viranomaisenText = useMemo(() => {
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
+    if (!viranomainen) {
+      return "<Viranomaistieto puuttuu>";
+    }
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      ? t("common:vaylaviraston")
+      : viranomainen && viranomainen.endsWith("ELY")
+      ? t("common:ely-keskuksen")
+      : t("common:elinvoimakeskuksen");
+  }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
   return (
     <HassuDialog
       PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
@@ -368,7 +397,7 @@ function EpaonnistuiDialogi({ open, onClose, isMobile }: Readonly<EpaonnistuiDia
       maxWidth={"sm"}
     >
       <DialogContent>
-        <p>{t("projekti:mielipidelomake.epaonnistui_viesti")}</p>
+        <p>{t("projekti:mielipidelomake.epaonnistui_viesti", { viranomainen: viranomaisenText })}</p>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} primary id="close_epaonnistui_mielipide">
