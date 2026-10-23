@@ -20,9 +20,15 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           await palauteEmailService.sendNewFeedbackDigest();
         } else if (emailEvent.type === EmailEventType.MIELIPIDE_KIRJAAMO) {
           const projekti = await projektiDatabase.loadProjektiByOid(emailEvent.oid);
-          if (!projekti) throw new NotFoundError("Projektia ei löydy: " + emailEvent.oid);
+          if (!projekti) {
+            log.error("Projektia ei löydy");
+            throw new NotFoundError("Projektia ei löydy");
+          }
           const mielipide = await mielipideDatabase.haeMielipide(emailEvent.oid, emailEvent.mielipideId);
-          if (!mielipide) throw new NotFoundError("Mielipidettä ei löydy: " + emailEvent.mielipideId);
+          if (!mielipide) {
+            log.error("Mielipidettä ei löydy", { mielipideId: emailEvent.mielipideId });
+            throw new NotFoundError("Mielipidettä ei löydy");
+          }
           await mielipideEmailService.sendEmailToKirjaamo(projekti, mielipide);
         } else {
           throw new Error("Unknown event type");
