@@ -237,6 +237,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         oid={projekti.oid}
         uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus}
         kuulutusPaiva={kuulutusPaiva}
+        projektiTyyppi={projekti.velho?.tyyppi}
       />
     </>
   );
