@@ -225,7 +225,7 @@
     "mielipiteen_liitteet": "Mielipiteen liitteet",
     "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat pdf, jpg, png, doc, docx ja txt. Yhden tiedoston suurin sallittu koko on 25 Mt.",
     "kiitos_mielipiteesta": "Kiitos mielipiteestä",
-    "olemme_vastaanottaneet_mielipiteesi": "Olemme vastaanottaneet mielipiteesi onnistuneesti.",
+    "olemme_vastaanottaneet_mielipiteesi": "Olemme vastaanottaneet mielipiteesi onnistuneesti ja se välitetään {{viranomainen}} kirjaamoon.",
     "voit_antaa_mielipiteita": "Voit antaa mielipiteitä suunnitteluhankkeesta {{pvm}} asti.",
     "epaonnistui": "Mielipiteen jättäminen epäonnistui",
     "epaonnistui_viesti": "Voit kokeilla lähettää mielipiteen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon."

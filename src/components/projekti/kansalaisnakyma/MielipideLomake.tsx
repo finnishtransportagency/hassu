@@ -319,6 +319,7 @@ export default function MielipideLomake({ projekti, mielipideoikeusPaattyyPaiva 
         onClose={close}
         isMobile={isMobile}
         mielipideoikeusPaattyyPaiva={mielipideoikeusPaattyyPaiva}
+        projekti={projekti}
       />
       <EpaonnistuiDialogi open={epaonnistuiDialogiOpen} onClose={closeEpaonnistui} isMobile={isMobile} projekti={projekti} />
     </Section>
@@ -332,11 +333,23 @@ interface KiitosDialogiProps {
   onClose: () => void;
   isMobile: boolean;
   mielipideoikeusPaattyyPaiva?: string | null;
+  projekti: ProjektiJulkinen;
 }
 
-function KiitosDialogi({ open, onClose, isMobile, mielipideoikeusPaattyyPaiva }: Readonly<KiitosDialogiProps>): ReactElement {
+function KiitosDialogi({ open, onClose, isMobile, mielipideoikeusPaattyyPaiva, projekti }: Readonly<KiitosDialogiProps>): ReactElement {
   const { t } = useTranslation();
   const paattyyPvm = mielipideoikeusPaattyyPaiva ? dayjs(mielipideoikeusPaattyyPaiva).endOf("date") : null;
+  const viranomaisenText = useMemo(() => {
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
+    if (!viranomainen) {
+      return "<Viranomaistieto puuttuu>";
+    }
+    return viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+      ? t("common:vaylaviraston")
+      : viranomainen && viranomainen.endsWith("ELY")
+      ? t("common:ely-keskuksen")
+      : t("common:elinvoimakeskuksen");
+  }, [projekti.velho?.suunnittelustaVastaavaViranomainen, t]);
   return (
     <HassuDialog
       PaperProps={isMobile ? { sx: { display: "flex", flexDirection: "column", justifyContent: "space-between" } } : undefined}
@@ -348,7 +361,7 @@ function KiitosDialogi({ open, onClose, isMobile, mielipideoikeusPaattyyPaiva }:
       maxWidth={"sm"}
     >
       <DialogContent>
-        <p>{t("projekti:mielipidelomake.olemme_vastaanottaneet_mielipiteesi")}</p>
+        <p>{t("projekti:mielipidelomake.olemme_vastaanottaneet_mielipiteesi", { viranomainen: viranomaisenText })}</p>
         {paattyyPvm && (
           <p>
             {t("projekti:mielipidelomake.voit_antaa_mielipiteita", {
