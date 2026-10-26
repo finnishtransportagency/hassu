@@ -259,7 +259,14 @@ input NahtavillaoloVaiheInput {
   aineistoNahtavilla: [AineistoInput!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput

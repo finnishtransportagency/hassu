@@ -29,6 +29,7 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     muistutusoikeusPaattyyPaiva,
+    mielipideoikeusPaattyyPaiva,
     uudelleenKuulutus,
     nahtavillaoloSaamePDFt,
   } = nahtavillaoloVaihe;
@@ -45,6 +46,7 @@ export function adaptNahtavillaoloVaiheToSave(
     kuulutusPaiva,
     kuulutusVaihePaattyyPaiva,
     muistutusoikeusPaattyyPaiva,
+    mielipideoikeusPaattyyPaiva,
     id,
     aineistoNahtavilla,
   };

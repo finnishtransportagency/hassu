@@ -22,6 +22,7 @@ export type NahtavillaoloVaihe = {
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   muistutusoikeusPaattyyPaiva?: string | null;
+  mielipideoikeusPaattyyPaiva?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
   kuulutusYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
@@ -39,6 +40,7 @@ export type NahtavillaoloVaiheJulkaisu = {
   kuulutusPaiva?: string | null;
   kuulutusVaihePaattyyPaiva?: string | null;
   muistutusoikeusPaattyyPaiva?: string | null;
+  mielipideoikeusPaattyyPaiva?: string | null;
   hankkeenKuvaus?: LocalizedMap<string>;
   velho: Velho;
   suunnitteluSopimus?: SuunnitteluSopimusJulkaisu | null;
