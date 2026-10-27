@@ -28,7 +28,7 @@ export class WafConfig extends Construct {
           // Block GraphQL batch queries (JSON array body starting with "[")
           name: "BlockGraphQLBatchQueries",
           action: { block: {} },
-          priority: 0,
+          priority: 2,
           statement: {
             byteMatchStatement: {
               searchString: "[",
