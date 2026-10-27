@@ -164,7 +164,10 @@ export class ProjektiAdapter {
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
-      muistutusMaara: (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
+      muistutusMaara:
+        velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN
+          ? undefined
+          : (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
       asianhallinta: await adaptAsianhallinta(dbProjekti),
       oid,
       versio,

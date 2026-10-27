@@ -50,6 +50,7 @@ import { adaptVelhoToAPI } from "./adapter/adaptToAPI";
 import { adaptOmistajahakuTila } from "./adapter/adaptToAPI/adaptOmistajahakuTila";
 import { muistuttajaSearchService } from "../projektiSearch/muistuttajaSearch/muistuttajaSearchService";
 import { omistajaDatabase } from "../database/omistajaDatabase";
+import { mielipideDatabase } from "../database/mielipideDatabase";
 import { config } from "../config";
 import { haeLiittyvanProjektinTiedot } from "./haeLiittyvanProjektinTiedot";
 import { lisaaJakotiedotJulkaisuille } from "./lisaaJakotiedotJulkaisuille";
@@ -107,6 +108,9 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
     const apiProjekti = await projektiAdapter.adaptProjekti(projektiFromDB);
+    if (projektiFromDB.velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN) {
+      apiProjekti.mielipideMaara = await mielipideDatabase.haeMielipideMaara(oid);
+    }
     await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
