@@ -106,7 +106,10 @@ export async function loadProjektiYllapito(oid: string): Promise<API.Projekti> {
   log.info("Loading projekti", { oid });
   const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
   if (projektiFromDB) {
-    const apiProjekti = await projektiAdapter.adaptProjekti(projektiFromDB);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projektiFromDB, undefined, {
+      checkAsianhallintaState: true,
+      haeMielipideMaara: true,
+    });
     await lisaaApiAineistolleTiedostokoko(apiProjekti.hyvaksymisPaatosVaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos1Vaihe?.hyvaksymisPaatos);
     await lisaaApiAineistolleTiedostokoko(apiProjekti.jatkoPaatos2Vaihe?.hyvaksymisPaatos);
