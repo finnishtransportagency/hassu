@@ -5,7 +5,7 @@ import Section from "@components/layout/Section2";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import { formatDate } from "hassu-common/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import { Kieli, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
@@ -14,7 +14,7 @@ import MuistutusLomake from "@components/projekti/kansalaisnakyma/MuistutusLomak
 import MielipideLomake from "@components/projekti/kansalaisnakyma/MielipideLomake";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import { kuntametadata } from "hassu-common/kuntametadata";
+import { kuntametadata } from "common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
@@ -81,6 +81,7 @@ export default function Nahtavillaolo(): ReactElement {
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const migroitu = kuulutus.tila == KuulutusJulkaisuTila.MIGROITU;
 
   const isProjektiInNahtavillaoloVaihe = projekti.status == Status.NAHTAVILLAOLO;
@@ -95,7 +96,9 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout
       suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
       selectedStep={Status.NAHTAVILLAOLO}
-      title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
+      title={t(
+        isToiminnallinen ? `asiakirja.kuulutus_nahtavillaolosta.otsikko_toiminnallinen` : `asiakirja.kuulutus_nahtavillaolosta.otsikko`
+      )}
     >
       <Section noDivider>
         <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
@@ -111,7 +114,9 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout
       selectedStep={Status.NAHTAVILLAOLO}
       suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
-      title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
+      title={t(
+        isToiminnallinen ? `asiakirja.kuulutus_nahtavillaolosta.otsikko_toiminnallinen` : `asiakirja.kuulutus_nahtavillaolosta.otsikko`
+      )}
       saameContent={
         <SaameContent
           kielitiedot={projekti.kielitiedot}
@@ -137,7 +142,9 @@ export default function Nahtavillaolo(): ReactElement {
         </ContentSpacer>
         <LiittyvatSuunnitelmat suunnitelmaJaettu={kuulutus.suunnitelmaJaettu} />
         <ContentSpacer>
-          <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</H3>
+          <H3 variant="h4">
+            {t(isToiminnallinen ? `ui-otsikot.nahtavillaolo.hankkeen_kuvaus` : `ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}
+          </H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
         </ContentSpacer>
         <ContentSpacer>
