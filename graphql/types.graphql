@@ -237,7 +237,9 @@ type Projekti implements IProjekti {
   tallennettu: Boolean
   euRahoitus: Boolean
   euRahoitusLogot: LokalisoituTeksti
+  "Ei TOIMINNALLINEN-projekteille. Katso mielipideMaara."
   muistutusMaara: Int
+  "Vain TOIMINNALLINEN-projekteille. Katso muistutusMaara."
   mielipideMaara: Int
   vahainenMenettely: Boolean
   kielitiedot: Kielitiedot
