@@ -9,8 +9,6 @@ import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
 import { Kieli, Projekti, ProjektiTyyppi, Status, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../src/util/assertions";
-import { omistajaDatabase } from "../../src/database/omistajaDatabase";
-
 import { expect } from "chai";
 import { parameters } from "../../src/aws/parameters";
 
@@ -24,7 +22,6 @@ describe("projektiHandler", () => {
     loadProjektiByOid = sinon.stub(projektiDatabase, "loadProjektiByOid");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
-    sinon.stub(omistajaDatabase, "hasOmistajat").resolves(false);
   });
 
   afterEach(() => {
