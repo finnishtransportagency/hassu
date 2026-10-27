@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { CfnIPSet, CfnWebACL, CfnWebACLAssociation, CfnWebACLProps } from "aws-cdk-lib/aws-wafv2";
 import { Config } from "./config";
 import { Construct } from "constructs";
@@ -23,6 +24,25 @@ export class WafConfig extends Construct {
       },
       name: `Hassu-ACL-${Config.env}`,
       rules: [
+        {
+          // Block GraphQL batch queries (JSON array body starting with "[")
+          name: "BlockGraphQLBatchQueries",
+          action: { block: {} },
+          priority: 0,
+          statement: {
+            byteMatchStatement: {
+              searchString: "[",
+              fieldToMatch: { body: { oversizeHandling: "CONTINUE" } },
+              textTransformations: [{ priority: 0, type: "COMPRESS_WHITE_SPACE" }],
+              positionalConstraint: "STARTS_WITH",
+            },
+          },
+          visibilityConfig: {
+            cloudWatchMetricsEnabled: true,
+            sampledRequestsEnabled: true,
+            metricName: `Hassu-${Config.env}-BlockGraphQLBatchQueries`,
+          },
+        },
         {
           name: "AllowOnlyFromVaylapilvi",
           action: { block: {} },
