@@ -25,6 +25,23 @@ export class WafConfig extends Construct {
       name: `Hassu-ACL-${Config.env}`,
       rules: [
         {
+          name: "AllowOnlyFromVaylapilvi",
+          action: { block: {} },
+          priority: 1,
+          statement: {
+            notStatement: {
+              statement: {
+                ipSetReferenceStatement: { arn: allowedIPSet.attrArn },
+              },
+            },
+          },
+          visibilityConfig: {
+            cloudWatchMetricsEnabled: true,
+            sampledRequestsEnabled: true,
+            metricName: `Hassu-${Config.env}-AllowOnlyFromVaylapilvi`,
+          },
+        },
+        {
           // Block GraphQL batch queries (JSON array body starting with "[")
           name: "BlockGraphQLBatchQueries",
           action: { block: {} },
@@ -41,23 +58,6 @@ export class WafConfig extends Construct {
             cloudWatchMetricsEnabled: true,
             sampledRequestsEnabled: true,
             metricName: `Hassu-${Config.env}-BlockGraphQLBatchQueries`,
-          },
-        },
-        {
-          name: "AllowOnlyFromVaylapilvi",
-          action: { block: {} },
-          priority: 1,
-          statement: {
-            notStatement: {
-              statement: {
-                ipSetReferenceStatement: { arn: allowedIPSet.attrArn },
-              },
-            },
-          },
-          visibilityConfig: {
-            cloudWatchMetricsEnabled: true,
-            sampledRequestsEnabled: true,
-            metricName: `Hassu-${Config.env}-AllowOnlyFromVaylapilvi`,
           },
         },
       ],
