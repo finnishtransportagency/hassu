@@ -88,7 +88,7 @@ describe("projektiAdapter", () => {
     const projekti = fixture.dbProjektiToiminnallinen();
     sinon.stub(mielipideDatabase, "haeMielipideMaara").resolves(7);
 
-    const result = await projektiAdapter.adaptProjekti(projekti, undefined, true, { haeMielipideMaara: true });
+    const result = await projektiAdapter.adaptProjekti(projekti, undefined, { haeMielipideMaara: true });
 
     expect(result.mielipideMaara).to.equal(7);
     expect(result.muistutusMaara).to.be.undefined;
@@ -104,7 +104,7 @@ describe("projektiAdapter", () => {
     };
     const haeMielipideMaaraSpy = sinon.stub(mielipideDatabase, "haeMielipideMaara").resolves(7);
 
-    const result = await projektiAdapter.adaptProjekti(projekti, undefined, true, { haeMielipideMaara: true });
+    const result = await projektiAdapter.adaptProjekti(projekti, undefined, { haeMielipideMaara: true });
 
     expect(result.mielipideMaara).to.be.undefined;
     expect(haeMielipideMaaraSpy.called).to.be.false;

@@ -44,7 +44,7 @@ describe("haeAktiivisenVaiheenAsianhallinanTila", () => {
   it("should check asianhallinnan tila for Vaihe.SUUNNITTELU if vuorovaikutusKierros is first modifiable Vaihe", async () => {
     assertIsDefined(dbProjekti.vuorovaikutusKierros);
     dbProjekti.vuorovaikutusKierros.tila = VuorovaikutusKierrosTila.MUOKATTAVISSA;
-    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, false);
+    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, { checkAsianhallintaState: false });
     await haeAktiivisenVaiheenAsianhallinnanTila(projekti);
     expect(checkAsianhallintaStateStub.calledOnce).to.be.true;
     expect(checkAsianhallintaStateStub.firstCall.firstArg).to.equal(projekti.oid);
@@ -54,7 +54,7 @@ describe("haeAktiivisenVaiheenAsianhallinanTila", () => {
   it("should check asianhallinnan tila for Vaihe.SUUNNITTELU if vuorovaikutusKierros is missing", async () => {
     delete dbProjekti.vuorovaikutusKierros;
     delete dbProjekti.vuorovaikutusKierrosJulkaisut;
-    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, false);
+    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, { checkAsianhallintaState: false });
     await haeAktiivisenVaiheenAsianhallinnanTila(projekti);
     expect(checkAsianhallintaStateStub.calledOnce).to.be.true;
     expect(checkAsianhallintaStateStub.firstCall.firstArg).to.equal(projekti.oid);
@@ -65,7 +65,7 @@ describe("haeAktiivisenVaiheenAsianhallinanTila", () => {
     delete dbProjekti.vuorovaikutusKierros;
     delete dbProjekti.vuorovaikutusKierrosJulkaisut;
     dbProjekti.vahainenMenettely = true;
-    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, false);
+    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, { checkAsianhallintaState: false });
     await haeAktiivisenVaiheenAsianhallinnanTila(projekti);
     expect(checkAsianhallintaStateStub.calledOnce).to.be.true;
     expect(checkAsianhallintaStateStub.firstCall.firstArg).to.equal(projekti.oid);
@@ -75,7 +75,7 @@ describe("haeAktiivisenVaiheenAsianhallinanTila", () => {
   it("should check asianhallinnan tila for Vaihe.NAHTAVILLAOLO if vuorovaikutusKierros is first modifiable Vaihe and palattuNahtavillaolosta is true", async () => {
     assertIsDefined(dbProjekti.vuorovaikutusKierros);
     dbProjekti.vuorovaikutusKierros.palattuNahtavillaolosta = true;
-    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, false);
+    const projekti = await projektiAdapter.adaptProjekti(dbProjekti, undefined, { checkAsianhallintaState: false });
     await haeAktiivisenVaiheenAsianhallinnanTila(projekti);
     expect(checkAsianhallintaStateStub.calledOnce).to.be.true;
     expect(checkAsianhallintaStateStub.firstCall.firstArg).to.equal(projekti.oid);

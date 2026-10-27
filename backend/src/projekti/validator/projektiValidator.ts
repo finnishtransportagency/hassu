@@ -20,7 +20,7 @@ import { validateKayttoOikeusEvkOrganisaatio } from "./validateKayttoOikeusEvkOr
 
 export async function validateTallennaProjekti(projekti: DBProjekti, input: TallennaProjektiInput): Promise<void> {
   requirePermissionMuokkaa(projekti);
-  const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
+  const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, { checkAsianhallintaState: false });
   validateKielivalinta(projekti, apiProjekti, input);
   validateEuRahoitus(projekti, apiProjekti, input);
   validateKasittelynTila(projekti, apiProjekti, input);

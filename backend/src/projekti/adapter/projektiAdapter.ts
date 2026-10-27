@@ -51,8 +51,7 @@ export class ProjektiAdapter {
   public async adaptProjekti(
     dbProjekti: DBProjekti,
     virhetiedot?: API.ProjektiVirhe,
-    checkAsianhallintaState = true,
-    options?: { haeMielipideMaara?: boolean }
+    options?: { checkAsianhallintaState?: boolean; haeMielipideMaara?: boolean }
   ): Promise<API.Projekti> {
     const {
       kayttoOikeudet,
@@ -223,7 +222,7 @@ export class ProjektiAdapter {
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
       if (apiProjekti.asianhallinta) {
         apiProjekti.asianhallinta.linkkiAsianhallintaan = await getLinkkiAsianhallintaan(dbProjekti);
-        if (checkAsianhallintaState) {
+        if (options?.checkAsianhallintaState !== false) {
           apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinnanTila(apiProjekti);
         }
       }
