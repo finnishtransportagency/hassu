@@ -17,6 +17,7 @@ import { DynaaminenVideoUpotus } from "./videoupotus/DynaaminenVideoUpotus";
 import { useRouter } from "next/router";
 import ExtLink from "@components/ExtLink";
 import Image from "next/image";
+import { ProjektiTyyppi } from "@services/api";
 
 const ProjektiSideNavigation = styled((props) => {
   const { t, lang } = useTranslation("projekti-side-bar");
@@ -69,7 +70,9 @@ const ProjektiSideNavigation = styled((props) => {
 
   const router = useRouter();
   const pathName = router.pathname;
-  const isVideoPage = pathName.includes("aloituskuulutus") || pathName.includes("suunnittelu") || pathName.includes("nahtavillaolo");
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+  const isVideoPage =
+    !isToiminnallinen && (pathName.includes("aloituskuulutus") || pathName.includes("suunnittelu") || pathName.includes("nahtavillaolo"));
 
   return (
     <Section noDivider {...props}>
