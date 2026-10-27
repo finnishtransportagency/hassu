@@ -6,7 +6,7 @@ import HassuStack from "@components/layout/HassuStack";
 import Section from "@components/layout/Section";
 import { Kieli, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import useTranslation from "next-translate/useTranslation";
-import { kuntametadata } from "hassu-common/kuntametadata";
+import { kuntametadata } from "common/kuntametadata";
 import { styled, useTheme } from "@mui/material";
 import { formatNimi } from "../../../util/userUtil";
 import { muodostaOrganisaatioTeksti } from "src/util/kayttajaTransformationUtil";
@@ -80,7 +80,7 @@ const ProjektiSideNavigation = styled((props) => {
         <Image src="/assets/rata_ja_tie_background.jpeg" alt="kuvituskuva" width={345} height={194} />
       )}
       <SideCard>
-        <SideCardHeading>{t("suunnitteluhankkeen_yhteystiedot")}</SideCardHeading>
+        <SideCardHeading>{t(isToiminnallinen ? "hankkeen_yhteystiedot" : "suunnitteluhankkeen_yhteystiedot")}</SideCardHeading>
         <SideCardContent>
           <HassuStack id="yhteystiedot">
             <img {...getTilaajaLogoImg()} />
