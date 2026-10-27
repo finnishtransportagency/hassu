@@ -9,7 +9,6 @@ import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
 import { Kieli, Projekti, ProjektiTyyppi, Status, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../src/util/assertions";
-import { mielipideDatabase } from "../../src/database/mielipideDatabase";
 import { omistajaDatabase } from "../../src/database/omistajaDatabase";
 
 import { expect } from "chai";
@@ -26,7 +25,6 @@ describe("projektiHandler", () => {
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(parameters, "isUspaIntegrationEnabled").returns(Promise.resolve(false));
     sinon.stub(omistajaDatabase, "hasOmistajat").resolves(false);
-    sinon.stub(mielipideDatabase, "haeMielipideMaara").resolves(0);
   });
 
   afterEach(() => {
@@ -139,30 +137,6 @@ describe("projektiHandler", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.julkinenStatus).to.eql(Status.EI_JULKAISTU);
-  });
-
-  it("loadProjektiYllapito should return mielipideMaara for TOIMINNALLINEN projekti", async () => {
-    projekti = {
-      oid: "1.2.246.578.5.1.2978288874.2711575506",
-      versio: 1,
-      kayttoOikeudet: [],
-      tallennettu: true,
-      velho: {
-        nimi: "Testi toiminnallinen projekti",
-        tyyppi: ProjektiTyyppi.TOIMINNALLINEN,
-      },
-    };
-    loadProjektiByOid.resolves(projekti);
-    sinon.restore();
-    sinon.stub(projektiDatabase, "loadProjektiByOid").resolves(projekti);
-    sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").resolves(false);
-    sinon.stub(parameters, "isUspaIntegrationEnabled").resolves(false);
-    sinon.stub(omistajaDatabase, "hasOmistajat").resolves(false);
-    sinon.stub(mielipideDatabase, "haeMielipideMaara").resolves(7);
-    userFixture.loginAs(UserFixture.mattiMeikalainen);
-    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
-    expect(adaptoituProjekti.mielipideMaara).to.equal(7);
-    expect(adaptoituProjekti.muistutusMaara).to.be.undefined;
   });
 
   it("loadProjekti should filter out references to removed users from hyvaäksymispäätösVaihe", async () => {

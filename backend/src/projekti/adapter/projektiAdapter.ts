@@ -45,12 +45,14 @@ import GetProjektiStatus from "../status/getProjektiStatus";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { adaptEnnakkoNeuvotteluJulkaisuToAPI, adaptEnnakkoNeuvotteluToAPI } from "../../ennakkoneuvottelu/mapper";
 import { omistajaDatabase } from "../../database/omistajaDatabase";
+import { mielipideDatabase } from "../../database/mielipideDatabase";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
     dbProjekti: DBProjekti,
     virhetiedot?: API.ProjektiVirhe,
-    checkAsianhallintaState = true
+    checkAsianhallintaState = true,
+    options?: { haeMielipideMaara?: boolean }
   ): Promise<API.Projekti> {
     const {
       kayttoOikeudet,
@@ -168,6 +170,12 @@ export class ProjektiAdapter {
         velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN
           ? undefined
           : (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
+      mielipideMaara:
+        options?.haeMielipideMaara &&
+        velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN &&
+        isStatusGreaterOrEqualTo(status, API.Status.NAHTAVILLAOLO)
+          ? await mielipideDatabase.haeMielipideMaara(oid)
+          : undefined,
       asianhallinta: await adaptAsianhallinta(dbProjekti),
       oid,
       versio,
