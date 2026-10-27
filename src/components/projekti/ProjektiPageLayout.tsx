@@ -7,7 +7,7 @@ import { IconButton, Stack, SvgIcon, useMediaQuery, useTheme } from "@mui/materi
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
 import AsianhallintaStatusNotification from "./AsianhallintaStatusNotification";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { Vaihe } from "@services/api";
+import { ProjektiTyyppi, Vaihe } from "@services/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import deburr from "lodash/deburr";
 import { isKuntatietoMissing } from "../../util/velhoUtils";
@@ -105,13 +105,7 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
               }),
             }}
           >
-            <div
-              style={
-                !isMobile
-                  ? { maxHeight: `calc(100vh - ${sidebarTop}px)`, overflowY: "auto" }
-                  : undefined
-              }
-            >
+            <div style={!isMobile ? { maxHeight: `calc(100vh - ${sidebarTop}px)`, overflowY: "auto" } : undefined}>
               <ProjektiSideNavigation />
             </div>
           </div>
@@ -156,12 +150,19 @@ export default function ProjektiPageLayout({ children, title, contentAsideTitle,
                       {projekti.asianhallinta.aktivoitavissa && vaihe && (
                         <AsianhallintaStatusNotification projekti={projekti} vaihe={vaihe} />
                       )}
-                      {!!projekti.muistutusMaara && (
-                        <Notification type={NotificationType.INFO_GRAY}>
-                          Järjestelmän kautta on lähetetty {projekti.muistutusMaara} kpl muistutuksia tähän suunnitelmaan. Muistutukset
-                          löytyvät asianhallinnasta.
-                        </Notification>
-                      )}
+                      {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN
+                        ? !!projekti.mielipideMaara && (
+                            <Notification type={NotificationType.INFO_GRAY}>
+                              Järjestelmän kautta on lähetetty {projekti.mielipideMaara} kpl mielipiteitä tähän suunnitelmaan. Mielipiteet
+                              löytyvät asianhallinnasta.
+                            </Notification>
+                          )
+                        : !!projekti.muistutusMaara && (
+                            <Notification type={NotificationType.INFO_GRAY}>
+                              Järjestelmän kautta on lähetetty {projekti.muistutusMaara} kpl muistutuksia tähän suunnitelmaan. Muistutukset
+                              löytyvät asianhallinnasta.
+                            </Notification>
+                          )}
                     </>
                   )}
                 </>
