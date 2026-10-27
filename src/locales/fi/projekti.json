@@ -79,6 +79,7 @@
     "kuulutus_suunnitelman_hyvaksymisesta": "Kuulutus suunnitelman hyväksymisestä",
     "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kuulutus hyväksymispäätöksen jatkamisesta",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kuulutus suunnitelman nähtäville asettamisesta",
+    "kuulutus_esityksen_nahtaville_asettamisesta": "Kuulutus esityksen nähtäville asettamisesta",
     "kuulutus_suunnitelman_hyvaksymispaatoksesta": "Kuulutus suunnitelman hyväksymispäätöksestä",
     "kuulutus_jatkopaatoksesta": "Kuulutus jatkopäätöksestä",
     "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "Kuulutus suunnitelman hyväksymispäätöksen voimassaoloajan pidentämisestä",
@@ -86,6 +87,7 @@
     "hankkeen_sijainti": "Hankkeen sijainti",
     "suunnitelman_tyyppi": "Suunnitelman tyyppi",
     "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
+    "hankkeen_kuvaus": "Hankkeen kuvaus",
     "asianosaisen_oikeudet": "Asianosaisen oikeudet",
     "yhteystiedot": "Yhteystiedot",
     "lisatietoja_antavat": "Lisätietoja antavat",
@@ -105,6 +107,7 @@
     "alkuperainenPaatos": "Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
+      "hankkeen_kuvaus": "Hankkeen kuvaus",
       "asianosaisen_oikeudet": "Asianosaisen oikeudet",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto",
       "muistutuksen_jattaminen": "Muistutuksen jättäminen",
@@ -363,6 +366,7 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
+      "otsikko_toiminnallinen": "Kuulutus esityksen nähtäville asettamisesta",
       "otsikko2": "Ilmoitus suunnitelman nähtäville asettamisesta",
       "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: *{{nimi}}*.",
       "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: *{{nimi}}*. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut {{osapuoli}} yhteistyössä {{tilaajaGenetiivi}} kanssa.",

@@ -79,6 +79,7 @@
     "kuulutus_suunnitelman_hyvaksymisesta": "Kungörelse om godkännande av planen",
     "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kungörelse om förlängning av beslutet om godkännande",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kungörelse om framläggande av plan",
+    "kuulutus_esityksen_nahtaville_asettamisesta": "Kungörelse om framläggande av förslaget",
     "kuulutus_suunnitelman_hyvaksymispaatoksesta": "Kungörelse av beslutet att godkänna planen",
     "kuulutus_jatkopaatoksesta": "Meddelande om beslut om fortsättning",
     "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "Meddelande om förlängning av giltighetstiden för beslutet om plangodkännande",
@@ -86,6 +87,7 @@
     "hankkeen_sijainti": "Projektets placering",
     "suunnitelman_tyyppi": "Typ av plan",
     "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+    "hankkeen_kuvaus": "Beskrivning av projektet",
     "asianosaisen_oikeudet": "Partens rättigheter",
     "yhteystiedot": "Kontaktuppgifter",
     "lisatietoja_antavat": "Ytterligare information",
@@ -105,6 +107,7 @@
     "alkuperainenPaatos": "Ursprungligt beslut och annat relaterat material",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+      "hankkeen_kuvaus": "Beskrivning av projektet",
       "asianosaisen_oikeudet": "Partens rättigheter",
       "nahtavilla_oleva_aineisto": "Material till påseende",
       "muistutuksen_jattaminen": "Inlämnande av anmärkning",
@@ -363,6 +366,7 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kungörelse om framläggande av plan",
+      "otsikko_toiminnallinen": "Kungörelse om framläggande av förslaget",
       "otsikko2": "Anmälan till fastighetsägare om framläggande av plan",
       "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): *{{nimi}}*.",
       "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} har publicerat en kungörelse om den plan som ska läggas fram till påseende: *{{nimi}}*. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av {{osapuoli}} i samarbete med {{tilaajaGenetiivi}}.",
