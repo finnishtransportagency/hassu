@@ -238,6 +238,7 @@ type Projekti implements IProjekti {
   euRahoitus: Boolean
   euRahoitusLogot: LokalisoituTeksti
   muistutusMaara: Int
+  mielipideMaara: Int
   vahainenMenettely: Boolean
   kielitiedot: Kielitiedot
   paivitetty: String
