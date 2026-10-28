@@ -519,8 +519,6 @@ input PalauteInput {
   sahkoposti: String
   puhelinnumero: String
   kysymysTaiPalaute: String
-  yhteydenottotapaEmail: Boolean
-  yhteydenottotapaPuhelin: Boolean
   liitteet: [String!]
 }
 
