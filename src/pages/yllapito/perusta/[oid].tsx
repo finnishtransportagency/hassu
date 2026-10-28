@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { FunctionComponent, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla, ProjektiValidationContext } from "hassu-common/ProjektiValidationContext";
@@ -18,7 +19,8 @@ import useApi from "src/hooks/useApi";
 import ProjektinPerusosio from "@components/projekti/perusosio/Perusosio";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
-import { Kayttaja, ProjektiKayttaja, TallennaProjektiInput } from "@services/api";
+import { Kayttaja, ProjektiKayttaja, ProjektiTyyppi, TallennaProjektiInput } from "@services/api";
+import Notification, { NotificationType } from "@components/notification/Notification";
 
 const validationSchema: Yup.SchemaOf<FormValues> = Yup.object().shape({
   oid: Yup.string().required(),
@@ -118,16 +120,14 @@ const defaultFormValues: (kayttoOikeudet: ProjektiKayttaja[], oid: string, versi
   oid: oid,
   versio: versio,
   kayttoOikeudet:
-    kayttoOikeudet?.map(
-      ({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, evkOrganisaatio, organisaatio }) => ({
-        kayttajatunnus,
-        puhelinnumero: puhelinnumero || "",
-        tyyppi,
-        yleinenYhteystieto: !!yleinenYhteystieto,
-        evkOrganisaatio: evkOrganisaatio || null,
-        organisaatio: organisaatio || "",
-      })
-    ) || [],
+    kayttoOikeudet?.map(({ kayttajatunnus, puhelinnumero, tyyppi, yleinenYhteystieto, evkOrganisaatio, organisaatio }) => ({
+      kayttajatunnus,
+      puhelinnumero: puhelinnumero || "",
+      tyyppi,
+      yleinenYhteystieto: !!yleinenYhteystieto,
+      evkOrganisaatio: evkOrganisaatio || null,
+      organisaatio: organisaatio || "",
+    })) || [],
 });
 
 const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({
@@ -231,6 +231,9 @@ const PerustaProjektiForm: FunctionComponent<PerustaProjektiFormProps> = ({
             </ContentSpacer>
           )}
           <input type="hidden" {...register("oid")} />
+          {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && (
+            <Notification type={NotificationType.INFO_GRAY}>Tämä projekti on merkitty toiminnallisen luokan muutokseksi.</Notification>
+          )}
           <ProjektinPerusosio projekti={projekti} />
           <KayttoOikeusHallinta
             disableFields={disableFormEdit}

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import * as Yup from "yup";
 import getAsiatunnus from "../util/getAsiatunnus";
 import { Kieli } from "../../common/graphql/apiModel";
@@ -9,9 +10,15 @@ export const maxNoteLength = 2000;
 export const UIValuesSchema = Yup.object().shape({
   suunnittelusopimusprojekti: Yup.string().required("Suunnittelusopimustieto on pakollinen").nullable().default(null),
   kustannuspaikka: Yup.string()
-    .matches(/^[A-Z0-9]{1,15}$/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
-    .default("")
-    .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
+    .when("$projekti", {
+      is: (projekti: Pick<ProjektiLisatiedolla, "velho">) => projekti?.velho?.tyyppi !== "TOIMINNALLINEN",
+      then: (schema) =>
+        schema
+          .matches(/^[A-Z0-9]{1,15}$/, { message: "Max 15 merkkiä, vain isoja kirjaimia ja numeroita." })
+          .typeError("Max 15 merkkiä, vain isoja kirjaimia ja numeroita."),
+      otherwise: (schema) => schema.optional().nullable(),
+    })
+    .default(""),
 });
 
 const makeMaybeOsapuoliSchema = (): Yup.AnySchema => {

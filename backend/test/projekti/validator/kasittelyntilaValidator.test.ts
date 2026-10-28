@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../../fixture/projektiFixture";
 import * as sinon from "sinon";
@@ -204,6 +205,30 @@ describe("kasittelyntilaValidator", () => {
     await expect(validateTallennaProjekti(projekti, input)).to.eventually.rejectedWith(
       "Sinulla ei ole admin-oikeuksia (Muita Käsittelyn tila -tietoja kuin hyväksymispäätöstietoja voi tallentaa vain Hassun yllapitaja)"
     );
+  });
+
+  it("Admin ei voi lisätä ensimmäistä jatkopäätöstä TOIMINNALLINEN-projektille", async () => {
+    const projekti = fixture.dbProjektiToiminnallinen();
+    userFixture.loginAs(UserFixture.hassuAdmin);
+    await expect(
+      validateTallennaProjekti(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        kasittelynTila: { ensimmainenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      })
+    ).to.eventually.rejectedWith("Ensimmäistä jatkopäätöstä ei voi lisätä Toiminnallisen luokan projektille");
+  });
+
+  it("Admin ei voi lisätä toista jatkopäätöstä TOIMINNALLINEN-projektille", async () => {
+    const projekti = fixture.dbProjektiToiminnallinen();
+    userFixture.loginAs(UserFixture.hassuAdmin);
+    await expect(
+      validateTallennaProjekti(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        kasittelynTila: { toinenJatkopaatos: { asianumero: "asianumero-123", paatoksenPvm: "2022-04-04" } },
+      })
+    ).to.eventually.rejectedWith("Toista jatkopäätöstä ei voi lisätä Toiminnallisen luokan projektille");
   });
 
   it("Admin voi muokata hyvaksymispaatos, ensimmainenJatkopaatos ja toinenJatkopaatos-kenttiä kun projekti on EPAAKTIIVINEN_3 vaiheessa", async () => {

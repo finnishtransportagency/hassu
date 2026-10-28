@@ -12,6 +12,7 @@
     "RATA": "Spårplan",
     "TIE": "Vägplan",
     "YLEINEN": "Översiktsplan",
+    "TOIMINNALLINEN": "SV PUUTTUU: Maantien toiminnallisen luokan muutos",
     "null": "Okänt"
   },
   "projekti-vaiheet": {
@@ -78,6 +79,7 @@
     "kuulutus_suunnitelman_hyvaksymisesta": "Kungörelse om godkännande av planen",
     "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kungörelse om förlängning av beslutet om godkännande",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kungörelse om framläggande av plan",
+    "kuulutus_esityksen_nahtaville_asettamisesta": "Kungörelse om framläggande av förslaget",
     "kuulutus_suunnitelman_hyvaksymispaatoksesta": "Kungörelse av beslutet att godkänna planen",
     "kuulutus_jatkopaatoksesta": "Meddelande om beslut om fortsättning",
     "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "Meddelande om förlängning av giltighetstiden för beslutet om plangodkännande",
@@ -85,6 +87,7 @@
     "hankkeen_sijainti": "Projektets placering",
     "suunnitelman_tyyppi": "Typ av plan",
     "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+    "hankkeen_kuvaus": "Beskrivning av projektet",
     "asianosaisen_oikeudet": "Partens rättigheter",
     "yhteystiedot": "Kontaktuppgifter",
     "lisatietoja_antavat": "Ytterligare information",
@@ -104,9 +107,11 @@
     "alkuperainenPaatos": "Ursprungligt beslut och annat relaterat material",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Beskrivning av planeringsprojektet",
+      "hankkeen_kuvaus": "Beskrivning av projektet",
       "asianosaisen_oikeudet": "Partens rättigheter",
       "nahtavilla_oleva_aineisto": "Material till påseende",
       "muistutuksen_jattaminen": "Inlämnande av anmärkning",
+      "mielipiteen_jattaminen": "Inlämnande av åsikt",
       "yhteystiedot": "Kontaktuppgifter"
     },
     "paatos_nahtavilla_oleva_aineisto": "Materialet bifogat beslutet",
@@ -193,16 +198,40 @@
     "30YS": "Y414 Kuulutus suunnitelman nähtävilläolo sv",
     "31YS": "Y415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta sv",
     "12YS_nahtavillaolo": "Y414-1 Ilmoitus suunnitelman nähtävilläolo sv",
+    "30TO": "TO414 Kuulutus suunnitelman nähtävilläolo sv",
+    "31TO": "TO415 Ilmoitus kiinteistönomistajille nähtäville asettamisesta sv",
+    "12TO_nahtavillaolo": "TO414-1 Ilmoitus suunnitelman nähtävilläolo sv",
     "60YS": "Y431 Kuulutus hyväksymispäätöksen nähtävilläolo sv",
     "61YS_ely": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja ELYlle sv",
     "61YS": "Y431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja elinvoimakeskukselle sv",
     "62YS": "Y431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille sv",
     "63YS": "Y431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille sv",
     "12YS_hyvaksymispaatos": "Y431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta sv",
+    "60TO": "TO431 Kuulutus hyväksymispäätöksen nähtävilläolo sv",
+    "61TO": "TO431-1 Ilmoitus hyväksymispäätöksestä kunnalle ja toiselle viranomaiselle sv",
+    "62TO": "TO431-3 Ilmoitus hyväksymispäätöksestä lausunnon antajille sv",
+    "63TO": "TO431-4 Ilmoitus hyväksymispäätöksestä kiinteistönomistajille ja muistuttajille sv",
+    "12TO_hyvaksymispaatos": "TO431-2 Ilmoitus hyväksymispäätöksen kuulutuksesta sv",
     "12YS_jatkopaatos": "Y441-2 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisen kuulutuksesta sv",
     "70YS": "Y441 Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta sv",
     "71YS": "Y441-1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle sv",
     "72YS": "Y441-3 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle sv"
+  },
+  "mielipidelomake": {
+    "jata_mielipide": "Lämna en åsikt",
+    "jata_mielipide_mennessa": "Åsikten om planen ska lämnas senast {{pvm}}.",
+    "mielipide_info": "Du kan lämna din åsikt om planen genom att fylla i blanketten nedan.",
+    "lisatietoja_henkilotietojesi": "<p>Mer information om behandlingen av dina personuppgifter finns i <a>dataskyddsbeskrivningen</a>.</p>",
+    "mielipiteen_lahettajan_tiedot": "Uppgifter om avsändaren av åsikten",
+    "mielipide": "Åsikt",
+    "ala_kirjoita": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till åsikten.",
+    "mielipiteen_liitteet": "Bilagor till åsikten",
+    "tuetut_tiedostomuodot_ovat": "Filformat som stöds är pdf, jpg, png, doc, docx och txt. Den största tillåtna storleken på en fil är 25 MB.",
+    "kiitos_mielipiteesta": "Tack för din åsikt",
+    "olemme_vastaanottaneet_mielipiteesi": "Vi har mottagit din åsikt och förmedlar den till registratorskontoret vid {{viranomainen}}.",
+    "voit_antaa_mielipiteita": "Du kan lämna åsikter om planeringsprojektet fram till {{pvm}}.",
+    "epaonnistui": "Det gick inte att skicka åsikten",
+    "epaonnistui_viesti": "Du kan försöka skicka åsikten igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
   },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} behöver dina personuppgifter för att behandla anmärkningen. Vi får dina personuppgifter från Myndigheten för digitalisering och befolkningsdata. Vi lämnar ut dina uppgifter till Transport- och kommunikationsverket, vars uppgift är att godkänna planen.",
@@ -337,6 +366,7 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kungörelse om framläggande av plan",
+      "otsikko_toiminnallinen": "Kungörelse om framläggande av förslaget",
       "otsikko2": "Anmälan till fastighetsägare om framläggande av plan",
       "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): *{{nimi}}*.",
       "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} har publicerat en kungörelse om den plan som ska läggas fram till påseende: *{{nimi}}*. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av {{osapuoli}} i samarbete med {{tilaajaGenetiivi}}.",
@@ -479,6 +509,12 @@
       "partitiivi": "utredningsplanen",
       "genetiivi": "utredningsplanen",
       "genetiivi_isolla": "Utredningsplanen"
+    },
+    "TOIMINNALLINEN": {
+      "perusmuoto": "vägplan",
+      "partitiivi": "vägplanen",
+      "genetiivi": "vägplanen",
+      "genetiivi_isolla": "Vägplanen"
     },
     "TIE": {
       "perusmuoto": "vägplan",

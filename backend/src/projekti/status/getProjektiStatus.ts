@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   Aineisto,
   AloitusKuulutusJulkaisu,
@@ -183,6 +184,10 @@ async function getProjektiStatus(projekti: ProjektiForGetStatus) {
     return API.Status.NAHTAVILLAOLO_AINEISTOT;
   }
 
+  if (projekti.velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN) {
+    return API.Status.NAHTAVILLAOLO_AINEISTOT;
+  }
+
   if (projektinStatusOnVahintaanSuunnittelu(projekti)) {
     return API.Status.SUUNNITTELU;
   }
@@ -225,6 +230,9 @@ function projektiHenkiloissaOnOngelma(projekti: ProjektiForGetStatus): boolean {
 }
 
 async function projektinPerustiedoissaOnOngelma(projekti: ProjektiForGetStatus): Promise<boolean> {
+  if (projekti.velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN) {
+    return false;
+  }
   try {
     perustiedotValidationSchema.validateSync(projekti, {
       context: {

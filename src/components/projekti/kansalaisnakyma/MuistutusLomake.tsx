@@ -27,6 +27,7 @@ import ExtLink from "@components/ExtLink";
 import { lataaTiedosto } from "../../../util/fileUtil";
 import useLoadingSpinner from "src/hooks/useLoadingSpinner";
 import { TextFieldWithController } from "@components/form/TextFieldWithController";
+import { getTietosuojaUrl } from "src/util/tietosuojaUtil";
 
 import useSuomifiUser from "src/hooks/useSuomifiUser";
 import { H2, H3 } from "@components/Headings";
@@ -103,20 +104,6 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
   const liitteetWatch = watch("liitteet");
 
   const api = useApi();
-
-  const getTietosuojaUrl = useCallback(() => {
-    if (projekti.velho.suunnittelustaVastaavaViranomainen == SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO) {
-      return lang == "sv" ? "https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy" : "https://www.vayla.fi/tietosuoja";
-    } else if (projekti.velho.suunnittelustaVastaavaViranomainen?.endsWith("ELY")) {
-      return lang == "sv"
-        ? "https://www.ely-keskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
-        : "https://www.ely-keskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
-    } else {
-      return lang == "sv"
-        ? "https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely"
-        : "https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely";
-    }
-  }, [lang, projekti.velho.suunnittelustaVastaavaViranomainen]);
 
   const { withLoadingSpinner } = useLoadingSpinner();
 
@@ -216,7 +203,7 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
           </p>
           <Trans
             i18nKey="projekti:muistutuslomake.lisatietoja_henkilotietojesi"
-            components={{ p: <p />, a: <ExtLink href={getTietosuojaUrl()} /> }}
+            components={{ p: <p />, a: <ExtLink href={getTietosuojaUrl(projekti.velho.suunnittelustaVastaavaViranomainen, lang)} /> }}
           />
         </ContentSpacer>
         <H3>{t("projekti:muistutuslomake.muistutuksen_lahettajan_tiedot")}</H3>

@@ -31,6 +31,7 @@ async function main() {
     TABLE_FEEDBACK: Config.feedbackTableName,
     TABLE_KIINTEISTONOMISTAJA: Config.kiinteistonomistajaTableName,
     TABLE_PROJEKTI_MUISTUTTAJA: Config.projektiMuistuttajaTableName,
+    TABLE_PROJEKTI_MIELIPIDE: Config.projektiMielipideTableName,
     TABLE_TIEDOTE: Config.tiedoteTableName,
     TABLE_NAHTAVILLAOLOVAIHEJULKAISU: Config.nahtavillaoloVaiheJulkaisuTableName,
     TABLE_PROJEKTI_DATA: Config.projektiDataTableName,

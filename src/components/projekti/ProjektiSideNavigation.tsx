@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { FunctionComponent, ReactElement, useCallback, useEffect, useState } from "react";
 import HassuLink from "../HassuLink";
 import classNames from "classnames";
@@ -66,7 +67,7 @@ const ProjektiSideNavigation: FunctionComponent<{ projekti: ProjektiLisatiedolla
           <RouteButtonInternal route={PROJEKTIN_HENKILOT_ROUTE} key={0} topLevel />
           <RouteButtonInternal route={PROJEKTIN_TIEDOT_ROUTE} key={1} topLevel />
           <RouteButtonInternal route={KASITTELYN_TILA_ROUTE} key={2} topLevel />
-          <RouteButtonInternal route={TIEDOTTAMINEN_ROUTE} key={3} topLevel />
+          {isVisible(projekti, TIEDOTTAMINEN_ROUTE) && <RouteButtonInternal route={TIEDOTTAMINEN_ROUTE} key={3} topLevel />}
           <ProjektiVaiheDropdownButton router={router} dropdownOpen={dropdownOpen} toggleDropdown={() => setDropdownOpen(!dropdownOpen)} />
           {dropdownOpen &&
             projektinVaiheetNavigaatiossa

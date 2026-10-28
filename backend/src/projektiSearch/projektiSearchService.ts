@@ -225,6 +225,8 @@ class ProjektiSearchService {
             result.ratasuunnitelmatMaara = bucket.doc_count;
           } else if (bucket.key == ProjektiTyyppi.YLEINEN) {
             result.yleissuunnitelmatMaara = bucket.doc_count;
+          } else if (bucket.key == ProjektiTyyppi.TOIMINNALLINEN) {
+            result.toiminnallisetMaara = bucket.doc_count;
           }
         });
       }

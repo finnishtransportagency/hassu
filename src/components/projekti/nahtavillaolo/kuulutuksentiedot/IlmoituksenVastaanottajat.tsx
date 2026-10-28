@@ -5,7 +5,7 @@ import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { KuntaVastaanottajaInput, NahtavillaoloVaihe, Status, Vaihe, ViranomaisVastaanottajaInput } from "@services/api";
+import { KuntaVastaanottajaInput, NahtavillaoloVaihe, ProjektiTyyppi, Status, Vaihe, ViranomaisVastaanottajaInput } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -29,6 +29,7 @@ interface Props {
   oid: string;
   omistajahakuStatus: Status | null | undefined;
   hasOmistajat?: boolean | null;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 type FormFields = {
@@ -40,7 +41,7 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omistajahakuStatus, hasOmistajat }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omistajahakuStatus, hasOmistajat, projektiTyyppi }: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -128,7 +129,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
         </Section>
       )}
       <div style={julkinen ? { display: "none" } : {}}>
-        <Section>
+        <Section noDivider={projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN}>
           <H2>Ilmoituksen vastaanottajat</H2>
           <SectionContent>
             <p>
@@ -229,7 +230,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               </HassuGrid>
             ))}
           </SectionContent>
-          {!nahtavillaoloVaihe?.uudelleenKuulutus && (
+          {!nahtavillaoloVaihe?.uudelleenKuulutus && projektiTyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
             <KiinteistonomistajatOhje
               vaihe={Vaihe.NAHTAVILLAOLO}
               oid={oid}
@@ -238,7 +239,7 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}
             />
           )}
-          {nahtavillaoloVaihe?.uudelleenKuulutus && (
+          {nahtavillaoloVaihe?.uudelleenKuulutus && projektiTyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
             <KiinteistonOmistajatUudelleenkuulutus
               oid={oid}
               uudelleenKuulutus={nahtavillaoloVaihe?.uudelleenKuulutus}

@@ -28,24 +28,25 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     },
   },
   NAHTAVILLAOLOKUULUTUS: {
-    TIE: { [ProjektiTyyppi.TIE]: "T414", [ProjektiTyyppi.YLEINEN]: "30YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T414", [ProjektiTyyppi.YLEINEN]: "30YS", [ProjektiTyyppi.TOIMINNALLINEN]: "30TO" },
     RATA: { [ProjektiTyyppi.RATA]: "30R", [ProjektiTyyppi.YLEINEN]: "30YS" },
   },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T414_1", [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo" },
+    TIE: { [ProjektiTyyppi.TIE]: "T414_1", [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo", [ProjektiTyyppi.TOIMINNALLINEN]: "12TO_nahtavillaolo" },
     RATA: {
       [ProjektiTyyppi.RATA]: "12R_nahtavillaolo",
       [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
     },
   },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T415", [ProjektiTyyppi.YLEINEN]: "31YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T415", [ProjektiTyyppi.YLEINEN]: "31YS", [ProjektiTyyppi.TOIMINNALLINEN]: "31TO" },
     RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
     TIE: {
       [ProjektiTyyppi.TIE]: "T431_2",
       [ProjektiTyyppi.YLEINEN]: "12YS_hyvaksymispaatos",
+      [ProjektiTyyppi.TOIMINNALLINEN]: "12TO_hyvaksymispaatos",
     },
     RATA: {
       [ProjektiTyyppi.RATA]: "12R_hyvaksymispaatos",
@@ -53,19 +54,19 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_3", [ProjektiTyyppi.YLEINEN]: "62YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T431_3", [ProjektiTyyppi.YLEINEN]: "62YS", [ProjektiTyyppi.TOIMINNALLINEN]: "62TO" },
     RATA: { [ProjektiTyyppi.RATA]: "62R", [ProjektiTyyppi.YLEINEN]: "62YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_4", [ProjektiTyyppi.YLEINEN]: "63YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T431_4", [ProjektiTyyppi.YLEINEN]: "63YS", [ProjektiTyyppi.TOIMINNALLINEN]: "63TO" },
     RATA: { [ProjektiTyyppi.RATA]: "63R", [ProjektiTyyppi.YLEINEN]: "63YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_1", [ProjektiTyyppi.YLEINEN]: "61YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T431_1", [ProjektiTyyppi.YLEINEN]: "61YS", [ProjektiTyyppi.TOIMINNALLINEN]: "61TO" },
     RATA: { [ProjektiTyyppi.RATA]: "61R", [ProjektiTyyppi.YLEINEN]: "61YS" },
   },
   HYVAKSYMISPAATOSKUULUTUS: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431", [ProjektiTyyppi.YLEINEN]: "60YS" },
+    TIE: { [ProjektiTyyppi.TIE]: "T431", [ProjektiTyyppi.YLEINEN]: "60YS", [ProjektiTyyppi.TOIMINNALLINEN]: "60TO" },
     RATA: { [ProjektiTyyppi.RATA]: "60R", [ProjektiTyyppi.YLEINEN]: "60YS" },
   },
   JATKOPAATOSKUULUTUS: {

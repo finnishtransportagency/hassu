@@ -34,7 +34,7 @@ export type ProjektiDocument = {
 
 export async function adaptProjektiToIndex(projekti: DBProjekti): Promise<Partial<ProjektiDocument>> {
   projekti.tallennettu = true;
-  const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
+  const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, { checkAsianhallintaState: false });
   if (!projekti.velho) {
     throw new Error("adaptProjektiToIndex: projekti.velho määrittelemättä");
   }
@@ -104,6 +104,7 @@ function getBaseDataForIndexing(
 ): Pick<ProjektiDocument, "nimi" | "hankkeenKuvaus" | "publishTimestamp"> {
   const vuorovaikutus = projekti.vuorovaikutukset;
   const aloitusKuulutusJulkaisu = projekti.aloitusKuulutusJulkaisu;
+  const nahtavillaoloVaihe = projekti.nahtavillaoloVaihe;
   let nimi: string | undefined;
   let hankkeenKuvaus: string | undefined;
   let publishTimestamp;
@@ -126,6 +127,11 @@ function getBaseDataForIndexing(
     hankkeenKuvaus = aloitusKuulutusJulkaisu.hankkeenKuvaus[kieli] ?? undefined;
     nimi = selectNimi(aloitusKuulutusJulkaisu.velho.nimi, aloitusKuulutusJulkaisu.kielitiedot, kieli);
     publishTimestamp = parseDate(aloitusKuulutusJulkaisu.kuulutusPaiva).format();
+  } else if (projekti.velho.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN && nahtavillaoloVaihe?.kuulutusPaiva) {
+    // TOIMINNALLINEN projects have no aloituskuulutus or suunnittelu phase — use nahtavillaolo as the base
+    hankkeenKuvaus = nahtavillaoloVaihe.hankkeenKuvaus?.[kieli] ?? undefined;
+    nimi = selectNimi(nahtavillaoloVaihe.velho.nimi, nahtavillaoloVaihe.kielitiedot!, kieli);
+    publishTimestamp = parseDate(nahtavillaoloVaihe.kuulutusPaiva).format();
   }
   return { nimi, hankkeenKuvaus, publishTimestamp };
 }

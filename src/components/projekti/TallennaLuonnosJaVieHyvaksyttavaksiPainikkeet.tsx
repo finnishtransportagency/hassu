@@ -3,7 +3,7 @@ import Button from "@components/button/Button";
 import Section from "@components/layout/Section2";
 import { Stack } from "@mui/system";
 import { FieldValues, SubmitHandler } from "react-hook-form";
-import { TallennaProjektiInput, KuntaVastaanottajaInput, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
+import { TallennaProjektiInput, KuntaVastaanottajaInput, ProjektiTyyppi, Status, TilasiirtymaToiminto, TilasiirtymaTyyppi } from "@services/api";
 import React, { useCallback } from "react";
 import { useHandleSubmitContext } from "src/hooks/useHandleSubmit";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -105,6 +105,7 @@ export default function TallennaLuonnosJaVieHyvaksyttavaksiPainikkeet<TFieldValu
             }
             if (
               data?.suomifiViestitEnabled &&
+              projekti.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN &&
               (tilasiirtymaTyyppi === TilasiirtymaTyyppi.ALOITUSKUULUTUS ||
                 tilasiirtymaTyyppi === TilasiirtymaTyyppi.NAHTAVILLAOLO ||
                 tilasiirtymaTyyppi === TilasiirtymaTyyppi.HYVAKSYMISPAATOSVAIHE) &&

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { ProjektiTyyppi, VelhoHakuTulos, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import {
   DBProjekti,
@@ -77,7 +78,7 @@ export type ProjektiSearchResult = Pick<ProjektiProjekti, "oid"> & {
   > & { vaihe: ProjektiVaihe };
 };
 
-type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12";
+type ProjektiVaihe = "vaihe/vaihe04" | "vaihe/vaihe10" | "vaihe/vaihe12" | "vaihe/vaihe25";
 type Organisaatio =
   | "organisaatio/org01"
   | "organisaatio/org02"
@@ -109,6 +110,7 @@ const projektiVaiheToTyyppi: ProjektiVaiheToTyyppi = {
   "vaihe/vaihe04": ProjektiTyyppi.YLEINEN,
   "vaihe/vaihe10": ProjektiTyyppi.TIE,
   "vaihe/vaihe12": ProjektiTyyppi.RATA,
+  "vaihe/vaihe25": ProjektiTyyppi.TOIMINNALLINEN,
 } as const;
 
 function getProjektiTyyppi(vaihe: ProjektiVaihe) {
@@ -605,12 +607,10 @@ export function applyNahtavillaoloajankohtaToVelho(
 }
 
 function toLocalDate(date: string) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return parseDate(date).startOf("day").format() as unknown as object;
 }
 
 function stringToObject(s: string) {
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return s as unknown as object;
 }
 
@@ -618,7 +618,6 @@ function objectToString<T>(s: unknown): T | undefined {
   if (s == undefined) {
     return undefined;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
   return s as unknown as T;
 }
 

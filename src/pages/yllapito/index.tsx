@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   ListaaProjektitInput,
   ProjektiHakutulos,
@@ -162,10 +163,11 @@ const VirkamiesHomePage = () => {
     }
   };
 
-  const tuloksienMaarat = {
+  const tuloksienMaarat: Partial<Record<ProjektiTyyppi | "epaaktiiviset", number>> = {
     [ProjektiTyyppi.TIE]: hakutulos?.tiesuunnitelmatMaara || 0,
     [ProjektiTyyppi.RATA]: hakutulos?.ratasuunnitelmatMaara || 0,
     [ProjektiTyyppi.YLEINEN]: hakutulos?.yleissuunnitelmatMaara || 0,
+    [ProjektiTyyppi.TOIMINNALLINEN]: hakutulos?.toiminnallisetMaara || 0,
     epaaktiiviset: hakutulos?.epaaktiivisetMaara || 0,
   };
 
@@ -191,6 +193,12 @@ const VirkamiesHomePage = () => {
       label:
         "Yleissuunnitelmat" + (hakutulos?.hasOwnProperty("yleissuunnitelmatMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.YLEINEN]})` : ""),
       value: ProjektiTyyppi.YLEINEN,
+    },
+    {
+      label:
+        "Toiminnalliset" +
+        (hakutulos?.hasOwnProperty("toiminnallisetMaara") ? ` (${tuloksienMaarat[ProjektiTyyppi.TOIMINNALLINEN]})` : ""),
+      value: ProjektiTyyppi.TOIMINNALLINEN,
     },
     {
       label: "Epäaktiiviset" + (hakutulos?.hasOwnProperty("epaaktiivisetMaara") ? ` (${tuloksienMaarat.epaaktiiviset})` : ""),
@@ -294,7 +302,7 @@ const VirkamiesHomePage = () => {
             sivunumero={sivunumero}
             jarjestysKasvava={jarjestysKasvava}
             jarjestysSarake={jarjestysSarake}
-            tuloksienMaara={tuloksienMaarat[aktiivinenTabi]}
+            tuloksienMaara={tuloksienMaarat[aktiivinenTabi] ?? 0}
             openUnauthorizedDialog={openUnauthorizedDialog}
           />
         ) : (

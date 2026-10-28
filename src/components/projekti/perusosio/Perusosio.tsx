@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { useEffect, useState } from "react";
 import ProjektiPerustiedot from "./ProjektiPerustiedot";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
@@ -11,6 +12,7 @@ import { FormState, UseFormRegister } from "react-hook-form";
 import { FormValues } from "@pages/yllapito/projekti/[oid]";
 import SectionContent from "@components/layout/SectionContent";
 import { H3, H4 } from "../../Headings";
+import { ProjektiTyyppi } from "@services/api";
 import axios from "axios";
 import useSnackbars from "src/hooks/useSnackbars";
 
@@ -69,7 +71,7 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
           <KarttaKansalaiselle geoJSON={geoJSON} />
         </ContentSpacer>
       </Section>
-      {register && formState && (
+      {register && formState && projekti.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
         <Section gap={4}>
           <H3>Projektin viitetieto</H3>
           <p>
@@ -86,7 +88,7 @@ export default function ProjektinPerusosio({ projekti, register, formState, luku
           />
         </Section>
       )}
-      {lukutila && (
+      {lukutila && projekti.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
         <Section gap={4}>
           <h4 className="vayla-small-title">Projektin viitetieto</h4>
           <SectionContent>

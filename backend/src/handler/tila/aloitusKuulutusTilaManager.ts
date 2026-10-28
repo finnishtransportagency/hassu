@@ -178,7 +178,7 @@ class AloitusKuulutusTilaManager extends KuulutusTilaManager<AloitusKuulutus, Al
     }
     // Aloituskuulutuksen uudelleenkuuluttaminen on mahdollista vain jos projekti on ylläpidossa suunnitteluvaiheessa,
     // tai nähtävilläolovaiheessa, kun kyseessä on vähäinen menettely
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, { checkAsianhallintaState: false });
     if (
       !(
         (apiProjekti.status === Status.SUUNNITTELU && !apiProjekti.vahainenMenettely) ||

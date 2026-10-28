@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Section from "@components/layout/Section";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -62,6 +63,7 @@ export default function ProjektiPageLayout({
               selectedStep={selectedStep}
               vertical={smallScreen ? true : undefined}
               vahainenMenettely={projekti.vahainenMenettely}
+              projektiTyyppi={projekti.velho?.tyyppi}
             />
           </Section>
           <PalauteKyselyMuistutusPopup></PalauteKyselyMuistutusPopup>
