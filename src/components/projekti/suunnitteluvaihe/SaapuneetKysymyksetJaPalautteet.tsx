@@ -204,7 +204,7 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet, lukutila }:
 function YhteystiedotSolu({ palaute }: Readonly<PalauteProps>): ReactElement {
   return (
     <div>
-      {!palaute.puhelinnumero && !palaute.sahkoposti && <div>Ei</div>}
+      {!palaute.puhelinnumero && !palaute.sahkoposti && <div>Ei tiedossa</div>}
       {palaute.puhelinnumero && <div>{palaute.puhelinnumero}</div>}
       {palaute.sahkoposti && <div>{palaute.sahkoposti}</div>}
     </div>
