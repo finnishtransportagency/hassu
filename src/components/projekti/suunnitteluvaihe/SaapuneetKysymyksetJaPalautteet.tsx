@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import { Liite, LiitteenSkannausTulos, Palaute, Projekti } from "@services/api";
 import Section from "@components/layout/Section";
@@ -45,9 +46,9 @@ export default function SaapuneetKysymyksetJaPalautteet({ projekti, lukutila }: 
         id: "kysymysTaiPalaute",
       },
       {
-        header: "Yhteydenottopyyntö",
-        accessorFn: (palaute: Palaute) => <YhteydenottopyyntoSolu palaute={palaute} />,
-        id: "yhteydenottopyynto",
+        header: "Yhteystiedot",
+        accessorFn: (palaute: Palaute) => <YhteystiedotSolu palaute={palaute} />,
+        id: "yhteystiedot",
       },
       {
         header: "Vastattu",
@@ -200,14 +201,12 @@ function KasittelePalauteCheckbox({ palaute, oid, paivitaPalautteet, lukutila }:
   return <CheckBox onChange={(event) => merkitsePalaute(event.target.checked)} checked={!!palaute.vastattu} disabled={lukutila} />;
 }
 
-function YhteydenottopyyntoSolu({ palaute }: Readonly<PalauteProps>): ReactElement {
+function YhteystiedotSolu({ palaute }: Readonly<PalauteProps>): ReactElement {
   return (
     <div>
-      {!palaute.yhteydenottotapaPuhelin && !palaute.yhteydenottotapaEmail && <div>Ei</div>}
-      {palaute.yhteydenottotapaPuhelin && <div>Kyllä, puhelimitse</div>}
-      {palaute.yhteydenottotapaPuhelin && palaute.puhelinnumero && <div>{palaute.puhelinnumero}</div>}
-      {palaute.yhteydenottotapaEmail && <div>Kyllä, sähköpostitse</div>}
-      {palaute.yhteydenottotapaEmail && palaute.sahkoposti && <div>{palaute.sahkoposti}</div>}
+      {!palaute.puhelinnumero && !palaute.sahkoposti && <div>Ei</div>}
+      {palaute.puhelinnumero && <div>{palaute.puhelinnumero}</div>}
+      {palaute.sahkoposti && <div>{palaute.sahkoposti}</div>}
     </div>
   );
 }
