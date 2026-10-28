@@ -139,7 +139,7 @@ export async function importAineisto(aineisto: Aineisto, oid: string, path: Path
   try {
     ({ disposition, contents } = await velho.getAineisto(aineisto.dokumenttiOid));
   } catch (e) {
-    log.error("Aineiston haku Velhosta epäonnistui", { projektinOid: oid, dokumenttiOid: aineisto.dokumenttiOid });
+    log.error("Aineiston haku Velhosta epäonnistui", { dokumenttiOid: aineisto.dokumenttiOid });
     if (e instanceof VelhoError && e.status === 404) {
       aineisto.tila = AineistoTila.EI_LOYDY;
       return;
