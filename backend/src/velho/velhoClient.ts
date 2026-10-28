@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { auditLog, log, recordVelhoLatencyDecorator, VelhoApiName } from "../logger";
 import { config } from "../config";
 import * as HakuPalvelu from "./hakupalvelu";
@@ -99,7 +100,7 @@ export class VelhoClient {
         },
         lauseke: [
           "ja",
-          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12"]],
+          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12", "vaihe/vaihe25"]],
           ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
           ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term],
         ],
@@ -358,15 +359,15 @@ export class VelhoClient {
         return new VelhoUnavailableError(response.status, response.statusText);
       }
       if (response.status >= 400) {
+        const badRequest = response.data as BadRequestResponse;
         log.error("Virhe Velho-rajapinnan kutsussa", {
           statusText: response.statusText,
           status: response.status,
-          problems: (response.data as BadRequestResponse)?.problems,
-          message: (response.data as BadRequestResponse)?.message,
-          viesti: (response.data as BadRequestResponse)?.viesti,
-          data: response.data,
+          problems: JSON.stringify(badRequest?.problems),
+          value: JSON.stringify(badRequest?.value),
+          viesti: badRequest?.viesti,
         });
-        const velhoMessage = (response.data as BadRequestResponse)?.viesti ?? (response.data as BadRequestResponse)?.message;
+        const velhoMessage = badRequest?.viesti;
         return new VelhoError(response.status, response.statusText, velhoMessage);
       }
     }
@@ -374,11 +375,13 @@ export class VelhoClient {
   }
 }
 
+// Fields not documented in Velho OpenAPI spec - observed from actual API responses:
+// projektirekisteri 400: { problems, value }
+// aineistopalvelu 404: { viesti }
 type BadRequestResponse = {
-  problems: object;
-  value: object;
-  viesti: string;
-  message: string;
+  problems?: object;
+  value?: object;
+  viesti?: string;
 };
 
 export const velho = new VelhoClient();
