@@ -1,4 +1,10 @@
 // Contains code generated or recommended by Amazon Q
+/**
+ * Poistaa yhteydenottotapaEmail ja yhteydenottotapaPuhelin attribuutit Palaute-taulusta.
+ * Nämä kentät liittyivät palautelomakkeen "Toivottu yhteydenottotapa" -checkboxeihin,
+ * Kentät ovat tarpeettomia eikä koodi enää lue niitä.
+ * version 0.42.0 tuotantoonviennin jälkeen luoduilla palautteilla näitä kenttiä ei ole koskaan ollut.
+*/
 import { ScanCommand, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { ddb } from "../ddb";
 import { PagedMigrationRunPlan } from "../types";

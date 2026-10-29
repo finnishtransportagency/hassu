@@ -96,17 +96,15 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
         },
       ],
     },
-    // Palaute-taulun siivous: poistetaan yhteydenottotapaEmail ja yhteydenottotapaPuhelin attribuutit.
-    // Voidaan ajaa milloin tahansa – koodi ei enää lue näitä attribuutteja.
-    // {
-    //   name: `Palaute-${options.environment}`,
-    //   migrations: [
-    //     {
-    //       versionId: 1,
-    //       plan: (options) => import("./Palaute/migrate-001").then((m) => m.default(options)),
-    //     },
-    //   ],
-    // },
+    {
+      name: `Palaute-${options.environment}`,
+      migrations: [
+        {
+          versionId: 1,
+          plan: (options) => import("./Palaute/migrate-001").then((m) => m.default(options)),
+        },
+      ],
+    },
     // {
     //   name: `Kiinteistonomistaja-${environment}`,
     //   migrations: [
