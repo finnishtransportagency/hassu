@@ -16,8 +16,6 @@ Object {
       "sahkoposti": "",
       "sukunimi": "",
       "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": true,
-      "yhteydenottotapaPuhelin": true,
     },
     Object {
       "__typename": "Palaute",
@@ -30,8 +28,6 @@ Object {
       "sahkoposti": "test@vayla.fi",
       "sukunimi": "Toinen",
       "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": true,
-      "yhteydenottotapaPuhelin": true,
     },
     Object {
       "__typename": "Palaute",
@@ -50,8 +46,6 @@ Object {
       "sahkoposti": "test@vayla.fi",
       "sukunimi": "Meikalainen",
       "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": false,
-      "yhteydenottotapaPuhelin": true,
     },
   ],
 }
@@ -73,8 +67,6 @@ Object {
       "sahkoposti": "",
       "sukunimi": "",
       "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": true,
-      "yhteydenottotapaPuhelin": true,
     },
     Object {
       "__typename": "Palaute",
@@ -87,8 +79,6 @@ Object {
       "sahkoposti": "test@vayla.fi",
       "sukunimi": "Toinen",
       "vastaanotettu": "***unittest***",
-      "yhteydenottotapaEmail": true,
-      "yhteydenottotapaPuhelin": true,
     },
     Object {
       "__typename": "Palaute",
@@ -108,8 +98,6 @@ Object {
       "sukunimi": "Meikalainen",
       "vastaanotettu": "***unittest***",
       "vastattu": true,
-      "yhteydenottotapaEmail": false,
-      "yhteydenottotapaPuhelin": true,
     },
   ],
 }

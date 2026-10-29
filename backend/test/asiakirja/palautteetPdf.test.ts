@@ -30,8 +30,6 @@ function createPalaute(id: number): Palaute {
     sahkoposti: `testi${id}@example.com`,
     puhelinnumero: "0401234567",
     kysymysTaiPalaute: LONG_TEXT + "\n",
-    yhteydenottotapaEmail: false,
-    yhteydenottotapaPuhelin: false,
     liite: null,
     liitteet: null,
   };
@@ -51,7 +49,7 @@ describe("PalautteetPdf", () => {
     expect(pdf.sisalto.length).to.be.greaterThan(0);
   });
 
-  it("generates a valid PDF with yhteydenottotapa fields", async () => {
+  it("generates a valid PDF with contact info", async () => {
     const palautteet: Palaute[] = [
       {
         oid: "1.2.3",
@@ -62,8 +60,6 @@ describe("PalautteetPdf", () => {
         sahkoposti: "matti@example.com",
         puhelinnumero: "0401234567",
         kysymysTaiPalaute: LONG_TEXT,
-        yhteydenottotapaEmail: true,
-        yhteydenottotapaPuhelin: true,
         liite: null,
         liitteet: null,
       },
@@ -73,11 +69,35 @@ describe("PalautteetPdf", () => {
     expect(pdf).to.exist;
     expect(pdf.sisalto).to.be.a("string");
     expect(pdf.sisalto.length).to.be.greaterThan(0);
+    expect(pdf.textContent).toMatchSnapshot();
   });
 
   it("handles empty palautteet list", async () => {
     const pdf = await new PalautteetPdf("Testiprojekti", []).pdf();
     expect(pdf).to.exist;
     expect(pdf.nimi).to.equal("Palautteet.pdf");
+  });
+
+  it("formats name correctly when only etunimi is present", async () => {
+    const pdf = await new PalautteetPdf("Testiprojekti", [
+      { ...createPalaute(1), etunimi: "Matti", sukunimi: undefined },
+    ]).pdf();
+    expect(pdf.textContent).to.include("Matti");
+    expect(pdf.textContent).not.to.include("undefined");
+  });
+
+  it("formats name correctly when only sukunimi is present", async () => {
+    const pdf = await new PalautteetPdf("Testiprojekti", [
+      { ...createPalaute(1), etunimi: undefined, sukunimi: "Meikäläinen" },
+    ]).pdf();
+    expect(pdf.textContent).to.include("Meikäläinen");
+    expect(pdf.textContent).not.to.include("undefined");
+  });
+
+  it("formats name as dash when both etunimi and sukunimi are missing", async () => {
+    const pdf = await new PalautteetPdf("Testiprojekti", [
+      { ...createPalaute(1), etunimi: undefined, sukunimi: undefined },
+    ]).pdf();
+    expect(pdf.textContent).to.match(/^-/);
   });
 });

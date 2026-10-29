@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { Palaute } from "../../src/database/model";
 import { migrateFromOldSchema } from "../../src/database/palauteSchemaUpdate";
@@ -15,8 +16,6 @@ describe("migrateFromOldSchema", () => {
       sahkoposti: "abc@abc.ab",
       puhelinnumero: "12334",
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      yhteydenottotapaEmail: true,
-      yhteydenottotapaPuhelin: true,
       liite: "/palautteet/86963301-4703-458f-abef-a89365f995f3/abc.pdf",
       oid: "projekti-oid",
       otettuKasittelyyn: true,
@@ -30,8 +29,6 @@ describe("migrateFromOldSchema", () => {
       sahkoposti: "abc@abc.ab",
       puhelinnumero: "12334",
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-      yhteydenottotapaEmail: true,
-      yhteydenottotapaPuhelin: true,
       liite: "/palautteet/86963301-4703-458f-abef-a89365f995f3/abc.pdf",
       oid: "projekti-oid",
       vastattu: true,
