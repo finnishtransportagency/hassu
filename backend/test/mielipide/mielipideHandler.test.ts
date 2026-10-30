@@ -5,8 +5,9 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { userService } from "../../src/user";
 import { UserFixture } from "../fixture/userFixture";
 import { MielipideInput } from "hassu-common/graphql/apiModel";
-import { mielipideHandler } from "../../src/mielipide/mielipideHandler";
+import { mielipideHandler, LIITE_SCAN_DELAY_SECONDS } from "../../src/mielipide/mielipideHandler";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { CopyObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { S3Mock } from "../aws/awsMock";
 import { expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
@@ -78,6 +79,37 @@ describe("mielipideHandler", () => {
     expect(saved.id).to.be.a("string");
     expect(saved.lisatty).to.be.a("string");
     expect(saved.id).to.equal(sqsMsg.mielipideId);
+  });
+
+  it("should set DelaySeconds when mielipide has liitteet", async () => {
+    mockClient(DynamoDBDocumentClient);
+    const s3Mock = new S3Mock();
+    s3Mock.s3Mock.on(CopyObjectCommand).resolves({});
+    s3Mock.s3Mock.on(HeadObjectCommand).resolves({ ContentType: "application/pdf", ContentLength: 1000 });
+
+    const mielipideInput: MielipideInput = {
+      mielipide: "Mielipide liitteellä",
+      liitteet: ["test-upload-bucket/test-file.pdf"],
+    };
+
+    await mielipideHandler.kasitteleMielipide({ oid: fixture.PROJEKTI3_OID, mielipide: mielipideInput });
+
+    expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
+    expect(sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.DelaySeconds).to.equal(LIITE_SCAN_DELAY_SECONDS);
+  });
+
+  it("should not set DelaySeconds when mielipide has no liitteet", async () => {
+    mockClient(DynamoDBDocumentClient);
+
+    const mielipideInput: MielipideInput = {
+      mielipide: "Mielipide ilman liitteitä",
+      liitteet: [],
+    };
+
+    await mielipideHandler.kasitteleMielipide({ oid: fixture.PROJEKTI3_OID, mielipide: mielipideInput });
+
+    expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
+    expect(sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.DelaySeconds).to.equal(0);
   });
 
   it("should work with only required fields (mielipide)", async () => {
