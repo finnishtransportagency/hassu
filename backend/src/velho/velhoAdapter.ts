@@ -18,6 +18,7 @@ import {
   ProjektiProjektiLuontiOminaisuudetHyvaksymispaatos,
   ProjektiProjektiLuontiOminaisuudetKorkeinHallintoOikeus,
   ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum,
+  ProjektiProjektiLuontiRataosoitteetInner,
   ProjektiProjektiMuokkaus,
 } from "./projektirekisteri";
 import mergeWith from "lodash/mergeWith";
@@ -328,16 +329,33 @@ async function persistGeoJsonFile(data: ProjektiProjekti) {
   }
 }
 
+function isValidRataosoite(r: ProjektiProjektiLuontiRataosoitteetInner): boolean {
+  return !!r.ratanumero && r["alku-km"] != null && r["alku-m"] != null && r["loppu-km"] != null && r["loppu-m"] != null;
+}
+
 function getGeoJSON(data: ProjektiProjekti): string | null {
   const geometrycollection = data.geometrycollection?.geometries;
   const geometriaEiOleKeskipiste = (geometry: ProjektiProjektiLuontiMitattugeometriaGeometria): boolean =>
     !isEqual(geometry, data.keskipiste?.["geometria-wgs84"]);
   const muutGeometriat = geometrycollection?.filter(geometriaEiOleKeskipiste);
 
-  // Jos on muitakin geometrioita kuin keskipiste, suodatetaan keskipisteet pois
-  const geometries = muutGeometriat?.length ? muutGeometriat : geometrycollection;
+  let geometries: ProjektiProjektiLuontiMitattugeometriaGeometria[] | undefined;
 
-  // Jos geometrioita ei ole, palautetaan null
+  if ((data.ominaisuudet.vaihe as unknown as string) === "vaihe/vaihe12") {
+    // Rata-projekti: haetaan aina geometriat rataosoitteet-kentästä
+    const validRataosoitteet = (data.rataosoitteet ?? []).filter(isValidRataosoite);
+    if (data.rataosoitteet?.length && validRataosoitteet.length !== data.rataosoitteet.length) {
+      log.warn("Osa rataosoitteista puuttuu pakollisia kenttiä (ratanumero, alku-km, alku-m, loppu-km, loppu-m)");
+    }
+    geometries = validRataosoitteet
+      .map((r) => r["geometria-wgs84"] ?? r.geometria)
+      .filter((g): g is ProjektiProjektiLuontiMitattugeometriaGeometria => g != null);
+  } else if (muutGeometriat?.length) {
+    geometries = muutGeometriat;
+  } else {
+    geometries = geometrycollection;
+  }
+
   if (!geometries?.length) {
     return null;
   }
@@ -347,14 +365,7 @@ function getGeoJSON(data: ProjektiProjekti): string | null {
     geometries,
   };
 
-  const geoJSON = {
-    type: "Feature",
-    geometry,
-  };
-
-  const geoJsonString = JSON.stringify(geoJSON);
-
-  return geoJsonString;
+  return JSON.stringify({ type: "Feature", geometry });
 }
 
 export function adaptDokumenttiTyyppi(dokumenttiTyyppi: string): { dokumenttiTyyppi: string; kategoria: string } {
