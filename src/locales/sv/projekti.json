@@ -219,10 +219,11 @@
   },
   "mielipidelomake": {
     "jata_mielipide": "Lämna en åsikt",
-    "jata_mielipide_mennessa": "Åsikten om planen ska lämnas senast {{pvm}}.",
-    "mielipide_info": "Du kan lämna din åsikt om planen genom att fylla i blanketten nedan.",
+    "jata_mielipide_mennessa": "Åsikten om framställningen ska lämnas senast {{pvm}}.",
+    "mielipide_info": "Du kan lämna din åsikt om framställningen genom att fylla i blanketten nedan.",
     "lisatietoja_henkilotietojesi": "<p>Mer information om behandlingen av dina personuppgifter finns i <a>dataskyddsbeskrivningen</a>.</p>",
     "mielipiteen_lahettajan_tiedot": "Uppgifter om avsändaren av åsikten",
+    "yhteystiedot_vapaaehtoisia": "Det är frivilligt att lämna kontaktuppgifter.",
     "mielipide": "Åsikt",
     "ala_kirjoita": "Skriv eller bifoga inte dokument som innehåller personbeteckningar, hemadresser eller känsliga uppgifter, såsom hälsouppgifter, till åsikten.",
     "mielipiteen_liitteet": "Bilagor till åsikten",
@@ -230,6 +231,8 @@
     "kiitos_mielipiteesta": "Tack för din åsikt",
     "olemme_vastaanottaneet_mielipiteesi": "Vi har mottagit din åsikt och förmedlar den till registratorskontoret vid {{viranomainen}}.",
     "voit_antaa_mielipiteita": "Du kan lämna åsikter om planeringsprojektet fram till {{pvm}}.",
+    "mielipide_info_1": "Åsikten är ett fritt formulerat skriftligt ställningstagande till framställningen till den myndighet som ansvarar för utarbetandet av den. Svaret på åsikten ges i Transport- och kommunikationsverkets beslut om godkännande av framställningen.",
+    "mielipide_info_2": "Åsiktens textinnehåll kan utarbetas direkt på blanketten Åsikt i tjänsten Planering av statens trafikleder. Du kan också förbereda åsikten till exempel som en Word-fil på din egen dator och bifoga filen till blanketten Åsikt. Även andra bilagor kan läggas till åsikten.",
     "epaonnistui": "Det gick inte att skicka åsikten",
     "epaonnistui_viesti": "Du kan försöka skicka åsikten igen eller skicka den via e-post till {{viranomainen}} registratorskontor."
   },
