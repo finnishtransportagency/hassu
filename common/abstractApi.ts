@@ -20,6 +20,8 @@ import {
   LatausTiedot,
   LausuntoPyynnonTaydennysInput,
   LausuntoPyyntoInput,
+  LisaaMielipideMutationVariables,
+  MielipideInput,
   LisaaMuistutusMutationVariables,
   LisaaPalauteMutationVariables,
   ListaaKayttajatInput,
@@ -345,6 +347,11 @@ export const apiConfig: ApiConfig = {
     name: "lisaaMuistutus",
     operationType: OperationType.Mutation,
     graphql: mutations.lisaaMuistutus,
+  },
+  lisaaMielipide: {
+    name: "lisaaMielipide",
+    operationType: OperationType.Mutation,
+    graphql: mutations.lisaaMielipide,
   },
   listaaLisaAineisto: {
     name: "listaaLisaAineisto",
@@ -724,6 +731,13 @@ export abstract class AbstractApi {
       oid,
       muistutus,
     } as LisaaMuistutusMutationVariables);
+  }
+
+  async lisaaMielipide(oid: string, mielipide: MielipideInput): Promise<string> {
+    return await this.callAPI(apiConfig.lisaaMielipide, {
+      oid,
+      mielipide,
+    } as LisaaMielipideMutationVariables);
   }
 
   async asetaPalauteVastattu(oid: string, id: string, vastattu: boolean): Promise<string> {

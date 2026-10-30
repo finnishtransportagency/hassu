@@ -1,5 +1,13 @@
 // Contains code generated or recommended by Amazon Q
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  KuulutusJulkaisuTila,
+  NykyinenKayttaja,
+  ProjektiTyyppi,
+  TilasiirtymaTyyppi,
+  Vaihe,
+} from "hassu-common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -149,7 +157,8 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new IllegalAineistoStateError();
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
-    const skipKiinteistoRequirement = vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false;
+    const skipKiinteistoRequirement =
+      vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false || projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
     if (suomifiViestitEnabled && !skipKiinteistoRequirement) {
       if (!projekti.omistajahaku?.status || !(await omistajaDatabase.hasOmistajat(projekti.oid))) {
         const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
@@ -207,7 +216,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusjulkaisua ei ole
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, { checkAsianhallintaState: false });
     const isHyvaksymisPaatosPresent = !!apiProjekti.hyvaksymisPaatosVaiheJulkaisu;
     if (isHyvaksymisPaatosPresent) {
       throw new IllegalArgumentError(

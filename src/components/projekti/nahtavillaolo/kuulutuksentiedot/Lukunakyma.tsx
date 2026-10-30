@@ -1,4 +1,13 @@
-import { Kieli, KuulutusJulkaisuTila, KuulutusSaamePDF, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, Vaihe } from "@services/api";
+// Contains code generated or recommended by Amazon Q
+import {
+  Kieli,
+  KuulutusJulkaisuTila,
+  KuulutusSaamePDF,
+  NahtavillaoloPDF,
+  NahtavillaoloVaiheJulkaisu,
+  ProjektiTyyppi,
+  Vaihe,
+} from "@services/api";
 import React, { ReactElement } from "react";
 import replace from "lodash/replace";
 import { examineKuulutusPaiva } from "src/util/aloitusKuulutusUtil";
@@ -53,7 +62,9 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
   const { ensisijainenKieli, toissijainenKieli } = kielitiedot || {};
   const ensisijaisetPDFt = getPdft(ensisijainenKieli);
   const toissijaisetPDFt = getPdft(toissijainenKieli);
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const epaaktiivinen = projektiOnEpaaktiivinen(projekti);
+
   const ajansiirtoSallittu = isAjansiirtoSallittu(getPublicEnv("AJANSIIRTO_SALLITTU"));
 
   return (
@@ -76,13 +87,19 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         <div>
           <p className="vayla-label">
             {label({
-              label: "Muistutukset",
+              label: isToiminnallinen ? "Mielipiteet" : "Muistutukset",
               inputLanguage: Kieli.SUOMI,
               kielitiedot,
             })}
           </p>
           <PreWrapParagraph>
-            Kansalaisia pyydetään esittämään muistutukset viimeistään {formatDate(nahtavillaoloVaiheJulkaisu.muistutusoikeusPaattyyPaiva)}.
+            {isToiminnallinen
+              ? `Kansalaisia pyydetään esittämään mielipiteensä viimeistään ${formatDate(
+                  nahtavillaoloVaiheJulkaisu.mielipideoikeusPaattyyPaiva
+                )}.`
+              : `Kansalaisia pyydetään esittämään muistutukset viimeistään ${formatDate(
+                  nahtavillaoloVaiheJulkaisu.muistutusoikeusPaattyyPaiva
+                )}.`}
           </PreWrapParagraph>
         </div>
         <div>
@@ -237,6 +254,7 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
         oid={projekti.oid}
         uudelleenKuulutus={nahtavillaoloVaiheJulkaisu.uudelleenKuulutus}
         kuulutusPaiva={kuulutusPaiva}
+        projektiTyyppi={projekti.velho?.tyyppi}
       />
     </>
   );

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DBProjekti, DBVaylaUser } from "../../database/model";
 import * as API from "hassu-common/graphql/apiModel";
 import { ProjektiJulkinen, Status } from "hassu-common/graphql/apiModel";
@@ -51,7 +52,8 @@ class ProjektiAdapterJulkinen {
       throw new Error("adaptProjekti: dbProjekti.velho määrittelemättä");
     }
     const aloitusKuulutusJulkaisu = await adaptAloitusKuulutusJulkaisuJulkinen(dbProjekti, dbProjekti.aloitusKuulutusJulkaisut, kieli);
-    if (!aloitusKuulutusJulkaisu) {
+    const isToiminnallinen = dbProjekti.velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN;
+    if (!aloitusKuulutusJulkaisu && !isToiminnallinen) {
       return {
         __typename: "ProjektiJulkinen",
         oid: dbProjekti.oid,
@@ -101,7 +103,7 @@ class ProjektiAdapterJulkinen {
       __typename: "ProjektiJulkinen",
       oid: dbProjekti.oid,
       lyhytOsoite: dbProjekti.lyhytOsoite,
-      kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot),
+      kielitiedot: adaptKielitiedotByAddingTypename(dbProjekti.kielitiedot, isToiminnallinen),
       velho: adaptVelhoJulkinen(dbProjekti.velho),
       euRahoitus: dbProjekti.euRahoitus,
       euRahoitusLogot,

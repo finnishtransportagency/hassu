@@ -157,6 +157,10 @@ class Parameters {
     return this.getParamOrVariable("outputs/AsianhallintaSQSUrl", "ASIANHALLINTA_SQS_URL");
   }
 
+  async getEmailSQSUrl() {
+    return this.getParamOrVariable("outputs/EmailSQSUrl", "EMAIL_SQS_URL");
+  }
+
   async getKiinteistoSQSUrl() {
     return this.getParameter("outputs/KiinteistoSQSUrl");
   }

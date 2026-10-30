@@ -237,7 +237,10 @@ type Projekti implements IProjekti {
   tallennettu: Boolean
   euRahoitus: Boolean
   euRahoitusLogot: LokalisoituTeksti
+  "Ei TOIMINNALLINEN-projekteille. Katso mielipideMaara."
   muistutusMaara: Int
+  "Vain TOIMINNALLINEN-projekteille. Katso muistutusMaara."
+  mielipideMaara: Int
   vahainenMenettely: Boolean
   kielitiedot: Kielitiedot
   paivitetty: String
@@ -394,7 +397,14 @@ type NahtavillaoloVaihe {
   aineistopaketti: String
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTeksti
   kuulutusYhteystiedot: StandardiYhteystiedot
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajat
@@ -430,7 +440,14 @@ type NahtavillaoloVaiheJulkaisu {
   aineistopaketti: String
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTeksti
   velho: Velho!
   kielitiedot: Kielitiedot
@@ -604,7 +621,14 @@ type NahtavillaoloVaiheJulkaisuJulkinen {
   aineistoNahtavilla: [Aineisto!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTeksti
   velho: VelhoJulkinen!
   kielitiedot: Kielitiedot
@@ -769,6 +793,10 @@ enum AineistoTila {
   Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
   """
   POISTETTU
+  """
+  Aineistoa ei loydy, esim. se on poistettu Velhosta ennen kuin se ehdittiin tuoda
+  """
+  EI_LOYDY
 }
 
 enum LadattuTiedostoTila {

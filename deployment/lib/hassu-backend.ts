@@ -12,6 +12,7 @@ import {
 import * as appsync from "aws-cdk-lib/aws-appsync";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Table } from "aws-cdk-lib/aws-dynamodb";
+import * as ddb from "aws-cdk-lib/aws-dynamodb";
 import { Queue, QueueEncryption } from "aws-cdk-lib/aws-sqs";
 import { Config } from "./config";
 import { ApiConfig, apiConfig, OperationConfig, OperationType } from "../../common/abstractApi";
@@ -71,6 +72,7 @@ export const backendStackName = "hassu-backend-" + Config.env;
 export class HassuBackendStack extends Stack {
   private readonly props: HassuBackendStackProps;
   private readonly layers: lambda.ILayerVersion[];
+  private readonly mielipideTable: ddb.ITable;
   public eventQueue: Queue;
   public asianhallintaQueue: Queue;
   private config: Config;
@@ -87,6 +89,8 @@ export class HassuBackendStack extends Stack {
       tags: Config.tags,
     });
     this.props = props;
+    const mielipideTableName = ssm.StringParameter.valueForStringParameter(this, "/" + Config.env + "/outputs/ProjektiMielipideTableName");
+    this.mielipideTable = ddb.Table.fromTableName(this, "ProjektiMielipideTable", mielipideTableName);
 
     this.layers = [
       new lambda.LayerVersion(this, "BaseLayer-" + Config.env, {
@@ -138,7 +142,8 @@ export class HassuBackendStack extends Stack {
       pdfGeneratorLambda,
       true,
       suomifiLambda,
-      vpc
+      vpc,
+      emailSQS
     );
     yllapitoBackendLambda.addToRolePolicy(
       new PolicyStatement({ effect: Effect.ALLOW, actions: ["lambda:InvokeFunction"], resources: [asianhallintaLambda.functionArn] })
@@ -157,7 +162,8 @@ export class HassuBackendStack extends Stack {
       pdfGeneratorLambda,
       false,
       suomifiLambda,
-      vpc
+      vpc,
+      emailSQS
     );
     this.attachDatabaseToLambda(julkinenBackendLambda, false);
     HassuBackendStack.mapApiResolversToLambda(api, julkinenBackendLambda, false);
@@ -487,7 +493,8 @@ export class HassuBackendStack extends Stack {
     pdfGeneratorLambda: NodejsFunction,
     isYllapitoBackend: boolean,
     suomifiLambda: NodejsFunction,
-    vpc: IVpc
+    vpc: IVpc,
+    emailSQS: Queue
   ) {
     let define;
     if (Config.isDeveloperEnvironment() && isYllapitoBackend) {
@@ -516,6 +523,9 @@ export class HassuBackendStack extends Stack {
     } else {
       backendName = "-julkinen";
       entry = `${__dirname}/../../backend/src/apiHandlerJulkinen.ts`;
+      backendEnvironmentVariables = {
+        EMAIL_SQS_URL: emailSQS.queueUrl,
+      };
     }
     const backendLambda = new NodejsFunction(this, "API" + backendName, {
       functionName: "hassu-backend" + backendName + "-" + Config.env,
@@ -605,6 +615,7 @@ export class HassuBackendStack extends Stack {
       backendLambda.addToRolePolicy(allowUusiaPalautteitaUpdate);
 
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/muistutukset/*");
+      this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/mielipiteet/*");
       this.props.yllapitoBucket.grantReadWrite(backendLambda, "*/palautteet/*");
       this.props.yllapitoBucket.grantRead(backendLambda, "*/aloituskuulutus/*"); // Hyväksymisesitystä varten lukuoikeus
       this.props.yllapitoBucket.grantRead(backendLambda, "*/suunnitteluvaihe/*"); // Hyväksymisesitystä varten lukuoikeus
@@ -615,6 +626,7 @@ export class HassuBackendStack extends Stack {
       this.props.yllapitoBucket.grantRead(backendLambda, "*/lausuntopyynnon_taydennys/*"); // Lausuntopyynnön täydennyksiä varten lukuoikeus
       this.props.publicBucket.grantRead(backendLambda);
       this.grantInternalBucket(backendLambda, "cache/bankHolidays.json");
+      emailSQS.grantSendMessages(backendLambda);
     }
     this.props.uploadBucket.grantPut(backendLambda);
     this.props.uploadBucket.grantReadWrite(backendLambda);
@@ -1028,9 +1040,9 @@ export class HassuBackendStack extends Stack {
       runtime: lambdaRuntime,
       entry: `${__dirname}/../../backend/src/email/emailSQSHandler.ts`,
       handler: "handleEvent",
-      memorySize: 512,
+      memorySize: 1024, // Nodemailer puskuroi liitteet muistiin MIME-muodossa ennen lähetystä, useille 25 MB liitteille otettu varmuudeksi 2 * 512
       reservedConcurrentExecutions: 1,
-      timeout: Duration.seconds(60),
+      timeout: Duration.minutes(5), // Useita 25 MB liitteitä sisältävän viestin lähetys turvapostiin voi kestää useita minuutteja
       bundling: {
         minify: true,
         sourceMap: true,
@@ -1045,6 +1057,8 @@ export class HassuBackendStack extends Stack {
       logRetention: this.getLogRetention(),
     });
     this.addPermissionsForMonitoring(importer);
+    importer.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
+    this.props.yllapitoBucket.grantRead(importer, "*/mielipiteet/*");
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
     importer.addEventSource(eventSource);
@@ -1077,6 +1091,7 @@ export class HassuBackendStack extends Stack {
     const lyhytOsoiteTable = this.props.lyhytOsoiteTable;
     const tiedoteTable = this.props.tiedoteTable;
     const nahtavillaoloVaiheJulkaisuTable = this.props.nahtavillaoloVaiheJulkaisuTable;
+    const mielipideTable = this.mielipideTable;
     if (isYllapitoBackend) {
       projektiTable.grantFullAccess(backendFn);
       projektiDataTable.grantFullAccess(backendFn);
@@ -1088,13 +1103,16 @@ export class HassuBackendStack extends Stack {
       backendFn.addEnvironment("TABLE_KIINTEISTONOMISTAJA", this.props.kiinteistonomistajaTable.tableName);
       this.props.projektiMuistuttajaTable.grantFullAccess(backendFn);
       nahtavillaoloVaiheJulkaisuTable.grantFullAccess(backendFn);
+      mielipideTable.grantFullAccess(backendFn);
     } else {
       projektiTable.grantReadData(backendFn);
       projektiDataTable.grantReadData(backendFn);
       nahtavillaoloVaiheJulkaisuTable.grantReadData(backendFn);
       this.props.projektiMuistuttajaTable.grantWriteData(backendFn);
+      mielipideTable.grantWriteData(backendFn);
     }
     backendFn.addEnvironment("TABLE_PROJEKTI_MUISTUTTAJA", this.props.projektiMuistuttajaTable.tableName);
+    backendFn.addEnvironment("TABLE_PROJEKTI_MIELIPIDE", mielipideTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI", projektiTable.tableName);
     backendFn.addEnvironment("TABLE_PROJEKTI_DATA", projektiDataTable.tableName);
     backendFn.addEnvironment("TABLE_NAHTAVILLAOLOVAIHEJULKAISU", nahtavillaoloVaiheJulkaisuTable.tableName);

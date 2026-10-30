@@ -79,6 +79,7 @@
     "kuulutus_suunnitelman_hyvaksymisesta": "Kuulutus suunnitelman hyväksymisestä",
     "kuulutus_hyvaksymispaatoksen_jatkamisesta": "Kuulutus hyväksymispäätöksen jatkamisesta",
     "kuulutus_suunnitelman_nahtaville_asettamisesta": "Kuulutus suunnitelman nähtäville asettamisesta",
+    "kuulutus_esityksen_nahtaville_asettamisesta": "Kuulutus esityksen nähtäville asettamisesta",
     "kuulutus_suunnitelman_hyvaksymispaatoksesta": "Kuulutus suunnitelman hyväksymispäätöksestä",
     "kuulutus_jatkopaatoksesta": "Kuulutus jatkopäätöksestä",
     "kuulutus_suunnitelman_hyvaksymispaatoksen_voimassaoloajan_pidentamisesta": "Kuulutus suunnitelman hyväksymispäätöksen voimassaoloajan pidentämisestä",
@@ -86,6 +87,7 @@
     "hankkeen_sijainti": "Hankkeen sijainti",
     "suunnitelman_tyyppi": "Suunnitelman tyyppi",
     "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
+    "hankkeen_kuvaus": "Hankkeen kuvaus",
     "asianosaisen_oikeudet": "Asianosaisen oikeudet",
     "yhteystiedot": "Yhteystiedot",
     "lisatietoja_antavat": "Lisätietoja antavat",
@@ -105,9 +107,11 @@
     "alkuperainenPaatos": "Alkuperäinen hyväksymispäätös ja muu liittyvä aineisto",
     "nahtavillaolo": {
       "suunnitteluhankkeen_kuvaus": "Suunnitteluhankkeen kuvaus",
+      "hankkeen_kuvaus": "Hankkeen kuvaus",
       "asianosaisen_oikeudet": "Asianosaisen oikeudet",
       "nahtavilla_oleva_aineisto": "Nähtävillä oleva aineisto",
       "muistutuksen_jattaminen": "Muistutuksen jättäminen",
+      "mielipiteen_jattaminen": "Mielipiteen jättäminen",
       "yhteystiedot": "Yhteystiedot"
     },
     "paatos_nahtavilla_oleva_aineisto": "Päätöksen liitteenä olevat aineistot",
@@ -212,6 +216,22 @@
     "70YS": "Y441 Kuulutus hyväksymispäätöksen voimassaolon jatkamisesta",
     "71YS": "Y441-1 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta kunnalle",
     "72YS": "Y441-3 Ilmoitus hyväksymispäätöksen voimassaolon jatkamisesta maakuntaliitolle"
+  },
+  "mielipidelomake": {
+    "jata_mielipide": "Jätä mielipide",
+    "jata_mielipide_mennessa": "Mielipide suunnitelmasta tulee jättää {{pvm}} mennessä.",
+    "mielipide_info": "Voit jättää mielipiteesi suunnitelmasta täyttämällä alla olevan lomakkeen.",
+    "lisatietoja_henkilotietojesi": "<p>Lisätietoja henkilötietojesi käsittelystä löydät <a>tietosuojaselosteesta</a>.</p>",
+    "mielipiteen_lahettajan_tiedot": "Mielipiteen lähettäjän tiedot",
+    "mielipide": "Mielipide",
+    "ala_kirjoita": "Älä kirjoita tai liitä mielipiteeseen asiakirjoja, joissa on henkilötunnuksia, kotiosoitteita tai arkaluonteisia tietoja, kuten terveystietoja.",
+    "mielipiteen_liitteet": "Mielipiteen liitteet",
+    "tuetut_tiedostomuodot_ovat": "Tuetut tiedostomuodot ovat pdf, jpg, png, doc, docx ja txt. Yhden tiedoston suurin sallittu koko on 25 Mt.",
+    "kiitos_mielipiteesta": "Kiitos mielipiteestä",
+    "olemme_vastaanottaneet_mielipiteesi": "Olemme vastaanottaneet mielipiteesi onnistuneesti ja se välitetään {{viranomainen}} kirjaamoon.",
+    "voit_antaa_mielipiteita": "Voit antaa mielipiteitä suunnitteluhankkeesta {{pvm}} asti.",
+    "epaonnistui": "Mielipiteen jättäminen epäonnistui",
+    "epaonnistui_viesti": "Voit kokeilla lähettää mielipiteen uudelleen tai lähettää se sähköpostitse {{viranomainen}} kirjaamoon."
   },
   "muistutuslomake": {
     "viranomainen_tarvitsee": "{{viranomainen}} tarvitsee henkilötietojasi muistutuksen käsittelyä varten. Saamme henkilötietosi Digi- ja väestötietovirastolta.  Luovutamme tietosi Liikenne- ja viestintävirastolle, jonka tehtävä on hyväksyä suunnitelma.",
@@ -346,6 +366,7 @@
     },
     "kuulutus_nahtavillaolosta": {
       "otsikko": "Kuulutus suunnitelman nähtäville asettamisesta",
+      "otsikko_toiminnallinen": "Kuulutus esityksen nähtäville asettamisesta",
       "otsikko2": "Ilmoitus suunnitelman nähtäville asettamisesta",
       "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: *{{nimi}}*.",
       "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: *{{nimi}}*. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut {{osapuoli}} yhteistyössä {{tilaajaGenetiivi}} kanssa.",

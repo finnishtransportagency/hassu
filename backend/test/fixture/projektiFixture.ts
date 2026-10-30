@@ -375,7 +375,8 @@ export class ProjektiFixture {
             },
             RUOTSI: {
               aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+                "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
@@ -584,7 +585,8 @@ export class ProjektiFixture {
             },
             RUOTSI: {
               aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+                "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
@@ -818,13 +820,14 @@ export class ProjektiFixture {
           SUOMI: {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+              "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
             aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+              "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
           },
         },
@@ -998,13 +1001,14 @@ export class ProjektiFixture {
           SUOMI: {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+              "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
           RUOTSI: {
             aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+              "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
           },
         },
@@ -1333,6 +1337,30 @@ export class ProjektiFixture {
     return cloneDeep(this.dbProjekti3);
   }
 
+  // TOIMINNALLINEN projekti: no aloituskuulutus or suunnittelu phase, starts directly from nahtavillaolo
+  dbProjektiToiminnallinen(): DBProjekti {
+    const { aloitusKuulutus: _ak, aloitusKuulutusJulkaisut: _akj, vuorovaikutusKierros: _vk, vuorovaikutusKierrosJulkaisut: _vkj, ...rest } = cloneDeep(
+      this.dbProjekti3
+    );
+    return {
+      ...rest,
+      velho: {
+        ...rest.velho,
+        nimi: rest.velho!.nimi,
+        tyyppi: ProjektiTyyppi.TOIMINNALLINEN,
+      },
+      nahtavillaoloVaihe: {
+        ...rest.nahtavillaoloVaihe!,
+        mielipideoikeusPaattyyPaiva: "2022-06-08",
+      },
+      nahtavillaoloVaiheJulkaisut: rest.nahtavillaoloVaiheJulkaisut?.map((j) => ({
+        ...j,
+        velho: { ...j.velho, tyyppi: ProjektiTyyppi.TOIMINNALLINEN },
+        mielipideoikeusPaattyyPaiva: "2042-07-21T11:54",
+      })),
+    };
+  }
+
   dbProjektiHyvaksymisMenettelyssa(): DBProjekti {
     return {
       kayttoOikeudet: [
@@ -1368,7 +1396,8 @@ export class ProjektiFixture {
             },
             RUOTSI: {
               aloituskuulutusIlmoitusPDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath: "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
+              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+                "/aloituskuulutus/1/MEDDELANDE OM KUNGORELSE FRAN BEHORIG MYNDIGHET Marikas testprojekt.pdf",
               aloituskuulutusPDFPath: "/aloituskuulutus/1/KUNGORELSE OM INLEDANDET AV PLANERINGEN Marikas testprojekt.pdf",
             },
           },
@@ -2310,8 +2339,8 @@ export class ProjektiFixture {
           SUOMI: {
             aloituskuulutusIlmoitusPDFPath:
               "/aloituskuulutus/1/ILMOITUS TOIMIVALTAISEN VIRANOMAISEN KUULUTUKSESTA Marikan testiprojekti.pdf",
-              aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
-                "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
+            aloituskuulutusIlmoitusKiinteistonOmistajallePDFPath:
+              "/aloituskuulutus/1/Ilmoitus henkilotietojen kasittelysta Marikan testiprojekti.pdf",
             aloituskuulutusPDFPath: "/aloituskuulutus/1/KUULUTUS SUUNNITTELUN ALOITTAMISESTA Marikan testiprojekti.pdf",
           },
         },

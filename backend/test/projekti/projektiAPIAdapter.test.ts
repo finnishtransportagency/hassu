@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import * as sinon from "sinon";
@@ -6,9 +7,8 @@ import { UserFixture } from "../fixture/userFixture";
 import { AloitusKuulutus, DBProjekti, HyvaksymisPaatosVaihe, NahtavillaoloVaihe, VuorovaikutusKierros } from "../../src/database/model";
 import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
-import { Kieli, Projekti, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
+import { Kieli, Projekti, ProjektiTyyppi, Status, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../src/util/assertions";
-
 import { expect } from "chai";
 import { parameters } from "../../src/aws/parameters";
 
@@ -115,6 +115,25 @@ describe("projektiHandler", () => {
     userFixture.loginAs(UserFixture.mattiMeikalainen);
     const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
     expect(adaptoituProjekti.nahtavillaoloVaihe?.kuulutusYhteystiedot?.yhteysHenkilot?.length).to.eql(2);
+  });
+
+  it("loadProjektiYllapito should not throw when toiminnallinen projekti has no kielitiedot", async () => {
+    // Regression test: adaptProjekti threw "Kielitiedot puuttuu!" for toiminnallinen projekti
+    // because the early return guarded by !aloitusKuulutusJulkaisu was bypassed.
+    projekti = {
+      oid: "1.2.246.578.5.1.2978288874.2711575506",
+      versio: 1,
+      kayttoOikeudet: [],
+      tallennettu: true,
+      velho: {
+        nimi: "Testi toiminnallinen projekti",
+        tyyppi: ProjektiTyyppi.TOIMINNALLINEN,
+      },
+    };
+    loadProjektiByOid.resolves(projekti);
+    userFixture.loginAs(UserFixture.mattiMeikalainen);
+    const adaptoituProjekti: Projekti = (await loadProjektiYllapito(projekti.oid)) as Projekti;
+    expect(adaptoituProjekti.julkinenStatus).to.eql(Status.EI_JULKAISTU);
   });
 
   it("loadProjekti should filter out references to removed users from hyvaäksymispäätösVaihe", async () => {

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import Stepper from "@mui/material/Stepper";
@@ -9,7 +10,7 @@ import StepConnector, { stepConnectorClasses } from "@mui/material/StepConnector
 import { StepIconProps } from "@mui/material/StepIcon";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import HassuLink from "@components/HassuLink";
-import { Status } from "@services/api";
+import { ProjektiTyyppi, Status } from "@services/api";
 import { UrlObject } from "url";
 import classNames from "classnames";
 import { focusStyle } from "@components/layout/HassuMuiThemeProvider";
@@ -20,6 +21,7 @@ interface Props {
   vertical?: true;
   projektiStatus: Status | null | undefined;
   vahainenMenettely?: boolean | null;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 const HassuStep = styled(Step)<StepProps>({
@@ -164,6 +166,7 @@ export default function ProjektiJulkinenStepper({
   vertical,
   projektiStatus,
   vahainenMenettely,
+  projektiTyyppi,
 }: Props): ReactElement {
   const { t } = useTranslation("projekti");
 
@@ -197,11 +200,17 @@ export default function ProjektiJulkinenStepper({
         steps: [Status.HYVAKSYTTY, Status.JATKOPAATOS_1, Status.JATKOPAATOS_2],
       },
     ];
+    if (projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+      return allSteps.filter((s) =>
+        // Toiminnallisen luokan muutoksessa ei ole jatkopäätösvaiheita Status.JATKOPAATOS_1, Status.JATKOPAATOS_2
+        s.steps.some((st) => [Status.NAHTAVILLAOLO, Status.HYVAKSYMISMENETTELYSSA, Status.HYVAKSYTTY].includes(st))
+      );
+    }
     if (vahainenMenettely) {
       allSteps.splice(1, 1);
     }
     return allSteps;
-  }, [oid, paatosLink, t, vahainenMenettely]);
+  }, [oid, paatosLink, projektiTyyppi, t, vahainenMenettely]);
 
   const activeStepIndex: number = useMemo(() => {
     if (!activeStep) return -1;

@@ -1,18 +1,20 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useEffect, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
 import KeyValueTable, { KeyValueData } from "@components/KeyValueTable";
 import useTranslation from "next-translate/useTranslation";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
-import { formatDate } from "hassu-common/util/dateUtils";
+import { formatDate } from "common/util/dateUtils";
 import ContentSpacer from "@components/layout/ContentSpacer";
-import { Kieli, KuulutusJulkaisuTila, Status } from "@services/api";
+import { Kieli, KuulutusJulkaisuTila, ProjektiTyyppi, Status } from "@services/api";
 import JataPalautettaNappi from "@components/button/JataPalautettaNappi";
 import Notification, { NotificationType } from "@components/notification/Notification";
 import MuistutusLomake from "@components/projekti/kansalaisnakyma/MuistutusLomake";
+import MielipideLomake from "@components/projekti/kansalaisnakyma/MielipideLomake";
 import KansalaisenAineistoNakyma from "@components/projekti/common/KansalaisenAineistoNakyma";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import { kuntametadata } from "hassu-common/kuntametadata";
+import { kuntametadata } from "common/kuntametadata";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { renderTextAsHTML } from "../../../util/renderTextAsHTML";
 import { Yhteystietokortti } from "./suunnittelu";
@@ -49,6 +51,7 @@ export default function Nahtavillaolo(): ReactElement {
 
   const velho = projekti?.velho;
   const [muistutusInfoOpen, setMuistutusInfoOpen] = useState(false);
+  const [mielipideInfoOpen, setMielipideInfoOpen] = useState(false);
 
   const kieli = useKansalaiskieli();
   const { data: kayttaja } = useSuomifiUser();
@@ -78,6 +81,7 @@ export default function Nahtavillaolo(): ReactElement {
     { header: t(`ui-otsikot.suunnitelman_tyyppi`), data: velho?.tyyppi && t(`projekti-tyyppi.${velho?.tyyppi}`) },
   ];
 
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const migroitu = kuulutus.tila == KuulutusJulkaisuTila.MIGROITU;
 
   const isProjektiInNahtavillaoloVaihe = projekti.status == Status.NAHTAVILLAOLO;
@@ -92,7 +96,9 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout
       suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
       selectedStep={Status.NAHTAVILLAOLO}
-      title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
+      title={t(
+        isToiminnallinen ? `asiakirja.kuulutus_nahtavillaolosta.otsikko_toiminnallinen` : `asiakirja.kuulutus_nahtavillaolosta.otsikko`
+      )}
     >
       <Section noDivider>
         <p>{t("projekti:suunnitelma_on_tuotu_toisesta_jarjestelmasta")}</p>
@@ -108,7 +114,9 @@ export default function Nahtavillaolo(): ReactElement {
     <ProjektiJulkinenPageLayout
       selectedStep={Status.NAHTAVILLAOLO}
       suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
-      title={t("asiakirja.kuulutus_nahtavillaolosta.otsikko")}
+      title={t(
+        isToiminnallinen ? `asiakirja.kuulutus_nahtavillaolosta.otsikko_toiminnallinen` : `asiakirja.kuulutus_nahtavillaolosta.otsikko`
+      )}
       saameContent={
         <SaameContent
           kielitiedot={projekti.kielitiedot}
@@ -134,7 +142,9 @@ export default function Nahtavillaolo(): ReactElement {
         </ContentSpacer>
         <LiittyvatSuunnitelmat suunnitelmaJaettu={kuulutus.suunnitelmaJaettu} />
         <ContentSpacer>
-          <H3 variant="h4">{t(`ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}</H3>
+          <H3 variant="h4">
+            {t(isToiminnallinen ? `ui-otsikot.nahtavillaolo.hankkeen_kuvaus` : `ui-otsikot.nahtavillaolo.suunnitteluhankkeen_kuvaus`)}
+          </H3>
           <PreWrapParagraph>{kuulutus.hankkeenKuvaus?.[kieli]}</PreWrapParagraph>
         </ContentSpacer>
         <ContentSpacer>
@@ -174,49 +184,84 @@ export default function Nahtavillaolo(): ReactElement {
       </Section>
       {isProjektiInNahtavillaoloVaihe && (
         <ContentSpacer>
-          <H3 variant="h4">
-            {t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}{" "}
-            {!muistutusInfoOpen && (
-              <FontAwesomeIcon
-                color="rgb(0, 100, 175)"
-                size="lg"
-                icon="info-circle"
-                type={NotificationType.INFO_GRAY}
-                cursor="pointer"
-                onClick={() => setMuistutusInfoOpen(true)}
-                aria-label={t("muistutuslomake.lue_lisaa")}
-              />
-            )}
-          </H3>
-          <p>
-            <strong>
-              {t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}
-              {kayttaja?.suomifiEnabled ? " " + t("muistutuslomake.jata_vahva") : ""}
-            </strong>
-          </p>
-
-          <Notification
-            type={NotificationType.INFO_GRAY}
-            className="mt-4"
-            open={muistutusInfoOpen}
-            onClose={() => setMuistutusInfoOpen(false)}
-            closable
-          >
-            <p>{t("muistutuslomake.muistutus_info_1")}</p>
-            <br />
-            <p>{t("muistutuslomake.muistutus_info_2")}</p>
-          </Notification>
-          {!!authUrl && !!kayttaja && (
+          {velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN ? (
             <>
-              {kayttaja.tunnistautunut || kayttaja.suomifiEnabled === false ? (
-                <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
-              ) : (
-                <JataPalautettaNappi
-                  teksti={t("muistutuslomake.jata_muistutus")}
-                  onClick={() => {
-                    router.push(authUrl);
-                  }}
-                />
+              <H3 variant="h4">
+                {t(`ui-otsikot.nahtavillaolo.mielipiteen_jattaminen`)}{" "}
+                {!mielipideInfoOpen && (
+                  <FontAwesomeIcon
+                    color="rgb(0, 100, 175)"
+                    size="lg"
+                    icon="info-circle"
+                    type={NotificationType.INFO_GRAY}
+                    cursor="pointer"
+                    onClick={() => setMielipideInfoOpen(true)}
+                    aria-label={t("muistutuslomake.lue_lisaa")}
+                  />
+                )}
+              </H3>
+              <p>
+                <strong>{t("mielipidelomake.jata_mielipide_mennessa", { pvm: formatDate(kuulutus.mielipideoikeusPaattyyPaiva) })}</strong>
+              </p>
+              <Notification
+                type={NotificationType.INFO_GRAY}
+                className="mt-4"
+                open={mielipideInfoOpen}
+                onClose={() => setMielipideInfoOpen(false)}
+                closable
+              >
+                <p>{t("muistutuslomake.muistutus_info_1")}</p>
+                <br />
+                <p>{t("muistutuslomake.muistutus_info_2")}</p>
+              </Notification>
+              <MielipideLomake projekti={projekti} mielipideoikeusPaattyyPaiva={kuulutus.mielipideoikeusPaattyyPaiva} />
+            </>
+          ) : (
+            <>
+              <H3 variant="h4">
+                {t(`ui-otsikot.nahtavillaolo.muistutuksen_jattaminen`)}{" "}
+                {!muistutusInfoOpen && (
+                  <FontAwesomeIcon
+                    color="rgb(0, 100, 175)"
+                    size="lg"
+                    icon="info-circle"
+                    type={NotificationType.INFO_GRAY}
+                    cursor="pointer"
+                    onClick={() => setMuistutusInfoOpen(true)}
+                    aria-label={t("muistutuslomake.lue_lisaa")}
+                  />
+                )}
+              </H3>
+              <p>
+                <strong>
+                  {t("muistutuslomake.jata_muistutus_mennessa", { pvm: formatDate(kuulutus.muistutusoikeusPaattyyPaiva) })}
+                  {kayttaja?.suomifiEnabled ? " " + t("muistutuslomake.jata_vahva") : ""}
+                </strong>
+              </p>
+              <Notification
+                type={NotificationType.INFO_GRAY}
+                className="mt-4"
+                open={muistutusInfoOpen}
+                onClose={() => setMuistutusInfoOpen(false)}
+                closable
+              >
+                <p>{t("muistutuslomake.muistutus_info_1")}</p>
+                <br />
+                <p>{t("muistutuslomake.muistutus_info_2")}</p>
+              </Notification>
+              {!!authUrl && !!kayttaja && (
+                <>
+                  {kayttaja.tunnistautunut || kayttaja.suomifiEnabled === false ? (
+                    <MuistutusLomake nahtavillaolo={kuulutus} projekti={projekti} kayttaja={kayttaja} />
+                  ) : (
+                    <JataPalautettaNappi
+                      teksti={t("muistutuslomake.jata_muistutus")}
+                      onClick={() => {
+                        router.push(authUrl);
+                      }}
+                    />
+                  )}
+                </>
               )}
             </>
           )}

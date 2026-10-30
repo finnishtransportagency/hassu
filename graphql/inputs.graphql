@@ -259,7 +259,14 @@ input NahtavillaoloVaiheInput {
   aineistoNahtavilla: [AineistoInput!]
   kuulutusPaiva: String
   kuulutusVaihePaattyyPaiva: String
+  """
+  Ei TOIMINNALLINEN-projekteille. Katso mielipideoikeusPaattyyPaiva.
+  """
   muistutusoikeusPaattyyPaiva: String
+  """
+  Vain TOIMINNALLINEN-projekteille. Katso muistutusoikeusPaattyyPaiva.
+  """
+  mielipideoikeusPaattyyPaiva: String
   hankkeenKuvaus: LokalisoituTekstiInput
   kuulutusYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
@@ -529,6 +536,19 @@ input MuistutusInput {
   liitteet: [String!]!
   puhelinnumero: String
   kiinteistotunnus: String
+}
+
+input MielipideInput {
+  mielipide: String!
+  liitteet: [String!]
+  etunimi: String
+  sukunimi: String
+  lahiosoite: String
+  postinumero: String
+  postitoimipaikka: String
+  maa: String
+  sahkoposti: String
+  puhelinnumero: String
 }
 
 input ListaaLisaAineistoInput {

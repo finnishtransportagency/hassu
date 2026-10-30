@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { KirjaamoOsoite, MuokkausTila, TallennaProjektiInput } from "@services/api";
+import { KirjaamoOsoite, MuokkausTila, ProjektiTyyppi, TallennaProjektiInput } from "@services/api";
 import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm, UseFormProps } from "react-hook-form";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -54,6 +54,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         kuulutusPaiva: projekti?.nahtavillaoloVaihe?.kuulutusPaiva || null,
         kuulutusVaihePaattyyPaiva: projekti?.nahtavillaoloVaihe?.kuulutusVaihePaattyyPaiva || null,
         muistutusoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.muistutusoikeusPaattyyPaiva || null,
+        mielipideoikeusPaattyyPaiva: projekti?.nahtavillaoloVaihe?.mielipideoikeusPaattyyPaiva || null,
         hankkeenKuvaus: getDefaultValuesForLokalisoituText(
           projekti.kielitiedot,
           projekti.nahtavillaoloVaihe?.hankkeenKuvaus ??
@@ -121,7 +122,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
         <>
           <FormProvider {...useFormReturn}>
             <form>
-              <KuulutusJaJulkaisuPaiva />
+              <KuulutusJaJulkaisuPaiva isToiminnallinen={projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN} />
               <SelitteetUudelleenkuulutukselle
                 disabled={!voiMuokata}
                 kielitiedot={projekti.kielitiedot}
@@ -136,6 +137,7 @@ function KuulutuksenTiedotForm({ projekti, kirjaamoOsoitteet }: KuulutuksenTiedo
                 oid={projekti.oid}
                 omistajahakuStatus={projekti.omistajahaku?.status}
                 hasOmistajat={projekti.omistajahaku?.hasOmistajat}
+                projektiTyyppi={projekti.velho?.tyyppi}
               />
               {pdfFormRef.current?.esikatselePdf && (
                 <KuulutuksenJaIlmoituksenEsikatselu esikatselePdf={pdfFormRef.current?.esikatselePdf} />

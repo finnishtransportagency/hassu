@@ -1,6 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import React, { ReactElement } from "react";
-import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType, Status, UudelleenKuulutus } from "@services/api";
+import { KuulutusJulkaisuTila, IlmoituksenVastaanottajat as IlmoituksenVastaanottajatType, ProjektiTyyppi, Status, UudelleenKuulutus } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import IlmoituksenVastaanottajatCommon from "./IlmoituksenVastaanottajatLukutilaCommon";
@@ -19,6 +19,7 @@ interface Props {
   uudelleenKuulutus?: UudelleenKuulutus | null;
   kuulutusPaiva?: string | null;
   paatosTyyppi?: PaatosTyyppi;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 interface InfoTextProps {
@@ -92,6 +93,7 @@ export default function IlmoituksenVastaanottajat({
   uudelleenKuulutus,
   kuulutusPaiva,
   paatosTyyppi,
+  projektiTyyppi,
 }: Readonly<Props>): ReactElement {
   return (
     <Section>
@@ -108,6 +110,7 @@ export default function IlmoituksenVastaanottajat({
           uudelleenKuulutus={uudelleenKuulutus}
           kuulutusPaiva={kuulutusPaiva}
           julkaisunTila={julkaisunTila}
+          projektiTyyppi={projektiTyyppi}
         />
       )}
     </Section>

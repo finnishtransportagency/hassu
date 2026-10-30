@@ -10,16 +10,10 @@ import { Kayttajas } from "../../../src/personSearch/kayttajas";
 import { validateTallennaProjekti } from "../../../src/projekti/validator/projektiValidator";
 import { validateHasAccessToEditKasittelyntilaFields } from "../../../src/projekti/validator/validateKasittelyntila";
 import { projektiAdapter } from "../../../src/projekti/adapter/projektiAdapter";
-import { DBProjekti } from "../../../src/database/model";
-import { ProjektiTyyppi, Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
+import { Status, TallennaProjektiInput } from "hassu-common/graphql/apiModel";
 
 import { expect } from "chai";
 import { parameters } from "../../../src/aws/parameters";
-
-// Helper for overriding projekti type in tests without modifying the original fixture
-function withTyyppi(projekti: DBProjekti, tyyppi: ProjektiTyyppi): DBProjekti {
-  return { ...projekti, velho: { ...projekti.velho, nimi: projekti.velho?.nimi ?? "", tyyppi } };
-}
 
 const ELY_UID = "A1";
 const VAYLA_UID = "A2";
@@ -214,7 +208,7 @@ describe("kasittelyntilaValidator", () => {
   });
 
   it("Admin ei voi lisätä ensimmäistä jatkopäätöstä TOIMINNALLINEN-projektille", async () => {
-    const projekti = withTyyppi(fixture.dbProjekti4(), ProjektiTyyppi.TOIMINNALLINEN);
+    const projekti = fixture.dbProjektiToiminnallinen();
     userFixture.loginAs(UserFixture.hassuAdmin);
     await expect(
       validateTallennaProjekti(projekti, {
@@ -226,7 +220,7 @@ describe("kasittelyntilaValidator", () => {
   });
 
   it("Admin ei voi lisätä toista jatkopäätöstä TOIMINNALLINEN-projektille", async () => {
-    const projekti = withTyyppi(fixture.dbProjektiKaikkiVaiheetSaame(), ProjektiTyyppi.TOIMINNALLINEN);
+    const projekti = fixture.dbProjektiToiminnallinen();
     userFixture.loginAs(UserFixture.hassuAdmin);
     await expect(
       validateTallennaProjekti(projekti, {
