@@ -6,13 +6,13 @@ import { DynamoDBDocumentClient, QueryCommand, QueryCommandInput, UpdateCommand,
 import { mielipideDatabase } from "../../src/database/mielipideDatabase";
 
 describe("mielipideDatabase", () => {
-  const ddbMock = mockClient(DynamoDBDocumentClient);
+  let ddbMock: ReturnType<typeof mockClient>;
 
-  afterEach(() => {
-    ddbMock.reset();
+  beforeEach(() => {
+    ddbMock = mockClient(DynamoDBDocumentClient);
   });
 
-  after(() => {
+  afterEach(() => {
     ddbMock.restore();
   });
 
