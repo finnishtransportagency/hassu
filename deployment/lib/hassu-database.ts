@@ -84,7 +84,7 @@ export class HassuDatabaseStack extends Stack {
     this.internalBucket = this.createInternalBucket();
     this.publicBucket = this.createPublicBucket(oai);
     this.createBackupPlan();
-    if (Config.env === "dev" || Config.isDeveloperEnvironment()) {
+    if (Config.isNotLocalStack()) {
       this.quarantineBucket = await setupSecurityScanning({
         stack: this,
         yllapitoBucket: this.yllapitoBucket,
