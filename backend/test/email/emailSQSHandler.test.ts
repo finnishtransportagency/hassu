@@ -49,7 +49,7 @@ describe("emailSQSHandler", () => {
 
   beforeEach(() => {
     sendEmailToKirjaamoStub = sinon.stub(mielipideEmailService, "sendEmailToKirjaamo").resolves();
-    getVirusScanResultStub = sinon.stub(virusScanService, "getVirusScanResult");
+    getVirusScanResultStub = sinon.stub(virusScanService, "getGuardDutyScanResult");
     isPermanentEnvironmentStub = sinon.stub(config, "isPermanentEnvironment").returns(true);
   });
 
@@ -119,13 +119,32 @@ describe("emailSQSHandler", () => {
     sinon.assert.notCalled(sendEmailToKirjaamoStub);
   });
 
+  it("should throw and retry when scan result is UNSUPPORTED, ACCESS_DENIED or FAILED", async () => {
+    const dbMock = mockClient(DynamoDBDocumentClient);
+    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: fixture.dbProjekti3 });
+    dbMock
+      .on(GetCommand, { TableName: process.env.TABLE_PROJEKTI_MIELIPIDE })
+      .resolves({ Item: { ...mielipideWithLiitteet, oid: fixture.PROJEKTI3_OID } });
+    getVirusScanResultStub.rejects(new Error("GuardDuty-skannaus epäonnistui: UNSUPPORTED"));
+
+    await expect(
+      handleEvent(
+        makeSQSEvent({ type: EmailEventType.MIELIPIDE_KIRJAAMO, oid: fixture.PROJEKTI3_OID, mielipideId: "test-id-123" }),
+        {} as any,
+        () => {}
+      )
+    ).to.eventually.be.rejectedWith("GuardDuty-skannaus epäonnistui");
+
+    sinon.assert.notCalled(sendEmailToKirjaamoStub);
+  });
+
   it("should throw and retry when virus scan is still pending", async () => {
     const dbMock = mockClient(DynamoDBDocumentClient);
     dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: fixture.dbProjekti3 });
     dbMock
       .on(GetCommand, { TableName: process.env.TABLE_PROJEKTI_MIELIPIDE })
       .resolves({ Item: { ...mielipideWithLiitteet, oid: fixture.PROJEKTI3_OID } });
-    getVirusScanResultStub.resolves(undefined);
+    getVirusScanResultStub.rejects(new Error("Virusskannaus kesken liitteille, yritetään uudelleen"));
 
     await expect(
       handleEvent(

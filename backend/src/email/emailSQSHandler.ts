@@ -36,17 +36,14 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           if (config.isPermanentEnvironment() && mielipide.liitteet?.length) {
             const projektiPaths = new ProjektiPaths(emailEvent.oid);
             const tulokset = await Promise.all(
-              mielipide.liitteet.map((liite) => virusScanService.getVirusScanResult(projektiPaths, liite))
+              mielipide.liitteet.map((liite) => virusScanService.getGuardDutyScanResult(projektiPaths, liite))
             );
-            if (tulokset.some((tulos) => tulos === undefined)) {
-              log.warn("Virusskannaus kesken liitteille, yritetään uudelleen..", { mielipideId: emailEvent.mielipideId });
-              throw new Error("Virusskannaus kesken liitteille, yritetään uudelleen");
-            }
             if (tulokset.some((tulos) => tulos === LiitteenSkannausTulos.SAASTUNUT)) {
               log.error(
                 "Mielipiteen liitteessä havaittu virus. Sähköpostia kirjaamolle ei lähetetä ja viesti poistetaan jonosta. GuardDuty on siirtänyt saastuneen tiedoston karanteeniin ja lähettänyt hälytyksen.",
                 { mielipideId: emailEvent.mielipideId }
               );
+              await mielipideDatabase.merkitseSaastuneeksi(emailEvent.oid, emailEvent.mielipideId);
               return;
             }
           }
