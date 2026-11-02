@@ -18,7 +18,7 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
@@ -60,7 +60,7 @@ export interface ProjektiProjektiGeometrycollection {
 }
 
 export const ProjektiProjektiGeometrycollectionTypeEnum = {
-    GeometryCollection: 'GeometryCollection'
+    GeometryCollection: 'GeometryCollection',
 } as const;
 
 export type ProjektiProjektiGeometrycollectionTypeEnum = typeof ProjektiProjektiGeometrycollectionTypeEnum[keyof typeof ProjektiProjektiGeometrycollectionTypeEnum];
@@ -103,7 +103,7 @@ export const ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum = {
     MultiLineString: 'MultiLineString',
     MultiPoint: 'MultiPoint',
     LineString: 'LineString',
-    Polygon: 'Polygon'
+    Polygon: 'Polygon',
 } as const;
 
 export type ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum = typeof ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum[keyof typeof ProjektiProjektiLuontiMitattugeometriaGeometriaTypeEnum];
@@ -115,7 +115,7 @@ export interface ProjektiProjektiLuontiOminaisuudet {
     'valitukset'?: number | null;
     'liikenteeseenluovutus'?: ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus;
     'varahenkilo': ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
+    'liittyvat-henkilot'?: Array<ProjektiProjektijoukotInnerOminaisuudetLiittyvatHenkilotInner>;
     'ennakkoneuvottelu'?: object | null;
     'muu-liittyva-organisaatio'?: string | null;
     'lainvoimaisuus'?: ProjektiProjektiLuontiOminaisuudetLainvoimaisuus | null;
@@ -178,7 +178,7 @@ export interface ProjektiProjektiLuontiOminaisuudet {
 export const ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum = {
     vesi: 'vesi',
     tie: 'tie',
-    rata: 'rata'
+    rata: 'rata',
 } as const;
 
 export type ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum = typeof ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektiLuontiOminaisuudetVaylamuotoEnum];
@@ -238,10 +238,6 @@ export interface ProjektiProjektiLuontiOminaisuudetLiikenteeseenluovutus {
     'kokonaan': object | null;
     'osittain': Array<object> | null;
 }
-export interface ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner {
-    'sahkoposti': string;
-    'rooli': string;
-}
 export interface ProjektiProjektiLuontiOminaisuudetSuunnittelupaatos {
     'paivamaara': object | null;
     'linkki': string | null;
@@ -292,7 +288,7 @@ export interface ProjektiProjektiLuontiSijainnitInnerSijaintitarkenne {
 }
 
 export const ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum = {
-    keskialue: 'keskialue'
+    keskialue: 'keskialue',
 } as const;
 
 export type ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum = typeof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum[keyof typeof ProjektiProjektiLuontiSijainnitInnerSijaintitarkenneKeskialueEnum];
@@ -360,6 +356,7 @@ export interface ProjektiProjektijoukko {
 export interface ProjektiProjektijoukkoOminaisuudet {
     'h-k-suhde': number | null;
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
+    'liittyvat-henkilot'?: Array<ProjektiProjektijoukotInnerOminaisuudetLiittyvatHenkilotInner>;
     'muu-liittyva-organisaatio'?: string;
     'kuvaus': string | null;
     'vaylamuoto'?: Set<ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum> | null;
@@ -386,7 +383,7 @@ export interface ProjektiProjektijoukkoOminaisuudet {
 export const ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum = {
     vesi: 'vesi',
     tie: 'tie',
-    rata: 'rata'
+    rata: 'rata',
 } as const;
 
 export type ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum = typeof ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektijoukkoOminaisuudetVaylamuotoEnum];
@@ -449,7 +446,7 @@ export const ProjektiProjektijoukotInnerLahdejarjestelmaEnum = {
     lahdejarjestelma_lj16: 'lahdejarjestelma/lj16',
     lahdejarjestelma_lj01: 'lahdejarjestelma/lj01',
     lahdejarjestelma_lj19: 'lahdejarjestelma/lj19',
-    lahdejarjestelma_lj12: 'lahdejarjestelma/lj12'
+    lahdejarjestelma_lj12: 'lahdejarjestelma/lj12',
 } as const;
 
 export type ProjektiProjektijoukotInnerLahdejarjestelmaEnum = typeof ProjektiProjektijoukotInnerLahdejarjestelmaEnum[keyof typeof ProjektiProjektijoukotInnerLahdejarjestelmaEnum];
@@ -462,6 +459,7 @@ export interface ProjektiProjektijoukotInnerLuoja {
 export interface ProjektiProjektijoukotInnerOminaisuudet {
     'h-k-suhde': number | null;
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
+    'liittyvat-henkilot'?: Array<ProjektiProjektijoukotInnerOminaisuudetLiittyvatHenkilotInner>;
     'muu-liittyva-organisaatio'?: string;
     'kuvaus': string | null;
     'vaylamuoto'?: Set<ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum> | null;
@@ -488,7 +486,7 @@ export interface ProjektiProjektijoukotInnerOminaisuudet {
 export const ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = {
     vesi: 'vesi',
     tie: 'tie',
-    rata: 'rata'
+    rata: 'rata',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum = typeof ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetVaylamuotoEnum];
@@ -951,7 +949,7 @@ export const ProjektiProjektijoukotInnerOminaisuudetKuntaEnum = {
     kunta_kunta423: 'kunta/kunta423',
     kunta_kunta151: 'kunta/kunta151',
     kunta_kunta768: 'kunta/kunta768',
-    kunta_kunta728: 'kunta/kunta728'
+    kunta_kunta728: 'kunta/kunta728',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetKuntaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetKuntaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetKuntaEnum];
@@ -960,7 +958,7 @@ export const ProjektiProjektijoukotInnerOminaisuudetTilaEnum = {
     tila_tila18: 'tila/tila18',
     tila_tila15: 'tila/tila15',
     tila_tila17: 'tila/tila17',
-    tila_tila14: 'tila/tila14'
+    tila_tila14: 'tila/tila14',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetTilaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetTilaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetTilaEnum];
@@ -984,7 +982,7 @@ export const ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum = {
     maakunta_maakunta02: 'maakunta/maakunta02',
     maakunta_maakunta04: 'maakunta/maakunta04',
     maakunta_maakunta11: 'maakunta/maakunta11',
-    maakunta_maakunta01: 'maakunta/maakunta01'
+    maakunta_maakunta01: 'maakunta/maakunta01',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum = typeof ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetMaakuntaEnum];
@@ -1009,13 +1007,13 @@ export const ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum = {
     organisaatio_org09: 'organisaatio/org09',
     organisaatio_org05: 'organisaatio/org05',
     organisaatio_org21: 'organisaatio/org21',
-    organisaatio_org03: 'organisaatio/org03'
+    organisaatio_org03: 'organisaatio/org03',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum = typeof ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetTilaajaorganisaatioEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum = {
     rahoituslahde_rahlah02: 'rahoituslahde/rahlah02',
-    rahoituslahde_rahlah01: 'rahoituslahde/rahlah01'
+    rahoituslahde_rahlah01: 'rahoituslahde/rahlah01',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum = typeof ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetRahoituksenLahdeEnum];
@@ -1040,18 +1038,22 @@ export const ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum = {
     organisaatio_org09: 'organisaatio/org09',
     organisaatio_org05: 'organisaatio/org05',
     organisaatio_org21: 'organisaatio/org21',
-    organisaatio_org03: 'organisaatio/org03'
+    organisaatio_org03: 'organisaatio/org03',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum = typeof ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetLiittyvaOrganisaatioEnum];
 export const ProjektiProjektijoukotInnerOminaisuudetVaiheEnum = {
     projektijoukon_vaihe_pjvaihe03: 'projektijoukon-vaihe/pjvaihe03',
     projektijoukon_vaihe_pjvaihe02: 'projektijoukon-vaihe/pjvaihe02',
-    projektijoukon_vaihe_pjvaihe01: 'projektijoukon-vaihe/pjvaihe01'
+    projektijoukon_vaihe_pjvaihe01: 'projektijoukon-vaihe/pjvaihe01',
 } as const;
 
 export type ProjektiProjektijoukotInnerOminaisuudetVaiheEnum = typeof ProjektiProjektijoukotInnerOminaisuudetVaiheEnum[keyof typeof ProjektiProjektijoukotInnerOminaisuudetVaiheEnum];
 
+export interface ProjektiProjektijoukotInnerOminaisuudetLiittyvatHenkilotInner {
+    'sahkoposti': string;
+    'rooli': string;
+}
 export interface ProjektiProjektijoukotInnerOminaisuudetVarahenkilo {
     'sahkoposti': string;
     'nimi': string;
@@ -1121,7 +1123,7 @@ export const ProjektiToimeksiannotInnerLahdejarjestelmaEnum = {
     lahdejarjestelma_lj16: 'lahdejarjestelma/lj16',
     lahdejarjestelma_lj01: 'lahdejarjestelma/lj01',
     lahdejarjestelma_lj19: 'lahdejarjestelma/lj19',
-    lahdejarjestelma_lj12: 'lahdejarjestelma/lj12'
+    lahdejarjestelma_lj12: 'lahdejarjestelma/lj12',
 } as const;
 
 export type ProjektiToimeksiannotInnerLahdejarjestelmaEnum = typeof ProjektiToimeksiannotInnerLahdejarjestelmaEnum[keyof typeof ProjektiToimeksiannotInnerLahdejarjestelmaEnum];
@@ -1129,7 +1131,7 @@ export type ProjektiToimeksiannotInnerLahdejarjestelmaEnum = typeof ProjektiToim
 export interface ProjektiToimeksiannotInnerOminaisuudet {
     'toteuttava-organisaatio'?: ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum | null;
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
+    'liittyvat-henkilot'?: Array<ProjektiProjektijoukotInnerOminaisuudetLiittyvatHenkilotInner>;
     'asiatunnus-traficom'?: string | null;
     'kuvaus': string | null;
     'vaylamuoto': Set<ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum>;
@@ -1175,14 +1177,14 @@ export const ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum = 
     organisaatio_org09: 'organisaatio/org09',
     organisaatio_org05: 'organisaatio/org05',
     organisaatio_org21: 'organisaatio/org21',
-    organisaatio_org03: 'organisaatio/org03'
+    organisaatio_org03: 'organisaatio/org03',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum = typeof ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetToteuttavaOrganisaatioEnum];
 export const ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = {
     vesi: 'vesi',
     tie: 'tie',
-    rata: 'rata'
+    rata: 'rata',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum = typeof ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetVaylamuotoEnum];
@@ -1645,7 +1647,7 @@ export const ProjektiToimeksiannotInnerOminaisuudetKuntaEnum = {
     kunta_kunta423: 'kunta/kunta423',
     kunta_kunta151: 'kunta/kunta151',
     kunta_kunta768: 'kunta/kunta768',
-    kunta_kunta728: 'kunta/kunta728'
+    kunta_kunta728: 'kunta/kunta728',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetKuntaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetKuntaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetKuntaEnum];
@@ -1654,7 +1656,7 @@ export const ProjektiToimeksiannotInnerOminaisuudetTilaEnum = {
     tila_tila18: 'tila/tila18',
     tila_tila15: 'tila/tila15',
     tila_tila17: 'tila/tila17',
-    tila_tila14: 'tila/tila14'
+    tila_tila14: 'tila/tila14',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetTilaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetTilaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetTilaEnum];
@@ -1678,7 +1680,7 @@ export const ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum = {
     maakunta_maakunta02: 'maakunta/maakunta02',
     maakunta_maakunta04: 'maakunta/maakunta04',
     maakunta_maakunta11: 'maakunta/maakunta11',
-    maakunta_maakunta01: 'maakunta/maakunta01'
+    maakunta_maakunta01: 'maakunta/maakunta01',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetMaakuntaEnum];
@@ -1693,7 +1695,7 @@ export const ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = {
     toimeksiantotehtava_tateh02: 'toimeksiantotehtava/tateh02',
     toimeksiantotehtava_tateh04: 'toimeksiantotehtava/tateh04',
     toimeksiantotehtava_tateh06: 'toimeksiantotehtava/tateh06',
-    toimeksiantotehtava_tateh01: 'toimeksiantotehtava/tateh01'
+    toimeksiantotehtava_tateh01: 'toimeksiantotehtava/tateh01',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetTehtavaEnum];
@@ -1718,7 +1720,7 @@ export const ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum =
     koordinaattijarjestelma_epsg_kj01: 'koordinaattijarjestelma-epsg/kj01',
     koordinaattijarjestelma_epsg_kj07: 'koordinaattijarjestelma-epsg/kj07',
     koordinaattijarjestelma_epsg_kj03: 'koordinaattijarjestelma-epsg/kj03',
-    koordinaattijarjestelma_epsg_kj20: 'koordinaattijarjestelma-epsg/kj20'
+    koordinaattijarjestelma_epsg_kj20: 'koordinaattijarjestelma-epsg/kj20',
 } as const;
 
 export type ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum = typeof ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum[keyof typeof ProjektiToimeksiannotInnerOminaisuudetKoordinaattijarjestelmaEnum];
@@ -1761,7 +1763,7 @@ export interface ProjektiToimeksianto {
 export interface ProjektiToimeksiantoOminaisuudet {
     'toteuttava-organisaatio'?: object | null;
     'varahenkilo'?: ProjektiProjektijoukotInnerOminaisuudetVarahenkilo | null;
-    'liittyvat-henkilot'?: Array<ProjektiProjektiLuontiOminaisuudetLiittyvatHenkilotInner>;
+    'liittyvat-henkilot'?: Array<ProjektiProjektijoukotInnerOminaisuudetLiittyvatHenkilotInner>;
     'asiatunnus-traficom'?: string | null;
     'kuvaus': string | null;
     'vaylamuoto': Set<ProjektiToimeksiantoOminaisuudetVaylamuotoEnum>;
@@ -1789,7 +1791,7 @@ export interface ProjektiToimeksiantoOminaisuudet {
 export const ProjektiToimeksiantoOminaisuudetVaylamuotoEnum = {
     vesi: 'vesi',
     tie: 'tie',
-    rata: 'rata'
+    rata: 'rata',
 } as const;
 
 export type ProjektiToimeksiantoOminaisuudetVaylamuotoEnum = typeof ProjektiToimeksiantoOminaisuudetVaylamuotoEnum[keyof typeof ProjektiToimeksiantoOminaisuudetVaylamuotoEnum];
@@ -1853,9 +1855,8 @@ export const HakuApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1945,7 +1946,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('projektirekisteriApiV2KohdeOidGet', 'oid', oid)
             const localVarPath = `/projektirekisteri/api/v2/kohde/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1957,8 +1958,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2002,8 +2003,6 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['rikasta'] = Array.from(rikasta).join(COLLECTION_FORMATS.csv);
             }
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2032,8 +2031,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'kohdeluokka' is not null or undefined
             assertParamExists('projektirekisteriApiV2TunnisteetNimiavaruusKohdeluokkaGet', 'kohdeluokka', kohdeluokka)
             const localVarPath = `/projektirekisteri/api/v2/tunnisteet/{nimiavaruus}/{kohdeluokka}`
-                .replace(`{${"nimiavaruus"}}`, encodeURIComponent(String(nimiavaruus)))
-                .replace(`{${"kohdeluokka"}}`, encodeURIComponent(String(kohdeluokka)));
+                .replace('{nimiavaruus}', encodeURIComponent(String(nimiavaruus)))
+                .replace('{kohdeluokka}', encodeURIComponent(String(kohdeluokka)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2057,8 +2056,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
                     loppumuokkausaika;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2237,8 +2236,8 @@ export const KyttjApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2270,9 +2269,8 @@ export const KyttjApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2402,7 +2400,6 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2439,9 +2436,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['ei-geometrioita'] = eiGeometrioita;
             }
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2464,7 +2460,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidDelete', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2476,8 +2472,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2499,7 +2495,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2515,8 +2511,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['ei-geometrioita'] = eiGeometrioita;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2537,7 +2533,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/linkit`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2550,7 +2546,6 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2577,8 +2572,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'body' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidDelete', 'body', body)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/linkit/{kohde-oid}`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)))
-                .replace(`{${"kohde-oid"}}`, encodeURIComponent(String(kohdeOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)))
+                .replace('{kohde-oid}', encodeURIComponent(String(kohdeOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2590,9 +2585,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2621,8 +2615,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'body' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitKohdeOidPost', 'body', body)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/linkit/{kohde-oid}`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)))
-                .replace(`{${"kohde-oid"}}`, encodeURIComponent(String(kohdeOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)))
+                .replace('{kohde-oid}', encodeURIComponent(String(kohdeOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2634,9 +2628,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2662,7 +2655,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'body' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidLinkitPut', 'body', body)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/linkit`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2674,9 +2667,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2703,7 +2695,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiProjektimuokkaus' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidPut', 'projektiProjektimuokkaus', projektiProjektimuokkaus)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2719,9 +2711,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['ei-geometrioita'] = eiGeometrioita;
             }
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2744,7 +2735,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidToimeksiannotGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/toimeksiannot`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2756,8 +2747,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2778,7 +2769,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidVektoridDelete', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/vektorid`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2790,8 +2781,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2812,7 +2803,7 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'projektiOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektiProjektiOidVektorlinkkiGet', 'projektiOid', projektiOid)
             const localVarPath = `/projektirekisteri/api/v2/projekti/{projekti-oid}/vektorlinkki`
-                .replace(`{${"projekti-oid"}}`, encodeURIComponent(String(projektiOid)));
+                .replace('{projekti-oid}', encodeURIComponent(String(projektiOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2824,8 +2815,8 @@ export const ProjektiApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3319,8 +3310,8 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3352,9 +3343,8 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3377,7 +3367,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidDelete', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}`
-                .replace(`{${"projektijoukko-oid"}}`, encodeURIComponent(String(projektijoukkoOid)));
+                .replace('{projektijoukko-oid}', encodeURIComponent(String(projektijoukkoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3390,7 +3380,6 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3411,7 +3400,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidGet', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}`
-                .replace(`{${"projektijoukko-oid"}}`, encodeURIComponent(String(projektijoukkoOid)));
+                .replace('{projektijoukko-oid}', encodeURIComponent(String(projektijoukkoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3423,8 +3412,8 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3445,7 +3434,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidProjektitGet', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}/projektit`
-                .replace(`{${"projektijoukko-oid"}}`, encodeURIComponent(String(projektijoukkoOid)));
+                .replace('{projektijoukko-oid}', encodeURIComponent(String(projektijoukkoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3458,7 +3447,6 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3482,7 +3470,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             // verify required parameter 'projektiProjektijoukonPaivitys' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidPut', 'projektiProjektijoukonPaivitys', projektiProjektijoukonPaivitys)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}`
-                .replace(`{${"projektijoukko-oid"}}`, encodeURIComponent(String(projektijoukkoOid)));
+                .replace('{projektijoukko-oid}', encodeURIComponent(String(projektijoukkoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3494,9 +3482,8 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3519,7 +3506,7 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             // verify required parameter 'projektijoukkoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ProjektijoukkoProjektijoukkoOidVektorlinkkiGet', 'projektijoukkoOid', projektijoukkoOid)
             const localVarPath = `/projektirekisteri/api/v2/projektijoukko/{projektijoukko-oid}/vektorlinkki`
-                .replace(`{${"projektijoukko-oid"}}`, encodeURIComponent(String(projektijoukkoOid)));
+                .replace('{projektijoukko-oid}', encodeURIComponent(String(projektijoukkoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3531,8 +3518,8 @@ export const ProjektijoukkoApiAxiosParamCreator = function (configuration?: Conf
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3835,9 +3822,8 @@ export const RataosoiteApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3938,9 +3924,8 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3963,7 +3948,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidDelete', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}`
-                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+                .replace('{toimeksianto-oid}', encodeURIComponent(String(toimeksiantoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3976,7 +3961,6 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3997,7 +3981,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidGet', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}`
-                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+                .replace('{toimeksianto-oid}', encodeURIComponent(String(toimeksiantoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4009,8 +3993,8 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -4034,7 +4018,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'projektiToimeksiannonPaivitys' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidPut', 'projektiToimeksiannonPaivitys', projektiToimeksiannonPaivitys)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}`
-                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+                .replace('{toimeksianto-oid}', encodeURIComponent(String(toimeksiantoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4046,9 +4030,8 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -4071,7 +4054,7 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('projektirekisteriApiV2ToimeksiantoToimeksiantoOidVektorlinkkiGet', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/projektirekisteri/api/v2/toimeksianto/{toimeksianto-oid}/vektorlinkki`
-                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+                .replace('{toimeksianto-oid}', encodeURIComponent(String(toimeksiantoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -4083,8 +4066,8 @@ export const ToimeksiantoApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
