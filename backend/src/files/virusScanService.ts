@@ -7,7 +7,7 @@ import { config } from "../config";
 import { fileService } from "./fileService";
 import { LiitteenSkannausTulos } from "hassu-common/graphql/apiModel";
 import { getS3Client } from "../aws/client";
-import { GetObjectTaggingCommand } from "@aws-sdk/client-s3";
+import { GetObjectTaggingCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 
 class VirusScanService {
   async runScanOnFile(bucketName: string, key: string) {
@@ -73,10 +73,10 @@ class VirusScanService {
         // Karanteenibucketissa oleva tiedosto on aina saastunut — EventBridge-sääntö
         // (deployment/lib/hassu-security.ts, GuardDutyMalwareScanRule) triggeröi
         // MalwareQuarantineLambdan ainoastaan THREATS_FOUND-eventistä.
-        await s3.send(new GetObjectTaggingCommand({ Bucket: config.quarantineBucketName, Key: key }));
+        await s3.send(new HeadObjectCommand({ Bucket: config.quarantineBucketName, Key: key }));
         return LiitteenSkannausTulos.SAASTUNUT;
       } catch (quarantineError: unknown) {
-        if (!isNoSuchKey(quarantineError)) throw quarantineError;
+        if (!isNotFound(quarantineError)) throw quarantineError;
         throw new Error(`Liite puuttuu sekä ylläpito- että karanteenibucketista: ${key}`);
       }
     }
@@ -87,6 +87,10 @@ export const virusScanService = new VirusScanService();
 
 function isNoSuchKey(e: unknown): boolean {
   return e instanceof Error && e.name === "NoSuchKey";
+}
+
+function isNotFound(e: unknown): boolean {
+  return e instanceof Error && (e.name === "NotFound" || e.name === "NoSuchKey");
 }
 
 function virusScanTagToTulos(tagResponse: { TagSet?: { Key?: string; Value?: string }[] }): LiitteenSkannausTulos | undefined {

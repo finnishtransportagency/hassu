@@ -2,7 +2,7 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
-import { S3Client, GetObjectTaggingCommand } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectTaggingCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { virusScanService } from "../../src/files/virusScanService";
 import { ProjektiPaths } from "../../src/files/ProjektiPath";
 import { LiitteenSkannausTulos } from "hassu-common/graphql/apiModel";
@@ -65,13 +65,15 @@ describe("virusScanService.getGuardDutyScanResult", () => {
   });
 
   it("should return SAASTUNUT when file is found in quarantine bucket", async () => {
-    s3Mock.on(GetObjectTaggingCommand).rejectsOnce({ name: "NoSuchKey", message: "NoSuchKey" }).resolves({});
+    s3Mock.on(GetObjectTaggingCommand).rejectsOnce({ name: "NoSuchKey", message: "NoSuchKey" });
+    s3Mock.on(HeadObjectCommand).resolves({});
     const tulos = await virusScanService.getGuardDutyScanResult(projektiPaths, LIITE);
     expect(tulos).to.equal(LiitteenSkannausTulos.SAASTUNUT);
   });
 
   it("should throw when file is missing from both yllapito and quarantine buckets", async () => {
-    s3Mock.on(GetObjectTaggingCommand).rejects({ name: "NoSuchKey", message: "NoSuchKey" });
+    s3Mock.on(GetObjectTaggingCommand).rejectsOnce({ name: "NoSuchKey", message: "NoSuchKey" });
+    s3Mock.on(HeadObjectCommand).rejects({ name: "NotFound", message: "NotFound" });
     await expect(virusScanService.getGuardDutyScanResult(projektiPaths, LIITE)).to.eventually.be.rejectedWith(
       "puuttuu sekä ylläpito- että karanteenibucketista"
     );
