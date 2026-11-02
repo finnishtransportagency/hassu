@@ -1060,7 +1060,13 @@ export class HassuBackendStack extends Stack {
     this.addPermissionsForMonitoring(importer);
     importer.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
     this.props.yllapitoBucket.grantRead(importer, "*/mielipiteet/*");
-    importer.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["s3:GetObjectTagging"], resources: [`arn:aws:s3:::${Config.quarantineBucketName}/*`] }));
+    importer.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["s3:GetObjectTagging"],
+        resources: [`arn:aws:s3:::${Config.quarantineBucketName}/*`],
+      })
+    );
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
     importer.addEventSource(eventSource);
