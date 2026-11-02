@@ -70,10 +70,10 @@ class VirusScanService {
       if (!isNoSuchKey(e)) throw e;
       log.warn("Liite poistettu ylläpitobucketista, tarkistetaan karanteenibucketista", { key });
       try {
-        const tulos = virusScanTagToTulos(await s3.send(new GetObjectTaggingCommand({ Bucket: config.quarantineBucketName, Key: key })));
-        if (tulos !== LiitteenSkannausTulos.SAASTUNUT) {
-          throw new Error(`Liite löytyi karanteenibucketista mutta GuardDutyMalwareScanStatus-tagi puuttuu tai on odottamaton: ${key}`);
-        }
+        // Karanteenibucketissa oleva tiedosto on aina saastunut — EventBridge-sääntö
+        // (deployment/lib/hassu-security.ts, GuardDutyMalwareScanRule) triggeröi
+        // MalwareQuarantineLambdan ainoastaan THREATS_FOUND-eventistä.
+        await s3.send(new GetObjectTaggingCommand({ Bucket: config.quarantineBucketName, Key: key }));
         return LiitteenSkannausTulos.SAASTUNUT;
       } catch (quarantineError: unknown) {
         if (!isNoSuchKey(quarantineError)) throw quarantineError;

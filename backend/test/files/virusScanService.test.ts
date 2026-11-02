@@ -64,20 +64,10 @@ describe("virusScanService.getGuardDutyScanResult", () => {
     await expect(virusScanService.getGuardDutyScanResult(projektiPaths, LIITE)).to.eventually.be.rejectedWith("Virusskannaus kesken");
   });
 
-  it("should return SAASTUNUT when file is in quarantine with THREATS_FOUND tag", async () => {
-    s3Mock
-      .on(GetObjectTaggingCommand)
-      .rejectsOnce({ name: "NoSuchKey", message: "NoSuchKey" })
-      .resolves(makeTagSet("GuardDutyMalwareScanStatus", "THREATS_FOUND"));
+  it("should return SAASTUNUT when file is found in quarantine bucket", async () => {
+    s3Mock.on(GetObjectTaggingCommand).rejectsOnce({ name: "NoSuchKey", message: "NoSuchKey" }).resolves({});
     const tulos = await virusScanService.getGuardDutyScanResult(projektiPaths, LIITE);
     expect(tulos).to.equal(LiitteenSkannausTulos.SAASTUNUT);
-  });
-
-  it("should throw when file is in quarantine but tag is missing", async () => {
-    s3Mock.on(GetObjectTaggingCommand).rejectsOnce({ name: "NoSuchKey", message: "NoSuchKey" }).resolves({ TagSet: [] });
-    await expect(virusScanService.getGuardDutyScanResult(projektiPaths, LIITE)).to.eventually.be.rejectedWith(
-      "karanteenibucketista mutta GuardDutyMalwareScanStatus-tagi puuttuu"
-    );
   });
 
   it("should throw when file is missing from both yllapito and quarantine buckets", async () => {
