@@ -1,5 +1,5 @@
 // Contains code generated or recommended by Amazon Q
-import { allowedFileTypesKansalaisille, maxFileSize } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille, maxEmailAttachmentsTotalSize } from "common/fileValidationSettings";
 import * as Yup from "yup";
 import { phoneNumberRegex } from "hassu-common/schema/puhelinNumero";
 
@@ -13,10 +13,14 @@ export const mielipideSchema = Yup.object().shape({
   maa: Yup.string().notRequired().nullable(),
   sahkoposti: Yup.string().notRequired().email("sahkoposti_ei_kelpaa").nullable(),
   puhelinnumero: Yup.string().notRequired().matches(new RegExp(phoneNumberRegex), "puh_vain_numerot").max(20, "puh_max_20").nullable(),
-  liitteet: Yup.array().of(
-    Yup.object().shape({
-      koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
-      tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypesKansalaisille, "tiedostotyyppi_ei_tuettu"),
-    })
-  ),
+  liitteet: Yup.array()
+    .of(
+      Yup.object().shape({
+        tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypesKansalaisille, "tiedostotyyppi_ei_tuettu"),
+      })
+    )
+    .test("liitteet_yhteiskoko", "liitteet_yhteiskoko_liian_suuri", (liitteet) => {
+      const total = liitteet?.reduce((sum, l) => sum + (l?.koko ?? 0), 0) ?? 0;
+      return total <= maxEmailAttachmentsTotalSize;
+    }),
 });

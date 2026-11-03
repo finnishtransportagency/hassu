@@ -1,5 +1,8 @@
 // Contains code generated or recommended by Amazon Q
 import { mielipideSchema } from "../../schemas/nahtavillaoloMielipide";
+import { maxEmailAttachmentsTotalSize } from "common/fileValidationSettings";
+
+const validLiite = { nimi: "testi.pdf", tiedosto: new File([], "testi.pdf"), tyyppi: "application/pdf", koko: 1000 };
 
 describe("mielipideSchema", () => {
   it("hyväksyy kun vain mielipide annettu", async () => {
@@ -45,5 +48,25 @@ describe("mielipideSchema", () => {
         puhelinnumero: "0401234567",
       })
     ).resolves.toBeDefined();
+  });
+
+  it("hyväksyy liitteet kun yhteiskoko on alle rajan", async () => {
+    await expect(
+      mielipideSchema.validate({ mielipide: "Mielipide", liitteet: [validLiite, { ...validLiite, koko: maxEmailAttachmentsTotalSize - 1000 }] })
+    ).resolves.toBeDefined();
+  });
+
+  it("hylkää liitteet kun yhteiskoko ylittää rajan", async () => {
+    const liitteet = [
+      { ...validLiite, koko: maxEmailAttachmentsTotalSize / 2 + 1 },
+      { ...validLiite, koko: maxEmailAttachmentsTotalSize / 2 + 1 },
+    ];
+    await expect(
+      mielipideSchema.validate({ mielipide: "Mielipide", liitteet }, { abortEarly: true })
+    ).rejects.toThrow("liitteet_yhteiskoko_liian_suuri");
+  });
+
+  it("hyväksyy kun liitteet on tyhjä lista", async () => {
+    await expect(mielipideSchema.validate({ mielipide: "Mielipide", liitteet: [] })).resolves.toBeDefined();
   });
 });
