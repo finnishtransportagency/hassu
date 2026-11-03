@@ -563,11 +563,6 @@ export class FileService {
     return headObject?.ContentLength;
   }
 
-  async getYllapitoProjektiFileContentLength(oid: string, path: string): Promise<number | undefined> {
-    const filePath = this.getYllapitoPathForProjektiFile(new ProjektiPaths(oid), path);
-    return this.getFileContentLength(config.yllapitoBucketName, filePath);
-  }
-
   async getUploadedFileContentLength(uploadedFileSource: string): Promise<number | undefined> {
     const key = uploadedFileSource.replace(/^\//, "");
     return this.getFileContentLength(config.uploadBucketName, key);
