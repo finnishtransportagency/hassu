@@ -26,6 +26,8 @@ import { SuomiFiCognitoKayttaja } from "../../src/user/suomiFiCognitoKayttaja";
 import MockDate from "mockdate";
 import { IllegalArgumentError } from "hassu-common/error";
 import { mockUUID } from "../../integrationtest/shared/sharedMock";
+import { fileService } from "../../src/files/fileService";
+import { maxEmailAttachmentsTotalSize } from "hassu-common/fileValidationSettings";
 
 describe("muistutusHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -181,6 +183,27 @@ describe("muistutusHandler", () => {
             return call.args[0].to;
           })
         ).to.have.members(["kirjaamo.uusimaa@ely-keskus.fi"]);
+      });
+
+      it("should throw IllegalArgumentError when total attachment size exceeds limit", async () => {
+        mockClient(DynamoDBDocumentClient);
+        mockClient(SQSClient);
+        sinon.stub(fileService, "getUploadedFileContentLength").resolves(maxEmailAttachmentsTotalSize / 2 + 1);
+
+        const muistutusInput: MuistutusInput = {
+          katuosoite: "Katuosoite 1",
+          postitoimipaikka: "Helsinki",
+          postinumero: "00100",
+          maa: "FI",
+          muistutus: "Testiteksti",
+          liitteet: ["upload/file1.pdf", "upload/file2.pdf"],
+          etunimi: "Tessa",
+          sukunimi: "Testaaja",
+        };
+
+        await expect(
+          muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput })
+        ).to.eventually.be.rejectedWith(IllegalArgumentError, "Liitteiden yhteiskoko ylittää sallitun");
       });
     });
 

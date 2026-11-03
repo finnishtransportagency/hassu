@@ -16,6 +16,9 @@ import MockDate from "mockdate";
 import { DBMielipide } from "../../src/database/mielipideDatabase";
 import { parameters } from "../../src/aws/parameters";
 import { EmailEventType } from "../../src/email/model/emailEvent";
+import { fileService } from "../../src/files/fileService";
+import { IllegalArgumentError } from "hassu-common/error";
+import { maxEmailAttachmentsTotalSize } from "hassu-common/fileValidationSettings";
 
 describe("mielipideHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -113,5 +116,17 @@ describe("mielipideHandler", () => {
     await expect(
       mielipideHandler.kasitteleMielipide({ oid: fixture.PROJEKTI3_OID, mielipide: { mielipide: "Testi", liitteet: [] } })
     ).to.eventually.be.rejectedWith("Projekti ei ole nähtävilläolovaiheessa");
+  });
+
+  it("should throw IllegalArgumentError when total attachment size exceeds limit", async () => {
+    mockClient(DynamoDBDocumentClient);
+    sinon.stub(fileService, "getUploadedFileContentLength").resolves(maxEmailAttachmentsTotalSize / 2 + 1);
+
+    await expect(
+      mielipideHandler.kasitteleMielipide({
+        oid: fixture.PROJEKTI3_OID,
+        mielipide: { mielipide: "Testi", liitteet: ["upload/file1.pdf", "upload/file2.pdf"] },
+      })
+    ).to.eventually.be.rejectedWith(IllegalArgumentError, "Liitteiden yhteiskoko ylittää sallitun");
   });
 });
