@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { DialogActions, DialogContent, styled, useMediaQuery, useTheme } from "@mui/material";
 import React, { ReactElement, useCallback, useRef, useState } from "react";
 import Button from "@components/button/Button";
@@ -40,15 +41,11 @@ interface PalauteFormInput {
   sahkoposti: string;
   puhelinnumero: string;
   kysymysTaiPalaute: string;
-  yhteydenottotapaEmail: boolean | null;
-  yhteydenottotapaPuhelin: boolean | null;
   liitteet: { nimi: string; tiedosto: File; tyyppi: string; koko: number }[];
 }
 
 const defaultValues = {
   kysymysTaiPalaute: "",
-  yhteydenottotapaEmail: false,
-  yhteydenottotapaPuhelin: false,
   liitteet: [],
 };
 
