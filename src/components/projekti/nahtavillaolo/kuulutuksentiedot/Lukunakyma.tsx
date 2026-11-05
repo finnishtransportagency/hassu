@@ -179,11 +179,21 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                         {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
                       </DownloadLink>
                     </div>
-                    <div>
-                      <DownloadLink href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}>
-                        {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
-                      </DownloadLink>
-                    </div>
+                    {isToiminnallinen
+                      ? ensisijaisetPDFt.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath && (
+                          <div>
+                            <DownloadLink href={ensisijaisetPDFt.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath}>
+                              {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )
+                      : ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath && (
+                          <div>
+                            <DownloadLink href={ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}>
+                              {splitFilePath(ensisijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )}
                   </>
                 )}
               </div>
@@ -212,11 +222,21 @@ export default function NahtavillaoloLukunakyma({ nahtavillaoloVaiheJulkaisu, pr
                             {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusPDFPath).fileName}
                           </DownloadLink>
                         </div>
-                        <div>
-                          <DownloadLink href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}>
-                            {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
-                          </DownloadLink>
-                        </div>
+                        {isToiminnallinen
+                          ? toissijaisetPDFt.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath && (
+                              <div>
+                                <DownloadLink href={toissijaisetPDFt.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath}>
+                                  {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath).fileName}
+                                </DownloadLink>
+                              </div>
+                            )
+                          : toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath && (
+                              <div>
+                                <DownloadLink href={toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath}>
+                                  {splitFilePath(toissijaisetPDFt.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath).fileName}
+                                </DownloadLink>
+                              </div>
+                            )}
                       </>
                     )}
                     {toissijaisetPDFt.__typename === "KuulutusSaamePDF" && (
