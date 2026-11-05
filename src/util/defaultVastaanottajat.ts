@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   IlmoitettavaViranomainen,
   IlmoituksenVastaanottajat,
@@ -6,6 +7,7 @@ import {
   KirjaamoOsoite,
   KuntaVastaanottajaInput,
   Projekti,
+  ProjektiTyyppi,
   ViranomaisVastaanottajaInput,
   Status,
   MaakuntaVastaanottajaInput,
@@ -115,10 +117,10 @@ export default function defaultVastaanottajat(
   const previous = findPreviousPhaseRecipients(projekti);
 
   const kunnat = buildKuntaRecipients(projekti, ilmoituksenVastaanottajat ?? previous);
+  const isToiminnallinen = projekti?.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+  const isJatkopaatos = paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2;
   const maakunnat =
-    paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2
-      ? buildMaakuntaRecipients(projekti, ilmoituksenVastaanottajat)
-      : [];
+    isJatkopaatos || isToiminnallinen ? buildMaakuntaRecipients(projekti, ilmoituksenVastaanottajat) : [];
 
   const viranomaiset = buildViranomaisetRecipients(projekti, ilmoituksenVastaanottajat, previous, kirjaamoOsoitteet);
 
