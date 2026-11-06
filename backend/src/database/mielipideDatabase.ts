@@ -1,5 +1,5 @@
 import { getDynamoDBDocumentClient } from "../aws/client";
-import { GetCommand, PutCommand, QueryCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand, QueryCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 import { getMielipideTableName } from "../util/environment";
 
 export type DBMielipide = {
@@ -17,6 +17,7 @@ export type DBMielipide = {
   maakoodi?: string | null;
   sahkoposti?: string | null;
   puhelinnumero?: string | null;
+  liiteSaastunut?: boolean;
 };
 
 class MielipideDatabase {
@@ -39,12 +40,24 @@ class MielipideDatabase {
     return result.Item as DBMielipide | undefined;
   }
 
+  async merkitseSaastuneeksi(oid: string, id: string): Promise<void> {
+    await getDynamoDBDocumentClient().send(
+      new UpdateCommand({
+        TableName: this.tableName,
+        Key: { oid, id },
+        UpdateExpression: "SET liiteSaastunut = :true",
+        ExpressionAttributeValues: { ":true": true },
+      })
+    );
+  }
+
   async haeMielipideMaara(oid: string): Promise<number> {
     const command = new QueryCommand({
       TableName: this.tableName,
       KeyConditionExpression: "#oid = :oid",
+      FilterExpression: "attribute_not_exists(liiteSaastunut) OR liiteSaastunut = :false",
       ExpressionAttributeNames: { "#oid": "oid" },
-      ExpressionAttributeValues: { ":oid": oid },
+      ExpressionAttributeValues: { ":oid": oid, ":false": false },
       Select: "COUNT",
     });
     const data = await getDynamoDBDocumentClient().send(command);
