@@ -43,4 +43,10 @@ describe("muistutusSchema", () => {
   it("hyväksyy kun liitteet on tyhjä lista", async () => {
     await expect(muistutusSchema.validate({ ...validBase, liitteet: [] })).resolves.toBeDefined();
   });
+
+  it("hylkää kun yksi liite ylittää yhteiskorajan", async () => {
+    await expect(
+      muistutusSchema.validate({ ...validBase, liitteet: [{ ...validLiite, koko: maxEmailAttachmentsTotalSize + 1 }] }, { abortEarly: true })
+    ).rejects.toThrow("liitteet_yhteiskoko_liian_suuri");
+  });
 });

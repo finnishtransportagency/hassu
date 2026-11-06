@@ -73,4 +73,10 @@ describe("palauteSchema", () => {
       palauteSchema.validate({ kysymysTaiPalaute: "Palaute", liitteet }, { abortEarly: true })
     ).rejects.toThrow("tiedostoja_liikaa");
   });
+
+  it("hylkää kun yksi liite ylittää yhteiskorajan", async () => {
+    await expect(
+      palauteSchema.validate({ kysymysTaiPalaute: "Palaute", liitteet: [{ ...validLiite, koko: maxEmailAttachmentsTotalSize + 1 }] }, { abortEarly: true })
+    ).rejects.toThrow("liitteet_yhteiskoko_liian_suuri");
+  });
 });

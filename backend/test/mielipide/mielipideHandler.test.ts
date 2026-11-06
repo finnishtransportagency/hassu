@@ -129,4 +129,19 @@ describe("mielipideHandler", () => {
       })
     ).to.eventually.be.rejectedWith(IllegalArgumentError, "Liitteiden yhteiskoko ylittää sallitun");
   });
+
+  it("should treat missing S3 file (undefined size) as zero and not throw when total is within limit", async () => {
+    mockClient(DynamoDBDocumentClient);
+    mockClient(SQSClient);
+    sinon.stub(fileService, "getUploadedFileContentLength").resolves(undefined);
+
+    // undefined size is treated as 0 in the total size check — validation passes,
+    // but persistLiitteet will subsequently fail when it tries to access the missing S3 object.
+    await expect(
+      mielipideHandler.kasitteleMielipide({
+        oid: fixture.PROJEKTI3_OID,
+        mielipide: { mielipide: "Testi", liitteet: ["upload/file1.pdf", "upload/file2.pdf"] },
+      })
+    ).to.eventually.be.rejectedWith("headObject:ia ei saatu haettua");
+  });
 });

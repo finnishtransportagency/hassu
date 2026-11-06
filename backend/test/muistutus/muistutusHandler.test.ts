@@ -205,6 +205,29 @@ describe("muistutusHandler", () => {
           muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput })
         ).to.eventually.be.rejectedWith(IllegalArgumentError, "Liitteiden yhteiskoko ylittää sallitun");
       });
+
+      it("should treat missing S3 file (undefined size) as zero and not throw when total is within limit", async () => {
+        mockClient(DynamoDBDocumentClient);
+        mockClient(SQSClient);
+        sinon.stub(fileService, "getUploadedFileContentLength").resolves(undefined);
+
+        const muistutusInput: MuistutusInput = {
+          katuosoite: "Katuosoite 1",
+          postitoimipaikka: "Helsinki",
+          postinumero: "00100",
+          maa: "FI",
+          muistutus: "Testiteksti",
+          liitteet: ["upload/file1.pdf", "upload/file2.pdf"],
+          etunimi: "Tessa",
+          sukunimi: "Testaaja",
+        };
+
+        // undefined size is treated as 0 in the total size check — validation passes,
+        // but persistLiitteet will subsequently fail when it tries to access the missing S3 object.
+        await expect(
+          muistutusHandler.kasitteleMuistutus({ oid: fixture.PROJEKTI3_OID, muistutus: muistutusInput })
+        ).to.eventually.be.rejectedWith("headObject:ia ei saatu haettua");
+      });
     });
 
     describe("tallennaMuistuttajat", () => {

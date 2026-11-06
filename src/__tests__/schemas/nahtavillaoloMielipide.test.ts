@@ -69,4 +69,10 @@ describe("mielipideSchema", () => {
   it("hyväksyy kun liitteet on tyhjä lista", async () => {
     await expect(mielipideSchema.validate({ mielipide: "Mielipide", liitteet: [] })).resolves.toBeDefined();
   });
+
+  it("hylkää kun yksi liite ylittää yhteiskorajan", async () => {
+    await expect(
+      mielipideSchema.validate({ mielipide: "Mielipide", liitteet: [{ ...validLiite, koko: maxEmailAttachmentsTotalSize + 1 }] }, { abortEarly: true })
+    ).rejects.toThrow("liitteet_yhteiskoko_liian_suuri");
+  });
 });
