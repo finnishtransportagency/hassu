@@ -103,7 +103,8 @@ export class NahtavillaoloVaiheTiedostoManager extends VaiheTiedostoManager<Naht
       s3Paths.pushYllapitoFilesIfDefined(
         pdf?.nahtavillaoloPDFPath,
         pdf?.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
-        pdf?.nahtavillaoloIlmoitusPDFPath
+        pdf?.nahtavillaoloIlmoitusPDFPath,
+        pdf?.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath
       );
     });
 
