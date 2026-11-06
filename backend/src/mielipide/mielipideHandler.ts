@@ -18,6 +18,9 @@ function getExpires() {
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
 
+// Odotetaan että GuardDuty saa virusskannauksen valmiiksi ennen kuin viesti näkyy jonon käsittelijälle
+export const LIITE_SCAN_DELAY_SECONDS = 5 * 60;
+
 class MielipideHandler {
   async kasitteleMielipide({ oid, mielipide: mielipideInput }: LisaaMielipideMutationVariables) {
     const projektiFromDB = await projektiDatabase.loadProjektiByOid(oid);
@@ -66,7 +69,12 @@ class MielipideHandler {
       mielipideId,
     };
     const emailSQSUrl = await parameters.getEmailSQSUrl();
-    await getSQS().sendMessage({ QueueUrl: emailSQSUrl, MessageBody: JSON.stringify(msg) });
+    const hasLiitteet = liitteet && liitteet.length > 0;
+    await getSQS().sendMessage({
+      QueueUrl: emailSQSUrl,
+      MessageBody: JSON.stringify(msg),
+      DelaySeconds: hasLiitteet ? LIITE_SCAN_DELAY_SECONDS : 0,
+    });
 
     return "OK";
   }
