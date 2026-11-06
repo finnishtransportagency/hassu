@@ -268,5 +268,32 @@ describe("EmailClient", () => {
       expect(result).to.be.undefined;
       expect(sendMailStub.calledOnce).to.be.true;
     });
+
+    it("retries on ESOCKET in sendTurvapostiEmail and succeeds on second attempt", async () => {
+      const socketError = Object.assign(new Error("connect error"), { code: "ESOCKET" });
+      const messageInfo = { accepted: [], rejected: [], messageId: "123" };
+      sendMailStub.onFirstCall().rejects(socketError);
+      sendMailStub.onSecondCall().resolves(messageInfo);
+
+      const resultPromise = emailClient.sendTurvapostiEmail(EMAIL_OPTIONS);
+      await clock.tickAsync(1 * 1000);
+      const result = await resultPromise;
+
+      expect(result).to.equal(messageInfo);
+      expect(sendMailStub.calledTwice).to.be.true;
+    });
+
+    it("reuses the same transport instance across retry attempts", async () => {
+      const socketError = Object.assign(new Error("connect error"), { code: "ESOCKET" });
+      const messageInfo = { accepted: [], rejected: [], messageId: "123" };
+      sendMailStub.onFirstCall().rejects(socketError);
+      sendMailStub.onSecondCall().resolves(messageInfo);
+
+      const resultPromise = emailClient.sendEmail(EMAIL_OPTIONS);
+      await clock.tickAsync(1 * 1000);
+      await resultPromise;
+
+      expect(createTransportStub.calledOnce).to.be.true;
+    });
   });
 });
