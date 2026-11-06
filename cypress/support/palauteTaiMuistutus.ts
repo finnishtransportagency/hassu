@@ -32,7 +32,6 @@ export function lahetaPalaute() {
   };
 
   typeIntoFields(selectorToTextMap);
-  cy.get('[name="yhteydenottotapaEmail"]').click({ force: true });
 
   uploadLiite();
   cy.get("#submit_feedback").scrollIntoView().click({ force: true });

@@ -817,8 +817,6 @@ type Palaute {
   sahkoposti: String
   puhelinnumero: String
   kysymysTaiPalaute: String
-  yhteydenottotapaEmail: Boolean
-  yhteydenottotapaPuhelin: Boolean
   liitteet: [Liite!]
   vastattu: Boolean
 }
