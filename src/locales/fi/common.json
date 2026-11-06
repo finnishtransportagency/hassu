@@ -201,6 +201,7 @@
   "virheet": {
     "palaute_on_pakollinen": "Palaute on pakollinen tieto",
     "muistutus_on_pakollinen": "Muistutus on pakollinen tieto",
+    "mielipide_on_pakollinen": "Mielipide on pakollinen tieto",
     "katuosoite_on_pakollinen": "Katuosoite on pakollinen tieto",
     "postinumero_on_pakollinen": "Postinumero on pakollinen tieto",
     "postitoimipaikka_on_pakollinen": "Postitoimipaikka on pakollinen tieto",
@@ -223,6 +224,7 @@
     "puh_vain_numerot": "Puhelinnumero voi sisältää vain numeroita",
     "tiedosto_on_liian_suuri": "Tiedosto on liian suuri",
     "tiedostotyyppi_ei_tuettu": "Tiedostotyyppi ei ole tuettu",
+    "liitteet_yhteiskoko_liian_suuri": "Liitteiden yhteiskoko ylittää sallitun 25 Mt rajan",
     "tiedostoja_liikaa": "Tiedostoja voi olla maksimissaan viisi",
     "anna_kiinteistotunnus_esitysmuodossa": "Tarkista kiinteistötunnuksen muoto, esim. 740-555-2-0"
   },

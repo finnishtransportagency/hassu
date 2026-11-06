@@ -5,7 +5,7 @@ import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "hassu-common/s
 import { lokalisoituTeksti, lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { kutsuSaamePDFInput } from "./kutsuSaamePDFInput";
-import { allowedFileTypesKansalaisille, maxFileSize } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille, maxEmailAttachmentsTotalSize } from "common/fileValidationSettings";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
@@ -19,10 +19,13 @@ export const palauteSchema = Yup.object().shape({
     .max(5, "tiedostoja_liikaa")
     .of(
       Yup.object().shape({
-        koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
         tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypesKansalaisille, "tiedostotyyppi_ei_tuettu"),
       })
-    ),
+    )
+    .test("liitteet_yhteiskoko", "liitteet_yhteiskoko_liian_suuri", (liitteet) => {
+      const total = liitteet?.reduce((sum, l) => sum + (l?.koko ?? 0), 0) ?? 0;
+      return total <= maxEmailAttachmentsTotalSize;
+    }),
 });
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({

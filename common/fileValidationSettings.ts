@@ -23,4 +23,7 @@ export const allowedFileTypesKansalaisille = [
 // 100MB
 export const maxFileSize = 100000000;
 
-export default { allowedFileTypesVirkamiehille, allowedFileTypesKansalaisille, maxFileSize };
+// 25MB – total attachment limit for emails sent to kirjaamo (muistutus, mielipide)
+export const maxEmailAttachmentsTotalSize = 25000000;
+
+export default { allowedFileTypesVirkamiehille, allowedFileTypesKansalaisille, maxFileSize, maxEmailAttachmentsTotalSize };

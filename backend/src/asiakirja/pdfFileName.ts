@@ -38,8 +38,12 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
     },
   },
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE: {
+    TIE: { [ProjektiTyyppi.TIE]: "T414_2", [ProjektiTyyppi.TOIMINNALLINEN]: "12TO_nahtavillaolo_maakunta" },
+    RATA: { [ProjektiTyyppi.RATA]: "12R_nahtavillaolo_maakunta" },
+  },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T415", [ProjektiTyyppi.YLEINEN]: "31YS", [ProjektiTyyppi.TOIMINNALLINEN]: "31TO" },
+    TIE: { [ProjektiTyyppi.TIE]: "T415", [ProjektiTyyppi.YLEINEN]: "31YS" },
     RATA: { [ProjektiTyyppi.RATA]: "31R", [ProjektiTyyppi.YLEINEN]: "31YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA: {
@@ -53,12 +57,16 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
       [ProjektiTyyppi.YLEINEN]: "12YS_hyvaksymispaatos",
     },
   },
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE: {
+    TIE: { [ProjektiTyyppi.TIE]: "T431_5", [ProjektiTyyppi.TOIMINNALLINEN]: "61TO_maakunta" },
+    RATA: { [ProjektiTyyppi.RATA]: "61R_maakunta" },
+  },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE: {
     TIE: { [ProjektiTyyppi.TIE]: "T431_3", [ProjektiTyyppi.YLEINEN]: "62YS", [ProjektiTyyppi.TOIMINNALLINEN]: "62TO" },
     RATA: { [ProjektiTyyppi.RATA]: "62R", [ProjektiTyyppi.YLEINEN]: "62YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T431_4", [ProjektiTyyppi.YLEINEN]: "63YS", [ProjektiTyyppi.TOIMINNALLINEN]: "63TO" },
+    TIE: { [ProjektiTyyppi.TIE]: "T431_4", [ProjektiTyyppi.YLEINEN]: "63YS" },
     RATA: { [ProjektiTyyppi.RATA]: "63R", [ProjektiTyyppi.YLEINEN]: "63YS" },
   },
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE: {
