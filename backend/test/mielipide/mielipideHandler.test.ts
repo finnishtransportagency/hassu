@@ -5,8 +5,9 @@ import { ProjektiFixture } from "../fixture/projektiFixture";
 import { userService } from "../../src/user";
 import { UserFixture } from "../fixture/userFixture";
 import { MielipideInput } from "hassu-common/graphql/apiModel";
-import { mielipideHandler } from "../../src/mielipide/mielipideHandler";
+import { mielipideHandler, LIITE_SCAN_DELAY_SECONDS } from "../../src/mielipide/mielipideHandler";
 import { projektiDatabase } from "../../src/database/projektiDatabase";
+import { CopyObjectCommand, HeadObjectCommand } from "@aws-sdk/client-s3";
 import { S3Mock } from "../aws/awsMock";
 import { expect } from "chai";
 import { mockClient } from "aws-sdk-client-mock";
@@ -16,6 +17,9 @@ import MockDate from "mockdate";
 import { DBMielipide } from "../../src/database/mielipideDatabase";
 import { parameters } from "../../src/aws/parameters";
 import { EmailEventType } from "../../src/email/model/emailEvent";
+import { fileService } from "../../src/files/fileService";
+import { IllegalArgumentError } from "hassu-common/error";
+import { maxEmailAttachmentsTotalSize } from "hassu-common/fileValidationSettings";
 
 describe("mielipideHandler", () => {
   const userFixture = new UserFixture(userService);
@@ -80,6 +84,37 @@ describe("mielipideHandler", () => {
     expect(saved.id).to.equal(sqsMsg.mielipideId);
   });
 
+  it("should set DelaySeconds when mielipide has liitteet", async () => {
+    mockClient(DynamoDBDocumentClient);
+    const s3Mock = new S3Mock();
+    s3Mock.s3Mock.on(CopyObjectCommand).resolves({});
+    s3Mock.s3Mock.on(HeadObjectCommand).resolves({ ContentType: "application/pdf", ContentLength: 1000 });
+
+    const mielipideInput: MielipideInput = {
+      mielipide: "Mielipide liitteellä",
+      liitteet: ["test-upload-bucket/test-file.pdf"],
+    };
+
+    await mielipideHandler.kasitteleMielipide({ oid: fixture.PROJEKTI3_OID, mielipide: mielipideInput });
+
+    expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
+    expect(sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.DelaySeconds).to.equal(LIITE_SCAN_DELAY_SECONDS);
+  });
+
+  it("should not set DelaySeconds when mielipide has no liitteet", async () => {
+    mockClient(DynamoDBDocumentClient);
+
+    const mielipideInput: MielipideInput = {
+      mielipide: "Mielipide ilman liitteitä",
+      liitteet: [],
+    };
+
+    await mielipideHandler.kasitteleMielipide({ oid: fixture.PROJEKTI3_OID, mielipide: mielipideInput });
+
+    expect(sqsMock.commandCalls(SendMessageCommand).length).to.equal(1);
+    expect(sqsMock.commandCalls(SendMessageCommand)[0].args[0].input.DelaySeconds).to.equal(0);
+  });
+
   it("should work with only required fields (mielipide)", async () => {
     const dbMockClient = mockClient(DynamoDBDocumentClient);
 
@@ -113,5 +148,32 @@ describe("mielipideHandler", () => {
     await expect(
       mielipideHandler.kasitteleMielipide({ oid: fixture.PROJEKTI3_OID, mielipide: { mielipide: "Testi", liitteet: [] } })
     ).to.eventually.be.rejectedWith("Projekti ei ole nähtävilläolovaiheessa");
+  });
+
+  it("should throw IllegalArgumentError when total attachment size exceeds limit", async () => {
+    mockClient(DynamoDBDocumentClient);
+    sinon.stub(fileService, "getUploadedFileContentLength").resolves(maxEmailAttachmentsTotalSize / 2 + 1);
+
+    await expect(
+      mielipideHandler.kasitteleMielipide({
+        oid: fixture.PROJEKTI3_OID,
+        mielipide: { mielipide: "Testi", liitteet: ["upload/file1.pdf", "upload/file2.pdf"] },
+      })
+    ).to.eventually.be.rejectedWith(IllegalArgumentError, "Liitteiden yhteiskoko ylittää sallitun");
+  });
+
+  it("should treat missing S3 file (undefined size) as zero and not throw when total is within limit", async () => {
+    mockClient(DynamoDBDocumentClient);
+    mockClient(SQSClient);
+    sinon.stub(fileService, "getUploadedFileContentLength").resolves(undefined);
+
+    // undefined size is treated as 0 in the total size check — validation passes,
+    // but persistLiitteet will subsequently fail when it tries to access the missing S3 object.
+    await expect(
+      mielipideHandler.kasitteleMielipide({
+        oid: fixture.PROJEKTI3_OID,
+        mielipide: { mielipide: "Testi", liitteet: ["upload/file1.pdf", "upload/file2.pdf"] },
+      })
+    ).to.eventually.be.rejectedWith("headObject:ia ei saatu haettua");
   });
 });

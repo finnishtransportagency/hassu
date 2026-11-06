@@ -8,6 +8,9 @@ import { mielipideEmailService } from "../mielipide/mielipideEmailService";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { mielipideDatabase } from "../database/mielipideDatabase";
 import { NotFoundError } from "hassu-common/error";
+import { virusScanService } from "../files/virusScanService";
+import { ProjektiPaths } from "../files/ProjektiPath";
+import { LiitteenSkannausTulos } from "hassu-common/graphql/apiModel";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -28,6 +31,20 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
           if (!mielipide) {
             log.error("Mielipidettä ei löydy", { mielipideId: emailEvent.mielipideId });
             throw new NotFoundError("Mielipidettä ei löydy");
+          }
+          if (mielipide.liitteet?.length) {
+            const projektiPaths = new ProjektiPaths(emailEvent.oid);
+            const tulokset = await Promise.all(
+              mielipide.liitteet.map((liite) => virusScanService.getGuardDutyScanResult(projektiPaths, liite))
+            );
+            if (tulokset.some((tulos) => tulos === LiitteenSkannausTulos.SAASTUNUT)) {
+              log.error(
+                "Mielipiteen liitteessä havaittu virus. Sähköpostia kirjaamolle ei lähetetä ja viesti poistetaan jonosta. GuardDuty on siirtänyt saastuneen tiedoston karanteeniin ja lähettänyt hälytyksen.",
+                { mielipideId: emailEvent.mielipideId }
+              );
+              await mielipideDatabase.merkitseSaastuneeksi(emailEvent.oid, emailEvent.mielipideId);
+              return;
+            }
           }
           await mielipideEmailService.sendEmailToKirjaamo(projekti, mielipide);
         } else {
