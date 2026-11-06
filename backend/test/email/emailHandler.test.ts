@@ -18,7 +18,7 @@ import { EmailClientStub, mockSaveProjektiToVelho, VelhoStub } from "../../integ
 import { mockBankHolidays } from "../mocks";
 import { GetObjectCommand, GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { expect } from "chai";
-import { KayttajaTyyppi, KuulutusJulkaisuTila, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import { KayttajaTyyppi, KuulutusJulkaisuTila, ProjektiTyyppi, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { parameters } from "../../src/aws/parameters";
 import { nahtavillaoloTilaManager } from "../../src/handler/tila/nahtavillaoloTilaManager";
 import { DBProjektiForSpecificVaiheFixture, VaiheenTila } from "../fixture/DBProjekti2ForSecificVaiheFixture";
@@ -183,6 +183,30 @@ describe("emailHandler", () => {
       loadProjektiByOidStub.resolves(projekti);
     });
 
+    it("approval for TOIMINNALLINEN project should send maakuntaliitto email as 4th email", async () => {
+      const toiminnallinenProjekti: DBProjekti = {
+        ...projekti,
+        velho: { ...projekti.velho!, tyyppi: ProjektiTyyppi.TOIMINNALLINEN },
+      };
+      loadProjektiByOidStub.resolves(toiminnallinenProjekti);
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      putNahtavillaoloKuulutusJulkaisuStub.resolves();
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
+
+      await expect(nahtavillaoloTilaManager.approve(toiminnallinenProjekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
+
+      // Hyväksymisviesti laatijalle, projektipäällikölle, ilmoitusviesti viranomaisille ja maakuntaliittoilmoitus
+      expect(emailClientStub.sendEmailStub.callCount).to.equal(4);
+
+      // 4. viesti lähtee maakuntaliittoihin
+      const maakuntaVastaanottajat = (emailClientStub.sendEmailStub.getCall(3).firstArg as EmailOptions).to;
+      expect(maakuntaVastaanottajat).to.include.all.members(["uusimaa@maakuntaliitto.fi", "pirkanmaa@maakuntaliitto.fi"]);
+    });
+
     it("approval should send emails and attachments succesfully", async () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
@@ -269,6 +293,30 @@ describe("emailHandler", () => {
     beforeEach(() => {
       projekti = new DBProjektiForSpecificVaiheFixture().getProjektiForVaihe(Vaihe.HYVAKSYMISPAATOS, VaiheenTila.ODOTTAA_HYVAKSYNTAA);
       loadProjektiByOidStub.resolves(projekti);
+    });
+
+    it("approval for TOIMINNALLINEN project should send maakuntaliitto email as 4th email", async () => {
+      const toiminnallinenProjekti: DBProjekti = {
+        ...projekti,
+        velho: { ...projekti.velho!, tyyppi: ProjektiTyyppi.TOIMINNALLINEN },
+      };
+      loadProjektiByOidStub.resolves(toiminnallinenProjekti);
+      publishProjektiFileStub.resolves();
+      synchronizeProjektiFilesStub.resolves();
+      putJulkaisutStub.resolves();
+      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+        Body: Readable.from(""),
+        ContentType: "application/pdf",
+      } as GetObjectCommandOutput);
+
+      await expect(hyvaksymisPaatosVaiheTilaManager.approve(toiminnallinenProjekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
+
+      // Hyväksymisviesti laatijalle, projektipäällikölle, ilmoitusviesti viranomaisille ja maakuntaliittoilmoitus
+      expect(emailClientStub.sendEmailStub.callCount).to.equal(4);
+
+      // 4. viesti lähtee maakuntaliittoihin
+      const maakuntaVastaanottajat = (emailClientStub.sendEmailStub.getCall(3).firstArg as EmailOptions).to;
+      expect(maakuntaVastaanottajat).to.include.all.members(["uusimaa@maakuntaliitto.fi", "pirkanmaa@maakuntaliitto.fi"]);
     });
 
     it("approval should send emails and attachments succesfully", async () => {
