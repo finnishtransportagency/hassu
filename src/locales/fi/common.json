@@ -201,6 +201,7 @@
   "virheet": {
     "palaute_on_pakollinen": "Palaute on pakollinen tieto",
     "muistutus_on_pakollinen": "Muistutus on pakollinen tieto",
+    "mielipide_on_pakollinen": "Mielipide on pakollinen tieto",
     "katuosoite_on_pakollinen": "Katuosoite on pakollinen tieto",
     "postinumero_on_pakollinen": "Postinumero on pakollinen tieto",
     "postitoimipaikka_on_pakollinen": "Postitoimipaikka on pakollinen tieto",
