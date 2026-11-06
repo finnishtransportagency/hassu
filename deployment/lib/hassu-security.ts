@@ -103,6 +103,9 @@ async function createMalwareProtectionForS3(stack: Stack, bucket: Bucket, quaran
       source: ["aws.guardduty"],
       detailType: ["GuardDuty Malware Protection Object Scan Result"],
       detail: {
+        s3ObjectDetails: {
+          bucketName: [bucket.bucketName],
+        },
         scanResultDetails: {
           scanResultStatus: ["THREATS_FOUND"],
         },
