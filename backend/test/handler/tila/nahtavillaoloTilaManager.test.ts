@@ -19,6 +19,8 @@ import { omistajaDatabase } from "../../../src/database/omistajaDatabase";
 import { mockClient } from "aws-sdk-client-mock";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { mockSaveProjektiToVelho, SaveProjektiToVelhoMocks, VelhoStub } from "../../../integrationtest/api/testUtil/util";
+import { fileService } from "../../../src/files/fileService";
+import { nahtavillaoloVaiheJulkaisuDatabase } from "../../../src/database/nahtavillaoloVaiheJulkaisuDatabase";
 
 describe("nahtavillaoloTilaManager", () => {
   let projekti: DBProjekti;
@@ -86,6 +88,36 @@ describe("nahtavillaoloTilaManager", () => {
     } finally {
       sandbox.restore();
     }
+  });
+
+  it("should delete nahtavillaoloIlmoitusMaakuntaliitoillePDFPath on reject for TOIMINNALLINEN project", async function () {
+    assertIsDefined(projekti.nahtavillaoloVaiheJulkaisut);
+    const toiminnallinenProjekti: DBProjekti = {
+      ...projekti,
+      velho: { ...projekti.velho!, tyyppi: ProjektiTyyppi.TOIMINNALLINEN },
+      nahtavillaoloVaiheJulkaisut: [
+        {
+          ...projekti.nahtavillaoloVaiheJulkaisut[0],
+          tila: API.KuulutusJulkaisuTila.ODOTTAA_HYVAKSYNTAA,
+          nahtavillaoloPDFt: {
+            SUOMI: {
+              nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/1.pdf",
+              nahtavillaoloPDFPath: "/nahtavillaolo/1/2.pdf",
+              nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: "/nahtavillaolo/1/4.pdf",
+            },
+          },
+        },
+      ],
+    };
+    const deleteFileStub = sinon.stub(fileService, "deleteYllapitoFileFromProjekti").resolves();
+    sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "delete").resolves();
+    sinon.stub(projektiDatabase, "saveProjekti").resolves();
+
+    await nahtavillaoloTilaManager.reject(toiminnallinenProjekti, "syy");
+
+    const deletedPaths = deleteFileStub.args.map((args) => args[0].filePathInProjekti);
+    expect(deletedPaths).to.include("/nahtavillaolo/1/4.pdf");
+    expect(deletedPaths).to.not.include(undefined);
   });
 
   it("should create ZIP_LAUSUNTOPYYNNOT event on nahtavillaolo approve", async function () {

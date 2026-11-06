@@ -80,6 +80,22 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
                   Ilmoitus kiinteistön omistajalle esikatselu
                 </Button>
               )}
+              {isToiminnallinen && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_maakuntaliitoille_pdf_" + ensisijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      formData,
+                      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE,
+                      ensisijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus maakuntaliitoille esikatselu
+                </Button>
+              )}
             </Box>
           </div>
         )}
@@ -126,6 +142,22 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf }: Re
                   )}
                 >
                   Ilmoitus kiinteistön omistajalle esikatselu
+                </Button>
+              )}
+              {isToiminnallinen && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_maakuntaliitoille_pdf_" + toissijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      formData,
+                      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE,
+                      toissijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus maakuntaliitoille esikatselu
                 </Button>
               )}
             </Box>

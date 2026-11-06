@@ -1,7 +1,8 @@
+// Contains code generated or recommended by Amazon Q
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { AsiakirjaTyyppi, Kayttaja, Kieli, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kayttaja, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
 import Mail from "nodemailer/lib/mailer";
 import {
   DBProjekti,
@@ -40,10 +41,52 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
 
   protected async sendEmailToMaakuntaliitto(
     _emailCreator: HyvaksymisPaatosEmailCreator,
-    _julkaisu: PaatosVaiheJulkaisu,
-    _projektinKielet: Kieli[],
-    _projekti: DBProjekti
-  ): Promise<void> {}
+    julkaisu: PaatosVaiheJulkaisu,
+    projektinKielet: Kieli[],
+    projekti: DBProjekti
+  ): Promise<void> {
+    if (projekti.velho?.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN) {
+      return;
+    }
+    const maakunnat = julkaisu.ilmoituksenVastaanottajat?.maakunnat;
+    if (!maakunnat?.length) {
+      log.info("Hyväksymispäätöskuulutus: ei maakuntaliittovastaanottajia, ohitetaan maakuntaliittoilmoitus");
+      return;
+    }
+    const pdft = await Object.entries(julkaisu.hyvaksymisPaatosVaihePDFt ?? {})
+      .filter(([kieli]) => projektinKielet.includes(kieli as Kieli))
+      .reduce<Promise<Mail.Attachment[]>>(async (lahetettavatPDFt, [kieli, pdft]) => {
+        const pdfKeys: (keyof HyvaksymisPaatosVaihePDF)[] = ["hyvaksymisIlmoitusMaakuntaliitoillePDFPath"];
+        const attachments = await Promise.all(
+          pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+        );
+        (await lahetettavatPDFt).push(...attachments);
+        return lahetettavatPDFt;
+      }, Promise.resolve([]));
+    const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
+    const viranomainen = projekti.velho?.suunnittelustaVastaavaViranomainen;
+    const virasto =
+      viranomainen === SuunnittelustaVastaavaViranomainen.VAYLAVIRASTO
+        ? "Väyläviraston"
+        : viranomainen && viranomainen.endsWith("ELY")
+        ? translate("ely_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " ELY-keskuksen"
+        : translate("ely_alue_genetiivi." + viranomainen, Kieli.SUOMI) + " elinvoimakeskuksen";
+    const projektiPaallikko = getProjektipaallikkoAndOrganisaatio(projekti, Kieli.SUOMI);
+    const prefix = julkaisu.uudelleenKuulutus ? "Korjaus/uudelleenkuulutus: " + virasto : virasto;
+    const emailOptions: EmailOptions = {
+      subject: prefix + " kuulutuksesta ilmoittaminen",
+      text: `Hei,\nLiitteenä on ${virasto} ilmoitus Liikenne- ja viestintävirasto Traficomin tekemästä hyväksymispäätöksestä koskien suunnitelmaa ${
+        projekti.velho?.nimi ?? ""
+      }.\n\nYstävällisin terveisin,\n${projektiPaallikko.nimi}\n${projektiPaallikko.organisaatio}`,
+      to: maakunnat.map((maakunta) => maakunta.sahkoposti),
+      cc: projektiPaallikkoJaVarahenkilotEmails(projekti.kayttoOikeudet),
+      attachments: [...pdft, ...paatosTiedostot],
+    };
+    const sentMessageInfo = await emailClient.sendEmail(emailOptions);
+    const aikaleima = localDateTimeString();
+    maakunnat.map((maakunta) => examineEmailSentResults(maakunta, sentMessageInfo, aikaleima));
+    await this.updateProjektiJulkaisut(projekti, julkaisu);
+  }
 
   public async sendEmails(oid: string): Promise<void> {
     const projekti = await projektiDatabase.loadProjektiByOid(oid);
@@ -195,9 +238,12 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
             "ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath",
             "hyvaksymisIlmoitusLausunnonantajillePDFPath",
             "hyvaksymisIlmoitusMuistuttajillePDFPath",
+            "hyvaksymisIlmoitusMaakuntaliitoillePDFPath",
           ];
           const attachments = await Promise.all(
-            pdfKeys.map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
+            pdfKeys
+              .filter((key) => pdft[key] !== undefined)
+              .map(async (key) => await this.getMandatoryProjektiFileAsAttachment(pdft[key], projekti, `${key} ${kieli}`))
           );
           (await lahetettavatPDFt).push(...attachments);
           return lahetettavatPDFt;
