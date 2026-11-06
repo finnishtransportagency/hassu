@@ -36,7 +36,6 @@ describe("emailSQSHandler", () => {
   const fixture = new ProjektiFixture();
   let sendEmailToKirjaamoStub: sinon.SinonStub;
   let getVirusScanResultStub: sinon.SinonStub;
-  let isPermanentEnvironmentStub: sinon.SinonStub;
 
   const mielipideWithLiitteet: DBMielipide = {
     oid: "",
@@ -50,7 +49,6 @@ describe("emailSQSHandler", () => {
   beforeEach(() => {
     sendEmailToKirjaamoStub = sinon.stub(mielipideEmailService, "sendEmailToKirjaamo").resolves();
     getVirusScanResultStub = sinon.stub(virusScanService, "getGuardDutyScanResult");
-    isPermanentEnvironmentStub = sinon.stub(config, "isPermanentEnvironment").returns(true);
   });
 
   afterEach(() => {
@@ -155,24 +153,6 @@ describe("emailSQSHandler", () => {
     ).to.eventually.be.rejectedWith("Virusskannaus kesken");
 
     sinon.assert.notCalled(sendEmailToKirjaamoStub);
-  });
-
-  it("should skip virus scan check in non-permanent environment", async () => {
-    isPermanentEnvironmentStub.returns(false);
-    const dbMock = mockClient(DynamoDBDocumentClient);
-    dbMock.on(GetCommand, { TableName: config.projektiTableName }).resolves({ Item: fixture.dbProjekti3 });
-    dbMock
-      .on(GetCommand, { TableName: process.env.TABLE_PROJEKTI_MIELIPIDE })
-      .resolves({ Item: { ...mielipideWithLiitteet, oid: fixture.PROJEKTI3_OID } });
-
-    await handleEvent(
-      makeSQSEvent({ type: EmailEventType.MIELIPIDE_KIRJAAMO, oid: fixture.PROJEKTI3_OID, mielipideId: "test-id-123" }),
-      {} as any,
-      () => {}
-    );
-
-    sinon.assert.notCalled(getVirusScanResultStub);
-    sinon.assert.calledOnce(sendEmailToKirjaamoStub);
   });
 
   it("should throw when project is not found", async () => {

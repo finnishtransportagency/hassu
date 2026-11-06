@@ -11,7 +11,6 @@ import { NotFoundError } from "hassu-common/error";
 import { virusScanService } from "../files/virusScanService";
 import { ProjektiPaths } from "../files/ProjektiPath";
 import { LiitteenSkannausTulos } from "hassu-common/graphql/apiModel";
-import { config } from "../config";
 
 export const handleEvent: SQSHandler = async (event: SQSEvent) => {
   setupLambdaMonitoring();
@@ -33,7 +32,7 @@ export const handleEvent: SQSHandler = async (event: SQSEvent) => {
             log.error("Mielipidettä ei löydy", { mielipideId: emailEvent.mielipideId });
             throw new NotFoundError("Mielipidettä ei löydy");
           }
-          if (config.isPermanentEnvironment() && mielipide.liitteet?.length) {
+          if (mielipide.liitteet?.length) {
             const projektiPaths = new ProjektiPaths(emailEvent.oid);
             const tulokset = await Promise.all(
               mielipide.liitteet.map((liite) => virusScanService.getGuardDutyScanResult(projektiPaths, liite))
