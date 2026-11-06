@@ -132,6 +132,7 @@ enum AsiakirjaTyyppi {
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
   ILMOITUS_HENKILOTIETOJEN_KASITTELYSTA_ALOITUSKUULUTUS
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE
+  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE
   MAANOMISTAJALUETTELO_ALOITUSKUULUTUS
   MAANOMISTAJALUETTELO_NAHTAVILLAOLO
   HYVAKSYMISESITYS_SAHKOPOSTI
@@ -141,6 +142,7 @@ enum AsiakirjaTyyppi {
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
   MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS
 
   JATKOPAATOSKUULUTUS
@@ -668,7 +670,8 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
 type NahtavillaoloPDF {
   nahtavillaoloPDFPath: String!
   nahtavillaoloIlmoitusPDFPath: String!
-  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String!
+  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String
+  nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: String
 }
 
 type NahtavillaoloPDFt {
@@ -695,6 +698,7 @@ type HyvaksymisPaatosVaihePDF {
   ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: String!
   hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
   hyvaksymisIlmoitusMuistuttajillePDFPath: String
+  hyvaksymisIlmoitusMaakuntaliitoillePDFPath: String
 }
 
 type HyvaksymisPaatosVaihePDFt {
@@ -817,8 +821,6 @@ type Palaute {
   sahkoposti: String
   puhelinnumero: String
   kysymysTaiPalaute: String
-  yhteydenottotapaEmail: Boolean
-  yhteydenottotapaPuhelin: Boolean
   liitteet: [Liite!]
   vastattu: Boolean
 }

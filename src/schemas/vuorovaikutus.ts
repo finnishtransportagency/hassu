@@ -1,53 +1,31 @@
+// Contains code generated or recommended by Amazon Q
 import { VuorovaikutusTilaisuusTyyppi } from "@services/api";
 import * as Yup from "yup";
 import { ilmoituksenVastaanottajat, standardiYhteystiedot } from "hassu-common/schema/common";
 import { lokalisoituTeksti, lokalisoituTekstiEiPakollinen } from "./lokalisoituTeksti";
 import { paivamaara } from "hassu-common/schema/paivamaaraSchema";
 import { kutsuSaamePDFInput } from "./kutsuSaamePDFInput";
-import { allowedFileTypesKansalaisille, maxFileSize } from "common/fileValidationSettings";
+import { allowedFileTypesKansalaisille, maxEmailAttachmentsTotalSize } from "common/fileValidationSettings";
 
 const validTimeRegexp = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])$/;
 
 export const palauteSchema = Yup.object().shape({
   etunimi: Yup.string().notRequired().max(100, "etunimi_max_100").nullable(),
   sukunimi: Yup.string().notRequired().max(100, "sukunimi_max_100").nullable(),
-  sahkoposti: Yup.string()
-    .notRequired()
-    .email("sahkoposti_ei_kelpaa")
-    .nullable()
-    .test({
-      message: "sahkoposti_pakollinen_jos",
-      test: (sahkoposti, context) => {
-        if (context.parent.yhteydenottotapaEmail === true && !sahkoposti) {
-          return false;
-        }
-        return true;
-      },
-    }),
-  puhelinnumero: Yup.string()
-    .notRequired()
-    .max(20, "puh_max_20")
-    .nullable()
-    .test({
-      message: "puhelinnumero_pakollinen_jos",
-      test: (puhelinnumero, context) => {
-        if (context.parent.yhteydenottotapaPuhelin === true && !puhelinnumero) {
-          return false;
-        }
-        return true;
-      },
-    }),
+  sahkoposti: Yup.string().notRequired().email("sahkoposti_ei_kelpaa").nullable(),
+  puhelinnumero: Yup.string().notRequired().max(20, "puh_max_20").nullable(),
   kysymysTaiPalaute: Yup.string().required("palaute_on_pakollinen").max(2000),
-  yhteydenottotapaEmail: Yup.boolean().notRequired().nullable(),
-  yhteydenottotapaPuhelin: Yup.boolean().notRequired().nullable(),
   liitteet: Yup.array()
     .max(5, "tiedostoja_liikaa")
     .of(
       Yup.object().shape({
-        koko: Yup.number().required("tiedosto_on_liian_suuri").max(maxFileSize, "tiedosto_on_liian_suuri"),
         tyyppi: Yup.string().required("tiedostotyyppi_ei_tuettu").oneOf(allowedFileTypesKansalaisille, "tiedostotyyppi_ei_tuettu"),
       })
-    ),
+    )
+    .test("liitteet_yhteiskoko", "liitteet_yhteiskoko_liian_suuri", (liitteet) => {
+      const total = liitteet?.reduce((sum, l) => sum + (l?.koko ?? 0), 0) ?? 0;
+      return total <= maxEmailAttachmentsTotalSize;
+    }),
 });
 
 export const vuorovaikutustilaisuudetSchema = Yup.object().shape({

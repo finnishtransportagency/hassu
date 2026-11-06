@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useMemo } from "react";
 import {
   HyvaksymisPaatosVaiheJulkaisu,
@@ -5,6 +6,7 @@ import {
   Kieli,
   KuulutusJulkaisuTila,
   KuulutusSaamePDF,
+  ProjektiTyyppi,
   Vaihe,
 } from "@services/api";
 import replace from "lodash/replace";
@@ -43,6 +45,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
     () => paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2,
     [paatosTyyppi]
   );
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
 
   const getPdft = (kieli: Kieli | undefined | null): KuulutusSaamePDF | HyvaksymisPaatosVaihePDF | null | undefined => {
     if (isKieliTranslatable(kieli) && julkaisu && julkaisu.hyvaksymisPaatosVaihePDFt) {
@@ -189,7 +192,14 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                         {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                       </DownloadLink>
                     </div>
-                    {ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
+                    {isToiminnallinen && ensisijaisetPDFt.hyvaksymisIlmoitusMaakuntaliitoillePDFPath && (
+                      <div>
+                        <DownloadLink href={ensisijaisetPDFt.hyvaksymisIlmoitusMaakuntaliitoillePDFPath}>
+                          {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMaakuntaliitoillePDFPath).fileName}
+                        </DownloadLink>
+                      </div>
+                    )}
+                    {!isToiminnallinen && ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
                       <div>
                         <DownloadLink href={ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
                           {splitFilePath(ensisijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
@@ -237,7 +247,14 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
                             {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusLausunnonantajillePDFPath).fileName}
                           </DownloadLink>
                         </div>
-                        {toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
+                        {isToiminnallinen && toissijaisetPDFt.hyvaksymisIlmoitusMaakuntaliitoillePDFPath && (
+                          <div>
+                            <DownloadLink href={toissijaisetPDFt.hyvaksymisIlmoitusMaakuntaliitoillePDFPath}>
+                              {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMaakuntaliitoillePDFPath).fileName}
+                            </DownloadLink>
+                          </div>
+                        )}
+                        {!isToiminnallinen && toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath && (
                           <div>
                             <DownloadLink href={toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath}>
                               {splitFilePath(toissijaisetPDFt.hyvaksymisIlmoitusMuistuttajillePDFPath).fileName}
@@ -283,6 +300,7 @@ export default function HyvaksymisKuulutusLukunakyma({ julkaisu, projekti, paato
         oid={projekti.oid}
         uudelleenKuulutus={julkaisu.uudelleenKuulutus}
         kuulutusPaiva={kuulutusPaiva}
+        projektiTyyppi={projekti.velho?.tyyppi}
       />
     </>
   );

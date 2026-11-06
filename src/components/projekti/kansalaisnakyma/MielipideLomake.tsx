@@ -254,6 +254,11 @@ export default function MielipideLomake({ projekti, mielipideoikeusPaattyyPaiva 
                 ))}
               </ContentSpacer>
             )}
+            <ErrorMessage
+              errors={formState.errors}
+              name="liitteet"
+              render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
+            />
             <input
               className="hidden"
               id="file-input-mielipide"

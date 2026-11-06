@@ -1,7 +1,7 @@
 // Contains code generated or recommended by Amazon Q
 import React from "react";
 import Section from "@components/layout/Section";
-import { AsiakirjaTyyppi, Kieli, TallennaProjektiInput } from "@services/api";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, TallennaProjektiInput } from "@services/api";
 import Button from "@components/button/Button";
 import { Box } from "@mui/material";
 import { useProjekti } from "src/hooks/useProjekti";
@@ -43,6 +43,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
 
   const ensisijainenKieli = kielitiedot.ensisijainenKieli;
   const toissijainenKieli = kielitiedot.toissijainenKieli;
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
 
   const {
     paatosAsiakirjaTyyppi,
@@ -50,6 +51,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
     ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi,
     ilmoitusPaatoskuulutuksestaAsiakirjaTyyppi,
     ilmoitusPaatoskuulutuksestaKunnalleJaToiselleViranomaiselleAsiakirjaTyyppi,
+    ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi,
   } = paatosSpecificRoutesMap[paatosTyyppi];
 
   return (
@@ -124,7 +126,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   ? "Ilmoitus lausunnonantajille esikatselu"
                   : "Ilmoitus maakuntaliitoille esikatselu"}
               </Button>
-              {ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi && (
+              {!isToiminnallinen && ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi && (
                 <Button
                   style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                   id={"preview_ilmoitus_muistuttajille_pdf_" + ensisijainenKieli}
@@ -138,6 +140,22 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   })}
                 >
                   Ilmoitus muistuttajille ja kiinteistönomistajille esikatselu
+                </Button>
+              )}
+              {isToiminnallinen && ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_maakuntaliitoille_pdf_" + ensisijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                      ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi,
+                      ensisijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus maakuntaliitoille esikatselu
                 </Button>
               )}
             </Box>
@@ -211,7 +229,7 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   ? "Ilmoitus lausunnonantajille esikatselu"
                   : "Ilmoitus maakuntaliitoille esikatselu"}
               </Button>
-              {ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi && (
+              {!isToiminnallinen && ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi && (
                 <Button
                   style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
                   id={"preview_ilmoitus_muistuttajille_pdf_" + toissijainenKieli}
@@ -225,6 +243,22 @@ export default function KuulutuksenJaIlmoituksenEsikatselu({ esikatselePdf, paat
                   })}
                 >
                   Ilmoitus muistuttajille esikatselu
+                </Button>
+              )}
+              {isToiminnallinen && ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi && (
+                <Button
+                  style={{ display: "inline", marginBottom: "2em", marginRight: "2em" }}
+                  id={"preview_ilmoitus_maakuntaliitoille_pdf_" + toissijainenKieli}
+                  type="button"
+                  onClick={handleSubmit((formData) =>
+                    esikatselePdf(
+                      convertFormDataToTallennaProjektiInput(formData, paatosTyyppi),
+                      ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi,
+                      toissijainenKieli
+                    )
+                  )}
+                >
+                  Ilmoitus maakuntaliitoille esikatselu
                 </Button>
               )}
             </Box>
