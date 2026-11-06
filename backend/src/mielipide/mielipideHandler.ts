@@ -1,6 +1,7 @@
 // Contains code generated or recommended by Amazon Q
 import { LisaaMielipideMutationVariables, Status } from "hassu-common/graphql/apiModel";
-import { NotFoundError } from "hassu-common/error";
+import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
+import fileValidation from "hassu-common/fileValidationSettings";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { auditLog, log } from "../logger";
@@ -39,6 +40,7 @@ class MielipideHandler {
     }
 
     const mielipideId = uuid.v4();
+    await this.validateLiitteetTotalSize(mielipideInput.liitteet, oid);
     const liitteet = await this.persistLiitteet(mielipideInput.liitteet, oid, mielipideId);
 
     const maakoodi = mielipideInput.maa !== "FI" ? mielipideInput.maa : undefined;
@@ -77,6 +79,17 @@ class MielipideHandler {
     });
 
     return "OK";
+  }
+
+  private async validateLiitteetTotalSize(liitteet: string[] | undefined | null, oid: string): Promise<void> {
+    if (!liitteet?.length) return;
+    const sizes = await Promise.all(liitteet.map((liite) => fileService.getUploadedFileContentLength(liite)));
+    const total = sizes.reduce<number>((sum, size) => sum + (size ?? 0), 0);
+    if (total > fileValidation.maxEmailAttachmentsTotalSize) {
+      const maxMB = Math.round(fileValidation.maxEmailAttachmentsTotalSize / 1000000);
+      log.error("Mielipiteen liitteiden yhteiskoko ylittää sallitun rajan", { total, oid });
+      throw new IllegalArgumentError(`Liitteiden yhteiskoko ylittää sallitun ${maxMB} Mt rajan`);
+    }
   }
 
   private async persistLiitteet(liitteet: string[] | undefined | null, oid: string, mielipideId: string): Promise<DBMielipide["liitteet"]> {
