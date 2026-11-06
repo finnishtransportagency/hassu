@@ -59,7 +59,8 @@ export class HyvaksymisPaatosVaiheTiedostoManager extends AbstractPaatosVaiheTie
         pdf?.hyvaksymisIlmoitusLausunnonantajillePDFPath,
         pdf?.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
         pdf?.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
-        pdf?.hyvaksymisIlmoitusMuistuttajillePDFPath
+        pdf?.hyvaksymisIlmoitusMuistuttajillePDFPath,
+        pdf?.hyvaksymisIlmoitusMaakuntaliitoillePDFPath
       );
     });
 

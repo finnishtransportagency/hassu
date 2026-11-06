@@ -1,4 +1,5 @@
-import { Vaihe, Projekti, AktiivisenVaiheenAsianhallinnanTila, KuulutusJulkaisuTila } from "hassu-common/graphql/apiModel";
+// Contains code generated or recommended by Amazon Q
+import { Vaihe, Projekti, AktiivisenVaiheenAsianhallinnanTila, KuulutusJulkaisuTila, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { statusOrder } from "hassu-common/statusOrder";
 import {
   haeJulkaisunTiedot,
@@ -45,5 +46,11 @@ function haeEnsimmainenVaiheJokaOdottaaHyvaksyntaaTaiOnMuokkausTilassa(projekti:
 function suodataSuunnitteluvaiheJosPalattuNahtavillaolostaTaiVahainenMenettely(
   projekti: Projekti
 ): (value: Vaihe, index: number, array: Vaihe[]) => boolean {
-  return (vaihe) => vaihe !== Vaihe.SUUNNITTELU || !(projekti.vuorovaikutusKierros?.palattuNahtavillaolosta || projekti.vahainenMenettely);
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+  return (vaihe) => {
+    if (isToiminnallinen && (vaihe === Vaihe.ALOITUSKUULUTUS || vaihe === Vaihe.SUUNNITTELU)) {
+      return false;
+    }
+    return vaihe !== Vaihe.SUUNNITTELU || !(projekti.vuorovaikutusKierros?.palattuNahtavillaolosta || projekti.vahainenMenettely);
+  };
 }
