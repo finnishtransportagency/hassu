@@ -104,7 +104,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     let allOk = true;
     try {
       await validateTallennaProjekti(projekti, input);
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);
@@ -157,7 +157,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     let allOk = true;
     try {
       await validateTallennaProjekti(projekti, input);
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);
@@ -240,7 +240,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     let allOk = true;
     try {
       await validateTallennaProjekti(projekti, input);
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);
@@ -295,7 +295,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
     let allOk = true;
     try {
       await validateTallennaProjekti(projekti, input);
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);

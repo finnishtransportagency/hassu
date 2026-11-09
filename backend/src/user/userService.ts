@@ -30,7 +30,7 @@ function parseRoles(roles?: string): string[] | undefined {
     return JSON.parse(roles)
       .map(parseRole)
       .filter((s: string) => s);
-  } catch (e) {
+  } catch (_e) {
     return roles
       .replace("\\", "")
       .split(",")
@@ -81,7 +81,7 @@ const identifyLoggedInKansalainen = async (event: AppSyncResolverEvent<unknown>)
   let keycloakUrl: string | undefined;
   try {
     keycloakUrl = await parameters.getKeycloakPrivateDomain();
-  } catch (e) {
+  } catch (_e) {
     log.error(e);
   }
   if (!keycloakUrl) {

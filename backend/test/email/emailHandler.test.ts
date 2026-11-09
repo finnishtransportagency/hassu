@@ -38,7 +38,7 @@ describe("emailHandler", () => {
   let updateAloitusKuulutusJulkaisuStub: sinon.SinonStub;
   let putNahtavillaoloKuulutusJulkaisuStub: sinon.SinonStub;
   let putJulkaisutStub: sinon.SinonStub;
-  let saveProjektiStub: sinon.SinonStub;
+  let _saveProjektiStub: sinon.SinonStub;
   let publishProjektiFileStub: sinon.SinonStub;
   let synchronizeProjektiFilesStub: sinon.SinonStub;
   let fixture: ProjektiFixture;
@@ -54,7 +54,7 @@ describe("emailHandler", () => {
     updateAloitusKuulutusJulkaisuStub = sinon.stub(projektiDatabase.aloitusKuulutusJulkaisut, "update");
     putNahtavillaoloKuulutusJulkaisuStub = sinon.stub(nahtavillaoloVaiheJulkaisuDatabase, "put");
     putJulkaisutStub = sinon.stub(projektiEntityDatabase, "put");
-    saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti").resolves();
+    _saveProjektiStub = sinon.stub(projektiDatabase, "saveProjekti").resolves();
     publishProjektiFileStub = sinon.stub(fileService, "publishProjektiFile");
     synchronizeProjektiFilesStub = sinon.stub(projektiSchedulerService, "synchronizeProjektiFiles");
     sinon.stub(parameters, "isAsianhallintaIntegrationEnabled").returns(Promise.resolve(false));

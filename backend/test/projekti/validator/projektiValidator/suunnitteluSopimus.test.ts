@@ -161,7 +161,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);
@@ -220,7 +220,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);
@@ -374,7 +374,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);
@@ -432,7 +432,7 @@ describe("validateTallennaProjekti (suunnittelusopimusValidator)", () => {
           yhteysHenkilo: fixture.mattiMeikalainenDBVaylaUser().kayttajatunnus,
         },
       });
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);

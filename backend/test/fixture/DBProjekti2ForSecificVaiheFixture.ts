@@ -162,7 +162,6 @@ export class DBProjektiForSpecificVaiheFixture {
     };
   }
 
-  /* eslint-disable no-fallthrough */
   public getProjektiForVaihe(currentVaihe: Vaihe, vaiheenTila: VaiheenTila): DBProjekti {
     const projekti = this.projektiBase();
 

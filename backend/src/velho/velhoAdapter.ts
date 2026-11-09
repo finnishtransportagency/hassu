@@ -214,7 +214,7 @@ function getKunnat(data: ProjektiProjekti): number[] | undefined {
       .map((s) => s.trim())
       .map(kuntametadata.idForKuntaName)
       .sort();
-  } catch (e) {
+  } catch (_e) {
     log.error("Virheellinen muu-kunta: '" + data.ominaisuudet["muu-kunta"] + "'");
     return undefined;
   }
@@ -239,7 +239,7 @@ function getMaakunnat(data: ProjektiProjekti) {
       .map((s) => s.trim())
       .map(kuntametadata.idForMaakuntaName)
       .sort();
-  } catch (e) {
+  } catch (_e) {
     log.error("Virheellinen muu-maakunta: '" + data.ominaisuudet["muu-maakunta"] + "'");
     return undefined;
   }

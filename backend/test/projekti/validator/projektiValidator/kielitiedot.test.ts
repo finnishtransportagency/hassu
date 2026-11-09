@@ -221,7 +221,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     let allOk = true;
     try {
       await validateTallennaProjekti(projekti, input);
-    } catch (e) {
+    } catch (_e) {
       console.log(e);
       allOk = false;
     }
@@ -306,7 +306,7 @@ describe("projektiValidator (kielitiedotValidator)", () => {
     let allOk = true;
     try {
       await validateTallennaProjekti(projekti, input);
-    } catch (e) {
+    } catch (_e) {
       allOk = false;
     }
     expect(allOk).to.eql(true);

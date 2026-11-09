@@ -28,7 +28,7 @@ export function parseDate(dateString: string): Dayjs {
   if (isDateStringLackingTimeElement(dateString)) {
     try {
       date = dayjs.tz(dateString, ISO_DATE_FORMAT, DEFAULT_TIMEZONE);
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
     if (date?.isValid()) {
@@ -38,7 +38,7 @@ export function parseDate(dateString: string): Dayjs {
   if (dateString.length > DATE_TIME_FORMAT.length) {
     try {
       date = dayjs.tz(dateString, FULL_DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
-    } catch (e) {
+    } catch (_e) {
       // Ignore
     }
     if (date?.isValid()) {
@@ -47,7 +47,7 @@ export function parseDate(dateString: string): Dayjs {
   }
   try {
     date = dayjs.tz(dateString, DATE_TIME_FORMAT, DEFAULT_TIMEZONE);
-  } catch (e) {
+  } catch (_e) {
     // Ignore
   }
   if (date?.isValid()) {
@@ -55,7 +55,7 @@ export function parseDate(dateString: string): Dayjs {
   }
   try {
     return dayjs.tz(dateString, DEFAULT_TIMEZONE);
-  } catch (e) {
+  } catch (_e) {
     // Ignore
   }
   throw new Error("Invalid date string: " + dateString);
@@ -70,7 +70,7 @@ export function parseOptionalDate(dateString: string | undefined | null): Dayjs 
     if (date?.isValid()) {
       return date;
     }
-  } catch (e) {
+  } catch (_e) {
     // Ignore
   }
 }

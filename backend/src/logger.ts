@@ -81,7 +81,6 @@ export enum VelhoApiName {
   dokumenttiApi = "dokumenttiApi",
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function recordVelhoLatencyDecorator(apiName: VelhoApiName, operationName: string) {
   const key = apiName + "." + operationName;
   return function (_target: unknown, _propertyKey: string, descriptor: PropertyDescriptor): void {

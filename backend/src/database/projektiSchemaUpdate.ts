@@ -65,7 +65,7 @@ export function migrateFromOldSchema(projekti: DBProjekti, isUpgradeDatabase = f
     if (key == "kunta") {
       try {
         return kuntametadata.idForKuntaName(value);
-      } catch (e) {
+      } catch (_e) {
         return 0;
       }
     }
@@ -80,7 +80,7 @@ export function migrateFromOldSchema(projekti: DBProjekti, isUpgradeDatabase = f
     if (key == "maakunnat" && isValueArrayOfStrings(value)) {
       try {
         return kuntametadata.idsForMaakuntaNames(value);
-      } catch (e) {
+      } catch (_e) {
         return [];
       }
     }

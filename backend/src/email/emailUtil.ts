@@ -87,7 +87,6 @@ export function isEmailSent(email: string, sentMessageInfo: SMTPTransport.SentMe
   throw new Error(`Annettua sähköpostia ${email} ei löydy sentMessageInfosta`);
 }
 
-// eslint-disable-next-line no-useless-escape
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 export function isValidEmail(email: string): boolean {
   if (new RegExp(emailRegex).test(email)) {

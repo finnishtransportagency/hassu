@@ -10,7 +10,7 @@ export function produce<T extends { middlewareStack: { remove: any; use: any }; 
     const client = p();
     try {
       (globalThis as any)[key] = wrapXRayCaptureAWSClient(client);
-    } catch (ignore) {
+    } catch (_ignore) {
       (globalThis as any)[key] = client;
     }
   }
