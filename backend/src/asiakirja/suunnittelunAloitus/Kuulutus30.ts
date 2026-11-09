@@ -80,14 +80,19 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   }
 
   protected addDocumentElements(): PDFStructureElement[] {
+    const isToiminnallinen = this.kutsuAdapter.isToiminnallinen;
     return [
       this.startOfPlanningPhrase,
       this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),
       this.kuulutettuYhdessaSuunnitelmaParagraph(),
       this.vahainenMenettely ? this.onKyseVahaisestaMenettelystaParagraph() : null,
-      this.paragraphFromKey("kappale2"),
-      this.paragraphFromKey("kappale3"),
-      this.vahainenMenettely ? this.paragraphFromKey("kappale4_vahainen_menettely") : this.paragraphFromKey("kappale4"),
+      isToiminnallinen ? this.paragraphFromKey("kappale2_toiminnallinen") : this.paragraphFromKey("kappale2"),
+      isToiminnallinen ? this.paragraphFromKey("kappale3_toiminnallinen") : this.paragraphFromKey("kappale3"),
+      isToiminnallinen
+        ? this.paragraphFromKey("kappale4_toiminnallinen")
+        : this.vahainenMenettely
+        ? this.paragraphFromKey("kappale4_vahainen_menettely")
+        : this.paragraphFromKey("kappale4"),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe?.yhteystiedot, null, true)),
@@ -101,6 +106,8 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
   private get startOfPlanningPhrase() {
     if (this.kutsuAdapter.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       return this.paragraphFromKey("rata_kappale1");
+    } else if (this.kutsuAdapter.isToiminnallinen) {
+      return this.paragraphFromKey("tie_kappale1_toiminnallinen");
     } else {
       if (this.kutsuAdapter.suunnitteluSopimus) {
         return this.pluralParagraphFromKey("tie_kappale1_suunnittelusopimus");

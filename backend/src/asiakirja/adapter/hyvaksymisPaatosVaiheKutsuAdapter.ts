@@ -1,5 +1,6 @@
+// Contains code generated or recommended by Amazon Q
 import { DBProjekti, PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model";
-import { HallintoOikeus, Kieli, KuulutusTekstit } from "hassu-common/graphql/apiModel";
+import { HallintoOikeus, Kieli, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../util/assertions";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
 import { formatDate } from "../asiakirjaUtil";
@@ -192,7 +193,10 @@ export class HyvaksymisPaatosVaiheKutsuAdapter extends KuulutusKutsuAdapter<Hyva
     let kappale1;
     const typeKey = this.props.paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? "hyvaksymispaatoksesta" : "jatkopaatos";
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      kappale1 = this.htmlText(`asiakirja.kuulutus_${typeKey}.tie_kappale1`);
+      kappale1 =
+        this.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? this.htmlText(`asiakirja.kuulutus_${typeKey}.toiminnallinen_kappale1`)
+          : this.htmlText(`asiakirja.kuulutus_${typeKey}.tie_kappale1`);
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.htmlText(`asiakirja.kuulutus_${typeKey}.rata_kappale1`);
     } else {

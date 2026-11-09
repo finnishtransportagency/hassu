@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import {
   AloituskuulutusPdfOptions,
@@ -315,6 +316,23 @@ describe("asiakirjaService", () => {
       projekti.velho.vaylamuoto = ["rata"];
       await expect(
         runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
+          assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
+
+      // ----------
+      projekti.velho.tyyppi = ProjektiTyyppi.TOIMINNALLINEN;
+      projekti.velho.vaylamuoto = ["tie"];
+      projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.ETELA_POHJANMAAN_ELY;
+      const toiminnallinenTypes: HyvaksymisPaatosKuulutusAsiakirjaTyyppi[] = [
+        AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
+      ];
+      await expect(
+        runTestWithTypes(toiminnallinenTypes, async (type) => {
           assertIsDefined(projekti.hyvaksymisPaatosVaihe);
           await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
         })

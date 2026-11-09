@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { CreateNahtavillaoloKuulutusPdfOptions, NahtavillaoloKuulutusAsiakirjaTyyppi } from "../../src/asiakirja/asiakirjaTypes";
 import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "hassu-common/graphql/apiModel";
@@ -36,6 +37,10 @@ describe("nahtavillaoloKuulutusAsiakirja", () => {
     doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.TIE));
   it("should generate kuulutus pdf succesfully SUOMI (rata)", async () =>
     doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.RATA));
+  it("should generate kuulutus pdf succesfully SUOMI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.TOIMINNALLINEN));
+  it("should generate kuulutus pdf succesfully RUOTSI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.RUOTSI, false, ProjektiTyyppi.TOIMINNALLINEN));
   it("should generate kuulutus pdf succesfully SUOMI (tie, vähäinen menettely)", async () =>
     doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.TIE, true));
   it("should generate kuulutus pdf succesfully SUOMI (rata, vähäinen menettely)", async () =>
@@ -68,6 +73,20 @@ describe("nahtavillaoloKuulutusAsiakirja", () => {
       Kieli.SUOMI,
       false,
       ProjektiTyyppi.RATA
+    ));
+  it("should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      Kieli.SUOMI,
+      false,
+      ProjektiTyyppi.TOIMINNALLINEN
+    ));
+  it("should generate ilmoitus kunnille/viranomaisille pdf succesfully RUOTSI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      Kieli.RUOTSI,
+      false,
+      ProjektiTyyppi.TOIMINNALLINEN
     ));
   it("should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (tie, vähäinen menettely)", async () =>
     doTestGenerateKuulutus(
