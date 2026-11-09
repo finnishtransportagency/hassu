@@ -109,9 +109,10 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
   private paragraphs(): PDFStructureElement[] {
     let kappale1;
     if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
-      kappale1 = this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
-        ? this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.toiminnallinen_kappale1")
-        : this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale1");
+      kappale1 =
+        this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.toiminnallinen_kappale1")
+          : this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale1");
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.rata_kappale1");
     } else {
