@@ -1,8 +1,10 @@
 import { IlmoitusAsiakirjaTyyppi, SuunnittelunAloitusPdf } from "./suunnittelunAloitusPdf";
 import { AloituskuulutusKutsuAdapterProps } from "../adapter/aloituskuulutusKutsuAdapter";
-import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapterProps } from "../adapter/nahtavillaoloVaiheKutsuAdapter";
 import { HyvaksymisPaatosVaiheKutsuAdapterProps } from "../adapter/hyvaksymisPaatosVaiheKutsuAdapter";
+
+// Contains code generated or recommended by Amazon Q
 
 const vaiheet: Record<IlmoitusAsiakirjaTyyppi, { ilmoitus: string }> = {
   ILMOITUS_KUULUTUKSESTA: {
@@ -27,9 +29,14 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
     asiakirjaTyyppi: IlmoitusAsiakirjaTyyppi,
     params: AloituskuulutusKutsuAdapterProps | NahtavillaoloVaiheKutsuAdapterProps | HyvaksymisPaatosVaiheKutsuAdapterProps
   ) {
-    const headerKey = params.suunnitteluSopimus
-      ? "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus"
-      : "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta";
+    let headerKey: string;
+    if (params.velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+      headerKey = "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_toiminnallinen";
+    } else if (params.suunnitteluSopimus) {
+      headerKey = "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus";
+    } else {
+      headerKey = "asiakirja.ilmoitus.otsikko_ilmoitus_kuulutuksesta";
+    }
     super(params, headerKey, asiakirjaTyyppi);
     this.kutsuAdapter.addTemplateResolver(this);
   }
@@ -39,6 +46,12 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
   }
 
   ilmoitus_vaihe_pitka(): string {
+    if (
+      this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE &&
+      this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+    ) {
+      return this.kutsuAdapter.text("asiakirja.ilmoitus.ilmoitus_vaihe_suunnitelman_nahtaville_asettamista_pitka_toiminnallinen");
+    }
     return this.kutsuAdapter.text(vaiheet[this.asiakirjaTyyppi as IlmoitusAsiakirjaTyyppi].ilmoitus + "_pitka");
   }
 
@@ -46,6 +59,11 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
     const paragraphs = [];
     if (this.params.suunnitteluSopimus && this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA) {
       paragraphs.push(this.pluralParagraphFromKey("asiakirja.ilmoitus.kappale1_suunnittelusopimus"));
+    } else if (
+      this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE &&
+      this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+    ) {
+      paragraphs.push(this.paragraphFromKey("asiakirja.ilmoitus.kappale1_toiminnallinen"));
     } else {
       paragraphs.push(this.paragraphFromKey("asiakirja.ilmoitus.kappale1"));
     }

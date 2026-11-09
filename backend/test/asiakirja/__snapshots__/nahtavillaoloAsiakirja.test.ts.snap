@@ -213,6 +213,32 @@ LUONNOS",
 }
 `;
 
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully RUOTSI (toiminnallinen) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TOIMINNALLINEN__TO414-1 Ilmoitus suunnitelman nahtavillaolo sv.pdf",
+  "textContent": "ELY/3/2022
+
+
+
+Meddelande om framläggande
+Namnet på svenska
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland publicerar en kungörelse om framläggande av det förslag till godkännande av landsvägens funktionella klass som nämns i rubriken. NTM-centralen i Nyland delger ärendet genom en offentlig kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen (lagen om trafiksystem och landsvägar 108 §, förvaltningslagen 62 a §).
+Kungörelsen publiceras 7.6.2022 på adressen https://localhost:3000/sv/s/ABCD/nahtavillaolo
+
+
+
+Kungörelsen finns till påseende 7.6.2022 - 7.6.2022.
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (rata) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_RATA__R414-1 Ilmoitus suunnitelman nahtavillaolo.pdf",
@@ -345,6 +371,32 @@ LUONNOS",
 }
 `;
 
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (toiminnallinen) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TOIMINNALLINEN__TO414-1 Ilmoitus suunnitelman nahtavillaolo.pdf",
+  "textContent": "ELY/3/2022
+
+
+
+Ilmoitus nähtäville asettamista
+Testiprojekti 3
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainittua maantien toiminnallisen luokan nähtäville asettamista koskevan hyväksymisehdotuksen. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo
+
+
+
+Kuulutus on nähtävillä 7.6.2022 - 7.6.2022 välisen ajan
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
 exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (yleis) (suunnittelusopimus) 1`] = `
 Object {
   "fileName": "esikatselu_aloituskuulutus_YLEINEN_suunnittelusopimus_Y414-1 Ilmoitus suunnitelman nahtavillaolo.pdf",
@@ -367,6 +419,140 @@ Matti Meikalainen (Väylävirasto),
 puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
 Marko Koi (Kajaani), 
 puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus maakuntaliitoille pdf succesfully RUOTSI (toiminnallinen) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TOIMINNALLINEN__TO414-2 Ilmoitus suunnitelman nahtavillaolosta maakuntaliitolle sv.pdf",
+  "textContent": "ELY/3/2022
+
+
+
+Meddelande om framläggande
+Namnet på svenska
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland publicerar en kungörelse om framläggande av det förslag till godkännande av landsvägens funktionella klass som nämns i rubriken. NTM-centralen i Nyland delger ärendet genom en offentlig kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen (lagen om trafiksystem och landsvägar 108 §, förvaltningslagen 62 a §).
+Kungörelsen publiceras 7.6.2022 på adressen https://localhost:3000/sv/s/ABCD/nahtavillaolo
+
+
+
+Kungörelsen finns till påseende 7.6.2022 - 7.6.2022.
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus maakuntaliitoille pdf succesfully SUOMI (rata) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_RATA__R414-2 Ilmoitus suunnitelman nahtavillaolosta maakuntaliitolle.pdf",
+  "textContent": "VAYLA/1/2022
+
+
+
+Ilmoitus Väyläviraston kuulutuksesta
+Testiprojekti 1
+Väylävirasto julkaisee kuulutuksen, joka koskee otsikossa mainitun ratasuunnitelman nähtäville asettamista. Väylävirasto saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (ratalaki 95 §/laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo
+
+
+
+Kuulutus on nähtävillä 7.6.2022 - 7.6.2042 välisen ajan
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus maakuntaliitoille pdf succesfully SUOMI (tie) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TIE__T414_2 Ilmoitus suunnitelman nahtavillaolosta maakuntaliitolle.pdf",
+  "textContent": "ELY/1/2022
+
+
+
+Ilmoitus Uudenmaan ELY-keskuksen kuulutuksesta
+Testiprojekti 1
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainitun tiesuunnitelman nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §) 
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo
+
+
+
+Kuulutus on nähtävillä 7.6.2022 - 7.6.2042 välisen ajan
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`nahtavillaoloKuulutusAsiakirja should generate ilmoitus maakuntaliitoille pdf succesfully SUOMI (toiminnallinen) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TOIMINNALLINEN__TO414-2 Ilmoitus suunnitelman nahtavillaolosta maakuntaliitolle.pdf",
+  "textContent": "ELY/3/2022
+
+
+
+Ilmoitus nähtäville asettamista
+Testiprojekti 3
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainittua maantien toiminnallisen luokan nähtäville asettamista koskevan hyväksymisehdotuksen. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+Kuulutus julkaistaan 7.6.2022 osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo
+
+
+
+Kuulutus on nähtävillä 7.6.2022 - 7.6.2022 välisen ajan
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully RUOTSI (toiminnallinen) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TOIMINNALLINEN__TO414 Kuulutus suunnitelman nahtavillaolo sv.pdf",
+  "textContent": "ELY/3/2022
+
+
+
+Kungörelse av framläggande av förslag till godkännande
+Namnet på svenska
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland bereder en framställning enligt lagen om trafiksystem och landsvägar (503/2005) om ändring av landsvägens funktionella klass och lägger fram ett förslag till godkännande Namnet på svenska offentligt
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland har 7.6.2022 publicerat en kungörelse om framläggandet av godkännandeförslaget om den funktionella klassen för den landsväg som nämns i rubriken. Sakägarna anses ha fått kännedom om att förslaget har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Planen hålls framlagd 7.6.2022 - 7.6.2022 på adressen https://localhost:3000/sv/s/ABCD/nahtavillaolo.
+
+Fastighetsägare och övriga sakägare samt personer vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att framföra sin åsikt om planen (27 § i lagen om trafiksystem och landsvägar). Åsikten ska lämnas före utgången av framläggningstiden, dvs. senast 7.6.2022. 
+
+Åsikten kan lämnas på adressen https://localhost:3000/sv/s/ABCD/nahtavillaolo eller skickas till registratorskontoret i NTM-centralen i Nyland på adressen uudenmaan_kirjaamo@uudenmaan.ely. Ärendenummer ELY/3/2022 ska läggas till en åsikt som skickas till registratorskontoret.
+
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
 LUONNOS",
 }
 `;
@@ -514,6 +700,36 @@ Uudenmaan ELY-keskus on 7.6.2022 julkaissut kuulutuksen suunnitelman nähtävill
 Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2042 osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo.
 
 Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus tehdä suunnitelmasta muistutus (LjMTL 27 § ja 28 §). Muistutus on tehtävä ennen nähtävänä oloajan päättymistä, eli 7.6.2042 mennessä.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`nahtavillaoloKuulutusAsiakirja should generate kuulutus pdf succesfully SUOMI (toiminnallinen) 1`] = `
+Object {
+  "fileName": "esikatselu_aloituskuulutus_TOIMINNALLINEN__TO414 Kuulutus suunnitelman nahtavillaolo.pdf",
+  "textContent": "ELY/3/2022
+
+
+
+Kuulutus hyväksymisehdotuksen nähtäville asettamisesta
+Testiprojekti 3
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) valmistelee liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaista esitystä maantien toiminnallisen luokan muuttamisesta ja asettaa julkisesti nähtäville hyväksymisehdotuksen Testiprojekti 3
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) on 7.6.2022 julkaissut kuulutuksen otsikossa mainitun maantien toiminnallisen luokan hyväksymisehdotuksen nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon ehdotuksen nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).
+Suunnitelma pidetään nähtävillä 7.6.2022 - 7.6.2022 osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo.
+
+Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus ilmaista mielipiteensä suunnitelmasta (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Mielipide on jätettävä ennen nähtävänäoloajan päättymistä, eli 7.6.2022 mennessä. 
+
+Mielipiteen voi jättää osoitteessa https://localhost:3000/s/ABCD/nahtavillaolo tai toimittamalla sen Uudenmaan ELY-keskuksen kirjaamoon osoitteeseen uudenmaan_kirjaamo@uudenmaan.ely. Kirjaamoon lähetettävään mielipiteeseen tulee liittää asiatunnus ELY/3/2022.
+
 Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
 
 Lisätietoja antaa 
