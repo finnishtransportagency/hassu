@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, ReactNode, useMemo } from "react";
 import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/projekti/ProjektiPageLayout";
 import Section from "@components/layout/Section";
@@ -9,7 +10,15 @@ import ProjektiConsumer from "../ProjektiConsumer";
 import { useProjekti } from "src/hooks/useProjekti";
 import { ProjektiLisatiedolla } from "hassu-common/ProjektiValidationContext";
 import { projektiOnEpaaktiivinen } from "src/util/statusUtil";
-import { KuulutusJulkaisuTila, MuokkausTila, Status, TilasiirtymaTyyppi, Vaihe, VuorovaikutusKierrosTila } from "@services/api";
+import {
+  KuulutusJulkaisuTila,
+  MuokkausTila,
+  ProjektiTyyppi,
+  Status,
+  TilasiirtymaTyyppi,
+  Vaihe,
+  VuorovaikutusKierrosTila,
+} from "@services/api";
 import UudelleenkuulutaButton from "../UudelleenkuulutaButton";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { isPohjoissaameSuunnitelma } from "src/util/isPohjoissaamiSuunnitelma";
@@ -105,6 +114,7 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
   }, [projekti.oid, reloadProjekti, showSiirraButton, showUudelleenkuulutaButton]);
 
   const includeSaamenkielisetOhjeet = isPohjoissaameSuunnitelma(projekti.kielitiedot); // Täytyy muokata huomioimaan muut saamenkielet kun niitä tulee
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const julkaisematonPaatos = projekti.nahtavillaoloVaihe;
   return (
     <ProjektiPageLayout
@@ -134,70 +144,126 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                         onClose={ohjeetOnClose}
                         open={ohjeetOpen}
                       >
-                        <li>
-                          Lisää nähtäville asetettavat aineistot ensimmäiseltä välilehdeltä.
-                          {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
-                        </li>
-                        <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
-                        <li>
-                          Anna päivämäärä, jolloin kuulutus julkaistaan Valtion liikenneväylien suunnittelu -palvelun julkisella puolella.
-                        </li>
-                        <li>Muokkaa tai täydennä halutessasi suunnitelman sisällönkuvausta. Sisällönkuvaus esitetään kuulutuksessa.</li>
-                        <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
-                        {includeSaamenkielisetOhjeet && (
-                          <li>
-                            Huomioi, että projektin kuulutus ja ilmoitus tulee lähettää käännöstoimistolle käännettäväksi saameksi. Kun
-                            kuulutus ja ilmoitus on käännetty, saamenkielinen kuulutus ja ilmoitus ladataan omalta koneelta järjestelmään.
-                          </li>
-                        )}
-                        <li>
-                          Tarkista kiinteistönomistajatietojen karttarajaus ja kiinteistönomistajatiedot{" "}
-                          <StyledLink
-                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
-                          >
-                            Tiedottaminen
-                          </StyledLink>{" "}
-                          -sivulla.
-                        </li>
-                        <li>
-                          Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi. Hyväksyntä
-                          on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
-                        </li>
-                        <li>
-                          Kuulutuksen julkaisupäivänä niille kiinteistönomistajille, joiden yhteystiedot ovat tiedossa lähetetään
-                          automaattisesti ilmoitus suunnitelman nähtävilläolosta Suomi.fi viestit -palvelun kautta.
-                        </li>
-                        <li>
-                          Katso listaukset kiinteistönomistajista{" "}
-                          <StyledLink
-                            href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
-                          >
-                            Tiedottaminen
-                          </StyledLink>{" "}
-                          -sivulta.
-                        </li>
-                        <li>
-                          Lausuntopyyntöihin lisättävä linkki suunnitelma-aineistoon tehdään Lausuntopyyntöjen aineistolinkit -sivulla
-                          kohdassa Lausuntopyyntö.
-                        </li>
-                        <li>
-                          Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
-                        </li>
-                        <li>
-                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
-                          esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
-                        </li>
-                        {projekti.asianhallinta.inaktiivinen && (
-                          <li>
-                            Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
-                            asianhallintaan.
-                          </li>
-                        )}
-                        {!projekti.asianhallinta.inaktiivinen && (
-                          <li>
-                            Kuulutus, ilmoitus kuulutuksesta, kiinteistönomistajille lähetettävä ilmoitus sekä kiinteistönomistajalistaus
-                            siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
-                          </li>
+                        {isToiminnallinen ? (
+                          <>
+                            <li>
+                              Lisää nähtäville asetettavat aineistot ensimmäiseltä välilehdeltä.
+                              {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
+                            </li>
+                            <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
+                            <li>
+                              Anna päivämäärä, jolloin kuulutus julkaistaan Valtion liikenneväylien suunnittelu -palvelun julkisella
+                              puolella.
+                            </li>
+                            <li>Kirjoita esityksen sisällönkuvaus sille varattuun kenttään. Sisällönkuvaus esitetään kuulutuksessa.</li>
+                            <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
+                            {includeSaamenkielisetOhjeet && (
+                              <li>
+                                Huomioi, että projektin kuulutus ja ilmoitus tulee lähettää käännöstoimistolle käännettäväksi saameksi. Kun
+                                kuulutus ja ilmoitus on käännetty, saamenkielinen kuulutus ja ilmoitus ladataan omalta koneelta
+                                järjestelmään.
+                              </li>
+                            )}
+                            <li>
+                              Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi.
+                              Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta
+                              ajoissa.
+                            </li>
+                            <li>
+                              Lausuntopyyntöihin lisättävä linkki suunnitelma-aineistoon tehdään Lausuntopyyntöjen aineistolinkit -sivulla
+                              kohdassa Lausuntopyyntö.
+                            </li>
+                            <li>
+                              Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
+                            </li>
+                            <li>Toiminnallisen luokan muutoksen kuulutuksesta ei ole tarpeen julkaista lehti-ilmoitusta.</li>
+                            {projekti.asianhallinta.inaktiivinen && (
+                              <li>Muistathan viedä kuulutuksen ja ilmoituksen kuulutuksesta asianhallintaan.</li>
+                            )}
+                            {!projekti.asianhallinta.inaktiivinen && (
+                              <li>
+                                Kuulutus ja ilmoitus kuulutuksesta siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen
+                                yhteydessä.
+                              </li>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <li>
+                              Lisää nähtäville asetettavat aineistot ensimmäiseltä välilehdeltä.
+                              {includeSaamenkielisetOhjeet && " Muista liittää aineistoihin myös mahdolliset saamenkieliset aineistot."}
+                            </li>
+                            <li>Siirry Kuulutuksen tiedot-välilehdelle täyttämään kuulutuksen perustiedot.</li>
+                            <li>
+                              Anna päivämäärä, jolloin kuulutus julkaistaan Valtion liikenneväylien suunnittelu -palvelun julkisella
+                              puolella.
+                            </li>
+                            <li>Muokkaa tai täydennä halutessasi suunnitelman sisällönkuvausta. Sisällönkuvaus esitetään kuulutuksessa.</li>
+                            <li>Valitse kuulutuksessa esitettävät yhteystiedot.</li>
+                            {includeSaamenkielisetOhjeet && (
+                              <li>
+                                Huomioi, että projektin kuulutus ja ilmoitus tulee lähettää käännöstoimistolle käännettäväksi saameksi. Kun
+                                kuulutus ja ilmoitus on käännetty, saamenkielinen kuulutus ja ilmoitus ladataan omalta koneelta
+                                järjestelmään.
+                              </li>
+                            )}
+                            <li>
+                              Tarkista kiinteistönomistajatietojen karttarajaus ja kiinteistönomistajatiedot{" "}
+                              <StyledLink
+                                href={{
+                                  pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`,
+                                  query: { oid: projekti.oid },
+                                }}
+                              >
+                                Tiedottaminen
+                              </StyledLink>{" "}
+                              -sivulla.
+                            </li>
+                            <li>
+                              Lähetä aineistot ja kuulutus suunnitelman nähtäville asettamisesta projektipäällikölle hyväksyttäväksi.
+                              Hyväksyntä on hyvä tehdä noin viikko ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta
+                              ajoissa.
+                            </li>
+                            <li>
+                              Kuulutuksen julkaisupäivänä niille kiinteistönomistajille, joiden yhteystiedot ovat tiedossa lähetetään
+                              automaattisesti ilmoitus suunnitelman nähtävilläolosta Suomi.fi viestit -palvelun kautta.
+                            </li>
+                            <li>
+                              Katso listaukset kiinteistönomistajista{" "}
+                              <StyledLink
+                                href={{
+                                  pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`,
+                                  query: { oid: projekti.oid },
+                                }}
+                              >
+                                Tiedottaminen
+                              </StyledLink>{" "}
+                              -sivulta.
+                            </li>
+                            <li>
+                              Lausuntopyyntöihin lisättävä linkki suunnitelma-aineistoon tehdään Lausuntopyyntöjen aineistolinkit -sivulla
+                              kohdassa Lausuntopyyntö.
+                            </li>
+                            <li>
+                              Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
+                            </li>
+                            <li>
+                              Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu
+                              Ilmoituksen esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+                            </li>
+                            {projekti.asianhallinta.inaktiivinen && (
+                              <li>
+                                Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
+                                asianhallintaan.
+                              </li>
+                            )}
+                            {!projekti.asianhallinta.inaktiivinen && (
+                              <li>
+                                Kuulutus, ilmoitus kuulutuksesta, kiinteistönomistajille lähetettävä ilmoitus sekä
+                                kiinteistönomistajalistaus siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
+                              </li>
+                            )}
+                          </>
                         )}
                       </OhjelistaNotification>
                     )}
