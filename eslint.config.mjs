@@ -63,6 +63,7 @@ export default defineConfig([
         {
           varsIgnorePattern: "^_",
           argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
         },
       ],
       "mocha-no-only/mocha-no-only": ["error"],
