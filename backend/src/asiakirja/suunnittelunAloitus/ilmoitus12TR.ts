@@ -59,10 +59,7 @@ export class Ilmoitus12TR extends SuunnittelunAloitusPdf {
     const paragraphs = [];
     if (this.params.suunnitteluSopimus && this.asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_KUULUTUKSESTA) {
       paragraphs.push(this.pluralParagraphFromKey("asiakirja.ilmoitus.kappale1_suunnittelusopimus"));
-    } else if (
-      this.asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE &&
-      this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
-    ) {
+    } else if (this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
       paragraphs.push(this.paragraphFromKey("asiakirja.ilmoitus.kappale1_toiminnallinen"));
     } else {
       paragraphs.push(this.paragraphFromKey("asiakirja.ilmoitus.kappale1"));
