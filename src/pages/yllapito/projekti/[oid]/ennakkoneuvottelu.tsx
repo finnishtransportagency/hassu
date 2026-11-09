@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import ExtLink from "@components/ExtLink";
 import HassuDialog from "@components/HassuDialog";
@@ -34,7 +35,7 @@ import ProjektiPageLayout, { ProjektiPageLayoutContext } from "@components/proje
 import { yupResolver } from "@hookform/resolvers/yup";
 import { DialogActions, DialogContent } from "@mui/material";
 import { Stack } from "@mui/system";
-import { AineistoInputNew, EnnakkoNeuvottelu, Projekti } from "@services/api";
+import { AineistoInputNew, EnnakkoNeuvottelu, Projekti, ProjektiTyyppi } from "@services/api";
 import { AineistoKategoriat, getAineistoKategoriat, kategorisoimattomatId } from "common/aineistoKategoriat";
 import { TestType } from "common/schema/common";
 import { ennakkoNeuvotteluSchema, EnnakkoneuvotteluValidationContext } from "common/schema/ennakkoNeuvotteluSchema";
@@ -145,6 +146,7 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
       }),
     [projekti?.velho.tyyppi]
   );
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${projekti.oid}/ennakkoneuvotteluaineistot?hash=${projekti.ennakkoNeuvotteluJulkaisu?.hash}`;
 
   return (
@@ -163,27 +165,55 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
             <form>
               <Section>
                 <OhjelistaNotification onClose={ohjeetOnClose} open={ohjeetOpen}>
-                  <li>
-                    Tällä sivulla luodaan ennakkoneuvotteluun/ennakkotarkastukseen lähetettävän suunnitelman aineiston sisältö ja
-                    määritellään sen vastaanottajat. Vaihetta voi tarvittaessa käyttää myös suunnitelma-aineiston jakoon hyväksymisesityksen
-                    allekirjoittajalle.
-                  </li>
-                  <li>
-                    Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee tarkastelemaan
-                    suunnitelman sisällön.
-                  </li>
-                  <li>
-                    Anna luotavalle linkille voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että vastaanottajan on mahdollista
-                    tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin voimassaoloaikaa on mahdollista muuttaa
-                    jälkikäteen.
-                  </li>
-                  <li>Halutessasi voit kirjata lisätietoa vastaanottajalle.</li>
-                  <li>
-                    Tuo suunnitelma Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa automaattisesti
-                    kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon. Voit haluessasi tuoda myös muuta aineistoa.
-                  </li>
-                  <li>Lisää lähetettävälle aineistolle vastaanottajat.</li>
-                  <li>Aineiston sisältöä on mahdollista päivittää lähettämisen jälkeen.</li>
+                  {isToiminnallinen ? (
+                    <>
+                      <li>
+                        Tällä sivulla luodaan ennakkoneuvotteluun/ennakkotarkastukseen lähetettävän esityksen aineiston sisältö ja
+                        määritellään sen vastaanottajat. Vaihetta voi tarvittaessa käyttää myös suunnitelma-aineiston jakoon
+                        hyväksymisesityksen allekirjoittajalle.
+                      </li>
+                      <li>
+                        Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee
+                        tarkastelemaan esityksen sisällön.
+                      </li>
+                      <li>
+                        Anna luotavalle linkille voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että vastaanottajan on mahdollista
+                        tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin voimassaoloaikaa on mahdollista
+                        muuttaa jälkikäteen.
+                      </li>
+                      <li>Halutessasi voit kirjata lisätietoa vastaanottajalle.</li>
+                      <li>
+                        Tuo suunnitelma-aineisto Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa
+                        automaattisesti nähtäville asettamisen kuulutuksen. Voit haluessasi tuoda myös muuta aineistoa.
+                      </li>
+                      <li>Lisää lähetettävälle aineistolle vastaanottajat.</li>
+                      <li>Aineiston sisältöä on mahdollista päivittää lähettämisen jälkeen.</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        Tällä sivulla luodaan ennakkoneuvotteluun/ennakkotarkastukseen lähetettävän suunnitelman aineiston sisältö ja
+                        määritellään sen vastaanottajat. Vaihetta voi tarvittaessa käyttää myös suunnitelma-aineiston jakoon
+                        hyväksymisesityksen allekirjoittajalle.
+                      </li>
+                      <li>
+                        Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkkistä pääsee
+                        tarkastelemaan suunnitelman sisällön.
+                      </li>
+                      <li>
+                        Anna luotavalle linkille voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että vastaanottajan on mahdollista
+                        tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin voimassaoloaikaa on mahdollista
+                        muuttaa jälkikäteen.
+                      </li>
+                      <li>Halutessasi voit kirjata lisätietoa vastaanottajalle.</li>
+                      <li>
+                        Tuo suunnitelma Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa automaattisesti
+                        kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon. Voit haluessasi tuoda myös muuta aineistoa.
+                      </li>
+                      <li>Lisää lähetettävälle aineistolle vastaanottajat.</li>
+                      <li>Aineiston sisältöä on mahdollista päivittää lähettämisen jälkeen.</li>
+                    </>
+                  )}
                 </OhjelistaNotification>
                 <H3 variant="h2">Aineistolinkin sisältö</H3>
                 <LinkinVoimassaoloaika ennakkoneuvottelu={true} />
