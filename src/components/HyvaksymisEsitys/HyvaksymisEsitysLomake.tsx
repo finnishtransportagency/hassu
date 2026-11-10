@@ -1,4 +1,5 @@
-import { HyvaksymisEsityksenTiedot, HyvaksymisTila, SuunnittelustaVastaavaViranomainen } from "@services/api";
+// Contains code generated or recommended by Amazon Q
+import { HyvaksymisEsityksenTiedot, HyvaksymisTila, ProjektiTyyppi, SuunnittelustaVastaavaViranomainen } from "@services/api";
 import { useEffect, useMemo } from "react";
 import { FormProvider, UseFormProps, useForm } from "react-hook-form";
 import { HyvaksymisEsitysForm, getDefaultValuesForForm } from "./hyvaksymisEsitysFormUtil";
@@ -75,6 +76,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
     return null;
   }
 
+  const isToiminnallinen = hyvaksymisEsityksenTiedot.perustiedot.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const url = `${window?.location?.protocol}//${window?.location?.host}/suunnitelma/${hyvaksymisEsityksenTiedot.oid}/hyvaksymisesitysaineistot?hash=${hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hash}`;
 
   return (
@@ -109,37 +111,71 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                         jos asianhallintajärjestelmässä on väärä toimenpide auki. <KatsoTarkemmatASHAOhjeetLink />
                       </li>
                     )}
-                  <li>
-                    Tällä sivulla luodaan hyväksymisesityksenä lähetettävän suunnitelman aineiston sisältö ja määritellään sen
-                    vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkistä pääsee
-                    tarkastelemaan ja lataamaan hyväksymisesityksen sisällön.
-                  </li>
-                  <li>
-                    Anna hyväksymisesitykseen toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että
-                    vastaanottajan on mahdollista tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin
-                    voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
-                  </li>
-                  <li>
-                    Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla ”Pyydetään kiireellistä käsittelyä”. Kiireellistä
-                    käsittelyä tulee pyytää vain oikeasti kiireellisissä tilanteissa ja kiireellisyyden peruste tulee kirjata lisätiedot
-                    -kenttään.
-                  </li>
-                  <li>Halutessasi voit kirjata lisätietoa hyväksymisesityksestä vastaanottajalle.</li>
-                  <li>
-                    Tuo omalta koneelta allekirjoitettu hyväksymisesitys. Sisällytä Hyväksymisesitys-tiedostoon linkki hyväksymisesityksen
-                    aineistosta.
-                  </li>
-                  <li>
-                    Tuo suunnitelma Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa automaattisesti
-                    kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon hyväksymisesitykseen. Voit haluessasi tuoda myös
-                    muuta aineistoa.
-                  </li>
-                  <li>Lisää hyväksymisesitykselle vastaanottajat.</li>
-                  <li>
-                    Esikatsele hyväksymisesityksen sisältä ennen sen lähettämistä projektipäällikön hyväksyttäväksi. Projektipäällikön
-                    hyväksyntä lähettää hyväksymisesityksen automaattisesti sen vastaanottajille.
-                  </li>
-                  <li>Hyväksymisesityksen sisältöä on mahdollista päivittää jälkikäteen.</li>
+                  {isToiminnallinen ? (
+                    <>
+                      <li>
+                        Tällä sivulla luodaan hyväksymisesityksenä lähetettävän esityksen aineiston sisältö ja määritellään sen
+                        vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkistä
+                        pääsee tarkastelemaan ja lataamaan hyväksymisesityksen sisällön.
+                      </li>
+                      <li>
+                        Anna hyväksymisesitykseen toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että
+                        vastaanottajan on mahdollista tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin
+                        voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
+                      </li>
+                      <li>Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla ”Pyydetään kiireellistä käsittelyä”.</li>
+                      <li>Halutessasi voit kirjata lisätietoa hyväksymisesityksestä vastaanottajalle.</li>
+                      <li>
+                        Tuo omalta koneelta allekirjoitettu hyväksymisesitys. Sisällytä Hyväksymisesitys-tiedostoon linkki
+                        hyväksymisesityksen aineistosta.
+                      </li>
+                      <li>
+                        Tuo suunnitelma-aineisto Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa
+                        automaattisesti nähtäville asettamisen kuulutuksen hyväksymisesitykseen. Voit halutessasi tuoda myös muuta
+                        aineistoa.
+                      </li>
+                      <li>Lisää hyväksymisesitykselle vastaanottajat.</li>
+                      <li>
+                        Esikatsele hyväksymisesityksen sisältä ennen sen lähettämistä projektipäällikön hyväksyttäväksi. Projektipäällikön
+                        hyväksyntä lähettää hyväksymisesityksen automaattisesti sen vastaanottajille.
+                      </li>
+                      <li>Hyväksymisesityksen sisältöä on mahdollista päivittää jälkikäteen.</li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        Tällä sivulla luodaan hyväksymisesityksenä lähetettävän suunnitelman aineiston sisältö ja määritellään sen
+                        vastaanottajat. Järjestelmä luo ja lähettää vastaanottajille automaattisesti sähköpostiviestin, jonka linkistä
+                        pääsee tarkastelemaan ja lataamaan hyväksymisesityksen sisällön.
+                      </li>
+                      <li>
+                        Anna hyväksymisesitykseen toimitettavalle suunnitelmalle voimassaoloaika. Voimassaoloaika tarkoittaa sitä, että
+                        vastaanottajan on mahdollista tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin
+                        voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
+                      </li>
+                      <li>
+                        Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla ”Pyydetään kiireellistä käsittelyä”.
+                        Kiireellistä käsittelyä tulee pyytää vain oikeasti kiireellisissä tilanteissa ja kiireellisyyden peruste tulee
+                        kirjata lisätiedot -kenttään.
+                      </li>
+                      <li>Halutessasi voit kirjata lisätietoa hyväksymisesityksestä vastaanottajalle.</li>
+                      <li>
+                        Tuo omalta koneelta allekirjoitettu hyväksymisesitys. Sisällytä Hyväksymisesitys-tiedostoon linkki
+                        hyväksymisesityksen aineistosta.
+                      </li>
+                      <li>
+                        Tuo suunnitelma Projektivelhosta ja vuorovaikutusaineistot omalta koneelta. Järjestelmä listaa automaattisesti
+                        kuulutukset ja kutsun vuorovaikutukseen sekä maanomistajaluettelon hyväksymisesitykseen. Voit haluessasi tuoda myös
+                        muuta aineistoa.
+                      </li>
+                      <li>Lisää hyväksymisesitykselle vastaanottajat.</li>
+                      <li>
+                        Esikatsele hyväksymisesityksen sisältä ennen sen lähettämistä projektipäällikön hyväksyttäväksi. Projektipäällikön
+                        hyväksyntä lähettää hyväksymisesityksen automaattisesti sen vastaanottajille.
+                      </li>
+                      <li>Hyväksymisesityksen sisältöä on mahdollista päivittää jälkikäteen.</li>
+                    </>
+                  )}
                 </OhjelistaNotification>
                 {hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.palautusSyy && (
                   <Notification type={NotificationType.WARN}>

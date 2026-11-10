@@ -1,5 +1,6 @@
+// Contains code generated or recommended by Amazon Q
 import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
@@ -152,7 +153,11 @@ export class Kuulutus6263 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
     ) {
       return [
         this.uudelleenKuulutusParagraph(),
-        this.paragraphFromKey("lausunnonantajille_kappale1"),
+        this.paragraphFromKey(
+          this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+            ? "lausunnonantajille_kappale1_toiminnallinen"
+            : "lausunnonantajille_kappale1"
+        ),
         this.paragraphFromKey("kappale2"),
         this.paragraphFromKey("kappale3"),
         this.paragraphFromKey("kappale4"),
