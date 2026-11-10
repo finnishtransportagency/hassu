@@ -86,6 +86,46 @@ describe("nahtavillaoloKuulutusAsiakirja", () => {
       true
     ));
 
+  it("should generate kuulutus pdf succesfully SUOMI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.SUOMI, false, ProjektiTyyppi.TOIMINNALLINEN));
+  it("should generate kuulutus pdf succesfully RUOTSI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS, Kieli.RUOTSI, false, ProjektiTyyppi.TOIMINNALLINEN));
+
+  it("should generate ilmoitus kunnille/viranomaisille pdf succesfully SUOMI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      Kieli.SUOMI,
+      false,
+      ProjektiTyyppi.TOIMINNALLINEN
+    ));
+  it("should generate ilmoitus kunnille/viranomaisille pdf succesfully RUOTSI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE,
+      Kieli.RUOTSI,
+      false,
+      ProjektiTyyppi.TOIMINNALLINEN
+    ));
+
+  it("should generate ilmoitus maakuntaliitoille pdf succesfully SUOMI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE,
+      Kieli.SUOMI,
+      false,
+      ProjektiTyyppi.TOIMINNALLINEN
+    ));
+  it("should generate ilmoitus maakuntaliitoille pdf succesfully RUOTSI (toiminnallinen)", async () =>
+    doTestGenerateKuulutus(
+      AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE,
+      Kieli.RUOTSI,
+      false,
+      ProjektiTyyppi.TOIMINNALLINEN
+    ));
+
+  it("should generate ilmoitus maakuntaliitoille pdf succesfully SUOMI (tie)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE, Kieli.SUOMI, false, ProjektiTyyppi.TIE));
+  it("should generate ilmoitus maakuntaliitoille pdf succesfully SUOMI (rata)", async () =>
+    doTestGenerateKuulutus(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE, Kieli.SUOMI, false, ProjektiTyyppi.RATA));
+
   it("should generate ilmoitus kiinteistöjen omistajille pdf succesfully SUOMI (tie) (suunnittelusopimus)", async () =>
     doTestGenerateKuulutus(
       AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
@@ -139,9 +179,14 @@ async function doTestGenerateKuulutus(
   projektiTyyppi: ProjektiTyyppi,
   vahainenMenettely?: boolean
 ): Promise<void> {
-  const projekti1 = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
-  const nahtavillaoloVaihe = projektiFixture.dbProjekti2().nahtavillaoloVaihe;
-  const projekti = { ...projekti1, nahtavillaoloVaihe };
+  let projekti;
+  if (projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+    projekti = projektiFixture.dbProjektiToiminnallinen();
+  } else {
+    const projekti1 = projektiFixture.dbProjekti1(); // Suomi+Ruotsi
+    const nahtavillaoloVaihe = projektiFixture.dbProjekti2().nahtavillaoloVaihe;
+    projekti = { ...projekti1, nahtavillaoloVaihe };
+  }
   assertIsDefined(projekti.velho);
   projekti.velho.tyyppi = projektiTyyppi;
   if (projektiTyyppi == ProjektiTyyppi.RATA) {
