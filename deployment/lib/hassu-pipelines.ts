@@ -322,10 +322,12 @@ export class HassuPipelineStack extends Stack {
       const projektiTable = Table.fromTableName(this, `ProjektiTable-${name}`, `Projekti-${pipelineConfig.env}`);
       const projektiDataTable = Table.fromTableName(this, `ProjektiDataTable-${name}`, `ProjektiData-${pipelineConfig.env}`);
       const schemaMetaTable = Table.fromTableName(this, `SchemaMetaTable-${name}`, `SchemaMeta-${pipelineConfig.env}`);
+      const palauteTable = Table.fromTableName(this, `PalauteTable-${name}`, `Palaute-${pipelineConfig.env}`);
       projektiTable.grantReadWriteData(buildProject);
       projektiDataTable.grantReadWriteData(buildProject);
       nahtavillaoloVaiheJulkaisuTable.grantReadWriteData(buildProject);
       schemaMetaTable.grantReadWriteData(buildProject);
+      palauteTable.grantReadWriteData(buildProject);
 
       if (isE2eTest) {
         buildProject.addToRolePolicy(

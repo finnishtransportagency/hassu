@@ -1,10 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import TextInput from "@components/form/TextInput";
 import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { HyvaksymisPaatosVaihe, Status, Vaihe } from "@services/api";
+import { HyvaksymisPaatosVaihe, ProjektiTyyppi, Status, Vaihe } from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -33,6 +34,7 @@ interface Props {
   oid: string;
   omistajahakuStatus: Status | null | undefined;
   hasOmistajat?: boolean | null;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 export default function IlmoituksenVastaanottajat({
@@ -41,7 +43,9 @@ export default function IlmoituksenVastaanottajat({
   oid,
   omistajahakuStatus,
   hasOmistajat,
+  projektiTyyppi,
 }: Props): ReactElement {
+  const showMaakunnat = paatosIsJatkopaatos(paatosTyyppi) || projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -124,7 +128,7 @@ export default function IlmoituksenVastaanottajat({
               ))}
             </div>
           </SectionContent>
-          {paatosIsJatkopaatos(paatosTyyppi) && (
+          {showMaakunnat && (
             <SectionContent>
               <h6 className="font-bold">Maakuntaliitot</h6>
               <div className="content grid grid-cols-4 mb-4">
@@ -243,7 +247,7 @@ export default function IlmoituksenVastaanottajat({
               </HassuGrid>
             ))}
           </SectionContent>
-          {paatosIsJatkopaatos(paatosTyyppi) && (
+          {showMaakunnat && (
             <SectionContent>
               <H3>Maakuntaliitot</H3>
               {maakuntaFields.length === 0 && <p>Maakuntia ei ole asetettu velhoon.</p>}
@@ -260,7 +264,7 @@ export default function IlmoituksenVastaanottajat({
               ))}
             </SectionContent>
           )}
-          {!paatosIsJatkopaatos(paatosTyyppi) && (
+          {!paatosIsJatkopaatos(paatosTyyppi) && projektiTyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
             <>
               {!paatosVaihe?.uudelleenKuulutus && (
                 <KiinteistonomistajatOhje

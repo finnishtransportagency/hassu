@@ -275,6 +275,7 @@ describe("asiakirjaService", () => {
       kuulutettuYhdessaSuunnitelmanimi: await haeKuulutettuYhdessaSuunnitelmanimi(julkaisu.projektinJakautuminen, kieli),
     });
     expectPDF("esikatselu_hyvaksymispaatos_", pdf, asiakirjaTyyppi);
+    return pdf;
   }
 
   it("should generate kuulutukset for Hyvaksymispaatos succesfully", async () => {
@@ -291,11 +292,17 @@ describe("asiakirjaService", () => {
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
         AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
       ];
       await expect(
         runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
           assertIsDefined(projekti.hyvaksymisPaatosVaihe);
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+          const pdf = await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+          if (type === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+            expect(pdf.textContent, `${kieli}: maakuntaliitoille should not contain lausunnonantajille text`).to.not.include(
+              kieli === Kieli.SUOMI ? "lausunnon antajille" : "dem som gett ett utl"
+            );
+          }
         })
       ).to.eventually.be.fulfilled;
 
@@ -306,15 +313,44 @@ describe("asiakirjaService", () => {
       await expect(
         runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
           assertIsDefined(projekti.hyvaksymisPaatosVaihe);
-          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+          const pdf = await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+          if (type === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+            expect(pdf.textContent, `${kieli}: maakuntaliitoille should not contain lausunnonantajille text`).to.not.include(
+              kieli === Kieli.SUOMI ? "lausunnon antajille" : "dem som gett ett utl"
+            );
+          }
         })
       ).to.eventually.be.fulfilled;
 
       // ----------
       projekti.velho.tyyppi = ProjektiTyyppi.YLEINEN;
       projekti.velho.vaylamuoto = ["rata"];
+      const yleisTypes: HyvaksymisPaatosKuulutusAsiakirjaTyyppi[] = [
+        AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
+      ];
       await expect(
-        runTestWithTypes(hyvaksymisPaatosTypes, async (type) => {
+        runTestWithTypes(yleisTypes, async (type) => {
+          assertIsDefined(projekti.hyvaksymisPaatosVaihe);
+          await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
+        })
+      ).to.eventually.be.fulfilled;
+
+      // ----------
+      projekti.velho.tyyppi = ProjektiTyyppi.TOIMINNALLINEN;
+      projekti.velho.suunnittelustaVastaavaViranomainen = SuunnittelustaVastaavaViranomainen.UUDENMAAN_ELY;
+      projekti.velho.vaylamuoto = ["tie"];
+      const toiminnallinenTypes: HyvaksymisPaatosKuulutusAsiakirjaTyyppi[] = [
+        AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA,
+        AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
+      ];
+      await expect(
+        runTestWithTypes(toiminnallinenTypes, async (type) => {
           assertIsDefined(projekti.hyvaksymisPaatosVaihe);
           await testHyvaksymisPaatosKuulutusWithLanguage(projekti, projekti.hyvaksymisPaatosVaihe, kieli as KaannettavaKieli, type);
         })

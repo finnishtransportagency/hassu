@@ -1050,6 +1050,7 @@ export class HassuBackendStack extends Stack {
       },
       environment: {
         ...commonEnvironmentVariables,
+        QUARANTINE_BUCKET_NAME: Config.quarantineBucketName,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -1059,6 +1060,13 @@ export class HassuBackendStack extends Stack {
     this.addPermissionsForMonitoring(importer);
     importer.addToRolePolicy(new PolicyStatement({ effect: Effect.ALLOW, actions: ["ssm:GetParameter"], resources: ["*"] }));
     this.props.yllapitoBucket.grantRead(importer, "*/mielipiteet/*");
+    importer.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ["s3:GetObject"],
+        resources: [`arn:aws:s3:::${Config.quarantineBucketName}/*`],
+      })
+    );
 
     const eventSource = new SqsEventSource(emailSQS, { batchSize: 1 });
     importer.addEventSource(eventSource);

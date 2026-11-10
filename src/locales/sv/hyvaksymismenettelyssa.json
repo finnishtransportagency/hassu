@@ -1,4 +1,6 @@
 {
   "suunnitelma_on_siirtynyt": "Planen har övergått till färdigställande och godkännande",
-  "nahtavilla_olon_jalkeen": "Inkomna anmärkningar och utlåtanden behandlas när tiden för framläggandet har löpt ut och utifrån dem kan det vid behov göras ändringar i planen. Efter färdigställandet skickas förslaget om godkännande av planen till Transport- och kommunikationsverket Traficom för godkännande."
+  "esitys_on_siirtynyt": "Förslaget har övergått till färdigställande och godkännande",
+  "nahtavilla_olon_jalkeen": "Inkomna anmärkningar och utlåtanden behandlas när tiden för framläggandet har löpt ut och utifrån dem kan det vid behov göras ändringar i planen. Efter färdigställandet skickas förslaget om godkännande av planen till Transport- och kommunikationsverket Traficom för godkännande.",
+  "nahtavilla_olon_jalkeen_toiminnallinen": "Inkomna åsikter och utlåtanden behandlas när tiden för framläggandet har löpt ut och utifrån dem kan det vid behov göras ändringar i förslaget. Efter färdigställandet skickas förslaget om godkännande av förslaget till Transport- och kommunikationsverket Traficom för godkännande."
 }

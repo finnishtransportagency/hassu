@@ -620,7 +620,7 @@ Object {
 
 
 Hyväksymispäätöksestä ilmoittaminen
-Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
 Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
@@ -639,6 +639,32 @@ LUONNOS",
 `;
 
 exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 6`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_T431_5 Ilmoitus hyvaksymispaatoksesta maakuntaliitolle.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Hyväksymispäätöksestä ilmoittaminen
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen tiesuunnitelman: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 7`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
   "textContent": "VAYLA/2/2022
@@ -667,7 +693,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 7`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 8`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R432 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
   "textContent": "VAYLA/2/2022
@@ -700,7 +726,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 8`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 9`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R431-1 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
   "textContent": "VAYLA/2/2022
@@ -726,7 +752,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 9`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 10`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R433 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
   "textContent": "VAYLA/2/2022
@@ -752,7 +778,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 10`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 11`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R434 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
   "textContent": "VAYLA/2/2022
@@ -760,7 +786,7 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
+Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
@@ -778,7 +804,33 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 11`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 12`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_R432-1 Ilmoitus hyvaksymispaatoksesta maakuntaliitolle.pdf",
+  "textContent": "VAYLA/2/2022
+
+
+
+Testiprojekti 2
+Väylävirasto ilmoittaa maakunnan liitolle, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään ratalain mukaisen ratasuunnitelman: Testiprojekti 2.
+Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (Ratalaki 91 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Väylävirasto käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.vayla.fi/tietosuoja.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 13`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
   "textContent": "VAYLA/2/2022
@@ -807,7 +859,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 12`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 14`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja elinvoimakeskukselle.pdf",
   "textContent": "VAYLA/2/2022
@@ -840,7 +892,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 13`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 15`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
   "textContent": "VAYLA/2/2022
@@ -866,7 +918,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 14`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 16`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille.pdf",
   "textContent": "VAYLA/2/2022
@@ -892,7 +944,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 15`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 17`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
   "textContent": "VAYLA/2/2022
@@ -900,7 +952,7 @@ Object {
 
 
 Testiprojekti 2
-Väylävirasto ilmoittaa lausunnon antajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
+Väylävirasto ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt traficom-123 päätöksellään liikennejärjestelmästä ja maanteistä annetun lain mukaisen yleissuunnitelman: Testiprojekti 2.
 Väylävirasto lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
 Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
 
@@ -918,7 +970,127 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 16`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 18`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431 Kuulutus hyvaksymispaatoksen nahtavillaolo.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Hyväksymispäätöksen kuuluttaminen
+Testiprojekti 2
+Liikenne- ja viestintävirasto on 3.2.2022 päätöksellään traficom-123, hyväksynyt liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen maantien toiminnallisen luokan muutoksen: Testiprojekti 2
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävillä 2.1.2022 - 3.1.2022. Asianosaisten katsotaan saaneen tiedon seitsemäntenä päivänä kuulutuksen julkaisemispäivästä (hallintolaki 62 a §).
+Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+
+Kuulutettavasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Päätökseen voi valittamalla hakea muutosta Hämeenlinnan hallinto-oikeudelta 30 päivän kuluessa päätöksen tiedoksisaannista. Muutoksenhaun tarkemmat ohjeet ovat päätöksen liitteenä olevassa valitusosoituksessa.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 19`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
+  "textContent": "ELY/2/2022
+
+
+Hyväksymispäätöksestä ilmoittaminen
+Testiprojekti 2
+Hyväksymispäätöksestä ilmoittaminen
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain mukaisen esityksen maantien toiminnallisen luokan muuttamisesta: Testiprojekti 2
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Kuulutuksesta ilmoittaminen
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa, että se julkaisee kuulutuksen, joka koskee otsikossa mainitun maantien toiminnallisen luokan muuttamista koskevan hyväksymispäätöksen tiedoksiantoa (LjMTL 103 § ja hallintolaki 62 § a). Kuulutus, päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään nähtävillä vähintään muutoksenhaulle säädetyn ajan. Tiedoksisaannin katsotaan tapahtuneen seitsemäntenä päivänä julkaisupäivästä.
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+
+Uudenmaan ELY-keskus pyytää kuntia julkaisemaan verkkosivuillaan liitteenä olevan ilmoituksen kuuluttamisesta. Ilmoitus tulee julkaista mahdollisuuksien mukaan edellä mainittuna kuulutuksen julkaisupäivänä.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus
+
+
+
+ELY/2/2022
+
+
+LUONNOSLUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 20`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431-2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Ilmoitus nähtäville asettamista
+Testiprojekti 2
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) julkaisee kuulutuksen, joka koskee otsikossa mainittua maantien toiminnallisen luokan hyväksymispäätöstä nähtäville asettamista. Uudenmaan ELY-keskus saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)
+Kuulutus julkaistaan 2.1.2022 osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos
+
+
+
+Kuulutus on nähtävillä 2.1.2022 - 3.1.2022 välisen ajan
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 21`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431-3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Hyväksymispäätöksestä ilmoittaminen
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus (ELY-keskus) ilmoittaa lausunnonantajille, että Liikenne- ja viestintävirasto on 3.2.2022 hyväksynyt päätöksellään traficom-123 liikennejärjestelmästä ja maanteistä annetun lain mukaisen esityksen maantien toiminnallisen luokan muuttamisesta: Testiprojekti 2.
+Uudenmaan ELY-keskus lähettää hyväksymispäätöksen tiedoksenne. (laki liikennejärjestelmästä ja maanteistä LjMTL 104 §).
+Päätös ja sen perusteena olevat asiakirjat sekä valitusosoitus pidetään yleisesti nähtävänä 2.1.2022 - 3.1.2022 välisen ajan osoitteessa https://localhost:3000/suunnitelma/2/hyvaksymispaatos.
+
+Liitteenä olevasta hyväksymispäätöksestä on poistettu henkilötiedot. Mikäli haluatte alkuperäisen päätöksen, voitte pyytää sen projektipäälliköltä.
+Uudenmaan elinkeino-, liikenne- ja ympäristökeskus käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, https://www.elinvoimakeskus.fi/tietosuoja-ja-henkilotietojen-kasittely.
+
+Lisätietoja antaa 
+Pekka Projari (Väylävirasto), 
+puh. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Väylävirasto), 
+puh. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+puh. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 22`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431 Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
   "textContent": "ELY/2/2022
@@ -947,7 +1119,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 17`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 23`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle sv.pdf",
   "textContent": "ELY/2/2022
@@ -956,7 +1128,7 @@ Object {
 Meddelande om beslut om godkännande
 Namnet på svenska
 Meddelande om beslut om godkännande
-NTM-centralen i Nyland meddelar kommunerna i planeringsområdet och NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplan enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+NTM-centralen i Nyland meddelar kommunerna i planeringsområdet och till NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplan enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
 NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
@@ -986,7 +1158,7 @@ LUONNOSLUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 18`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 24`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
   "textContent": "ELY/2/2022
@@ -1012,7 +1184,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 19`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 25`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille sv.pdf",
   "textContent": "ELY/2/2022
@@ -1038,7 +1210,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 20`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 26`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_T431_3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
   "textContent": "ELY/2/2022
@@ -1064,7 +1236,33 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 21`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 27`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_T431_5 Ilmoitus hyvaksymispaatoksesta maakuntaliitolle sv.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Meddelande om beslut om godkännande
+NTM-centralen i Nyland meddelar landskapsförbund att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en vägplan enligt lagen om trafiksystem och landsvägar : Namnet på svenska.
+NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
+
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 28`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R431 Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1093,7 +1291,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 22`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 29`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R432 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1102,7 +1300,7 @@ Object {
 Meddelande om beslut om godkännande
 Namnet på svenska
 Meddelande om beslut om godkännande
-Trafikledsverket meddelar kommunerna i planeringsområdet och NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplan enligt banlagen: Namnet på svenska.
+Trafikledsverket meddelar kommunerna i planeringsområdet och till NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplan enligt banlagen: Namnet på svenska.
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
@@ -1132,7 +1330,7 @@ LUONNOSLUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 23`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 30`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R431-1 Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1158,7 +1356,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 24`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 31`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R433 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1184,7 +1382,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 25`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 32`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_R434 Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1210,7 +1408,33 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 26`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 33`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_R432-1 Ilmoitus hyvaksymispaatoksesta maakuntaliitolle sv.pdf",
+  "textContent": "VAYLA/2/2022
+
+
+
+Namnet på svenska
+Trafikledsverket meddelar landskapsförbund att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en järnvägsplan enligt banlagen : Namnet på svenska.
+Trafikledsverket skickar beslutet om godkännande till er för kännedom (91 § i banlagen).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
+
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 34`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431 Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1239,7 +1463,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 27`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 35`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja elinvoimakeskukselle sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1248,7 +1472,7 @@ Object {
 Meddelande om beslut om godkännande
 Namnet på svenska
 Meddelande om beslut om godkännande
-Trafikledsverket meddelar kommunerna i planeringsområdet och NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en utredningsplan enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
+Trafikledsverket meddelar kommunerna i planeringsområdet och till NTM-centralen i Södra Savolax, att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt en utredningsplan enligt lagen om trafiksystem och landsvägar: Namnet på svenska.
 Trafikledsverket skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
 Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
 
@@ -1278,7 +1502,7 @@ LUONNOSLUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 28`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 36`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-2 Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1304,7 +1528,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 29`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 37`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-4 Ilmoitus hyvaksymispaatoksesta kiinteistonomistajille ja muistuttajille sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1330,7 +1554,7 @@ LUONNOS",
 }
 `;
 
-exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 30`] = `
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 38`] = `
 Object {
   "fileName": "esikatselu_hyvaksymispaatos_Y431-3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
   "textContent": "VAYLA/2/2022
@@ -1344,6 +1568,126 @@ Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvi
 
 Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
 Trafikledsverket behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://vayla.fi/sv/trafikledsverket/kontaktuppgifter/dataskyddspolicy.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 39`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431 Kuulutus hyvaksymispaatoksen nahtavillaolo sv.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Kungörelse av beslut om godkännande
+Namnet på svenska
+Transport- och kommunikationsverket har 3.2.2022 genom sitt beslut traficom-123 godkänt ändringen av landsvägens funktionella klass enligt lagen om trafiksystem och landsvägar (503/2005): Namnet på svenska
+Beslutet och de handlingar som ligger till grund för det samt besvärsanvisningen hålls offentligt framlagd 2.1.2022 - 3.1.2022. Sakägarna anses ha fått kännedom om detta den sjunde dagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).
+Kungörelsen, beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
+
+Personuppgifterna i det framlagda beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Ändring i beslutet kan sökas genom besvär hos Tavastehus förvaltningsdomstolen inom 30 dagar från delfåendet av beslutet. Närmare anvisningar för sökande av ändring finns i besvärsanvisningen som finns som bilaga till beslutet.
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+Närings-, trafik- och miljöcentralen i Nyland
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 40`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431-1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle sv.pdf",
+  "textContent": "ELY/2/2022
+
+
+Meddelande om beslut om godkännande
+Namnet på svenska
+Meddelande om beslut om godkännande
+NTM-centralen i Nyland meddelar att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt framställningen enligt lagen om trafiksystem och landsvägar om ändring av landsvägens funktionella klass: Namnet på svenska
+NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
+
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+Meddelande om kungörelse
+NTM-centralen i Nyland meddelar att de publicerar en kungörelse om delgivning av det beslut om godkännande av ändring av landsvägens funktionella klass som nämns i rubriken (lagen om trafiksystem och landsvägar 103 § och förvaltningslagen 62 a §). Kungörelsen, beslutet och handlingarna som ligger till grund för beslutet samt besvärsanvisningen hålls framlagda åtminstone under den tid som föreskrivs för ändringssökande. Delgivningen anses ha skett den sjunde dagen efter att kungörelsen publicerades.
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
+
+NTM-centralen i Nyland ber kommunerna att publicera det bifogade meddelandet om kungörelse på sin webbplats. Meddelandet ska om möjligt publiceras på ovan nämnda publiceringsdatum för kungörelsen.
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
+
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+
+
+
+Närings-, trafik- och miljöcentralen i Nyland
+ELY/2/2022
+
+
+LUONNOSLUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 41`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431-2 Ilmoitus hyvaksymispaatoksen kuulutuksesta sv.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Meddelande om framläggande
+Namnet på svenska
+Närings-, trafik- och miljöcentralen (NTM-centralen) i Nyland publicerar en kungörelse om framläggande av det beslut om godkännande som nämns i rubriken. NTM-centralen i Nyland delger ärendet genom en offentlig kungörelse på det sätt som föreskrivs om offentlig kungörelse i förvaltningslagen (lagen om trafiksystem och landsvägar 108 §, förvaltningslagen 62 a §).
+Kungörelsen publiceras 2.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos
+
+
+
+Kungörelsen finns till påseende 2.1.2022 - 3.1.2022.
+Mer information om planen 
+Pekka Projari (Trafikledsverket), 
+tel. 029312, pekka.projari(at)vayla.fi 
+Matti Meikalainen (Trafikledsverket), 
+tel. 0293123123, Matti.Meikalainen(at)vayla.fi 
+Marko Koi (Kajaani), 
+tel. 0293121213, markku.koi(at)koi.com 
+LUONNOS",
+}
+`;
+
+exports[`asiakirjaService should generate kuulutukset for Hyvaksymispaatos succesfully 42`] = `
+Object {
+  "fileName": "esikatselu_hyvaksymispaatos_TO431-3 Ilmoitus hyvaksymispaatoksesta lausunnon antajille sv.pdf",
+  "textContent": "ELY/2/2022
+
+
+
+Meddelande om beslut om godkännande
+NTM-centralen i Nyland meddelar dem som gett ett utlåtande att Transport- och kommunikationsverket 3.2.2022 genom sitt beslut traficom-123 har godkänt framställningen enligt lagen om trafiksystem och landsvägar om ändring av landsvägens funktionella klass: Namnet på svenska.
+NTM-centralen i Nyland skickar beslutet om godkännande till er för kännedom (104 § i lagen om trafiksystem och landsvägar).
+Beslutet och de handlingar som ligger till grund för beslutet samt besvärsanvisningen hålls offentligt framlagda under tiden 2.1.2022 - 3.1.2022 på adressen https://localhost:3000/sv/suunnitelma/2/hyvaksymispaatos.
+
+Personuppgifterna i det bifogade beslutet om godkännande har strukits. Om ni vill ha det ursprungliga beslutet kan ni be projektchefen om det.
+NTM-centralen i Nyland behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen https://www.elinvoimakeskus.fi/sv/tietosuoja-ja-henkilotietojen-kasittely.
 
 Mer information om planen 
 Pekka Projari (Trafikledsverket), 

@@ -10,6 +10,9 @@ import { parameters } from "../aws/parameters";
 import { parse } from "yaml";
 import { EmailOptions } from "./model/emailOptions";
 
+const RETRYABLE_ERROR_CODES = new Set(["ESOCKET", "ECONNREFUSED", "ETIMEDOUT", "ECONNRESET"]);
+const RETRY_DELAYS_MS = [1 * 1000, 3 * 1000];
+
 type SMTPConfig = {
   SMTP_KEY_ID: string;
   SMTP_SECRET: string;
@@ -121,31 +124,42 @@ class EmailClient {
       log.error("Sähköpostin vastaanottajat puuttuvat", { options, "config.emailsTo": config.emailsTo });
       return;
     }
-    try {
-      let transport;
-      if (isTurvaposti) {
-        const turvapostiConfig = await getTurvapostiConfig();
-        transport = getTurvapostiTransport(turvapostiConfig);
-        addDotSecToMailRecipients(mailOptions);
-      } else {
-        transport = getTransport(smtpConfig);
-      }
-      const messageInfo: SMTPTransport.SentMessageInfo = await transport.sendMail(mailOptions);
-      log.info("Email lähetetty", messageInfo);
+    let transport;
+    if (isTurvaposti) {
+      const turvapostiConfig = await getTurvapostiConfig();
+      transport = getTurvapostiTransport(turvapostiConfig);
+      addDotSecToMailRecipients(mailOptions);
+    } else {
+      transport = getTransport(smtpConfig);
+    }
 
-      // Testiympäristössä kaikki postit ohjataan config.emailsTo osoittamaan osoitteeseen. Jotta koodi osaisi tulkita postit lähteneiksi, pitää lähetysraporttia huijata lisäämällä oikeat osoitteet sinne
-      if (config.emailsTo) {
-        if (isArray(options.to)) {
-          messageInfo.accepted.push(...(options.to as string[]));
-        } else if (options.to) {
-          messageInfo.accepted.push(options.to as string);
+    for (let attempt = 0; ; attempt++) {
+      try {
+        const messageInfo: SMTPTransport.SentMessageInfo = await transport.sendMail(mailOptions);
+        log.info("Email lähetetty", messageInfo);
+
+        // Testiympäristössä kaikki postit ohjataan config.emailsTo osoittamaan osoitteeseen. Jotta koodi osaisi tulkita postit lähteneiksi, pitää lähetysraporttia huijata lisäämällä oikeat osoitteet sinne
+        if (config.emailsTo) {
+          if (isArray(options.to)) {
+            messageInfo.accepted.push(...(options.to as string[]));
+          } else if (options.to) {
+            messageInfo.accepted.push(options.to as string);
+          }
+        }
+
+        return messageInfo;
+      } catch (e) {
+        const code = (e as NodeJS.ErrnoException).code;
+        if (code && RETRYABLE_ERROR_CODES.has(code) && attempt < RETRY_DELAYS_MS.length) {
+          const delayMs = RETRY_DELAYS_MS[attempt];
+          log.warn("Email lähetys epäonnistui, yritetään uudelleen", { attempt: attempt + 1, code, delayMs });
+          await new Promise((resolve) => setTimeout(resolve, delayMs));
+        } else {
+          const { attachments: _attachments, ...mailOptionsToLog } = mailOptions;
+          log.error("Email lähetys epäonnistui", { mailOptions: mailOptionsToLog, e });
+          return;
         }
       }
-
-      return messageInfo;
-    } catch (e) {
-      const { attachments: _attachments, ...mailOptionsToLog } = mailOptions;
-      log.error("Email lähetys epäonnistui", { mailOptions: mailOptionsToLog, e });
     }
   }
 }

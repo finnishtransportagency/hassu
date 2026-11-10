@@ -47,7 +47,7 @@ import { omistajaDatabase } from "../database/omistajaDatabase";
 import { muistuttajaDatabase } from "../database/muistuttajaDatabase";
 import { tallennaMaanomistajaluettelo } from "../mml/tiedotettavatExcel";
 import { SisainenProjektiPaths } from "../files/ProjektiPath";
-import { Vaihe } from "hassu-common/graphql/apiModel";
+import { ProjektiTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
 import { nahtavillaoloVaiheJulkaisuDatabase } from "../database/nahtavillaoloVaiheJulkaisuDatabase";
 import { projektiEntityDatabase } from "../database/projektiEntityDatabase";
 import { asianhallintaService } from "../asianhallinta/asianhallintaService";
@@ -402,6 +402,10 @@ async function synchronizeAll(ctx: ImportContext): Promise<boolean> {
 }
 
 async function handleGenerateMaanomistajaluettelo(projekti: DBProjekti, approvalType: PublishOrExpireEventType) {
+  if (projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+    log.info("Toiminnallinen projekti, maanomistajaluetteloa ei generoida", { approvalType });
+    return;
+  }
   const omistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(projekti.oid);
   const suomifiOmistajat = omistajat.filter((o) => o.suomifiLahetys);
 

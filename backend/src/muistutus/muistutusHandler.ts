@@ -7,6 +7,7 @@ import {
   TallennaMuistuttajatMutationVariables,
 } from "hassu-common/graphql/apiModel";
 import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
+import fileValidation from "hassu-common/fileValidationSettings";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { fileService } from "../files/fileService";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
@@ -68,6 +69,7 @@ class MuistutusHandler {
 
     const aikaleima = localDateTimeString();
     const muistutusId = uuid.v4();
+    await this.validateLiitteetTotalSize(muistutusInput.liitteet, oid);
     const liitteet = await this.persistLiitteet(muistutusInput.liitteet, oid, muistutusId);
     const muistutus: Muistutus = adaptMuistutusInput({ aikaleima, muistutusId, liitteet, loggedInUser, muistutusInput });
 
@@ -112,6 +114,17 @@ class MuistutusHandler {
 
   getLoggedInUser() {
     return getSuomiFiCognitoKayttaja();
+  }
+
+  private async validateLiitteetTotalSize(liitteet: string[] | undefined | null, oid: string): Promise<void> {
+    if (!liitteet?.length) return;
+    const sizes = await Promise.all(liitteet.map((liite) => fileService.getUploadedFileContentLength(liite)));
+    const total = sizes.reduce<number>((sum, size) => sum + (size ?? 0), 0);
+    if (total > fileValidation.maxEmailAttachmentsTotalSize) {
+      const maxMB = Math.round(fileValidation.maxEmailAttachmentsTotalSize / 1000000);
+      log.error("Muistutuksen liitteiden yhteiskoko ylittää sallitun rajan", { total, oid });
+      throw new IllegalArgumentError(`Liitteiden yhteiskoko ylittää sallitun ${maxMB} Mt rajan`);
+    }
   }
 
   private async persistLiitteet(

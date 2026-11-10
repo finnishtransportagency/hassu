@@ -1,5 +1,8 @@
 // Contains code generated or recommended by Amazon Q
 import { palauteSchema } from "../../schemas/vuorovaikutus";
+import { maxEmailAttachmentsTotalSize } from "common/fileValidationSettings";
+
+const validLiite = { nimi: "testi.pdf", tiedosto: new File([], "testi.pdf"), tyyppi: "application/pdf", koko: 1000 };
 
 describe("palauteSchema", () => {
   it("hyväksyy kun vain kysymysTaiPalaute annettu", async () => {
@@ -46,5 +49,34 @@ describe("palauteSchema", () => {
         puhelinnumero: "0401234567",
       })
     ).resolves.toBeDefined();
+  });
+
+  it("hyväksyy liitteet kun yhteiskoko on alle rajan", async () => {
+    await expect(
+      palauteSchema.validate({ kysymysTaiPalaute: "Palaute", liitteet: [validLiite, { ...validLiite, koko: maxEmailAttachmentsTotalSize - 1000 }] })
+    ).resolves.toBeDefined();
+  });
+
+  it("hylkää liitteet kun yhteiskoko ylittää rajan", async () => {
+    const liitteet = [
+      { ...validLiite, koko: maxEmailAttachmentsTotalSize / 2 + 1 },
+      { ...validLiite, koko: maxEmailAttachmentsTotalSize / 2 + 1 },
+    ];
+    await expect(
+      palauteSchema.validate({ kysymysTaiPalaute: "Palaute", liitteet }, { abortEarly: true })
+    ).rejects.toThrow("liitteet_yhteiskoko_liian_suuri");
+  });
+
+  it("hylkää yli viisi liitettä", async () => {
+    const liitteet = Array(6).fill(validLiite);
+    await expect(
+      palauteSchema.validate({ kysymysTaiPalaute: "Palaute", liitteet }, { abortEarly: true })
+    ).rejects.toThrow("tiedostoja_liikaa");
+  });
+
+  it("hylkää kun yksi liite ylittää yhteiskorajan", async () => {
+    await expect(
+      palauteSchema.validate({ kysymysTaiPalaute: "Palaute", liitteet: [{ ...validLiite, koko: maxEmailAttachmentsTotalSize + 1 }] }, { abortEarly: true })
+    ).rejects.toThrow("liitteet_yhteiskoko_liian_suuri");
   });
 });
