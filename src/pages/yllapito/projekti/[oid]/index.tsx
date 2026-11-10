@@ -489,7 +489,10 @@ function ProjektiSivuLomake({ projekti, projektiLoadError, reloadProjekti }: Pro
             {projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN ? (
               <OhjelistaNotification open={ohjeetOpen} onClose={ohjeetOnClose}>
                 <li>Osa projektin perustiedoista on tuotu Projektivelhosta. Jos näissä tiedoissa on virhe, tee muutos Projektivelhoon.</li>
-                <li>Puuttuvat tiedot pitää olla täytettynä ennen nähtävilläolokuulutuksen tekemistä.</li>
+                <li>
+                  Puuttuvat tiedot pitää olla täytettynä ennen nähtävilläolokuulutuksen tekemistä. Projektin kielivalintaan voi vaikuttaa
+                  nähtävilläolokuulutuksen hyväksyntään saakka, jonka jälkeen valinta lukittuu.
+                </li>
                 <li>
                   Jos tallennettuihin perustietoihin tehdään muutoksia, ne eivät vaikuta jo tehtyihin kuulutuksiin tai projektin aiempiin
                   vaiheisiin.
