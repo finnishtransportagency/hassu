@@ -342,7 +342,7 @@ function getGeoJSON(data: ProjektiProjekti): string | null {
   let geometries: ProjektiProjektiLuontiMitattugeometriaGeometria[] | undefined;
 
   if ((data.ominaisuudet.vaihe as unknown as string) === "vaihe/vaihe12") {
-    // Rata-projekti: haetaan aina geometriat rataosoitteet-kentästä
+    //Rata-projekti: haetaan aina geometriat rataosoitteet-kentästä
     const validRataosoitteet = (data.rataosoitteet ?? []).filter(isValidRataosoite);
     if (data.rataosoitteet?.length && validRataosoitteet.length !== data.rataosoitteet.length) {
       log.warn("Osa rataosoitteista puuttuu pakollisia kenttiä (ratanumero, alku-km, alku-m, loppu-km, loppu-m)");
