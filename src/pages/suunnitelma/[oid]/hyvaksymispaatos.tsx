@@ -1,10 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useEffect } from "react";
 import { useProjektiJulkinen } from "src/hooks/useProjektiJulkinen";
 import HyvaksymispaatosTiedot from "@components/projekti/kansalaisnakyma/HyvaksymispaatosTiedot";
 import PaatosPageLayout from "@components/projekti/kansalaisnakyma/PaatosPageLayout";
 import useTranslation from "next-translate/useTranslation";
 import SaameContent from "@components/projekti/kansalaisnakyma/SaameContent";
-import { Status } from "@services/api";
+import { ProjektiTyyppi, Status } from "@services/api";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 import { PaatosTyyppi } from "common/hyvaksymisPaatosUtil";
@@ -35,9 +36,11 @@ export default function Hyvaksymispaatos(): ReactElement {
     return <>{t("common:ladataan")}</>;
   }
 
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+
   return (
     <PaatosPageLayout
-      pageTitle={t("ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}
+      pageTitle={t(isToiminnallinen ? "ui-otsikot.kuulutus_esityksen_hyvaksymisesta" : "ui-otsikot.kuulutus_suunnitelman_hyvaksymisesta")}
       suunnitelmaJaettu={kuulutus.suunnitelmaJaettu}
       saameContent={
         <SaameContent
