@@ -210,9 +210,9 @@ export default function Nahtavillaolo(): ReactElement {
                 onClose={() => setMielipideInfoOpen(false)}
                 closable
               >
-                <p>{t("muistutuslomake.muistutus_info_1")}</p>
+                <p>{t("mielipidelomake.mielipide_info_1")}</p>
                 <br />
-                <p>{t("muistutuslomake.muistutus_info_2")}</p>
+                <p>{t("mielipidelomake.mielipide_info_2")}</p>
               </Notification>
               <MielipideLomake projekti={projekti} mielipideoikeusPaattyyPaiva={kuulutus.mielipideoikeusPaattyyPaiva} />
             </>
