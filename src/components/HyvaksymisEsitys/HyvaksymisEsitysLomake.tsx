@@ -123,7 +123,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                         vastaanottajan on mahdollista tarkastella toimitettavan linkin sisältöä kyseiseen päivämäärään saakka. Linkin
                         voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
                       </li>
-                      <li>Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla "Pyydetään kiireellistä käsittelyä".</li>
+                      <li>Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla ”Pyydetään kiireellistä käsittelyä”.</li>
                       <li>Halutessasi voit kirjata lisätietoa hyväksymisesityksestä vastaanottajalle.</li>
                       <li>
                         Tuo omalta koneelta allekirjoitettu hyväksymisesitys. Sisällytä Hyväksymisesitys-tiedostoon linkki
@@ -154,7 +154,7 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                         voimassaoloaikaa on mahdollista muuttaa jälkikäteen.
                       </li>
                       <li>
-                        Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla "Pyydetään kiireellistä käsittelyä".
+                        Hyväksymisesityksen kiireellistä käsittelyä voi pyytää raksittamalla ”Pyydetään kiireellistä käsittelyä”.
                         Kiireellistä käsittelyä tulee pyytää vain oikeasti kiireellisissä tilanteissa ja kiireellisyyden peruste tulee
                         kirjata lisätiedot -kenttään.
                       </li>

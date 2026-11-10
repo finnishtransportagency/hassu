@@ -95,7 +95,7 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
                         </li>
                         <li>
                           Tarkista aluksi, että esityksen nähtäville asetettavat aineistot on tuotu järjestelmään kohdassa
-                          "nähtävilläolovaihe".
+                          ”nähtävilläolovaihe”.
                         </li>
                         <li>Luotava aineistolinkki sisältää aina nähtäville asetetun aineiston.</li>
                         <li>Tarvittaessa voit luoda eri lausunnonantajille suunnattuja linkkejä eri lisäaineistoilla.</li>
@@ -122,7 +122,7 @@ function LausuntoPyynnotPageLayout({ projekti, children }: { projekti: ProjektiL
                         </li>
                         <li>
                           Tarkista aluksi, että suunnitelman nähtäville asetettavat aineistot on tuotu järjestelmään kohdassa
-                          "nähtävilläolovaihe".
+                          ”nähtävilläolovaihe”.
                         </li>
                         <li>Luotava aineistolinkki sisältää aina nähtäville asetetun aineiston.</li>
                         <li>Tarvittaessa voit luoda eri lausunnonantajille suunnattuja linkkejä eri lisäaineistoilla.</li>
