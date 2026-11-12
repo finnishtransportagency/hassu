@@ -196,16 +196,23 @@ export default function HyvaksymisEsitysLomake({ hyvaksymisEsityksenTiedot }: Re
                 <HyvaksymisEsitysTiedosto tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.hyvaksymisEsitys} />
                 <Suunnitelma aineistoKategoriat={aineistoKategoriat} />
                 <H4 variant="h3">Vuorovaikutus</H4>
-                <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
+                <p>
+                  {isToiminnallinen
+                    ? "Tuo omalta koneelta suunnitelmalle annetut mielipiteet ja lausunnot."
+                    : "Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo."}
+                </p>
                 <Muistutukset
                   kunnat={hyvaksymisEsityksenTiedot.perustiedot.kunnat}
                   tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.muistutukset}
+                  isToiminnallinen={isToiminnallinen}
                 />
                 <Lausunnot tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.lausunnot} />
-                <Maanomistajaluettelo
-                  tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo}
-                  tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.maanomistajaluettelo}
-                />
+                {!isToiminnallinen && (
+                  <Maanomistajaluettelo
+                    tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.maanomistajaluettelo}
+                    tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.maanomistajaluettelo}
+                  />
+                )}
                 <KuulutuksetJaKutsu
                   tiedostot={hyvaksymisEsityksenTiedot.hyvaksymisEsitys?.kuulutuksetJaKutsu}
                   tuodut={hyvaksymisEsityksenTiedot.tuodutTiedostot.kuulutuksetJaKutsu}
