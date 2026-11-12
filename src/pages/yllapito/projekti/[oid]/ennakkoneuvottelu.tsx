@@ -226,19 +226,26 @@ function EnnakkoNeuvotteluLomake({ projekti }: { projekti: ProjektiLisatiedolla 
                 <HyvaksymisEsitysTiedosto tiedostot={projekti.ennakkoNeuvottelu?.hyvaksymisEsitys} ennakkoneuvottelu={true} />
                 <Suunnitelma aineistoKategoriat={aineistoKategoriat} ennakkoneuvottelu={true} />
                 <H4 variant="h3">Vuorovaikutus</H4>
-                <p>Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo.</p>
+                <p>
+                  {isToiminnallinen
+                    ? "Tuo omalta koneelta suunnitelmalle annetut mielipiteet ja lausunnot."
+                    : "Tuo omalta koneelta suunnitelmalle annetut muistutukset, lausunnot ja maanomistajaluettelo."}
+                </p>
                 <Muistutukset
                   kunnat={projekti.velho.kunnat}
                   tiedostot={projekti.ennakkoNeuvottelu?.muistutukset}
                   ennakkoneuvottelu={true}
+                  isToiminnallinen={isToiminnallinen}
                 />
                 <Lausunnot tiedostot={projekti.ennakkoNeuvottelu?.lausunnot} ennakkoneuvottelu={true} />
-                <Maanomistajaluettelo
-                  tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.maanomistajaluettelo}
-                  tiedostot={projekti.ennakkoNeuvottelu?.maanomistajaluettelo}
-                  poisValitutTiedostot={projekti.ennakkoNeuvottelu?.poisValitutMaanomistajaluettelot}
-                  ennakkoneuvottelu={true}
-                />
+                {!isToiminnallinen && (
+                  <Maanomistajaluettelo
+                    tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.maanomistajaluettelo}
+                    tiedostot={projekti.ennakkoNeuvottelu?.maanomistajaluettelo}
+                    poisValitutTiedostot={projekti.ennakkoNeuvottelu?.poisValitutMaanomistajaluettelot}
+                    ennakkoneuvottelu={true}
+                  />
+                )}
                 <KuulutuksetJaKutsu
                   tiedostot={projekti.ennakkoNeuvottelu?.kuulutuksetJaKutsu}
                   tuodut={projekti.ennakkoNeuvottelu?.tuodutTiedostot.kuulutuksetJaKutsu}
