@@ -9,7 +9,7 @@ import {
   SaameKieli,
 } from "../../database/model";
 import { parseDate } from "../../util/dateUtil";
-import { Kieli } from "hassu-common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { fileService } from "../../files/fileService";
 import { PathTuple } from "../../files/ProjektiPath";
 import { projektiDatabase } from "../../database/projektiDatabase";
@@ -59,6 +59,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager<T extends PaatosV
       const {
         ilmoitusPaatoskuulutuksestaLausunnonantajilleAsiakirjaTyyppi,
         ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi,
+        ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi,
         paatosAsiakirjaTyyppi,
         ilmoitusPaatoskuulutuksestaAsiakirjaTyyppi,
         ilmoitusPaatoskuulutuksestaKunnalleJaToiselleViranomaiselleAsiakirjaTyyppi,
@@ -67,9 +68,15 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager<T extends PaatosV
       // Create PDFs in parallel
       const hyvaksymisKuulutusPDFPath = createPDFOfType(paatosAsiakirjaTyyppi);
       const hyvaksymisIlmoitusLausunnonantajillePDFPath = createPDFOfType(ilmoitusPaatoskuulutuksestaLausunnonantajilleAsiakirjaTyyppi);
-      const hyvaksymisIlmoitusMuistuttajillePDFPath = ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi
-        ? createPDFOfType(ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi)
-        : undefined;
+      const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      const hyvaksymisIlmoitusMuistuttajillePDFPath =
+        !isToiminnallinen && ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi
+          ? createPDFOfType(ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi)
+          : undefined;
+      const hyvaksymisIlmoitusMaakuntaliitoillePDFPath =
+        isToiminnallinen && ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi
+          ? createPDFOfType(ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi)
+          : undefined;
       const ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath = createPDFOfType(
         ilmoitusPaatoskuulutuksestaKunnalleJaToiselleViranomaiselleAsiakirjaTyyppi
       );
@@ -79,6 +86,9 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager<T extends PaatosV
         hyvaksymisIlmoitusLausunnonantajillePDFPath: await hyvaksymisIlmoitusLausunnonantajillePDFPath,
         hyvaksymisIlmoitusMuistuttajillePDFPath: hyvaksymisIlmoitusMuistuttajillePDFPath
           ? await hyvaksymisIlmoitusMuistuttajillePDFPath
+          : undefined,
+        hyvaksymisIlmoitusMaakuntaliitoillePDFPath: hyvaksymisIlmoitusMaakuntaliitoillePDFPath
+          ? await hyvaksymisIlmoitusMaakuntaliitoillePDFPath
           : undefined,
         ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
           await ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
@@ -114,6 +124,7 @@ export abstract class AbstractHyvaksymisPaatosVaiheTilaManager<T extends PaatosV
         pdfs.hyvaksymisKuulutusPDFPath,
         pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath,
         pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath,
+        pdfs.hyvaksymisIlmoitusMaakuntaliitoillePDFPath,
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
       ]) {

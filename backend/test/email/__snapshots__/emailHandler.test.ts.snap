@@ -259,6 +259,10 @@ Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
     },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_5 Ilmoitus hyvaksymispaatoksesta maakuntaliitoille.pdf",
+    },
   ],
   "stub": "s3Mock",
 }
@@ -304,6 +308,10 @@ Object {
     Object {
       "Bucket": "hassu-localstack-yllapito",
       "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_4 Ilmoitus hyvaksymispaatoksesta muistuttajille.pdf",
+    },
+    Object {
+      "Bucket": "hassu-localstack-yllapito",
+      "Key": "yllapito/tiedostot/projekti/2/hyvaksymispaatos/1/T431_5 Ilmoitus hyvaksymispaatoksesta maakuntaliitoille.pdf",
     },
   ],
   "stub": "s3Mock",

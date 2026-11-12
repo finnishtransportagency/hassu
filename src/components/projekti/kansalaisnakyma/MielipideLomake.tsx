@@ -151,6 +151,7 @@ export default function MielipideLomake({ projekti, mielipideoikeusPaattyyPaiva 
           />
         </ContentSpacer>
         <H3>{t("projekti:mielipidelomake.mielipiteen_lahettajan_tiedot")}</H3>
+        <p>{t("projekti:mielipidelomake.yhteystiedot_vapaaehtoisia")}</p>
         <ContentSpacer gap={8} as="form">
           <HassuStack>
             <HassuGrid sx={{ width: "100%" }} cols={[1, 1, 2]}>

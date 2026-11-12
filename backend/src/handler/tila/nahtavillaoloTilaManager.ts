@@ -350,16 +350,27 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         projekti,
         kieli
       );
-      const nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath = createNahtavillaoloVaihePDF(
-        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-        julkaisu,
-        projekti,
-        kieli
-      );
+      const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      const nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath = !isToiminnallinen
+        ? createNahtavillaoloVaihePDF(
+            AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+            julkaisu,
+            projekti,
+            kieli
+          )
+        : undefined;
+      const nahtavillaoloIlmoitusMaakuntaliitoillePDFPath = isToiminnallinen
+        ? createNahtavillaoloVaihePDF(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE, julkaisu, projekti, kieli)
+        : undefined;
       return {
         nahtavillaoloPDFPath: await nahtavillaoloPDFPath,
         nahtavillaoloIlmoitusPDFPath: await nahtavillaoloIlmoitusPDFPath,
-        nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: await nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+        nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
+          ? await nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
+          : undefined,
+        nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: nahtavillaoloIlmoitusMaakuntaliitoillePDFPath
+          ? await nahtavillaoloIlmoitusMaakuntaliitoillePDFPath
+          : undefined,
       };
     }
 
@@ -393,11 +404,20 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         filePathInProjekti: pdfs.nahtavillaoloIlmoitusPDFPath,
         reason: "Nähtävilläolo rejected",
       });
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid,
-        filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
-        reason: "Nähtävilläolo rejected",
-      });
+      if (pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath) {
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+          reason: "Nähtävilläolo rejected",
+        });
+      }
+      if (pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath) {
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath,
+          reason: "Nähtävilläolo rejected",
+        });
+      }
     }
   }
 }

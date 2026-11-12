@@ -1,5 +1,6 @@
 import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+// Contains code generated or recommended by Amazon Q
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto, determineAsiakirjaMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -60,7 +61,11 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
     this.kutsuAdapter.addTemplateResolver(this);
     const fileName = createPDFFileName(AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS, this.asiakirjanMuoto, velho.tyyppi, kieli);
-    this.header = kutsuAdapter.text("asiakirja.kuulutus_hyvaksymispaatoksesta.otsikko");
+    this.header = kutsuAdapter.text(
+      kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+        ? "asiakirja.kuulutus_hyvaksymispaatoksesta.otsikko_toiminnallinen"
+        : "asiakirja.kuulutus_hyvaksymispaatoksesta.otsikko"
+    );
     super.setupPDF(this.header, kutsuAdapter.nimi, fileName, kutsuAdapter.sopimus);
   }
 
@@ -103,7 +108,9 @@ export class Kuulutus60 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
 
   private paragraphs(): PDFStructureElement[] {
     let kappale1;
-    if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
+    if (this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+      kappale1 = this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.toiminnallinen_kappale1");
+    } else if (this.asiakirjanMuoto == AsiakirjanMuoto.TIE) {
       kappale1 = this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.tie_kappale1");
     } else if (this.asiakirjanMuoto == AsiakirjanMuoto.RATA) {
       kappale1 = this.paragraphFromKey("asiakirja.kuulutus_hyvaksymispaatoksesta.rata_kappale1");

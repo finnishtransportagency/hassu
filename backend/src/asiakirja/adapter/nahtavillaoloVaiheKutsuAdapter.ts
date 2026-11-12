@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
@@ -166,7 +167,12 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
       kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
-      infoTekstit: this.vahainenMenettely ? [this.htmlText("kappale4_vahainen_menettely")] : [this.htmlText("kappale4")],
+      infoTekstit:
+        this.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? [this.htmlText("kappale4_toiminnallinen")]
+          : this.vahainenMenettely
+          ? [this.htmlText("kappale4_vahainen_menettely")]
+          : [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", false, { extLinks: true }),
     };
   }

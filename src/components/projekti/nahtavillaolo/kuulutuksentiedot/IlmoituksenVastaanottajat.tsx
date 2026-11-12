@@ -5,7 +5,15 @@ import React, { Fragment, ReactElement } from "react";
 import { Controller, FieldError, useFieldArray, useFormContext } from "react-hook-form";
 import useTranslation from "next-translate/useTranslation";
 import IconButton from "@components/button/IconButton";
-import { KuntaVastaanottajaInput, NahtavillaoloVaihe, ProjektiTyyppi, Status, Vaihe, ViranomaisVastaanottajaInput } from "@services/api";
+import {
+  KuntaVastaanottajaInput,
+  MaakuntaVastaanottajaInput,
+  NahtavillaoloVaihe,
+  ProjektiTyyppi,
+  Status,
+  Vaihe,
+  ViranomaisVastaanottajaInput,
+} from "@services/api";
 import Section from "@components/layout/Section";
 import SectionContent from "@components/layout/SectionContent";
 import HassuGrid from "@components/HassuGrid";
@@ -37,11 +45,19 @@ type FormFields = {
     ilmoituksenVastaanottajat: {
       kunnat: Array<KuntaVastaanottajaInput>;
       viranomaiset: Array<ViranomaisVastaanottajaInput>;
+      maakunnat: Array<MaakuntaVastaanottajaInput>;
     };
   };
 };
 
-export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omistajahakuStatus, hasOmistajat, projektiTyyppi }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({
+  nahtavillaoloVaihe,
+  oid,
+  omistajahakuStatus,
+  hasOmistajat,
+  projektiTyyppi,
+}: Props): ReactElement {
+  const showMaakunnat = projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 
@@ -57,6 +73,12 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
   const { fields: kuntaFields } = useFieldArray({
     control,
     name: "nahtavillaoloVaihe.ilmoituksenVastaanottajat.kunnat",
+    keyName: "alt-id",
+  });
+
+  const { fields: maakuntaFields } = useFieldArray({
+    control,
+    name: "nahtavillaoloVaihe.ilmoituksenVastaanottajat.maakunnat",
     keyName: "alt-id",
   });
 
@@ -230,6 +252,23 @@ export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omi
               </HassuGrid>
             ))}
           </SectionContent>
+          {showMaakunnat && (
+            <SectionContent>
+              <H3>Maakuntaliitot</H3>
+              {maakuntaFields.length === 0 && <p>Maakuntia ei ole asetettu velhoon.</p>}
+              {maakuntaFields.map((maakunta, index) => (
+                <HassuGrid key={maakunta.id} cols={{ lg: 3 }}>
+                  <input type="hidden" {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.maakunnat.${index}.id`)} readOnly />
+                  <TextInput label="Maakuntaliitto *" value={kuntametadata.liittoNameForMaakuntaId(maakunta.id)} disabled />
+                  <TextInput
+                    label="Sähköpostiosoite *"
+                    error={(errors?.nahtavillaoloVaihe?.ilmoituksenVastaanottajat as any)?.maakunnat?.[index]?.sahkoposti}
+                    {...register(`nahtavillaoloVaihe.ilmoituksenVastaanottajat.maakunnat.${index}.sahkoposti`)}
+                  />
+                </HassuGrid>
+              ))}
+            </SectionContent>
+          )}
           {!nahtavillaoloVaihe?.uudelleenKuulutus && projektiTyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
             <KiinteistonomistajatOhje
               vaihe={Vaihe.NAHTAVILLAOLO}
