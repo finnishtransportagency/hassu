@@ -51,8 +51,8 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
           </li>
           <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna ja siirry kuulutukselle&quot;.</li>
           <li>
-            Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
-            liikenneväylien suunnittelu -palvelun kansalaispuolella.
+            Anna päivämäärä, jolloin hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion liikenneväylien
+            suunnittelu -palvelun kansalaispuolella.
           </li>
           <li>
             Pääkäyttäjä tai projektipäällikkö lisää projektille Liikenne- ja viestintäviraston päätöksen päivän ja asiatunnuksen{" "}
@@ -91,7 +91,7 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
           )}
           <li>
             Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen esikatselu
-            -painikkeesta.
+            -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
           </li>
           {projekti.asianhallinta.inaktiivinen && (
             <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan.</li>
