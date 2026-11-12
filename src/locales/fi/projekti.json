@@ -4,7 +4,7 @@
   "info": {
     "nahtavillaolo": {
       "ei-rata": {
-        "suunnitelmiin_on_mahdollista": "<p>Suunnitelmiin on mahdollista tutustua <b>{{kuulutusVaihePaattyyPaiva}}</b> saakka, jonka jälkeen suunnitelmat poistuvat näkyviltä.</p>"
+        "suunnitelmiin_on_mahdollista": "<p>Aineistoihin on mahdollista tutustua <b>{{kuulutusVaihePaattyyPaiva}}</b> saakka, jonka jälkeen aineistot poistuvat näkyviltä.</p>"
       }
     }
   },
@@ -360,7 +360,7 @@
       "otsikko_ilmoitus_kuulutuksesta_suunnittelusopimus": "Ilmoitus {{ilmoitus_vaihe}}",
       "otsikko_ilmoitus_kuulutuksesta_toiminnallinen": "Ilmoitus nähtäville asettamista",
       "kappale1": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{viranomainenLyhyt}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}}) ",
-      "kappale1_toiminnallinen": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainittua maantien toiminnallisen luokan {{ilmoitus_vaihe_pitka}} nähtäville asettamista. {{viranomainenLyhyt}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)",
+      "kappale1_toiminnallinen": "{{kuuluttaja_pitka}} julkaisee kuulutuksen, joka koskee otsikossa mainittua maantien toiminnallisen luokan muutosta koskevan {{ilmoitus_vaihe_pitka}} nähtäville asettamista. {{viranomainenLyhyt}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa. (laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §)",
       "kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa, julkaisee kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{kuuluttaja}} saattaa asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
       "kappale1_suunnittelusopimus_monikko": "{{kuuluttaja_pitka}}, sovittuaan asiasta {{viranomaisen}} kanssa, julkaisevat kuulutuksen, joka koskee otsikossa mainitun {{suunnitelman}} {{ilmoitus_vaihe_pitka}}. {{kuuluttaja}} saattavat asian tiedoksi julkisesti kuuluttamalla siten, kuin julkisesta kuulutuksesta säädetään hallintolaissa, sekä julkaisemalla kuulutuksen vähintään yhdessä alueella yleisesti ilmestyvässä sanomalehdessä. ({{lakiviite_kunnan_ilmoitus}})",
       "lakiviite_kunnan_ilmoitus_tie": "laki liikennejärjestelmästä ja maanteistä LjMTL 108§, hallintolaki HL 62 a §",
@@ -385,7 +385,8 @@
       "tie_kappale1": "{{kuuluttaja_pitka}} on laatinut liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisen {{suunnitelman}}: *{{nimi}}*.",
       "toiminnallinen_kappale1": "{{kuuluttaja_pitka}} valmistelee liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaista esitystä maantien toiminnallisen luokan muuttamisesta ja asettaa julkisesti nähtäville hyväksymisehdotuksen {{nimi}}",
       "kappale2_toiminnallinen": "{{kuuluttaja_pitka}} on {{kuulutusPaiva}} julkaissut kuulutuksen otsikossa mainitun maantien toiminnallisen luokan hyväksymisehdotuksen nähtäville asettamisesta. Asianosaisten katsotaan saaneen tiedon ehdotuksen nähtäville asettamisesta seitsemäntenä päivänä kuulutuksen julkaisusta (hallintolaki 62 a §).",
-      "kappale4_toiminnallinen": "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin suunnitelma vaikuttaa on mahdollisuus ilmaista mielipiteensä suunnitelmasta (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Mielipide on jätettävä ennen nähtävänäoloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä. \n\nMielipiteen voi jättää osoitteessa {{nahtavillaoloUrl}} tai toimittamalla sen {{tilaajaGenetiivi}} kirjaamoon osoitteeseen {{kirjaamo}}. Kirjaamoon lähetettävään mielipiteeseen tulee liittää asiatunnus {{asiatunnus}}.",
+      "kappale3_toiminnallinen": "Hyväksymisehdotus pidetään nähtävillä {{kuulutusNahtavillaAika}} osoitteessa {{nahtavillaoloUrl}}.",
+      "kappale4_toiminnallinen": "Kiinteistön omistajilla ja muilla asianosaisilla, sekä niillä, joiden asumiseen, työntekoon tai muihin oloihin maantien toiminnallisen luokan muutos vaikuttaa on mahdollisuus ilmaista siitä mielipiteensä (laki liikennejärjestelmästä ja maanteistä LjMTL 27§). Mielipide on jätettävä ennen nähtävänäoloajan päättymistä, eli {{kuulutusVaihePaattyyPaiva}} mennessä. \n\nMielipiteen voi jättää osoitteessa {{nahtavillaoloUrl}} tai toimittamalla sen {{tilaajaGenetiivi}} kirjaamoon osoitteeseen {{kirjaamo}}. Kirjaamoon lähetettävään mielipiteeseen tulee liittää asiatunnus {{asiatunnus}}.",
       "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: *{{nimi}}*. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman on laatinut {{osapuoli}} yhteistyössä {{tilaajaGenetiivi}} kanssa.",
       "tie_kappale1_suunnittelusopimus_monikko": "{{kuuluttaja_pitka}} on julkaissut kuulutuksen nähtäville asetettavasta suunnitelmasta: *{{nimi}}*. Tiesuunnitelma on laadittu liikennejärjestelmästä ja maanteistä annetun lain (503/2005) mukaisesti. Suunnitelman ovat laatineet {{osapuoli}} yhteistyössä {{tilaajaGenetiivi}} kanssa.",
       "rata_kappale1": "{{kuuluttaja_pitka}} on laatinut ratalain (110/2007) mukaisen {{suunnitelman}}: *{{nimi}}*.",
@@ -512,7 +513,7 @@
       "lakiviite_muistuttajille_rata": "ratalaki 91 §"
     },
     "ala_vastaa": "Tämä viesti on lähetetty Valtion liikenneväylien suunnittelu -järjestelmästä, älä vastaa tähän viestiin.",
-    "tietosuoja": "{{viranomainen}} käsittelee suunnitelman laatimiseen liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, {{tietosuojaurl}}.",
+    "tietosuoja": "{{viranomainen}} käsittelee asian käsittelyyn liittyen tarpeellisia henkilötietoja. Halutessasi tietää tarkemmin väyläsuunnittelun tietosuojakäytänteistä tutustu verkkosivujen tietosuojaosioon, {{tietosuojaurl}}.",
     "lisatietoja_antavat": "Lisätietoja antaa "
   },
   "hallinto_oikeus_genetiivi": {

@@ -4,7 +4,7 @@
   "info": {
     "nahtavillaolo": {
       "ei-rata": {
-        "suunnitelmiin_on_mahdollista": "<p>Det är möjligt att bekanta sig med planerna fram till <b>{{kuulutusVaihePaattyyPaiva}}</b>, sedan försvinner de.</p>"
+        "suunnitelmiin_on_mahdollista": "<p>Det är möjligt att bekanta sig med materialet fram till <b>{{kuulutusVaihePaattyyPaiva}}</b>, sedan försvinner de.</p>"
       }
     }
   },
@@ -385,7 +385,8 @@
       "tie_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt lagen om trafiksystem och landsvägar (503/2005): *{{nimi}}*.",
       "toiminnallinen_kappale1": "{{kuuluttaja_pitka}} bereder en framställning enligt lagen om trafiksystem och landsvägar (503/2005) om ändring av landsvägens funktionella klass och lägger fram ett förslag till godkännande {{nimi}} offentligt",
       "kappale2_toiminnallinen": "{{kuuluttaja_pitka}} har {{kuulutusPaiva}} publicerat en kungörelse om framläggandet av godkännandeförslaget om den funktionella klassen för den landsväg som nämns i rubriken. Sakägarna anses ha fått kännedom om att förslaget har lagts fram den sjunde kalenderdagen efter att kungörelsen publicerades (62 a § i förvaltningslagen).",
-      "kappale4_toiminnallinen": "Fastighetsägare och övriga sakägare samt personer vars boende, arbete eller övriga förhållanden påverkas av planen har möjlighet att framföra sin åsikt om planen (27 § i lagen om trafiksystem och landsvägar). Åsikten ska lämnas före utgången av framläggningstiden, dvs. senast {{kuulutusVaihePaattyyPaiva}}. \n\nÅsikten kan lämnas på adressen {{nahtavillaoloUrl}} eller skickas till registratorskontoret i {{tilaajaGenetiivi}} på adressen {{kirjaamo}}. Ärendenummer {{asiatunnus}} ska läggas till en åsikt som skickas till registratorskontoret.",
+      "kappale3_toiminnallinen": "Godkännandeförslaget hålls framlagd {{kuulutusNahtavillaAika}} på adressen {{nahtavillaoloUrl}}.",
+      "kappale4_toiminnallinen": "Fastighetsägare och övriga sakägare samt personer vars boende, arbete eller övriga förhållanden påverkas av ändringen av landsvägens funktionella klass har möjlighet att framföra sin åsikt om den (27 § i lagen om trafiksystem och landsvägar). Åsikten ska lämnas före utgången av framläggningstiden, dvs. senast {{kuulutusVaihePaattyyPaiva}}. \n\nÅsikten kan lämnas på adressen {{nahtavillaoloUrl}} eller skickas till registratorskontoret i {{tilaajaGenetiivi}} på adressen {{kirjaamo}}. Ärendenummer {{asiatunnus}} ska läggas till en åsikt som skickas till registratorskontoret.",
       "tie_kappale1_suunnittelusopimus": "{{kuuluttaja_pitka}} har publicerat en kungörelse om den plan som ska läggas fram till påseende: *{{nimi}}*. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av {{osapuoli}} i samarbete med {{tilaajaGenetiivi}}.",
       "tie_kappale1_suunnittelusopimus_monikko": "{{kuuluttaja_pitka}} har publicerat en kungörelse om den plan som ska läggas fram till påseende: *{{nimi}}*. Vägplanen har utarbetats i enlighet med lagen om trafiksystem och landsvägar (503/2005). Planen har utarbetats av {{osapuoli}} i samarbete med {{tilaajaGenetiivi}}.",
       "rata_kappale1": "{{kuuluttaja_pitka}} har utarbetat en {{suunnitelma}} enligt banlagen (110/2007): *{{nimi}}*.",
@@ -514,7 +515,7 @@
       "lakiviite_muistuttajille_rata": "91 § i banlagen"
     },
     "ala_vastaa": "Detta meddelande har skickats från Planering av statens trafikleder, vänligen svara inte på detta.",
-    "tietosuoja": "{{viranomainenLyhyt}} behandlar personuppgifter som är nödvändiga för utarbetandet av planen. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}.",
+    "tietosuoja": "{{viranomainenLyhyt}} behandlar de personuppgifter som är nödvändiga för behandlingen av ärendet. Om du vill veta mer om trafikledsplaneringens dataskyddspolicy, bekanta dig med sektionen om dataskydd på webbplatsen {{tietosuojaurl}}.",
     "lisatietoja_antavat": "Mer information om planen "
   },
   "hallinto_oikeus_genetiivi": {
