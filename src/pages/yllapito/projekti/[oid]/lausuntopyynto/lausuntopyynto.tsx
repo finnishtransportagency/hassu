@@ -131,7 +131,17 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
             sisältö. Vie valmis lausuntopyyntö asianhallintaan allekirjoitettavaksi.
           </p>
           <div className="grid gap-4">
-            {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && (
+            {projekti.velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+                <DownloadButtonLink
+                  id="mallipohja-42Tlm"
+                  href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/5ad58e12-eaf1-40b8-bfa6-a94f54a9896f/42Tlm_lausuntopyynto_liitto_muut_tarpeelliset.docx?a=true"
+                >
+                  Mallipohja toiminnallisen luokan muutos 42Tlm
+                </DownloadButtonLink>
+              </div>
+            )}
+            {projekti.velho.tyyppi !== ProjektiTyyppi.RATA && projekti.velho.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <DownloadButtonLink
                   id="mallipohja-32T"
@@ -153,7 +163,7 @@ const LausuntoPyynnot = ({ projekti }: { projekti: ProjektiLisatiedolla }): Reac
                 </DownloadButtonLink>
               </div>
             )}
-            {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && (
+            {projekti.velho.tyyppi !== ProjektiTyyppi.TIE && projekti.velho.tyyppi !== ProjektiTyyppi.TOIMINNALLINEN && (
               <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                 <DownloadButtonLink
                   id="mallipohja-32R"
