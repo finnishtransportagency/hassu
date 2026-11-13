@@ -359,17 +359,12 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
             kieli
           )
         : undefined;
-      const nahtavillaoloIlmoitusMaakuntaliitoillePDFPath = isToiminnallinen
-        ? createNahtavillaoloVaihePDF(AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE, julkaisu, projekti, kieli)
-        : undefined;
+
       return {
         nahtavillaoloPDFPath: await nahtavillaoloPDFPath,
         nahtavillaoloIlmoitusPDFPath: await nahtavillaoloIlmoitusPDFPath,
         nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
           ? await nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
-          : undefined,
-        nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: nahtavillaoloIlmoitusMaakuntaliitoillePDFPath
-          ? await nahtavillaoloIlmoitusMaakuntaliitoillePDFPath
           : undefined,
       };
     }
@@ -408,13 +403,6 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         await fileService.deleteYllapitoFileFromProjekti({
           oid,
           filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
-          reason: "Nähtävilläolo rejected",
-        });
-      }
-      if (pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath) {
-        await fileService.deleteYllapitoFileFromProjekti({
-          oid,
-          filePathInProjekti: pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath,
           reason: "Nähtävilläolo rejected",
         });
       }

@@ -489,13 +489,11 @@ export class DBProjektiForSpecificVaiheFixture {
             nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/1.pdf",
             nahtavillaoloPDFPath: "/nahtavillaolo/1/2.pdf",
             nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/1/3.pdf",
-            nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: "/nahtavillaolo/1/4.pdf",
           },
           RUOTSI: {
             nahtavillaoloIlmoitusPDFPath: "/nahtavillaolo/1/1 sv.pdf",
             nahtavillaoloPDFPath: "/nahtavillaolo/1/2 sv.pdf",
             nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: "/nahtavillaolo/1/3 sv.pdf",
-            nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: "/nahtavillaolo/1/4 sv.pdf",
           },
         },
       },

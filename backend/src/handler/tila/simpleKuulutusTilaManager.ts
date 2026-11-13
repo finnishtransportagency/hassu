@@ -128,13 +128,6 @@ export class SimpleNahtavillaoloVaiheTilaManager extends SimpleKuulutusTilaManag
           reason: "Nähtävilläolo rejected",
         });
       }
-      if (pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath) {
-        await fileService.deleteYllapitoFileFromProjekti({
-          oid,
-          filePathInProjekti: pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath,
-          reason: "Nähtävilläolo rejected",
-        });
-      }
     }
   }
 }
