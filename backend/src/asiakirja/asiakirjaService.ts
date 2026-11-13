@@ -1,7 +1,6 @@
 // Contains code generated or recommended by Amazon Q
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
-import { IlmoitusMaakuntaliitoille } from "./suunnittelunAloitus/IlmoitusMaakuntaliitoille";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
 import { Kutsu20 } from "./suunnittelunAloitus/Kutsu20";
 import { Kuulutus30 } from "./suunnittelunAloitus/Kuulutus30";
@@ -136,8 +135,6 @@ export class AsiakirjaService {
       pdf = await new Kuulutus31(params, nahtavillaoloVaihe).pdf(luonnos);
     } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE) {
       pdf = await new KiinteistonOmistaja(params, nahtavillaoloVaihe).pdf(luonnos);
-    } else if (asiakirjaTyyppi == AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE) {
-      pdf = await new IlmoitusMaakuntaliitoille(asiakirjaTyyppi, params).pdf(luonnos);
     }
     if (pdf) {
       return pdf;
