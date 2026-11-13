@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useMemo, FunctionComponent } from "react";
 import { NextRouter, useRouter } from "next/router";
 import Link from "next/link";
@@ -54,6 +55,7 @@ const getJulkinenRouteLabels: (projekti: ProjektiJulkinen | null | undefined, ki
     },
     "/tietoa-palvelusta": { label: "tietoa-palvelusta" },
     "/tietoa-palvelusta/tietoa-suunnittelusta": { label: "tietoa-suunnittelusta" },
+    "/tietoa-palvelusta/tietoa-suunnittelusta/toiminnallisen-luokan-muutos": { label: "toiminnallisen-luokan-muutos" },
     "/tietoa-palvelusta/tietoa-suomifi-palvelusta": { label: "tietoa-suomifi-palvelusta" },
     "/tietoa-palvelusta/yhteystiedot-ja-palaute": { label: "yhteystiedot-ja-palaute" },
     "/tietoa-palvelusta/saavutettavuus": { label: "saavutettavuus" },
