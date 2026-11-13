@@ -1,0 +1,39 @@
+{
+  "paaotsikko": "Toiminnallisen luokan muutos",
+  "ingressi": "Maantiet jaetaan eri luokkiin sen perusteella, millaista liikennettä ne pääasiassa palvelevat ja mikä niiden merkitys on liikenneverkossa. Tätä kutsutaan maanteiden toiminnalliseksi luokitukseksi. Maantien toiminnallista luokkaa voidaan muuttaa, jos tien merkitys liikenneverkossa on muuttunut. Väylävirasto tai elinvoimakeskus valmistelee ja tekee esityksen toiminnallisen luokan muuttamisesta.",
+  "vaiheet": {
+    "otsikko": "Toiminnallisen luokan muutoksen vaiheet",
+    "kappale1": "Kansalaisella on mahdollisuus saada tietoa ja ilmaista mielipiteensä esityksestä Valtion liikenneväylien suunnittelu -palvelun kautta. Palvelu muodostaa vuorovaikutuskanavan esityksen laatijoiden ja kansalaisten välille esityksen eri vaiheissa.",
+    "vaihe": {
+      "ehdotus-nahtavilla": "Ehdotus nähtävillä",
+      "hyvaksyminen": "Hyväksyminen"
+    }
+  },
+  "ehdotus-nahtavilla": {
+    "otsikko": "Ehdotus nähtävillä",
+    "kappale1": "Valmis ehdotus asetetaan julkisesti nähtäville, jolloin asukkaat voivat kertoa mielipiteensä. Esitys julkaistaan virallisella kuulutuksella, ja kaikilla kiinnostuneilla on mahdollisuus tutustua esitykseen ja esittää siitä mielipiteensä. Kunnilta ja maakunnan liitoilta, joiden alueelle esitys toiminnallisesta luokasta kohdistuu, pyydetään lausunnot ehdotuksesta."
+  },
+  "hyvaksymismenettelyssa": {
+    "otsikko": "Hyväksymismenettelyssä",
+    "kappale1": "Hyväksymismenettelyyn siirtyminen tarkoittaa sitä, että esityksen nähtävilläoloaika on päättynyt. Esityksen laatija käsittelee nähtävilläolon aikana saapuneet mielipiteet sekä lausunnot ja voi niiden perusteella muuttaa esitystä. Merkittävistä muutoksista ollaan yhteydessä tahoihin, joihin muutos vaikuttaa. Muutokset näkyvät hyväksyttyssä esityksessä. Viimeistelyn jälkeen esityksen laatija lähettää esityksen Liikenne- ja viestintävirasto Traficomiin hyväksyttäväksi. Hyväksymiseen kuluva aika ei ole etukäteen tiedossa."
+  },
+  "hyvaksytty": {
+    "otsikko": "Hyväksytty",
+    "kappale1": "Liikenne- ja viestintävirasto Traficom tekee päätöksen maantien toiminnallisen luokan muutoksesta, minkä jälkeen esityksen laatija antaa päätöksen yleisesti tiedoksi julkaisemalla kuulutuksen.",
+    "kappale2": "Kuulutuksen julkaisemisesta alkaa päätöksen muutoksenhakuaika. Liikenne- ja viestintävirasto Traficomin tekemään päätökseen voi hakea muutosta valittamalla asiasta hallinto-oikeuteen. Ohjeet valituksen tekemiseen löytyvät hyväksymispäätöksen yhteydessä olevasta valitusosoituksesta. Kuulutus, hyväksymispäätös sekä päätöksen perusteena olevat asiakirjat pidetään julkisesti nähtävillä Valtion liikenneväylien suunnittelu –palvelussa koko muutoksenhaun ajan.",
+    "kappale3": "Päätös saa lainvoiman, jos siitä ei ole muutoksenhakuaikana jätetty valituksia hallinto-oikeuteen."
+  },
+  "kuulutussivut": {
+    "otsikko": "Kuulutussivut",
+    "kappale1": "Valtion liikenneväylien suunnittelu -palvelun lisäksi tiedot julkaistuista löytyvät Väyläviraston, elinvoimakeskuksen sekä esitystä koskevien kuntien verkkosivuilta.",
+    "kappale2": "Linkit kuulutussivuille",
+    "linkki1": {
+      "teksti": "Väyläviraston kuulutussivut",
+      "href": "https://www.vayla.fi/tietoa-meista/ajankohtaista/kuulutukset"
+    },
+    "linkki2": {
+      "teksti": "Elinvoimakeskusten kuulutussivut",
+      "href": "https://www.elinvoimakeskus.fi/kuulutukset"
+    }
+  }
+}

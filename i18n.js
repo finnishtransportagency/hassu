@@ -8,6 +8,7 @@ module.exports = {
     "rgx:^/tietoa-palvelusta": ["tietoa-palvelusta/navigation"],
     "/tietoa-palvelusta": ["tietoa-palvelusta/tietoa-palvelusta"],
     "/tietoa-palvelusta/tietoa-suunnittelusta": ["tietoa-palvelusta/tietoa-suunnittelusta"],
+    "/tietoa-palvelusta/tietoa-suunnittelusta/toiminnallisen-luokan-muutos": ["tietoa-palvelusta/toiminnallisen-luokan-muutos"],
     "/tietoa-palvelusta/yhteystiedot-ja-palaute": ["tietoa-palvelusta/yhteystiedot-ja-palaute"],
     "/tietoa-palvelusta/saavutettavuus": ["tietoa-palvelusta/saavutettavuus"],
     "/tietoa-palvelusta/tietoa-suomifi-palvelusta": ["tietoa-palvelusta/tietoa-suomifi-palvelusta"],

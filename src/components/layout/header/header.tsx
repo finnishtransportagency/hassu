@@ -74,6 +74,12 @@ const kansalainenNavigationRoutes: (NavigationRoute | NavigationRouteCollection)
         requireExactMatch: true,
       },
       {
+        label: "toiminnallisen-luokan-muutos",
+        href: "/tietoa-palvelusta/tietoa-suunnittelusta/toiminnallisen-luokan-muutos",
+        requireExactMatch: true,
+        indent: true,
+      },
+      {
         label: "tietoa-suomifi-palvelusta",
         href: "/tietoa-palvelusta/tietoa-suomifi-palvelusta",
         requireExactMatch: true,
