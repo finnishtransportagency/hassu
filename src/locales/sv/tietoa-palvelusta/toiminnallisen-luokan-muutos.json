@@ -1,0 +1,39 @@
+{
+  "paaotsikko": "Ändring av funktionell klass",
+  "ingressi": "Landsvägarna delas in i olika klasser baserat på vilken typ av trafik de huvudsakligen betjänar och vilken betydelse de har i trafiknätet. Det kallas funktionell klassificering av landsvägar. En landsvägs funktionella klass kan ändras om vägens betydelse i trafiknätet har förändrats. Trafikledsverket eller livskraftscentralen bereder och utarbetar en framställning om ändring av den funktionella klassen.",
+  "vaiheet": {
+    "otsikko": "Skeden i ändringen av funktionell klass",
+    "kappale1": "Medborgarna har möjlighet att få information om och uttrycka sin åsikt om en framställning via tjänsten Planering av statens trafikleder. Tjänsten utgör en interaktionskanal mellan dem som utarbetar framställningen och medborgarna i olika skeden av framställningens behandling.",
+    "vaihe": {
+      "ehdotus-nahtavilla": "Förslaget framlagt",
+      "hyvaksyminen": "Godkännande"
+    }
+  },
+  "ehdotus-nahtavilla": {
+    "otsikko": "Förslaget framlagt",
+    "kappale1": "Det färdiga förslaget läggs fram offentligt så att invånarna kan framföra sina åsikter. Framställningen offentliggörs genom en officiell kungörelse och alla som vill kan bekanta sig med framställningen och framföra sin åsikt om den. Utlåtanden om förslaget begärs av de kommuner och landskapsförbund vars områden berörs av framställningen om ändring av den funktionella klassen."
+  },
+  "hyvaksymismenettelyssa": {
+    "otsikko": "Godkännandeförfarande",
+    "kappale1": "Övergången till godkännandeförfarandet innebär att tiden för när framställningen är framlagd har löpt ut. Den som utarbetat framställningen behandlar de åsikter och utlåtanden som inkommit under framläggandet och kan göra ändringar i framställningen på basis av dem. När det är fråga om betydande förändringar kontaktas aktörer som påverkas av dem. Ändringarna syns i den godkända framställningen. Efter finslipningen skickar den som utarbetat framställningen den till Transport- och kommunikationsverket Traficom för godkännande. Det är inte känt på förhand hur lång tid godkännandet kommer att ta i anspråk."
+  },
+  "hyvaksytty": {
+    "otsikko": "Godkänd",
+    "kappale1": "Transport- och kommunikationsverket Traficom fattar beslut om ändring av en landsvägs funktionella klass, varefter den som utarbetat framställningen offentliggör beslutet genom att publicera en kungörelse.",
+    "kappale2": "När kungörelsen publiceras börjar tiden för sökande av ändring i beslutet. Transport- och kommunikationsverket Traficoms beslut kan överklagas genom besvär hos förvaltningsdomstolen. Anvisningar för anförande av besvär finns i besvärsanvisningen i samband med beslutet om godkännande. Kungörelsen, beslutet om godkännande och de handlingar som ligger till grund för beslutet hålls offentligt framlagda i tjänsten Planering av statens trafikleder under hela tiden för ändringssökande.",
+    "kappale3": "Beslutet vinner laga kraft om inga besvär över beslutet har lämnats in till förvaltningsdomstolen under tiden för ändringssökande."
+  },
+  "kuulutussivut": {
+    "otsikko": "Kungörelsesidor",
+    "kappale1": "Utöver tjänsten Planering av statens trafikleder finns information om publicerade kungörelser på Trafikledsverkets, livskraftscentralernas samt de kommuners webbplatser som berörs av framställningen.",
+    "kappale2": "Länkar till kungörelsesidorna",
+    "linkki1": {
+      "teksti": "Trafikledsverkets kungörelser",
+      "href": "https://www.vayla.fi/sv/arkiv/kungorelser"
+    },
+    "linkki2": {
+      "teksti": "Livskraftscentralernas kungörelser",
+      "href": "https://www.elinvoimakeskus.fi/sv/kuulutukset"
+    }
+  }
+}
