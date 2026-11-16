@@ -94,6 +94,22 @@ function setupLocalDevelopmentMode(config, env) {
   return config;
 }
 
+const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: [
+      "default-src 'self'",
+      "script-src 'self'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data:",
+      "font-src 'self'",
+      "connect-src 'self'",
+      "frame-src https://www.youtube.com https://player.vimeo.com",
+      "frame-ancestors 'none'",
+    ].join("; "),
+  },
+];
+
 module.exports = (phase) => {
   /**
    * @type {import("next").NextConfig}
@@ -107,6 +123,9 @@ module.exports = (phase) => {
     output: "standalone",
     // Määritellään workspace root eksplisiittisesti välttääksemme varoituksen useista lockfileista
     outputFileTracingRoot: __dirname,
+    async headers() {
+      return [{ source: "/(.*)", headers: securityHeaders }];
+    },
   };
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     config = setupLocalDevelopmentMode(config);
