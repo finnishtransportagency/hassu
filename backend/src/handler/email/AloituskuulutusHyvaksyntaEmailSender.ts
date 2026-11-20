@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
@@ -107,18 +108,21 @@ class AloituskuulutusHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender
         }
       }
 
+      // saveEmailAsFile must be called before sendEmail: MailComposer (saveEmailAsFile) and nodemailer (sendEmail)
+      // both read attachment streams, and a stream can only be read once (nodemailer 10.5.0+)
+      aloituskuulutus.lahetekirje = await saveEmailAsFile(
+        projekti.oid,
+        new ProjektiPaths(projekti.oid).aloituskuulutus(aloituskuulutus),
+        emailOptionsLahetekirje,
+        AsiakirjaTyyppi.ALOITUSKUULUTUS_LAHETEKIRJE
+      );
+
       const sentMessageInfo = await emailClient.sendEmail(emailOptionsLahetekirje);
 
       const aikaleima = localDateTimeString();
       aloituskuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
       aloituskuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
         examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-      );
-      aloituskuulutus.lahetekirje = await saveEmailAsFile(
-        projekti.oid,
-        new ProjektiPaths(projekti.oid).aloituskuulutus(aloituskuulutus),
-        emailOptionsLahetekirje,
-        AsiakirjaTyyppi.ALOITUSKUULUTUS_LAHETEKIRJE
       );
       await projektiDatabase.aloitusKuulutusJulkaisut.update(projekti, aloituskuulutus);
     } else {
