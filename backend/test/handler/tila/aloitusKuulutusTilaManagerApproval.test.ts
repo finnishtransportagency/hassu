@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { Readable } from "stream";
 import * as sinon from "sinon";
@@ -79,10 +80,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       personSearchFixture = new PersonSearchFixture();
       const todayIso = nyt().format("YYYY-MM-DD");
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(todayIso));
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
     });
 
     it("should set all other kuulutuksien tila to PERUUTETTU", async () => {
@@ -127,10 +125,7 @@ describe("aloitusKuulutusTilaManagerApproval", () => {
       fixture = new ProjektiFixture();
       personSearchFixture = new PersonSearchFixture();
       loadProjektiByOidStub.resolves(fixture.dbProjekti2UseammallaKuulutuksella(tomorrowIso));
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
     });
 
     it("should set all but the most recent published kuulutuksien tila to PERUUTETTU", async () => {

@@ -21,7 +21,7 @@
     "@smithy/protocol-http": "4.1.8",
     "@types/node": "22.19.17",
     "aws-xray-sdk-core": "3.10.3",
-    "nodemailer": "10.0.16"
+    "nodemailer": "10.5.0"
   },
   "engines": {
     "node": ">=22.23.4",
