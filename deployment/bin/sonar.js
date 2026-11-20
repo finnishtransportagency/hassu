@@ -16,12 +16,6 @@ if (env === "dev") {
 import("sonarqube-scanner").then(({ scan }) => {
   const latestVersion = process.env.LATEST_VERSION;
   console.log("latestVersion: " + latestVersion);
-  /*scan({
-    "sonar.host.url": process.env.SONARQUBE_HOST_URL,
-    "sonar.token": process.env.SONARQUBE_ACCESS_TOKEN,
-    "sonar.projectKey": projectKey,
-    "sonar.projectVersion": latestVersion,
-  })*/
   scan({
     serverUrl: process.env.SONARQUBE_HOST_URL,
     token: process.env.SONARQUBE_ACCESS_TOKEN,
