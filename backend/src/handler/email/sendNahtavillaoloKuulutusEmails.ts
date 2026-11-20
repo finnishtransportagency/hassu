@@ -29,19 +29,21 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
 
     if (!nahtavillakuulutus.aineistoMuokkaus) {
       const lahetekirje = await emailCreator.createLahetekirjeWithAttachments();
+      // saveEmailAsFile must be called before sendEmail: MailComposer (saveEmailAsFile) and nodemailer (sendEmail)
+      // both read attachment streams, and a stream can only be read once (nodemailer 10.5.0+)
+      nahtavillakuulutus.lahetekirje = await saveEmailAsFile(
+        projekti.oid,
+        new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillakuulutus),
+        lahetekirje,
+        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
+      );
+
       const sentMessageInfo = await emailClient.sendEmail(lahetekirje);
 
       const aikaleima = localDateTimeString();
       nahtavillakuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
       nahtavillakuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
         examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-      );
-
-      nahtavillakuulutus.lahetekirje = await saveEmailAsFile(
-        projekti.oid,
-        new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillakuulutus),
-        lahetekirje,
-        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
       );
     }
 

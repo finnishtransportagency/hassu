@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { replaceFieldsByName } from "../../integrationtest/api/testFixtureRecorder";
 import mocha from "mocha";
 import fs from "fs";
@@ -76,7 +77,13 @@ export class S3Mock {
     });
   }
 
-  mockGetObject(param: Partial<GetObjectCommandOutput>): void {
-    this.s3Mock.on(GetObjectCommand).resolves(param);
+  mockGetObject({ Body: _body, ...rest }: Partial<GetObjectCommandOutput>): void {
+    // callsFake is used instead of resolves to create a new Readable stream per call,
+    // since nodemailer 10.5.0+ reads streams multiple times and a consumed stream causes
+    // "Content stream was already read" errors.
+    this.s3Mock.on(GetObjectCommand).callsFake(() => ({
+      ...rest,
+      Body: Readable.from(""),
+    }));
   }
 }

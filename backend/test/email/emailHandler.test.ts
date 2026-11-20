@@ -108,10 +108,12 @@ describe("emailHandler", () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
       updateAloitusKuulutusJulkaisuStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+      // callsFake creates a new Readable per call; resolves would reuse the same stream instance
+      // causing "Content stream was already read" with nodemailer 10.5.0+
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({
         Body: Readable.from(""),
         ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      }));
 
       const projekti = fixture.dbProjekti5();
 
@@ -126,10 +128,12 @@ describe("emailHandler", () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
       updateAloitusKuulutusJulkaisuStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
+      // callsFake creates a new Readable per call; resolves would reuse the same stream instance
+      // causing "Content stream was already read" with nodemailer 10.5.0+
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({
         Body: Readable.from(""),
         ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      }));
 
       const projekti = fixture.dbProjekti6();
 
@@ -187,10 +191,7 @@ describe("emailHandler", () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
       putNahtavillaoloKuulutusJulkaisuStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
 
       await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
       expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
@@ -241,10 +242,7 @@ describe("emailHandler", () => {
         publishProjektiFileStub.resolves();
         synchronizeProjektiFilesStub.resolves();
         putNahtavillaoloKuulutusJulkaisuStub.resolves();
-        s3Mock.s3Mock.on(GetObjectCommand).resolves({
-          Body: Readable.from(""),
-          ContentType: "application/pdf",
-        } as GetObjectCommandOutput);
+        s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
         await expect(nahtavillaoloTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
         expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
 
@@ -280,10 +278,7 @@ describe("emailHandler", () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
       putJulkaisutStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
 
       await expect(hyvaksymisPaatosVaiheTilaManager.approve(toiminnallinenProjekti, UserFixture.hassuATunnus1)).to.eventually.be.fulfilled;
 
@@ -299,10 +294,7 @@ describe("emailHandler", () => {
       publishProjektiFileStub.resolves();
       synchronizeProjektiFilesStub.resolves();
       putJulkaisutStub.resolves();
-      s3Mock.s3Mock.on(GetObjectCommand).resolves({
-        Body: Readable.from(""),
-        ContentType: "application/pdf",
-      } as GetObjectCommandOutput);
+      s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
 
       console.log(projekti.hyvaksymisPaatosVaiheJulkaisut);
 
@@ -355,10 +347,7 @@ describe("emailHandler", () => {
         publishProjektiFileStub.resolves();
         synchronizeProjektiFilesStub.resolves();
         putJulkaisutStub.resolves();
-        s3Mock.s3Mock.on(GetObjectCommand).resolves({
-          Body: Readable.from(""),
-          ContentType: "application/pdf",
-        } as GetObjectCommandOutput);
+        s3Mock.s3Mock.on(GetObjectCommand).callsFake(() => ({ Body: Readable.from(""), ContentType: "application/pdf" }));
         await expect(hyvaksymisPaatosVaiheTilaManager.approve(projekti, UserFixture.pekkaProjari)).to.eventually.be.fulfilled;
         expectAwsCalls("s3Mock", s3Mock.s3Mock.calls());
 
