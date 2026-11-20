@@ -94,7 +94,39 @@ function setupLocalDevelopmentMode(config, env) {
   return config;
 }
 
+function createSecurityHeaders(isLocalDev) {
+  return [
+    {
+      key: "Content-Security-Policy-Report-Only",
+      value: [
+        "default-src 'self'",
+        `script-src 'self' 'unsafe-inline'${isLocalDev ? " 'unsafe-eval'" : ""}`,
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' blob: data:",
+        "font-src 'self'",
+        "connect-src 'self'",
+        "frame-src https://www.youtube.com https://player.vimeo.com",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+        "frame-ancestors 'none'",
+        ...(isLocalDev ? [] : ["upgrade-insecure-requests"]),
+      ].join("; "),
+    },
+    {
+      key: "X-Content-Type-Options",
+      value: "nosniff",
+    },
+    {
+      key: "Referrer-Policy",
+      value: "strict-origin-when-cross-origin",
+    },
+  ];
+}
+
 module.exports = (phase) => {
+  const isLocalDev = phase === PHASE_DEVELOPMENT_SERVER;
+
   /**
    * @type {import("next").NextConfig}
    */
@@ -107,8 +139,11 @@ module.exports = (phase) => {
     output: "standalone",
     // Määritellään workspace root eksplisiittisesti välttääksemme varoituksen useista lockfileista
     outputFileTracingRoot: __dirname,
+    async headers() {
+      return [{ source: "/(.*)", headers: createSecurityHeaders(isLocalDev) }];
+    },
   };
-  if (phase === PHASE_DEVELOPMENT_SERVER) {
+  if (isLocalDev) {
     config = setupLocalDevelopmentMode(config);
   } else {
     // actual env variables are provided runtime
