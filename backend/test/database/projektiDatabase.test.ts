@@ -10,15 +10,15 @@ import { assertIsDefined } from "../../src/util/assertions";
 import { expect } from "chai";
 
 describe("apiHandler", () => {
-  const ddbMock = mockClient(DynamoDBDocumentClient);
+  let ddbMock: ReturnType<typeof mockClient>;
 
-  afterEach(() => {
-    ddbMock.reset();
-    sinon.reset();
+  beforeEach(() => {
+    ddbMock = mockClient(DynamoDBDocumentClient);
   });
 
-  after(() => {
+  afterEach(() => {
     ddbMock.restore();
+    sinon.reset();
   });
 
   describe("updateSuunnitelma", () => {

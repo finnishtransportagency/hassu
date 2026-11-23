@@ -36,8 +36,6 @@ describe("Palaute", () => {
       sukunimi: "Meikalainen",
       puhelinnumero: "123456",
       sahkoposti: "test@vayla.fi",
-      yhteydenottotapaPuhelin: true,
-      yhteydenottotapaEmail: false,
       kysymysTaiPalaute: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
       liitteet: [await tallennaLogo()],
     });
@@ -46,8 +44,6 @@ describe("Palaute", () => {
       sukunimi: "Toinen",
       puhelinnumero: "123456",
       sahkoposti: "test@vayla.fi",
-      yhteydenottotapaPuhelin: true,
-      yhteydenottotapaEmail: true,
       kysymysTaiPalaute:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     });
@@ -56,8 +52,6 @@ describe("Palaute", () => {
       sukunimi: "",
       puhelinnumero: "",
       sahkoposti: "",
-      yhteydenottotapaPuhelin: true,
-      yhteydenottotapaEmail: true,
       kysymysTaiPalaute: "Nimetön palaute.",
     });
 

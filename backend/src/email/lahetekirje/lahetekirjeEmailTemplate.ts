@@ -1,6 +1,7 @@
+// Contains code generated or recommended by Amazon Q
 import { AloituskuulutusKutsuAdapter } from "../../asiakirja/adapter/aloituskuulutusKutsuAdapter";
 import { projektiPaallikkoJaVarahenkilotEmails } from "../emailTemplates";
-import { Kieli } from "hassu-common/graphql/apiModel";
+import { Kieli, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { NahtavillaoloVaiheKutsuAdapter } from "../../asiakirja/adapter/nahtavillaoloVaiheKutsuAdapter";
 import { EmailOptions } from "../model/emailOptions";
 
@@ -50,14 +51,23 @@ export function createAloituskuulutusLahetekirjeEmail(adapter: AloituskuulutusKu
 }
 
 const lahetekirje11Nahtavillaolo = (adapter: NahtavillaoloVaiheKutsuAdapter) => {
+  const isToiminnallinen = adapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const paragraphs = [
     adapter.text("asiakirja.ala_vastaa"),
     adapter.nimi,
     adapter.uudelleenKuulutusSeloste,
-    adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"),
+    adapter.text(
+      isToiminnallinen
+        ? "asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1_toiminnallinen"
+        : "asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale1"
+    ),
     adapter.vahainenMenettely ? adapter.onKyseVahaisestaMenettelystaParagraph() : null,
     adapter.text("asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale2"),
-    adapter.text(`asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3`),
+    adapter.text(
+      isToiminnallinen
+        ? "asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3_toiminnallinen"
+        : `asiakirja.nahtaavillaolovaihekuulutus_lahete_email.kappale3`
+    ),
     adapter.hankkeenKuvaus(),
     adapter.text("asiakirja.tietosuoja"),
     adapter.text("asiakirja.lisatietoja_antavat"),

@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Button from "@components/button/Button";
 import { H5, H6 } from "@components/Headings";
 import SectionContent from "@components/layout/SectionContent";
@@ -14,14 +15,16 @@ export default function Muistutukset({
   kunnat,
   tiedostot,
   ennakkoneuvottelu,
+  isToiminnallinen,
 }: Readonly<{
   kunnat: number[] | null | undefined;
   tiedostot?: KunnallinenLadattuTiedosto[] | null;
   ennakkoneuvottelu?: boolean;
+  isToiminnallinen?: boolean;
 }>): ReactElement {
   return (
     <SectionContent>
-      <H5 variant="h4">Muistutukset</H5>
+      <H5 variant="h4">{isToiminnallinen ? "Mielipiteet" : "Muistutukset"}</H5>
       {kunnat?.length
         ? kunnat.map((kunta) => (
             <KunnanMuistutukset key={kunta} kunta={kunta} tiedostot={tiedostot} ennakkoneuvottelu={ennakkoneuvottelu} />

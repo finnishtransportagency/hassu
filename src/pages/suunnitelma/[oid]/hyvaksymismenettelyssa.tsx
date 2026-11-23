@@ -1,10 +1,11 @@
+// Contains code generated or recommended by Amazon Q
 import React, { ReactElement, useEffect } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import useTranslation from "next-translate/useTranslation";
 import EuLogo from "@components/projekti/common/EuLogo";
 import { useProjektiJulkinen } from "../../../hooks/useProjektiJulkinen";
 import useKansalaiskieli from "src/hooks/useKansalaiskieli";
-import { Kieli, Status } from "@services/api";
+import { Kieli, ProjektiTyyppi, Status } from "@services/api";
 import { useRouter } from "next/router";
 import { getSivuTilanPerusteella } from "@components/kansalaisenEtusivu/Hakutulokset";
 
@@ -32,13 +33,15 @@ export default function Hyvaksymismenettelyssa(): ReactElement {
     return <>{t("common:ladataan")}</>;
   }
 
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+
   return (
     <ProjektiJulkinenPageLayout
       selectedStep={Status.HYVAKSYMISMENETTELYSSA}
-      title={t("suunnitelma_on_siirtynyt")}
+      title={t(isToiminnallinen ? "esitys_on_siirtynyt" : "suunnitelma_on_siirtynyt")}
       vahainenMenettely={projekti?.vahainenMenettely}
     >
-      <p>{t("nahtavilla_olon_jalkeen")}</p>
+      <p>{t(isToiminnallinen ? "nahtavilla_olon_jalkeen_toiminnallinen" : "nahtavilla_olon_jalkeen")}</p>
       {projekti && projekti.kielitiedot?.toissijainenKieli === Kieli.POHJOISSAAME && kieli === Kieli.SUOMI && (
         <p aria-label="Suunnitelman saamenkieliset tiedot" lang="se-FI">
           Oaidninláhkái orruma maŋŋá boahtán muittuhusat ja cealkámušat gieđahallojuvvojit ja daid vuođul sáhttá dárbbu mielde dahkat

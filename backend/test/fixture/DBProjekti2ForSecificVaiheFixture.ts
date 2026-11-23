@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import {
   AineistoTila,
   HallintoOikeus,
@@ -123,6 +124,16 @@ export class DBProjektiForSpecificVaiheFixture {
         sahkoposti: "kirjaamo.etela-savo@ely-keskus.fi",
         lahetetty: "2022-03-11T14:54",
         nimi: IlmoitettavaViranomainen.ETELA_SAVO_ELY,
+      },
+    ],
+    maakunnat: [
+      {
+        id: uusimaaPirkanmaa[0],
+        sahkoposti: "uusimaa@maakuntaliitto.fi",
+      },
+      {
+        id: uusimaaPirkanmaa[1],
+        sahkoposti: "pirkanmaa@maakuntaliitto.fi",
       },
     ],
   };
@@ -544,6 +555,7 @@ export class DBProjektiForSpecificVaiheFixture {
             ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath:
               polku + "/T431_1 Ilmoitus hyvaksymispaatoksesta kunnalle ja toiselle viranomaiselle.pdf",
             ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: polku + "/T431_2 Ilmoitus hyvaksymispaatoksen kuulutuksesta.pdf",
+            hyvaksymisIlmoitusMaakuntaliitoillePDFPath: polku + "/T431_5 Ilmoitus hyvaksymispaatoksesta maakuntaliitoille.pdf",
           },
         },
         hyvaksymisPaiva: this.hyvaksymisPaiva(vaiheenTila),

@@ -201,6 +201,7 @@
   "virheet": {
     "palaute_on_pakollinen": "Återkoppling är obligatorisk information",
     "muistutus_on_pakollinen": "Anmärkning är obligatorisk information",
+    "mielipide_on_pakollinen": "Åsikt är obligatorisk information",
     "katuosoite_on_pakollinen": "Gatuadressen är obligatorisk information",
     "postinumero_on_pakollinen": "Postnummer är obligatorisk information",
     "postitoimipaikka_on_pakollinen": "Postkontor är obligatorisk information",
@@ -223,6 +224,7 @@
     "puh_vain_numerot": "Ett telefonnummer kan bara innehålla nummer",
     "tiedosto_on_liian_suuri": "Filen är för stor",
     "tiedostotyyppi_ei_tuettu": "Filtypen stöds inte",
+    "liitteet_yhteiskoko_liian_suuri": "Bilagornas totala storlek överskrider den tillåtna gränsen på 25 MB",
     "tiedostoja_liikaa": "Det kan vara högst fem filer",
     "anna_kiinteistotunnus_esitysmuodossa": "Kontrollera fastighetsbeteckningens format, t.ex. 740-555-2-0"
   },

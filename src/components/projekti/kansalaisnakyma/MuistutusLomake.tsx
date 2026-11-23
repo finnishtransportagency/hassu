@@ -330,6 +330,11 @@ export default function MuistutusLomake({ projekti, nahtavillaolo, kayttaja }: R
                 ))}
               </ContentSpacer>
             )}
+            <ErrorMessage
+              errors={formState.errors}
+              name="liitteet"
+              render={({ message }) => <ErrorSpan sx={{ display: "block" }}>{constructErrorMessage(message)}</ErrorSpan>}
+            />
             <input
               className="hidden"
               id="file-input"

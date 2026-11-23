@@ -43,6 +43,7 @@ export type HyvaksymisPaatosKuulutusAsiakirjaTyyppi = Extract<
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+  | AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
   | AsiakirjaTyyppi.JATKOPAATOSKUULUTUS
   | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA
   | AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE
@@ -63,6 +64,7 @@ export interface PaatoksenAvaimet {
   ilmoitusPaatoskuulutuksestaKunnalleJaToiselleViranomaiselleAsiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   ilmoitusPaatoskuulutuksestaLausunnonantajilleAsiakirjaTyyppi: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
   ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi?: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
+  ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi?: HyvaksymisPaatosKuulutusAsiakirjaTyyppi;
 }
 
 export const paatosSpecificVaihe: Record<PaatosTyyppi, Vaihe> = {
@@ -83,6 +85,7 @@ export const paatosSpecificRoutesMap: Record<PaatosTyyppi, PaatoksenAvaimet> = {
       AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE,
     ilmoitusPaatoskuulutuksestaLausunnonantajilleAsiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE,
     ilmoitusPaatoskuulutuksestaMuistuttajilleAsiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE,
+    ilmoitusPaatoskuulutuksestaMaakuntaliitoilleAsiakirjaTyyppi: AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE,
   },
   JATKOPAATOS1: {
     paatosAvain: "ensimmainenJatkopaatos",

@@ -1,5 +1,6 @@
+// Contains code generated or recommended by Amazon Q
 import { NahtavillaoloVaiheJulkaisu } from "../../database/model/";
-import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { createPDFFileName } from "../pdfFileName";
@@ -60,7 +61,7 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.kieli = params.kieli;
     this.vahainenMenettely = params.vahainenMenettely;
     this.nahtavillaoloVaihe = nahtavillaoloVaihe;
-    this.header = kutsuAdapter.subject;
+    this.header = velho.tyyppi === ProjektiTyyppi.TOIMINNALLINEN ? kutsuAdapter.text("otsikko_toiminnallinen") : kutsuAdapter.subject;
     this.kuulutettuYhdessaSuunnitelmanimi = params.kuulutettuYhdessaSuunnitelmanimi;
 
     this.kutsuAdapter.addTemplateResolver(this);
@@ -79,7 +80,22 @@ export class Kuulutus30 extends CommonPdf<NahtavillaoloVaiheKutsuAdapter> {
     this.doc.addStructure(this.doc.struct("Document", {}, elements));
   }
 
+  private get isToiminnallinen(): boolean {
+    return this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+  }
+
   protected addDocumentElements(): PDFStructureElement[] {
+    if (this.isToiminnallinen) {
+      return [
+        this.paragraphFromKey("toiminnallinen_kappale1"),
+        this.paragraphFromKey("kappale2_toiminnallinen"),
+        this.paragraphFromKey("kappale3"),
+        this.paragraphFromKey("kappale4_toiminnallinen"),
+        this.tietosuojaParagraph(),
+        this.lisatietojaAntavatParagraph(),
+        this.doc.struct("P", {}, this.moreInfoElements(this.nahtavillaoloVaihe?.yhteystiedot, null, true)),
+      ].filter((elem): elem is PDFStructureElement => !!elem);
+    }
     return [
       this.startOfPlanningPhrase,
       this.paragraph(this.kutsuAdapter.hankkeenKuvaus()),

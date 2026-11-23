@@ -45,12 +45,13 @@ import GetProjektiStatus from "../status/getProjektiStatus";
 import { isStatusGreaterOrEqualTo } from "hassu-common/statusOrder";
 import { adaptEnnakkoNeuvotteluJulkaisuToAPI, adaptEnnakkoNeuvotteluToAPI } from "../../ennakkoneuvottelu/mapper";
 import { omistajaDatabase } from "../../database/omistajaDatabase";
+import { mielipideDatabase } from "../../database/mielipideDatabase";
 
 export class ProjektiAdapter {
   public async adaptProjekti(
     dbProjekti: DBProjekti,
     virhetiedot?: API.ProjektiVirhe,
-    checkAsianhallintaState = true
+    options?: { checkAsianhallintaState?: boolean; haeMielipideMaara?: boolean }
   ): Promise<API.Projekti> {
     const {
       kayttoOikeudet,
@@ -164,7 +165,16 @@ export class ProjektiAdapter {
       ),
       virhetiedot,
       kasittelynTila: adaptKasittelynTilaToAPI(kasittelynTila),
-      muistutusMaara: (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
+      muistutusMaara:
+        velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN
+          ? undefined
+          : (annetutMuistutukset?.length ?? 0) + (muistuttajat?.length ?? 0) + (muutMuistuttajat?.length ?? 0),
+      mielipideMaara:
+        options?.haeMielipideMaara &&
+        velho?.tyyppi === API.ProjektiTyyppi.TOIMINNALLINEN &&
+        isStatusGreaterOrEqualTo(status, API.Status.NAHTAVILLAOLO)
+          ? await mielipideDatabase.haeMielipideMaara(oid)
+          : undefined,
       asianhallinta: await adaptAsianhallinta(dbProjekti),
       oid,
       versio,
@@ -212,7 +222,7 @@ export class ProjektiAdapter {
       apiProjekti.julkinenStatus = apiProjektiJulkinen?.status;
       if (apiProjekti.asianhallinta) {
         apiProjekti.asianhallinta.linkkiAsianhallintaan = await getLinkkiAsianhallintaan(dbProjekti);
-        if (checkAsianhallintaState) {
+        if (options?.checkAsianhallintaState !== false) {
           apiProjekti.asianhallinta.aktiivinenTila = await haeAktiivisenVaiheenAsianhallinnanTila(apiProjekti);
         }
       }

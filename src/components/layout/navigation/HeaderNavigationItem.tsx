@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { useCallback, useRef } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +18,7 @@ export interface NavigationRoute {
   mobile?: true;
   isCurrentRoute?: boolean;
   requireExactMatch?: boolean;
+  indent?: boolean;
   excludeInLanguage?: Kieli;
 }
 
@@ -30,7 +32,14 @@ export interface NavigationRouteCollection {
   requireExactMatch?: boolean;
 }
 
-function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute & { collection?: NavigationRoute[] }) {
+function NavDropdown({
+  label,
+  icon,
+  mobile,
+  collection,
+  href,
+  isCurrentRoute,
+}: NavigationRoute & { collection?: NavigationRoute[]; isCurrentRoute?: boolean }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const router = useRouter();
@@ -82,7 +91,7 @@ function NavDropdown({ label, icon, mobile, collection, href }: NavigationRoute 
             }
           >
             {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
-            <span className={`underline-if-current-route${open ? " open" : " closed"}`}>
+            <span className={`underline-if-current-route${open ? " open" : " closed"}${isCurrentRoute ? " isCurrentRoute" : ""}`}>
               {label}
               {mobile ? null : <FontAwesomeIcon className="ml-2 text-primary" icon="chevron-down" size="lg" />}
             </span>
@@ -140,6 +149,7 @@ function DropdownItem({
   icon,
   mobile,
   label,
+  indent,
   isCurrentRoute,
   onClick,
 }: NavigationRoute & { id: string; isCurrentRoute: boolean; onClick: () => void }) {
@@ -155,7 +165,7 @@ function DropdownItem({
       }}
       tabIndex={0}
     >
-      <a>
+      <a style={indent ? { paddingLeft: "1.5rem" } : undefined}>
         {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
         <span>{label}</span>
       </a>
@@ -164,10 +174,18 @@ function DropdownItem({
 }
 
 const HeaderNavigationItem = styled(
-  ({ href, label, icon, mobile, className, collection }: NavigationRoute & { collection?: NavigationRoute[]; className?: string }) => (
+  ({
+    href,
+    label,
+    icon,
+    mobile,
+    className,
+    collection,
+    isCurrentRoute,
+  }: NavigationRoute & { collection?: NavigationRoute[]; className?: string; isCurrentRoute?: boolean }) => (
     <li className={className}>
       {collection ? (
-        <NavDropdown label={label} icon={icon} mobile={mobile} collection={collection} href={href} />
+        <NavDropdown label={label} icon={icon} mobile={mobile} collection={collection} href={href} isCurrentRoute={isCurrentRoute} />
       ) : (
         <Link href={href} className={`first-level-link${mobile ? " mobile" : ""}`}>
           {icon && !mobile && <FontAwesomeIcon icon={icon} size="lg" className="text-primary-dark mr-10" />}
@@ -229,6 +247,12 @@ const HeaderNavigationItem = styled(
         left: 0,
         right: 0,
         margin: "auto",
+      },
+      "&.isCurrentRoute": {
+        fontWeight: 700,
+        "&.closed::after": {
+          borderBottom: "3px solid #0064af",
+        },
       },
       "&.closed": {
         "&::after": {

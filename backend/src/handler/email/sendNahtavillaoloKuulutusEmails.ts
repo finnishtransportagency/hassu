@@ -1,7 +1,8 @@
+// Contains code generated or recommended by Amazon Q
 import { projektiDatabase } from "../../database/projektiDatabase";
 import { emailClient } from "../../email/email";
 import { log } from "../../logger";
-import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { DBProjekti, NahtavillaoloPDF, NahtavillaoloVaiheJulkaisu, KuulutusSaamePDF } from "../../database/model";
 import { localDateTimeString } from "../../util/dateUtil";
 import { assertIsDefined } from "../../util/assertions";
@@ -28,19 +29,21 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
 
     if (!nahtavillakuulutus.aineistoMuokkaus) {
       const lahetekirje = await emailCreator.createLahetekirjeWithAttachments();
+      // saveEmailAsFile must be called before sendEmail: MailComposer (saveEmailAsFile) and nodemailer (sendEmail)
+      // both read attachment streams, and a stream can only be read once (nodemailer 10.5.0+)
+      nahtavillakuulutus.lahetekirje = await saveEmailAsFile(
+        projekti.oid,
+        new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillakuulutus),
+        lahetekirje,
+        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
+      );
+
       const sentMessageInfo = await emailClient.sendEmail(lahetekirje);
 
       const aikaleima = localDateTimeString();
       nahtavillakuulutus.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
       nahtavillakuulutus.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
         examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-      );
-
-      nahtavillakuulutus.lahetekirje = await saveEmailAsFile(
-        projekti.oid,
-        new ProjektiPaths(projekti.oid).nahtavillaoloVaihe(nahtavillakuulutus),
-        lahetekirje,
-        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE_LAHETEKIRJE
       );
     }
 
@@ -55,7 +58,10 @@ class NahtavillaoloHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSender {
   ) {
     const hyvaksyttyEmail = emailCreator.createHyvaksyttyEmailPp();
     if (hyvaksyttyEmail.to) {
-      const pdfKeys: (keyof NahtavillaoloPDF)[] = ["nahtavillaoloPDFPath", "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"];
+      const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      const pdfKeys: (keyof NahtavillaoloPDF)[] = isToiminnallinen
+        ? ["nahtavillaoloPDFPath"]
+        : ["nahtavillaoloPDFPath", "nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath"];
 
       hyvaksyttyEmail.attachments = await Promise.all(
         pdfKeys.map(

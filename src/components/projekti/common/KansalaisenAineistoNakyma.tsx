@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import React, { Key, ReactElement, useMemo, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "hassu-common/util/dateUtils";
@@ -8,6 +9,7 @@ import {
   NahtavillaoloVaiheJulkaisuJulkinen,
   HyvaksymisPaatosVaiheJulkaisuJulkinen,
   UudelleenKuulutus,
+  ProjektiTyyppi,
 } from "@services/api";
 import Trans from "next-translate/Trans";
 import HassuAccordion, { AccordionItem } from "@components/HassuAccordion";
@@ -136,6 +138,7 @@ export default function KansalaisenAineistoNakyma({ projekti, kuulutus, uudellee
           paakategoria
           julkaisuPaiva={kuulutus.kuulutusPaiva ?? undefined}
           alkuperainenHyvaksymisPaiva={uudelleenKuulutus?.alkuperainenHyvaksymisPaiva ?? undefined}
+          projektiTyyppi={velho.tyyppi}
         />
       )}
     </SectionContent>
@@ -149,6 +152,7 @@ interface AineistoKategoriaAccordionProps {
   paakategoria?: boolean;
   julkaisuPaiva: string | undefined;
   alkuperainenHyvaksymisPaiva: string | undefined;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
@@ -166,7 +170,10 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
 
     return aineistotKategorioittain.map<AccordionItem>(({ kategoria, aineisto }) => {
       const titleText = t(`aineisto-kategoria-nimi.${kategoria.id}`) + " (" + (aineisto?.length || 0) + ")";
-      const tooltipText = props.paakategoria ? t(`aineisto-kategoria-tooltip.${kategoria.id}`) : undefined;
+      const tooltipText =
+        props.paakategoria && props.projektiTyyppi !== ProjektiTyyppi.TOIMINNALLINEN
+          ? t(`aineisto-kategoria-tooltip.${kategoria.id}`)
+          : undefined;
       return {
         title: <AccordioSummaryContent titleText={titleText} paakategoria={props.paakategoria} tooltipText={tooltipText} />,
         content: (
@@ -176,6 +183,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
             expandedState={props.expandedState}
             julkaisuPaiva={props.julkaisuPaiva}
             alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
+            projektiTyyppi={props.projektiTyyppi}
           />
         ),
         id: kategoria.id,
@@ -188,6 +196,7 @@ const AineistoKategoriaAccordion = (props: AineistoKategoriaAccordionProps) => {
     props.expandedState,
     props.julkaisuPaiva,
     props.paakategoria,
+    props.projektiTyyppi,
     t,
   ]);
 
@@ -200,6 +209,7 @@ interface SuunnitelmaAineistoKategoriaContentProps {
   expandedState: [React.Key[], React.Dispatch<React.Key[]>];
   julkaisuPaiva: string | undefined;
   alkuperainenHyvaksymisPaiva: string | undefined;
+  projektiTyyppi?: ProjektiTyyppi | null;
 }
 
 const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoriaContentProps) => {
@@ -207,6 +217,10 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
   const kategorianAineistot = useMemo(
     () => props.aineistot?.filter((aineisto) => typeof aineisto.tiedosto === "string" && aineisto.kategoriaId === props.kategoria.id),
     [props.aineistot, props.kategoria.id]
+  );
+
+  const hasAlaKategoriaAineistot = !!props.kategoria.alaKategoriat?.some((ala) =>
+    props.aineistot?.some((a) => a.kategoriaId === ala.id)
   );
 
   return (
@@ -219,7 +233,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
           sx={{ marginBottom: 4 }}
         />
       ) : (
-        <p>{t("ei_aineistoa")}</p>
+        !hasAlaKategoriaAineistot && <p>{t("ei_aineistoa")}</p>
       )}
       {!!props.aineistot?.length && (
         <AineistoKategoriaAccordion
@@ -228,6 +242,7 @@ const SuunnitelmaAineistoKategoriaContent = (props: SuunnitelmaAineistoKategoria
           expandedState={props.expandedState}
           alkuperainenHyvaksymisPaiva={props.alkuperainenHyvaksymisPaiva}
           julkaisuPaiva={props.julkaisuPaiva}
+          projektiTyyppi={props.projektiTyyppi}
         />
       )}
     </>

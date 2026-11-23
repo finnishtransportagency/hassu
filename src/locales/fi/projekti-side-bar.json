@@ -1,9 +1,11 @@
 {
   "suunnitteluhankkeen_yhteystiedot": "Suunnitteluhankkeen yhteyshenkilöt",
+  "hankkeen_yhteystiedot": "Hankkeen yhteyshenkilöt",
   "hankesivut_otsikko": "Hankkeen sivu",
   "lue_hankesivulta": "Laajemmat tiedot suunnitelmasta ovat esillä hankkeen verkkosivulla.",
   "siirry_hankesivulle": "Siirry hankesivulle",
   "suunnitelma_kartalla": "Suunnitelma kartalla",
+  "suunnitelma-alue_kartalla": "Suunnitelma-alue kartalla",
   "tutustu-videoiden-avulla-TIE": "Tutustu tiesuunnitteluun",
   "tutustu-videoiden-avulla-RATA": "Tutustu ratasuunnitteluun",
   "tutustu-videoiden-avulla-YLEINEN": "Tutustu yleissuunnitteluun"

@@ -563,6 +563,11 @@ export class FileService {
     return headObject?.ContentLength;
   }
 
+  async getUploadedFileContentLength(uploadedFileSource: string): Promise<number | undefined> {
+    const key = uploadedFileSource.replace(/^\//, "");
+    return this.getFileContentLength(config.uploadBucketName, key);
+  }
+
   private static async getHeadObject(bucketName: string, key: string) {
     const keyWithoutLeadingSlash = key.replace(/^\//, "");
     try {

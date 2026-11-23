@@ -1,5 +1,6 @@
+// Contains code generated or recommended by Amazon Q
 import { PaatosVaiheJulkaisu, KasittelynTila } from "../../database/model/";
-import { AsiakirjaTyyppi, Kieli } from "hassu-common/graphql/apiModel";
+import { AsiakirjaTyyppi, Kieli, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { CommonPdf } from "./commonPdf";
 import { AsiakirjanMuoto } from "../asiakirjaTypes";
 import { translate } from "../../util/localization";
@@ -104,14 +105,24 @@ export class Kuulutus61 extends CommonPdf<HyvaksymisPaatosVaiheKutsuAdapter> {
       this.headerElement(this.kutsuAdapter.title, false),
       this.uudelleenKuulutusParagraph(),
       this.paragraphFromKey("hyvaksymispaatoksesta_ilmoittaminen"),
-      this.paragraphFromKey("kappale1"),
+      this.paragraphFromKey(
+        this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN ? "kappale1_toiminnallinen" : "kappale1"
+      ),
       this.paragraphFromKey("kappale2"),
       this.paragraphFromKey("kappale3"),
       this.paragraphFromKey("kappale4"),
       this.paragraphFromKey("kuulutuksesta_ilmoittaminen"),
-      this.paragraphFromKey("kuulutuksesta_ilmoittaminen_kappale1"),
+      this.paragraphFromKey(
+        this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? "kuulutuksesta_ilmoittaminen_kappale1_toiminnallinen"
+          : "kuulutuksesta_ilmoittaminen_kappale1"
+      ),
       this.paragraphFromKey("kuulutuksesta_ilmoittaminen_kappale2"),
-      this.paragraphFromKey("kuulutuksesta_ilmoittaminen_kappale3"),
+      this.paragraphFromKey(
+        this.kutsuAdapter.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? "kuulutuksesta_ilmoittaminen_kappale3_toiminnallinen"
+          : "kuulutuksesta_ilmoittaminen_kappale3"
+      ),
       this.tietosuojaParagraph(),
       this.lisatietojaAntavatParagraph(),
       this.doc.struct("P", {}, this.moreInfoElements(this.hyvaksymisPaatosVaihe.yhteystiedot, null, true)),

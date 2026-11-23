@@ -96,6 +96,15 @@ async function migrateAllTables(options: MigrateAllTablesOptions | DryRunMigrate
         },
       ],
     },
+    {
+      name: `Palaute-${options.environment}`,
+      migrations: [
+        {
+          versionId: 1,
+          plan: (options) => import("./Palaute/migrate-001").then((m) => m.default(options)),
+        },
+      ],
+    },
     // {
     //   name: `Kiinteistonomistaja-${environment}`,
     //   migrations: [

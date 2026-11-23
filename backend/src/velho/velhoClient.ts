@@ -100,7 +100,11 @@ export class VelhoClient {
         },
         lauseke: [
           "ja",
-          ["joukossa", ["projekti/projekti", "ominaisuudet", "vaihe"], ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12", "vaihe/vaihe25"]],
+          [
+            "joukossa",
+            ["projekti/projekti", "ominaisuudet", "vaihe"],
+            ["vaihe/vaihe04", "vaihe/vaihe10", "vaihe/vaihe12", "vaihe/vaihe25"],
+          ],
           ["yhtasuuri", ["projekti/projekti", "ominaisuudet", "tila"], "tila/tila15"],
           ["sisaltaa-tekstin", ["projekti/projekti", "ominaisuudet", "nimi"], term],
         ],
@@ -365,17 +369,23 @@ export class VelhoClient {
           status: response.status,
           problems: JSON.stringify(badRequest?.problems),
           value: JSON.stringify(badRequest?.value),
+          viesti: badRequest?.viesti,
         });
-        return new VelhoError(response.status, response.statusText);
+        const velhoMessage = badRequest?.viesti;
+        return new VelhoError(response.status, response.statusText, velhoMessage);
       }
     }
     return e;
   }
 }
 
+// Fields not documented in Velho OpenAPI spec - observed from actual API responses:
+// projektirekisteri 400: { problems, value }
+// aineistopalvelu 404: { viesti }
 type BadRequestResponse = {
-  problems: object;
-  value: object;
+  problems?: object;
+  value?: object;
+  viesti?: string;
 };
 
 export const velho = new VelhoClient();

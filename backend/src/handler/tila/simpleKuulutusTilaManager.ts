@@ -121,11 +121,13 @@ export class SimpleNahtavillaoloVaiheTilaManager extends SimpleKuulutusTilaManag
         filePathInProjekti: pdfs.nahtavillaoloIlmoitusPDFPath,
         reason: "Nähtävilläolo rejected",
       });
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid,
-        filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
-        reason: "Nähtävilläolo rejected",
-      });
+      if (pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath) {
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+          reason: "Nähtävilläolo rejected",
+        });
+      }
     }
   }
 }
@@ -155,6 +157,7 @@ export abstract class SimpleAbstractHyvaksymisPaatosVaiheTilaManager extends Sim
         pdfs.hyvaksymisKuulutusPDFPath,
         pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath,
         pdfs.hyvaksymisIlmoitusMuistuttajillePDFPath,
+        pdfs.hyvaksymisIlmoitusMaakuntaliitoillePDFPath,
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaKunnalleToiselleViranomaisellePDFPath,
         pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath,
       ]) {

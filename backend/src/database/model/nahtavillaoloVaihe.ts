@@ -66,7 +66,7 @@ export type NahtavillaoloVaiheJulkaisu = {
 export type NahtavillaoloPDF = {
   nahtavillaoloPDFPath: string;
   nahtavillaoloIlmoitusPDFPath: string;
-  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: string;
+  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath?: string;
 };
 
 export type Muistutus = {

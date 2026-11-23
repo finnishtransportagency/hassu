@@ -24,6 +24,7 @@ import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
 import StyledLink from "@components/StyledLink";
+import { ProjektiTyyppi } from "@services/api";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
   return (
@@ -38,6 +39,7 @@ export default function PaatosPageLayout({ children, paatosTyyppi }: { children?
 }
 
 const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyppi: PaatosTyyppi }> = ({ projekti, paatosTyyppi }) => {
+  const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   return (
     <>
       {paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS ? (
@@ -49,8 +51,8 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
           </li>
           <li>Jatka täyttämään kuulutuksen perustiedot valitsemalla &quot;Tallenna ja siirry kuulutukselle&quot;.</li>
           <li>
-            Anna päivämäärä, jolloin suunnitelman hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion
-            liikenneväylien suunnittelu -palvelun kansalaispuolella.
+            Anna päivämäärä, jolloin hyväksymispäätöksestä kuulutetaan. Kuulutus julkaistaan samana päivänä Valtion liikenneväylien
+            suunnittelu -palvelun kansalaispuolella.
           </li>
           <li>
             Pääkäyttäjä tai projektipäällikkö lisää projektille Liikenne- ja viestintäviraston päätöksen päivän ja asiatunnuksen{" "}
@@ -65,33 +67,40 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
             Esikatsele ja lähetä hyväksymispäätöksen kuulutus hyväksyttäväksi projektipäällikölle. Hyväksyntä on hyvä tehdä noin viikko
             ennen kuulutuksen julkaisua, jotta kunnat saavat tiedon kuulutuksesta ajoissa.
           </li>
-          <li>
-            Kuulutuksen julkaisupäivänä osalle kiinteistönomistajista ja muistuttajista lähtee automaattisesti ilmoitus
-            hyväksymispäätöksestä Suomi.fi viestit -palvelun kautta.
-          </li>
-          <li>
-            Huomioithan, että osaa kiinteistönomistajista ja muistuttajista sekä lausunnonantajia ja maakuntaliittoja tulee tiedottaa
-            järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä sivulta PDF-muotoisen ilmoituksen, joka heille
-            lähetetään.
-          </li>
-          <li>
-            Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista ja muistuttajista{" "}
-            <StyledLink href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}>
-              Tiedottaminen
-            </StyledLink>{" "}
-            -sivulta.
-          </li>
+          {!isToiminnallinen && (
+            <>
+              <li>
+                Kuulutuksen julkaisupäivänä osalle kiinteistönomistajista ja muistuttajista lähtee automaattisesti ilmoitus
+                hyväksymispäätöksestä Suomi.fi viestit -palvelun kautta.
+              </li>
+              <li>
+                Huomioithan, että osaa kiinteistönomistajista ja muistuttajista sekä lausunnonantajia ja maakuntaliittoja tulee tiedottaa
+                järjestelmän ulkopuolella. Kuulutuksen hyväksymisen jälkeen löydät tältä sivulta PDF-muotoisen ilmoituksen, joka heille
+                lähetetään.
+              </li>
+              <li>
+                Katso listaukset eri tavoin tiedotettavista kiinteistönomistajista ja muistuttajista{" "}
+                <StyledLink
+                  href={{ pathname: `/yllapito/projekti/[oid]/tiedottaminen/kiinteistonomistajat`, query: { oid: projekti.oid } }}
+                >
+                  Tiedottaminen
+                </StyledLink>{" "}
+                -sivulta.
+              </li>
+            </>
+          )}
           <li>
             Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen esikatselu
-            -painikkeesta.
+            -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
           </li>
           {projekti.asianhallinta.inaktiivinen && (
             <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan.</li>
           )}
           {!projekti.asianhallinta.inaktiivinen && (
             <li>
-              Kuulutus, ilmoitus kuulutuksesta, lausunnonantajille, kiinteistönomistajille ja muistuttajille lähetettävät ilmoitukset sekä
-              kiinteistönomistajalistaus siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä.
+              {isToiminnallinen
+                ? "Kuulutus, ilmoitus kuulutuksesta, sekä lausunnonantajille lähetettävät ilmoitukset siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä."
+                : "Kuulutus, ilmoitus kuulutuksesta, lausunnonantajille, kiinteistönomistajille ja muistuttajille lähetettävät ilmoitukset sekä kiinteistönomistajalistaus siirtyvät automaattisesti asianhallintaan kuulutuksen hyväksymisen yhteydessä."}
             </li>
           )}
         </>

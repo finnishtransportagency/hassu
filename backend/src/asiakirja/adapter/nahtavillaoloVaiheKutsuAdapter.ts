@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { KirjaamoOsoite, KuulutusTekstit, ProjektiTyyppi } from "hassu-common/graphql/apiModel";
 import { formatDate } from "../asiakirjaUtil";
 import { AsiakirjanMuoto, Osoite } from "../asiakirjaTypes";
@@ -158,6 +159,8 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
       kappale1 = this.htmlText("rata_kappale1");
     } else if (this.suunnitteluSopimus) {
       kappale1 = this.htmlText("tie_kappale1_suunnittelusopimus", usePlural);
+    } else if (this.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN) {
+      kappale1 = this.htmlText("toiminnallinen_kappale1");
     } else {
       kappale1 = this.htmlText("tie_kappale1");
     }
@@ -165,8 +168,16 @@ export class NahtavillaoloVaiheKutsuAdapter extends KuulutusKutsuAdapter<Nahtavi
     return {
       __typename: "KuulutusTekstit",
       leipaTekstit: [kappale1],
-      kuvausTekstit: [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
-      infoTekstit: this.vahainenMenettely ? [this.htmlText("kappale4_vahainen_menettely")] : [this.htmlText("kappale4")],
+      kuvausTekstit:
+        this.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? [this.htmlText("kappale2_toiminnallinen"), this.htmlText("kappale3_toiminnallinen")]
+          : [this.htmlText("kappale2"), this.htmlText("kappale3_ui")],
+      infoTekstit:
+        this.projektiTyyppi === ProjektiTyyppi.TOIMINNALLINEN
+          ? [this.htmlText("kappale4_toiminnallinen")]
+          : this.vahainenMenettely
+          ? [this.htmlText("kappale4_vahainen_menettely")]
+          : [this.htmlText("kappale4")],
       tietosuoja: this.htmlText("asiakirja.tietosuoja", false, { extLinks: true }),
     };
   }

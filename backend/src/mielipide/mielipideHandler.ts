@@ -1,6 +1,7 @@
 // Contains code generated or recommended by Amazon Q
 import { LisaaMielipideMutationVariables, Status } from "hassu-common/graphql/apiModel";
-import { NotFoundError } from "hassu-common/error";
+import { IllegalArgumentError, NotFoundError } from "hassu-common/error";
+import fileValidation from "hassu-common/fileValidationSettings";
 import { projektiDatabase } from "../database/projektiDatabase";
 import { projektiAdapterJulkinen } from "../projekti/adapter/projektiAdapterJulkinen";
 import { auditLog, log } from "../logger";
@@ -17,6 +18,9 @@ function getExpires() {
   const days = config.isPermanentEnvironment() ? 2557 : 90;
   return Math.round(Date.now() / 1000) + 60 * 60 * 24 * days;
 }
+
+// Odotetaan että GuardDuty saa virusskannauksen valmiiksi ennen kuin viesti näkyy jonon käsittelijälle
+export const LIITE_SCAN_DELAY_SECONDS = 5 * 60;
 
 class MielipideHandler {
   async kasitteleMielipide({ oid, mielipide: mielipideInput }: LisaaMielipideMutationVariables) {
@@ -36,6 +40,7 @@ class MielipideHandler {
     }
 
     const mielipideId = uuid.v4();
+    await this.validateLiitteetTotalSize(mielipideInput.liitteet, oid);
     const liitteet = await this.persistLiitteet(mielipideInput.liitteet, oid, mielipideId);
 
     const maakoodi = mielipideInput.maa !== "FI" ? mielipideInput.maa : undefined;
@@ -66,9 +71,25 @@ class MielipideHandler {
       mielipideId,
     };
     const emailSQSUrl = await parameters.getEmailSQSUrl();
-    await getSQS().sendMessage({ QueueUrl: emailSQSUrl, MessageBody: JSON.stringify(msg) });
+    const hasLiitteet = liitteet && liitteet.length > 0;
+    await getSQS().sendMessage({
+      QueueUrl: emailSQSUrl,
+      MessageBody: JSON.stringify(msg),
+      DelaySeconds: hasLiitteet ? LIITE_SCAN_DELAY_SECONDS : 0,
+    });
 
     return "OK";
+  }
+
+  private async validateLiitteetTotalSize(liitteet: string[] | undefined | null, oid: string): Promise<void> {
+    if (!liitteet?.length) return;
+    const sizes = await Promise.all(liitteet.map((liite) => fileService.getUploadedFileContentLength(liite)));
+    const total = sizes.reduce<number>((sum, size) => sum + (size ?? 0), 0);
+    if (total > fileValidation.maxEmailAttachmentsTotalSize) {
+      const maxMB = Math.round(fileValidation.maxEmailAttachmentsTotalSize / 1000000);
+      log.error("Mielipiteen liitteiden yhteiskoko ylittää sallitun rajan", { total, oid });
+      throw new IllegalArgumentError(`Liitteiden yhteiskoko ylittää sallitun ${maxMB} Mt rajan`);
+    }
   }
 
   private async persistLiitteet(liitteet: string[] | undefined | null, oid: string, mielipideId: string): Promise<DBMielipide["liitteet"]> {

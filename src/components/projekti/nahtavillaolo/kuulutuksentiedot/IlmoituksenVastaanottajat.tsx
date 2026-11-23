@@ -41,7 +41,13 @@ type FormFields = {
   };
 };
 
-export default function IlmoituksenVastaanottajat({ nahtavillaoloVaihe, oid, omistajahakuStatus, hasOmistajat, projektiTyyppi }: Props): ReactElement {
+export default function IlmoituksenVastaanottajat({
+  nahtavillaoloVaihe,
+  oid,
+  omistajahakuStatus,
+  hasOmistajat,
+  projektiTyyppi,
+}: Props): ReactElement {
   const { t, lang } = useTranslation("commonFI");
   const { data: kirjaamoOsoitteet } = useKirjaamoOsoitteet();
 

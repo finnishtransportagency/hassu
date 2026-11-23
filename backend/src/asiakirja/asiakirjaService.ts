@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { AsiakirjaTyyppi } from "hassu-common/graphql/apiModel";
 import { AloitusKuulutus10TR } from "./suunnittelunAloitus/aloitusKuulutus10TR";
 import { Ilmoitus12TR } from "./suunnittelunAloitus/ilmoitus12TR";
@@ -204,6 +205,8 @@ export class AsiakirjaService {
       asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2_MAAKUNTALIITOILLE
     ) {
       return new Kuulutus72(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
+    } else if (asiakirjaTyyppi === AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE) {
+      return new Kuulutus6263(asiakirjaTyyppi, hyvaksymisPaatosVaihe, kasittelynTila, params).pdf(luonnos);
     }
     throw new Error("Not implemented");
   }

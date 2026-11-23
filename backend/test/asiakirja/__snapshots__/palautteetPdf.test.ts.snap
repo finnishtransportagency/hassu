@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PalautteetPdf generates a valid PDF with contact info 1`] = `
+"Matti Meikäläinen | Rakentamisen tilaajan projektipäällikkö vastaa siitä, että suunnitteluperusteet tulee olla laadittuna ennen kuin 3.2 Rakentamissuunnittelutoimeksianto alkaa. Rakentamisen tilaajan projektipäällikkö varmistaa suunnitteluperusteiden päivityksen myös ennen rakentamisen aloitusta. Tilaajan projektipäällikkö, rakennuttaja tai suunnittelija voi päivittää suunnitteluperusteita. Suunnitteluperusteiden hyväksymismenettelystä on kerrottu Väyläviraston ohjeessa 38/2021. Rakentamisen tilaajan projektipäällikkö tulisi olla nimettynä kohteelle toteuttamisen asiantuntijana suunnitteluperusteiden laatimisessa Väylähankkeiden suunnitteluperusteiden menettelykuvaus -ohjeen mukaisesti. Suunnitteluperusteet on asiakirja, johon on koottu suunnittelukohteen tilaajan asettamat tavoitteet, lähtökohdat sekä sellaiset suunnittelua ohjaavat tekniset asiat, joissa on tehty päätöksiä joko aiemassa suunnitteluvaiheessa tai muutoin ennen varsinaisen suunnittelutyön käynnistymistä. Väylävirastossa on nimetty väylämuotokohtaisesti suunnitteluperusteiden yhdyshenkilöt suunnittelun, rakentamisen, kunnossapidon, erityistekniikoiden sekä tarvittaessa osallistuvien tekniikoiden osalta. Yhteyshenkilöt osallistuvat suunnitteluperusteiden laadintaan ja kommentoivat suunnitteluperusteita. Suunnitteluperusteissa esitetään myös muita toimijoita ja sidosryhmiä koskevat vaatimukset hankkeessa, jossa Väylävirasto on osapuolena.
+
+Puhelinnumero: 0401234567
+Sähköposti: matti@example.com | 08.05.2025 klo 12:04 | "
+`;

@@ -95,6 +95,10 @@ export function TiedottaminenPageLayout({ children, projekti }: { children?: Rea
                 Muistuttajat-välilehdeltä löytyy VLS:n kautta tunnistautuneena muistutuksen jättäneiden yhteystiedot. Huomaathan tarkistaa
                 kaikki muistutukset asianhallinnasta.
               </li>
+              <li style={{ color: "red" }}>
+                Tunnistautuminen tuli käyttöön 4.6.2024. Ennen tätä muistutuksen jättäneiden tiedot eivät ole automaattisesti siirtyneet
+                VLS:ään, joten heitä on tiedotettava erikseen järjestelmän ulkopuolella.
+              </li>
               <li>
                 Katso ohjevideot karttarajauksen tekemisestä OHJEET-sivulta ja Valtion liikenneväylien suunnittelu- järjestelmän käyttöohje
                 (Tiedottaminen – Karttarajaus).

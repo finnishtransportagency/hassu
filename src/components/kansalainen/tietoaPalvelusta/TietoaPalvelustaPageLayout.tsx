@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import SideNavigation, { Route } from "@components/SideNavigation";
 import { Kieli } from "hassu-common/graphql/apiModel";
 import useTranslation from "next-translate/useTranslation";
@@ -8,22 +9,34 @@ type Props = {
   children?: ReactNode;
 };
 
-const routes: Omit<Route, "title">[] = [
+type RouteConfig = Omit<Route, "title" | "children"> & { children?: Omit<Route, "title" | "children">[] };
+
+const routes: RouteConfig[] = [
   { id: "tietoa-palvelusta", pathname: "/tietoa-palvelusta", requireExactMatch: true },
-  { id: "tietoa-suunnittelusta", pathname: "/tietoa-palvelusta/tietoa-suunnittelusta" },
+  {
+    id: "tietoa-suunnittelusta",
+    pathname: "/tietoa-palvelusta/tietoa-suunnittelusta",
+    requireExactMatch: true,
+    children: [{ id: "toiminnallisen-luokan-muutos", pathname: "/tietoa-palvelusta/tietoa-suunnittelusta/toiminnallisen-luokan-muutos" }],
+  },
   { id: "tietoa-suomifi-palvelusta", pathname: "/tietoa-palvelusta/tietoa-suomifi-palvelusta" },
   { id: "yhteystiedot-ja-palaute", pathname: "/tietoa-palvelusta/yhteystiedot-ja-palaute" },
   { id: "saavutettavuus", pathname: "/tietoa-palvelusta/saavutettavuus" },
 ];
 
-const routesFi: Omit<Route, "title">[] = [...routes, { id: "diehtu-planemis", pathname: "/tietoa-palvelusta/diehtu-planemis" }];
+const routesFi: RouteConfig[] = [...routes, { id: "diehtu-planemis", pathname: "/tietoa-palvelusta/diehtu-planemis" }];
 
 export default function TietoaPalvelustaPageLayout({ children }: Props) {
   const { t } = useTranslation("tietoa-palvelusta/navigation");
   const kieli = useKansalaiskieli();
   const routesUsed = kieli === Kieli.SUOMI ? routesFi : routes;
   const routesWithLabel: Route[] = useMemo(
-    () => routesUsed.map((route) => ({ ...route, title: t(`polkujen-nimet.${route.id}`) })),
+    () =>
+      routesUsed.map((route) => ({
+        ...route,
+        title: t(`polkujen-nimet.${route.id}`),
+        children: route.children?.map((child) => ({ ...child, title: t(`polkujen-nimet.${child.id}`) })),
+      })),
     [routesUsed, t]
   );
   return (

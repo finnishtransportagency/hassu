@@ -1,5 +1,13 @@
 // Contains code generated or recommended by Amazon Q
-import { AsiakirjaTyyppi, Kieli, KuulutusJulkaisuTila, NykyinenKayttaja, ProjektiTyyppi, TilasiirtymaTyyppi, Vaihe } from "hassu-common/graphql/apiModel";
+import {
+  AsiakirjaTyyppi,
+  Kieli,
+  KuulutusJulkaisuTila,
+  NykyinenKayttaja,
+  ProjektiTyyppi,
+  TilasiirtymaTyyppi,
+  Vaihe,
+} from "hassu-common/graphql/apiModel";
 import { KuulutusTilaManager } from "./KuulutusTilaManager";
 import {
   DBProjekti,
@@ -150,8 +158,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
     }
     const suomifiViestitEnabled = await parameters.isSuomiFiViestitIntegrationEnabled();
     const skipKiinteistoRequirement =
-      vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false ||
-      projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      vaihe.uudelleenKuulutus?.tiedotaKiinteistonomistajia === false || projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
     if (suomifiViestitEnabled && !skipKiinteistoRequirement) {
       if (!projekti.omistajahaku?.status || !(await omistajaDatabase.hasOmistajat(projekti.oid))) {
         const msg = "Kiinteistönomistajia ei ole haettu ennen nähtävilläolon hyväksyntää";
@@ -209,7 +216,7 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
       throw new IllegalArgumentError("Ei ole olemassa kuulutusta, jota uudelleenkuuluttaa");
     }
     // Nähtävilläolovaiheen uudelleenkuuluttaminen on mahdollista vain jos hyväksymispäätöskuulutusjulkaisua ei ole
-    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, false);
+    const apiProjekti = await projektiAdapter.adaptProjekti(projekti, undefined, { checkAsianhallintaState: false });
     const isHyvaksymisPaatosPresent = !!apiProjekti.hyvaksymisPaatosVaiheJulkaisu;
     if (isHyvaksymisPaatosPresent) {
       throw new IllegalArgumentError(
@@ -343,16 +350,22 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         projekti,
         kieli
       );
-      const nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath = createNahtavillaoloVaihePDF(
-        AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
-        julkaisu,
-        projekti,
-        kieli
-      );
+      const isToiminnallinen = projekti.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
+      const nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath = !isToiminnallinen
+        ? createNahtavillaoloVaihePDF(
+            AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE,
+            julkaisu,
+            projekti,
+            kieli
+          )
+        : undefined;
+
       return {
         nahtavillaoloPDFPath: await nahtavillaoloPDFPath,
         nahtavillaoloIlmoitusPDFPath: await nahtavillaoloIlmoitusPDFPath,
-        nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: await nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+        nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
+          ? await nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
+          : undefined,
       };
     }
 
@@ -386,11 +399,13 @@ class NahtavillaoloTilaManager extends KuulutusTilaManager<NahtavillaoloVaihe, N
         filePathInProjekti: pdfs.nahtavillaoloIlmoitusPDFPath,
         reason: "Nähtävilläolo rejected",
       });
-      await fileService.deleteYllapitoFileFromProjekti({
-        oid,
-        filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
-        reason: "Nähtävilläolo rejected",
-      });
+      if (pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath) {
+        await fileService.deleteYllapitoFileFromProjekti({
+          oid,
+          filePathInProjekti: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath,
+          reason: "Nähtävilläolo rejected",
+        });
+      }
     }
   }
 }

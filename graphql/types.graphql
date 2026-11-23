@@ -141,6 +141,7 @@ enum AsiakirjaTyyppi {
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_LAUSUNNONANTAJILLE
   ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MUISTUTTAJILLE
+  ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE
   MAANOMISTAJALUETTELO_HYVAKSYMISPAATOS
 
   JATKOPAATOSKUULUTUS
@@ -237,7 +238,10 @@ type Projekti implements IProjekti {
   tallennettu: Boolean
   euRahoitus: Boolean
   euRahoitusLogot: LokalisoituTeksti
+  "Ei TOIMINNALLINEN-projekteille. Katso mielipideMaara."
   muistutusMaara: Int
+  "Vain TOIMINNALLINEN-projekteille. Katso muistutusMaara."
+  mielipideMaara: Int
   vahainenMenettely: Boolean
   kielitiedot: Kielitiedot
   paivitetty: String
@@ -665,7 +669,7 @@ type HyvaksymisPaatosVaiheJulkaisuJulkinen {
 type NahtavillaoloPDF {
   nahtavillaoloPDFPath: String!
   nahtavillaoloIlmoitusPDFPath: String!
-  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String!
+  nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: String
 }
 
 type NahtavillaoloPDFt {
@@ -692,6 +696,7 @@ type HyvaksymisPaatosVaihePDF {
   ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: String!
   hyvaksymisIlmoitusLausunnonantajillePDFPath: String!
   hyvaksymisIlmoitusMuistuttajillePDFPath: String
+  hyvaksymisIlmoitusMaakuntaliitoillePDFPath: String
 }
 
 type HyvaksymisPaatosVaihePDFt {
@@ -790,6 +795,10 @@ enum AineistoTila {
   Aineisto on poistettu projektin mentya epaaktiiviseksi, mutta tiedot aineistoista silti sailytetaan
   """
   POISTETTU
+  """
+  Aineistoa ei loydy, esim. se on poistettu Velhosta ennen kuin se ehdittiin tuoda
+  """
+  EI_LOYDY
 }
 
 enum LadattuTiedostoTila {
@@ -810,8 +819,6 @@ type Palaute {
   sahkoposti: String
   puhelinnumero: String
   kysymysTaiPalaute: String
-  yhteydenottotapaEmail: Boolean
-  yhteydenottotapaPuhelin: Boolean
   liitteet: [Liite!]
   vastattu: Boolean
 }

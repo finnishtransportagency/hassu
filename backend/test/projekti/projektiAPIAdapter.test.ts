@@ -9,7 +9,6 @@ import { loadProjektiYllapito } from "../../src/projekti/projektiHandler";
 import { userService } from "../../src/user";
 import { Kieli, Projekti, ProjektiTyyppi, Status, VuorovaikutusTilaisuusTyyppi } from "hassu-common/graphql/apiModel";
 import { assertIsDefined } from "../../src/util/assertions";
-
 import { expect } from "chai";
 import { parameters } from "../../src/aws/parameters";
 

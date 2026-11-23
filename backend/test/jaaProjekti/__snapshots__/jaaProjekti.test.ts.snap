@@ -87,6 +87,16 @@ Object {
             "sahkoposti": "savonlinna@savonlin.na",
           },
         ],
+        "maakunnat": Array [
+          Object {
+            "id": 1,
+            "sahkoposti": "uusimaa@maakuntaliitto.fi",
+          },
+          Object {
+            "id": 6,
+            "sahkoposti": "pirkanmaa@maakuntaliitto.fi",
+          },
+        ],
         "viranomaiset": Array [
           Object {
             "lahetetty": "2022-03-11T14:54",
@@ -215,6 +225,16 @@ Object {
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
+      "maakunnat": Array [
+        Object {
+          "id": 1,
+          "sahkoposti": "uusimaa@maakuntaliitto.fi",
+        },
+        Object {
+          "id": 6,
+          "sahkoposti": "pirkanmaa@maakuntaliitto.fi",
+        },
+      ],
       "viranomaiset": Array [
         Object {
           "lahetetty": "2022-03-11T14:54",
@@ -309,6 +329,16 @@ yksi tavoitteista.",
           "sahkoposti": "savonlinna@savonlin.na",
         },
       ],
+      "maakunnat": Array [
+        Object {
+          "id": 1,
+          "sahkoposti": "uusimaa@maakuntaliitto.fi",
+        },
+        Object {
+          "id": 6,
+          "sahkoposti": "pirkanmaa@maakuntaliitto.fi",
+        },
+      ],
       "viranomaiset": Array [
         Object {
           "lahetetty": "2022-03-11T14:54",
@@ -380,6 +410,16 @@ yksi tavoitteista.",
             "id": 740,
             "lahetetty": "2022-03-11T14:54",
             "sahkoposti": "savonlinna@savonlin.na",
+          },
+        ],
+        "maakunnat": Array [
+          Object {
+            "id": 1,
+            "sahkoposti": "uusimaa@maakuntaliitto.fi",
+          },
+          Object {
+            "id": 6,
+            "sahkoposti": "pirkanmaa@maakuntaliitto.fi",
           },
         ],
         "viranomaiset": Array [

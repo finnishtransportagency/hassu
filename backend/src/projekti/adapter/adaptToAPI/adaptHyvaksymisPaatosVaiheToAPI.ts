@@ -194,6 +194,9 @@ function adaptHyvaksymisPaatosVaihePDFPaths(
         : undefined,
       hyvaksymisIlmoitusLausunnonantajillePDFPath: getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusLausunnonantajillePDFPath),
       ilmoitusHyvaksymispaatoskuulutuksestaPDFPath: getYllapitoPathForFile(pdfs.ilmoitusHyvaksymispaatoskuulutuksestaPDFPath),
+      hyvaksymisIlmoitusMaakuntaliitoillePDFPath: pdfs.hyvaksymisIlmoitusMaakuntaliitoillePDFPath
+        ? getYllapitoPathForFile(pdfs.hyvaksymisIlmoitusMaakuntaliitoillePDFPath)
+        : undefined,
     };
   }
   return { __typename: "HyvaksymisPaatosVaihePDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.HyvaksymisPaatosVaihePDF, ...result };

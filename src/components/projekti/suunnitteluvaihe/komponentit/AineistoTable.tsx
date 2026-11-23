@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { ComponentProps, useCallback, useMemo } from "react";
 import IconButton from "@components/button/IconButton";
 import { UseFieldArrayAppend, UseFieldArrayRemove, UseFieldArrayReturn, useFormContext } from "react-hook-form";
@@ -88,6 +89,9 @@ const AineistoTable = ({
         header: "Tuotu",
         id: "tuotu",
         accessorFn: (aineisto) => {
+          if (aineisto.tila === AineistoTila.EI_LOYDY) {
+            return <span className="text-red">Ei löydy Velhosta</span>;
+          }
           if (aineisto.tila === AineistoTila.ODOTTAA_TUONTIA) {
             return "Ladataan...";
           }

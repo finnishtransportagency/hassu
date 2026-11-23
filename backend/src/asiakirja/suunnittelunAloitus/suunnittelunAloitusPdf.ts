@@ -51,6 +51,9 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2:
         kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params as HyvaksymisPaatosVaiheKutsuAdapterProps);
         break;
+      case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_MAAKUNTALIITOILLE:
+        kutsuAdapter = new HyvaksymisPaatosVaiheKutsuAdapter(params as HyvaksymisPaatosVaiheKutsuAdapterProps);
+        break;
       default:
         kutsuAdapter = new AloituskuulutusKutsuAdapter(params as AloituskuulutusKutsuAdapterProps);
     }

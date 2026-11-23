@@ -18,7 +18,7 @@ import type { AxiosPromise, AxiosInstance, RawAxiosRequestConfig } from 'axios';
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, replaceWithSerializableTypeIfNeeded } from './common';
 import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
@@ -580,14 +580,14 @@ export const AineistoLisaystiedotOminaisuudetRakennusosaEnum = {
     rakennusosa_ro51: 'rakennusosa/ro51',
     rakennusosa_ro421: 'rakennusosa/ro421',
     rakennusosa_ro197: 'rakennusosa/ro197',
-    rakennusosa_ro79: 'rakennusosa/ro79'
+    rakennusosa_ro79: 'rakennusosa/ro79',
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetRakennusosaEnum = typeof AineistoLisaystiedotOminaisuudetRakennusosaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRakennusosaEnum];
 export const AineistoLisaystiedotOminaisuudetTilaEnum = {
     aineistotila_tila02: 'aineistotila/tila02',
     aineistotila_tila03: 'aineistotila/tila03',
-    aineistotila_tila01: 'aineistotila/tila01'
+    aineistotila_tila01: 'aineistotila/tila01',
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetTilaEnum = typeof AineistoLisaystiedotOminaisuudetTilaEnum[keyof typeof AineistoLisaystiedotOminaisuudetTilaEnum];
@@ -608,7 +608,7 @@ export const AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum = {
     tekniikka_ala_ta11: 'tekniikka-ala/ta11',
     tekniikka_ala_ta06: 'tekniikka-ala/ta06',
     tekniikka_ala_ta00: 'tekniikka-ala/ta00',
-    tekniikka_ala_ta01: 'tekniikka-ala/ta01'
+    tekniikka_ala_ta01: 'tekniikka-ala/ta01',
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum = typeof AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum[keyof typeof AineistoLisaystiedotOminaisuudetTekniikkaAlatEnum];
@@ -681,7 +681,7 @@ export const AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum = {
     dokumenttityyppi_dt114: 'dokumenttityyppi/dt114',
     dokumenttityyppi_dt15: 'dokumenttityyppi/dt15',
     dokumenttityyppi_dt47: 'dokumenttityyppi/dt47',
-    dokumenttityyppi_dt87: 'dokumenttityyppi/dt87'
+    dokumenttityyppi_dt87: 'dokumenttityyppi/dt87',
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum = typeof AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum[keyof typeof AineistoLisaystiedotOminaisuudetDokumenttityyppiEnum];
@@ -720,7 +720,7 @@ export const AineistoLisaystiedotOminaisuudetLajiEnum = {
     aineistolaji_al39: 'aineistolaji/al39',
     aineistolaji_al08: 'aineistolaji/al08',
     aineistolaji_al09: 'aineistolaji/al09',
-    aineistolaji_al25: 'aineistolaji/al25'
+    aineistolaji_al25: 'aineistolaji/al25',
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetLajiEnum = typeof AineistoLisaystiedotOminaisuudetLajiEnum[keyof typeof AineistoLisaystiedotOminaisuudetLajiEnum];
@@ -734,7 +734,7 @@ export const AineistoLisaystiedotOminaisuudetRyhmaEnum = {
     aineistoryhma_ar04: 'aineistoryhma/ar04',
     aineistoryhma_ar09: 'aineistoryhma/ar09',
     aineistoryhma_ar05: 'aineistoryhma/ar05',
-    aineistoryhma_ar08: 'aineistoryhma/ar08'
+    aineistoryhma_ar08: 'aineistoryhma/ar08',
 } as const;
 
 export type AineistoLisaystiedotOminaisuudetRyhmaEnum = typeof AineistoLisaystiedotOminaisuudetRyhmaEnum[keyof typeof AineistoLisaystiedotOminaisuudetRyhmaEnum];
@@ -785,8 +785,35 @@ export interface AineistopalveluApiV1AineistoMassapoistoPost200ResponseTilastot 
 export interface AineistopalveluApiV1AineistoMassapoistoPostRequest {
     'oidit': Set<string>;
 }
+export interface AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest {
+    'multipart-upload-id': string;
+}
+export interface AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest {
+    'multipart-upload-id': string;
+    'osa-numero': number;
+    'sisallon-pituus'?: number;
+}
+export interface AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest {
+    'multipart-upload-id': string;
+    'osat': Array<object>;
+}
 export interface AineistopalveluApiV1AineistoOidVektorlinkkiGet200Response {
     'vektorlinkki': string | null;
+}
+export interface AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest {
+    'multipart-upload-id': string;
+    'operaatio-oid': string;
+}
+export interface AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest {
+    'multipart-upload-id': string;
+    'operaatio-oid': string;
+    'osa-numero': number;
+    'sisallon-pituus'?: number;
+}
+export interface AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest {
+    'multipart-upload-id': string;
+    'operaatio-oid': string;
+    'osat': Array<object>;
 }
 export interface AineistopalveluApiV1LatauspakettiPost200Response {
     'paketti-oid': string;
@@ -902,8 +929,8 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -935,8 +962,6 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -971,9 +996,8 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -996,7 +1020,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDelete', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1009,7 +1033,6 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1031,7 +1054,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1047,8 +1070,8 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['hae-poistetut'] = haePoistetut;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1072,7 +1095,7 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'aineistoPaivitystiedot' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidPut', 'aineistoPaivitystiedot', aineistoPaivitystiedot)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1084,9 +1107,8 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -1120,8 +1142,6 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1156,8 +1176,6 @@ export const AineistoApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1492,8 +1510,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'tiedosto' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDokumentinLahetyssivuTiedostoGet', 'tiedosto', tiedosto)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentin-lahetyssivu/{tiedosto}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"tiedosto"}}`, encodeURIComponent(String(tiedosto)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1506,7 +1524,6 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1530,8 +1547,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'tiedosto' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet', 'tiedosto', tiedosto)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentin-lahetystiedot/{tiedosto}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"tiedosto"}}`, encodeURIComponent(String(tiedosto)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1544,10 +1561,172 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Keskeyttää keskeneräisen multipart-latauksen S3:ssä.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost: async (oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost', 'tiedosto', tiedosto)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentin-multipart-lataus/{tiedosto}/keskeytys`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa presigned URLin yhdelle multipart-latauksen osalle (HTTP PUT sivuun).
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost: async (oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost', 'tiedosto', tiedosto)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentin-multipart-lataus/{tiedosto}/osa`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Aloittaa dokumentin multipart-latauksen S3:een (suurille tiedostoille).                             Palauttaa multipart-upload-id:n. Seuraavaksi haetaan osakohtaiset presigned PUT-urlit                             polusta .../osa ja viimeistellään polusta .../valmis.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost: async (oid: string, tiedosto: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost', 'tiedosto', tiedosto)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentin-multipart-lataus/{tiedosto}`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Viimeistelee multipart-latauksen annetuilla osien ETag-arvoilla.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost: async (oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost', 'tiedosto', tiedosto)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentin-multipart-lataus/{tiedosto}/valmis`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1567,7 +1746,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidDokumenttiGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/dokumentti`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1588,7 +1767,6 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             }
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1612,8 +1790,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'kohdeOid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidLinkitKohdeOidDelete', 'kohdeOid', kohdeOid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/linkit/{kohde-oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"kohde-oid"}}`, encodeURIComponent(String(kohdeOid)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{kohde-oid}', encodeURIComponent(String(kohdeOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1625,8 +1803,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1650,8 +1828,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'kohdeOid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidLinkitKohdeOidPost', 'kohdeOid', kohdeOid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/linkit/{kohde-oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"kohde-oid"}}`, encodeURIComponent(String(kohdeOid)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{kohde-oid}', encodeURIComponent(String(kohdeOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1663,8 +1841,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1685,7 +1863,7 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1AineistoOidVektorlinkkiGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/aineisto/{oid}/vektorlinkki`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1697,8 +1875,8 @@ export const DokumenttiApiAxiosParamCreator = function (configuration?: Configur
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -1743,6 +1921,65 @@ export const DokumenttiApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet(oid, tiedosto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinLahetystiedotTiedostoGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Keskeyttää keskeneräisen multipart-latauksen S3:ssä.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa presigned URLin yhdelle multipart-latauksen osalle (HTTP PUT sivuun).
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Aloittaa dokumentin multipart-latauksen S3:een (suurille tiedostoille).                             Palauttaa multipart-upload-id:n. Seuraavaksi haetaan osakohtaiset presigned PUT-urlit                             polusta .../osa ja viimeistellään polusta .../valmis.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost(oid, tiedosto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Viimeistelee multipart-latauksen annetuilla osien ETag-arvoilla.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DokumenttiApi.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1834,6 +2071,53 @@ export const DokumenttiApiFactory = function (configuration?: Configuration, bas
         },
         /**
          * 
+         * @summary Keskeyttää keskeneräisen multipart-latauksen S3:ssä.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa presigned URLin yhdelle multipart-latauksen osalle (HTTP PUT sivuun).
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Aloittaa dokumentin multipart-latauksen S3:een (suurille tiedostoille).                             Palauttaa multipart-upload-id:n. Seuraavaksi haetaan osakohtaiset presigned PUT-urlit                             polusta .../osa ja viimeistellään polusta .../valmis.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost(oid: string, tiedosto: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost(oid, tiedosto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Viimeistelee multipart-latauksen annetuilla osien ETag-arvoilla.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Tekee redirectin annetun aineiston annettuun dokumenttiin (ja tarvittaessa tiettyyn versioon)
          * @param {string} oid 
          * @param {string} [versio] 
@@ -1909,6 +2193,57 @@ export class DokumenttiApi extends BaseAPI {
 
     /**
      * 
+     * @summary Keskeyttää keskeneräisen multipart-latauksen S3:ssä.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPostRequest, options?: RawAxiosRequestConfig) {
+        return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoKeskeytysPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa presigned URLin yhdelle multipart-latauksen osalle (HTTP PUT sivuun).
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPostRequest, options?: RawAxiosRequestConfig) {
+        return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoOsaPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Aloittaa dokumentin multipart-latauksen S3:een (suurille tiedostoille).                             Palauttaa multipart-upload-id:n. Seuraavaksi haetaan osakohtaiset presigned PUT-urlit                             polusta .../osa ja viimeistellään polusta .../valmis.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost(oid: string, tiedosto: string, options?: RawAxiosRequestConfig) {
+        return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoPost(oid, tiedosto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Viimeistelee multipart-latauksen annetuilla osien ETag-arvoilla.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost(oid: string, tiedosto: string, body: AineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPostRequest, options?: RawAxiosRequestConfig) {
+        return DokumenttiApiFp(this.configuration).aineistopalveluApiV1AineistoOidDokumentinMultipartLatausTiedostoValmisPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Tekee redirectin annetun aineiston annettuun dokumenttiin (ja tarvittaessa tiettyyn versioon)
      * @param {string} oid 
      * @param {string} [versio] 
@@ -1965,7 +2300,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
-         * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).
+         * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).                          Aineisto palautuu vain, jos sen dokumentti on valmis. Keskeneräisestä                          aineistosta palautuu 404.
          * @param {string} oid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1974,7 +2309,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1987,7 +2322,6 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2011,8 +2345,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'tiedosto' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoGet', 'tiedosto', tiedosto)
             const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-lahetystiedot/{tiedosto}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"tiedosto"}}`, encodeURIComponent(String(tiedosto)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2025,7 +2359,6 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2050,8 +2383,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'tiedosto' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost', 'tiedosto', tiedosto)
             const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-lahetystiedot/{tiedosto}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"tiedosto"}}`, encodeURIComponent(String(tiedosto)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2063,8 +2396,172 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
-    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Keskeyttää keskeneräisen zip-multipart-latauksen S3:ssä.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost: async (oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost', 'tiedosto', tiedosto)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-multipart-lataus/{tiedosto}/keskeytys`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Palauttaa presigned PUT-URLin yhdelle zip-multipart-latauksen osalle.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost: async (oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost', 'tiedosto', tiedosto)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-multipart-lataus/{tiedosto}/osa`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Aloittaa purettavan zip-paketin multipart-latauksen S3:een (aineisto-zip-upload-bucket).                            Vastaus sisältää :operaatio-oid ja :file kuten kansion-lahetystiedot; seuraavaksi /osa ja /valmis.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {object | null} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost: async (oid: string, tiedosto: string, body?: object | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost', 'tiedosto', tiedosto)
+            const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-multipart-lataus/{tiedosto}`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Viimeistelee zip-paketin multipart-latauksen.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost: async (oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'oid' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost', 'oid', oid)
+            // verify required parameter 'tiedosto' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost', 'tiedosto', tiedosto)
+            // verify required parameter 'body' is not null or undefined
+            assertParamExists('aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost', 'body', body)
+            const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kansion-multipart-lataus/{tiedosto}/valmis`
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{tiedosto}', encodeURIComponent(String(tiedosto)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2088,7 +2585,7 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1KohdeOidKaynnissaOlevatOperaatiotGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/kohde/{oid}/kaynnissa-olevat-operaatiot`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2100,8 +2597,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2133,9 +2630,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2163,8 +2659,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'kohdeluokka' is not null or undefined
             assertParamExists('aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaGet', 'kohdeluokka', kohdeluokka)
             const localVarPath = `/aineistopalvelu/api/v1/tunnisteet/{nimiavaruus}/{kohdeluokka}`
-                .replace(`{${"nimiavaruus"}}`, encodeURIComponent(String(nimiavaruus)))
-                .replace(`{${"kohdeluokka"}}`, encodeURIComponent(String(kohdeluokka)));
+                .replace('{nimiavaruus}', encodeURIComponent(String(nimiavaruus)))
+                .replace('{kohdeluokka}', encodeURIComponent(String(kohdeluokka)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2188,8 +2684,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
                     loppumuokkausaika;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2215,8 +2711,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'kohdeluokka' is not null or undefined
             assertParamExists('aineistopalveluApiV1TunnisteetNimiavaruusKohdeluokkaPoistetutGet', 'kohdeluokka', kohdeluokka)
             const localVarPath = `/aineistopalvelu/api/v1/tunnisteet/{nimiavaruus}/{kohdeluokka}/poistetut`
-                .replace(`{${"nimiavaruus"}}`, encodeURIComponent(String(nimiavaruus)))
-                .replace(`{${"kohdeluokka"}}`, encodeURIComponent(String(kohdeluokka)));
+                .replace('{nimiavaruus}', encodeURIComponent(String(nimiavaruus)))
+                .replace('{kohdeluokka}', encodeURIComponent(String(kohdeluokka)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2240,8 +2736,8 @@ export const KohdeApiAxiosParamCreator = function (configuration?: Configuration
                     loppumuokkausaika;
             }
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2262,7 +2758,7 @@ export const KohdeApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).
+         * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).                          Aineisto palautuu vain, jos sen dokumentti on valmis. Keskeneräisestä                          aineistosta palautuu 404.
          * @param {string} oid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2300,6 +2796,66 @@ export const KohdeApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid, tiedosto, body, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Keskeyttää keskeneräisen zip-multipart-latauksen S3:ssä.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Palauttaa presigned PUT-URLin yhdelle zip-multipart-latauksen osalle.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Aloittaa purettavan zip-paketin multipart-latauksen S3:een (aineisto-zip-upload-bucket).                            Vastaus sisältää :operaatio-oid ja :file kuten kansion-lahetystiedot; seuraavaksi /osa ja /valmis.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {object | null} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Viimeistelee zip-paketin multipart-latauksen.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost(oid, tiedosto, body, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['KohdeApi.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2371,7 +2927,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
-         * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).
+         * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).                          Aineisto palautuu vain, jos sen dokumentti on valmis. Keskeneräisestä                          aineistosta palautuu 404.
          * @param {string} oid 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2401,6 +2957,54 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
          */
         aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Keskeyttää keskeneräisen zip-multipart-latauksen S3:ssä.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Palauttaa presigned PUT-URLin yhdelle zip-multipart-latauksen osalle.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Aloittaa purettavan zip-paketin multipart-latauksen S3:een (aineisto-zip-upload-bucket).                            Vastaus sisältää :operaatio-oid ja :file kuten kansion-lahetystiedot; seuraavaksi /osa ja /valmis.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {object | null} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Viimeistelee zip-paketin multipart-latauksen.
+         * @param {string} oid 
+         * @param {string} tiedosto 
+         * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost(oid, tiedosto, body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2457,7 +3061,7 @@ export const KohdeApiFactory = function (configuration?: Configuration, basePath
 export class KohdeApi extends BaseAPI {
     /**
      * 
-     * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).
+     * @summary Palauttaa OID:n mukaisen kohdeluokan instanssin (aineiston tai viittauksen).                          Aineisto palautuu vain, jos sen dokumentti on valmis. Keskeneräisestä                          aineistosta palautuu 404.
      * @param {string} oid 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -2489,6 +3093,58 @@ export class KohdeApi extends BaseAPI {
      */
     public aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig) {
         return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionLahetystiedotTiedostoPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Keskeyttää keskeneräisen zip-multipart-latauksen S3:ssä.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPostRequest, options?: RawAxiosRequestConfig) {
+        return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoKeskeytysPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Palauttaa presigned PUT-URLin yhdelle zip-multipart-latauksen osalle.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPostRequest, options?: RawAxiosRequestConfig) {
+        return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoOsaPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Aloittaa purettavan zip-paketin multipart-latauksen S3:een (aineisto-zip-upload-bucket).                            Vastaus sisältää :operaatio-oid ja :file kuten kansion-lahetystiedot; seuraavaksi /osa ja /valmis.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {object | null} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost(oid: string, tiedosto: string, body?: object | null, options?: RawAxiosRequestConfig) {
+        return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Viimeistelee zip-paketin multipart-latauksen.
+     * @param {string} oid 
+     * @param {string} tiedosto 
+     * @param {AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost(oid: string, tiedosto: string, body: AineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPostRequest, options?: RawAxiosRequestConfig) {
+        return KohdeApiFp(this.configuration).aineistopalveluApiV1KohdeOidKansionMultipartLatausTiedostoValmisPost(oid, tiedosto, body, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2560,7 +3216,7 @@ export const LatauspakettiApiAxiosParamCreator = function (configuration?: Confi
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1LatauspakettiOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/latauspaketti/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2573,7 +3229,6 @@ export const LatauspakettiApiAxiosParamCreator = function (configuration?: Confi
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2605,9 +3260,8 @@ export const LatauspakettiApiAxiosParamCreator = function (configuration?: Confi
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2742,9 +3396,8 @@ export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Co
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -2775,8 +3428,8 @@ export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Co
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2797,7 +3450,7 @@ export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Co
             // verify required parameter 'projectId' is not null or undefined
             assertParamExists('aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFolderlistGet', 'projectId', projectId)
             const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/projects/{project-id}/folderlist`
-                .replace(`{${"project-id"}}`, encodeURIComponent(String(projectId)));
+                .replace('{project-id}', encodeURIComponent(String(projectId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2809,8 +3462,8 @@ export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Co
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -2834,8 +3487,8 @@ export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Co
             // verify required parameter 'folderId' is not null or undefined
             assertParamExists('aineistopalveluApiV1ProjektiportaaliProjectsProjectIdFoldersFolderIdDocumentsGet', 'folderId', folderId)
             const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/projects/{project-id}/folders/{folder-id}/documents`
-                .replace(`{${"project-id"}}`, encodeURIComponent(String(projectId)))
-                .replace(`{${"folder-id"}}`, encodeURIComponent(String(folderId)));
+                .replace('{project-id}', encodeURIComponent(String(projectId)))
+                .replace('{folder-id}', encodeURIComponent(String(folderId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2847,8 +3500,8 @@ export const ProjektiportaaliApiAxiosParamCreator = function (configuration?: Co
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3049,9 +3702,8 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3074,7 +3726,7 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             // verify required parameter 'integraatioId' is not null or undefined
             assertParamExists('aineistopalveluApiV1ProjektiportaaliIntegraatioIntegraatioIdDelete', 'integraatioId', integraatioId)
             const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/integraatio/{integraatio-id}`
-                .replace(`{${"integraatio-id"}}`, encodeURIComponent(String(integraatioId)));
+                .replace('{integraatio-id}', encodeURIComponent(String(integraatioId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3087,7 +3739,6 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3119,9 +3770,8 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3144,7 +3794,7 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidIntegraatioGet', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/toimeksianto/{toimeksianto-oid}/integraatio`
-                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+                .replace('{toimeksianto-oid}', encodeURIComponent(String(toimeksiantoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3156,8 +3806,8 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3178,7 +3828,7 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             // verify required parameter 'toimeksiantoOid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ProjektiportaaliToimeksiantoToimeksiantoOidRetryPost', 'toimeksiantoOid', toimeksiantoOid)
             const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/toimeksianto/{toimeksianto-oid}/retry`
-                .replace(`{${"toimeksianto-oid"}}`, encodeURIComponent(String(toimeksiantoOid)));
+                .replace('{toimeksianto-oid}', encodeURIComponent(String(toimeksiantoOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3190,8 +3840,8 @@ export const ProjektiportaaliIntegraatioApiAxiosParamCreator = function (configu
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3415,7 +4065,7 @@ export const ProjektiportaaliSynkronointiApiAxiosParamCreator = function (config
             // verify required parameter 'suoritusId' is not null or undefined
             assertParamExists('aineistopalveluApiV1ProjektiportaaliSynkronointiSuoritusSuoritusIdEdistyminenGet', 'suoritusId', suoritusId)
             const localVarPath = `/aineistopalvelu/api/v1/projektiportaali/synkronointi/suoritus/{suoritus-id}/edistyminen`
-                .replace(`{${"suoritus-id"}}`, encodeURIComponent(String(suoritusId)));
+                .replace('{suoritus-id}', encodeURIComponent(String(suoritusId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3427,8 +4077,8 @@ export const ProjektiportaaliSynkronointiApiAxiosParamCreator = function (config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3524,8 +4174,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3546,7 +4196,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidDelete', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3559,7 +4209,6 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarQueryParameter = {} as any;
 
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3580,7 +4229,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'oid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidGet', 'oid', oid)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3592,8 +4241,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3617,8 +4266,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'kohdeOid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidLinkitKohdeOidDelete', 'kohdeOid', kohdeOid)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}/linkit/{kohde-oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"kohde-oid"}}`, encodeURIComponent(String(kohdeOid)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{kohde-oid}', encodeURIComponent(String(kohdeOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3630,8 +4279,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3655,8 +4304,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'kohdeOid' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidLinkitKohdeOidPost', 'kohdeOid', kohdeOid)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}/linkit/{kohde-oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)))
-                .replace(`{${"kohde-oid"}}`, encodeURIComponent(String(kohdeOid)));
+                .replace('{oid}', encodeURIComponent(String(oid)))
+                .replace('{kohde-oid}', encodeURIComponent(String(kohdeOid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3668,8 +4317,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            localVarHeaderParameter['Accept'] = 'application/json';
 
-    
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
@@ -3693,7 +4342,7 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             // verify required parameter 'viittausPaivitystiedot' is not null or undefined
             assertParamExists('aineistopalveluApiV1ViittausOidPut', 'viittausPaivitystiedot', viittausPaivitystiedot)
             const localVarPath = `/aineistopalvelu/api/v1/viittaus/{oid}`
-                .replace(`{${"oid"}}`, encodeURIComponent(String(oid)));
+                .replace('{oid}', encodeURIComponent(String(oid)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -3705,9 +4354,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -3741,9 +4389,8 @@ export const ViittausApiAxiosParamCreator = function (configuration?: Configurat
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-
-    
             localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};

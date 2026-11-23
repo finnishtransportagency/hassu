@@ -1,9 +1,11 @@
 {
   "suunnitteluhankkeen_yhteystiedot": "Kontaktpersoner för planeringsprojektet",
+  "hankkeen_yhteystiedot": "Kontaktpersoner för projektet",
   "hankesivut_otsikko": "Projektsidor",
   "lue_hankesivulta": "Mer information om planen finns på projektets webbsida.",
   "siirry_hankesivulle": "Gå till projektsidorna",
   "suunnitelma_kartalla": "Planera på kartan",
+  "suunnitelma-alue_kartalla": "Planområde på kartan",
   "tutustu-videoiden-avulla-TIE": "Bekanta dig med vägplanering",
   "tutustu-videoiden-avulla-RATA": "Bekanta dig med järnvägsplanering",
   "tutustu-videoiden-avulla-YLEINEN": "Bekanta dig med utredningsplanering"

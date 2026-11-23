@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import Section from "@components/layout/Section2";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import React, { useCallback } from "react";
@@ -48,8 +49,8 @@ export default function KuulutusJaJulkaisuPaiva({ isToiminnallinen }: { isToimin
           paiva
         );
       } catch (error) {
-        showErrorMessage("Muistutuspäivän laskennassa tapahtui virhe");
-        log.error("Muistutuspäivän laskennassa virhe", error);
+        showErrorMessage(isToiminnallinen ? "Mielipidepäivän laskennassa tapahtui virhe" : "Muistutuspäivän laskennassa tapahtui virhe");
+        log.error(isToiminnallinen ? "Mielipidepäivän laskennassa virhe" : "Muistutuspäivän laskennassa virhe", error);
       }
     },
     [api, isToiminnallinen, setValue, showErrorMessage]

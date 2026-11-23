@@ -106,7 +106,7 @@ export class HassuAccountStack extends Stack {
         LayerVersion.fromLayerVersionArn(
           this,
           "paramLayer",
-          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:118"
+          "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension:176"
         ),
       ],
       logRetention: RetentionDays.SEVEN_YEARS,
