@@ -36,6 +36,7 @@ export type DBOmistaja = {
   jakeluosoite?: string | null;
   postinumero?: string | null;
   paikkakunta?: string | null;
+  tiekuntaKunta?: string | null;
   maakoodi?: string | null;
   expires?: number;
   kaytossa: boolean;
