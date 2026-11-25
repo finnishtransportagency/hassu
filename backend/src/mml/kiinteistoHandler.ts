@@ -7,6 +7,11 @@ import { parameters } from "../aws/parameters";
 import { getVaylaUser, identifyMockUser, requirePermissionMuokkaa } from "../user/userService";
 import { getDynamoDBDocumentClient } from "../aws/client";
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { getS3Client } from "../aws/client";
+import { Readable } from "stream";
+import { streamToBuffer } from "../util/streamUtil";
+import proj4 from "proj4";
 import {
   HaeKiinteistonOmistajatQueryVariables,
   KiinteistonOmistajat,
@@ -31,6 +36,37 @@ import { omistajaSearchService } from "../projektiSearch/omistajaSearch/omistaja
 import { adaptOmistajahakuTila } from "../projekti/adapter/adaptToAPI/adaptOmistajahakuTila";
 import { createPrhClient, PrhClient } from "./prh/prh";
 import { adaptOmistajaToIndex } from "../projektiSearch/omistajaSearch/kiinteistonomistajaSearchAdapter";
+
+proj4.defs("EPSG:3067", "+proj=utm +zone=35 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs");
+const etrs2wgs = proj4("EPSG:3067", "WGS84");
+
+async function laskeBbox(oid: string): Promise<number[]> {
+  const s3Key = new ProjektiPaths(oid).yllapitoFullPath + "/karttarajaus/karttarajaus.geojson";
+  const { Body } = await getS3Client().send(new GetObjectCommand({ Bucket: config.yllapitoBucketName, Key: s3Key }));
+  if (!(Body instanceof Readable)) throw new Error("Karttarajauksen lukeminen epäonnistui");
+  const buffer = await streamToBuffer(Body);
+  const geojson = JSON.parse(buffer.toString("utf-8"));
+  let minLon = Infinity,
+    minLat = Infinity,
+    maxLon = -Infinity,
+    maxLat = -Infinity;
+  function processCoords(coords: unknown): void {
+    if (Array.isArray(coords) && typeof coords[0] === "number") {
+      const [wgsLon, wgsLat] = etrs2wgs.forward(coords as number[]);
+      if (wgsLon < minLon) minLon = wgsLon;
+      if (wgsLat < minLat) minLat = wgsLat;
+      if (wgsLon > maxLon) maxLon = wgsLon;
+      if (wgsLat > maxLat) maxLat = wgsLat;
+    } else if (Array.isArray(coords)) {
+      coords.forEach(processCoords);
+    }
+  }
+  const features = geojson.features ?? (geojson.type === "Feature" ? [geojson] : [{ geometry: geojson }]);
+  for (const feat of features) {
+    if (feat.geometry?.coordinates) processCoords(feat.geometry.coordinates);
+  }
+  return [minLon, minLat, maxLon, maxLat];
+}
 
 export type OmistajaHakuEvent = {
   oid: string;
@@ -129,17 +165,43 @@ const handlerFactory = (event: SQSEvent) => async () => {
         auditLog.info("Haettu lainhuutotiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
         const yhteystiedot = await client.haeYhteystiedot(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
         auditLog.info("Haettu yhteystiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
-        const tiekunnat = await client.haeTiekunnat(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
-        auditLog.info("Haettu tiekuntatiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const bbox = await laskeBbox(hakuEvent.oid);
+        const tiekunnat = await client.haeTiekunnat(bbox, hakuEvent.uid);
+        auditLog.info("Haettu tiekuntatiedot bbox:llä", { bbox });
+        const rantakunnat = await client.haeRantakunnat(bbox, hakuEvent.uid);
+        auditLog.info("Haettu rantakuntatiedot bbox:llä", { bbox });
+        const yhteisalueetTunnukset = await client.haeYhteisalueet(hakuEvent.kiinteistotunnukset, hakuEvent.uid);
+        auditLog.info("Haettu yhteisaluetiedot kiinteistöille", { kiinteistotunnukset: hakuEvent.kiinteistotunnukset });
+        const uudetYhteisalueTunnukset = yhteisalueetTunnukset
+          .map((k) => k.kiinteistotunnus)
+          .filter((t): t is string => !!t && !hakuEvent.kiinteistotunnukset.includes(t));
+        const [yhteisalueLainhuutotiedot, yhteisalueYhteystiedot] = uudetYhteisalueTunnukset.length
+          ? await Promise.all([
+              client.haeLainhuutotiedot(uudetYhteisalueTunnukset, hakuEvent.uid),
+              client.haeYhteystiedot(uudetYhteisalueTunnukset, hakuEvent.uid),
+            ])
+          : [[], []];
+        auditLog.info("Haettu yhteisalueiden omistajatiedot", { tunnukset: uudetYhteisalueTunnukset });
+        const maaraalat = await client.haeMaaraalat(bbox, hakuEvent.uid, undefined, hakuEvent.kiinteistotunnukset);
+        auditLog.info("Haettu määräalatiedot bbox:llä", { bbox });
         let kiinteistoOmistajaCount = 0;
         kiinteistot.forEach((k) => (kiinteistoOmistajaCount = kiinteistoOmistajaCount + k.omistajat.length));
         let yhteystietoOmistajaCount = 0;
         yhteystiedot.forEach((k) => (yhteystietoOmistajaCount = yhteystietoOmistajaCount + k.omistajat.length));
         let tiekuntaOmistajaCount = 0;
         tiekunnat.forEach((k) => (tiekuntaOmistajaCount = tiekuntaOmistajaCount + k.omistajat.length));
+        let rantakuntaOmistajaCount = 0;
+        rantakunnat.forEach((k) => (rantakuntaOmistajaCount = rantakuntaOmistajaCount + k.omistajat.length));
+        let yhteisalueOmistajaCount = 0;
+        yhteisalueLainhuutotiedot.forEach((k) => (yhteisalueOmistajaCount = yhteisalueOmistajaCount + k.omistajat.length));
+        let maaralaOmistajaCount = 0;
+        maaraalat.forEach((k) => (maaralaOmistajaCount = maaralaOmistajaCount + k.omistajat.length));
         log.info("Vastauksena saatiin " + kiinteistot.length + " kiinteistö(ä) ja " + kiinteistoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + yhteystiedot.length + " yhteystieto(a) ja " + yhteystietoOmistajaCount + " omistaja(a)");
         log.info("Vastauksena saatiin " + tiekunnat.length + " tiekunta(a) ja " + tiekuntaOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + rantakunnat.length + " rantakunta(a) ja " + rantakuntaOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + yhteisalueetTunnukset.length + " yhteisalue(tta) ja " + yhteisalueOmistajaCount + " omistaja(a)");
+        log.info("Vastauksena saatiin " + maaraalat.length + " määräala(a) ja " + maaralaOmistajaCount + " omistaja(a)");
         await updatePRHAddress(yhteystiedot, hakuEvent.uid);
         const aiemmatOmistajat = await omistajaDatabase.haeProjektinKaytossaolevatOmistajat(hakuEvent.oid);
         const oldOmistajaMap = new Map<string, DBOmistaja>(
@@ -153,7 +215,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
         let keys: string[] = [];
         const lisatty = nyt().format(FULL_DATE_TIME_FORMAT_WITH_TZ);
         const expires = getExpires();
-        yhteystiedot.push(...tiekunnat);
+        yhteystiedot.push(...tiekunnat, ...rantakunnat, ...yhteisalueLainhuutotiedot, ...yhteisalueYhteystiedot, ...maaraalat);
         yhteystiedot.forEach((k) => {
           k.omistajat.forEach((o) => {
             const osoitetiedotSaatu = !!(o.yhteystiedot?.jakeluosoite || o.yhteystiedot?.postinumero || o.yhteystiedot?.paikkakunta);
@@ -174,6 +236,7 @@ const handlerFactory = (event: SQSEvent) => async () => {
               osoitetiedotSaatu,
               kaytossa: true,
               expires,
+              tiekuntaKunta: o.tiekuntaKunta,
             };
             omistaja.suomifiLahetys = isSuomifiLahetys(omistaja);
             omistajaMap.set(
