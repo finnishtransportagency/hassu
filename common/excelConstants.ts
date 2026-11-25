@@ -27,6 +27,8 @@ export const TIEDOTETTAVA_EXCEL_HEADERS = {
   postiosoite: "Postiosoite",
   postinumero: "Postinumero",
   postitoimipaikka: "Postitoimipaikka",
+  tiekuntaKunta: "Tiekunnan kunta",
+  kayttooikeusyksikkotunnus: "Käyttöoikeusyksikkötunnus",
   maa: "Maa",
   tiedotHaettu: "Tiedot haettu",
   tiedotustapa: "Tiedotustapa",

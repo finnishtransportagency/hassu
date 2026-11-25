@@ -55,7 +55,17 @@ function getMuistuttajaColumnsWithLahetysaika(): Columns {
 }
 
 function getKiinteistonomistajaColumns(): Columns {
-  return [{ width: 20 }, { width: 30 }, { width: 30 }, { width: 15 }, { width: 20 }, { width: 20 }, { width: 25 }, { width: 15 }];
+  return [
+    { width: 20 },
+    { width: 30 },
+    { width: 30 },
+    { width: 15 },
+    { width: 20 },
+    { width: 25 },
+    { width: 20 },
+    { width: 25 },
+    { width: 15 },
+  ];
 }
 
 function getKiinteistonomistajaColumnsWithLahetysaika(): Columns {
@@ -126,6 +136,12 @@ function lisaaRivi(rivi: Rivi): Row {
       value: rivi.postitoimipaikka,
     },
     {
+      value: rivi.tiekuntaKunta,
+    },
+    {
+      value: rivi.kayttooikeusyksikkotunnus,
+    },
+    {
       value: rivi.maa,
     },
     {
@@ -153,6 +169,12 @@ function lisaaOtsikko(): { value: string }[] {
     },
     {
       value: TIEDOTETTAVA_EXCEL_HEADERS.postitoimipaikka,
+    },
+    {
+      value: TIEDOTETTAVA_EXCEL_HEADERS.tiekuntaKunta,
+    },
+    {
+      value: TIEDOTETTAVA_EXCEL_HEADERS.kayttooikeusyksikkotunnus,
     },
     {
       value: TIEDOTETTAVA_EXCEL_HEADERS.maa,
@@ -213,6 +235,8 @@ type Rivi = {
   postiosoite: string;
   postinumero: string;
   postitoimipaikka: string;
+  tiekuntaKunta: string;
+  kayttooikeusyksikkotunnus: string;
   maa: string;
   haettu: string;
   tiedotustapa: string;
@@ -259,6 +283,8 @@ async function haeOmistajat(oid: string): Promise<Rivi[]> {
         postiosoite: o.jakeluosoite ?? "",
         postinumero: o.postinumero ?? "",
         postitoimipaikka: o.paikkakunta ?? "",
+        tiekuntaKunta: o.tiekuntaKunta ?? "",
+        kayttooikeusyksikkotunnus: o.kayttooikeusyksikkotunnus ?? "",
         maa: o.maakoodi ? getLocalizedCountryName("fi", o.maakoodi) : "",
         haettu: o.paivitetty ?? o.lisatty,
         tiedotustapa: getTiedotustapa(o.suomifiLahetys, o.lahetykset),
@@ -279,9 +305,13 @@ async function haeMuistuttajat(oid: string): Promise<Rivi[]> {
         postiosoite: m.lahiosoite ?? "",
         postinumero: m.postinumero ?? "",
         postitoimipaikka: m.postitoimipaikka ?? "",
+        tiekuntaKunta: "",
+        kayttooikeusyksikkotunnus: "",
         maa: m.maakoodi ? getLocalizedCountryName("fi", m.maakoodi) : "",
         haettu: m.paivitetty ?? m.lisatty,
-        tiedotustapa: m.suomifiLahetys ? getTiedotustapa(m.suomifiLahetys, m.lahetykset) : (m.tiedotustapa || TIEDOTUSTAPA_TEKSTIT.eiTiedossa),
+        tiedotustapa: m.suomifiLahetys
+          ? getTiedotustapa(m.suomifiLahetys, m.lahetykset)
+          : m.tiedotustapa || TIEDOTUSTAPA_TEKSTIT.eiTiedossa,
         suomifiLahetys: !!m.henkilotunnus,
         lahetysaika: getLahetysaika(m.lahetykset),
         sahkoposti: m.sahkoposti ?? undefined,
