@@ -22,6 +22,8 @@ import { parameters } from "../../src/aws/parameters";
 import sinon from "sinon";
 import MockDate from "mockdate";
 import { PrhClient } from "../../src/mml/prh/prh";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { Readable } from "stream";
 
 const mockMmlClient: MmlClient = {
   haeLainhuutotiedot: () => {
@@ -131,6 +133,22 @@ const mockMmlClient: MmlClient = {
   haeTiekunnat: () => {
     return Promise.resolve([]);
   },
+  haeRantakunnat: () => {
+    return Promise.resolve([
+      {
+        kayttooikeusyksikkotunnus: "876-1-1-1",
+        omistajat: [
+          {
+            nimi: "Rantakunta-yhteyshenkilö (Testijärven yhteisalue)",
+            yhteystiedot: { jakeluosoite: "Rantakatu 1", postinumero: "12345", paikkakunta: "Testikylä", maakoodi: "FI" },
+          },
+        ],
+      },
+    ]);
+  },
+  haeMaaraalat: () => {
+    return Promise.resolve([]);
+  },
   haeYhteisalueet: () => {
     return Promise.resolve([]);
   },
@@ -167,18 +185,43 @@ describe("kiinteistoHandler", () => {
   beforeEach(() => {
     setLogContextOid("1");
     identifyMockUser({ etunimi: "", sukunimi: "", uid: "testuid", __typename: "NykyinenKayttaja" });
+    const geojsonBuffer = Buffer.from(
+      JSON.stringify({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [25.0, 61.0],
+                  [25.1, 61.0],
+                  [25.1, 61.1],
+                  [25.0, 61.1],
+                  [25.0, 61.0],
+                ],
+              ],
+            },
+            properties: {},
+          },
+        ],
+      })
+    );
+    const s3Mock = mockClient(S3Client as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
+    s3Mock.on(GetObjectCommand as any).resolves({ Body: Readable.from(geojsonBuffer) } as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
   });
 
   it("tallenna kiinteistön omistajat", async () => {
     const event: OmistajaHakuEvent = { oid: "1.2.3", uid: "test", kiinteistotunnukset: ["1", "2", "3", "4", "5"] };
     const record: SQSRecord = { body: JSON.stringify(event) } as unknown as SQSRecord;
     const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
-    await handleEvent({ Records: [record] });
     dbMock.on(TransactWriteCommand as any).resolves({});
+    await handleEvent({ Records: [record] });
     expect(dbMock.commandCalls(TransactWriteCommand as any).length).to.be.equal(1);
     const writeCommand = dbMock.commandCalls(TransactWriteCommand as any)[0];
     assert(writeCommand.args[0].input.TransactItems);
-    expect(writeCommand.args[0].input.TransactItems.length).to.be.equal(6);
+    expect(writeCommand.args[0].input.TransactItems.length).to.be.equal(7);
     expect(dbMock.commandCalls(UpdateCommand as any).length).to.be.equal(2);
     const updateCommand = dbMock.commandCalls(UpdateCommand as any)[0];
     const updateCommand2 = dbMock.commandCalls(UpdateCommand as any)[1];
@@ -274,7 +317,7 @@ describe("kiinteistoHandler", () => {
   });
 
   it("heittää virhettä olemattoman omistajan poistamisesta", async () => {
-    const dbMock = mockClient(DynamoDBDocumentClient as any);  // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
+    const dbMock = mockClient(DynamoDBDocumentClient as any); // aws-sdk-client-mock@4.1.0 type incompatibility with @smithy/types@4.x
     const omistajaIdt = ["11", "22"];
     const muutOmistajaIdt = ["33", "44"];
     dbMock.on(GetCommand as any, { TableName: config.projektiTableName }).resolves({
