@@ -46,9 +46,6 @@ export abstract class SuunnittelunAloitusPdf extends CommonPdf<
       case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
         kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter(params as NahtavillaoloVaiheKutsuAdapterProps);
         break;
-      case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE:
-        kutsuAdapter = new NahtavillaoloVaiheKutsuAdapter(params as NahtavillaoloVaiheKutsuAdapterProps);
-        break;
       case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA:
       case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA:
       case AsiakirjaTyyppi.ILMOITUS_JATKOPAATOSKUULUTUKSESTA2:

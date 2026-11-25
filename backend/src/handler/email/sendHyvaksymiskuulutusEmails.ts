@@ -204,19 +204,21 @@ class HyvaksymisPaatosHyvaksyntaEmailSender extends KuulutusHyvaksyntaEmailSende
       }, Promise.resolve([]));
     const paatosTiedostot = await this.getPaatostiedostotAsAttachments(julkaisu, projekti);
     emailToKunnatPDF.attachments = [...pdft, ...paatosTiedostot];
+    // saveEmailAsFile must be called before sendEmail: MailComposer (saveEmailAsFile) and nodemailer (sendEmail)
+    // both read attachment streams, and a stream can only be read once (nodemailer 10.5.0+)
+    julkaisu.lahetekirje = await saveEmailAsFile(
+      projekti.oid,
+      this.getProjektiPaths(projekti.oid, julkaisu),
+      emailToKunnatPDF,
+      this.getAsiakirjaTyyppi()
+    );
+
     const sentMessageInfo = await emailClient.sendEmail(emailToKunnatPDF);
 
     const aikaleima = localDateTimeString();
     julkaisu.ilmoituksenVastaanottajat?.kunnat?.map((kunta) => examineEmailSentResults(kunta, sentMessageInfo, aikaleima));
     julkaisu.ilmoituksenVastaanottajat?.viranomaiset?.map((viranomainen) =>
       examineEmailSentResults(viranomainen, sentMessageInfo, aikaleima)
-    );
-
-    julkaisu.lahetekirje = await saveEmailAsFile(
-      projekti.oid,
-      this.getProjektiPaths(projekti.oid, julkaisu),
-      emailToKunnatPDF,
-      this.getAsiakirjaTyyppi()
     );
 
     await this.updateProjektiJulkaisut(projekti, julkaisu);

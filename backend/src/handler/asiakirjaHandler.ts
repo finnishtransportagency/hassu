@@ -194,7 +194,6 @@ export async function lataaAsiakirja({ oid, asiakirjaTyyppi, kieli, muutokset }:
         case AsiakirjaTyyppi.NAHTAVILLAOLOKUULUTUS:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE:
         case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE:
-        case AsiakirjaTyyppi.ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE:
           return handleNahtavillaoloKuulutus(projekti, kaytettavaKieli, muutokset, asiakirjaTyyppi);
         case AsiakirjaTyyppi.HYVAKSYMISPAATOSKUULUTUS:
         case AsiakirjaTyyppi.ILMOITUS_HYVAKSYMISPAATOSKUULUTUKSESTA_KUNNALLE_JA_TOISELLE_VIRANOMAISELLE:

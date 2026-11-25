@@ -119,8 +119,9 @@ export default function defaultVastaanottajat(
   const kunnat = buildKuntaRecipients(projekti, ilmoituksenVastaanottajat ?? previous);
   const isToiminnallinen = projekti?.velho?.tyyppi === ProjektiTyyppi.TOIMINNALLINEN;
   const isJatkopaatos = paatosTyyppi === PaatosTyyppi.JATKOPAATOS1 || paatosTyyppi === PaatosTyyppi.JATKOPAATOS2;
+  const isHyvaksymispaatos = paatosTyyppi === PaatosTyyppi.HYVAKSYMISPAATOS;
   const maakunnat =
-    isJatkopaatos || isToiminnallinen ? buildMaakuntaRecipients(projekti, ilmoituksenVastaanottajat) : [];
+    isJatkopaatos || (isHyvaksymispaatos && isToiminnallinen) ? buildMaakuntaRecipients(projekti, ilmoituksenVastaanottajat) : [];
 
   const viranomaiset = buildViranomaisetRecipients(projekti, ilmoituksenVastaanottajat, previous, kirjaamoOsoitteet);
 

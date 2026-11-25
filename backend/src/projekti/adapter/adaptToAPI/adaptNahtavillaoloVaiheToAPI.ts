@@ -166,9 +166,6 @@ function adaptNahtavillaoloPDFPaths(
       nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath: pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath
         ? fileService.getYllapitoPathForProjektiFile(paths, pdfs.nahtavillaoloIlmoitusKiinteistonOmistajallePDFPath)
         : undefined,
-      nahtavillaoloIlmoitusMaakuntaliitoillePDFPath: pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath
-        ? fileService.getYllapitoPathForProjektiFile(paths, pdfs.nahtavillaoloIlmoitusMaakuntaliitoillePDFPath)
-        : undefined,
     };
   }
   return { __typename: "NahtavillaoloPDFt", [API.Kieli.SUOMI]: result[API.Kieli.SUOMI] as API.NahtavillaoloPDF, ...result };

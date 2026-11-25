@@ -32,15 +32,15 @@ const pdfTypeKeys: Partial<Record<AsiakirjaTyyppi, Record<AsiakirjanMuoto, Parti
     RATA: { [ProjektiTyyppi.RATA]: "30R", [ProjektiTyyppi.YLEINEN]: "30YS" },
   },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KUNNILLE_VIRANOMAISELLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T414_1", [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo", [ProjektiTyyppi.TOIMINNALLINEN]: "12TO_nahtavillaolo" },
+    TIE: {
+      [ProjektiTyyppi.TIE]: "T414_1",
+      [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
+      [ProjektiTyyppi.TOIMINNALLINEN]: "12TO_nahtavillaolo",
+    },
     RATA: {
       [ProjektiTyyppi.RATA]: "12R_nahtavillaolo",
       [ProjektiTyyppi.YLEINEN]: "12YS_nahtavillaolo",
     },
-  },
-  ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_MAAKUNTALIITOILLE: {
-    TIE: { [ProjektiTyyppi.TIE]: "T414_2", [ProjektiTyyppi.TOIMINNALLINEN]: "12TO_nahtavillaolo_maakunta" },
-    RATA: { [ProjektiTyyppi.RATA]: "12R_nahtavillaolo_maakunta" },
   },
   ILMOITUS_NAHTAVILLAOLOKUULUTUKSESTA_KIINTEISTOJEN_OMISTAJILLE: {
     TIE: { [ProjektiTyyppi.TIE]: "T415", [ProjektiTyyppi.YLEINEN]: "31YS" },
