@@ -31,7 +31,7 @@ export default function SuunnitelmaLuonnos3D({ kielitiedot }: Props): ReactEleme
         <div className="pb-4 mb-4">
           {toissijainenKaannettavaKieli && (
             <h5 className="vayla-smallest-title">
-              {label({ label: "suunnitelmaluonnos3D", inputLanguage: ensisijainenKaannettavaKieli, kielitiedot })}
+              {label({ label: "Suunnitelmaluonnoksen 3D-näkymä", inputLanguage: ensisijainenKaannettavaKieli, kielitiedot })}
             </h5>
           )}
           <TextInput
