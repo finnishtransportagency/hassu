@@ -23,7 +23,7 @@ import { isStatusGreaterOrEqualTo } from "common/statusOrder";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
-import StyledLink from "@components/StyledLink";
+import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 import { ProjektiTyyppi } from "@services/api";
 
 export default function PaatosPageLayout({ children, paatosTyyppi }: { children?: ReactNode; paatosTyyppi: PaatosTyyppi }) {
@@ -90,9 +90,12 @@ const PaatosOhje: FunctionComponent<{ projekti: ProjektiLisatiedolla; paatosTyyp
             </>
           )}
           <li>
-            Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen esikatselu
-            -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+            Voit hyödyntää lehti-ilmoituksen tilauksessa toimintajärjestelmästä löytyviä lehti-ilmoituksen{" "}
+            <ExternalStyledLink href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af1f0fea-c2c6-4a88-9f0f-eac2c61a88d7/Lehti-ilmoitusten%20mallitekstit.pptx?a=true">
+              mallitekstejä.
+            </ExternalStyledLink>
           </li>
+          <li>Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.</li>
           {projekti.asianhallinta.inaktiivinen && (
             <li>Muistathan viedä kuulutuksen sekä muut järjestelmän luomat asiakirjat asianhallintaan.</li>
           )}

@@ -58,7 +58,7 @@ import defaultVastaanottajat from "src/util/defaultVastaanottajat";
 import useKirjaamoOsoitteet from "src/hooks/useKirjaamoOsoitteet";
 import { H2, H3 } from "../../../../components/Headings";
 import { LiittyvatSuunnitelmat } from "../../../../components/projekti/LiittyvatSuunnitelmat";
-import StyledLink from "@components/StyledLink";
+import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -353,8 +353,10 @@ function AloituskuulutusForm({ projekti, projektiLoadError, reloadProjekti, kirj
                           -sivulta.
                         </li>
                         <li>
-                          Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu Ilmoituksen
-                          esikatselu -painikkeesta.
+                          Voit hyödyntää lehti-ilmoituksen tilauksessa toimintajärjestelmästä löytyviä lehti-ilmoituksen{" "}
+                          <ExternalStyledLink href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af1f0fea-c2c6-4a88-9f0f-eac2c61a88d7/Lehti-ilmoitusten%20mallitekstit.pptx?a=true">
+                            mallitekstejä.
+                          </ExternalStyledLink>
                         </li>
                         <li>Projekti siirtyy kuulutuspäivästä lasketun määräajan jälkeen automaattisesti suunnitteluvaiheeseen.</li>
                         {projekti.asianhallinta.inaktiivinen && (

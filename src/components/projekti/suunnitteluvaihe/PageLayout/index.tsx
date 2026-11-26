@@ -20,6 +20,7 @@ import log from "loglevel";
 import { EdellinenVaiheMigroituNotification } from "@components/projekti/EdellinenVaiheMigroituNotification";
 import { OhjelistaNotification } from "@components/projekti/common/OhjelistaNotification";
 import { JulkaisuOnKopioNotification } from "@components/projekti/common/JulkaisuOnKopioNotification";
+import { ExternalStyledLink } from "@components/StyledLink";
 
 export default function SuunnitteluPageLayoutWrapper({
   children,
@@ -215,7 +216,12 @@ function SuunnitteluPageLayout({
                     Kutsu on hyvä tehdä valmiiksi ja tallentaa julkaistavaksi noin viikko ennen sen julkaisua, jotta kunnat saavat tiedon
                     kutsusta ajoissa.
                   </li>
-                  <li>Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua kutsun luonnosta.</li>
+                  <li>
+                    Voit hyödyntää lehti-ilmoituksen tilauksessa toimintajärjestelmästä löytyviä lehti-ilmoituksen{" "}
+                    <ExternalStyledLink href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af1f0fea-c2c6-4a88-9f0f-eac2c61a88d7/Lehti-ilmoitusten%20mallitekstit.pptx?a=true">
+                      mallitekstejä.
+                    </ExternalStyledLink>
+                  </li>
                   <li>
                     Suunnitelma näkyy kansalaisille suunnitteluvaiheessa olevana kutsun julkaisusta nähtäville asettamisen kuulutuksen
                     julkaisuun asti.
