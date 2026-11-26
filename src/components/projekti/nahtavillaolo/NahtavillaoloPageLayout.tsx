@@ -28,7 +28,7 @@ import ToiminnotButton from "../ToiminnotButton";
 import { KuulutusInfoElement } from "../KuulutusInfoElement";
 import { UusiSpan } from "../UusiSpan";
 import { OhjelistaNotification } from "../common/OhjelistaNotification";
-import StyledLink from "@components/StyledLink";
+import StyledLink, { ExternalStyledLink } from "@components/StyledLink";
 
 export default function NahtavillaoloPageLayoutWrapper({ children }: { children?: ReactNode }) {
   return (
@@ -248,9 +248,12 @@ function NahtavillaoloPageLayout({ projekti, children }: { projekti: ProjektiLis
                               Projekti näytetään nähtävilläoloajan päätyttyä palvelun julkisella puolella ‘Hyväksyntämenettelyssä’ -olevana.
                             </li>
                             <li>
-                              Voit hyödyntää lehti-ilmoituksen tilauksessa järjestelmässä luotua ilmoituksen luonnosta, joka avautuu
-                              Ilmoituksen esikatselu -painikkeesta. Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.
+                              Voit hyödyntää lehti-ilmoituksen tilauksessa toimintajärjestelmästä löytyviä lehti-ilmoituksen{" "}
+                              <ExternalStyledLink href="https://extranet.vayla.fi/share/proxy/alfresco/slingshot/node/content/workspace/SpacesStore/af1f0fea-c2c6-4a88-9f0f-eac2c61a88d7/Lehti-ilmoitusten%20mallitekstit.pptx?a=true">
+                                mallitekstejä.
+                              </ExternalStyledLink>
                             </li>
+                            <li>Vähäisessä menettelytavassa ei ole tarve julkaista ilmoitusta lehdessä.</li>
                             {projekti.asianhallinta.inaktiivinen && (
                               <li>
                                 Muistathan viedä kuulutuksen, ilmoituksen kuulutuksesta ja kiinteistönomistajille lähetettävän ilmoituksen
