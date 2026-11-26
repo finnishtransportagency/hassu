@@ -49,6 +49,7 @@ import { FormAineisto } from "src/util/FormAineisto";
 import { useCheckAineistoValmiit } from "src/hooks/useCheckAineistoValmiit";
 import { canVuorovaikutusKierrosBeDeleted } from "common/util/vuorovaikutuskierros/validateVuorovaikutusKierrosCanBeDeleted";
 import { useShowTallennaProjektiMessage } from "src/hooks/useShowTallennaProjektiMessage";
+import SuunnitelmaLuonnos3D from "./SuunnitelmaLuonnos3D";
 
 type ProjektiFields = Pick<TallennaProjektiInput, "oid" | "versio">;
 type RequiredProjektiFields = Required<{
@@ -64,6 +65,7 @@ export type SuunnittelunPerustiedotFormValues = RequiredProjektiFields & {
     | "suunnittelunEteneminenJaKesto"
     | "videot"
     | "suunnittelumateriaali"
+    | "suunnitelmaluonnos3d"
     | "kysymyksetJaPalautteetViimeistaan"
     | "palautteidenVastaanottajat"
   > & {
@@ -202,6 +204,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         poistetutEsittelyaineistot,
         poistetutSuunnitelmaluonnokset,
         videot: defaultListWithEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.videot, projekti.kielitiedot),
+        suunnitelmaluonnos3d: defaultEmptyLokalisoituLink(projekti.vuorovaikutusKierros?.suunnitelmaluonnos3d, projekti.kielitiedot),
         suunnittelumateriaali: projekti.vuorovaikutusKierros?.suunnittelumateriaali?.length
           ? projekti.vuorovaikutusKierros?.suunnittelumateriaali?.map((link) => defaultEmptyLokalisoituLink(link, projekti.kielitiedot))
           : [defaultEmptyLokalisoituLink(null, projekti.kielitiedot)],
@@ -260,6 +263,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
         kysymyksetJaPalautteetViimeistaan,
         palautteidenVastaanottajat,
         suunnittelumateriaali,
+        suunnitelmaluonnos3d,
         suunnittelunEteneminenJaKesto,
         videot,
       } = formData.vuorovaikutusKierros;
@@ -276,6 +280,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           suunnitelmaluonnokset: handleAineistoArraysForSave(suunnitelmaluonnokset, poistetutSuunnitelmaluonnokset),
           videot: getDefaultValuesForLokalisoituLinkkiLista(projekti.kielitiedot, videot),
           suunnittelumateriaali: getDefaultValuesForLokalisoituLinkkiLista(projekti.kielitiedot, suunnittelumateriaali),
+          suunnitelmaluonnos3d: suunnitelmaluonnos3d ?? undefined,
         },
       };
       await api.paivitaPerustiedot(partialFormData);
@@ -365,6 +370,7 @@ function SuunnitteluvaiheenPerustiedotForm({ projekti, reloadProjekti }: Suunnit
           </Section>
           <SuunnittelunEteneminenJaArvioKestosta kielitiedot={projekti.kielitiedot} />
           <SuunnitelmaLuonnoksetJaEsittelyAineistot />
+          <SuunnitelmaLuonnos3D kielitiedot={projekti?.kielitiedot} />
           <EnnaltaKuvattuVideoesittely />
           <MuuEsittelymateriaali kielitiedot={projekti?.kielitiedot} />
           <Section>

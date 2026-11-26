@@ -11,7 +11,7 @@ export function adaptLokalisoidutLinkitToAPI(
   return undefined;
 }
 
-function adaptLokalisoituLinkkiToAPI(linkki: RequiredLocalizedMap<Linkki> | undefined | null): API.LokalisoituLinkki | undefined {
+export function adaptLokalisoituLinkkiToAPI(linkki: RequiredLocalizedMap<Linkki> | undefined | null): API.LokalisoituLinkki | undefined {
   if (linkki && Object.keys(linkki).length > 0) {
     const lokalisoituLinkki: Partial<API.LokalisoituLinkki> = {
       __typename: "LokalisoituLinkki",

@@ -178,6 +178,7 @@ input VuorovaikutusKierrosInput {
   suunnitelmaluonnokset: [AineistoInput!]
   videot: [LokalisoituLinkkiInput!]
   suunnittelumateriaali: [LokalisoituLinkkiInput!]
+  suunnitelmaluonnos3d: LokalisoituLinkkiInput
   esitettavatYhteystiedot: StandardiYhteystiedotInput
   ilmoituksenVastaanottajat: IlmoituksenVastaanottajatInput
   vuorovaikutusSaamePDFt: VuorovaikutusKutsuSaamePDFtInput
@@ -244,6 +245,7 @@ input PerustiedotInput {
   suunnitelmaluonnokset: [AineistoInput!]
   videot: [LokalisoituLinkkiInput!]
   suunnittelumateriaali: [LokalisoituLinkkiInput!]
+  suunnitelmaluonnos3d: LokalisoituLinkkiInput
 }
 
 input VuorovaikutusTilaisuusPaivitysInput {

@@ -39,7 +39,7 @@ export default function MuuEsittelymateriaali({ kielitiedot }: Props): ReactElem
     <Section>
       <h4 className="vayla-small-title">Muut esittelymateriaalit</h4>
       <p>
-        Muu esittelymateraali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
+        Muu esittelymateriaali on järjestelmän ulkopuolelle julkaistua suunnitelmaan liittyvää materiaalia. Muun esittelymateriaalin
         lisääminen on vapaaehtoista.
       </p>
       <ListWithAlternatingBGColors

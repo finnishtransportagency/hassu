@@ -26,6 +26,7 @@ export type VuorovaikutusKierros = {
   kysymyksetJaPalautteetViimeistaan?: string | null;
   videot?: Array<RequiredLocalizedMap<Linkki>> | null;
   suunnittelumateriaali?: RequiredLocalizedMap<Linkki>[] | null;
+  suunnitelmaluonnos3d?: RequiredLocalizedMap<Linkki> | null;
   esitettavatYhteystiedot?: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;
   aineistot?: Aineisto[] | null;
@@ -50,6 +51,7 @@ export type VuorovaikutusKierrosJulkaisu = {
   kysymyksetJaPalautteetViimeistaan?: string | null;
   videot?: Array<RequiredLocalizedMap<Linkki>> | null;
   suunnittelumateriaali?: RequiredLocalizedMap<Linkki>[] | null;
+  suunnitelmaluonnos3d?: RequiredLocalizedMap<Linkki> | null;
   yhteystiedot: Yhteystieto[];
   esitettavatYhteystiedot: StandardiYhteystiedot;
   ilmoituksenVastaanottajat?: IlmoituksenVastaanottajat | null;

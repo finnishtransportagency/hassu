@@ -13,6 +13,12 @@
     "kysymykset_ja_palautteet": "Vi önskar att frågor och respons framförs senast {{paivamaara}}. Efter detta kan responsen inte nödvändigtvis beaktas i planen.",
     "siirry_lomakkeelle": "<a>Gå till blanketten.</a>"
   },
+  "suunnitelmaluonnos3d": {
+    "otsikko": "3D-vy av planutkastet",
+    "avaa": "Öppna 3D-vyn: ",
+    "info_tietomalleista": "I 3D-vyn kan du granska planeringsmaterialet med hjälp av förhands sparade vyer. Du kan också navigera i vyerna och granska planerna ur olika perspektiv. Materialet innehåller vyer som hjälper dig att få en uppfattning om planlösningarna i förhållande till den befintliga markanvändningen. 3D-vyn fungerar direkt i webbläsaren och kräver ingen separat programvara. Vyn öppnas i en ny flik.",
+    "ei_kelvollinen": "Länken är inte giltig"
+  },
   "videoesittely": {
     "otsikko": "Förhandsinspelad videopresentation",
     "tutustu": "Bekanta dig med den förhandsinspelade presentationen nedan.",

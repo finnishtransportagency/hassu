@@ -1,3 +1,5 @@
+// Contains code generated or recommended by Amazon Q
+import Notification, { NotificationType } from "@components/notification/Notification";
 import ContentSpacer from "@components/layout/ContentSpacer";
 import Section from "@components/layout/Section2";
 import { DefinitionList, StyledDefinitionList } from "@components/projekti/common/StyledDefinitionList";
@@ -65,8 +67,41 @@ const SuunnitelmaluonnoksetJaEsittelyAineistot: FunctionComponent<{
     return linkit;
   }, [ensisijainenKaannettavaKieli, julkaisu.suunnittelumateriaali, toissijainenKaannettavaKieli]);
 
+  const suunnitelmaluonnos3d: Linkki[] = useMemo(() => {
+    const linkit: Linkki[] = [];
+    const lokalisoituLinkki = julkaisu.suunnitelmaluonnos3d;
+    if (lokalisoituLinkki) {
+      const ensisijainenLinkki = ensisijainenKaannettavaKieli ? lokalisoituLinkki[ensisijainenKaannettavaKieli] : undefined;
+      const toissijainenLinkki = toissijainenKaannettavaKieli ? lokalisoituLinkki[toissijainenKaannettavaKieli] : undefined;
+      if (ensisijainenLinkki?.url) linkit.push(ensisijainenLinkki);
+      if (toissijainenLinkki?.url) linkit.push(toissijainenLinkki);
+    }
+    return linkit;
+  }, [ensisijainenKaannettavaKieli, julkaisu.suunnitelmaluonnos3d, toissijainenKaannettavaKieli]);
+
   return (
     <ContentSpacer gap={7}>
+      {!!suunnitelmaluonnos3d.length && (
+        <ContentSpacer gap={2}>
+          <p> Suunnitelmaluonnoksen 3D-näkymä</p>
+          <ContentSpacer as="ul" sx={{ ["& p"]: { marginBottom: 0 } }} gap={2}>
+            {suunnitelmaluonnos3d.map((suunnitelmaluonnos3d, index) => (
+              <li key={index}>
+                {suunnitelmaluonnos3d.nimi && <p>{suunnitelmaluonnos3d.nimi}</p>}
+                <StyledLink target="_blank" sx={{ fontWeight: 400 }} href={suunnitelmaluonnos3d.url}>
+                  {suunnitelmaluonnos3d.url}
+                </StyledLink>
+              </li>
+            ))}
+          </ContentSpacer>
+        </ContentSpacer>
+      )}
+      <Notification type={NotificationType.INFO_GRAY} hideIcon>
+        3D-näkymässä voi tarkastella suunnitelma-aineistoja valmiiksi tallennettujen näkymien kautta. Voit myös liikkua näkymissä ja
+        tarkastella suunnitelmia eri näkökulmista. Aineistossa on näkymiä, jotka auttavat hahmottamaan suunnitelmaratkaisuja suhteessa
+        nykyiseen maankäyttöön. Näkymä toimii selainpohjaisesti eikä sen tarkastelu vaadi erillistä ohjelmistoa. Näkymä avautuu uuteen
+        välilehteen.
+      </Notification>
       {!!videolista.length && (
         <ContentSpacer gap={2}>
           <p>Videoesittely</p>
