@@ -85,6 +85,18 @@ const getLinkkiNimiPakollinenSchema = (schema: Yup.ObjectSchema<ObjectShape>) =>
       }),
   });
 
+const getLinkki3dSchema = (schema: Yup.ObjectSchema<ObjectShape>) =>
+  schema.shape({
+    nimi: Yup.string(),
+    url: Yup.string()
+      .url("URL ei kelpaa, linkin täytyy olla muodossa https://www.osoite.fi")
+      .test("url-https", "linkin täytyy olla muodossa https://www.osoite.fi", (value) => {
+        if (!value) return true;
+        return value.startsWith("https://");
+      })
+      .notRequired(),
+  });
+
 export const suunnittelunPerustiedotSchema = Yup.object().shape({
   oid: Yup.string().required(),
   vuorovaikutusKierros: Yup.object().shape({
@@ -106,9 +118,34 @@ export const suunnittelunPerustiedotSchema = Yup.object().shape({
         return !linkki.SUOMI;
       }),
     suunnittelumateriaali: Yup.array().notRequired().of(suunnittelumateriaaliSchema()),
+    suunnitelmaluonnos3d: suunnitelmaluonnos3dSchema(),
     kysymyksetJaPalautteetViimeistaan: paivamaara({ preventPast: false }).required("Toivottu palautepäivämäärä täytyy antaa"),
   }),
 });
+
+function suunnitelmaluonnos3dSchema() {
+  return Yup.object()
+    .notRequired()
+    .shape({
+      SUOMI: lokalisoituEiPakollinenObjektiSchema({
+        kieli: Kieli.SUOMI,
+        additionalObjectValidations: getLinkki3dSchema,
+      }),
+    })
+    .when("$projekti.kielitiedot", {
+      is: (kielitiedot: Kielitiedot | null | undefined) =>
+        [kielitiedot?.ensisijainenKieli, kielitiedot?.toissijainenKieli].includes(Kieli.RUOTSI),
+      then: (schema) =>
+        schema.concat(
+          Yup.object().shape({
+            RUOTSI: lokalisoituEiPakollinenObjektiSchema({
+              kieli: Kieli.RUOTSI,
+              additionalObjectValidations: getLinkki3dSchema,
+            }),
+          })
+        ),
+    });
+}
 
 function suunnittelumateriaaliSchema() {
   return Yup.object()
