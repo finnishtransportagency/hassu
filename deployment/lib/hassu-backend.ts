@@ -703,6 +703,7 @@ export class HassuBackendStack extends Stack {
         PARAMETERS_SECRETS_EXTENSION_LOG_LEVEL: "ERROR",
         TABLE_KIINTEISTONOMISTAJA: this.props.kiinteistonomistajaTable.tableName,
         TABLE_PROJEKTI: this.props.projektiTable.tableName,
+        YLLAPITO_BUCKET_NAME: this.props.yllapitoBucket.bucketName,
       },
       tracing: Tracing.ACTIVE,
       insightsVersion,
@@ -721,6 +722,7 @@ export class HassuBackendStack extends Stack {
     kiinteistoSQS.grantConsumeMessages(kiinteistoLambda);
     kiinteistoLambda.addEventSource(new SqsEventSource(kiinteistoSQS, { maxConcurrency: 3 }));
     this.props.kiinteistonomistajaTable.grantFullAccess(kiinteistoLambda);
+    this.props.yllapitoBucket.grantRead(kiinteistoLambda);
     const updateSynkronointiPolicy = new PolicyStatement({
       effect: Effect.ALLOW,
       resources: [this.props.projektiTable.tableArn],
