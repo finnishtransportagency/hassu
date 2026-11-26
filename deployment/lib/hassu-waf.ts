@@ -114,6 +114,8 @@ export class FrontendWafStack extends Stack {
       customResponseBodies: {
         "Site-under-maintenance": { content: "<html lang='fi'><body>Asennuskatko</body></html>", contentType: "TEXT_HTML" },
       },
+      // Voi tulla ajankohtaiseksi nostaa default arvoa 16 -> 64 KB jos keskitetty WAF ratkaisu korvataan
+      //associationConfig: { requestBody: { "CLOUDFRONT": { defaultSizeInspectionLimit: "KB_64"}} }
     };
 
     const cfnWebACL = new CfnWebACL(this, "frontendWAF", props);
@@ -234,19 +236,19 @@ const managedRules: CfnWebACL.RuleProperty[] = [
           {
             name: "SizeRestrictions_BODY",
             actionToUse: {
-              allow: {},
+              count: {},
             },
           },
           {
             name: "CrossSiteScripting_COOKIE",
             actionToUse: {
-              allow: {},
+              count: {},
             },
           },
           {
             name: "SizeRestrictions_Cookie_HEADER",
             actionToUse: {
-              allow: {},
+              count: {},
             },
           },
         ],
