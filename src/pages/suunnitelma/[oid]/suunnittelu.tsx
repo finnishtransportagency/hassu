@@ -1,4 +1,5 @@
 // Contains code generated or recommended by Amazon Q
+import Notification, { NotificationType } from "@components/notification/Notification";
 import React, { FunctionComponent, ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import ProjektiJulkinenPageLayout from "@components/projekti/kansalaisnakyma/ProjektiJulkinenPageLayout";
 import Section from "@components/layout/Section2";
@@ -264,6 +265,19 @@ const VuorovaikutusTiedot: FunctionComponent<{
             <AineistoLinkkiLista aineistot={suunnitelmaluonnokset} julkaisupaiva={vuorovaikutus?.vuorovaikutusJulkaisuPaiva} />
           </ContentSpacer>
         )}
+        {!!vuorovaikutus?.suunnitelmaluonnos3d?.[kieli]?.url && (
+          <ContentSpacer>
+            <H5>{t("suunnitelmaluonnos3d.otsikko")}</H5>
+            <ContentSpacer gap={2}>
+              {vuorovaikutus.suunnitelmaluonnos3d[kieli]?.nimi && <p>{vuorovaikutus.suunnitelmaluonnos3d[kieli]?.nimi}</p>}
+              <p>
+                {t("suunnitelmaluonnos3d.avaa")}
+                <ExtLink href={vuorovaikutus.suunnitelmaluonnos3d[kieli]?.url}>{vuorovaikutus.suunnitelmaluonnos3d[kieli]?.url}</ExtLink>
+              </p>
+              <Notification type={NotificationType.INFO_GRAY}>{t("suunnitelmaluonnos3d.info_tietomalleista")}</Notification>
+            </ContentSpacer>
+          </ContentSpacer>
+        )}
         {hasVideoURL(vuorovaikutus?.videot) && (
           <ContentSpacer>
             <H5>{t(`videoesittely.otsikko`)}</H5>
@@ -304,7 +318,11 @@ const VuorovaikutusTiedot: FunctionComponent<{
         <>
           {projekti?.status === Status.SUUNNITTELU && (
             <ContentSpacer>
-              <JataPalautettaNappi teksti={t("projekti:palautelomake.jata_palaute")} tekstiIso={t("projekti:jata_palaute_tai")} onClick={() => setPalauteLomakeOpen(true)} />
+              <JataPalautettaNappi
+                teksti={t("projekti:palautelomake.jata_palaute")}
+                tekstiIso={t("projekti:jata_palaute_tai")}
+                onClick={() => setPalauteLomakeOpen(true)}
+              />
               <PalauteLomakeDialogi
                 vuorovaikutus={vuorovaikutus}
                 open={palauteLomakeOpen}
