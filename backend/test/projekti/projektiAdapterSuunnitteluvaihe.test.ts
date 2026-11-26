@@ -1,3 +1,4 @@
+// Contains code generated or recommended by Amazon Q
 import { describe, it } from "mocha";
 import { ProjektiFixture } from "../fixture/projektiFixture";
 import { projektiAdapter } from "../../src/projekti/adapter/projektiAdapter";
@@ -738,6 +739,69 @@ describe("projektiAdapter", () => {
         vuorovaikutusKierros: vuorovaikutusKierrosInput,
       })
     ).to.be.fulfilled;
+  });
+
+  it("should prevent saving vuorovaikutusKierros if suunnitelmaluonnos3d is only in ensisijainenKieli", async () => {
+    const projekti = fixture.dbProjekti1();
+
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = fixture.dbProjektiHyvaksymisMenettelyssa()
+      .vuorovaikutusKierros as VuorovaikutusKierrosInput;
+    const suunnitelmaluonnos3d: LokalisoituLinkkiInput = {
+      SUOMI: {
+        nimi: "SUOMI linkki",
+        url: "http://www.url.fi",
+      },
+    };
+    vuorovaikutusKierrosInput.suunnitelmaluonnos3d = suunnitelmaluonnos3d;
+
+    return expect(
+      projektiAdapter.adaptProjektiToSave(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        vuorovaikutusKierros: vuorovaikutusKierrosInput,
+      })
+    ).to.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("should prevent saving vuorovaikutusKierros if suunnitelmaluonnos3d is only in toissijainenKieli", async () => {
+    const projekti = fixture.dbProjekti1();
+    projekti.kielitiedot = {
+      ensisijainenKieli: projekti.kielitiedot?.toissijainenKieli as Kieli,
+      toissijainenKieli: projekti.kielitiedot?.ensisijainenKieli,
+    };
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = fixture.dbProjektiHyvaksymisMenettelyssa()
+      .vuorovaikutusKierros as VuorovaikutusKierrosInput;
+    const suunnitelmaluonnos3d: LokalisoituLinkkiInput = {
+      SUOMI: {
+        nimi: "SUOMI linkki",
+        url: "http://www.url.fi",
+      },
+    };
+    vuorovaikutusKierrosInput.suunnitelmaluonnos3d = suunnitelmaluonnos3d;
+
+    return expect(
+      projektiAdapter.adaptProjektiToSave(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        vuorovaikutusKierros: vuorovaikutusKierrosInput,
+      })
+    ).to.be.rejectedWith(IllegalArgumentError);
+  });
+
+  it("should NOT prevent saving vuorovaikutusKierros if suunnitelmaluonnos3d is missing", async () => {
+    const projekti = fixture.dbProjekti1();
+
+    const vuorovaikutusKierrosInput: VuorovaikutusKierrosInput = fixture.dbProjektiHyvaksymisMenettelyssa()
+      .vuorovaikutusKierros as VuorovaikutusKierrosInput;
+    delete vuorovaikutusKierrosInput.suunnitelmaluonnos3d;
+
+    return expect(
+      projektiAdapter.adaptProjektiToSave(projekti, {
+        oid: projekti.oid,
+        versio: projekti.versio,
+        vuorovaikutusKierros: vuorovaikutusKierrosInput,
+      })
+    ).to.be.not.rejectedWith(IllegalArgumentError);
   });
 
   it("should be able to make esitettavatYhteystiedot list empty", async () => {
