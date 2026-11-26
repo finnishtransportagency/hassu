@@ -18,6 +18,7 @@ import { PathTuple, ProjektiPaths } from "../../../../files/ProjektiPath";
 import {
   adaptAineistotJulkinen,
   adaptLokalisoidutLinkitToAPI,
+  adaptLokalisoituLinkkiToAPI,
   adaptLokalisoituTekstiToAPI,
   adaptMandatoryYhteystiedotByAddingTypename,
   adaptVuorovaikutusSaamePDFtToAPI,
@@ -66,6 +67,7 @@ export function adaptVuorovaikutusKierroksetJulkinen(dbProjekti: DBProjekti): AP
       kysymyksetJaPalautteetViimeistaan: viimeisinVuorovaikutusKierros.kysymyksetJaPalautteetViimeistaan,
       videot: isAineistoVisible ? videotAdaptoituna : undefined,
       suunnittelumateriaali: isAineistoVisible ? adaptLokalisoidutLinkitToAPI(viimeisinVuorovaikutusKierros.suunnittelumateriaali) : undefined,
+      suunnitelmaluonnos3d: isAineistoVisible ? adaptLokalisoituLinkkiToAPI(viimeisinVuorovaikutusKierros.suunnitelmaluonnos3d) : undefined,
       esittelyaineistot: isAineistoVisible
         ? adaptAineistotJulkinen(esittelyaineistot, vuorovaikutusPaths.aineisto, julkaisuPaiva)
         : undefined,
