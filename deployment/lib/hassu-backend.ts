@@ -277,6 +277,7 @@ export class HassuBackendStack extends Stack {
       },
       authorizationConfig: { defaultAuthorization },
       xrayEnabled: true,
+      introspectionConfig: Config.isDeveloperEnvironment() ? appsync.IntrospectionConfig.ENABLED : appsync.IntrospectionConfig.DISABLED,
     });
     if (!Config.isDeveloperEnvironment()) {
       new WafConfig(this, "Hassu-WAF", {
