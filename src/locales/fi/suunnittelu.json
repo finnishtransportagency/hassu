@@ -13,6 +13,12 @@
     "kysymykset_ja_palautteet": "Kysymykset ja palautteet toivotaan esitettävän {{paivamaara}} mennessä. Tämän jälkeen annettuja palautteita ei välttämättä pystytä huomioimaan suunnitelmassa.",
     "siirry_lomakkeelle": "<a>Siirry lomakkeelle.</a>"
   },
+  "suunnitelmaluonnos3d": {
+    "otsikko": "Suunnitelmaluonnoksen 3D-näkymä",
+    "avaa": "Avaa suunnitelman 3D-näkymä karttapalvelussa: ",
+    "info_tietomalleista": "3D-näkymässä voi tarkastella suunnitelma-aineistoja valmiiksi tallennettujen näkymien kautta. Voit myös liikkua näkymissä  ja tarkastella suunnitelmia eri näkökulmista. Aineistossa on näkymiä, jotka auttavat hahmottamaan suunnitelmaratkaisuja suhteessa nykyiseen maankäyttöön. Näkymä toimii selainpohjaisesti eikä sen tarkastelu vaadi erillistä ohjelmistoa. Näkymä avautuu uuteen välilehteen.",
+    "ei_kelvollinen": "Linkki ei ole kelvollinen"
+  },
   "videoesittely": {
     "otsikko": "Ennakkoon kuvattu videoesittely",
     "tutustu": "Tutustu ennalta kuvattuun videoesittelyyn alta.",
